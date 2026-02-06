@@ -15,10 +15,8 @@
 ## Meter Names
 
 Format: `{tier_prefix}{size} Cache Instance`
-
-- Basic: `C0`, `C1`, `C2`, `C3`, `C4`, `C5`, `C6`
-- Standard: same sizes, different product filter
-- Premium: `P1`, `P2`, `P3`, `P4`, `P5`
+- Basic/Standard: `C0`–`C6` (use productName to distinguish tier)
+- Premium: `P1`–`P5`
 
 ## Product Names
 
@@ -63,20 +61,14 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 ## Reserved Instance Pricing
 
-```powershell
-# RI for Premium P2 (returns both 1-Year and 3-Year terms)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Redis Cache' `
-    -MeterName 'P2 Cache Instance' `
-    -PriceType Reservation
+RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
 
-# RI for Premium P4
+```powershell
+# RI for Premium — substitute {Size} with P1-P5
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Redis Cache' `
-    -MeterName 'P4 Cache Instance' `
+    -MeterName '{Size} Cache Instance' `
     -PriceType Reservation
 ```
 
-> **Note**: Reserved Instances are available for **Premium tier only** (P1-P5). Basic and Standard tiers do not support reservations. The API returns the **total prepaid cost** for the reservation term. To get monthly cost, divide the `retailPrice` by 12 (1-Year) or 36 (3-Years). Both 1-Year and 3-Year results are returned in a single query — select the desired term from the results.
->
-> **Trap (RI MonthlyCost)**: The script’s `MonthlyCost` is **wildly wrong** for Reservation items. It multiplies the total term price by 730 hours, producing absurd values (e.g., £million+). **Always ignore the script’s `MonthlyCost`** for Reservation items and manually calculate: `unitPrice ÷ 12` for 1-Year monthly cost, or `unitPrice ÷ 36` for 3-Year monthly cost.
+> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).

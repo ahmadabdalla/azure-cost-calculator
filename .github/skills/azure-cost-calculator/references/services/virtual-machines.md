@@ -7,11 +7,6 @@
 ## Query Pattern
 
 ```powershell
-# Unfiltered — returns 6 results (Linux + Windows × Standard + Spot + Low Priority)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D2s_v5'
-
 # Recommended: Filter to Linux standard only using -ProductName
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Virtual Machines' `
@@ -25,7 +20,7 @@
     -ProductName 'Virtual Machines Dsv5 Series Windows'
 ```
 
-> **Tip (productName pattern)**: The `productName` follows the pattern `'Virtual Machines {Series} Series'` for **Linux** and `'Virtual Machines {Series} Series Windows'` for **Windows**. Using `-ProductName` reduces results from 6 to 3 (Standard + Spot + Low Priority for one OS). The series name in `productName` drops underscores and 'v' casing from the ARM SKU — e.g., `Standard_D2s_v5` → series `Dsv5`, `Standard_E4s_v5` → series `Esv5`, `Standard_B2ms` → series `Bms`. When in doubt, run `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover the exact `productName`.
+> **Tip (productName pattern)**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover exact values.
 
 ## Key Fields
 
@@ -50,10 +45,6 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 ## Notes
 
-- Linux: `productName` does NOT contain "Windows"
-- Windows: `productName` contains "Windows"
-- Spot: `skuName` ends with "Spot"
-- Low Priority: `skuName` ends with "Low Priority"
 - Node VMs (e.g., AKS, Batch) are priced as Virtual Machines
 - Use `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover exact `productName` values
 
@@ -68,9 +59,7 @@ Monthly = retailPrice × 730 hours × instanceCount
     -PriceType Reservation
 ```
 
-> **Trap (RI MonthlyCost)**: For `-PriceType Reservation`, the API returns a **total term price** (e.g., £1,120 for the full year), NOT an hourly rate. The script still multiplies by 730 hours, producing an absurdly inflated `MonthlyCost` (e.g., £817K). **Always ignore the script's `MonthlyCost`** for Reservation items and manually calculate: `unitPrice ÷ 12` for monthly cost, or use `unitPrice` directly as the annual cost.
->
-> **Agent instruction**: `reservationTerm` will show "1 Year" or "3 Years" — select the desired term from results.
+> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). Select desired `reservationTerm` ("1 Year" / "3 Years") from results.
 
 ## Common SKUs
 

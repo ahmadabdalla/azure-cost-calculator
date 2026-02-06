@@ -8,48 +8,22 @@
 
 ## Query Pattern
 
+Substitute `{Tier}` with `Standard`, `Premium`, or `Basic` (see Meter Names table). Run **two queries per tier**:
+
 ```powershell
-# Standard tier — fixed deployment cost
+# {Tier} — fixed deployment cost
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Firewall' `
     -ProductName 'Azure Firewall' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Deployment'
+    -SkuName '{Tier}' `
+    -MeterName '{Tier} Deployment'
 
-# Standard tier — data processing
+# {Tier} — data processing
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Firewall' `
     -ProductName 'Azure Firewall' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Data Processed'
-
-# Premium tier — fixed deployment cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Deployment'
-
-# Premium tier — data processing
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Data Processed'
-
-# Basic tier — fixed deployment cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Basic' `
-    -MeterName 'Basic Deployment'
-
-# Basic tier — data processing
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Basic' `
-    -MeterName 'Basic Data Processed'
+    -SkuName '{Tier}' `
+    -MeterName '{Tier} Data Processed'
 ```
 
 ## Meter Names
@@ -66,14 +40,6 @@
 
 ```
 Monthly = deploymentPrice × 730 + dataPrice × estimatedGB
-```
-
-## Example (Standard tier)
-
-```
-Deployment: deploymentPrice × 730
-Data processed: dataPrice × estimatedGB
-Total: sum of above — query live prices for current rates
 ```
 
 ## Notes

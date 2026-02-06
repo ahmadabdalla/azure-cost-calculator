@@ -55,7 +55,7 @@ Monthly retention cost = retentionPrice × 295
 
 ## Commitment Tiers (optional, for high-volume)
 
-For 100+ GB/day, commitment tiers offer discounts. Use this pattern:
+For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) offer discounts:
 
 ```powershell
 # Example: 100 GB/day commitment tier
@@ -65,9 +65,7 @@ For 100+ GB/day, commitment tiers offer discounts. Use this pattern:
     -MeterName '100 GB Commitment Tier Capacity Reservation'
 ```
 
-Available tiers: 100, 200, 300, 400, 500, 1000, 2000, 5000 GB/day.
-
-> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` field reports the **daily price** (e.g., €869/day), NOT the monthly cost. **Always ignore the script's `MonthlyCost`** for commitment tiers and manually calculate: `unitPrice × 30`.
+> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
 
 ## Notes
 
@@ -75,4 +73,3 @@ Available tiers: 100, 200, 300, 400, 500, 1000, 2000, 5000 GB/day.
 - 31 days retention included free; longer retention charged per-GB/month
 - Application Insights data flows into Log Analytics workspace
 - **Workspace-based Application Insights has no additional cost** beyond Log Analytics ingestion. Do NOT query a separate Application Insights meter — all telemetry costs are captured by the Log Analytics workspace ingestion and retention charges above. Only classic (non-workspace-based) Application Insights has separate billing, and it is being retired.
-- For a typical app ingesting 5 GB/day: monthly cost = ingestionPrice × 150 GB — query live price for current per-GB rate

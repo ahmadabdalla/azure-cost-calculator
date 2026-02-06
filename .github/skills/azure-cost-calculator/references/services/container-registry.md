@@ -10,37 +10,23 @@
 
 ## Query Pattern
 
+Substitute `{Tier}` with `Basic`, `Standard`, or `Premium`:
+
 ```powershell
-# Premium tier — registry unit (daily cost)
+# {Tier} registry unit (daily cost)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Container Registry' `
     -ProductName 'Container Registry' `
-    -MeterName 'Premium Registry Unit'
+    -MeterName '{Tier} Registry Unit'
 
-# Basic tier — registry unit
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Container Registry' `
-    -ProductName 'Container Registry' `
-    -MeterName 'Basic Registry Unit'
-
-# Standard tier — registry unit
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Container Registry' `
-    -ProductName 'Container Registry' `
-    -MeterName 'Standard Registry Unit'
-
-# Data stored (excess storage beyond included quota)
+# Data stored (excess beyond included quota)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Container Registry' `
     -ProductName 'Container Registry' `
     -MeterName 'Data Stored'
-
-# Geo-replication storage (Premium only)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Container Registry' `
-    -ProductName 'Container Registry' `
-    -MeterName 'Premium GB Registry Replication Data Stored'
 ```
+
+> **Note**: For geo-replication storage (Premium only), use `-MeterName 'Premium GB Registry Replication Data Stored'`.
 
 ## Meter Names
 
@@ -67,14 +53,6 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 ```
 
 > **Remember**: Use `× 30` (days), NOT `× 730` (hours). Check `unitOfMeasure` in the API response.
-
-## Example (Premium)
-
-```
-Registry: registryUnitPrice × 30
-Storage (50 GB excess): storagePrice × max(0, totalGB - includedGB)
-Total: sum of above — query live prices for current rates
-```
 
 ## Notes
 
