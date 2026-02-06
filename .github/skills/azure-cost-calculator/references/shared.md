@@ -16,6 +16,7 @@ Exact `serviceName` values (case-sensitive) and reference files for each support
 | Resource                     | serviceName                       | Reference                                                 |
 | ---------------------------- | --------------------------------- | --------------------------------------------------------- |
 | Virtual Machines             | `Virtual Machines`                | [virtual-machines.md](services/virtual-machines.md)       |
+| Managed Disks                | `Storage`                         | [managed-disks.md](services/managed-disks.md)             |
 | App Service                  | `Azure App Service`               | [app-service.md](services/app-service.md)                 |
 | SQL Database                 | `SQL Database`                    | [sql-database.md](services/sql-database.md)               |
 | Blob/File/Table Storage      | `Storage`                         | [storage.md](services/storage.md)                         |

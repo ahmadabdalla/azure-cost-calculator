@@ -1,6 +1,6 @@
 ---
 name: azure-cost-calculator
-description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources", "how much does a D2s v5 cost", or "compare VM pricing across regions". Covers 20+ resource types including VMs, App Service, SQL Database, Storage, Functions, Cosmos DB, Key Vault, AKS, API Management, Service Bus, Redis, Application Gateway, Container Apps, Application Insights, Load Balancer, PostgreSQL Flexible Server, Azure Firewall, Container Registry, Private Link, Private DNS, Defender for Cloud, and DDoS Protection.
+description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources".
 ---
 
 # Azure Cost Calculator
