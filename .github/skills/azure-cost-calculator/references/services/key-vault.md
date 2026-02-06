@@ -29,7 +29,7 @@
     -MeterName 'Advanced Key Operations'
 ```
 
-## Key Meter Names (verified 2026-02-06)
+## Meter Names (verified 2026-02-06)
 
 | Meter                         | unitOfMeasure | Notes                           |
 | ----------------------------- | ------------- | ------------------------------- |

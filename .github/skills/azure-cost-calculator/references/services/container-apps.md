@@ -6,7 +6,7 @@
 >
 > **Agent instruction**: For always-on workloads, use the `Dedicated` SKU query (prices display correctly). For Consumption (`Standard`), the script shows `$0.00` — use the published Azure per-second rates and the cost formula below instead. Always ask whether the workload is always-on or event-driven to pick the right SKU.
 
-## Query Patterns
+## Query Pattern
 
 ```powershell
 # Consumption plan (Standard SKU) — per-second pricing
@@ -31,7 +31,7 @@
 | Always-on, minimum replicas > 0 | `Dedicated` | Per-hour      | Use for background workers, ML pipelines |
 | Hybrid (on-prem connected)      | `Hybrid`    | Per-hour      | For Arc-enabled environments             |
 
-## Key Meter Names (verified 2026-02-06)
+## Meter Names (verified 2026-02-06)
 
 ### Dedicated Plan (recommended for always-on workloads)
 
@@ -54,7 +54,7 @@
 
 > **Note**: The `Standard Requests` meter is the ONLY Consumption plan meter that returns a non-zero price from the API. For vCPU and memory meters, use the published USD rates in the "Known Consumption Plan Rates" section below.
 
-## Cost Formulas
+## Cost Formula
 
 ```
 Consumption Plan (Standard):

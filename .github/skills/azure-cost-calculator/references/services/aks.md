@@ -26,7 +26,7 @@
     -Quantity 1 -InstanceCount 3
 ```
 
-## AKS Meter Names (case-sensitive)
+## Meter Names (case-sensitive)
 
 | Meter                        | Purpose                                        |
 | ---------------------------- | ---------------------------------------------- |

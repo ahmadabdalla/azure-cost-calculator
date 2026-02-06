@@ -10,7 +10,7 @@
     -ProductName 'Service Bus'
 ```
 
-## Key Meter Names
+## Meter Names
 
 | Tier     | meterName                |
 | -------- | ------------------------ |

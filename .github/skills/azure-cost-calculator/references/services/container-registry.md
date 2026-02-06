@@ -42,7 +42,7 @@
     -MeterName 'Premium GB Registry Replication Data Stored'
 ```
 
-## Key Meters (case-sensitive)
+## Meter Names (case-sensitive)
 
 | Meter                                         | unitOfMeasure | Notes                          |
 | --------------------------------------------- | ------------- | ------------------------------ |

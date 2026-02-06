@@ -8,7 +8,7 @@
 > **Trap**: Different sub-products use different `unitOfMeasure` values (`1/Hour`, `1/Month`, `1 Hour`). Always check the unit before applying the formula.
 > **Trap**: SQL has multiple pricing models for different deployment types (PaaS vs IaaS) — multiple meters may be returned. Use `Standard Instance` for PaaS (Flexible Server). Do not confuse with `Standard Node` (monthly flat) or `Standard vCore` (hourly per-vCore) which are for different deployment types.
 
-## Query Patterns
+## Query Pattern
 
 ```powershell
 # Defender for Servers — Plan 1
@@ -68,7 +68,7 @@
     -MeterName 'Standard Images'
 ```
 
-## Sub-Product Reference (verified 2026-02-06)
+## Meter Names (verified 2026-02-06)
 
 | Sub-product         | productName                         | skuName           | meterName                   | unitOfMeasure | Formula               |
 | ------------------- | ----------------------------------- | ----------------- | --------------------------- | ------------- | --------------------- |

@@ -31,18 +31,16 @@
 
 | Parameter     | How to determine                            | Example values                                                                 |
 | ------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
+| `serviceName` | Always `Virtual Machines`                   | `Virtual Machines`                                                             |
 | `armSkuName`  | VM size from portal/Bicep `vmSize` property | `Standard_D2s_v5`, `Standard_B2ms`, `Standard_E4s_v5`                          |
 | `productName` | Contains series + OS indicator              | `Virtual Machines Dsv5 Series` (Linux), `Virtual Machines Dsv5 Series Windows` |
+| `skuName`     | Size + pricing tier suffix                  | `D2s v5`, `D2s v5 Spot`, `D2s v5 Low Priority`                                 |
 
-## Filter Tips
+## Meter Names (verified 2026-02-06)
 
-- Linux: `productName` does NOT contain "Windows"
-- Windows: `productName` contains "Windows"
-- Spot: `skuName` ends with "Spot"
-- Low Priority: `skuName` ends with "Low Priority"
-- Reservations: set `-PriceType Reservation` — `reservationTerm` will show "1 Year" or "3 Years"
-
-> **Trap (RI MonthlyCost — verified 2026-02-06)**: For `-PriceType Reservation`, the API returns a **total term price** (e.g., £1,120 for the full year), NOT an hourly rate. The script still multiplies by 730 hours, producing an absurdly inflated `MonthlyCost` (e.g., £817K). **Always ignore the script's `MonthlyCost`** for Reservation items and manually calculate: `unitPrice ÷ 12` for monthly cost, or use `unitPrice` directly as the annual cost.
+| Meter                      | unitOfMeasure | Notes                                                                 |
+| -------------------------- | ------------- | --------------------------------------------------------------------- |
+| _(VM size, e.g. `D2s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix and underscores |
 
 ## Cost Formula
 
@@ -50,9 +48,33 @@
 Monthly = retailPrice × 730 hours × instanceCount
 ```
 
-## Common VM SKUs (armSkuName)
+## Notes
 
-| Size              | vCPUs | RAM (GB) | Typical use           |
+- Linux: `productName` does NOT contain "Windows"
+- Windows: `productName` contains "Windows"
+- Spot: `skuName` ends with "Spot"
+- Low Priority: `skuName` ends with "Low Priority"
+- Node VMs (e.g., AKS, Batch) are priced as Virtual Machines
+- Use `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover exact `productName` values
+
+## Reserved Instance Pricing
+
+```powershell
+# RI for Linux D2s v5 (returns both 1-Year and 3-Year terms)
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Virtual Machines' `
+    -ArmSkuName 'Standard_D2s_v5' `
+    -ProductName 'Virtual Machines Dsv5 Series' `
+    -PriceType Reservation
+```
+
+> **Trap (RI MonthlyCost — verified 2026-02-06)**: For `-PriceType Reservation`, the API returns a **total term price** (e.g., £1,120 for the full year), NOT an hourly rate. The script still multiplies by 730 hours, producing an absurdly inflated `MonthlyCost` (e.g., £817K). **Always ignore the script's `MonthlyCost`** for Reservation items and manually calculate: `unitPrice ÷ 12` for monthly cost, or use `unitPrice` directly as the annual cost.
+>
+> **Agent instruction**: `reservationTerm` will show "1 Year" or "3 Years" — select the desired term from results.
+
+## Common SKUs
+
+| SKU               | vCPUs | RAM (GB) | Tier/Notes            |
 | ----------------- | ----- | -------- | --------------------- |
 | `Standard_B2ms`   | 2     | 8        | Dev/test, low traffic |
 | `Standard_D2s_v5` | 2     | 8        | General purpose       |

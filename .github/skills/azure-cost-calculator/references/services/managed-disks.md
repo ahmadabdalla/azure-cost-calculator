@@ -15,7 +15,7 @@
 | Ultra Disk     | `Ultra Disks`                | N/A        | IO-intensive (SAP HANA, databases)      |
 | Premium SSD v2 | `Azure Premium SSD v2`       | N/A        | Flexible IOPS/throughput tuning         |
 
-## Query Patterns
+## Query Pattern
 
 ```powershell
 # Premium SSD — P30 LRS (returns disk + mount meters)
@@ -67,7 +67,7 @@ These use three hourly meters instead of fixed monthly pricing:
 | `skuName`     | Disk size + redundancy     | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`                  |
 | `meterName`   | Specific cost component    | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`          |
 
-## Cost Formulas
+## Cost Formula
 
 **Fixed-size disks** (Premium/Standard SSD/HDD):
 

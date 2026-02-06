@@ -52,7 +52,7 @@
     -MeterName 'Basic Data Processed'
 ```
 
-## Tier Meters (case-sensitive)
+## Meter Names (case-sensitive)
 
 | Tier     | skuName    | Deployment Meter      | Data Meter                |
 | -------- | ---------- | --------------------- | ------------------------- |

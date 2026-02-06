@@ -36,7 +36,7 @@
 | `skuName`     | Tier name — this selects the pricing tier | `Developer`, `Basic`, `Standard`, `Premium`, `Standard v2` |
 | `meterName`   | Tier name + component                     | `Standard Unit`, `Standard v2 Unit`, `Gateway Unit`        |
 
-## Tier Meter Reference (verified 2026-02-06)
+## Meter Names (verified 2026-02-06)
 
 | Tier              | productName      | skuName       | meterName           | unitOfMeasure | Notes                         |
 | ----------------- | ---------------- | ------------- | ------------------- | ------------- | ----------------------------- |
@@ -73,23 +73,6 @@
 | Premium v2  | `Premium v2 Workspace Pack`  | `1/Hour`      | API Management Workspaces add-on |
 | Isolated    | `Isolated Workspace Pack`    | `1/Hour`      | API Management Workspaces add-on |
 
-## Reserved Instance Pricing
-
-> **Note (verified 2026-02-06)**: API Management does **not** offer Reserved Instance pricing via the Retail Prices API. No results are returned for `-PriceType Reservation`.
-
-## Common SKUs
-
-| Tier        | Max APIs  | SLA          | Key Features                                              |
-| ----------- | --------- | ------------ | --------------------------------------------------------- |
-| Developer   | Unlimited | No SLA       | Dev/test only, no scale-out                               |
-| Basic       | Unlimited | 99.95%       | 1,000 requests/sec, no VNet                               |
-| Standard    | Unlimited | 99.95%       | 2,500 requests/sec, built-in cache                        |
-| Premium     | Unlimited | 99.95–99.99% | Multi-region, VNet, self-hosted gateway, higher scale     |
-| Basic v2    | Unlimited | 99.95%       | Newer architecture, network-integrated                    |
-| Standard v2 | Unlimited | 99.95%       | Newer architecture, self-hosted gateway, VNet integration |
-| Premium v2  | Unlimited | 99.95–99.99% | Newer architecture, multi-region, VNet, zone redundancy   |
-| Consumption | 50        | 99.95%       | Serverless, per-call pricing, auto-scale                  |
-
 ## Cost Formula
 
 ```
@@ -106,3 +89,20 @@ Monthly += gatewayPrice × 730 hours × gatewayCount
 # Workspace Pack (if using API Management Workspaces):
 Monthly += workspacePackPrice × 730 hours × packCount
 ```
+
+## Reserved Instance Pricing
+
+> **Note (verified 2026-02-06)**: API Management does **not** offer Reserved Instance pricing via the Retail Prices API. No results are returned for `-PriceType Reservation`.
+
+## Common SKUs
+
+| Tier        | Max APIs  | SLA          | Key Features                                              |
+| ----------- | --------- | ------------ | --------------------------------------------------------- |
+| Developer   | Unlimited | No SLA       | Dev/test only, no scale-out                               |
+| Basic       | Unlimited | 99.95%       | 1,000 requests/sec, no VNet                               |
+| Standard    | Unlimited | 99.95%       | 2,500 requests/sec, built-in cache                        |
+| Premium     | Unlimited | 99.95–99.99% | Multi-region, VNet, self-hosted gateway, higher scale     |
+| Basic v2    | Unlimited | 99.95%       | Newer architecture, network-integrated                    |
+| Standard v2 | Unlimited | 99.95%       | Newer architecture, self-hosted gateway, VNet integration |
+| Premium v2  | Unlimited | 99.95–99.99% | Newer architecture, multi-region, VNet, zone redundancy   |
+| Consumption | 50        | 99.95%       | Serverless, per-call pricing, auto-scale                  |

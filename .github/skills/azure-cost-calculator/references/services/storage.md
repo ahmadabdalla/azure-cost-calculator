@@ -1,6 +1,6 @@
 # Storage Accounts (Blob)
 
-**Multiple meters**: Data stored (per-GB/month), operations (per-10K), data retrieval, write operations
+**Primary cost**: Data stored (per-GB/month), operations (per-10K), data retrieval, write operations
 
 > **Trap (verified 2026-02-06)**: `productName = 'Blob Storage'` only works for **LRS** and **GRS** redundancy. ZRS and GZRS SKUs return **nothing** under `'Blob Storage'`. For ZRS/GZRS, use `productName = 'General Block Blob v2'` instead.
 
@@ -40,11 +40,25 @@
 
 | Parameter     | How to determine         | Example values                                                           |
 | ------------- | ------------------------ | ------------------------------------------------------------------------ |
+| `serviceName` | Always `Storage`         | `Storage`                                                                |
 | `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool LRS`, `Hot GRS`, `Hot ZRS`                              |
 | `productName` | Storage product type     | `Blob Storage`, `General Block Blob v2`, `Files v2`                      |
 | `meterName`   | Specific meter           | `Hot LRS Data Stored`, `Hot Read Operations`, `Hot LRS Write Operations` |
 
-## Cost Formula (tiered)
+## Meter Names (verified 2026-02-06)
+
+| Meter                       | skuName       | productName             | unitOfMeasure | Notes                             |
+| --------------------------- | ------------- | ----------------------- | ------------- | --------------------------------- |
+| `Hot LRS Data Stored`       | `Hot LRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered pricing                    |
+| `Hot ZRS Data Stored`       | `Hot ZRS`     | `General Block Blob v2` | `1 GB/Month`  | Tiered pricing                    |
+| `Hot GRS Data Stored`       | `Hot GRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered pricing                    |
+| `Hot GZRS Data Stored`      | `Hot GZRS`    | `General Block Blob v2` | `1 GB/Month`  | Tiered pricing                    |
+| `Hot RA-GZRS Data Stored`   | `Hot RA-GZRS` | `General Block Blob v2` | `1 GB/Month`  | ~25% more expensive than GZRS     |
+| `Hot Read Operations`       | _(any Hot)_   | _(varies)_              | `10K`         | Generic — not redundancy-specific |
+| `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | LRS-specific                      |
+| `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared across GZRS and RA-GZRS    |
+
+## Cost Formula
 
 ```
 Storage is tiered — the API returns multiple items for same meter with different tierMinimumUnits:
@@ -60,7 +74,16 @@ Note: Operation meter names include the access tier prefix:
   Cool tier: 'Cool Read Operations', 'Cool LRS Write Operations'
 ```
 
-## productName by Redundancy
+## Notes
+
+- Storage pricing is tiered by volume — first 50 TB is the most expensive tier
+- Operation meter names include the access tier prefix (Hot, Cool, etc.)
+- Read operations meter is generic — not redundancy-specific
+- Write operations meter names include the redundancy type
+- See GZRS / RA-GZRS Meter Reference section for complex redundancy naming
+- See Common Redundancy Options section for full list of redundancy codes
+
+## Product Names (case-sensitive)
 
 | Redundancy | productName             | Notes                          |
 | ---------- | ----------------------- | ------------------------------ |
@@ -77,17 +100,17 @@ Note: Operation meter names include the access tier prefix:
 
 ### Data Stored
 
-| Redundancy | skuName | meterName | productName |
-| ---------- | ------- | --------- | ----------- |
-| GZRS | `Hot GZRS` | `Hot GZRS Data Stored` | `General Block Blob v2` |
-| RA-GZRS | `Hot RA-GZRS` | `Hot RA-GZRS Data Stored` | `General Block Blob v2` |
+| Redundancy | skuName       | meterName                 | productName             |
+| ---------- | ------------- | ------------------------- | ----------------------- |
+| GZRS       | `Hot GZRS`    | `Hot GZRS Data Stored`    | `General Block Blob v2` |
+| RA-GZRS    | `Hot RA-GZRS` | `Hot RA-GZRS Data Stored` | `General Block Blob v2` |
 
 ### Operations
 
-| Operation | skuName | meterName | productName | Notes |
-| --------- | ------- | --------- | ----------- | ----- |
-| Write (GZRS & RA-GZRS) | `Hot GZRS` | `Hot GZRS Write Operations` | `General Block Blob v2` | Shared across GZRS and RA-GZRS |
-| Read (all redundancies) | _(any Hot SKU)_ | `Hot Read Operations` | `General Block Blob v2` | Generic — not redundancy-specific |
+| Operation               | skuName         | meterName                   | productName             | Notes                             |
+| ----------------------- | --------------- | --------------------------- | ----------------------- | --------------------------------- |
+| Write (GZRS & RA-GZRS)  | `Hot GZRS`      | `Hot GZRS Write Operations` | `General Block Blob v2` | Shared across GZRS and RA-GZRS    |
+| Read (all redundancies) | _(any Hot SKU)_ | `Hot Read Operations`       | `General Block Blob v2` | Generic — not redundancy-specific |
 
 > **Trap (RA-GZRS vs GZRS pricing)**: RA-GZRS data storage is **~25% more expensive** than GZRS (e.g., €0.0446 vs €0.0357/GB in tier 1, northeurope). Using `Hot GZRS` skuName instead of `Hot RA-GZRS` will significantly under-price large storage accounts.
 
@@ -117,11 +140,11 @@ Note: Operation meter names include the access tier prefix:
 
 ## Common Redundancy Options
 
-| Code   | Full name                         |
-| ------ | --------------------------------- |
-| LRS    | Locally Redundant Storage         |
-| ZRS    | Zone Redundant Storage            |
-| GRS    | Geo Redundant Storage             |
-| RA-GRS | Read-Access Geo Redundant Storage |
-| GZRS    | Geo-Zone Redundant Storage                     |
-| RA-GZRS | Read-Access Geo-Zone Redundant Storage         |
+| Code    | Full name                              |
+| ------- | -------------------------------------- |
+| LRS     | Locally Redundant Storage              |
+| ZRS     | Zone Redundant Storage                 |
+| GRS     | Geo Redundant Storage                  |
+| RA-GRS  | Read-Access Geo Redundant Storage      |
+| GZRS    | Geo-Zone Redundant Storage             |
+| RA-GZRS | Read-Access Geo-Zone Redundant Storage |

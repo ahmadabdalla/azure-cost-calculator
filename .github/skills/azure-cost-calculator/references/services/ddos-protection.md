@@ -8,6 +8,10 @@
 
 **This service requires manual estimation only.**
 
+## Query Pattern
+
+**Not applicable** — no script can query this service. Return the manual estimates above and note the limitation to the user.
+
 ## Pricing (manual fallback)
 
 | Plan               | Monthly Cost (USD) | Scope                            |
@@ -26,10 +30,6 @@ Network Protection:
 IP Protection:
   Monthly = ~$199 USD × publicIPCount
 ```
-
-## Query Pattern
-
-**Not applicable** — no script can query this service. Return the manual estimates above and note the limitation to the user.
 
 ## Notes
 
