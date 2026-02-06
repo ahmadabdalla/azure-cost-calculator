@@ -7,10 +7,25 @@
 ## Query Pattern
 
 ```powershell
+# Unfiltered — returns 6 results (Linux + Windows × Standard + Spot + Low Priority)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Virtual Machines' `
     -ArmSkuName 'Standard_D2s_v5'
+
+# Recommended: Filter to Linux standard only using -ProductName
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Virtual Machines' `
+    -ArmSkuName 'Standard_D2s_v5' `
+    -ProductName 'Virtual Machines Dsv5 Series'
+
+# Windows standard only
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Virtual Machines' `
+    -ArmSkuName 'Standard_D2s_v5' `
+    -ProductName 'Virtual Machines Dsv5 Series Windows'
 ```
+
+> **Tip (productName pattern — verified 2026-02-06)**: The `productName` follows the pattern `'Virtual Machines {Series} Series'` for **Linux** and `'Virtual Machines {Series} Series Windows'` for **Windows**. Using `-ProductName` reduces results from 6 to 3 (Standard + Spot + Low Priority for one OS). The series name in `productName` drops underscores and 'v' casing from the ARM SKU — e.g., `Standard_D2s_v5` → series `Dsv5`, `Standard_E4s_v5` → series `Esv5`, `Standard_B2ms` → series `Bms`. When in doubt, run `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover the exact `productName`.
 
 ## Key Fields
 

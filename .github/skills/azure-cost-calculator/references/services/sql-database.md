@@ -92,3 +92,4 @@ Total = Compute + Storage
 - `skuName` determines vCore count — no quantity multiplier needed for compute
 - The price per vCore varies by tier (Business Critical ~3× General Purpose)
 - Elastic Pools share the same `productName` as Single DB
+- **Default storage (verified 2026-02-06)**: Both General Purpose and Business Critical default to 32 GB max data size. Storage is always billed separately from compute at the tier's per-GB rate — there is no "free included" data storage in the vCore model. You are charged for the configured maximum data size, not actual usage. Backup storage equal to the configured max data size is provided at no extra charge.

@@ -43,6 +43,7 @@ Total              = Throughput + Storage
 ## Notes
 
 - Free tier available (1000 RU/s + 25 GB free, one account per subscription)
+- **Free tier guidance**: Do NOT deduct the free tier (1000 RU/s + 25 GB) from estimates unless the user explicitly confirms they are using a free-tier-eligible account. Production workloads typically do not use the free tier (only one free-tier account per subscription). Always ask the user if uncertain.
 - Serverless pricing: per-RU consumed (different meter: `1M RUs` under productName `Azure Cosmos DB serverless`)
 - Multi-region: multiply throughput cost by number of regions
 - The storage query returns multiple skuName variants (`RUs`, `mRUs`, `RUm`, `Free Tier`) — filter to `RUs` for standard provisioned

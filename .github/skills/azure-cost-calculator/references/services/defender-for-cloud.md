@@ -119,4 +119,30 @@ Total: sum of above (query live prices)
 - Defender for Containers vCore pricing is based on the **total vCores across all protected AKS nodes**. For example, 6× E4s_v5 (4 vCPU each) = 24 vCores.
 - Defender for App Service, DNS, and Resource Manager plans also exist — use `Explore-AzurePricing.ps1 -SearchTerm 'Defender'` to discover them.
 - Free tier (CSPM) provides basic security recommendations at no cost.
+
+## Defender CSPM (Cloud Security Posture Management)
+
+> **Trap (not in Retail Prices API — verified 2026-02-06)**: Defender CSPM is **not available as a meter** in the Azure Retail Prices API. Queries for `serviceName = 'Microsoft Defender for Cloud'` do not return a CSPM-specific meter. The pricing must be estimated using the published rate from the Azure pricing page.
+
+**Pricing**: $5.11 per billable resource per month (source: [Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/))
+
+**Billable resource types** (verified 2026-02-06):
+
+- **Compute**: VMs (`Microsoft.Compute/virtualMachines`), VMSS VMs — excludes deallocated VMs and Databricks VMs
+- **Storage**: Storage accounts — excludes accounts without blob containers or file shares
+- **Databases**: OSS DBs (PostgreSQL, MySQL, MariaDB), SQL PaaS & Servers on Machines
+- **Serverless**: Functions and Web Apps (billing starts February 27, 2026)
+
+**Foundational CSPM vs Defender CSPM**:
+
+- **Foundational CSPM**: Free. Provides secure score, basic recommendations, asset inventory, compliance with Microsoft cloud security benchmark.
+- **Defender CSPM** (paid): Adds agentless vulnerability scanning, attack path analysis, data-aware security posture, cloud security explorer, governance, and regulatory compliance. Requires enablement per subscription.
+
+### Cost Formula
+
+```
+Monthly = $5.11 × billableResourceCount
+```
+
+> **Note**: Count only billable resource types listed above. Deallocated VMs and storage accounts without blob containers/file shares are excluded. Use Azure Resource Graph or the portal to count eligible resources.
 ````
