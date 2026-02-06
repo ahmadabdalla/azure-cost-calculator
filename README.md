@@ -82,6 +82,24 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 >
 > **Assumptions:** Pay-as-you-go pricing, Linux OS, 730 hours/month, no reserved instances.
 
+## Architecture
+
+```mermaid
+flowchart LR
+    A[User Query] --> B[Copilot Chat]
+    B --> C[Skill Engine]
+    C --> D[Service References]
+    D --> D1[Virtual Machines]
+    D --> D2[App Service]
+    D --> D3[Cosmos DB]
+    D --> D4[...]
+    D1 & D2 & D3 & D4 --> E[Get-AzurePricing.ps1]
+    E --> F[Azure Retail Prices API]
+    F --> E
+    E --> B
+    B --> G[Cost Estimate]
+```
+
 ## How It Works
 
 1. **Identifies** the Azure resource type(s) from your question
@@ -105,29 +123,6 @@ All prices come directly from Microsoft's public API — no hardcoded values.
 - **PowerShell 5.1+** (pre-installed on Windows; available on macOS/Linux via [PowerShell Core](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell))
 - **Internet access** to reach `https://prices.azure.com`
 - No Azure subscription or authentication required — the Retail Prices API is public
-
-## Repository Structure
-
-```
-.github/skills/azure-cost-calculator/
-├── SKILL.md                          # Skill definition and workflow
-├── scripts/
-│   ├── Get-AzurePricing.ps1          # Main pricing query script
-│   ├── Explore-AzurePricing.ps1      # SKU/pricing discovery script
-│   └── lib/                          # Shared helper functions
-│       ├── Invoke-RetailPricesQuery.ps1
-│       ├── Build-ODataFilter.ps1
-│       └── Get-MonthlyMultiplier.ps1
-└── references/
-    ├── shared.md                     # Service routing table, constants
-    ├── workflow.md                   # Detailed script parameters
-    ├── pitfalls.md                   # Known issues and troubleshooting
-    └── services/                     # Per-service query references
-        ├── virtual-machines.md
-        ├── app-service.md
-        ├── sql-database.md
-        └── ... (20+ service files)
-```
 
 ## Contributing
 
