@@ -32,7 +32,7 @@ $uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Virt
 | `productName`   | `Virtual Network Private Link` |
 | `armRegionName` | `''` (empty) or `'Global'`     |
 
-## Meter Names (case-sensitive)
+## Meter Names
 
 | Meter                               | Unit Price (USD) | unitOfMeasure | Notes                  |
 | ----------------------------------- | ---------------- | ------------- | ---------------------- |

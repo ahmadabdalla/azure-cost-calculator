@@ -2,7 +2,7 @@
 
 **Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 
-> **Trap (verified 2026-02-06)**: Querying with only `-SkuName 'Standard'` (no `-ProductName` or `-MeterName`) returns **Azure Dedicated HSM** (thousands per month) mixed in with standard Key Vault operations (sub-dollar per 10K ops). The `summary.totalMonthlyCost` is wildly misleading. Always filter by `-ProductName 'Key Vault'` or use a specific `-MeterName`.
+> **Trap**: Querying with only `-SkuName 'Standard'` (no `-ProductName` or `-MeterName`) returns **Azure Dedicated HSM** (thousands per month) mixed in with standard Key Vault operations (sub-dollar per 10K ops). The `summary.totalMonthlyCost` is wildly misleading. Always filter by `-ProductName 'Key Vault'` or use a specific `-MeterName`.
 
 ## Query Pattern
 
@@ -29,7 +29,7 @@
     -MeterName 'Advanced Key Operations'
 ```
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 | Meter                         | unitOfMeasure | Notes                           |
 | ----------------------------- | ------------- | ------------------------------- |

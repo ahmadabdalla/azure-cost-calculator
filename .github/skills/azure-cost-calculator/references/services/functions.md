@@ -3,7 +3,7 @@
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> **Trap (verified 2026-02-06)**: Consumption plan unit prices are **sub-cent** (e.g., ~$0.000016/GB-s, ~$0.0000002/execution in USD). The script displays these as `$0.00` for both `UnitPrice` and `MonthlyCost`, making it impossible to calculate costs directly from script output. You must apply the cost formula manually using the known per-unit rates below.
+> **Trap**: Consumption plan unit prices are **sub-cent** (e.g., ~$0.000016/GB-s, ~$0.0000002/execution in USD). The script displays these as `$0.00` for both `UnitPrice` and `MonthlyCost`, making it impossible to calculate costs directly from script output. You must apply the cost formula manually using the known per-unit rates below.
 >
 > **Agent instruction**: Do NOT report `$0.00` to the user — that is a display rounding issue. Use the Azure pricing page rates and the manual calculation example below. Always explain the free grant deduction.
 
@@ -23,7 +23,7 @@
     -ProductName 'Premium Functions'
 ```
 
-## Known Consumption Plan Rates (verified 2026-02-06)
+## Known Consumption Plan Rates
 
 | Meter                       | Unit        | Published Rate (USD)  | Free Grant      |
 | --------------------------- | ----------- | --------------------- | --------------- |

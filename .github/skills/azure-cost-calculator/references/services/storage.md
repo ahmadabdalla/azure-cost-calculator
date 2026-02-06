@@ -2,7 +2,7 @@
 
 **Primary cost**: Data stored (per-GB/month), operations (per-10K), data retrieval, write operations
 
-> **Trap (verified 2026-02-06)**: `productName = 'Blob Storage'` only works for **LRS** and **GRS** redundancy. ZRS and GZRS SKUs return **nothing** under `'Blob Storage'`. For ZRS/GZRS, use `productName = 'General Block Blob v2'` instead.
+> **Trap**: `productName = 'Blob Storage'` only works for **LRS** and **GRS** redundancy. ZRS and GZRS SKUs return **nothing** under `'Blob Storage'`. For ZRS/GZRS, use `productName = 'General Block Blob v2'` instead.
 
 ## Query Pattern
 
@@ -45,7 +45,7 @@
 | `productName` | Storage product type     | `Blob Storage`, `General Block Blob v2`, `Files v2`                      |
 | `meterName`   | Specific meter           | `Hot LRS Data Stored`, `Hot Read Operations`, `Hot LRS Write Operations` |
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 | Meter                       | skuName       | productName             | unitOfMeasure | Notes                             |
 | --------------------------- | ------------- | ----------------------- | ------------- | --------------------------------- |
@@ -83,7 +83,7 @@ Note: Operation meter names include the access tier prefix:
 - See GZRS / RA-GZRS Meter Reference section for complex redundancy naming
 - See Common Redundancy Options section for full list of redundancy codes
 
-## Product Names (case-sensitive)
+## Product Names
 
 | Redundancy | productName             | Notes                          |
 | ---------- | ----------------------- | ------------------------------ |
@@ -94,7 +94,7 @@ Note: Operation meter names include the access tier prefix:
 | GZRS       | `General Block Blob v2` | Different productName required |
 | RA-GZRS    | `General Block Blob v2` | Different productName required |
 
-## GZRS / RA-GZRS Meter Reference (verified 2026-02-06)
+## GZRS / RA-GZRS Meter Reference
 
 > **Trap**: RA-GZRS and GZRS use **different skuNames** for data storage but **share** write/read operation meters. The naming is inconsistent — do not assume patterns from LRS/GRS apply.
 

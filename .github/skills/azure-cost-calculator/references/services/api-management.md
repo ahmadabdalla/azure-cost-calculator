@@ -2,9 +2,9 @@
 
 **Primary cost**: Unit hours based on tier
 
-> **Trap (multiple meters per tier — verified 2026-02-06)**: Several tiers have multiple meters (e.g., `Standard v2 Unit`, `Standard v2 Secondary Unit`, `Standard v2 Self-hosted Gateway`, `Standard v2 Calls`). Always use the primary `{Tier} Unit` meter for the base deployment cost. Secondary units, self-hosted gateways, and workspace packs are additional components — do not add them to the base estimate unless the user explicitly requests them.
-> **Trap (v2 tiers — verified 2026-02-06)**: Basic v2 and Standard v2 tiers also have a `Calls` meter at `$0.00` per 10K — this is for included API calls and does not need to be added to cost estimates.
-> **Trap (Consumption tier — verified 2026-02-06)**: The Consumption tier uses per-call pricing (`Consumption Calls` at `$0.00/10K` in API — check live for non-zero overage rates) rather than hourly units. Do NOT multiply by 730 hours for Consumption.
+> **Trap (multiple meters per tier)**: Several tiers have multiple meters (e.g., `Standard v2 Unit`, `Standard v2 Secondary Unit`, `Standard v2 Self-hosted Gateway`, `Standard v2 Calls`). Always use the primary `{Tier} Unit` meter for the base deployment cost. Secondary units, self-hosted gateways, and workspace packs are additional components — do not add them to the base estimate unless the user explicitly requests them.
+> **Trap (v2 tiers)**: Basic v2 and Standard v2 tiers also have a `Calls` meter at `$0.00` per 10K — this is for included API calls and does not need to be added to cost estimates.
+> **Trap (Consumption tier)**: The Consumption tier uses per-call pricing (`Consumption Calls` at `$0.00/10K` in API — check live for non-zero overage rates) rather than hourly units. Do NOT multiply by 730 hours for Consumption.
 
 ## Query Pattern
 
@@ -36,7 +36,7 @@
 | `skuName`     | Tier name — this selects the pricing tier | `Developer`, `Basic`, `Standard`, `Premium`, `Standard v2` |
 | `meterName`   | Tier name + component                     | `Standard Unit`, `Standard v2 Unit`, `Gateway Unit`        |
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 | Tier              | productName      | skuName       | meterName           | unitOfMeasure | Notes                         |
 | ----------------- | ---------------- | ------------- | ------------------- | ------------- | ----------------------------- |
@@ -92,7 +92,7 @@ Monthly += workspacePackPrice × 730 hours × packCount
 
 ## Reserved Instance Pricing
 
-> **Note (verified 2026-02-06)**: API Management does **not** offer Reserved Instance pricing via the Retail Prices API. No results are returned for `-PriceType Reservation`.
+> **Note**: API Management does **not** offer Reserved Instance pricing via the Retail Prices API. No results are returned for `-PriceType Reservation`.
 
 ## Common SKUs
 

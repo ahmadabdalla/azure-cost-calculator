@@ -25,7 +25,7 @@
 | `skuName`     | App Service Plan tier+size | `B1`, `B2`, `S1`, `P1 v3`, `P2 v3` |
 | `productName` | Includes plan tier and OS  | See below                          |
 
-## Product Names (case-sensitive, verified 2026-02-06)
+## Product Names
 
 | Tier       | Linux                                       | Windows                             |
 | ---------- | ------------------------------------------- | ----------------------------------- |

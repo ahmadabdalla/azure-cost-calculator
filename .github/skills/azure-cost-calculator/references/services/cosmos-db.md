@@ -23,7 +23,7 @@
     -SkuName 'RUs'
 ```
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 | What           | meterName               | skuName | productName                  | Notes                                   |
 | -------------- | ----------------------- | ------- | ---------------------------- | --------------------------------------- |

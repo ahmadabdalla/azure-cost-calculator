@@ -17,37 +17,51 @@
 
   3. TRAPS (optional but highly encouraged): Document any pricing API
      gotchas discovered during verification. Each trap should include:
-       - Verified date in parentheses
        - What goes wrong (e.g., inflated totals, wrong meters returned)
        - How to avoid it (specific filter values)
        - Agent instruction if the AI needs special handling
+     Use a descriptive name in parentheses for traps that need identification,
+     e.g., **Trap (RI MonthlyCost)**: ...
 
   4. QUERY PATTERN: Provide copy-paste-ready Get-AzurePricing.ps1 commands.
      If the service requires direct API calls (e.g., Global-only pricing),
      provide raw Invoke-RestMethod examples instead and explain why.
 
-  5. KEY FIELDS / METER NAMES: Document the exact API field values
-     (case-sensitive) with verification dates. Organize as tables.
+  5. KEY FIELDS: Document the exact API field values (case-sensitive).
+     Organize as a table with Parameter, How to determine, Example values.
 
-  6. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
+  6. METER NAMES: Document exact meter names as a table. All meter/SKU/
+     product names are CASE-SENSITIVE — this is assumed throughout and does
+     not need to be stated per-section.
+
+  7. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
      Include free tier/grant deductions where applicable.
 
-  7. NOTES: Additional context — free tiers, SKU guidance, common
+  8. NOTES: Additional context — free tiers, SKU guidance, common
      mistakes, links to pricing pages, etc.
 
-  8. OPTIONAL SECTIONS (add as needed):
+  9. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
      - Manual Calculation Example (for sub-cent or complex pricing)
      - Known Rates table (for services where API returns $0.00)
      - Common SKUs table (sizes, vCPUs, RAM)
-     - Product Names table (case-sensitive lookup reference)
-     - Tier/SKU Selection Guide
+     - Product Names table (lookup reference)
+     - SKU Selection Guide
      - Sub-product queries (for services with multiple billing components)
+
+  STYLE RULES:
+  - Do NOT include "verified" dates anywhere (section headers, traps, notes,
+    tables). All content is assumed current as of the last commit.
+  - Do NOT annotate section headers with "(case-sensitive)" or similar —
+    case-sensitivity of API values is a universal rule stated in shared.md.
+  - Keep section headers clean: ## Meter Names, ## Product Names, etc.
+  - Trap format: > **Trap**: ... or > **Trap ({descriptive name})**: ...
+  - Agent instruction format: > **Agent instruction**: ...
 
   DELETE THIS COMMENT BLOCK BEFORE PUBLISHING.
 -->
 
-> **Trap (verified {YYYY-MM-DD})**: {Description of a common pricing API gotcha — e.g., unfiltered queries returning too many meters, summary totals being inflated, wrong meter names, sub-cent rounding to $0.00, etc. Explain what goes wrong and how to avoid it.}
+> **Trap**: {Description of a common pricing API gotcha — e.g., unfiltered queries returning too many meters, summary totals being inflated, wrong meter names, sub-cent rounding to $0.00, etc. Explain what goes wrong and how to avoid it.}
 >
 > **Agent instruction**: {Optional — specific guidance for the AI agent, e.g., "Do NOT report $0.00 to the user", "Always ignore the script's MonthlyCost for Reservation items", etc.}
 
@@ -88,7 +102,7 @@
 | `skuName`     | {What determines the SKU selection}    | `{exact skuName value(s)}`     |
 | `meterName`   | {What the meter represents}            | `{exact meterName value(s)}`   |
 
-## Meter Names (verified {YYYY-MM-DD})
+## Meter Names
 
 <!--
   Use one of these table formats depending on complexity:
@@ -98,8 +112,6 @@
 
   DETAILED (many meters or multiple tiers):
   | Meter | skuName | productName | unitOfMeasure | Notes |
-
-  All meter/SKU/product names are CASE-SENSITIVE — always verify against the API.
 -->
 
 | Meter           | unitOfMeasure | Notes                      |
@@ -175,7 +187,7 @@ Total = ${result} USD/month
 
 <!-- === KNOWN RATES (for sub-cent pricing) === -->
 <!--
-## Known Rates (verified {YYYY-MM-DD})
+## Known Rates
 
 | Meter | Unit | Published Rate (USD) | Free Grant |
 | ----- | ---- | -------------------- | ---------- |
@@ -197,7 +209,7 @@ Total = ${result} USD/month
 
 <!-- === PRODUCT NAMES TABLE === -->
 <!--
-## Product Names (case-sensitive)
+## Product Names
 
 | Configuration | productName |
 | ------------- | ----------- |

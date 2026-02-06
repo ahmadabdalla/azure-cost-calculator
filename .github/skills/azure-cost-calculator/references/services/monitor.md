@@ -67,7 +67,7 @@ For 100+ GB/day, commitment tiers offer discounts. Use this pattern:
 
 Available tiers: 100, 200, 300, 400, 500, 1000, 2000, 5000 GB/day.
 
-> **Trap (verified 2026-02-06)**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` field reports the **daily price** (e.g., €869/day), NOT the monthly cost. **Always ignore the script's `MonthlyCost`** for commitment tiers and manually calculate: `unitPrice × 30`.
+> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` field reports the **daily price** (e.g., €869/day), NOT the monthly cost. **Always ignore the script's `MonthlyCost`** for commitment tiers and manually calculate: `unitPrice × 30`.
 
 ## Notes
 

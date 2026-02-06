@@ -3,7 +3,7 @@
 
 **Primary cost**: Fixed monthly rate per disk + disk mount fee
 
-> **Trap (verified 2026-02-06)**: Each disk SKU returns **two meters** — `{Size} {Red} Disk` (main cost) and `{Size} {Red} Disk Mount` (smaller mount fee). The `summary.totalMonthlyCost` sums both, which is correct — but present them separately for transparency.
+> **Trap**: Each disk SKU returns **two meters** — `{Size} {Red} Disk` (main cost) and `{Size} {Red} Disk Mount` (smaller mount fee). The `summary.totalMonthlyCost` sums both, which is correct — but present them separately for transparency.
 
 ## Disk Types
 
@@ -92,7 +92,7 @@ Available for **Premium SSD only** (1-year term).
     -PriceType Reservation
 ```
 
-> **Trap (RI pricing — verified 2026-02-06)**: The API returns the **total annual prepaid price** (e.g., $1,541 USD for P30 LRS). Divide by 12 for monthly cost: `$1,541 ÷ 12 ≈ $128.42/month` — ~5% saving vs pay-as-you-go.
+> **Trap (RI pricing)**: The API returns the **total annual prepaid price** (e.g., $1,541 USD for P30 LRS). Divide by 12 for monthly cost: `$1,541 ÷ 12 ≈ $128.42/month` — ~5% saving vs pay-as-you-go.
 
 ## Common SKUs
 

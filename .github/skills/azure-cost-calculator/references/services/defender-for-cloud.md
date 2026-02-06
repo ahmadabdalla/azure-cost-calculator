@@ -68,7 +68,7 @@
     -MeterName 'Standard Images'
 ```
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 | Sub-product         | productName                         | skuName           | meterName                   | unitOfMeasure | Formula               |
 | ------------------- | ----------------------------------- | ----------------- | --------------------------- | ------------- | --------------------- |
@@ -122,11 +122,11 @@ Total: sum of above (query live prices)
 
 ## Defender CSPM (Cloud Security Posture Management)
 
-> **Trap (not in Retail Prices API — verified 2026-02-06)**: Defender CSPM is **not available as a meter** in the Azure Retail Prices API. Queries for `serviceName = 'Microsoft Defender for Cloud'` do not return a CSPM-specific meter. The pricing must be estimated using the published rate from the Azure pricing page.
+> **Trap (not in Retail Prices API)**: Defender CSPM is **not available as a meter** in the Azure Retail Prices API. Queries for `serviceName = 'Microsoft Defender for Cloud'` do not return a CSPM-specific meter. The pricing must be estimated using the published rate from the Azure pricing page.
 
 **Pricing**: $5.11 per billable resource per month (source: [Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/))
 
-**Billable resource types** (verified 2026-02-06):
+**Billable resource types**:
 
 - **Compute**: VMs (`Microsoft.Compute/virtualMachines`), VMSS VMs — excludes deallocated VMs and Databricks VMs
 - **Storage**: Storage accounts — excludes accounts without blob containers or file shares

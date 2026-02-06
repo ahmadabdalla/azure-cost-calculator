@@ -45,7 +45,7 @@
     -MeterName 'Basic Capacity Units'
 ```
 
-## Product Names (case-sensitive, verified 2026-02-06)
+## Product Names
 
 | Variant     | productName                       | Fixed Cost Meter      | CU Meter                  |
 | ----------- | --------------------------------- | --------------------- | ------------------------- |

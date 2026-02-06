@@ -2,7 +2,7 @@
 
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
-> **Trap (verified 2026-02-06)**: Querying without `-SkuName` returns **13 meters** across 4 SKU types (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including a GPU meter at $6,666/mo. Always filter by `-SkuName`. Additionally, Consumption (`Standard`) meters show `$0.00` because pricing is per-second — the same sub-cent precision trap as Azure Functions.
+> **Trap**: Querying without `-SkuName` returns **13 meters** across 4 SKU types (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including a GPU meter at $6,666/mo. Always filter by `-SkuName`. Additionally, Consumption (`Standard`) meters show `$0.00` because pricing is per-second — the same sub-cent precision trap as Azure Functions.
 >
 > **Agent instruction**: For always-on workloads, use the `Dedicated` SKU query (prices display correctly). For Consumption (`Standard`), the script shows `$0.00` — use the published Azure per-second rates and the cost formula below instead. Always ask whether the workload is always-on or event-driven to pick the right SKU.
 
@@ -31,7 +31,7 @@
 | Always-on, minimum replicas > 0 | `Dedicated` | Per-hour      | Use for background workers, ML pipelines |
 | Hybrid (on-prem connected)      | `Hybrid`    | Per-hour      | For Arc-enabled environments             |
 
-## Meter Names (verified 2026-02-06)
+## Meter Names
 
 ### Dedicated Plan (recommended for always-on workloads)
 
@@ -68,7 +68,7 @@ Dedicated Plan:
   Monthly = vCPU + Memory + Mgmt (if not sharing environment)
 ```
 
-## Known Consumption Plan Rates (verified 2026-02-06)
+## Known Consumption Plan Rates
 
 | Meter               | Published Rate (USD)                      | Free Grant              |
 | ------------------- | ----------------------------------------- | ----------------------- |

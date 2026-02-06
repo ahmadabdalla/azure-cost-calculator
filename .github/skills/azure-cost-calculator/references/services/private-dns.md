@@ -29,7 +29,7 @@ $uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Azur
 | `productName`   | `Azure DNS`                |
 | `armRegionName` | `''` (empty) or `'Global'` |
 
-## Meter Names (case-sensitive)
+## Meter Names
 
 | Meter             | Unit Price (USD) | unitOfMeasure | Notes                                    |
 | ----------------- | ---------------- | ------------- | ---------------------------------------- |

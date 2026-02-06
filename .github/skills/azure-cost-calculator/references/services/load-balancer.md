@@ -10,7 +10,7 @@ VNets themselves are free. Costs come from:
 
 ## Load Balancer
 
-> **Trap (verified 2026-02-06)**: The Retail Prices API returns **no data for any standard public Azure region** (e.g., `eastus`, `australiaeast`, `westeurope`). Data only exists for edge/operator regions (`attdetroit1`, `sgxsingapore1`, etc.), `Global`, and `US Gov`. Both `Get-AzurePricing.ps1` and `Explore-AzurePricing.ps1` will return zero results for any public region. This is an API data gap, not a filter issue.
+> **Trap**: The Retail Prices API returns **no data for any standard public Azure region** (e.g., `eastus`, `australiaeast`, `westeurope`). Data only exists for edge/operator regions (`attdetroit1`, `sgxsingapore1`, etc.), `Global`, and `US Gov`. Both `Get-AzurePricing.ps1` and `Explore-AzurePricing.ps1` will return zero results for any public region. This is an API data gap, not a filter issue.
 >
 > **Agent instruction**: Do NOT attempt to query this service via the scripts — it will always fail. Use the manual fallback below and note the limitation to the user.
 
@@ -24,7 +24,7 @@ VNets themselves are free. Costs come from:
 
 ### Manual Fallback (API unavailable for public regions)
 
-The API has no data for any standard Azure public region. Use the known rates below (USD, verified 2026-02-06):
+The API has no data for any standard Azure public region. Use the known rates below (USD):
 
 | Component       | Rate (USD) | Unit              | Notes                                      |
 | --------------- | ---------- | ----------------- | ------------------------------------------ |
