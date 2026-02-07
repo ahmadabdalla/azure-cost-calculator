@@ -8,25 +8,25 @@ No guessing, no stale spreadsheets — just real-time price lookups and clear co
 
 18 categories covering the full breadth of Azure. Services with reference files have fully documented query patterns; all others are routable via the [service routing map](.github/skills/azure-cost-calculator/references/service-routing.md).
 
-| Category            | Example Services                                                                    |
-| ------------------- | ----------------------------------------------------------------------------------- |
-| **Compute**         | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Batch          |
-| **Containers**      | Container Instances, Container Registry                                             |
-| **Databases**       | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache, MySQL, MariaDB    |
-| **Networking**      | Application Gateway, Azure Firewall, Load Balancer, VPN Gateway, Private Link, DNS  |
-| **Storage**         | Blob / File / Queue / Table Storage, Managed Disks, NetApp Files, Data Box          |
-| **Security**        | Key Vault, Defender for Cloud, Purview, Confidential Ledger, HSMs                   |
-| **Monitoring**      | Azure Monitor, Application Insights, Log Analytics                                  |
-| **Management**      | Sentinel, Automation, Site Recovery, Azure Arc, Migrate, Cost Management            |
-| **Integration**     | API Management, Service Bus, Logic Apps, Event Grid                                 |
-| **Analytics**       | Synapse Analytics, Data Factory, Databricks, Data Explorer, HDInsight, Fabric       |
-| **AI + ML**         | Azure OpenAI, Azure ML, AI Services, Bot Service, Foundry Models                    |
-| **IoT**             | IoT Hub, IoT Central, Event Hubs, Digital Twins, Azure Maps                         |
-| **Developer Tools** | App Configuration, DevTest Labs, Dev Box, Load Testing, Grafana                     |
-| **Identity**        | Entra ID, Entra Domain Services, Azure AD B2C, External Identities                  |
-| **Migration**       | Database Migration Service, Azure Migrate                                           |
-| **Web**             | Azure AI Search, Static Web Apps, Spring Apps                                       |
-| **Communication**   | ACS Voice, SMS, Email, Phone Numbers, Packet Core                                   |
+| Category            | Example Services                                                                   |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| **Compute**         | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Batch         |
+| **Containers**      | Container Instances, Container Registry                                            |
+| **Databases**       | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache, MySQL, MariaDB   |
+| **Networking**      | Application Gateway, Azure Firewall, Load Balancer, VPN Gateway, Private Link, DNS |
+| **Storage**         | Blob / File / Queue / Table Storage, Managed Disks, NetApp Files, Data Box         |
+| **Security**        | Key Vault, Defender for Cloud, Purview, Confidential Ledger, HSMs                  |
+| **Monitoring**      | Azure Monitor, Application Insights, Log Analytics                                 |
+| **Management**      | Sentinel, Automation, Site Recovery, Azure Arc, Migrate, Cost Management           |
+| **Integration**     | API Management, Service Bus, Logic Apps, Event Grid                                |
+| **Analytics**       | Synapse Analytics, Data Factory, Databricks, Data Explorer, HDInsight, Fabric      |
+| **AI + ML**         | Azure OpenAI, Azure ML, AI Services, Bot Service, Foundry Models                   |
+| **IoT**             | IoT Hub, IoT Central, Event Hubs, Digital Twins, Azure Maps                        |
+| **Developer Tools** | App Configuration, DevTest Labs, Dev Box, Load Testing, Grafana                    |
+| **Identity**        | Entra ID, Entra Domain Services, Azure AD B2C, External Identities                 |
+| **Migration**       | Database Migration Service, Azure Migrate                                          |
+| **Web**             | Azure AI Search, Static Web Apps, Spring Apps                                      |
+| **Communication**   | ACS Voice, SMS, Email, Phone Numbers, Packet Core                                  |
 | **Specialist**      | Azure Quantum, Remote Rendering, FHIR API, Copilot Studio, Stack Edge              |
 
 ## Installation
@@ -109,7 +109,7 @@ flowchart LR
     C --> D{Locate Service}
     D -->|file search| E["services/**/*.md"]
     D -->|alias index| S["shared.md\n(lightweight)"]
-    D -->|full routing| R["service-routing.md\n(140+ services)"]
+    D -->|full routing| R["service-routing.md\n(160+ services)"]
     D -->|not found| F[Explore-AzurePricing.ps1]
     S --> E
     R --> E
@@ -134,7 +134,7 @@ References are loaded on demand — only `SKILL.md` and `shared.md` load on ever
 The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `.github/skills/azure-cost-calculator/references/services/` organized into 18 categories. These files contain the exact API filter values, cost formulas, and known traps for each service.
 
 1. **Identifies** the Azure resource type(s) from your question
-2. **Locates** the matching service reference file via file search, the [common alias index](.github/skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](.github/skills/azure-cost-calculator/references/service-routing.md) (140+ services)
+2. **Locates** the matching service reference file via file search, the [common alias index](.github/skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](.github/skills/azure-cost-calculator/references/service-routing.md) (160+ services)
 3. **Reads** the service file — in full for 1–2 services, or lines 1–45 only in **batch estimation mode** (3+ services) for token efficiency
 4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions

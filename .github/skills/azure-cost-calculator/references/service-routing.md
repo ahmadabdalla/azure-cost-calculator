@@ -58,29 +58,31 @@ Managed database engines, caches, and database migration services.
 
 Network connectivity, routing, load balancing, firewalls, and DNS.
 
-| API serviceName        | Suggested Filename    | Aliases / Portal Names                                          |
-| ---------------------- | --------------------- | --------------------------------------------------------------- |
-| Application Gateway    | `app-gateway.md`      | App Gateway, AGW, WAF v2, Web Application Firewall              |
-| Azure Firewall         | `azure-firewall.md`   | Firewall, Azure Firewall Premium/Standard/Basic                 |
-| Azure Firewall Manager | `firewall-manager.md` | Firewall Manager, Firewall Policy                               |
-| Azure Bastion          | `bastion.md`          | Bastion, Jump Host, Bastion Host                                |
-| Azure DDOS Protection  | `ddos-protection.md`  | DDoS, DDoS Protection, DDoS Network Protection                  |
-| ExpressRoute           | `expressroute.md`     | ExpressRoute, ER, Dedicated Circuit                             |
-| Virtual Network        | `virtual-network.md`  | VNet, Virtual Network, NSG, Peering, Private Link               |
-| Virtual WAN            | `virtual-wan.md`      | vWAN, Virtual WAN, WAN Hub                                      |
-| VPN Gateway            | `vpn-gateway.md`      | VPN, VPN Gateway, Site-to-Site, Point-to-Site, S2S, P2S         |
-| Bandwidth              | `bandwidth.md`        | Data Transfer, Egress, Outbound Transfer, Inter-region Transfer |
-| Network Watcher        | `network-watcher.md`  | Network Watcher, NSG Flow Logs, Connection Monitor              |
-| Azure Orbital          | `orbital.md`          | Azure Orbital, Ground Station, Satellite                        |
-| Private Mobile Network | `private-5g-core.md`  | Private 5G Core, Mobile Network, MEC                            |
-| Load Balancer          | `load-balancer.md`    | ALB, Azure Load Balancer, Standard LB, Basic LB                 |
-| Azure Front Door       | `front-door.md`       | Front Door, AFD, CDN, Azure CDN, Front Door Premium/Standard    |
-| Azure DNS              | `dns.md`              | DNS, DNS Zones, Private DNS Zones                               |
-| Traffic Manager        | `traffic-manager.md`  | Traffic Manager, DNS Load Balancer                              |
-| Azure Route Server     | `route-server.md`     | Route Server, BGP Routing                                       |
-| Azure Private Link     | `private-link.md`     | Private Link, Private Endpoint                                  |
+| API serviceName                        | Suggested Filename    | Aliases / Portal Names                                          |
+| -------------------------------------- | --------------------- | --------------------------------------------------------------- |
+| Application Gateway                    | `app-gateway.md`      | App Gateway, AGW, WAF v2, Web Application Firewall              |
+| Azure Firewall                         | `azure-firewall.md`   | Firewall, Azure Firewall Premium/Standard/Basic                 |
+| Azure Firewall Manager                 | `firewall-manager.md` | Firewall Manager, Firewall Policy                               |
+| Azure Bastion                          | `bastion.md`          | Bastion, Jump Host, Bastion Host                                |
+| Azure DDOS Protection                  | `ddos-protection.md`  | DDoS, DDoS Protection, DDoS Network Protection                  |
+| ExpressRoute                           | `expressroute.md`     | ExpressRoute, ER, Dedicated Circuit                             |
+| Virtual Network                        | `virtual-network.md`  | VNet, Virtual Network, NSG, Peering, Private Link               |
+| Virtual WAN                            | `virtual-wan.md`      | vWAN, Virtual WAN, WAN Hub                                      |
+| VPN Gateway                            | `vpn-gateway.md`      | VPN, VPN Gateway, Site-to-Site, Point-to-Site, S2S, P2S         |
+| Bandwidth                              | `bandwidth.md`        | Data Transfer, Egress, Outbound Transfer, Inter-region Transfer |
+| Network Watcher                        | `network-watcher.md`  | Network Watcher, NSG Flow Logs, Connection Monitor              |
+| Azure Orbital                          | `orbital.md`          | Azure Orbital, Ground Station, Satellite                        |
+| Private Mobile Network                 | `private-5g-core.md`  | Private 5G Core, Mobile Network, MEC                            |
+| Load Balancer                          | `load-balancer.md`    | ALB, Azure Load Balancer, Standard LB, Basic LB                 |
+| Azure Front Door                       | `front-door.md`       | Front Door, AFD, CDN, Azure CDN, Front Door Premium/Standard    |
+| Azure DNS                              | `dns.md`              | DNS, DNS Zones, Private DNS Zones                               |
+| Traffic Manager                        | `traffic-manager.md`  | Traffic Manager, DNS Load Balancer                              |
+| Azure Route Server                     | `route-server.md`     | Route Server, BGP Routing                                       |
+| Azure Private Link                     | `private-link.md`     | Private Link, Private Endpoint                                  |
+| Advanced Container Networking Services | `advanced-cni.md`     | Advanced CNI, Container Networking, Cilium, Azure CNI Overlay   |
+| Microsoft Azure Peering Service        | `peering-service.md`  | Peering Service, ISP Peering, Internet Peering                  |
 
-> **Note**: Load Balancer, Front Door, DNS, Traffic Manager, Route Server, and Private Link do not always appear as distinct `serviceName` values in the API — they may be nested under `Application Gateway`, `Virtual Network`, `Bandwidth`, or queried via `productName` filters. Always verify with the Explore script.
+> **Note**: Load Balancer, Front Door, DNS, Traffic Manager, Route Server, and Private Link do not always appear as distinct `serviceName` values in the API — they may be nested under `Application Gateway`, `Virtual Network`, `Bandwidth`, or queried via `productName` filters. Advanced Container Networking Services is a newer service for AKS advanced networking (Cilium, overlay). Microsoft Azure Peering Service is for ISP connectivity optimization. Always verify with the Explore script.
 
 ## Storage (`services/storage/`)
 
@@ -181,10 +183,11 @@ Data warehousing, ETL, streaming, BI, big data, and data governance.
 | Azure Data Share                 | `data-share.md`         | Data Share, Data Sharing                               |
 | Microsoft Fabric                 | `fabric.md`             | Microsoft Fabric, Fabric Capacity, OneLake, Lakehouse  |
 | Microsoft Planetary Computer Pro | `planetary-computer.md` | Planetary Computer, Geospatial Analytics               |
+| Data Lake Store                  | `data-lake-store.md`    | ADLS Gen1, Data Lake Store, Azure Data Lake (legacy)   |
 | SignalR                          | `signalr.md`            | Azure SignalR Service, SignalR, Real-time Messaging    |
 | Web PubSub                       | `web-pubsub.md`         | Azure Web PubSub, WebSocket Service                    |
 
-> **Note**: SignalR and Web PubSub are under `serviceFamily eq 'Analytics'` in the API (not Integration as expected). Data Factory has both v1 and v2 as separate `serviceName` values — v2 is the current version. Azure Purview appears in both Security (`serviceFamily eq 'Security'` as `Microsoft Purview`) and Analytics (`serviceFamily eq 'Analytics'` as `Azure Purview`). Create files in both categories referencing each other.
+> **Note**: SignalR and Web PubSub are under `serviceFamily eq 'Analytics'` in the API (not Integration as expected). Data Factory has both v1 and v2 as separate `serviceName` values — v2 is the current version. Data Lake Store is the Gen1 service (legacy, now deprecated in favour of ADLS Gen2 which uses `serviceName eq 'Storage'` with hierarchical namespace). Azure Purview appears in both Security (`serviceFamily eq 'Security'` as `Microsoft Purview`) and Analytics (`serviceFamily eq 'Analytics'` as `Azure Purview`). Create files in both categories referencing each other.
 
 ## AI + ML (`services/ai-ml/`)
 
@@ -200,8 +203,9 @@ Machine learning, cognitive services, OpenAI, bots, and AI platforms.
 | Microsoft Genomics          | `genomics.md`                    | Genomics, Microsoft Genomics, Genomics Workspace                    |
 | Azure OpenAI Service        | `openai.md`                      | OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4                     |
 | Azure AI Services           | `ai-services.md`                 | Cognitive Services, AI Services, Vision, Speech, Language, Decision |
+| Machine Learning Studio     | `ml-studio-classic.md`           | ML Studio (classic), Classic ML, Machine Learning Studio            |
 
-> **Note**: Azure OpenAI Service and Azure AI Services may appear under `Foundry Models` or `Foundry Tools` as `serviceName` in newer API responses, as Microsoft rebranded under AI Foundry. Check both legacy and new names. If the API returns 0 results for `Azure OpenAI Service`, try `Foundry Models`.
+> **Note**: Azure OpenAI Service and Azure AI Services may appear under `Foundry Models` or `Foundry Tools` as `serviceName` in newer API responses, as Microsoft rebranded under AI Foundry. Check both legacy and new names. If the API returns 0 results for `Azure OpenAI Service`, try `Foundry Models`. Machine Learning Studio is the classic (v1) ML service — it has a separate `serviceName` from `Azure Machine Learning` (the current workspace-based service).
 
 ## IoT (`services/iot/`)
 

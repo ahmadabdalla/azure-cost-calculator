@@ -78,7 +78,7 @@ Quick lookup for the most commonly requested services. Maps aliases to their ref
 | Service Bus, ASB, Queues, Topics       | `services/integration/service-bus.md`       |
 | APIM, API Management, API Gateway      | `services/integration/api-management.md`    |
 
-For the full service routing map (all 140+ services), see [service-routing.md](service-routing.md).
+For the full service routing map (all 160+ services), see [service-routing.md](service-routing.md).
 
 ### Category Design Principles
 
