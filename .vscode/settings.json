@@ -1,0 +1,7 @@
+{
+  "github.copilot.chat.commandAllowList": [
+    "*/Get-AzurePricing.ps1 *",
+    "*/Explore-AzurePricing.ps1 *",
+    "*Invoke-RestMethod*prices.azure.com*"
+  ]
+}

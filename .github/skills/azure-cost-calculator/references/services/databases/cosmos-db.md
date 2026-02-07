@@ -1,3 +1,9 @@
+---
+serviceName: Azure Cosmos DB
+category: databases
+aliases: [CosmosDB, Cosmos, documentdb]
+---
+
 # Azure Cosmos DB
 
 **Primary cost**: Provisioned throughput (RU/s per-hour) + storage
@@ -23,7 +29,7 @@
     -SkuName 'RUs'
 ```
 
-## Key Meter Names (verified 2026-02-06)
+## Meter Names
 
 | What           | meterName               | skuName | productName                  | Notes                                   |
 | -------------- | ----------------------- | ------- | ---------------------------- | --------------------------------------- |

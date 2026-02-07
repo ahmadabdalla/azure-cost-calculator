@@ -1,3 +1,9 @@
+---
+serviceName: Application Gateway
+category: networking
+aliases: [app gateway, application gateway, appgw]
+---
+
 # Application Gateway
 
 **Primary cost**: Gateway hours (fixed cost) + capacity units processed
@@ -45,7 +51,7 @@
     -MeterName 'Basic Capacity Units'
 ```
 
-## Product Names (case-sensitive, verified 2026-02-06)
+## Product Names
 
 | Variant     | productName                       | Fixed Cost Meter      | CU Meter                  |
 | ----------- | --------------------------------- | --------------------- | ------------------------- |

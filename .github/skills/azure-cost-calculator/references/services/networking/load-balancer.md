@@ -1,3 +1,9 @@
+---
+serviceName: Load Balancer
+category: networking
+aliases: [LB, load balancer]
+---
+
 # Virtual Network / Load Balancer
 
 ## Virtual Network
@@ -10,7 +16,7 @@ VNets themselves are free. Costs come from:
 
 ## Load Balancer
 
-> **Trap (verified 2026-02-06)**: The Retail Prices API returns **no data for any standard public Azure region** (e.g., `eastus`, `australiaeast`, `westeurope`). Data only exists for edge/operator regions (`attdetroit1`, `sgxsingapore1`, etc.), `Global`, and `US Gov`. Both `Get-AzurePricing.ps1` and `Explore-AzurePricing.ps1` will return zero results for any public region. This is an API data gap, not a filter issue.
+> **Trap**: The Retail Prices API returns **no data for any standard public Azure region** (e.g., `eastus`, `australiaeast`, `westeurope`). Data only exists for edge/operator regions (`attdetroit1`, `sgxsingapore1`, etc.), `Global`, and `US Gov`. Both `Get-AzurePricing.ps1` and `Explore-AzurePricing.ps1` will return zero results for any public region. This is an API data gap, not a filter issue.
 >
 > **Agent instruction**: Do NOT attempt to query this service via the scripts — it will always fail. Use the manual fallback below and note the limitation to the user.
 
@@ -24,7 +30,7 @@ VNets themselves are free. Costs come from:
 
 ### Manual Fallback (API unavailable for public regions)
 
-The API has no data for any standard Azure public region. Use the known rates below (USD, verified 2026-02-06):
+The API has no data for any standard Azure public region. Use the known rates below (USD):
 
 | Component       | Rate (USD) | Unit              | Notes                                      |
 | --------------- | ---------- | ----------------- | ------------------------------------------ |
@@ -32,7 +38,7 @@ The API has no data for any standard Azure public region. Use the known rates be
 | Overage rules   | ~$0.01     | per hour per rule | Each rule beyond the first 5               |
 | Data processed  | ~$0.005    | per GB            | Inbound + outbound                         |
 
-> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). These are approximate USD values — direct users to the pricing page for current rates. For non-USD currencies, use the currency derivation method in [shared.md](../shared.md).
+> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). These are approximate USD values — direct users to the pricing page for current rates. For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
 
 ### Manual Cost Formula
 
@@ -52,7 +58,7 @@ Data:    200 × $0.005         = $1.00
 Total:   ~$41.15 USD/month
 ```
 
-### Key Meter Names
+### Meter Names
 
 | Meter                                           | unitOfMeasure | Notes                            |
 | ----------------------------------------------- | ------------- | -------------------------------- |

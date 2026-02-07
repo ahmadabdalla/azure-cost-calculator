@@ -1,4 +1,9 @@
-````markdown
+---
+serviceName: not in API
+category: networking
+aliases: [DDoS, DDoS protection]
+---
+
 # DDoS Protection
 
 > **⚠ API UNAVAILABLE**: DDoS Protection pricing is **NOT available** in the Azure Retail Prices API. Searching by serviceName, productName, or meterName containing "DDoS" across all regions returns zero results.
@@ -7,6 +12,10 @@
 > **Agent instruction**: Do NOT attempt to query this service via the scripts — it will always return zero results. Use the manual fallback table below directly and note the API limitation to the user.
 
 **This service requires manual estimation only.**
+
+## Query Pattern
+
+**Not applicable** — no script can query this service. Return the manual estimates above and note the limitation to the user.
 
 ## Pricing (manual fallback)
 
@@ -27,10 +36,6 @@ IP Protection:
   Monthly = ~$199 USD × publicIPCount
 ```
 
-## Query Pattern
-
-**Not applicable** — no script can query this service. Return the manual estimates above and note the limitation to the user.
-
 ## Notes
 
 - Network Protection is significantly cheaper per-IP if you have many public IPs (break-even at ~15 IPs)
@@ -38,4 +43,3 @@ IP Protection:
 - Both plans include DDoS rapid response (DRR) support
 - Overage charges may apply for data processing above included limits
 - Prices are in USD (only available currency for this service). If the user requires a different currency, note these are approximate USD values and direct them to the Azure pricing calculator for local-currency equivalents.
-````

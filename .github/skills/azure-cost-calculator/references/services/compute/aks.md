@@ -1,8 +1,14 @@
+---
+serviceName: Azure Kubernetes Service
+category: compute
+aliases: [AKS, kubernetes, k8s]
+---
+
 # Azure Kubernetes Service (AKS)
 
 **Primary cost**: AKS management fee + VM node costs (priced separately as VMs)
 
-> **Trap (verified 2026-02-06)**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` ($0.1429/hr) and `Standard Long Term Support` ($0.8573/hr). The `summary.totalMonthlyCost` sums both, inflating the estimate ~7× (~$730/mo instead of ~$104/mo). Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
+> **Trap**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` ($0.1429/hr) and `Standard Long Term Support` ($0.8573/hr). The `summary.totalMonthlyCost` sums both, inflating the estimate ~7× (~$730/mo instead of ~$104/mo). Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
 
 ## Query Pattern
 
@@ -26,7 +32,7 @@
     -Quantity 1 -InstanceCount 3
 ```
 
-## AKS Meter Names (case-sensitive)
+## Meter Names
 
 | Meter                        | Purpose                                        |
 | ---------------------------- | ---------------------------------------------- |

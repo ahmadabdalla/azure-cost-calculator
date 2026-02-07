@@ -1,4 +1,9 @@
-````markdown
+---
+serviceName: Azure Firewall
+category: networking
+aliases: [firewall]
+---
+
 # Azure Firewall
 
 **Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
@@ -8,51 +13,25 @@
 
 ## Query Pattern
 
+Substitute `{Tier}` with `Standard`, `Premium`, or `Basic` (see Meter Names table). Run **two queries per tier**:
+
 ```powershell
-# Standard tier — fixed deployment cost
+# {Tier} — fixed deployment cost
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Firewall' `
     -ProductName 'Azure Firewall' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Deployment'
+    -SkuName '{Tier}' `
+    -MeterName '{Tier} Deployment'
 
-# Standard tier — data processing
+# {Tier} — data processing
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Firewall' `
     -ProductName 'Azure Firewall' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Data Processed'
-
-# Premium tier — fixed deployment cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Deployment'
-
-# Premium tier — data processing
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Data Processed'
-
-# Basic tier — fixed deployment cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Basic' `
-    -MeterName 'Basic Deployment'
-
-# Basic tier — data processing
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName 'Basic' `
-    -MeterName 'Basic Data Processed'
+    -SkuName '{Tier}' `
+    -MeterName '{Tier} Data Processed'
 ```
 
-## Tier Meters (case-sensitive)
+## Meter Names
 
 | Tier     | skuName    | Deployment Meter      | Data Meter                |
 | -------- | ---------- | --------------------- | ------------------------- |
@@ -68,18 +47,9 @@
 Monthly = deploymentPrice × 730 + dataPrice × estimatedGB
 ```
 
-## Example (Standard tier)
-
-```
-Deployment: deploymentPrice × 730
-Data processed: dataPrice × estimatedGB
-Total: sum of above — query live prices for current rates
-```
-
 ## Notes
 
 - The deployment (fixed) cost is the dominant expense — Azure Firewall is a premium service
 - Data processing costs are typically small relative to the fixed cost for moderate traffic
 - Standard → Premium adds IDPS, TLS inspection, URL filtering (higher fixed cost)
 - Basic is a budget option with limited features and throughput
-````

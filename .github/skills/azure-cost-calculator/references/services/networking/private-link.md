@@ -1,3 +1,9 @@
+---
+serviceName: Virtual Network
+category: networking
+aliases: [private link, private endpoint, PL]
+---
+
 ````markdown
 # Private Link / Private Endpoints
 
@@ -8,7 +14,7 @@
 >
 > **Agent instruction**: Do NOT use `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — they will silently return nothing. Copy the direct API query below into PowerShell. Prices are always USD regardless of currency parameter.
 
-## Direct API Query (required — script won't work)
+## Query Pattern
 
 ```powershell
 # Private Endpoint hourly cost
@@ -32,7 +38,7 @@ $uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Virt
 | `productName`   | `Virtual Network Private Link` |
 | `armRegionName` | `''` (empty) or `'Global'`     |
 
-## Meters (case-sensitive)
+## Meter Names
 
 | Meter                               | Unit Price (USD) | unitOfMeasure | Notes                  |
 | ----------------------------------- | ---------------- | ------------- | ---------------------- |

@@ -1,9 +1,15 @@
+---
+serviceName: Functions
+category: compute
+aliases: [azure functions, serverless, function app]
+---
+
 # Azure Functions
 
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> **Trap (verified 2026-02-06)**: Consumption plan unit prices are **sub-cent** (e.g., ~$0.000016/GB-s, ~$0.0000002/execution in USD). The script displays these as `$0.00` for both `UnitPrice` and `MonthlyCost`, making it impossible to calculate costs directly from script output. You must apply the cost formula manually using the known per-unit rates below.
+> **Trap**: Consumption plan unit prices are **sub-cent** (e.g., ~$0.000016/GB-s, ~$0.0000002/execution in USD). The script displays these as `$0.00` for both `UnitPrice` and `MonthlyCost`, making it impossible to calculate costs directly from script output. You must apply the cost formula manually using the known per-unit rates below.
 >
 > **Agent instruction**: Do NOT report `$0.00` to the user — that is a display rounding issue. Use the Azure pricing page rates and the manual calculation example below. Always explain the free grant deduction.
 
@@ -23,7 +29,7 @@
     -ProductName 'Premium Functions'
 ```
 
-## Known Consumption Plan Rates (verified 2026-02-06)
+## Known Consumption Plan Rates
 
 | Meter                       | Unit        | Published Rate (USD)  | Free Grant      |
 | --------------------------- | ----------- | --------------------- | --------------- |
@@ -32,7 +38,7 @@
 
 > These rates are from the [Azure Functions pricing page](https://azure.microsoft.com/en-au/pricing/details/functions/). The API returns them but at precision below what the script rounds to — the script shows `$0.00` for both.
 
-> **For non-USD currencies**: The API returns `$0.00` in all currencies due to rounding. Use the USD rates above and convert using either the user's known exchange rate or the ratio derived from another meter in the same region (e.g., query a VM price in both USD and the target currency to derive the conversion factor). See [shared.md](../shared.md) for the currency derivation method.
+> **For non-USD currencies**: The API returns `$0.00` in all currencies due to rounding. Use the USD rates above and convert using either the user's known exchange rate or the ratio derived from another meter in the same region (e.g., query a VM price in both USD and the target currency to derive the conversion factor). See [regions-and-currencies.md](../../regions-and-currencies.md) for the currency derivation method.
 
 ## Manual Calculation Example
 
