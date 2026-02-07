@@ -24,28 +24,28 @@ Service reference files are organized by category. To find a service file:
 
 ### Category Index
 
-18 categories, designed to scale to 2000+ services. Each category maps to one or more API `serviceFamily` values.
+18 categories, designed to scale to 2000+ services. Each category maps to one or more API `serviceFamily` values. New API `serviceFamily` values (Azure Stack, Azure Arc, Power Platform, Gaming, Microsoft 365 Copilot) are routed to existing categories — primarily Specialist — to avoid category proliferation.
 
-| Category        | Path                        | API serviceFamily                                   |
-| --------------- | --------------------------- | --------------------------------------------------- |
-| Compute         | `services/compute/`         | Compute                                             |
-| Containers      | `services/containers/`      | Containers                                          |
-| Databases       | `services/databases/`       | Databases                                           |
-| Networking      | `services/networking/`      | Networking                                          |
-| Storage         | `services/storage/`         | Storage                                             |
-| Security        | `services/security/`        | Security, Azure Security                            |
-| Monitoring      | `services/monitoring/`      | Management and Governance (monitoring subset)       |
-| Management      | `services/management/`      | Management and Governance (governance/ops subset)   |
-| Integration     | `services/integration/`     | Integration                                         |
-| Analytics       | `services/analytics/`       | Analytics, Data                                     |
-| AI + ML         | `services/ai-ml/`           | AI + Machine Learning                               |
-| IoT             | `services/iot/`             | Internet of Things                                  |
-| Developer Tools | `services/developer-tools/` | Developer Tools                                     |
-| Identity        | `services/identity/`        | Security (identity subset), Microsoft Syntex        |
-| Migration       | `services/migration/`       | Databases (migration subset), Other                 |
-| Web             | `services/web/`             | Web                                                 |
-| Communication   | `services/communication/`   | Azure Communication Services, Telecommunications    |
-| Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Other |
+| Category        | Path                        | API serviceFamily                                                                                   |
+| --------------- | --------------------------- | --------------------------------------------------------------------------------------------------- |
+| Compute         | `services/compute/`         | Compute, Windows Virtual Desktop                                                                    |
+| Containers      | `services/containers/`      | Containers                                                                                          |
+| Databases       | `services/databases/`       | Databases                                                                                           |
+| Networking      | `services/networking/`      | Networking                                                                                          |
+| Storage         | `services/storage/`         | Storage                                                                                             |
+| Security        | `services/security/`        | Security, Azure Security                                                                            |
+| Monitoring      | `services/monitoring/`      | Management and Governance (monitoring subset)                                                       |
+| Management      | `services/management/`      | Management and Governance (governance/ops subset)                                                   |
+| Integration     | `services/integration/`     | Integration                                                                                         |
+| Analytics       | `services/analytics/`       | Analytics, Data                                                                                     |
+| AI + ML         | `services/ai-ml/`           | AI + Machine Learning                                                                               |
+| IoT             | `services/iot/`             | Internet of Things                                                                                  |
+| Developer Tools | `services/developer-tools/` | Developer Tools                                                                                     |
+| Identity        | `services/identity/`        | Security (identity subset), Microsoft Syntex                                                        |
+| Migration       | `services/migration/`       | Databases (migration subset), Other                                                                 |
+| Web             | `services/web/`             | Web                                                                                                 |
+| Communication   | `services/communication/`   | Azure Communication Services, Telecommunications                                                    |
+| Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Azure Stack, Azure Arc, Power Platform, Gaming, Other |
 
 ### Common Alias Index
 
