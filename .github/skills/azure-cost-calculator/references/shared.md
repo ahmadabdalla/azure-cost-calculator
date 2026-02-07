@@ -20,16 +20,16 @@ Service reference files are organized by category. To find a service file:
 3. **Broad search** — list `services/**/*.md` to see all files
 4. **Discovery** — use `scripts/Explore-AzurePricing.ps1` for services not yet documented
 
-| Category    | Path                    | Examples                                         |
-| ----------- | ----------------------- | ------------------------------------------------ |
-| Compute     | `services/compute/`     | VMs, AKS, App Service, Functions, Container Apps |
-| Databases   | `services/databases/`   | SQL Database, Cosmos DB, PostgreSQL              |
-| Networking  | `services/networking/`  | Load Balancer, Firewall, Private Link, DDoS      |
-| Storage     | `services/storage/`     | Blob/File/Table, Managed Disks                   |
-| Security    | `services/security/`    | Key Vault, Defender for Cloud                    |
-| Monitoring  | `services/monitoring/`  | App Insights, Log Analytics                      |
-| Messaging   | `services/messaging/`   | Service Bus                                      |
-| Integration | `services/integration/` | API Management, Redis Cache                      |
+| Category    | Path                    | Examples                                                             |
+| ----------- | ----------------------- | -------------------------------------------------------------------- |
+| Compute     | `services/compute/`     | VMs, AKS, App Service, Functions, Container Apps, Container Registry |
+| Databases   | `services/databases/`   | SQL Database, Cosmos DB, PostgreSQL                                  |
+| Networking  | `services/networking/`  | Load Balancer, Firewall, Private Link, DDoS                          |
+| Storage     | `services/storage/`     | Blob/File/Table, Managed Disks                                       |
+| Security    | `services/security/`    | Key Vault, Defender for Cloud                                        |
+| Monitoring  | `services/monitoring/`  | App Insights, Log Analytics                                          |
+| Messaging   | `services/messaging/`   | Service Bus                                                          |
+| Integration | `services/integration/` | API Management, Redis Cache                                          |
 
 > Each service file contains its own `serviceName`, `category`, and `aliases` metadata. The routing information lives with the service it describes — no central lookup needed.
 

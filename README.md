@@ -8,14 +8,14 @@ No guessing, no stale spreadsheets — just real-time price lookups and clear co
 
 | Category        | Services                                                                                       |
 | --------------- | ---------------------------------------------------------------------------------------------- |
-| **Compute**     | Virtual Machines, App Service, Azure Functions, Container Apps, AKS                            |
-| **Databases**   | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache                               |
-| **Storage**     | Blob / File / Queue / Table Storage                                                            |
+| **Compute**     | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Container Registry        |
+| **Databases**   | SQL Database, Cosmos DB, PostgreSQL Flexible Server                                            |
+| **Storage**     | Blob / File / Queue / Table Storage, Managed Disks                                             |
 | **Networking**  | Application Gateway, Load Balancer, Azure Firewall, Private Link, Private DNS, DDoS Protection |
 | **Security**    | Key Vault, Defender for Cloud                                                                  |
-| **Integration** | API Management, Service Bus                                                                    |
+| **Integration** | API Management, Redis Cache                                                                    |
+| **Messaging**   | Service Bus                                                                                    |
 | **Monitoring**  | Application Insights / Azure Monitor                                                           |
-| **Containers**  | Container Registry                                                                             |
 
 ## Installation
 
@@ -87,25 +87,32 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 ```mermaid
 flowchart LR
     A[User Query] --> B[Copilot Chat]
-    B --> C[Skill Engine]
-    C --> D[Service References]
-    D --> D1[Virtual Machines]
-    D --> D2[App Service]
-    D --> D3[Cosmos DB]
-    D --> D4[...]
-    D1 & D2 & D3 & D4 --> E[Get-AzurePricing.ps1]
-    E --> F[Azure Retail Prices API]
-    F --> E
-    E --> B
-    B --> G[Cost Estimate]
+    B --> C[SKILL.md]
+    C --> D{Locate Service}
+    D -->|file search| E["references/services/**/*.md"]
+    D -->|not found| F[Explore-AzurePricing.ps1]
+    E --> G["Reference Docs\n(workflow · pitfalls · regions)"]
+    F --> G
+    G --> H[Get-AzurePricing.ps1]
+    H --> I[Azure Retail Prices API]
+    I --> H
+    H --> B
+    B --> J[Cost Estimate]
 ```
 
 ## How It Works
 
+The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `references/services/` organized by category (compute, databases, networking, etc.). These files contain the exact API filter values, cost formulas, and known traps for each service.
+
 1. **Identifies** the Azure resource type(s) from your question
-2. **Looks up** the correct query parameters from built-in service references
-3. **Runs** a PowerShell script (`Get-AzurePricing.ps1`) that calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
-4. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
+2. **Locates** the matching service reference file via file search across `references/services/**/*.md`
+3. **Reads** the service file for exact query parameters (`serviceName`, `productName`, `skuName`, `meterName`)
+4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
+5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
+
+Shared reference docs provide additional guidance: [workflow.md](references/workflow.md) for script parameters, [pitfalls.md](references/pitfalls.md) for known traps, [regions-and-currencies.md](references/regions-and-currencies.md) for region names and currency conversion, and [reserved-instances.md](references/reserved-instances.md) for RI pricing traps.
+
+For services **not yet documented**, `Explore-AzurePricing.ps1` discovers available filter values directly from the API.
 
 All prices come directly from Microsoft's public API — no hardcoded values.
 
@@ -129,8 +136,8 @@ All prices come directly from Microsoft's public API — no hardcoded values.
 Contributions are welcome! If you'd like to add support for a new Azure service or improve an existing one:
 
 1. Fork this repository
-2. Add or update the service reference in `references/services/`
-3. Update the routing table in `references/shared.md`
+2. Add or update the service reference in `references/services/` (use `TEMPLATE.md` as a starting point)
+3. Update the category index in `references/shared.md` if adding a new category
 4. Submit a pull request
 
 ## License
