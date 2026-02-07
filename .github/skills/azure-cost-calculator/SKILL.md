@@ -57,7 +57,7 @@ These 4 traps apply to EVERY query — do not skip them:
 
 When estimating **3 or more services**, use these rules to reduce token consumption:
 
-1. **Partial reads** — read only lines 1–30 of each service file. Lines 1–30 contain: YAML front matter, primary cost description, trap warning, and the first (most common) query pattern.
+1. **Partial reads** — read only lines 1–45 of each service file. These lines contain: YAML front matter, primary cost description, trap warning, and the first (most common) query pattern.
 2. **Full read triggers** — only read the full service file if:
    - The partial read does not contain a usable query pattern
    - The user requests a non-default tier, SKU, or configuration
