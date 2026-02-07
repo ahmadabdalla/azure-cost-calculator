@@ -34,6 +34,13 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
 <!--
   INSTRUCTIONS FOR AUTHORS:
 
+  0. 30-LINE RULE: The first Query Pattern example MUST be the most common/default
+     configuration and MUST appear within the first 30 lines of the file. This enables
+     batch estimation mode to read only lines 1–30 for multi-service estimates.
+     Ensure the first usable default Query Pattern (not including comments or purely
+     instructional content) appears within lines 1–30. Do not rely on exact line
+     ranges for YAML front matter, titles, or trap warnings — their length may vary.
+
   1. TITLE: Use the official Azure service name as shown in the portal.
 
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
