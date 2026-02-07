@@ -23,11 +23,16 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 4. **Run** `scripts/Get-AzurePricing.ps1` with the parameters from the service reference
 5. **Present** the estimate with breakdown: unit price, multiplier, monthly cost, assumptions
 
-For detailed script parameters and output formats, see [references/workflow.md](references/workflow.md).
-For known traps and troubleshooting, see [references/pitfalls.md](references/pitfalls.md).
-For Reserved Instance pricing traps, see [references/reserved-instances.md](references/reserved-instances.md).
-For constants, category index, and pricing factors, see [references/shared.md](references/shared.md).
-For region names, currency conversion, and API-unavailable services, see [references/regions-and-currencies.md](references/regions-and-currencies.md).
+## Reference Index (load on demand)
+
+| Condition                                                | Read                                                                                    |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Always (entry point)                                     | [references/shared.md](references/shared.md) — constants, category index, alias lookup  |
+| Query returned 0 results or wrong data                   | [references/pitfalls.md](references/pitfalls.md) — troubleshooting and traps            |
+| User asks about Reserved Instances or savings plans      | [references/reserved-instances.md](references/reserved-instances.md)                    |
+| Non-USD currency or non-eastus region                    | [references/regions-and-currencies.md](references/regions-and-currencies.md)            |
+| Category Index + file search both failed                 | [references/service-routing.md](references/service-routing.md) — full 140+ service map  |
+| First time running scripts or unfamiliar with parameters | [references/workflow.md](references/workflow.md) — script parameters and output formats |
 
 ## Critical Rules
 
@@ -46,3 +51,16 @@ These 4 traps apply to EVERY query — do not skip them:
 2. **Unfiltered queries return mixed SKU variants** — without `productName`/`skuName` filters, results mix Spot, Low Priority, and OS variants. Always filter to the specific variant needed.
 3. **Multi-meter resources need separate queries** — many resources have multiple cost components (compute + storage, fixed + variable). Run one query per meter with `-MeterName`.
 4. **`Write-Host` output is invisible to agents** — always use `-OutputFormat Json` (the default). Never use `Summary` format.
+
+## Batch Estimation Mode
+
+When estimating **3 or more services**, use these rules to reduce token consumption:
+
+1. **Partial reads** — read only lines 1–30 of each service file. Lines 1–30 contain: YAML front matter, primary cost description, trap warning, and the first (most common) query pattern.
+2. **Full read triggers** — only read the full service file if:
+   - The partial read does not contain a usable query pattern
+   - The user requests a non-default tier, SKU, or configuration
+   - The service has complex multi-meter billing that needs the full meter table
+   - The query returns 0 or unexpected results
+3. **Parallel queries** — run `Get-AzurePricing.ps1` calls in parallel where possible. Independent services have no query dependencies.
+4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.
