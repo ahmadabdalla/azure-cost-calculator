@@ -4,17 +4,30 @@ An AI coding agent skill that estimates Azure resource costs using **live pricin
 
 No guessing, no stale spreadsheets — just real-time price lookups and clear cost breakdowns.
 
-## Supported Services (20+)
+## Supported Services (140+ mapped)
 
-| Category        | Services                                                                                       |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| **Compute**     | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Container Registry        |
-| **Databases**   | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache                               |
-| **Storage**     | Blob / File / Queue / Table Storage, Managed Disks                                             |
-| **Networking**  | Application Gateway, Load Balancer, Azure Firewall, Private Link, Private DNS, DDoS Protection |
-| **Security**    | Key Vault, Defender for Cloud                                                                  |
-| **Integration** | API Management, Service Bus                                                                    |
-| **Monitoring**  | Application Insights / Azure Monitor                                                           |
+18 categories covering the full breadth of Azure. Services with reference files have fully documented query patterns; all others are routable via the [service routing map](.github/skills/azure-cost-calculator/references/service-routing.md).
+
+| Category            | Example Services                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------- |
+| **Compute**         | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Batch          |
+| **Containers**      | Container Instances, Container Registry                                             |
+| **Databases**       | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache, MySQL, MariaDB    |
+| **Networking**      | Application Gateway, Azure Firewall, Load Balancer, VPN Gateway, Private Link, DNS  |
+| **Storage**         | Blob / File / Queue / Table Storage, Managed Disks, NetApp Files, Data Box          |
+| **Security**        | Key Vault, Defender for Cloud, Purview, Confidential Ledger, HSMs                   |
+| **Monitoring**      | Azure Monitor, Application Insights, Log Analytics                                  |
+| **Management**      | Sentinel, Automation, Site Recovery, Azure Arc, Migrate, Cost Management            |
+| **Integration**     | API Management, Service Bus, Logic Apps, Event Grid                                 |
+| **Analytics**       | Synapse Analytics, Data Factory, Databricks, Data Explorer, HDInsight, Fabric       |
+| **AI + ML**         | Azure OpenAI, Azure ML, AI Services, Bot Service, Foundry Models                    |
+| **IoT**             | IoT Hub, IoT Central, Event Hubs, Digital Twins, Azure Maps                         |
+| **Developer Tools** | App Configuration, DevTest Labs, Dev Box, Load Testing, Grafana                     |
+| **Identity**        | Entra ID, Entra Domain Services, Azure AD B2C, External Identities                  |
+| **Migration**       | Database Migration Service, Azure Migrate                                           |
+| **Web**             | Azure AI Search, Static Web Apps, Spring Apps                                       |
+| **Communication**   | ACS Voice, SMS, Email, Phone Numbers, Packet Core                                   |
+| **Specialist**      | Azure Quantum, Remote Rendering, FHIR API, Copilot Studio, Stack Edge              |
 
 ## Installation
 
@@ -94,28 +107,45 @@ flowchart LR
     A[User Query] --> B[AI Agent]
     B --> C[SKILL.md]
     C --> D{Locate Service}
-    D -->|file search| E["references/services/**/*.md"]
+    D -->|file search| E["services/**/*.md"]
+    D -->|alias index| S["shared.md\n(lightweight)"]
+    D -->|full routing| R["service-routing.md\n(140+ services)"]
     D -->|not found| F[Explore-AzurePricing.ps1]
-    E --> G["Reference Docs\n(workflow · pitfalls · regions)"]
-    F --> G
-    G --> H[Get-AzurePricing.ps1]
+    S --> E
+    R --> E
+    E -->|"≤2 services: full read"| G1["Full Service File"]
+    E -->|"3+ services: lines 1-30"| G2["Partial Read\n(batch mode)"]
+    G1 --> H[Get-AzurePricing.ps1]
+    G2 --> H
     H --> I[Azure Retail Prices API]
     I --> H
     H --> B
     B --> J[Cost Estimate]
+
+    P["pitfalls.md"] -.->|on error| H
+    RI["reserved-instances.md"] -.->|if RI requested| H
+    RG["regions-and-currencies.md"] -.->|non-USD/eastus| H
 ```
+
+References are loaded on demand — only `SKILL.md` and `shared.md` load on every query. All other references load conditionally, keeping token consumption low for multi-service estimates.
 
 ## How It Works
 
-The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `.github/skills/azure-cost-calculator/references/services/` organized by category (compute, databases, networking, etc.). These files contain the exact API filter values, cost formulas, and known traps for each service.
+The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `.github/skills/azure-cost-calculator/references/services/` organized into 18 categories. These files contain the exact API filter values, cost formulas, and known traps for each service.
 
 1. **Identifies** the Azure resource type(s) from your question
-2. **Locates** the matching service reference file via file search across `.github/skills/azure-cost-calculator/references/services/**/*.md`
-3. **Reads** the service file for exact query parameters (`serviceName`, `productName`, `skuName`, `meterName`)
+2. **Locates** the matching service reference file via file search, the [common alias index](.github/skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](.github/skills/azure-cost-calculator/references/service-routing.md) (140+ services)
+3. **Reads** the service file — in full for 1–2 services, or lines 1–30 only in **batch estimation mode** (3+ services) for token efficiency
 4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
 
-Shared reference docs provide additional guidance: [workflow.md](.github/skills/azure-cost-calculator/references/workflow.md) for script parameters, [pitfalls.md](.github/skills/azure-cost-calculator/references/pitfalls.md) for known traps, [regions-and-currencies.md](.github/skills/azure-cost-calculator/references/regions-and-currencies.md) for region names and currency conversion, and [reserved-instances.md](.github/skills/azure-cost-calculator/references/reserved-instances.md) for RI pricing traps.
+### Token-efficient design
+
+The skill is designed for complex multi-service estimates (10–15+ services) without exhausting the agent's context window:
+
+- **Lazy reference loading** — only `SKILL.md` and `shared.md` load on every query. Troubleshooting ([pitfalls.md](.github/skills/azure-cost-calculator/references/pitfalls.md)), RI pricing ([reserved-instances.md](.github/skills/azure-cost-calculator/references/reserved-instances.md)), region/currency info ([regions-and-currencies.md](.github/skills/azure-cost-calculator/references/regions-and-currencies.md)), and the full routing map ([service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)) load only when needed.
+- **Batch estimation mode** — for 3+ services, the agent reads only the first 30 lines of each service file (metadata + primary query pattern), reducing per-service token cost by ~65%.
+- **Alias-first routing** — a compact alias index in `shared.md` resolves common service names without loading the full 140+ service routing map.
 
 For services **not yet documented**, `Explore-AzurePricing.ps1` discovers available filter values directly from the API.
 
@@ -141,9 +171,11 @@ All prices come directly from Microsoft's public API — no hardcoded values.
 Contributions are welcome! If you'd like to add support for a new Azure service or improve an existing one:
 
 1. Fork this repository
-2. Add or update the service reference in `.github/skills/azure-cost-calculator/references/services/` (use [TEMPLATE.md](.github/skills/azure-cost-calculator/TEMPLATE.md) as a starting point)
-3. Update the category index in [references/shared.md](.github/skills/azure-cost-calculator/references/shared.md) if adding a new category
-4. Submit a pull request
+2. Add or update the service reference in `.github/skills/azure-cost-calculator/references/services/<category>/` using [TEMPLATE.md](.github/skills/azure-cost-calculator/references/services/TEMPLATE.md) as a starting point
+3. **30-line rule**: ensure the first query pattern (most common configuration) appears within the first 30 lines — this is required for batch estimation mode
+4. Place the file in the category specified in [service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)
+5. If adding a new category, update the category index in [shared.md](.github/skills/azure-cost-calculator/references/shared.md)
+6. Submit a pull request
 
 ## License
 
