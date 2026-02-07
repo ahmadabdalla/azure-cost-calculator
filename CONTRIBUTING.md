@@ -53,6 +53,8 @@ If results are sparse, also try:
 
 Record every unique `serviceName`, `productName`, `skuName`, and `meterName` value. These are case-sensitive — use them exactly as returned.
 
+If the service has **multiple `productName` values**, explore each one individually — different products often carry their own compute/memory/storage meters with different names and units. Also check for **platform or OS variants** (e.g., Windows vs Linux, GPU vs CPU) that may introduce additional meters not present in the default variant.
+
 ### Step 5 — Validate queries
 
 For each query you plan to document, run it with the pricing script and verify the output:
@@ -76,6 +78,7 @@ From the API results, identify any pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
 - **RI MonthlyCost**: Reservation items where the script's `MonthlyCost` multiplies the full term price by 730 — always manually calculate RI monthly cost as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
 - **Multiple product names**: A single service spanning several `productName` values (e.g., "Key Vault" vs "Key Vault - Premium").
+- **Non-hourly units showing `$0.0` MonthlyCost**: The script calculates `unitPrice × 730` which only works for hourly meters. Meters billed per second, per GB-hour, per 100 seconds, etc. will show `$0.0` or a meaningless value — document the correct manual formula for each.
 - **Sub-cent rounding**: Meters returning `$0.00` because the rate is below the script's display precision.
 - **Global-only pricing**: Some meters have no region (`armRegionName` is empty or "Global") and require direct API calls instead of the script.
 
@@ -92,6 +95,7 @@ The file MUST follow these rules:
 - **Total file length**: under 100 lines of markdown content.
 - **Never hardcode prices** — always reference `retailPrice` from the API query results.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
+- **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
 - **Section order**: YAML → Title → Primary cost → Trap(s) → Query Pattern → Key Fields or Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
 - **Do NOT** include "verified" dates anywhere.
 - **Do NOT** annotate headers with "(case-sensitive)".
