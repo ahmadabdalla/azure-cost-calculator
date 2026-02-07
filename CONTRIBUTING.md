@@ -16,7 +16,7 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 Copy the prompt below, replace `{SERVICE_NAME}` with the Azure service you want to add, and paste it into your AI assistant. The AI must have access to this repository's files and the ability to run terminal commands.
 
-~~~
+````
 You are generating a service reference file for the Azure Cost Calculator skill. The service to document is: {SERVICE_NAME}
 
 Follow these steps exactly:
@@ -99,7 +99,7 @@ The file MUST follow these rules:
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
 
 All paths in the file are relative to `.github/skills/azure-cost-calculator/`.
-~~~
+````
 
 ## After the AI Generates the File
 
