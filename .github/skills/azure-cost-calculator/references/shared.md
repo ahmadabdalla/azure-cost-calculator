@@ -51,48 +51,32 @@ Service reference files are organized by category. To find a service file:
 
 Quick lookup for the most commonly requested services. Maps aliases to their reference file paths.
 
-| Alias                                  | File Path                                    |
-| -------------------------------------- | -------------------------------------------- |
-| VMs, Virtual Machines, VMSS            | `services/compute/virtual-machines.md`       |
-| App Service, Web Apps, ASP             | `services/compute/app-service.md`            |
-| Functions, Azure Functions             | `services/compute/functions.md`              |
-| Container Apps, ACA                    | `services/compute/container-apps.md`         |
-| AKS, Kubernetes, K8s                   | `services/compute/aks.md`                    |
-| ACR, Container Registry                | `services/containers/container-registry.md`  |
-| Azure SQL, SQL DB, SQL Database        | `services/databases/sql-database.md`         |
-| SQL MI, Managed Instance               | `services/databases/sql-managed-instance.md` |
-| Cosmos DB, CosmosDB, DocumentDB        | `services/databases/cosmos-db.md`            |
-| PostgreSQL, Postgres, Flexible Server  | `services/databases/postgresql-flexible.md`  |
-| MySQL, Azure MySQL                     | `services/databases/mysql.md`                |
-| Redis, Azure Cache for Redis           | `services/databases/redis-cache.md`          |
-| App Gateway, AGW, WAF v2               | `services/networking/app-gateway.md`         |
-| Azure Firewall                         | `services/networking/azure-firewall.md`      |
-| DDoS Protection                        | `services/networking/ddos-protection.md`     |
-| Load Balancer, ALB                     | `services/networking/load-balancer.md`       |
-| Front Door, AFD, CDN                   | `services/networking/front-door.md`          |
-| VPN Gateway, S2S, P2S                  | `services/networking/vpn-gateway.md`         |
-| Private Link, Private Endpoint         | `services/networking/private-link.md`        |
-| ExpressRoute, ER                       | `services/networking/expressroute.md`        |
-| Blob Storage, Azure Files, ADLS        | `services/storage/storage.md`                |
-| Managed Disks, Premium SSD, Ultra Disk | `services/storage/managed-disks.md`          |
-| Key Vault, AKV                         | `services/security/key-vault.md`             |
-| Defender for Cloud, CSPM               | `services/security/defender-for-cloud.md`    |
-| Azure Monitor, Metrics, Alerts         | `services/monitoring/monitor.md`             |
-| Log Analytics, OMS                     | `services/monitoring/log-analytics.md`       |
-| App Insights, APM                      | `services/monitoring/app-insights.md`        |
-| Service Bus, ASB, Queues, Topics       | `services/integration/service-bus.md`        |
-| APIM, API Management, API Gateway      | `services/integration/api-management.md`     |
-| Logic Apps, Workflows                  | `services/integration/logic-apps.md`         |
-| Synapse, Synapse Analytics             | `services/analytics/synapse.md`              |
-| Databricks, DBX                        | `services/analytics/databricks.md`           |
-| Data Factory, ADF, ETL                 | `services/analytics/data-factory.md`         |
-| Event Hubs, Kafka on Azure             | `services/iot/event-hubs.md`                 |
-| Event Grid                             | `services/iot/event-grid.md`                 |
-| Azure OpenAI, AOAI, GPT                | `services/ai-ml/openai.md`                   |
-| Cognitive Services, AI Services        | `services/ai-ml/ai-services.md`              |
-| Azure ML, AML                          | `services/ai-ml/machine-learning.md`         |
-| Sentinel, SIEM, SOAR                   | `services/management/sentinel.md`            |
-| Site Recovery, ASR, DR                 | `services/management/site-recovery.md`       |
+| Alias                                  | File Path                                   |
+| -------------------------------------- | ------------------------------------------- |
+| VMs, Virtual Machines, VMSS            | `services/compute/virtual-machines.md`      |
+| App Service, Web Apps, ASP             | `services/compute/app-service.md`           |
+| Functions, Azure Functions             | `services/compute/functions.md`             |
+| Container Apps, ACA                    | `services/compute/container-apps.md`        |
+| AKS, Kubernetes, K8s                   | `services/compute/aks.md`                   |
+| ACR, Container Registry                | `services/containers/container-registry.md` |
+| Azure SQL, SQL DB, SQL Database        | `services/databases/sql-database.md`        |
+| Cosmos DB, CosmosDB, DocumentDB        | `services/databases/cosmos-db.md`           |
+| PostgreSQL, Postgres, Flexible Server  | `services/databases/postgresql-flexible.md` |
+| Redis, Azure Cache for Redis           | `services/databases/redis-cache.md`         |
+| App Gateway, AGW, WAF v2               | `services/networking/app-gateway.md`        |
+| Azure Firewall                         | `services/networking/azure-firewall.md`     |
+| DDoS Protection                        | `services/networking/ddos-protection.md`    |
+| Load Balancer, ALB                     | `services/networking/load-balancer.md`      |
+| Private Link, Private Endpoint         | `services/networking/private-link.md`       |
+| Blob Storage, Azure Files, ADLS        | `services/storage/storage.md`               |
+| Managed Disks, Premium SSD, Ultra Disk | `services/storage/managed-disks.md`         |
+| Key Vault, AKV                         | `services/security/key-vault.md`            |
+| Defender for Cloud, CSPM               | `services/security/defender-for-cloud.md`   |
+| Azure Monitor, Metrics, Alerts         | `services/monitoring/monitor.md`            |
+| Log Analytics, OMS                     | `services/monitoring/monitor.md`            |
+| App Insights, APM                      | `services/monitoring/monitor.md`            |
+| Service Bus, ASB, Queues, Topics       | `services/integration/service-bus.md`       |
+| APIM, API Management, API Gateway      | `services/integration/api-management.md`    |
 
 For the full service routing map (all 140+ services), see [service-routing.md](service-routing.md).
 

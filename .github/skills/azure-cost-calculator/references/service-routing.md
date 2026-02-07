@@ -294,7 +294,7 @@ Communication platforms, telephony, messaging, and telecom services.
 | AI Ops            | `ai-ops.md`            | Telecom AI Ops, Azure Operator Insights                |
 | Packet Core       | `packet-core.md`       | Azure Private 5G Core, Packet Core, Mobile Packet Core |
 
-> **Note**: All Azure Communication Services appear as separate `serviceName` values per feature (Voice, SMS, Email, etc.) rather then one unified entry. Telecom services (AI Ops, Packet Core) are from `serviceFamily eq 'Telecommunications'`.
+> **Note**: All Azure Communication Services appear as separate `serviceName` values per feature (Voice, SMS, Email, etc.) rather than one unified entry. Telecom services (AI Ops, Packet Core) are from `serviceFamily eq 'Telecommunications'`.
 
 ## Specialist (`services/specialist/`)
 
