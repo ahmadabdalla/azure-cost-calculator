@@ -10,5 +10,5 @@
 - [ ] First query pattern appears within lines 1-45
 - [ ] All API filter values verified against live API using `Explore-AzurePricing.ps1`
 - [ ] Cost formula uses `retailPrice` from API (no hardcoded prices)
-- [ ] Validation script passes locally: `.\Validate-ServiceReference.ps1 -Path <file> -CheckAliasUniqueness`
-- [ ] File placed in correct `services/{category}/` folder
+- [ ] Validation script passes locally: `.\.github\skills\azure-cost-calculator\scripts\Validate-ServiceReference.ps1 -Path .github\skills\azure-cost-calculator\references\services\{category}\{file} -CheckAliasUniqueness`
+- [ ] File placed in correct `.github/skills/azure-cost-calculator/references/services/{category}/` folder
