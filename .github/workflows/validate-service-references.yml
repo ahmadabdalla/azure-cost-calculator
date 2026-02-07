@@ -7,32 +7,42 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  issues: write # Required to create category labels
 
 jobs:
-  validate-and-label:
-    name: Validate and label service files
+  validate:
+    name: Validate service reference files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
 
       - name: Get changed service files
         id: changed
-        uses: tj-actions/changed-files@ed68ef82c095e0229c4523d0a4e62550cf3ee5e4 # v46
-        with:
-          files: |
-            .github/skills/azure-cost-calculator/references/services/**/*.md
-          files_ignore: |
-            .github/skills/azure-cost-calculator/references/services/TEMPLATE.md
+        shell: bash
+        run: |
+          CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}" \
+            -- '.github/skills/azure-cost-calculator/references/services/' \
+            | grep '\.md$' | grep -v 'TEMPLATE.md' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "any_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "any_changed=true" >> "$GITHUB_OUTPUT"
+            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$CHANGED" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Run validation
         if: steps.changed.outputs.any_changed == 'true'
         shell: pwsh
         run: |
-          $files = "${{ steps.changed.outputs.all_changed_files }}" -split ' '
-          $files = $files | Where-Object { $_ -and (Test-Path $_) }
+          $files = "${{ steps.changed.outputs.all_changed_files }}" -split "`n" |
+            Where-Object { $_ -and (Test-Path $_) }
 
           if ($files.Count -eq 0) {
             Write-Output "No service reference files to validate."
@@ -47,47 +57,3 @@ jobs:
           $servicesRoot = ".github/skills/azure-cost-calculator/references/services"
 
           & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness
-
-      - name: Auto-label by category
-        if: ${{ !cancelled() && steps.changed.outputs.any_changed == 'true' }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
-        with:
-          script: |
-            const files = `${{ steps.changed.outputs.all_changed_files }}`.split(' ').filter(Boolean);
-            const categories = new Set();
-
-            for (const file of files) {
-              const match = file.match(/services\/([^/]+)\//);
-              if (match) categories.add(match[1]);
-            }
-
-            const labels = [...categories].map(c => `category/${c}`);
-            if (labels.length === 0) return;
-
-            // Ensure labels exist before applying
-            for (const label of labels) {
-              try {
-                await github.rest.issues.getLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: label
-                });
-              } catch {
-                await github.rest.issues.createLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  name: label,
-                  color: '0075ca',
-                  description: `Service reference: ${label.replace('category/', '')}`
-                });
-              }
-            }
-
-            await github.rest.issues.addLabels({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              labels: labels
-            });
-
-            console.log(`Applied labels: ${labels.join(', ')}`);

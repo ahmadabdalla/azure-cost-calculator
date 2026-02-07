@@ -93,11 +93,20 @@ function Get-FrontMatter {
             continue
         }
 
-        # Match "key:" with no value -- consume subsequent "- item" lines
+        # Match "key:" with no value -- consume subsequent lines
         if ($line -match '^\s*(\w+)\s*:\s*$') {
             $key = $Matches[1]
-            $items = @()
             $index++
+
+            # Check if next line is an indented bracketed list [a, b]
+            if ($index -lt $frontMatterLines.Count -and $frontMatterLines[$index] -match '^\s+(\[.*\])\s*$') {
+                $result.Fields[$key] = $Matches[1].Trim()
+                $index++
+                continue
+            }
+
+            # Otherwise consume "- item" YAML sequence lines
+            $items = @()
             while ($index -lt $frontMatterLines.Count) {
                 $nextLine = $frontMatterLines[$index]
                 if ($nextLine -match '^\s+\-\s*(.+)$') {
@@ -150,6 +159,25 @@ function Test-ServiceReference {
                 })
         }
 
+        # --- Alias-specific: ensure at least one alias actually exists ---
+        if ($fm.Fields.ContainsKey('aliases')) {
+            $aliasValue = $fm.Fields['aliases']
+            $parsedAliases = @()
+            if ($aliasValue -is [string]) {
+                $stripped = $aliasValue -replace '^\[', '' -replace '\]$', ''
+                $parsedAliases = @($stripped -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+            }
+            elseif ($aliasValue -is [System.Collections.IEnumerable]) {
+                $parsedAliases = @($aliasValue | ForEach-Object { $_.ToString().Trim() } | Where-Object { $_ })
+            }
+            $hasAliases = $parsedAliases.Count -gt 0
+            $checks.Add(@{
+                    Name    = 'aliases_not_empty'
+                    Pass    = $hasAliases
+                    Message = if ($hasAliases) { "aliases contains $($parsedAliases.Count) entry(s)" } else { 'aliases field is present but empty - at least one alias is required' }
+                })
+        }
+
         # --- Category validation ---
         if ($fm.Fields.ContainsKey('category')) {
             $rawCategory = $fm.Fields['category'].Trim()
@@ -168,20 +196,29 @@ function Test-ServiceReference {
 
         # --- File placement ---
         $pathStr = $fullPath.ToString().Replace('\', '/')
-        if ($fm.Fields.ContainsKey('category') -and $pathStr -match 'services/([^/]+)/') {
-            $folderCategory = $Matches[1]
-            $expectedCategory = $fm.Fields['category'].Trim()
-            $placementOk = $folderCategory -eq $expectedCategory
-            $checks.Add(@{
-                    Name    = 'file_placement'
-                    Pass    = $placementOk
-                    Message = if ($placementOk) {
-                        "File is in correct category folder '$folderCategory'"
-                    }
-                    else {
-                        "File is in '$folderCategory/' but category is '$expectedCategory'"
-                    }
-                })
+        if ($fm.Fields.ContainsKey('category')) {
+            if ($pathStr -match 'services/([^/]+)/') {
+                $folderCategory = $Matches[1]
+                $expectedCategory = $fm.Fields['category'].Trim()
+                $placementOk = $folderCategory -eq $expectedCategory
+                $checks.Add(@{
+                        Name    = 'file_placement'
+                        Pass    = $placementOk
+                        Message = if ($placementOk) {
+                            "File is in correct category folder '$folderCategory'"
+                        }
+                        else {
+                            "File is in '$folderCategory/' but category is '$expectedCategory'"
+                        }
+                    })
+            }
+            else {
+                $checks.Add(@{
+                        Name    = 'file_placement'
+                        Pass    = $false
+                        Message = "File is not under a 'references/services/<category>/' directory"
+                    })
+            }
         }
     }
 
@@ -189,7 +226,7 @@ function Test-ServiceReference {
     $first45 = if ($lines.Count -ge 45) { $lines[0..44] } else { $lines }
     $hasQueryInFirst45 = $false
     for ($i = 0; $i -lt $first45.Count; $i++) {
-        if ($first45[$i] -match '^\s*```powershell') {
+        if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)') {
             $hasQueryInFirst45 = $true
             break
         }
@@ -199,10 +236,10 @@ function Test-ServiceReference {
             Name    = 'forty_five_line_rule'
             Pass    = $hasQueryInFirst45
             Message = if ($hasQueryInFirst45) {
-                'Query pattern (```powershell) found within first 45 lines'
+                'Query pattern (```powershell/pwsh) found within first 45 lines'
             }
             else {
-                'No ```powershell block found within first 45 lines (45-line rule)'
+                'No ```powershell or ```pwsh block found within first 45 lines (45-line rule)'
             }
         })
 
@@ -266,6 +303,7 @@ function Test-AliasUniqueness {
     param([string]$RootPath)
 
     $checks = [System.Collections.Generic.List[object]]::new()
+    $RootPath = (Resolve-Path -Path $RootPath).Path
     $aliasMap = @{}
     $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse |
     Where-Object { $_.Name -ne 'TEMPLATE.md' }
