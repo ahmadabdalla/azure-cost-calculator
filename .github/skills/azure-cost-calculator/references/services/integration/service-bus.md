@@ -1,6 +1,6 @@
 ---
 serviceName: Service Bus
-category: messaging
+category: integration
 aliases: [service bus, messaging, queues, topics]
 ---
 

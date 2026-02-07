@@ -1,6 +1,6 @@
 ---
 serviceName: Redis Cache
-category: integration
+category: databases
 aliases: [Redis, Azure Cache for Redis, cache]
 ---
 

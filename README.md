@@ -9,12 +9,11 @@ No guessing, no stale spreadsheets — just real-time price lookups and clear co
 | Category        | Services                                                                                       |
 | --------------- | ---------------------------------------------------------------------------------------------- |
 | **Compute**     | Virtual Machines, App Service, Azure Functions, Container Apps, AKS, Container Registry        |
-| **Databases**   | SQL Database, Cosmos DB, PostgreSQL Flexible Server                                            |
+| **Databases**   | SQL Database, Cosmos DB, PostgreSQL Flexible Server, Redis Cache                               |
 | **Storage**     | Blob / File / Queue / Table Storage, Managed Disks                                             |
 | **Networking**  | Application Gateway, Load Balancer, Azure Firewall, Private Link, Private DNS, DDoS Protection |
 | **Security**    | Key Vault, Defender for Cloud                                                                  |
-| **Integration** | API Management, Redis Cache                                                                    |
-| **Messaging**   | Service Bus                                                                                    |
+| **Integration** | API Management, Service Bus                                                                    |
 | **Monitoring**  | Application Insights / Azure Monitor                                                           |
 
 ## Installation

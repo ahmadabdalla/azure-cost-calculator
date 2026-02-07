@@ -1,9 +1,22 @@
 ````markdown
-# {Service Display Name}
+---
+serviceName: { exact serviceName from API }
+category:
+  {
+    category folder name,
+    e.g.,
+    compute,
+    databases,
+    networking,
+    storage,
+    security,
+    monitoring,
+    integration,
+  }
+aliases: [{ comma-separated common names, abbreviations, and synonyms }]
+---
 
-- **serviceName**: `{exact serviceName from API}`
-- **category**: {category folder name, e.g., compute, databases, networking, storage, security, monitoring, messaging, integration}
-- **aliases**: [{comma-separated common names, abbreviations, and synonyms}]
+# {Service Display Name}
 
 **Primary cost**: {One-line summary of the main billing dimensions, e.g., "Compute hours × 730" or "Operations per-10K + storage per-GB/month"}
 
@@ -12,7 +25,7 @@
 
   1. TITLE: Use the official Azure service name as shown in the portal.
 
-  1b. METADATA (required): Add the 3 metadata lines immediately after the title:
+  1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
      - serviceName: The exact case-sensitive value from the Retail Prices API
      - category: The category folder this file lives in (compute, databases, etc.)
      - aliases: Common names, abbreviations, and synonyms users might search for
