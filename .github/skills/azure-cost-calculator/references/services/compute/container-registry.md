@@ -1,6 +1,10 @@
 ````markdown
 # Container Registry (ACR)
 
+- **serviceName**: `Container Registry`
+- **category**: compute
+- **aliases**: [ACR, container registry]
+
 **Primary cost**: Registry unit (daily) + excess storage (per-GB/month)
 
 > **Critical trap**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. Multiplying by 730 gives a result ~24× too high. Always multiply by **30** (days/month).

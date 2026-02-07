@@ -1,4 +1,7 @@
 # Key Vault
+- **serviceName**: `Key Vault`
+- **category**: security
+- **aliases**: [keyvault, KV, vault]
 
 **Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 

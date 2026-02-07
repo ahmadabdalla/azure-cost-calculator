@@ -1,4 +1,7 @@
 # Redis Cache
+- **serviceName**: `Redis Cache`
+- **category**: integration
+- **aliases**: [Redis, Azure Cache for Redis, cache]
 
 **Primary cost**: Cache instance hours based on tier and size
 
@@ -71,4 +74,4 @@ RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms
     -PriceType Reservation
 ```
 
-> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).
+> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).

@@ -1,4 +1,7 @@
 # Azure SQL Database
+- **serviceName**: `SQL Database`
+- **category**: databases
+- **aliases**: [SQL DB, Azure SQL, sql]
 
 **Primary cost**: vCore hourly rate + storage per-GB/month
 
@@ -62,7 +65,7 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 ```
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
-> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Product Names
 

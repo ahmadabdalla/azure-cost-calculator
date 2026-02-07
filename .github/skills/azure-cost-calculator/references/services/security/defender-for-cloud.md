@@ -1,5 +1,8 @@
 ````markdown
 # Microsoft Defender for Cloud
+- **serviceName**: `Microsoft Defender for Cloud`
+- **category**: security
+- **aliases**: [defender, security center, MDC]
 
 **Multiple sub-products** — query each separately by its own productName/skuName/meterName.
 

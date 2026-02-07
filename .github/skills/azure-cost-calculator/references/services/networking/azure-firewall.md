@@ -1,5 +1,8 @@
 ````markdown
 # Azure Firewall
+- **serviceName**: `Azure Firewall`
+- **category**: networking
+- **aliases**: [firewall]
 
 **Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
 

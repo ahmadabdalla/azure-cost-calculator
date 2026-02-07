@@ -1,5 +1,9 @@
 # Azure Functions
 
+- **serviceName**: `Functions`
+- **category**: compute
+- **aliases**: [azure functions, serverless, function app]
+
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
@@ -32,7 +36,7 @@
 
 > These rates are from the [Azure Functions pricing page](https://azure.microsoft.com/en-au/pricing/details/functions/). The API returns them but at precision below what the script rounds to — the script shows `$0.00` for both.
 
-> **For non-USD currencies**: The API returns `$0.00` in all currencies due to rounding. Use the USD rates above and convert using either the user's known exchange rate or the ratio derived from another meter in the same region (e.g., query a VM price in both USD and the target currency to derive the conversion factor). See [shared.md](../shared.md) for the currency derivation method.
+> **For non-USD currencies**: The API returns `$0.00` in all currencies due to rounding. Use the USD rates above and convert using either the user's known exchange rate or the ratio derived from another meter in the same region (e.g., query a VM price in both USD and the target currency to derive the conversion factor). See [regions-and-currencies.md](../../regions-and-currencies.md) for the currency derivation method.
 
 ## Manual Calculation Example
 

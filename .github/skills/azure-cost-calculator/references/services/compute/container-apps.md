@@ -1,5 +1,9 @@
 # Container Apps
 
+- **serviceName**: `Azure Container Apps`
+- **category**: compute
+- **aliases**: [container apps, ACA]
+
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
 > **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `-SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. Always ask if workload is always-on or event-driven to pick the right SKU.
@@ -55,7 +59,7 @@ Dedicated:
 | Memory Active Usage | $0.000003 per GiB-second                  | 360,000 GiB-seconds/mo  |
 | Requests            | ~$0.40 per 1M requests (varies by region) | 2M requests/mo          |
 
-> **Note**: Rates from [Azure Container Apps pricing page](https://azure.microsoft.com/pricing/details/container-apps/). API returns `$0.00` for vCPU/memory in all currencies (sub-cent rounding). Use USD rates above; for other currencies convert via [shared.md](../shared.md).
+> **Note**: Rates from [Azure Container Apps pricing page](https://azure.microsoft.com/pricing/details/container-apps/). API returns `$0.00` for vCPU/memory in all currencies (sub-cent rounding). Use USD rates above; for other currencies convert via [regions-and-currencies.md](../../regions-and-currencies.md).
 
 ### Manual Calculation Example
 

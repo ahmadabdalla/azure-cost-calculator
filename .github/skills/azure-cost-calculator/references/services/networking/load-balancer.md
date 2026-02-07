@@ -1,4 +1,7 @@
 # Virtual Network / Load Balancer
+- **serviceName**: `Load Balancer`
+- **category**: networking
+- **aliases**: [LB, load balancer]
 
 ## Virtual Network
 
@@ -32,7 +35,7 @@ The API has no data for any standard Azure public region. Use the known rates be
 | Overage rules   | ~$0.01     | per hour per rule | Each rule beyond the first 5               |
 | Data processed  | ~$0.005    | per GB            | Inbound + outbound                         |
 
-> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). These are approximate USD values — direct users to the pricing page for current rates. For non-USD currencies, use the currency derivation method in [shared.md](../shared.md).
+> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). These are approximate USD values — direct users to the pricing page for current rates. For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
 
 ### Manual Cost Formula
 

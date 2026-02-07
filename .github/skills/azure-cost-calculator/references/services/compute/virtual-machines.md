@@ -1,5 +1,9 @@
 # Virtual Machines
 
+- **serviceName**: `Virtual Machines`
+- **category**: compute
+- **aliases**: [VMs, virtual machine, VM]
+
 **Primary cost**: Compute hours (hourly rate × 730)
 
 > **Trap**: A query with only `-ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
@@ -59,7 +63,7 @@ Monthly = retailPrice × 730 hours × instanceCount
     -PriceType Reservation
 ```
 
-> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). Select desired `reservationTerm` ("1 Year" / "3 Years") from results.
+> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). Select desired `reservationTerm` ("1 Year" / "3 Years") from results.
 
 ## Common SKUs
 

@@ -1,4 +1,7 @@
 # Application Insights / Log Analytics
+- **serviceName**: `Azure Monitor` / `Log Analytics`
+- **category**: monitoring
+- **aliases**: [App Insights, Application Insights, Log Analytics, monitoring, logs]
 
 **Primary cost**: Data ingestion per-GB + retention
 

@@ -1,5 +1,8 @@
 ````markdown
 # Private DNS Zones
+- **serviceName**: `Azure DNS`
+- **category**: networking
+- **aliases**: [private DNS, DNS zones]
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 

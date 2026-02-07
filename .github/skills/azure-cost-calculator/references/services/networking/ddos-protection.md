@@ -1,5 +1,8 @@
 ````markdown
 # DDoS Protection
+- **serviceName**: _not in API_
+- **category**: networking
+- **aliases**: [DDoS, DDoS protection]
 
 > **⚠ API UNAVAILABLE**: DDoS Protection pricing is **NOT available** in the Azure Retail Prices API. Searching by serviceName, productName, or meterName containing "DDoS" across all regions returns zero results.
 > **Trap**: The manual fallback prices below are in **USD** — the only currency available for this service. Direct users to the Azure pricing calculator for local-currency equivalents.

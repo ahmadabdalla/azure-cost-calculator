@@ -1,5 +1,9 @@
 # App Service Plans
 
+- **serviceName**: `Azure App Service`
+- **category**: compute
+- **aliases**: [app service, web app, webapp]
+
 **Primary cost**: Fixed hourly rate for the plan SKU × 730
 
 ## Query Pattern

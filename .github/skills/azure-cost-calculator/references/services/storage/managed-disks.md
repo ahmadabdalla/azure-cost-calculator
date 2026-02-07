@@ -1,5 +1,8 @@
 ````markdown
 # Managed Disks
+- **serviceName**: `Storage`
+- **category**: storage
+- **aliases**: [managed disks, disks, disk storage]
 
 **Primary cost**: Fixed monthly rate per disk + disk mount fee
 
@@ -51,7 +54,7 @@
 
 Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
 
-> **Trap (RI MonthlyCost)**: See [pitfalls.md](../pitfalls.md). Calculate: unitPrice ÷ 12 for monthly cost.
+> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Calculate: unitPrice ÷ 12 for monthly cost.
 
 ## Common SKUs
 

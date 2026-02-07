@@ -1,4 +1,7 @@
 # Storage Accounts (Blob)
+- **serviceName**: `Storage`
+- **category**: storage
+- **aliases**: [blob storage, file storage, table storage, queue storage, Azure Storage]
 
 **Primary cost**: Data stored (per-GB/month), operations (per-10K), data retrieval, write operations
 

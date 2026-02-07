@@ -1,4 +1,7 @@
 # Azure Cosmos DB
+- **serviceName**: `Azure Cosmos DB`
+- **category**: databases
+- **aliases**: [CosmosDB, Cosmos, documentdb]
 
 **Primary cost**: Provisioned throughput (RU/s per-hour) + storage
 
