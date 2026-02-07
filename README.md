@@ -114,7 +114,7 @@ flowchart LR
     S --> E
     R --> E
     E -->|"≤2 services: full read"| G1["Full Service File"]
-    E -->|"3+ services: lines 1-30"| G2["Partial Read\n(batch mode)"]
+    E -->|"3+ services: lines 1-45"| G2["Partial Read\n(batch mode)"]
     G1 --> H[Get-AzurePricing.ps1]
     G2 --> H
     H --> I[Azure Retail Prices API]
@@ -135,7 +135,7 @@ The skill uses the **filesystem as an index** — each supported Azure service h
 
 1. **Identifies** the Azure resource type(s) from your question
 2. **Locates** the matching service reference file via file search, the [common alias index](.github/skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](.github/skills/azure-cost-calculator/references/service-routing.md) (140+ services)
-3. **Reads** the service file — in full for 1–2 services, or lines 1–30 only in **batch estimation mode** (3+ services) for token efficiency
+3. **Reads** the service file — in full for 1–2 services, or lines 1–45 only in **batch estimation mode** (3+ services) for token efficiency
 4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
 
@@ -144,7 +144,7 @@ The skill uses the **filesystem as an index** — each supported Azure service h
 The skill is designed for complex multi-service estimates (10–15+ services) without exhausting the agent's context window:
 
 - **Lazy reference loading** — only `SKILL.md` and `shared.md` load on every query. Troubleshooting ([pitfalls.md](.github/skills/azure-cost-calculator/references/pitfalls.md)), RI pricing ([reserved-instances.md](.github/skills/azure-cost-calculator/references/reserved-instances.md)), region/currency info ([regions-and-currencies.md](.github/skills/azure-cost-calculator/references/regions-and-currencies.md)), and the full routing map ([service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)) load only when needed.
-- **Batch estimation mode** — for 3+ services, the agent reads only the first 30 lines of each service file (metadata + primary query pattern), reducing per-service token cost by ~65%.
+- **Batch estimation mode** — for 3+ services, the agent reads only the first 45 lines of each service file (metadata + primary query pattern), reducing per-service token cost by ~65%.
 - **Alias-first routing** — a compact alias index in `shared.md` resolves common service names without loading the full 140+ service routing map.
 
 For services **not yet documented**, `Explore-AzurePricing.ps1` discovers available filter values directly from the API.
@@ -172,7 +172,7 @@ Contributions are welcome! If you'd like to add support for a new Azure service 
 
 1. Fork this repository
 2. Add or update the service reference in `.github/skills/azure-cost-calculator/references/services/<category>/` using [TEMPLATE.md](.github/skills/azure-cost-calculator/references/services/TEMPLATE.md) as a starting point
-3. **30-line rule**: ensure the first query pattern (most common configuration) appears within the first 30 lines — this is required for batch estimation mode
+3. **45-line rule**: ensure the first query pattern (most common configuration) appears within the first 45 lines — this is required for batch estimation mode
 4. Place the file in the category specified in [service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)
 5. If adding a new category, update the category index in [shared.md](.github/skills/azure-cost-calculator/references/shared.md)
 6. Submit a pull request
