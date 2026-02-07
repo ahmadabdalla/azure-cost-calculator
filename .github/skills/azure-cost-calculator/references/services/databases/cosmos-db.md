@@ -21,6 +21,15 @@ aliases: [CosmosDB, Cosmos, documentdb]
     -SkuName 'RUs' `
     -Quantity 4
 
+# Autoscale provisioned throughput (use -Quantity for multiples of 100 RU/s)
+# Example: 10,000 max RU/s = -Quantity 100
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Azure Cosmos DB' `
+    -ProductName 'Azure Cosmos DB autoscale' `
+    -MeterName 'AP1 100 RUs' `
+    -SkuName 'AP1' `
+    -Quantity 100
+
 # Storage (transactional)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Cosmos DB' `
@@ -37,6 +46,7 @@ aliases: [CosmosDB, Cosmos, documentdb]
 | Multi-master   | `100 Multi-master RU/s` | `mRUs`  | `Azure Cosmos DB`            | For multi-region writes                 |
 | Storage        | `Data Stored`           | `RUs`   | `Azure Cosmos DB`            | Per GB/month for provisioned throughput |
 | Serverless ops | `1M RUs`                | —       | `Azure Cosmos DB serverless` | Per million RU consumed                 |
+| Autoscale      | `AP1 100 RUs`           | `AP1`   | `Azure Cosmos DB autoscale`  | 1.5× standard rate — already baked in   |
 
 ## Cost Formula
 
@@ -54,3 +64,4 @@ Total              = Throughput + Storage
 - Multi-region: multiply throughput cost by number of regions
 - The storage query returns multiple skuName variants (`RUs`, `mRUs`, `RUm`, `Free Tier`) — filter to `RUs` for standard provisioned
 - **Multi-region write (multi-master) costs ~2× single-region**: The `100 Multi-master RU/s` meter (skuName `mRUs`) is approximately double the price of the standard `100 RU/s` meter (skuName `RUs`). Always inform users about this multiplier when they request multi-region writes. For cost comparison, query both meters and show the per-region price difference.
+- **Autoscale provisioned throughput**: The API has a **separate product** (`Azure Cosmos DB autoscale`) with its own meter (`AP1 100 RUs`, skuName `AP1`). The autoscale rate is exactly 1.5× the standard provisioned rate and this premium is **already included** in the API price. Do NOT query the standard `100 RU/s` meter and manually multiply by 1.5 — instead query the autoscale product directly. With autoscale, billing is based on the maximum RU/s set; calculate as `autoscale_price × (maxRUs / 100) × 730`.

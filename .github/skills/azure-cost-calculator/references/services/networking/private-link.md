@@ -13,6 +13,8 @@ aliases: [private link, private endpoint, PL]
 > **Trap**: Prices returned from the Global region are in **USD only**, regardless of any currency parameter. Always note this caveat to the user.
 >
 > **Agent instruction**: Do NOT use `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — they will silently return nothing. Copy the direct API query below into PowerShell. Prices are always USD regardless of currency parameter.
+>
+> **Currency instruction (MANDATORY)**: If the user's requested currency is NOT USD, you **MUST** convert the USD prices using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT present USD prices when the user requested a different currency.
 
 ## Query Pattern
 
@@ -62,7 +64,7 @@ Total: ~$22.90/month (USD)
 
 ## Notes
 
-- Prices returned from the Global region are in **USD** regardless of the `currencyCode` parameter
+- Prices returned from the Global region are in **USD** regardless of the `currencyCode` parameter. If the user requested a non-USD currency, you **MUST** convert using the derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
 - Private endpoints are per-resource (e.g., one for SQL, one for Storage, one for Key Vault)
 - Data processing charges are typically negligible compared to endpoint hours for moderate usage
 - Each private endpoint consumes an IP address from the VNet subnet

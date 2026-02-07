@@ -14,6 +14,8 @@ aliases: [private DNS, DNS zones]
 > **Trap**: Zone pricing is **tiered** — the API returns multiple items with different `tierMinimumUnits`. First 25 zones at $0.50/zone/month, additional zones at $0.10/zone/month. Do NOT sum all tiers — pick the tier matching the expected zone count.
 >
 > **Agent instruction**: Do NOT use `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — they will silently return nothing. Copy the direct API query below into PowerShell. Prices are always USD regardless of currency parameter.
+>
+> **Currency instruction (MANDATORY)**: If the user's requested currency is NOT USD, you **MUST** convert the USD prices using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT present USD prices when the user requested a different currency.
 
 ## Query Pattern
 
@@ -66,7 +68,7 @@ Total: $7.00/month (USD)
 
 ## Notes
 
-- Prices returned from the Global region are in **USD** regardless of the `currencyCode` parameter
+- Prices returned from the Global region are in **USD** regardless of the `currencyCode` parameter. If the user requested a non-USD currency, you **MUST** convert using the derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
 - Private DNS zones are commonly paired with Private Endpoints (one zone per service type)
 - Typical private endpoint zones: `privatelink.database.windows.net`, `privatelink.blob.core.windows.net`, etc.
 - Query volume is usually very low — the zone hosting fee dominates for most deployments

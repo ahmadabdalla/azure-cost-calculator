@@ -54,8 +54,10 @@ All sub-products use the same pattern — substitute values from the Meter Names
 ## Defender CSPM (Cloud Security Posture Management)
 
 > **Trap (not in API)**: Defender CSPM has **no meter** in the Retail Prices API. Use the published rate below.
+>
+> **Currency instruction (MANDATORY)**: The CSPM price below is in **USD only**. If the user's requested currency is NOT USD, you **MUST** convert using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT present USD prices when the user requested a different currency.
 
-**Pricing**: $5.11 per billable resource/month ([Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)). Foundational CSPM is free (not estimated).
+**Pricing**: $5.11 USD per billable resource/month ([Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)). Foundational CSPM is free (not estimated).
 
 **Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (billing starts Feb 27 2026).
 
