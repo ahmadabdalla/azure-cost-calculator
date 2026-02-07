@@ -211,7 +211,7 @@ function Test-ServiceReference {
         $pattern = "^#{1,3}\s+$([regex]::Escape($section))\s*$"
         $hasSection = @($lines | Where-Object { $_ -match $pattern }).Count -gt 0
         $checks.Add(@{
-                Name    = "section_$($section -replace '\s+', '_' | ForEach-Object { $_.ToLower() })"
+                Name    = "section_$(($section -replace '\s+', '_').ToLower())"
                 Pass    = $hasSection
                 Message = if ($hasSection) { "Section '$section' found" } else { "Missing required section: ## $section" }
             })
@@ -247,7 +247,7 @@ function Test-ServiceReference {
     # --- Style: Trap format ---
     $trapLines = $lines | Where-Object { $_ -match '>\s*\*\*Trap' }
     $badTraps = @($trapLines | Where-Object { $_ -notmatch '>\s*\*\*Trap\*\*:' -and $_ -notmatch '>\s*\*\*Trap\s*\([^)]+\)\*\*:' })
-    $trapFormatOk = ($badTraps | Measure-Object).Count -eq 0
+    $trapFormatOk = $badTraps.Count -eq 0
     $checks.Add(@{
             Name    = 'trap_format'
             Pass    = $trapFormatOk
