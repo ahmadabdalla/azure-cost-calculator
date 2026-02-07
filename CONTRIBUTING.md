@@ -71,6 +71,7 @@ Check that:
 - The query returns the expected meters (not extras from unrelated products).
 - The `summary.totalMonthlyCost` is reasonable. If it looks inflated, you likely need additional filters (e.g., `-MeterName`) to exclude unwanted meters.
 - Sub-cent prices are handled (the script may round to `$0.00`).
+- **Reservation availability**: Run one query with `-PriceType Reservation`. If it returns 0 results, note in the final file's Notes section that reserved pricing is not available — this prevents future agents from wasting queries on dead-end RI lookups.
 
 ### Step 6 — Identify traps and gotchas
 
@@ -81,6 +82,9 @@ From the API results, identify any pricing traps. Common ones include:
 - **Non-hourly units showing `$0.0` MonthlyCost**: The script calculates `unitPrice × 730` which only works for hourly meters. Meters billed per second, per GB-hour, per 100 seconds, etc. will show `$0.0` or a meaningless value — document the correct manual formula for each.
 - **Sub-cent rounding**: Meters returning `$0.00` because the rate is below the script's display precision.
 - **Global-only pricing**: Some meters have no region (`armRegionName` is empty or "Global") and require direct API calls instead of the script.
+
+- **Geo-replication / geo-DR topology**: If the service supports multi-region or geo-disaster recovery, document the billing topology (e.g., a separate resource billed independently per region, replication data transfer charges) and note that regional price variance applies.
+- **Add-on billing scope**: For optional add-on meters, verify whether each add-on scales with the base unit count or is a flat per-resource charge. Document this in the trap or cost formula.
 
 Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: ...`
 
@@ -96,9 +100,12 @@ The file MUST follow these rules:
 - **Never hardcode prices** — always reference `retailPrice` from the API query results.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
 - **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
+- **Demonstrate scaling parameters**: At least one query pattern should use `-InstanceCount` (for multi-unit resources) or `-Quantity` (for event/request-based meters), with a comment explaining the parameter.
 - **Section order**: YAML → Title → Primary cost → Trap(s) → Query Pattern → Key Fields or Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
 - **Do NOT** include "verified" dates anywhere.
 - **Do NOT** annotate headers with "(case-sensitive)".
+- **Capacity planning notes**: When a service has scalable units (e.g., throughput units, processing units, compute units, DTUs, RU/s), include a note documenting what 1 unit provides in terms of throughput, requests, or connections so agents can map user workloads to unit counts.
+- **Tier limitations**: When a service has multiple tiers, document key per-tier limitations that affect pricing (e.g., features unavailable in lower tiers, meters that don't exist for certain tiers, maximum retention or throughput caps).
 - **Trap format**: `> **Trap**: ...` or `> **Trap ({descriptive name})**: ...`
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
 
