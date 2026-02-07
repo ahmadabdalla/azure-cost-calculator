@@ -1,4 +1,5 @@
 # Azure SQL Database
+
 - **serviceName**: `SQL Database`
 - **category**: databases
 - **aliases**: [SQL DB, Azure SQL, sql]

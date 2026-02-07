@@ -1,4 +1,5 @@
 # Azure Cosmos DB
+
 - **serviceName**: `Azure Cosmos DB`
 - **category**: databases
 - **aliases**: [CosmosDB, Cosmos, documentdb]

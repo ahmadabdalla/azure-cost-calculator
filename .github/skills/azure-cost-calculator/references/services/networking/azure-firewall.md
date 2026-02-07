@@ -1,5 +1,6 @@
 ````markdown
 # Azure Firewall
+
 - **serviceName**: `Azure Firewall`
 - **category**: networking
 - **aliases**: [firewall]

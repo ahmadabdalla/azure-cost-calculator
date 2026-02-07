@@ -36,12 +36,12 @@ When encountering these services, note the limitation to the user and provide th
 
 Three service categories return pricing in **USD only** — either because they are API-unavailable or because they are listed under the `Global` region:
 
-| Service              | Reason                                       | Reference                                         |
-| -------------------- | -------------------------------------------- | ------------------------------------------------- |
+| Service              | Reason                                       | Reference                                                    |
+| -------------------- | -------------------------------------------- | ------------------------------------------------------------ |
 | DDoS Protection      | Not in API at all                            | [ddos-protection.md](services/networking/ddos-protection.md) |
 | Private Link         | Global region, USD only                      | [private-link.md](services/networking/private-link.md)       |
 | Private DNS          | Global region, USD only                      | [private-dns.md](services/networking/private-dns.md)         |
-| Functions (sub-cent) | API returns `$0.00` in all currencies        | [functions.md](services/compute/functions.md)             |
+| Functions (sub-cent) | API returns `$0.00` in all currencies        | [functions.md](services/compute/functions.md)                |
 | Load Balancer        | No API data for public regions, USD fallback | [load-balancer.md](services/networking/load-balancer.md)     |
 
 ### Deriving a USD→local currency conversion factor

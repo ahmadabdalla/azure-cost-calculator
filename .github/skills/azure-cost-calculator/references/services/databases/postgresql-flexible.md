@@ -1,5 +1,6 @@
 ````markdown
 # Azure Database for PostgreSQL Flexible Server
+
 - **serviceName**: `Azure Database for PostgreSQL`
 - **category**: databases
 - **aliases**: [PostgreSQL, postgres, flexible server]

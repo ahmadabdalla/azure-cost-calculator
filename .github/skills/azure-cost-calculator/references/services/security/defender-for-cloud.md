@@ -1,5 +1,6 @@
 ````markdown
 # Microsoft Defender for Cloud
+
 - **serviceName**: `Microsoft Defender for Cloud`
 - **category**: security
 - **aliases**: [defender, security center, MDC]

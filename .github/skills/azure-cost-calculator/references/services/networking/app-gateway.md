@@ -1,4 +1,5 @@
 # Application Gateway
+
 - **serviceName**: `Application Gateway`
 - **category**: networking
 - **aliases**: [app gateway, application gateway, appgw]

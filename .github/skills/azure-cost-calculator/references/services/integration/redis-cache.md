@@ -1,4 +1,5 @@
 # Redis Cache
+
 - **serviceName**: `Redis Cache`
 - **category**: integration
 - **aliases**: [Redis, Azure Cache for Redis, cache]
@@ -18,6 +19,7 @@
 ## Meter Names
 
 Format: `{tier_prefix}{size} Cache Instance`
+
 - Basic/Standard: `C0`–`C6` (use productName to distinguish tier)
 - Premium: `P1`–`P5`
 
