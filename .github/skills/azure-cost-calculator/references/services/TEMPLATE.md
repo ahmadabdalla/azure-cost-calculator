@@ -3,15 +3,26 @@
 serviceName: { exact serviceName from API }
 category:
   {
-    category folder name,
+    category folder name — must match a category in shared.md Service Routing Map,
     e.g.,
     compute,
+    containers,
     databases,
     networking,
     storage,
     security,
     monitoring,
+    management,
     integration,
+    analytics,
+    ai-ml,
+    iot,
+    developer-tools,
+    identity,
+    migration,
+    web,
+    communication,
+    specialist,
   }
 aliases: [{ comma-separated common names, abbreviations, and synonyms }]
 ---
