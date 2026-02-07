@@ -1,8 +1,10 @@
-# Key Vault
+---
+serviceName: Key Vault
+category: security
+aliases: [keyvault, KV, vault]
+---
 
-- **serviceName**: `Key Vault`
-- **category**: security
-- **aliases**: [keyvault, KV, vault]
+# Key Vault
 
 **Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 

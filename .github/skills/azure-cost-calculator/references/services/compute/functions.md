@@ -1,8 +1,10 @@
-# Azure Functions
+---
+serviceName: Functions
+category: compute
+aliases: [azure functions, serverless, function app]
+---
 
-- **serviceName**: `Functions`
-- **category**: compute
-- **aliases**: [azure functions, serverless, function app]
+# Azure Functions
 
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).

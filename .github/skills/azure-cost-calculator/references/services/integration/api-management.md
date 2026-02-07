@@ -1,8 +1,10 @@
-# API Management
+---
+serviceName: API Management
+category: integration
+aliases: [APIM, API gateway, API management]
+---
 
-- **serviceName**: `API Management`
-- **category**: integration
-- **aliases**: [APIM, API gateway, API management]
+# API Management
 
 **Primary cost**: Unit hours based on tier
 

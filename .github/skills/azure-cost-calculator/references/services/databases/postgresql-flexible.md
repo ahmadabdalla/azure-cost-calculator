@@ -1,9 +1,11 @@
-````markdown
-# Azure Database for PostgreSQL Flexible Server
+---
+serviceName: Azure Database for PostgreSQL
+category: databases
+aliases: [PostgreSQL, postgres, flexible server]
+---
 
-- **serviceName**: `Azure Database for PostgreSQL`
-- **category**: databases
-- **aliases**: [PostgreSQL, postgres, flexible server]
+
+# Azure Database for PostgreSQL Flexible Server
 
 **Multiple meters**: vCore compute (hourly) + storage (per-GB/month)
 

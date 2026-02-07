@@ -1,9 +1,10 @@
-````markdown
-# Azure Firewall
+---
+serviceName: Azure Firewall
+category: networking
+aliases: [firewall]
+---
 
-- **serviceName**: `Azure Firewall`
-- **category**: networking
-- **aliases**: [firewall]
+# Azure Firewall
 
 **Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
 
@@ -52,4 +53,3 @@ Monthly = deploymentPrice × 730 + dataPrice × estimatedGB
 - Data processing costs are typically small relative to the fixed cost for moderate traffic
 - Standard → Premium adds IDPS, TLS inspection, URL filtering (higher fixed cost)
 - Basic is a budget option with limited features and throughput
-````

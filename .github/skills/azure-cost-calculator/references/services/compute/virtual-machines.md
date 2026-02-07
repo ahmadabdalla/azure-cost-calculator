@@ -1,8 +1,10 @@
-# Virtual Machines
+---
+serviceName: Virtual Machines
+category: compute
+aliases: [VMs, virtual machine, VM]
+---
 
-- **serviceName**: `Virtual Machines`
-- **category**: compute
-- **aliases**: [VMs, virtual machine, VM]
+# Virtual Machines
 
 **Primary cost**: Compute hours (hourly rate × 730)
 

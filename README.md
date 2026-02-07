@@ -1,6 +1,6 @@
-# Azure Cost Calculator — GitHub Copilot Skill
+# Azure Cost Calculator — AI Agent Skill
 
-A [GitHub Copilot Skill](https://docs.github.com/en/copilot/customizing-copilot/copilot-extensions/building-copilot-skills) that gives Copilot the ability to estimate Azure resource costs using **live pricing data** from the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices).
+An AI coding agent skill that estimates Azure resource costs using **live pricing data** from the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices). Compatible with [GitHub Copilot](https://docs.github.com/en/copilot/customizing-copilot/copilot-extensions/building-copilot-skills), [Claude Code](https://claude.ai), [Cursor](https://cursor.sh), [Windsurf](https://windsurf.com), and other agents that support the [skills.sh](https://skills.sh) ecosystem.
 
 No guessing, no stale spreadsheets — just real-time price lookups and clear cost breakdowns.
 
@@ -19,7 +19,13 @@ No guessing, no stale spreadsheets — just real-time price lookups and clear co
 
 ## Installation
 
-### Via Copilot Chat (recommended)
+### Via skills.sh (any agent)
+
+```bash
+npx skills add ahmadabdalla/azure-cost-calculator-skill
+```
+
+### Via GitHub Copilot Chat
 
 1. Open **GitHub Copilot Chat** in VS Code
 2. Type: `install skill ahmadabdalla/azure-cost-calculator-skill`
@@ -86,7 +92,7 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 
 ```mermaid
 flowchart LR
-    A[User Query] --> B[Copilot Chat]
+    A[User Query] --> B[AI Agent]
     B --> C[SKILL.md]
     C --> D{Locate Service}
     D -->|file search| E["references/services/**/*.md"]
@@ -102,15 +108,15 @@ flowchart LR
 
 ## How It Works
 
-The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `references/services/` organized by category (compute, databases, networking, etc.). These files contain the exact API filter values, cost formulas, and known traps for each service.
+The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `.github/skills/azure-cost-calculator/references/services/` organized by category (compute, databases, networking, etc.). These files contain the exact API filter values, cost formulas, and known traps for each service.
 
 1. **Identifies** the Azure resource type(s) from your question
-2. **Locates** the matching service reference file via file search across `references/services/**/*.md`
+2. **Locates** the matching service reference file via file search across `.github/skills/azure-cost-calculator/references/services/**/*.md`
 3. **Reads** the service file for exact query parameters (`serviceName`, `productName`, `skuName`, `meterName`)
 4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
 
-Shared reference docs provide additional guidance: [workflow.md](references/workflow.md) for script parameters, [pitfalls.md](references/pitfalls.md) for known traps, [regions-and-currencies.md](references/regions-and-currencies.md) for region names and currency conversion, and [reserved-instances.md](references/reserved-instances.md) for RI pricing traps.
+Shared reference docs provide additional guidance: [workflow.md](.github/skills/azure-cost-calculator/references/workflow.md) for script parameters, [pitfalls.md](.github/skills/azure-cost-calculator/references/pitfalls.md) for known traps, [regions-and-currencies.md](.github/skills/azure-cost-calculator/references/regions-and-currencies.md) for region names and currency conversion, and [reserved-instances.md](.github/skills/azure-cost-calculator/references/reserved-instances.md) for RI pricing traps.
 
 For services **not yet documented**, `Explore-AzurePricing.ps1` discovers available filter values directly from the API.
 
@@ -136,8 +142,8 @@ All prices come directly from Microsoft's public API — no hardcoded values.
 Contributions are welcome! If you'd like to add support for a new Azure service or improve an existing one:
 
 1. Fork this repository
-2. Add or update the service reference in `references/services/` (use `TEMPLATE.md` as a starting point)
-3. Update the category index in `references/shared.md` if adding a new category
+2. Add or update the service reference in `.github/skills/azure-cost-calculator/references/services/` (use [TEMPLATE.md](.github/skills/azure-cost-calculator/TEMPLATE.md) as a starting point)
+3. Update the category index in [references/shared.md](.github/skills/azure-cost-calculator/references/shared.md) if adding a new category
 4. Submit a pull request
 
 ## License

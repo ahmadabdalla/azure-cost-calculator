@@ -1,8 +1,10 @@
-# Application Gateway
+---
+serviceName: Application Gateway
+category: networking
+aliases: [app gateway, application gateway, appgw]
+---
 
-- **serviceName**: `Application Gateway`
-- **category**: networking
-- **aliases**: [app gateway, application gateway, appgw]
+# Application Gateway
 
 **Primary cost**: Gateway hours (fixed cost) + capacity units processed
 

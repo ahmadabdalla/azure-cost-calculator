@@ -1,8 +1,10 @@
-# Redis Cache
+---
+serviceName: Redis Cache
+category: integration
+aliases: [Redis, Azure Cache for Redis, cache]
+---
 
-- **serviceName**: `Redis Cache`
-- **category**: integration
-- **aliases**: [Redis, Azure Cache for Redis, cache]
+# Redis Cache
 
 **Primary cost**: Cache instance hours based on tier and size
 

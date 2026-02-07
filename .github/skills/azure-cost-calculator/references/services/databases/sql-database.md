@@ -1,8 +1,10 @@
-# Azure SQL Database
+---
+serviceName: SQL Database
+category: databases
+aliases: [SQL DB, Azure SQL, sql]
+---
 
-- **serviceName**: `SQL Database`
-- **category**: databases
-- **aliases**: [SQL DB, Azure SQL, sql]
+# Azure SQL Database
 
 **Primary cost**: vCore hourly rate + storage per-GB/month
 

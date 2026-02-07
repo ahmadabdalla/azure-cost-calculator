@@ -1,9 +1,10 @@
-````markdown
-# DDoS Protection
+---
+serviceName: not in API
+category: networking
+aliases: [DDoS, DDoS protection]
+---
 
-- **serviceName**: _not in API_
-- **category**: networking
-- **aliases**: [DDoS, DDoS protection]
+# DDoS Protection
 
 > **⚠ API UNAVAILABLE**: DDoS Protection pricing is **NOT available** in the Azure Retail Prices API. Searching by serviceName, productName, or meterName containing "DDoS" across all regions returns zero results.
 > **Trap**: The manual fallback prices below are in **USD** — the only currency available for this service. Direct users to the Azure pricing calculator for local-currency equivalents.
@@ -42,4 +43,3 @@ IP Protection:
 - Both plans include DDoS rapid response (DRR) support
 - Overage charges may apply for data processing above included limits
 - Prices are in USD (only available currency for this service). If the user requires a different currency, note these are approximate USD values and direct them to the Azure pricing calculator for local-currency equivalents.
-````

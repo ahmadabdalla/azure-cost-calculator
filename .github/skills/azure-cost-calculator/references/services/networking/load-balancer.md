@@ -1,8 +1,10 @@
-# Virtual Network / Load Balancer
+---
+serviceName: Load Balancer
+category: networking
+aliases: [LB, load balancer]
+---
 
-- **serviceName**: `Load Balancer`
-- **category**: networking
-- **aliases**: [LB, load balancer]
+# Virtual Network / Load Balancer
 
 ## Virtual Network
 

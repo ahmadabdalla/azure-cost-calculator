@@ -1,8 +1,10 @@
-# Container Apps
+---
+serviceName: Azure Container Apps
+category: compute
+aliases: [container apps, ACA]
+---
 
-- **serviceName**: `Azure Container Apps`
-- **category**: compute
-- **aliases**: [container apps, ACA]
+# Container Apps
 
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 

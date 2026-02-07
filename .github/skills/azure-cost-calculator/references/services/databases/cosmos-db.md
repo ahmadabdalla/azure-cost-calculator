@@ -1,8 +1,10 @@
-# Azure Cosmos DB
+---
+serviceName: Azure Cosmos DB
+category: databases
+aliases: [CosmosDB, Cosmos, documentdb]
+---
 
-- **serviceName**: `Azure Cosmos DB`
-- **category**: databases
-- **aliases**: [CosmosDB, Cosmos, documentdb]
+# Azure Cosmos DB
 
 **Primary cost**: Provisioned throughput (RU/s per-hour) + storage
 

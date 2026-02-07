@@ -1,8 +1,12 @@
+---
+serviceName: Azure Monitor
+category: monitoring
+aliases: [App Insights, Application Insights, Log Analytics, monitoring, logs]
+---
+
 # Application Insights / Log Analytics
 
-- **serviceName**: `Azure Monitor` / `Log Analytics`
-- **category**: monitoring
-- **aliases**: [App Insights, Application Insights, Log Analytics, monitoring, logs]
+> **Note**: Log Analytics uses `serviceName: 'Log Analytics'` in the API for workspace-specific queries. Use `'Azure Monitor'` as the primary service name.
 
 **Primary cost**: Data ingestion per-GB + retention
 

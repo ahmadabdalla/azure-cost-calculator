@@ -1,9 +1,10 @@
-````markdown
-# Managed Disks
+---
+serviceName: Storage
+category: storage
+aliases: [managed disks, disks, disk storage]
+---
 
-- **serviceName**: `Storage`
-- **category**: storage
-- **aliases**: [managed disks, disks, disk storage]
+# Managed Disks
 
 **Primary cost**: Fixed monthly rate per disk + disk mount fee
 
@@ -76,4 +77,3 @@ Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`
 - Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
 - Premium SSD P1–P20 include free burst (up to 3,500 IOPS / 170 MBps). On-demand burst for P20+ is a separate meter.
 - Snapshots billed separately (`Managed Disk Snapshots`). Ultra/Premium SSD v2 have per-vCPU reservation charge on attached VM.
-````

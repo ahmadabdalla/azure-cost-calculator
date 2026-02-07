@@ -1,8 +1,10 @@
-# Service Bus
+---
+serviceName: Service Bus
+category: messaging
+aliases: [service bus, messaging, queues, topics]
+---
 
-- **serviceName**: `Service Bus`
-- **category**: messaging
-- **aliases**: [service bus, messaging, queues, topics]
+# Service Bus
 
 **Primary cost**: Namespace hours (Standard/Premium) + operations
 

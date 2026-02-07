@@ -1,9 +1,11 @@
+---
+serviceName: Container Registry
+category: compute
+aliases: [ACR, container registry]
+---
+
 ````markdown
 # Container Registry (ACR)
-
-- **serviceName**: `Container Registry`
-- **category**: compute
-- **aliases**: [ACR, container registry]
 
 **Primary cost**: Registry unit (daily) + excess storage (per-GB/month)
 

@@ -1,6 +1,10 @@
 ---
 name: azure-cost-calculator
 description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources".
+license: MIT
+metadata:
+  author: ahmadabdalla
+  version: "1.0.0"
 ---
 
 # Azure Cost Calculator

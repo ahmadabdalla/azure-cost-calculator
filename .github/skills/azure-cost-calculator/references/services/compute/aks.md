@@ -1,8 +1,10 @@
-# Azure Kubernetes Service (AKS)
+---
+serviceName: Azure Kubernetes Service
+category: compute
+aliases: [AKS, kubernetes, k8s]
+---
 
-- **serviceName**: `Azure Kubernetes Service`
-- **category**: compute
-- **aliases**: [AKS, kubernetes, k8s]
+# Azure Kubernetes Service (AKS)
 
 **Primary cost**: AKS management fee + VM node costs (priced separately as VMs)
 

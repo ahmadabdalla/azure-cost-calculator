@@ -1,8 +1,10 @@
-# App Service Plans
+---
+serviceName: Azure App Service
+category: compute
+aliases: [app service, web app, webapp]
+---
 
-- **serviceName**: `Azure App Service`
-- **category**: compute
-- **aliases**: [app service, web app, webapp]
+# App Service Plans
 
 **Primary cost**: Fixed hourly rate for the plan SKU × 730
 
