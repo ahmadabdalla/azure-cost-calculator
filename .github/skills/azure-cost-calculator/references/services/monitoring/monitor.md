@@ -1,83 +1,52 @@
 ---
 serviceName: Azure Monitor
 category: monitoring
-aliases: [App Insights, Application Insights, Log Analytics, monitoring, logs]
+aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics]
 ---
 
-# Application Insights / Log Analytics
+# Azure Monitor
 
-> **Note**: Log Analytics uses `serviceName: 'Log Analytics'` in the API for workspace-specific queries. Use `'Azure Monitor'` as the primary service name.
+> **Note**: Azure Monitor is the umbrella service for monitoring in Azure. For **Log Analytics** and **Application Insights** pricing, see their separate reference files: `log-analytics.md` and `app-insights.md`.
 
-**Primary cost**: Data ingestion per-GB + retention
+**Primary cost**: Platform metrics are free; custom metrics billed per time series
 
-> **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
-> **Trap**: Azure Monitor commitment tiers use per-day pricing (`1/Day` unit), not per-GB. Only use them if the user needs 100+ GB/day.
-> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free (Log Analytics workspace). Always deduct this from the billable total: `billable_GB = total_GB - 5`.
-> **Trap (retention calculation)**: The first **31 days** of retention are free. For extended retention (e.g., 90 days), the chargeable window is `retentionDays - 31`. At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - 31)`. This is the most commonly miscalculated component — agents often forget to subtract the 31 free days or miscalculate the data volume in the chargeable window.
+> **Trap**: Platform metrics (CPU, memory, network, etc.) emitted by Azure resources are **free** — do not include them in cost estimates. Only custom metrics published via the Azure Monitor API are billable.
 
 ## Query Pattern
 
 ```powershell
-# Log Analytics — pay-as-you-go ingestion (per GB)
-# This is the primary meter for Application Insights + Log Analytics data
+# Azure Monitor — custom metrics
 .\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Analyzed'
-
-# Log Analytics — data retention (beyond 31 days free)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Retention'
+    -ServiceName 'Azure Monitor' `
+    -MeterName 'Monitored Time Series'
 ```
+
+## Key Fields
+
+| Parameter     | How to determine                                  | Example values                      |
+| ------------- | ------------------------------------------------- | ----------------------------------- |
+| `serviceName` | Fixed value for Azure Monitor metrics             | `Azure Monitor`                     |
+| `meterName`   | Custom metrics time series meter                  | `Monitored Time Series`             |
+
+## Meter Names
+
+| Meter                      | unitOfMeasure | Notes                                     |
+| -------------------------- | ------------- | ----------------------------------------- |
+| `Monitored Time Series`    | `10`          | Custom metrics - billed per 10 time series |
 
 ## Cost Formula
 
 ```
-Monthly Ingestion = retailPrice_per_GB × estimatedGB_per_month
-Monthly Retention = retention_price_per_GB × retainedGB
-Total = Ingestion + Retention
+Monthly = (customTimeSeries / 10) × retailPrice
 ```
 
-### Retention Calculation Clarification
-
-The first 31 days of retention are **free**. Charges apply for data retained beyond 31 days (up to the configured retention period, max 730 days).
-
-**How to calculate retained GB**: For steady-state ingestion of X GB/day, the volume of data in the chargeable retention window (days 32 to configured max) is:
-
-```
-Retained GB = dailyIngestionGB × chargeableDays
-where chargeableDays = min(retentionPeriodDays - 31, actualDaysOfData - 31)
-```
-
-For example, with 90-day retention and 5 GB/day steady ingestion:
-
-```
-Chargeable days = 90 - 31 = 59 days
-Retained GB = 5 × 59 = 295 GB
-Monthly retention cost = retentionPrice × 295
-```
-
-> **Note**: The first 5 GB/month of ingestion is free (Log Analytics workspace). This applies to ingestion only, not retention.
-
-## Commitment Tiers (optional, for high-volume)
-
-For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) offer discounts:
-
-```powershell
-# Example: 100 GB/day commitment tier
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Monitor' `
-    -SkuName '100 GB Commitment Tier' `
-    -MeterName '100 GB Commitment Tier Capacity Reservation'
-```
-
-> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
+> **Note**: The first **10 time series** per resource are free. For example, if you have 45 custom time series, only 35 are billable: `billableTimeSeries = max(0, customTimeSeries - 10)`.
 
 ## Notes
 
-- First 5 GB/month free (Log Analytics workspace)
-- 31 days retention included free; longer retention charged per-GB/month
-- Application Insights data flows into Log Analytics workspace
-- **Workspace-based Application Insights has no additional cost** beyond Log Analytics ingestion. Do NOT query a separate Application Insights meter — all telemetry costs are captured by the Log Analytics workspace ingestion and retention charges above. Only classic (non-workspace-based) Application Insights has separate billing, and it is being retired.
+- **Platform metrics are free**: All standard metrics emitted by Azure resources (CPU, memory, network, disk, etc.) have no cost
+- **Custom metrics**: Metrics published via Azure Monitor API are billed per time series
+- First 10 custom time series per resource are free
+- **Alerts**: Basic metric alerts (platform metrics) are free; multi-resource, multi-condition, or custom metric alerts have separate pricing
+- **Log Analytics and Application Insights** have separate pricing models - see `log-analytics.md` and `app-insights.md`
+- **Diagnostic settings**: Routing platform metrics to destinations (Log Analytics, Storage, Event Hubs) is free, but destination storage/ingestion has costs
