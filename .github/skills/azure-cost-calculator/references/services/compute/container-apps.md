@@ -73,3 +73,10 @@ Billable: vCPU-s = 4M − 180K = 3,820K · GiB-s = 8M − 360K = 7,640K · reqs 
 Cost: vCPU 3,820K × $0.000024 = $91.68 + mem 7,640K × $0.000003 = $22.92 + reqs 8 × $0.40 = $3.20
 Total = $117.80/mo
 ```
+
+## Notes
+
+- Consumption (Standard) meters return `$0.00` from the API — always use the Known Rates table above
+- Dedicated plan charges per-environment management fee in addition to vCPU/memory
+- GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
+- Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
