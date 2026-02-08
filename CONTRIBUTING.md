@@ -146,6 +146,15 @@ If the AI-generated file fails validation or looks wrong, check these common iss
 
 **Missing traps** — If you spot an API gotcha the AI missed (e.g., multiple meters being summed, RI cost miscalculation), add a trap block manually.
 
+## Category Design Principles
+
+1. **API-aligned** — categories map to the API `serviceFamily` field for first-pass routing
+2. **Routing over taxonomy** — the goal is finding the right file, not a perfect ontology
+3. **Cross-references over duplication** — when a service spans categories, keep one primary file and add a cross-reference in the other
+4. **Flat within categories** — no sub-folders; 100+ files per category is fine
+5. **Aliases are first-class** — the `aliases` YAML field is the primary search index
+6. **Free/no-meter services need files too** — prevents agents from wasting queries on free services
+
 ## Style Rules
 
 - Use 730 hours/month for hourly billing, 30 days/month for daily billing
