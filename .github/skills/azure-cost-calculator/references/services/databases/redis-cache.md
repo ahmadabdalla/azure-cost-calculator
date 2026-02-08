@@ -78,4 +78,4 @@ RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms
     -PriceType Reservation
 ```
 
-> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).
+> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost.

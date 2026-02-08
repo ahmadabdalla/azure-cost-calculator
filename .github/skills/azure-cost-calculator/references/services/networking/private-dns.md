@@ -9,13 +9,8 @@ aliases: [private DNS, DNS zones]
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
-> **Critical trap**: Private DNS pricing is **NOT available under any standard region** (e.g., `eastus`, `australiaeast`). The data is listed under `armRegionName = 'Global'` or an empty string. The `Get-AzurePricing.ps1` script requires a `-Region` parameter and will silently return no results. **You must call the API directly** to get these prices.
-> **Trap**: Prices returned from the Global region are in **USD only**, regardless of any currency parameter. Always note this caveat to the user.
-> **Trap**: Zone pricing is **tiered** — the API returns multiple items with different `tierMinimumUnits`. First 25 zones at $0.50/zone/month, additional zones at $0.10/zone/month. Do NOT sum all tiers — pick the tier matching the expected zone count.
->
-> **Agent instruction**: Do NOT use `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — they will silently return nothing. Copy the direct API query below into PowerShell. Prices are always USD regardless of currency parameter.
->
-> **Currency instruction (MANDATORY)**: If the user's requested currency is NOT USD, you **MUST** convert the USD prices using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT present USD prices when the user requested a different currency.
+> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not use scripts (Global region only, scripts require `-Region`). Call API directly using query below.
+> **Trap**: Zone pricing is **tiered** — first 25 zones at $0.50/zone/month, additional at $0.10/zone/month. Pick the tier matching expected zone count, do NOT sum all tiers.
 
 ## Query Pattern
 
@@ -68,7 +63,7 @@ Total: $7.00/month (USD)
 
 ## Notes
 
-- Prices returned from the Global region are in **USD** regardless of the `currencyCode` parameter. If the user requested a non-USD currency, you **MUST** convert using the derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
+- USD-only (Global region) — see shared.md § Common Traps for mandatory currency conversion
 - Private DNS zones are commonly paired with Private Endpoints (one zone per service type)
 - Typical private endpoint zones: `privatelink.database.windows.net`, `privatelink.blob.core.windows.net`, etc.
 - Query volume is usually very low — the zone hosting fee dominates for most deployments

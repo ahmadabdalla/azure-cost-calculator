@@ -6,12 +6,7 @@ aliases: [DDoS, DDoS protection]
 
 # DDoS Protection
 
-> **⚠ API UNAVAILABLE**: DDoS Protection pricing is **NOT available** in the Azure Retail Prices API. Searching by serviceName, productName, or meterName containing "DDoS" across all regions returns zero results.
-> **Trap**: The manual fallback prices below are in **USD only**.
->
-> **Agent instruction**: Do NOT attempt to query this service via the scripts — it will always return zero results. Use the manual fallback table below directly and note the API limitation to the user.
->
-> **Currency instruction (MANDATORY)**: If the user's requested currency is NOT USD, you **MUST** convert the USD fallback prices using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT leave prices in USD when the user requested a different currency. Do NOT direct the user to the Azure pricing calculator — derive the factor yourself and apply it.
+> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback table below.
 
 **This service requires manual estimation only.**
 
@@ -44,4 +39,4 @@ IP Protection:
 - IP Protection is better for small deployments with 1-14 public IPs
 - Both plans include DDoS rapid response (DRR) support
 - Overage charges may apply for data processing above included limits
-- Prices are in USD (only available currency for this service). If the user requested a non-USD currency, you **MUST** convert using the derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Always note the conversion is approximate.
+- USD-only — see shared.md § Common Traps for mandatory currency conversion

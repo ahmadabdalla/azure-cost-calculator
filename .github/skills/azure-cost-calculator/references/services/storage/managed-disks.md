@@ -56,7 +56,7 @@ aliases: [managed disks, disks, disk storage]
 
 Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
 
-> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Calculate: unitPrice ÷ 12 for monthly cost.
+> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost.
 
 ## Common SKUs
 

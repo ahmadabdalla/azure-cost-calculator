@@ -56,6 +56,29 @@ Service reference files are organized by category. To find a service file:
 5. **Aliases are first-class** — the `aliases` field in each service file's YAML front matter is the primary search index. Invest in comprehensive aliases over perfect folder structure.
 6. **Free/no-meter services need files too** — services like Azure Policy, Advisor, and Cost Management have no retail price, but they still need reference files that say "this service is free" to prevent agents from wasting time querying the API.
 
+## Common Traps (read once, apply to all affected services)
+
+### API-Unavailable Services
+
+Some services have **no data** in the Retail Prices API for standard regions. Scripts return zero results.
+**Do NOT** query via `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — use the manual fallback table in the service file.
+Affected: DDoS Protection, Load Balancer, Private DNS & Private Link (Global region only), Defender CSPM.
+Full list: [regions-and-currencies.md § Known API-Unavailable Services](regions-and-currencies.md#known-api-unavailable-services).
+
+### USD-Only Prices — Mandatory Conversion
+
+API-unavailable and Global-region services return **USD-only** prices. If the user requested a non-USD currency, you **MUST** derive a conversion factor and apply it. Do NOT leave prices in USD. Do NOT direct users to the Azure pricing calculator.
+Method: [regions-and-currencies.md § Deriving a USD→local currency conversion factor](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
+
+### Sub-Cent Pricing ($0.00 Display)
+
+Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Use the **Known Rates table** in each service file and calculate manually. Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
+
+### Reserved Instance MonthlyCost
+
+RI queries return the **total prepaid cost** for the full term, not monthly. The script's `MonthlyCost` is wrong for RIs.
+Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). See [reserved-instances.md](reserved-instances.md) for full RI traps.
+
 ## Pricing Factors
 
 - **Reserved Instances**: 1yr/3yr commitments save 30-70%. Use `-PriceType Reservation`.
