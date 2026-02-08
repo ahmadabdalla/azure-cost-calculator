@@ -8,7 +8,9 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 
 **Primary cost**: vCore hourly rate × 730 + storage per-GB/month
 
-> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. Query the standard `vCore` meter first, then add the zone-redundancy surcharge if the user specifies zone redundancy.
+> **Trap (Inflated totals)**: Omitting `-SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `-SkuName` for compute queries.
+
+> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. Query the standard `vCore` meter first, then add the zone-redundancy surcharge.
 
 ## Query Pattern
 
@@ -22,19 +24,12 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 ```
 
 ```powershell
-# Storage (General Purpose)
+# Storage (General Purpose) — use -Quantity for provisioned GB
 .\Get-AzurePricing.ps1 `
     -ServiceName 'SQL Managed Instance' `
     -ProductName 'SQL Managed Instance General Purpose - Storage' `
-    -MeterName 'General Purpose Data Stored'
-```
-
-```powershell
-# Storage (Business Critical)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'SQL Managed Instance' `
-    -ProductName 'SQL Managed Instance Business Critical - Storage' `
-    -MeterName 'Business Critical Data Stored'
+    -MeterName 'General Purpose Data Stored' `
+    -Quantity 256
 ```
 
 ## Key Fields
@@ -67,9 +62,11 @@ Total = Monthly Compute + Monthly Storage
 
 ## Notes
 
-- **License included vs AHB**: vCore prices are license-included by default. AHB prices appear as separate items with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`. Choose based on whether the customer has eligible SQL Server licenses.
-- **Storage**: GP storage billed separately per-GB. BC includes local SSD; storage meter covers data beyond included allocation.
+- **License included vs AHB**: vCore prices are license-included by default. AHB prices appear as separate items with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`.
+- **Storage**: GP and BC storage billed separately per-GB. For BC storage, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`.
 - **Backup**: PITR backup equal to max storage is free. Extra PITR/LTR billed via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage`.
+- **Tier limits**: GP supports 4–80 vCores (Gen5/Premium Series). BC supports 4–80 vCores and includes In-Memory OLTP. Premium Series Memory Optimized offers higher memory-per-vCore.
+- **Hardware**: Gen5 is the default. Premium Series and Premium Series Memory Optimized offer newer hardware. Gen4 is legacy (limited availability).
 
 ## Reserved Instance Pricing
 
