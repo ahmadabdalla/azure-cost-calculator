@@ -1,0 +1,59 @@
+name: Validate Service References
+
+on:
+  pull_request:
+    paths:
+      - ".github/skills/azure-cost-calculator/references/services/**/*.md"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate service reference files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed service files
+        id: changed
+        shell: bash
+        run: |
+          CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            "${{ github.event.pull_request.base.sha }}" \
+            "${{ github.event.pull_request.head.sha }}" \
+            -- '.github/skills/azure-cost-calculator/references/services/' \
+            | grep '\.md$' | grep -v 'TEMPLATE.md' || true)
+
+          if [ -z "$CHANGED" ]; then
+            echo "any_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "any_changed=true" >> "$GITHUB_OUTPUT"
+            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$CHANGED" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run validation
+        if: steps.changed.outputs.any_changed == 'true'
+        shell: pwsh
+        run: |
+          $files = "${{ steps.changed.outputs.all_changed_files }}" -split "`n" |
+            Where-Object { $_ -and (Test-Path $_) }
+
+          if ($files.Count -eq 0) {
+            Write-Output "No service reference files to validate."
+            exit 0
+          }
+
+          Write-Output "Validating $($files.Count) file(s):"
+          $files | ForEach-Object { Write-Output "  - $_" }
+          Write-Output ""
+
+          $scriptPath = ".github/skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1"
+          $servicesRoot = ".github/skills/azure-cost-calculator/references/services"
+
+          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness

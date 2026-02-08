@@ -1,0 +1,67 @@
+name: Add Service Reference
+description: Request or submit a new service reference file
+labels: ["new-service"]
+body:
+  - type: input
+    id: service-name
+    attributes:
+      label: Service name
+      description: The Azure service name as shown in the portal
+      placeholder: e.g., Azure Container Apps
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which category does this service belong to?
+      options:
+        - compute
+        - containers
+        - databases
+        - networking
+        - storage
+        - security
+        - monitoring
+        - management
+        - integration
+        - analytics
+        - ai-ml
+        - iot
+        - developer-tools
+        - identity
+        - migration
+        - web
+        - communication
+        - specialist
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Why is this needed?
+      description: Describe your use case or how often you need pricing for this service
+      placeholder: e.g., Frequently used in enterprise deployments, needed for landing zone cost estimates
+    validations:
+      required: true
+
+  - type: textarea
+    id: api-values
+    attributes:
+      label: Known API values (optional)
+      description: |
+        If you have already explored the API, provide the exact values.
+        Run `Explore-AzurePricing.ps1 -ServiceName 'Service Name'` to discover these.
+      placeholder: |
+        serviceName: 
+        productName: 
+        meterName: 
+
+  - type: checkboxes
+    id: self-submit
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to submit this service reference myself

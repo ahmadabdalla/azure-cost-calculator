@@ -1,0 +1,17 @@
+name: Improvement
+description: Suggest an improvement to the skill, scripts, or workflow
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What would you like to improve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why?
+      description: How does this improve the skill's accuracy, coverage, or usability?

@@ -1,0 +1,26 @@
+name: Fix Service Reference
+description: Report an error or correction needed in an existing service reference file
+labels: ["fix"]
+body:
+  - type: input
+    id: service-file
+    attributes:
+      label: Service file
+      description: Path or name of the service reference file with the issue
+      placeholder: e.g., services/compute/aks.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+      description: Describe the error — wrong API values, incorrect formula, missing trap, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Correct information
+      description: Provide the correct values, formula, or behavior if known
