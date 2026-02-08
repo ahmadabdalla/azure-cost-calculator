@@ -1,365 +1,574 @@
 # Full Service Routing Map
 
-Authoritative mapping of Azure services to category folders. Each entry shows the exact API `serviceName` (case-sensitive), the category folder, and common aliases. When a contributor creates a new service reference file, they MUST place it in the category listed here.
+Authoritative mapping of Azure services to category folders.
 
 For the Category Index and constants, see [shared.md](shared.md).
 
+Filename convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`
+Example: "Azure Data Factory" → `data-factory.md`
+Only entries with explicit `f:` field deviate from this convention.
+
+## Routing Notes
+
+- Some services share a `serviceName`; use `productName` filters (Storage, Managed Disks, Data Lake).
+- API `serviceFamily` may differ from category here (Event Hubs → IoT, APIM → Dev Tools, Sentinel → Mgmt, Spring Cloud → Other). Always use this file's category.
+- Services with no retail meter (Policy, Advisor, Cost Mgmt, DevOps, Entra ID free) still need reference files.
+- OpenAI/AI Services may appear as `Foundry Models`/`Foundry Tools` in newer API responses (AI Foundry rebrand).
+
 ## Compute (`services/compute/`)
 
-Services billed primarily on compute hours, vCPUs, or execution time.
-
-| API serviceName           | Suggested Filename          | Aliases / Portal Names                                        |
-| ------------------------- | --------------------------- | ------------------------------------------------------------- |
-| Virtual Machines          | `virtual-machines.md`       | VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host |
-| Azure App Service         | `app-service.md`            | App Service, Web Apps, App Service Plan, ASP                  |
-| Functions                 | `functions.md`              | Azure Functions, Serverless Functions, Function App           |
-| Azure Container Apps      | `container-apps.md`         | Container Apps, ACA                                           |
-| Azure Kubernetes Service  | `aks.md`                    | AKS, Kubernetes, K8s                                          |
-| Cloud Services            | `cloud-services.md`         | Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles   |
-| Service Fabric Mesh       | `service-fabric.md`         | Service Fabric, SF Mesh, Microservices                        |
-| Azure App Service (Linux) | `app-service-linux.md`      | App Service Linux, Linux Web Apps                             |
-| Azure Batch               | `batch.md`                  | Batch, HPC Batch, Batch Compute                               |
-| Azure VMware Solution     | `vmware-solution.md`        | AVS, VMware on Azure                                          |
-| Azure Red Hat OpenShift   | `openshift.md`              | ARO, OpenShift, Red Hat OpenShift                             |
-| Specialized Compute       | `specialized-compute.md`    | SAP HANA Large Instances, Azure Boost                         |
-| HPC Cache                 | `hpc-cache.md`              | HPC Cache, High Performance Compute Cache                     |
-| Durable Task Scheduler    | `durable-task-scheduler.md` | Durable Tasks, Workflow Scheduler                             |
-| Windows Virtual Desktop   | `virtual-desktop.md`        | Azure Virtual Desktop, AVD, WVD, Windows Virtual Desktop      |
-| Service Fabric            | `service-fabric-cluster.md` | Service Fabric, SF, Microservices Cluster, Reliable Services  |
-| Azure VM Image Builder    | `vm-image-builder.md`       | Image Builder, AIB, VM Image, Custom Image                    |
-| Virtual Machines Licenses | `vm-licenses.md`            | VM Licenses, BYOL, Windows Server License, SQL Server License |
-| Azure Local               | `azure-local.md`            | Azure Local, Azure Stack Local, Hybrid Compute                |
+```yaml
+- s: "Virtual Machines"
+  a: [VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host]
+- s: "Azure App Service"
+  a: [Web Apps, App Service Plan, ASP]
+- s: "Functions"
+  a: [Serverless Functions, Function App]
+- s: "Azure Container Apps"
+  a: [ACA]
+- s: "Azure Kubernetes Service"
+  f: aks.md
+  a: [AKS, Kubernetes, K8s]
+- s: "Cloud Services"
+  a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
+- s: "Service Fabric Mesh"
+  f: service-fabric.md
+  a: [Service Fabric, SF Mesh, Microservices]
+- s: "Azure App Service (Linux)"
+  a: [App Service Linux, Linux Web Apps]
+- s: "Azure Batch"
+  a: [HPC Batch, Batch Compute]
+- s: "Azure VMware Solution"
+  a: [AVS, VMware on Azure]
+- s: "Azure Red Hat OpenShift"
+  f: openshift.md
+  a: [ARO, OpenShift]
+- s: "Specialized Compute"
+  a: [SAP HANA Large Instances, Azure Boost]
+- s: "HPC Cache"
+  a: [High Performance Compute Cache]
+- s: "Durable Task Scheduler"
+  a: [Durable Tasks, Workflow Scheduler]
+- s: "Windows Virtual Desktop"
+  f: virtual-desktop.md
+  a: [Azure Virtual Desktop, AVD, WVD]
+- s: "Service Fabric"
+  f: service-fabric-cluster.md
+  a: [SF, Microservices Cluster, Reliable Services]
+- s: "Azure VM Image Builder"
+  a: [Image Builder, AIB, VM Image, Custom Image]
+- s: "Virtual Machines Licenses"
+  f: vm-licenses.md
+  a: [VM Licenses, BYOL, Windows Server License, SQL Server License]
+- s: "Azure Local"
+  f: azure-local.md
+  a: [Azure Stack Local, Hybrid Compute]
+```
 
 ## Containers (`services/containers/`)
 
-Container-specific infrastructure (registries, instances). Container orchestration (AKS) is under Compute.
-
-| API serviceName        | Suggested Filename       | Aliases / Portal Names                                |
-| ---------------------- | ------------------------ | ----------------------------------------------------- |
-| Container Instances    | `container-instances.md` | ACI, Azure Container Instances, Serverless Containers |
-| Container Registry     | `container-registry.md`  | ACR, Azure Container Registry, Docker Registry        |
-| AKS on Azure Stack HCI | `aks-on-stack-hci.md`    | AKS-HCI, AKS on HCI, Kubernetes on Azure Stack HCI    |
-| Azure Arc-enabled AKS  | `arc-enabled-aks.md`     | Arc AKS, Arc-enabled Kubernetes, Arc K8s              |
+```yaml
+- s: "Container Instances"
+  a: [ACI, Serverless Containers]
+- s: "Container Registry"
+  a: [ACR, Docker Registry]
+- s: "AKS on Azure Stack HCI"
+  f: aks-on-stack-hci.md
+  a: [AKS-HCI, AKS on HCI, Kubernetes on Azure Stack HCI]
+- s: "Azure Arc-enabled AKS"
+  a: [Arc AKS, Arc-enabled Kubernetes, Arc K8s]
+```
 
 ## Databases (`services/databases/`)
 
-Managed database engines, caches, and database migration services.
-
-| API serviceName                             | Suggested Filename        | Aliases / Portal Names                                   |
-| ------------------------------------------- | ------------------------- | -------------------------------------------------------- |
-| SQL Database                                | `sql-database.md`         | Azure SQL, SQL DB, Azure SQL Database                    |
-| SQL Managed Instance                        | `sql-managed-instance.md` | SQL MI, Azure SQL MI, Managed Instance                   |
-| Azure Cosmos DB                             | `cosmos-db.md`            | Cosmos DB, CosmosDB, DocumentDB, Multi-model DB          |
-| Azure Database for PostgreSQL               | `postgresql-flexible.md`  | PostgreSQL, Postgres, Azure Postgres, Flexible Server    |
-| Azure Database for MySQL                    | `mysql.md`                | MySQL, Azure MySQL, Flexible Server                      |
-| Azure Database for MariaDB                  | `mariadb.md`              | MariaDB, Azure MariaDB                                   |
-| Redis Cache                                 | `redis-cache.md`          | Azure Cache for Redis, Redis, Azure Redis, Managed Redis |
-| Azure Managed Instance for Apache Cassandra | `cassandra.md`            | Cassandra MI, Apache Cassandra, Managed Cassandra        |
-| SQL Data Warehouse                          | `sql-data-warehouse.md`   | Azure Synapse SQL Pool (dedicated), DW, Data Warehouse   |
-| SQL Server Stretch Database                 | `sql-stretch-db.md`       | Stretch DB, SQL Stretch                                  |
-| Azure Database Migration Service            | `database-migration.md`   | DMS, Database Migration, DB Migration Service            |
-| Azure Arc Enabled Databases                 | `arc-databases.md`        | Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services    |
-| Azure SQL Edge                              | `sql-edge.md`             | SQL Edge, Edge Database, IoT SQL                         |
-| SQL DB Edge                                 | `sql-db-edge.md`          | SQL DB Edge, Edge SQL (legacy name for Azure SQL Edge)   |
+```yaml
+- s: "SQL Database"
+  a: [Azure SQL, SQL DB]
+- s: "SQL Managed Instance"
+  a: [SQL MI, Azure SQL MI, Managed Instance]
+- s: "Azure Cosmos DB"
+  a: [CosmosDB, DocumentDB, Multi-model DB]
+- s: "Azure Database for PostgreSQL"
+  f: postgresql-flexible.md
+  a: [PostgreSQL, Postgres, Azure Postgres, Flexible Server]
+- s: "Azure Database for MySQL"
+  f: mysql.md
+  a: [MySQL, Azure MySQL, Flexible Server]
+- s: "Azure Database for MariaDB"
+  f: mariadb.md
+  a: [MariaDB, Azure MariaDB]
+- s: "Redis Cache"
+  a: [Azure Cache for Redis, Redis, Azure Redis, Managed Redis]
+- s: "Azure Managed Instance for Apache Cassandra"
+  f: cassandra.md
+  a: [Cassandra MI, Apache Cassandra, Managed Cassandra]
+- s: "SQL Data Warehouse"
+  a: [Azure Synapse SQL Pool (dedicated), DW, Data Warehouse]
+- s: "SQL Server Stretch Database"
+  f: sql-stretch-db.md
+  a: [Stretch DB, SQL Stretch]
+- s: "Azure Database Migration Service"
+  f: database-migration.md
+  a: [DMS, Database Migration, DB Migration Service]
+- s: "Azure Arc Enabled Databases"
+  f: arc-databases.md
+  a: [Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services]
+- s: "Azure SQL Edge"
+  a: [Edge Database, IoT SQL]
+- s: "SQL DB Edge"
+  a: [Edge SQL (legacy name for Azure SQL Edge)]
+```
 
 ## Networking (`services/networking/`)
 
-Network connectivity, routing, load balancing, firewalls, and DNS.
-
-| API serviceName                        | Suggested Filename             | Aliases / Portal Names                                          |
-| -------------------------------------- | ------------------------------ | --------------------------------------------------------------- |
-| Application Gateway                    | `app-gateway.md`               | App Gateway, AGW, WAF v2, Web Application Firewall              |
-| Azure Firewall                         | `azure-firewall.md`            | Firewall, Azure Firewall Premium/Standard/Basic                 |
-| Azure Firewall Manager                 | `firewall-manager.md`          | Firewall Manager, Firewall Policy                               |
-| Azure Bastion                          | `bastion.md`                   | Bastion, Jump Host, Bastion Host                                |
-| Azure DDOS Protection                  | `ddos-protection.md`           | DDoS, DDoS Protection, DDoS Network Protection                  |
-| ExpressRoute                           | `expressroute.md`              | ExpressRoute, ER, Dedicated Circuit                             |
-| Virtual Network                        | `virtual-network.md`           | VNet, Virtual Network, NSG, Peering, Private Link               |
-| Virtual WAN                            | `virtual-wan.md`               | vWAN, Virtual WAN, WAN Hub                                      |
-| VPN Gateway                            | `vpn-gateway.md`               | VPN, VPN Gateway, Site-to-Site, Point-to-Site, S2S, P2S         |
-| Bandwidth                              | `bandwidth.md`                 | Data Transfer, Egress, Outbound Transfer, Inter-region Transfer |
-| Network Watcher                        | `network-watcher.md`           | Network Watcher, NSG Flow Logs, Connection Monitor              |
-| Azure Orbital                          | `orbital.md`                   | Azure Orbital, Ground Station, Satellite                        |
-| Private Mobile Network                 | `private-5g-core.md`           | Private 5G Core, Mobile Network, MEC                            |
-| Load Balancer                          | `load-balancer.md`             | ALB, Azure Load Balancer, Standard LB, Basic LB                 |
-| Azure Front Door                       | `front-door.md`                | Front Door, AFD, CDN, Azure CDN, Front Door Premium/Standard    |
-| Azure DNS                              | `dns.md`                       | DNS, DNS Zones, Private DNS Zones                               |
-| Traffic Manager                        | `traffic-manager.md`           | Traffic Manager, DNS Load Balancer                              |
-| Azure Route Server                     | `route-server.md`              | Route Server, BGP Routing                                       |
-| Azure Private Link                     | `private-link.md`              | Private Link, Private Endpoint                                  |
-| Advanced Container Networking Services | `advanced-cni.md`              | Advanced CNI, Container Networking, Cilium, Azure CNI Overlay   |
-| Microsoft Azure Peering Service        | `peering-service.md`           | Peering Service, ISP Peering, Internet Peering                  |
-| Azure Front Door Service               | `front-door-service.md`        | Front Door (exact API name), AFD, CDN, Azure CDN                |
-| Content Delivery Network               | `content-delivery-network.md`  | CDN, Azure CDN, Content Delivery                                |
-| NAT Gateway                            | `nat-gateway.md`               | NAT Gateway, Azure NAT, SNAT, Outbound Connectivity             |
-| Azure Programmable Connectivity        | `programmable-connectivity.md` | APC, Programmable Connectivity, Network APIs                    |
-
-> **Note**: Load Balancer, Front Door, DNS, Traffic Manager, Route Server, and Private Link do not always appear as distinct `serviceName` values in the API — they may be nested under `Application Gateway`, `Virtual Network`, `Bandwidth`, or queried via `productName` filters. `Azure Front Door Service` is the exact API `serviceName` — the virtual entry `Azure Front Door` is kept for alias routing. `Content Delivery Network` is a separate `serviceName` from Front Door in the API. Advanced Container Networking Services is a newer service for AKS advanced networking (Cilium, overlay). Microsoft Azure Peering Service is for ISP connectivity optimization. Always verify with the Explore script.
+```yaml
+- s: "Application Gateway"
+  f: app-gateway.md
+  a: [App Gateway, AGW, WAF v2, Web Application Firewall]
+- s: "Azure Firewall"
+  f: azure-firewall.md
+  a: [Azure Firewall Premium/Standard/Basic]
+- s: "Azure Firewall Manager"
+  a: [Firewall Policy]
+- s: "Azure Bastion"
+  a: [Jump Host, Bastion Host]
+- s: "Azure DDOS Protection"
+  a: [DDoS, DDoS Network Protection]
+- s: "ExpressRoute"
+  a: [ER, Dedicated Circuit]
+- s: "Virtual Network"
+  a: [VNet, NSG, Peering, Private Link]
+- s: "Virtual WAN"
+  a: [vWAN, WAN Hub]
+- s: "VPN Gateway"
+  a: [VPN, Site-to-Site, Point-to-Site, S2S, P2S]
+- s: "Bandwidth"
+  a: [Data Transfer, Egress, Outbound Transfer, Inter-region Transfer]
+- s: "Network Watcher"
+  a: [NSG Flow Logs, Connection Monitor]
+- s: "Azure Orbital"
+  a: [Ground Station, Satellite]
+- s: "Private Mobile Network"
+  f: private-5g-core.md
+  a: [Private 5G Core, Mobile Network, MEC]
+- s: "Load Balancer"
+  a: [ALB, Standard LB, Basic LB]
+- s: "Azure Front Door"
+  a: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
+- s: "Azure DNS"
+  a: [DNS Zones, Private DNS Zones]
+- s: "Traffic Manager"
+  a: [DNS Load Balancer]
+- s: "Azure Route Server"
+  a: [BGP Routing]
+- s: "Azure Private Link"
+  a: [Private Endpoint]
+- s: "Advanced Container Networking Services"
+  f: advanced-cni.md
+  a: [Advanced CNI, Container Networking, Cilium, Azure CNI Overlay]
+- s: "Microsoft Azure Peering Service"
+  a: [ISP Peering, Internet Peering]
+- s: "Azure Front Door Service"
+  a: [Front Door (exact API name), AFD, CDN, Azure CDN]
+- s: "Content Delivery Network"
+  a: [CDN, Azure CDN, Content Delivery]
+- s: "NAT Gateway"
+  a: [Azure NAT, SNAT, Outbound Connectivity]
+- s: "Azure Programmable Connectivity"
+  a: [APC, Network APIs]
+# Front Door Service is exact API serviceName; CDN is separate; some services nested under others
+```
 
 ## Storage (`services/storage/`)
 
-Blob, File, Table, Queue, Managed Disks, Data Lake, backup, and archival storage.
-
-| API serviceName      | Suggested Filename  | Aliases / Portal Names                                                        |
-| -------------------- | ------------------- | ----------------------------------------------------------------------------- |
-| Storage              | `storage.md`        | Blob Storage, Azure Files, Table Storage, Queue Storage, Data Lake Gen2, ADLS |
-| Backup               | `backup.md`         | Azure Backup, Recovery Services Vault, MARS Agent, VM Backup                  |
-| Azure NetApp Files   | `netapp-files.md`   | NetApp, ANF, Azure NetApp                                                     |
-| Data Box             | `data-box.md`       | Data Box, Data Box Disk, Data Box Heavy, Import/Export                        |
-| Managed Disks        | `managed-disks.md`  | Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage              |
-| Azure Elastic SAN    | `elastic-san.md`    | Elastic SAN, SAN, Block Storage                                               |
-| Azure Managed Lustre | `managed-lustre.md` | Lustre, HPC Storage, Managed Lustre                                           |
-| StorSimple           | `storsimple.md`     | StorSimple, Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array  |
-
-> **Note**: Managed Disks and Data Lake storage often appear under `serviceName eq 'Storage'` with different `productName` values rather than separate `serviceName` entries. Use `productName` filters.
+```yaml
+- s: "Storage"
+  a:
+    [
+      Blob Storage,
+      Azure Files,
+      Table Storage,
+      Queue Storage,
+      Data Lake Gen2,
+      ADLS,
+    ]
+- s: "Backup"
+  a: [Recovery Services Vault, MARS Agent, VM Backup]
+- s: "Azure NetApp Files"
+  a: [NetApp, ANF, Azure NetApp]
+- s: "Data Box"
+  a: [Data Box Disk, Data Box Heavy, Import/Export]
+- s: "Managed Disks"
+  a: [Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage]
+- s: "Azure Elastic SAN"
+  a: [SAN, Block Storage]
+- s: "Azure Managed Lustre"
+  a: [Lustre, HPC Storage]
+- s: "StorSimple"
+  a: [Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array]
+```
 
 ## Security (`services/security/`)
 
-Key management, HSMs, threat protection, compliance, and confidential computing.
-
-| API serviceName              | Suggested Filename       | Aliases / Portal Names                                           |
-| ---------------------------- | ------------------------ | ---------------------------------------------------------------- |
-| Key Vault                    | `key-vault.md`           | Key Vault, AKV, Azure Key Vault, Managed HSM                     |
-| Microsoft Defender for Cloud | `defender-for-cloud.md`  | Defender for Cloud, Azure Security Center, CSPM, CWP             |
-| Microsoft Purview            | `purview.md`             | Purview, Microsoft Purview, Data Governance, Data Catalog        |
-| Azure confidential ledger    | `confidential-ledger.md` | Confidential Ledger, CCF, Blockchain Ledger                      |
-| Azure Cloud HSM              | `cloud-hsm.md`           | Cloud HSM, Dedicated HSM, Hardware Security Module               |
-| Microsoft Azure Payment HSM  | `payment-hsm.md`         | Payment HSM, Payment Processing HSM                              |
-| Azure IoT Security           | `iot-security.md`        | Defender for IoT, IoT Security, OT Security                      |
-| Microsoft Security Copilot   | `security-copilot.md`    | Security Copilot, Copilot for Security                           |
-| Microsoft Graph Services     | `graph-services.md`      | Microsoft Graph, Graph API metered usage                         |
-| Microsoft Defender Experts   | `defender-experts.md`    | Defender Experts, XDR Experts, Managed Detection and Response    |
-| Multi-Factor Authentication  | `multi-factor-auth.md`   | MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication     |
-| Trusted Signing              | `trusted-signing.md`     | Trusted Signing, Code Signing, Azure Code Signing                |
-| Microsoft Entra              | `entra.md`               | Entra Suite, Microsoft Entra (exact API name), Entra ID metered  |
-| Microsoft Entra Verified ID  | `entra-verified-id.md`   | Verified ID, Verifiable Credentials, Decentralized Identity, DID |
+```yaml
+- s: "Key Vault"
+  a: [AKV, Managed HSM]
+- s: "Microsoft Defender for Cloud"
+  a: [Azure Security Center, CSPM, CWP]
+- s: "Microsoft Purview"
+  a: [Data Governance, Data Catalog]
+- s: "Azure confidential ledger"
+  a: [CCF, Blockchain Ledger]
+- s: "Azure Cloud HSM"
+  a: [Dedicated HSM, Hardware Security Module]
+- s: "Microsoft Azure Payment HSM"
+  a: [Payment Processing HSM]
+- s: "Azure IoT Security"
+  a: [Defender for IoT, OT Security]
+- s: "Microsoft Security Copilot"
+  a: [Copilot for Security]
+- s: "Microsoft Graph Services"
+  a: [Microsoft Graph, Graph API metered usage]
+- s: "Microsoft Defender Experts"
+  a: [XDR Experts, Managed Detection and Response]
+- s: "Multi-Factor Authentication"
+  f: multi-factor-auth.md
+  a: [MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication]
+- s: "Trusted Signing"
+  a: [Code Signing, Azure Code Signing]
+- s: "Microsoft Entra"
+  a: [Entra Suite, Microsoft Entra (exact API name), Entra ID metered]
+- s: "Microsoft Entra Verified ID"
+  a: [Verified ID, Verifiable Credentials, Decentralized Identity, DID]
+```
 
 ## Monitoring (`services/monitoring/`)
 
-Observability, alerting, log collection, and application performance.
-
-| API serviceName       | Suggested Filename         | Aliases / Portal Names                       |
-| --------------------- | -------------------------- | -------------------------------------------- |
-| Azure Monitor         | `monitor.md`               | Azure Monitor, Metrics, Alerts, Diagnostics  |
-| Application Insights  | `app-insights.md`          | App Insights, APM, Application Performance   |
-| Log Analytics         | `log-analytics.md`         | Log Analytics, OMS, Workspace, Logs          |
-| Insight and Analytics | `insight-and-analytics.md` | OMS (legacy), Insight and Analytics (legacy) |
+```yaml
+- s: "Azure Monitor"
+  a: [Metrics, Alerts, Diagnostics]
+- s: "Application Insights"
+  f: app-insights.md
+  a: [App Insights, APM, Application Performance]
+- s: "Log Analytics"
+  a: [OMS, Workspace, Logs]
+- s: "Insight and Analytics"
+  a: [OMS (legacy), Insight and Analytics (legacy)]
+```
 
 ## Management (`services/management/`)
 
-Governance, automation, cost management, compliance, disaster recovery, and operations.
-
-| API serviceName                    | Suggested Filename                  | Aliases / Portal Names                                             |
-| ---------------------------------- | ----------------------------------- | ------------------------------------------------------------------ |
-| Automation                         | `automation.md`                     | Azure Automation, Runbooks, DSC, Update Management                 |
-| Azure Site Recovery                | `site-recovery.md`                  | ASR, Site Recovery, Disaster Recovery, DR                          |
-| Sentinel                           | `sentinel.md`                       | Microsoft Sentinel, Azure Sentinel, SIEM, SOAR                     |
-| Azure Chaos Studio                 | `chaos-studio.md`                   | Chaos Studio, Chaos Engineering, Fault Injection                   |
-| Scheduler                          | `scheduler.md`                      | Azure Scheduler (legacy), Job Scheduler                            |
-| Azure Migrate                      | `migrate.md`                        | Azure Migrate, Server Assessment, Migration Tools                  |
-| Azure Arc                          | `arc.md`                            | Azure Arc, Hybrid Management, Arc-enabled Servers, Arc-enabled K8s |
-| Azure Lighthouse                   | `lighthouse.md`                     | Lighthouse, Delegated Resource Management, MSP Management          |
-| Azure Policy                       | `policy.md`                         | Policy, Azure Policy, Compliance, Governance                       |
-| Azure Advisor                      | `advisor.md`                        | Advisor, Recommendations, Best Practices                           |
-| Azure Cost Management              | `cost-management.md`                | Cost Management, Billing, Budgets, Cost Analysis                   |
-| Azure Blueprints                   | `blueprints.md`                     | Blueprints, Governance Templates (deprecated)                      |
-| Azure Resource Mover               | `resource-mover.md`                 | Resource Mover, Move Resources, Subscription Mover                 |
-| Azure Update Manager               | `update-manager.md`                 | Update Manager, Patch Management, OS Updates                       |
-| Azure Virtual Enclaves             | `virtual-enclaves.md`               | Virtual Enclaves, Isolated Environments, Secure Enclaves           |
-| Change Tracking and Inventory      | `change-tracking-and-inventory.md`  | Change Tracking, Inventory Tracking, Configuration Tracking        |
-| Dynamics 365 for Customer Insights | `dynamics-365-customer-insights.md` | Customer Insights, D365 CI, Dynamics 365 Analytics                 |
-
-> **Note**: Sentinel is under Management (not Security) because its API `serviceFamily` is `Management and Governance` and its billing uses Log Analytics meters. Some management services (Policy, Advisor, Cost Management, Lighthouse) are free or have no direct retail meters — they still need reference files to document that fact and prevent unnecessary API queries.
+```yaml
+- s: "Automation"
+  a: [Runbooks, DSC, Update Management]
+- s: "Azure Site Recovery"
+  a: [ASR, Disaster Recovery, DR]
+- s: "Sentinel"
+  a: [SIEM, SOAR]
+- s: "Azure Chaos Studio"
+  a: [Chaos Engineering, Fault Injection]
+- s: "Scheduler"
+  a: [Azure Scheduler (legacy), Job Scheduler]
+- s: "Azure Migrate"
+  a: [Server Assessment, Migration Tools]
+- s: "Azure Arc"
+  a: [Hybrid Management, Arc-enabled Servers, Arc-enabled K8s]
+- s: "Azure Lighthouse"
+  a: [Delegated Resource Management, MSP Management]
+- s: "Azure Policy"
+  a: [Compliance, Governance]
+- s: "Azure Advisor"
+  a: [Recommendations, Best Practices]
+- s: "Azure Cost Management"
+  a: [Billing, Budgets, Cost Analysis]
+- s: "Azure Blueprints"
+  a: [Governance Templates (deprecated)]
+- s: "Azure Resource Mover"
+  a: [Move Resources, Subscription Mover]
+- s: "Azure Update Manager"
+  a: [Patch Management, OS Updates]
+- s: "Azure Virtual Enclaves"
+  a: [Isolated Environments, Secure Enclaves]
+- s: "Change Tracking and Inventory"
+  a: [Change Tracking, Inventory Tracking, Configuration Tracking]
+- s: "Dynamics 365 for Customer Insights"
+  f: dynamics-365-customer-insights.md
+  a: [Customer Insights, D365 CI, Dynamics 365 Analytics]
+```
 
 ## Integration (`services/integration/`)
 
-Messaging, eventing, API gateways, and workflow orchestration.
-
-| API serviceName  | Suggested Filename  | Aliases / Portal Names                                |
-| ---------------- | ------------------- | ----------------------------------------------------- |
-| Service Bus      | `service-bus.md`    | Service Bus, ASB, Queues, Topics                      |
-| Logic Apps       | `logic-apps.md`     | Logic Apps, Workflows, Logic App Standard/Consumption |
-| Azure API Center | `api-center.md`     | API Center, API Catalog, API Inventory                |
-| BizTalk Services | `biztalk.md`        | BizTalk, BizTalk Services (legacy), B2B Integration   |
-| API Management   | `api-management.md` | APIM, API Management, API Gateway                     |
-
-> **Note**: API Management appears under `serviceFamily eq 'Developer Tools'` in the Retail Prices API, but functionally it's an integration/gateway service. Place it here.
+```yaml
+- s: "Service Bus"
+  a: [ASB, Queues, Topics]
+- s: "Logic Apps"
+  a: [Workflows, Logic App Standard/Consumption]
+- s: "Azure API Center"
+  a: [API Catalog, API Inventory]
+- s: "BizTalk Services"
+  f: biztalk.md
+  a: [BizTalk, BizTalk Services (legacy), B2B Integration]
+- s: "API Management"
+  a: [APIM, API Gateway]
+```
 
 ## Analytics (`services/analytics/`)
 
-Data warehousing, ETL, streaming, BI, big data, and data governance.
-
-| API serviceName                  | Suggested Filename      | Aliases / Portal Names                                   |
-| -------------------------------- | ----------------------- | -------------------------------------------------------- |
-| Azure Synapse Analytics          | `synapse.md`            | Synapse, Synapse Workspace, Synapse SQL, Synapse Spark   |
-| Azure Data Factory               | `data-factory.md`       | ADF, Data Factory, ETL, Data Pipeline                    |
-| Azure Data Factory v2            | `data-factory-v2.md`    | ADF v2, Data Factory v2                                  |
-| Azure Databricks                 | `databricks.md`         | Databricks, DBX, Spark on Azure                          |
-| Azure Data Explorer              | `data-explorer.md`      | ADX, Kusto, Data Explorer                                |
-| HDInsight                        | `hdinsight.md`          | HDInsight, Hadoop, Spark, HBase, Kafka, HDI              |
-| Azure Analysis Services          | `analysis-services.md`  | Analysis Services, AAS, Tabular Model                    |
-| Stream Analytics                 | `stream-analytics.md`   | Stream Analytics, ASA, Real-time Analytics               |
-| Power BI                         | `power-bi.md`           | Power BI, Power BI Service                               |
-| Power BI Embedded                | `power-bi-embedded.md`  | PBI Embedded, Embedded Analytics                         |
-| Data Catalog                     | `data-catalog.md`       | Data Catalog (legacy)                                    |
-| Azure Purview                    | `purview-analytics.md`  | Purview Data Map, Data Estate Scanning                   |
-| Azure Data Share                 | `data-share.md`         | Data Share, Data Sharing                                 |
-| Microsoft Fabric                 | `fabric.md`             | Microsoft Fabric, Fabric Capacity, OneLake, Lakehouse    |
-| Microsoft Planetary Computer Pro | `planetary-computer.md` | Planetary Computer, Geospatial Analytics                 |
-| Data Lake Store                  | `data-lake-store.md`    | ADLS Gen1, Data Lake Store, Azure Data Lake (legacy)     |
-| SignalR                          | `signalr.md`            | Azure SignalR Service, SignalR, Real-time Messaging      |
-| Web PubSub                       | `web-pubsub.md`         | Azure Web PubSub, WebSocket Service                      |
-| Microsoft Graph data connect     | `graph-data-connect.md` | Graph Data Connect, Microsoft 365 Data, M365 Data Export |
-
-> **Note**: SignalR and Web PubSub are under `serviceFamily eq 'Analytics'` in the API (not Integration as expected). Data Factory has both v1 and v2 as separate `serviceName` values — v2 is the current version. Data Lake Store is the Gen1 service (legacy, now deprecated in favour of ADLS Gen2 which uses `serviceName eq 'Storage'` with hierarchical namespace). Azure Purview appears in both Security (`serviceFamily eq 'Security'` as `Microsoft Purview`) and Analytics (`serviceFamily eq 'Analytics'` as `Azure Purview`). Create files in both categories referencing each other.
+```yaml
+- s: "Azure Synapse Analytics"
+  f: synapse.md
+  a: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
+- s: "Azure Data Factory"
+  a: [ADF, ETL, Data Pipeline]
+- s: "Azure Data Factory v2"
+  a: [ADF v2]
+- s: "Azure Databricks"
+  a: [DBX, Spark on Azure]
+- s: "Azure Data Explorer"
+  a: [ADX, Kusto]
+- s: "HDInsight"
+  a: [Hadoop, Spark, HBase, Kafka, HDI]
+- s: "Azure Analysis Services"
+  a: [AAS, Tabular Model]
+- s: "Stream Analytics"
+  a: [ASA, Real-time Analytics]
+- s: "Power BI"
+  a: [Power BI Service]
+- s: "Power BI Embedded"
+  a: [PBI Embedded, Embedded Analytics]
+- s: "Data Catalog"
+  a: [Data Catalog (legacy)]
+- s: "Azure Purview"
+  f: purview-analytics.md
+  a: [Purview Data Map, Data Estate Scanning]
+- s: "Azure Data Share"
+  a: [Data Sharing]
+- s: "Microsoft Fabric"
+  a: [Fabric Capacity, OneLake, Lakehouse]
+- s: "Microsoft Planetary Computer Pro"
+  f: planetary-computer.md
+  a: [Planetary Computer, Geospatial Analytics]
+- s: "Data Lake Store"
+  a: [ADLS Gen1, Azure Data Lake (legacy)]
+- s: "SignalR"
+  a: [Azure SignalR Service, Real-time Messaging]
+- s: "Web PubSub"
+  a: [WebSocket Service]
+- s: "Microsoft Graph data connect"
+  a: [Microsoft 365 Data, M365 Data Export]
+# Data Factory v1+v2 are separate serviceNames; Data Lake Store=Gen1 legacy; Purview in Security+Analytics
+```
 
 ## AI + ML (`services/ai-ml/`)
 
-Machine learning, cognitive services, OpenAI, bots, and AI platforms.
-
-| API serviceName             | Suggested Filename               | Aliases / Portal Names                                              |
-| --------------------------- | -------------------------------- | ------------------------------------------------------------------- |
-| Azure Machine Learning      | `machine-learning.md`            | Azure ML, AML, ML Workspace, Machine Learning Studio                |
-| Foundry Models              | `foundry-models.md`              | Azure AI Foundry Models, Model Catalog, AI Foundry                  |
-| Foundry Tools               | `foundry-tools.md`               | Azure AI Foundry Tools, AI Studio, AI Foundry Workspace             |
-| Azure Bot Service           | `bot-service.md`                 | Bot Service, Bot Framework, Chatbot                                 |
-| Intelligent Recommendations | `intelligent-recommendations.md` | Recommendations, Personalization                                    |
-| Microsoft Genomics          | `genomics.md`                    | Genomics, Microsoft Genomics, Genomics Workspace                    |
-| Azure OpenAI Service        | `openai.md`                      | OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4                     |
-| Azure AI Services           | `ai-services.md`                 | Cognitive Services, AI Services, Vision, Speech, Language, Decision |
-| Machine Learning Studio     | `ml-studio-classic.md`           | ML Studio (classic), Classic ML, Machine Learning Studio            |
-
-> **Note**: Azure OpenAI Service and Azure AI Services may appear under `Foundry Models` or `Foundry Tools` as `serviceName` in newer API responses, as Microsoft rebranded under AI Foundry. Check both legacy and new names. If the API returns 0 results for `Azure OpenAI Service`, try `Foundry Models`. Machine Learning Studio is the classic (v1) ML service — it has a separate `serviceName` from `Azure Machine Learning` (the current workspace-based service).
+```yaml
+- s: "Azure Machine Learning"
+  a: [Azure ML, AML, ML Workspace, Machine Learning Studio]
+- s: "Foundry Models"
+  a: [Azure AI Foundry Models, Model Catalog, AI Foundry]
+- s: "Foundry Tools"
+  a: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace]
+- s: "Azure Bot Service"
+  a: [Bot Framework, Chatbot]
+- s: "Intelligent Recommendations"
+  a: [Recommendations, Personalization]
+- s: "Microsoft Genomics"
+  a: [Genomics Workspace]
+- s: "Azure OpenAI Service"
+  f: openai.md
+  a: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
+- s: "Azure AI Services"
+  a: [Cognitive Services, Vision, Speech, Language, Decision]
+- s: "Machine Learning Studio"
+  f: ml-studio-classic.md
+  a: [ML Studio (classic), Classic ML]
+# ML Studio (classic) is separate serviceName from Azure ML (current workspace service)
+```
 
 ## IoT (`services/iot/`)
 
-Internet of Things hubs, device management, edge computing, and spatial intelligence.
-
-| API serviceName              | Suggested Filename                | Aliases / Portal Names                                 |
-| ---------------------------- | --------------------------------- | ------------------------------------------------------ |
-| IoT Hub                      | `iot-hub.md`                      | IoT Hub, Azure IoT Hub, Device Messaging               |
-| IoT Central                  | `iot-central.md`                  | IoT Central, IoT SaaS, IoT Application                 |
-| Event Hubs                   | `event-hubs.md`                   | Event Hubs, Kafka on Azure, Event Streaming            |
-| Event Grid                   | `event-grid.md`                   | Event Grid, Event Routing, Event-driven                |
-| Azure Maps                   | `maps.md`                         | Azure Maps, Location Services, Geospatial              |
-| Digital Twins                | `digital-twins.md`                | Azure Digital Twins, ADT, IoT Modeling                 |
-| Notification Hubs            | `notification-hubs.md`            | Notification Hubs, Push Notifications, ANH             |
-| Time Series Insights         | `time-series-insights.md`         | TSI, Time Series, IoT Analytics (deprecated/migrating) |
-| AKS Edge Essentials          | `aks-edge-essentials.md`          | AKS Edge, K8s Edge, Kubernetes Edge Essentials         |
-| Azure Device Registry        | `device-registry.md`              | Device Registry, IoT Device Registry, Asset Registry   |
-| Azure IoT Operations         | `iot-operations.md`               | IoT Ops, IoT Operations, Edge IoT, Azure IoT OPC UA    |
-| Windows 10 IoT Core Services | `windows-10-iot-core-services.md` | IoT Core, Windows IoT, IoT Core Services, Windows CE   |
-
-> **Note**: Event Hubs and Event Grid are placed under IoT (matching the API `serviceFamily eq 'Internet of Things'`) even though they're often used outside IoT scenarios. Service reference files should note this dual nature.
+```yaml
+- s: "IoT Hub"
+  a: [Device Messaging]
+- s: "IoT Central"
+  a: [IoT SaaS, IoT Application]
+- s: "Event Hubs"
+  a: [Kafka on Azure, Event Streaming]
+- s: "Event Grid"
+  a: [Event Routing, Event-driven]
+- s: "Azure Maps"
+  a: [Location Services, Geospatial]
+- s: "Digital Twins"
+  a: [ADT, IoT Modeling]
+- s: "Notification Hubs"
+  a: [Push Notifications, ANH]
+- s: "Time Series Insights"
+  a: [TSI, Time Series, IoT Analytics (deprecated/migrating)]
+- s: "AKS Edge Essentials"
+  a: [AKS Edge, K8s Edge, Kubernetes Edge Essentials]
+- s: "Azure Device Registry"
+  a: [IoT Device Registry, Asset Registry]
+- s: "Azure IoT Operations"
+  a: [IoT Ops, Edge IoT, Azure IoT OPC UA]
+- s: "Windows 10 IoT Core Services"
+  a: [IoT Core, Windows IoT, IoT Core Services, Windows CE]
+```
 
 ## Developer Tools (`services/developer-tools/`)
 
-Development environments, testing, configuration, and DevOps tooling.
-
-| API serviceName               | Suggested Filename              | Aliases / Portal Names                                        |
-| ----------------------------- | ------------------------------- | ------------------------------------------------------------- |
-| App Configuration             | `app-configuration.md`          | App Configuration, Feature Flags, Configuration Store         |
-| Azure Lab Services            | `lab-services.md`               | Lab Services, Classroom Labs, DevTest Labs                    |
-| Microsoft Playwright Testing  | `playwright-testing.md`         | Playwright, Browser Testing, E2E Testing                      |
-| Azure App Testing             | `app-testing.md`                | App Testing, Mobile App Testing                               |
-| Azure Fluid Relay             | `fluid-relay.md`                | Fluid Framework, Real-time Collaboration                      |
-| Azure Grafana Service         | `grafana.md`                    | Managed Grafana, Azure Managed Grafana, Grafana Dashboard     |
-| Visual Studio Codespaces      | `codespaces.md`                 | Codespaces (legacy), Cloud Dev Environments                   |
-| Azure DevOps                  | `devops.md`                     | Azure DevOps, ADO, Repos, Pipelines, Boards, Artifacts        |
-| Azure DevTest Labs            | `devtest-labs.md`               | DevTest Labs, Lab VMs, Dev Environments                       |
-| Microsoft Dev Box             | `dev-box.md`                    | Dev Box, Cloud Dev Workstation, Developer VM                  |
-| Azure Deployment Environments | `deployment-environments.md`    | ADE, Deployment Environments, IaC Templates                   |
-| Azure Load Testing            | `load-testing.md`               | Load Testing, JMeter, Performance Testing                     |
-| GitHub                        | `github.md`                     | GitHub, GitHub Enterprise, GitHub Actions, GitHub Copilot     |
-| GitHub AE                     | `github-ae.md`                  | GitHub AE, GitHub Enterprise (Azure-hosted, legacy)           |
-| Test Base                     | `test-base.md`                  | Test Base, Test Base for Microsoft 365, Compatibility Testing |
-| Visual Studio Subscription    | `visual-studio-subscription.md` | VS Subscription, MSDN, Visual Studio Enterprise/Professional  |
-
-> **Note**: Azure DevOps and some DevTest Labs pricing may not appear in the Retail Prices API (they have separate licensing). Reference files should document this and link to the Azure DevOps pricing page.
+```yaml
+- s: "App Configuration"
+  a: [Feature Flags, Configuration Store]
+- s: "Azure Lab Services"
+  a: [Classroom Labs, DevTest Labs]
+- s: "Microsoft Playwright Testing"
+  a: [Playwright, Browser Testing, E2E Testing]
+- s: "Azure App Testing"
+  a: [Mobile App Testing]
+- s: "Azure Fluid Relay"
+  a: [Fluid Framework, Real-time Collaboration]
+- s: "Azure Grafana Service"
+  f: grafana.md
+  a: [Managed Grafana, Azure Managed Grafana, Grafana Dashboard]
+- s: "Visual Studio Codespaces"
+  f: codespaces.md
+  a: [Codespaces (legacy), Cloud Dev Environments]
+- s: "Azure DevOps"
+  a: [ADO, Repos, Pipelines, Boards, Artifacts]
+- s: "Azure DevTest Labs"
+  a: [Lab VMs, Dev Environments]
+- s: "Microsoft Dev Box"
+  a: [Cloud Dev Workstation, Developer VM]
+- s: "Azure Deployment Environments"
+  a: [ADE, IaC Templates]
+- s: "Azure Load Testing"
+  a: [JMeter, Performance Testing]
+- s: "GitHub"
+  a: [GitHub Enterprise, GitHub Actions, GitHub Copilot]
+- s: "GitHub AE"
+  a: [GitHub Enterprise (Azure-hosted, legacy)]
+- s: "Test Base"
+  a: [Test Base for Microsoft 365, Compatibility Testing]
+- s: "Visual Studio Subscription"
+  a: [VS Subscription, MSDN, Visual Studio Enterprise/Professional]
+```
 
 ## Identity (`services/identity/`)
 
-Identity management, directory services, and external identity providers.
-
-| API serviceName                                | Suggested Filename         | Aliases / Portal Names                                            |
-| ---------------------------------------------- | -------------------------- | ----------------------------------------------------------------- |
-| Azure Active Directory B2C                     | `aad-b2c.md`               | AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID |
-| Azure Active Directory for External Identities | `aad-external.md`          | AAD External, B2B, Guest Users, Entra External ID                 |
-| Microsoft Entra Domain Services                | `entra-domain-services.md` | AAD DS, Azure AD DS, Managed AD, Entra Domain Services            |
-| Microsoft Entra ID                             | `entra-id.md`              | Azure AD, Azure Active Directory, Entra ID, AAD, Directory        |
-| Windows 365 Agents                             | `windows-365-agents.md`    | Windows 365 Agents, Cloud PC Agents                               |
-
-> **Note**: Microsoft Entra ID (formerly Azure AD) free tier has no retail meter. Premium P1/P2 tiers are licensed per-user, often not in the Retail Prices API. The API uses `Microsoft Entra` (under `serviceFamily eq 'Azure Security'`) as a separate `serviceName` — that entry is routed to Security. `Microsoft Entra ID` is kept here as a virtual entry for identity-focused routing. Reference files should document the licensing model and cross-reference.
+```yaml
+- s: "Azure Active Directory B2C"
+  f: aad-b2c.md
+  a: [AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID]
+- s: "Azure Active Directory for External Identities"
+  f: aad-external.md
+  a: [AAD External, B2B, Guest Users, Entra External ID]
+- s: "Microsoft Entra Domain Services"
+  a: [AAD DS, Azure AD DS, Managed AD]
+- s: "Microsoft Entra ID"
+  a: [Azure AD, Azure Active Directory, AAD, Directory]
+- s: "Windows 365 Agents"
+  a: [Cloud PC Agents]
+# Microsoft Entra (Security) and Microsoft Entra ID (Identity) are separate API entries
+```
 
 ## Migration (`services/migration/`)
 
-Tools for migrating workloads, data, and databases to Azure.
-
-| API serviceName                  | Suggested Filename      | Aliases / Portal Names                             |
-| -------------------------------- | ----------------------- | -------------------------------------------------- |
-| Azure Database Migration Service | `database-migration.md` | DMS, Database Migration Service, DB Migration      |
-| Azure Migrate                    | `migrate.md`            | Azure Migrate, Server Assessment, Server Migration |
-| Azure Site Recovery              | `site-recovery.md`      | ASR (also in Management for DR use case)           |
-
-> **Note**: Migration has significant overlap with Management (Site Recovery) and Databases (DMS). Place the primary reference in the category matching the API `serviceFamily`. Add cross-references in the other category.
+```yaml
+- s: "Azure Database Migration Service"
+  f: database-migration.md
+  a: [DMS, DB Migration]
+- s: "Azure Migrate"
+  a: [Server Assessment, Server Migration]
+- s: "Azure Site Recovery"
+  a: [ASR (also in Management for DR use case)]
+# Overlaps Management (Site Recovery) and Databases (DMS); cross-reference both
+```
 
 ## Web (`services/web/`)
 
-Web-hosted search, content delivery, and web application platforms.
-
-| API serviceName        | Suggested Filename      | Aliases / Portal Names                                              |
-| ---------------------- | ----------------------- | ------------------------------------------------------------------- |
-| Azure Cognitive Search | `cognitive-search.md`   | Azure AI Search, Cognitive Search, Search Service, Full-text Search |
-| Azure Static Web Apps  | `static-web-apps.md`    | Static Web Apps, SWA, JAMstack                                      |
-| Azure Spring Cloud     | `spring-apps.md`        | Azure Spring Apps, Spring Cloud, Java Microservices                 |
-| Community Training     | `community-training.md` | Community Training, Microsoft Community Training, Learning          |
-
-> **Note**: Azure Spring Cloud/Apps appears under `serviceFamily eq 'Other'` in the API. We route it to Web because it's a web app hosting service. Static Web Apps may not have retail pricing meters (free tier is common).
+```yaml
+- s: "Azure Cognitive Search"
+  a: [Azure AI Search, Search Service, Full-text Search]
+- s: "Azure Static Web Apps"
+  a: [SWA, JAMstack]
+- s: "Azure Spring Cloud"
+  f: spring-apps.md
+  a: [Azure Spring Apps, Java Microservices]
+- s: "Community Training"
+  a: [Learning]
+```
 
 ## Communication (`services/communication/`)
 
-Communication platforms, telephony, messaging, and telecom services.
-
-| API serviceName      | Suggested Filename     | Aliases / Portal Names                                 |
-| -------------------- | ---------------------- | ------------------------------------------------------ |
-| Phone Numbers        | `phone-numbers.md`     | ACS Phone Numbers, PSTN, Telephony                     |
-| Voice                | `voice.md`             | ACS Voice, Voice Calling, VOIP                         |
-| Email                | `email.md`             | ACS Email, Email Communication                         |
-| Messaging            | `messaging.md`         | ACS Chat, Chat Messaging                               |
-| SMS                  | `sms.md`               | ACS SMS, Text Messaging                                |
-| Network Traversal    | `network-traversal.md` | ACS TURN, TURN Relay, Network Traversal                |
-| AI Ops               | `ai-ops.md`            | Telecom AI Ops, Azure Operator Insights                |
-| Packet Core          | `packet-core.md`       | Azure Private 5G Core, Packet Core, Mobile Packet Core |
-| Azure Operator Nexus | `operator-nexus.md`    | Operator Nexus, Telecom Nexus, Carrier Network         |
-| Voice Core           | `voice-core.md`        | Voice Core, Telecom Voice, Core Voice Infrastructure   |
-| Routing              | `routing.md`           | ACS Routing, Communication Routing, Call Routing       |
-
-> **Note**: All Azure Communication Services appear as separate `serviceName` values per feature (Voice, SMS, Email, etc.) rather than one unified entry. Telecom services (AI Ops, Packet Core) are from `serviceFamily eq 'Telecommunications'`.
+```yaml
+- s: "Phone Numbers"
+  a: [ACS Phone Numbers, PSTN, Telephony]
+- s: "Voice"
+  a: [ACS Voice, Voice Calling, VOIP]
+- s: "Email"
+  a: [ACS Email, Email Communication]
+- s: "Messaging"
+  a: [ACS Chat, Chat Messaging]
+- s: "SMS"
+  a: [ACS SMS, Text Messaging]
+- s: "Network Traversal"
+  a: [ACS TURN, TURN Relay]
+- s: "AI Ops"
+  a: [Telecom AI Ops, Azure Operator Insights]
+- s: "Packet Core"
+  a: [Azure Private 5G Core, Mobile Packet Core]
+- s: "Azure Operator Nexus"
+  a: [Telecom Nexus, Carrier Network]
+- s: "Voice Core"
+  a: [Telecom Voice, Core Voice Infrastructure]
+- s: "Routing"
+  a: [ACS Routing, Communication Routing, Call Routing]
+```
 
 ## Specialist (`services/specialist/`)
 
-Niche, emerging, or cross-cutting services that don't fit other categories. Includes Azure Stack/hybrid infrastructure, Power Platform, Gaming, and miscellaneous services.
-
-| API serviceName          | Suggested Filename       | Aliases / Portal Names                                          |
-| ------------------------ | ------------------------ | --------------------------------------------------------------- |
-| Azure Blockchain         | `blockchain.md`          | Blockchain Service, Blockchain Workbench (deprecated)           |
-| Azure Remote Rendering   | `remote-rendering.md`    | Remote Rendering, 3D Rendering, Mixed Reality                   |
-| Quantum Computing        | `quantum-computing.md`   | Azure Quantum, Quantum Computing, Q#                            |
-| Azure API for FHIR       | `fhir.md`                | FHIR API, Healthcare API, Health Data Services                  |
-| Energy Data Manager      | `energy-data-manager.md` | Energy Data Manager, OSDU, Oil & Gas Data                       |
-| Microsoft Dragon Copilot | `dragon-copilot.md`      | Dragon Copilot, Healthcare Copilot, Clinical Documentation      |
-| Microsoft Copilot Studio | `copilot-studio.md`      | Copilot Studio, Power Virtual Agents, Chatbot Builder           |
-| Syntex                   | `syntex.md`              | Microsoft Syntex, SharePoint Syntex, Document Processing        |
-| Azure Spatial Anchors    | `spatial-anchors.md`     | Spatial Anchors, AR Anchors, Mixed Reality Anchors              |
-| Azure Stack Edge         | `stack-edge.md`          | Stack Edge, Azure Stack Edge, Edge Computing, Edge Appliance    |
-| Azure Stack HCI          | `stack-hci.md`           | Stack HCI, HCI, Hyper-Converged Infrastructure, Azure Stack HCI |
-| Azure Stack Hub          | `stack-hub.md`           | Stack Hub, Azure Stack Hub, Azure Stack (original)              |
-| Azure Orbital Edge       | `orbital-edge.md`        | Orbital Edge, Edge Satellite, Space Edge Computing              |
-| Firmware Analysis        | `firmware-analysis.md`   | Firmware Analysis, Defender for IoT Firmware, IoT Firmware      |
-| Dataverse                | `dataverse.md`           | Dataverse, Common Data Service, CDS, Power Platform Data        |
-| Power Apps               | `power-apps.md`          | Power Apps, PowerApps, Low-code Apps, Canvas Apps, Model-driven |
-| Power Automate           | `power-automate.md`      | Power Automate, Flow, Microsoft Flow, Workflow Automation       |
-| Power Pages              | `power-pages.md`         | Power Pages, Portal, Power Apps Portals, Low-code Websites      |
-| PlayFab                  | `playfab.md`             | PlayFab, Azure PlayFab, Game Backend, Game Services             |
-| MS Bing Services         | `bing-services.md`       | Bing Search, Bing API, Bing Search API, Bing Services           |
-| SAP Embrace              | `sap-embrace.md`         | SAP Embrace, SAP on Azure, SAP Integration                      |
+```yaml
+- s: "Azure Blockchain"
+  a: [Blockchain Service, Blockchain Workbench (deprecated)]
+- s: "Azure Remote Rendering"
+  a: [3D Rendering, Mixed Reality]
+- s: "Quantum Computing"
+  a: [Azure Quantum, Q#]
+- s: "Azure API for FHIR"
+  f: fhir.md
+  a: [FHIR API, Healthcare API, Health Data Services]
+- s: "Energy Data Manager"
+  a: [OSDU, Oil & Gas Data]
+- s: "Microsoft Dragon Copilot"
+  a: [Healthcare Copilot, Clinical Documentation]
+- s: "Microsoft Copilot Studio"
+  a: [Power Virtual Agents, Chatbot Builder]
+- s: "Syntex"
+  a: [SharePoint Syntex, Document Processing]
+- s: "Azure Spatial Anchors"
+  a: [AR Anchors, Mixed Reality Anchors]
+- s: "Azure Stack Edge"
+  a: [Edge Computing, Edge Appliance]
+- s: "Azure Stack HCI"
+  a: [HCI, Hyper-Converged Infrastructure]
+- s: "Azure Stack Hub"
+  a: [Azure Stack (original)]
+- s: "Azure Orbital Edge"
+  a: [Edge Satellite, Space Edge Computing]
+- s: "Firmware Analysis"
+  a: [Defender for IoT Firmware, IoT Firmware]
+- s: "Dataverse"
+  a: [Common Data Service, CDS, Power Platform Data]
+- s: "Power Apps"
+  a: [PowerApps, Low-code Apps, Canvas Apps, Model-driven]
+- s: "Power Automate"
+  a: [Flow, Microsoft Flow, Workflow Automation]
+- s: "Power Pages"
+  a: [Portal, Power Apps Portals, Low-code Websites]
+- s: "PlayFab"
+  a: [Game Backend, Game Services]
+- s: "MS Bing Services"
+  a: [Bing Search, Bing API, Bing Search API]
+- s: "SAP Embrace"
+  a: [SAP on Azure, SAP Integration]
+```
