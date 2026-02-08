@@ -51,13 +51,13 @@ aliases: [service bus, messaging, queues, topics]
 
 ## Meter Names
 
-| Meter                    | SKU      | Purpose                                          |
-| ------------------------ | -------- | ------------------------------------------------ |
-| `Basic Operations`       | Basic    | Per 1M operations                                |
-| `Standard Base Unit`     | Standard | Namespace hourly charge                          |
-| `Standard Operations`    | Standard | Per 13M operations (first 13M included)          |
-| `Standard Relay Hours`   | Standard | Hybrid Connections (hourly)                      |
-| `Premium Messaging Unit` | Premium  | Messaging Unit (hourly, operations included)     |
+| Meter                    | SKU      | Purpose                                      |
+| ------------------------ | -------- | -------------------------------------------- |
+| `Basic Operations`       | Basic    | Per 1M operations                            |
+| `Standard Base Unit`     | Standard | Namespace hourly charge                      |
+| `Standard Operations`    | Standard | Per 13M operations (first 13M included)      |
+| `Standard Relay Hours`   | Standard | Hybrid Connections (hourly)                  |
+| `Premium Messaging Unit` | Premium  | Messaging Unit (hourly, operations included) |
 
 ## Cost Formula
 
