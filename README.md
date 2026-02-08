@@ -1,12 +1,12 @@
 # Azure Cost Calculator — AI Agent Skill
 
-An AI coding agent skill that estimates Azure resource costs using **live pricing data** from the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices). Compatible with [GitHub Copilot](https://docs.github.com/en/copilot/customizing-copilot/copilot-extensions/building-copilot-skills), [Claude Code](https://claude.ai), [Cursor](https://cursor.sh), [Windsurf](https://windsurf.com), and other agents that support the [skills.sh](https://skills.sh) ecosystem.
+An AI coding agent skill that estimates Azure resource costs using **live pricing data** from the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices). Compatible with 35+ agents that support the [skills.sh](https://skills.sh) ecosystem, including [GitHub Copilot](https://docs.github.com/en/copilot/customizing-copilot/copilot-extensions/building-copilot-skills), [Claude Code](https://claude.ai), [Cursor](https://cursor.sh), and [Windsurf](https://windsurf.com).
 
 No guessing, no stale spreadsheets — just real-time price lookups and clear cost breakdowns.
 
 ## Supported Services (140+ mapped)
 
-18 categories covering the full breadth of Azure. Services with reference files have fully documented query patterns; all others are routable via the [service routing map](.github/skills/azure-cost-calculator/references/service-routing.md).
+18 categories covering the full breadth of Azure. Services with reference files have fully documented query patterns; all others are routable via the [service routing map](skills/azure-cost-calculator/references/service-routing.md).
 
 | Category            | Example Services                                                                   |
 | ------------------- | ---------------------------------------------------------------------------------- |
@@ -37,24 +37,23 @@ No guessing, no stale spreadsheets — just real-time price lookups and clear co
 npx skills add ahmadabdalla/azure-cost-calculator-skill
 ```
 
-### Via GitHub Copilot Chat
+### Via agent chat
 
-1. Open **GitHub Copilot Chat** in VS Code
-2. Type: `install skill ahmadabdalla/azure-cost-calculator-skill`
-3. The skill is now available in all Copilot Chat sessions
+Some agents support installing skills directly from the chat interface:
+
+```
+install skill ahmadabdalla/azure-cost-calculator-skill
+```
+
+Refer to your agent's documentation for the exact install command syntax.
 
 ### Manual install
 
-Add the skill to your VS Code settings or `.github/copilot-skills.yml`:
-
-```yaml
-skills:
-  - repo: ahmadabdalla/azure-cost-calculator-skill
-```
+Point your agent's configuration to the skill entry point at `skills/azure-cost-calculator/SKILL.md` in this repository. For example, clone the repo and add the path to your agent's skill or instruction configuration.
 
 ## Usage
 
-Once installed, just ask Copilot about Azure costs in natural language. The skill automatically activates when it detects pricing-related questions.
+Once installed, just ask your AI agent about Azure costs in natural language. The skill automatically activates when it detects pricing-related questions.
 
 ### Example prompts
 
@@ -86,7 +85,7 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 
 **You:** _How much does a Standard_D4s_v5 VM cost per month in East US?_
 
-**Copilot:** Queries the live Azure Retail Prices API and returns:
+**Agent:** Queries the live Azure Retail Prices API and returns:
 
 > **Azure VM Cost Estimate — Standard_D4s_v5 (East US)**
 >
@@ -131,10 +130,10 @@ References are loaded on demand — only `SKILL.md` and `shared.md` load on ever
 
 ## How It Works
 
-The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `.github/skills/azure-cost-calculator/references/services/` organized into 18 categories. These files contain the exact API filter values, cost formulas, and known traps for each service.
+The skill uses the **filesystem as an index** — each supported Azure service has a dedicated reference file under `skills/azure-cost-calculator/references/services/` organized into 18 categories. These files contain the exact API filter values, cost formulas, and known traps for each service.
 
 1. **Identifies** the Azure resource type(s) from your question
-2. **Locates** the matching service reference file via file search, the [common alias index](.github/skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](.github/skills/azure-cost-calculator/references/service-routing.md) (160+ services)
+2. **Locates** the matching service reference file via file search, the [common alias index](skills/azure-cost-calculator/references/shared.md) (~40 most-searched services), or the [full routing map](skills/azure-cost-calculator/references/service-routing.md) (160+ services)
 3. **Reads** the service file — in full for 1–2 services, or lines 1–45 only in **batch estimation mode** (3+ services) for token efficiency
 4. **Runs** `Get-AzurePricing.ps1` which calls the [Azure Retail Prices REST API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 5. **Presents** a structured estimate with unit price, monthly cost, and stated assumptions
@@ -143,7 +142,7 @@ The skill uses the **filesystem as an index** — each supported Azure service h
 
 The skill is designed for complex multi-service estimates (10–15+ services) without exhausting the agent's context window:
 
-- **Lazy reference loading** — only `SKILL.md` and `shared.md` load on every query. Troubleshooting ([pitfalls.md](.github/skills/azure-cost-calculator/references/pitfalls.md)), RI pricing ([reserved-instances.md](.github/skills/azure-cost-calculator/references/reserved-instances.md)), region/currency info ([regions-and-currencies.md](.github/skills/azure-cost-calculator/references/regions-and-currencies.md)), and the full routing map ([service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)) load only when needed.
+- **Lazy reference loading** — only `SKILL.md` and `shared.md` load on every query. Troubleshooting ([pitfalls.md](skills/azure-cost-calculator/references/pitfalls.md)), RI pricing ([reserved-instances.md](skills/azure-cost-calculator/references/reserved-instances.md)), region/currency info ([regions-and-currencies.md](skills/azure-cost-calculator/references/regions-and-currencies.md)), and the full routing map ([service-routing.md](skills/azure-cost-calculator/references/service-routing.md)) load only when needed.
 - **Batch estimation mode** — for 3+ services, the agent reads only the first 45 lines of each service file (metadata + primary query pattern), reducing per-service token cost by ~65%.
 - **Alias-first routing** — a compact alias index in `shared.md` resolves common service names without loading the full 140+ service routing map.
 
@@ -171,10 +170,10 @@ All prices come directly from Microsoft's public API — no hardcoded values.
 Contributions are welcome! If you'd like to add support for a new Azure service or improve an existing one:
 
 1. Fork this repository
-2. Add or update the service reference in `.github/skills/azure-cost-calculator/references/services/<category>/` using [TEMPLATE.md](.github/skills/azure-cost-calculator/references/services/TEMPLATE.md) as a starting point
+2. Add or update the service reference in `skills/azure-cost-calculator/references/services/<category>/` using [TEMPLATE.md](skills/azure-cost-calculator/references/services/TEMPLATE.md) as a starting point
 3. **45-line rule**: ensure the first query pattern (most common configuration) appears within the first 45 lines — this is required for batch estimation mode
-4. Place the file in the category specified in [service-routing.md](.github/skills/azure-cost-calculator/references/service-routing.md)
-5. If adding a new category, update the category index in [shared.md](.github/skills/azure-cost-calculator/references/shared.md)
+4. Place the file in the category specified in [service-routing.md](skills/azure-cost-calculator/references/service-routing.md)
+5. If adding a new category, update the category index in [shared.md](skills/azure-cost-calculator/references/shared.md)
 6. Submit a pull request
 
 ## License
