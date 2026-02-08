@@ -243,9 +243,9 @@ function Test-ServiceReference {
             }
         })
 
-    # --- Required Sections ---
+    # --- Required Sections (must be h2 per TEMPLATE.md spec) ---
     foreach ($section in $RequiredSections) {
-        $pattern = "^#{1,3}\s+$([regex]::Escape($section))\s*$"
+        $pattern = "^#{2}\s+$([regex]::Escape($section))\s*$"
         $hasSection = @($lines | Where-Object { $_ -match $pattern }).Count -gt 0
         $checks.Add(@{
                 Name    = "section_$(($section -replace '\s+', '_').ToLower())"
@@ -254,9 +254,20 @@ function Test-ServiceReference {
             })
     }
 
-    # --- Style: No "verified" dates ---
+    # --- Style: No "verified" dates (skip fenced code blocks) ---
+    $nonCodeLines = [System.Collections.Generic.List[string]]::new()
+    $insideCodeBlock = $false
+    foreach ($line in $lines) {
+        if ($line -match '^\s*```') {
+            $insideCodeBlock = -not $insideCodeBlock
+            continue
+        }
+        if (-not $insideCodeBlock) {
+            $nonCodeLines.Add($line)
+        }
+    }
     $verifiedPattern = '(?i)\bverified\b.*\d{4}'
-    $hasVerifiedDate = @($lines | Where-Object { $_ -match $verifiedPattern }).Count -gt 0
+    $hasVerifiedDate = @($nonCodeLines | Where-Object { $_ -match $verifiedPattern }).Count -gt 0
     $checks.Add(@{
             Name    = 'no_verified_dates'
             Pass    = -not $hasVerifiedDate
@@ -283,7 +294,7 @@ function Test-ServiceReference {
 
     # --- Style: Trap format ---
     $trapLines = $lines | Where-Object { $_ -match '>\s*\*\*Trap' }
-    $badTraps = @($trapLines | Where-Object { $_ -notmatch '>\s*\*\*Trap\*\*:' -and $_ -notmatch '>\s*\*\*Trap\s*\([^)]+\)\*\*:' })
+    $badTraps = @($trapLines | Where-Object { $_ -notmatch '>\s*\*\*Trap\*\*:' -and $_ -notmatch '>\s*\*\*Trap\s*\(.*\)\*\*:' })
     $trapFormatOk = $badTraps.Count -eq 0
     $checks.Add(@{
             Name    = 'trap_format'
