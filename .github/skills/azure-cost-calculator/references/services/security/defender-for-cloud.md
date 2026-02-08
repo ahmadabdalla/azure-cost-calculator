@@ -59,5 +59,11 @@ All sub-products use the same pattern — substitute values from the Meter Names
 
 **Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (billing starts Feb 27 2026).
 
+**NOT billable for CSPM** (do not count these): Key Vault, Cosmos DB, Container Registry, Event Hubs, Service Bus, IoT Hub, Load Balancer, Private Endpoints, DNS Zones, Virtual Networks, Application Gateway, Azure Firewall, Front Door, API Management, AKS (the service resource itself).
+
+> **AKS counting**: AKS node pools are VMSS-based — count the individual node VMs as VMSS VMs. Do NOT count the AKS resource separately. E.g., 1 AKS cluster with 3 nodes = 3 billable resources, not 4.
+
+**Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `$5.11 × 8 = $40.88/mo`.
+
 **Formula**: `$5.11 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.
 ````
