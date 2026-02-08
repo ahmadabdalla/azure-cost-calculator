@@ -48,16 +48,14 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 
 ## Meter Names
 
-| Meter                                        | unitOfMeasure | Notes                                     |
-| -------------------------------------------- | ------------- | ----------------------------------------- |
-| `vCore`                                      | `1 Hour`      | Compute meter for all tiers/series        |
-| `Zone Redundancy vCore`                      | `1 Hour`      | Zone-redundancy compute surcharge         |
-| `General Purpose Data Stored`                | `1 GB/Month`  | Storage for General Purpose tier          |
-| `General Purpose Zone Redundancy Data Stored`| `1 GB/Month`  | Zone-redundant GP storage                 |
-| `Business Critical Data Stored`              | `1 GB/Month`  | Storage for Business Critical tier        |
-| `Business Critical Zone Redundancy Data Stored` | `1 GB/Month` | Zone-redundant BC storage               |
-| `General Purpose IO Rate Operations`         | `1M`          | IO operations for GP tier                 |
-| `Business Critical IO Rate Operations`       | `1M`          | IO operations for BC tier                 |
+| Meter                           | unitOfMeasure | Notes                              |
+| ------------------------------- | ------------- | ---------------------------------- |
+| `vCore`                         | `1 Hour`      | Compute meter for all tiers/series |
+| `Zone Redundancy vCore`         | `1 Hour`      | Zone-redundancy compute surcharge  |
+| `General Purpose Data Stored`   | `1 GB/Month`  | Storage for GP tier                |
+| `Business Critical Data Stored` | `1 GB/Month`  | Storage for BC tier                |
+
+Zone-redundant storage meters append `Zone Redundancy` (e.g., `General Purpose Zone Redundancy Data Stored`). IO meters: `General Purpose IO Rate Operations` / `Business Critical IO Rate Operations` (`1M`).
 
 ## Cost Formula
 
@@ -69,9 +67,9 @@ Total = Monthly Compute + Monthly Storage
 
 ## Notes
 
-- **License included vs AHB**: Public vCore prices are typically license-included. Azure Hybrid Benefit (AHB) prices are exposed as separate items, often with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`. When estimating, choose either the license-included or AHB SKUs based on whether the customer has eligible SQL Server licenses, and confirm the exact identifiers on the Azure pricing page or via the Retail Prices API.
-- **Storage**: GP storage is billed separately per-GB. BC tier includes local SSD storage; the storage meter covers data stored beyond the included allocation.
-- **Backup storage**: PITR backup storage equal to instance max storage is free. Additional PITR and LTR backup storage are billed separately via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage` products.
+- **License included vs AHB**: vCore prices are license-included by default. AHB prices appear as separate items with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`. Choose based on whether the customer has eligible SQL Server licenses.
+- **Storage**: GP storage billed separately per-GB. BC includes local SSD; storage meter covers data beyond included allocation.
+- **Backup**: PITR backup equal to max storage is free. Extra PITR/LTR billed via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage`.
 
 ## Reserved Instance Pricing
 
@@ -85,8 +83,7 @@ Total = Monthly Compute + Monthly Storage
     -PriceType Reservation
 ```
 
-> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results for reservations.
-> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. SQL MI-specific: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results for reservations. MonthlyCost is wildly wrong — see shared.md § RI MonthlyCost. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Product Names
 
