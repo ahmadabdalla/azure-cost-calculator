@@ -9,7 +9,7 @@ aliases: [private DNS, DNS zones]
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
-> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not use scripts (Global region only, scripts require `-Region`). Call API directly using query below.
+> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require `-Region` and return nothing; call the API directly using query below.
 > **Trap**: Zone pricing is **tiered** — first 25 zones at $0.50/zone/month, additional at $0.10/zone/month. Pick the tier matching expected zone count, do NOT sum all tiers.
 
 ## Query Pattern

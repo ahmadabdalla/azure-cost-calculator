@@ -60,10 +60,16 @@ Service reference files are organized by category. To find a service file:
 
 ### API-Unavailable Services
 
-Some services have **no data** in the Retail Prices API for standard regions. Scripts return zero results.
+Some services have **no data** in the Retail Prices API at all. Scripts return zero results.
 **Do NOT** query via `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — use the manual fallback table in the service file.
-Affected: DDoS Protection, Load Balancer, Private DNS & Private Link (Global region only), Defender CSPM.
+Affected: DDoS Protection, Defender CSPM.
 Full list: [regions-and-currencies.md § Known API-Unavailable Services](regions-and-currencies.md#known-api-unavailable-services).
+
+### Global/Empty-Region Services
+
+Some services have pricing only under `Global`/empty `armRegionName`, not standard regions. Scripts require `-Region` and return nothing.
+**Query the Retail Prices API directly** (see each service file for the query). Prices are USD-only.
+Affected: Load Balancer, Private DNS, Private Link.
 
 ### USD-Only Prices — Mandatory Conversion
 

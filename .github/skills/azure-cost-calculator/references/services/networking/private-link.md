@@ -9,7 +9,7 @@ aliases: [private link, private endpoint, PL]
 
 **Multiple meters**: Endpoint hours (per-endpoint) + data processed (ingress/egress per-GB)
 
-> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not use scripts (Global region only, scripts require `-Region`). Call API directly using query below.
+> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require `-Region` and return nothing; call the API directly using query below.
 
 ## Query Pattern
 
