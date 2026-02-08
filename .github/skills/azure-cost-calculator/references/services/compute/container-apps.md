@@ -20,6 +20,27 @@ aliases: [container apps, ACA]
     -SkuName $sku
 ```
 
+## Known Consumption Plan Rates
+
+| Meter               | Published Rate (USD)                      | Free Grant              |
+| ------------------- | ----------------------------------------- | ----------------------- |
+| vCPU Active Usage   | $0.000024 per vCPU-second                 | 180,000 vCPU-seconds/mo |
+| Memory Active Usage | $0.000003 per GiB-second                  | 360,000 GiB-seconds/mo  |
+| Requests            | ~$0.40 per 1M requests (varies by region) | 2M requests/mo          |
+
+> **Note**: Rates from [Azure Container Apps pricing page](https://azure.microsoft.com/pricing/details/container-apps/). API returns `$0.00` for vCPU/memory in all currencies (sub-cent rounding). Use USD rates above; for other currencies convert via [regions-and-currencies.md](../../regions-and-currencies.md).
+
+## Cost Formula
+
+```
+Consumption (Standard):
+  Monthly = (vCPU_seconds × $0.000024) + (GiB_seconds × $0.000003)
+  Free grant: 180K vCPU-s + 360K GiB-s per subscription/month
+
+Dedicated:
+  Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
+```
+
 ## SKU Selection Guide
 
 | Workload Type                   | SKU         | Pricing Model | Notes                                    |
@@ -41,27 +62,6 @@ aliases: [container apps, ACA]
 | Standard  | `Standard Memory Active Usage` | 1 GiB Second  | Shows $0.00 — sub-cent               |
 | Standard  | `Standard Memory Idle Usage`   | 1 GiB Second  | Shows $0.00 — sub-cent               |
 | Standard  | `Standard Requests`            | 1M            | Only meter returning non-zero price  |
-
-## Cost Formula
-
-```
-Consumption (Standard):
-  Monthly = (vCPU_seconds × $0.000024) + (GiB_seconds × $0.000003)
-  Free grant: 180K vCPU-s + 360K GiB-s per subscription/month
-
-Dedicated:
-  Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
-```
-
-## Known Consumption Plan Rates
-
-| Meter               | Published Rate (USD)                      | Free Grant              |
-| ------------------- | ----------------------------------------- | ----------------------- |
-| vCPU Active Usage   | $0.000024 per vCPU-second                 | 180,000 vCPU-seconds/mo |
-| Memory Active Usage | $0.000003 per GiB-second                  | 360,000 GiB-seconds/mo  |
-| Requests            | ~$0.40 per 1M requests (varies by region) | 2M requests/mo          |
-
-> **Note**: Rates from [Azure Container Apps pricing page](https://azure.microsoft.com/pricing/details/container-apps/). API returns `$0.00` for vCPU/memory in all currencies (sub-cent rounding). Use USD rates above; for other currencies convert via [regions-and-currencies.md](../../regions-and-currencies.md).
 
 ### Manual Calculation Example
 
