@@ -64,7 +64,7 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 ```
 Monthly Compute = retailPrice × 730
 Monthly Storage = storage_retailPrice × sizeInGB
-Total = Compute + Storage
+Total = Monthly Compute + Monthly Storage
 ```
 
 ## Notes
