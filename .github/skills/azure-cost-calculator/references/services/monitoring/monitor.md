@@ -23,16 +23,16 @@ aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics]
 
 ## Key Fields
 
-| Parameter     | How to determine                                  | Example values                      |
-| ------------- | ------------------------------------------------- | ----------------------------------- |
-| `serviceName` | Fixed value for Azure Monitor metrics             | `Azure Monitor`                     |
-| `meterName`   | Custom metrics time series meter                  | `Monitored Time Series`             |
+| Parameter     | How to determine                      | Example values          |
+| ------------- | ------------------------------------- | ----------------------- |
+| `serviceName` | Fixed value for Azure Monitor metrics | `Azure Monitor`         |
+| `meterName`   | Custom metrics time series meter      | `Monitored Time Series` |
 
 ## Meter Names
 
-| Meter                      | unitOfMeasure | Notes                                     |
-| -------------------------- | ------------- | ----------------------------------------- |
-| `Monitored Time Series`    | `10`          | Custom metrics - billed per 10 time series |
+| Meter                   | unitOfMeasure | Notes                                      |
+| ----------------------- | ------------- | ------------------------------------------ |
+| `Monitored Time Series` | `10`          | Custom metrics - billed per 10 time series |
 
 ## Cost Formula
 

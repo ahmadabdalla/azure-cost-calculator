@@ -1,7 +1,15 @@
 ---
 serviceName: Application Insights
 category: monitoring
-aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
+aliases:
+  [
+    App Insights,
+    APM,
+    Application Performance Monitoring,
+    Application Performance,
+    AppInsights,
+    Azure Application Insights,
+  ]
 ---
 
 # Application Insights
@@ -30,18 +38,18 @@ aliases: [App Insights, APM, Application Performance Monitoring, Application Per
 
 ## Key Fields
 
-| Parameter     | How to determine                                         | Example values                      |
-| ------------- | -------------------------------------------------------- | ----------------------------------- |
-| `serviceName` | Fixed value - uses Log Analytics workspace pricing       | `Log Analytics`                     |
-| `skuName`     | Fixed value for pay-as-you-go tier                       | `Analytics Logs`                    |
-| `meterName`   | Either ingestion or retention meter                      | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
+| Parameter     | How to determine                                   | Example values                                                  |
+| ------------- | -------------------------------------------------- | --------------------------------------------------------------- |
+| `serviceName` | Fixed value - uses Log Analytics workspace pricing | `Log Analytics`                                                 |
+| `skuName`     | Fixed value for pay-as-you-go tier                 | `Analytics Logs`                                                |
+| `meterName`   | Either ingestion or retention meter                | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
 
 ## Meter Names
 
-| Meter                              | skuName         | unitOfMeasure | Notes                                     |
-| ---------------------------------- | --------------- | ------------- | ----------------------------------------- |
-| `Analytics Logs Data Analyzed`     | `Analytics Logs` | `1 GB`       | Application telemetry data ingestion      |
-| `Analytics Logs Data Retention`    | `Analytics Logs` | `1 GB`       | Application telemetry retention beyond 31 days |
+| Meter                           | skuName          | unitOfMeasure | Notes                                          |
+| ------------------------------- | ---------------- | ------------- | ---------------------------------------------- |
+| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion           |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 31 days |
 
 ## Cost Formula
 

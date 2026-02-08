@@ -1,7 +1,15 @@
 ---
 serviceName: Log Analytics
 category: monitoring
-aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
+aliases:
+  [
+    OMS,
+    Workspace,
+    Logs,
+    Log Analytics Workspace,
+    Azure Monitor Logs,
+    Operations Management Suite,
+  ]
 ---
 
 # Log Analytics
@@ -30,18 +38,18 @@ aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Ope
 
 ## Key Fields
 
-| Parameter     | How to determine                                  | Example values                      |
-| ------------- | ------------------------------------------------- | ----------------------------------- |
-| `serviceName` | Fixed value for Log Analytics workspace pricing  | `Log Analytics`                     |
-| `skuName`     | Fixed value for pay-as-you-go tier                | `Analytics Logs`                    |
-| `meterName`   | Either ingestion or retention meter               | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
+| Parameter     | How to determine                                | Example values                                                  |
+| ------------- | ----------------------------------------------- | --------------------------------------------------------------- |
+| `serviceName` | Fixed value for Log Analytics workspace pricing | `Log Analytics`                                                 |
+| `skuName`     | Fixed value for pay-as-you-go tier              | `Analytics Logs`                                                |
+| `meterName`   | Either ingestion or retention meter             | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
 
 ## Meter Names
 
-| Meter                              | skuName         | unitOfMeasure | Notes                                     |
-| ---------------------------------- | --------------- | ------------- | ----------------------------------------- |
-| `Analytics Logs Data Analyzed`     | `Analytics Logs` | `1 GB`       | Pay-as-you-go data ingestion              |
-| `Analytics Logs Data Retention`    | `Analytics Logs` | `1 GB`       | Data retention beyond 31 days free        |
+| Meter                           | skuName          | unitOfMeasure | Notes                              |
+| ------------------------------- | ---------------- | ------------- | ---------------------------------- |
+| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Pay-as-you-go data ingestion       |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Data retention beyond 31 days free |
 
 ## Cost Formula
 
