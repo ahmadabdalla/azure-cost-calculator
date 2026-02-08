@@ -65,20 +65,3 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - The query returns 0 or unexpected results
 3. **Parallel queries** — run `Get-AzurePricing.ps1` calls in parallel where possible. Independent services have no query dependencies.
 4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.
-
-## Architecture Estimation Mode
-
-When estimating a **complete architecture** (5+ services), follow this workflow to minimize round-trips:
-
-1. **Decompose** — parse the architecture description and list all billable Azure services identified
-2. **Map** — resolve each service to its reference file using file search (Step 2 from Workflow)
-3. **Propose defaults** — present ALL services with proposed defaults (tier, SKU, region, quantity) in a single table for bulk confirmation. Use these safe defaults unless the user specifies otherwise:
-   - Tier: General Purpose / Standard
-   - Redundancy: LRS (storage), Zone-redundant where available
-   - Region: user's stated region or eastus
-   - Commitment: Pay-as-you-go (no RI)
-4. **Confirm once** — let the user review and override any defaults in one response, not 25 separate questions. Rule #5 ("ask before assuming") is satisfied by this bulk confirmation step.
-5. **Batch queries** — run all `Get-AzurePricing.ps1` calls using batch estimation mode (partial reads, parallel queries)
-6. **Consolidated output** — present results as a single cost table with: Service | SKU/Tier | Unit Price | Qty/Multiplier | Monthly Cost, plus a total row and an assumptions footnote
-
-> **Note**: Cross-service dependencies to watch for: AKS nodes are VMs (budget both AKS uptime SLA + VM node costs), Container Apps may need ACR, App Service apps share an App Service Plan, VNet peering has bilateral costs.
