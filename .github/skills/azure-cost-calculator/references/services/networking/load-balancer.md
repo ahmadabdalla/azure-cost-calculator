@@ -16,11 +16,9 @@ VNets themselves are free. Costs come from:
 
 ## Load Balancer
 
-> **Trap**: The Retail Prices API returns **no data for any standard public Azure region** (e.g., `eastus`, `australiaeast`, `westeurope`). Data only exists for edge/operator regions (`attdetroit1`, `sgxsingapore1`, etc.), `Global`, and `US Gov`. Both `Get-AzurePricing.ps1` and `Explore-AzurePricing.ps1` will return zero results for any public region. This is an API data gap, not a filter issue.
->
-> **Agent instruction**: Do NOT attempt to query this service via the scripts — it will always fail. Use the manual fallback below and note the limitation to the user.
+> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback below.
 
-### Query Pattern
+## Query Pattern
 
 ```powershell
 .\Get-AzurePricing.ps1 `
@@ -28,7 +26,7 @@ VNets themselves are free. Costs come from:
     -SkuName 'Standard'
 ```
 
-### Manual Fallback (API unavailable for public regions)
+## Manual Fallback (API unavailable for public regions)
 
 The API has no data for any standard Azure public region. Use the known rates below (USD):
 
@@ -38,9 +36,9 @@ The API has no data for any standard Azure public region. Use the known rates be
 | Overage rules   | ~$0.01     | per hour per rule | Each rule beyond the first 5               |
 | Data processed  | ~$0.005    | per GB            | Inbound + outbound                         |
 
-> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). These are approximate USD values — direct users to the pricing page for current rates. For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). USD-only — see shared.md § Common Traps for mandatory currency conversion.
 
-### Manual Cost Formula
+## Cost Formula
 
 ```
 Base      = $0.025 × 730                          = ~$18.25/month
@@ -49,7 +47,7 @@ Data      = processedGB × $0.005
 Monthly   = Base + Overage + Data
 ```
 
-### Example (8 rules, 200 GB)
+## Example (8 rules, 200 GB)
 
 ```
 Base:    $0.025 × 730         = $18.25
@@ -58,7 +56,13 @@ Data:    200 × $0.005         = $1.00
 Total:   ~$41.15 USD/month
 ```
 
-### Meter Names
+## Notes
+
+- Basic SKU is free but lacks SLA and zone redundancy
+- Standard SKU requires Standard public IPs
+- USD-only — see shared.md § Common Traps for mandatory currency conversion
+
+## Meter Names
 
 | Meter                                           | unitOfMeasure | Notes                            |
 | ----------------------------------------------- | ------------- | -------------------------------- |

@@ -8,7 +8,7 @@ aliases: [container apps, ACA]
 
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `-SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. Always ask if workload is always-on or event-driven to pick the right SKU.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `-SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
 
 ## Query Pattern
 
@@ -41,6 +41,8 @@ Consumption (Standard):
 Dedicated:
   Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
 ```
+
+> **Agent defaults** (when not specified): Use Consumption plan. If request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s` — never assume `730 × 3600` (always-on) for Standard SKU.
 
 ## SKU Selection Guide
 

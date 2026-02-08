@@ -68,7 +68,7 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 ```
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
-> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. SQL-specific: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Product Names
 

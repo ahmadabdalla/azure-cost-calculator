@@ -53,13 +53,17 @@ All sub-products use the same pattern — substitute values from the Meter Names
 
 ## Defender CSPM (Cloud Security Posture Management)
 
-> **Trap (not in API)**: Defender CSPM has **no meter** in the Retail Prices API. Use the published rate below.
->
-> **Currency instruction (MANDATORY)**: The CSPM price below is in **USD only**. If the user's requested currency is NOT USD, you **MUST** convert using the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Do NOT present USD prices when the user requested a different currency.
+> **Trap**: Defender CSPM has **no meter** in the Retail Prices API. USD-only — see shared.md § Common Traps. Use the published rate below.
 
 **Pricing**: $5.11 USD per billable resource/month ([Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)). Foundational CSPM is free (not estimated).
 
 **Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (billing starts Feb 27 2026).
+
+**NOT billable for CSPM** (do not count these): Key Vault, Cosmos DB, Container Registry, Event Hubs, Service Bus, IoT Hub, Load Balancer, Private Endpoints, DNS Zones, Virtual Networks, Application Gateway, Azure Firewall, Front Door, API Management, AKS (the service resource itself).
+
+> **AKS counting**: AKS node pools are VMSS-based — count the individual node VMs as VMSS VMs. Do NOT count the AKS resource separately. E.g., 1 AKS cluster with 3 nodes = 3 billable resources, not 4.
+
+**Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `$5.11 × 8 = $40.88/mo`.
 
 **Formula**: `$5.11 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.
 ````

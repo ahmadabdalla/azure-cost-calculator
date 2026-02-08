@@ -65,7 +65,7 @@ Monthly = retailPrice × 730 hours × instanceCount
     -PriceType Reservation
 ```
 
-> **Trap (RI MonthlyCost)**: See [reserved-instances.md](../../reserved-instances.md). Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). Select desired `reservationTerm` ("1 Year" / "3 Years") from results.
+> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. Select desired `reservationTerm` from results.
 
 ## Common SKUs
 

@@ -9,9 +9,7 @@ aliases: [azure functions, serverless, function app]
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> **Trap**: Consumption plan unit prices are **sub-cent** (e.g., ~$0.000016/GB-s, ~$0.0000002/execution in USD). The script displays these as `$0.00` for both `UnitPrice` and `MonthlyCost`, making it impossible to calculate costs directly from script output. You must apply the cost formula manually using the known per-unit rates below.
->
-> **Agent instruction**: Do NOT report `$0.00` to the user — that is a display rounding issue. Use the Azure pricing page rates and the manual calculation example below. Always explain the free grant deduction.
+> ⚠ **Sub-cent pricing** — see shared.md § Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -38,7 +36,7 @@ aliases: [azure functions, serverless, function app]
 
 > These rates are from the [Azure Functions pricing page](https://azure.microsoft.com/en-au/pricing/details/functions/). The API returns them but at precision below what the script rounds to — the script shows `$0.00` for both.
 
-> **For non-USD currencies**: The API returns `$0.00` in all currencies due to rounding. Use the USD rates above and convert using either the user's known exchange rate or the ratio derived from another meter in the same region (e.g., query a VM price in both USD and the target currency to derive the conversion factor). See [regions-and-currencies.md](../../regions-and-currencies.md) for the currency derivation method.
+> **For non-USD currencies**: USD-only due to sub-cent rounding — see shared.md § Common Traps for mandatory conversion.
 
 ## Manual Calculation Example
 
@@ -78,3 +76,9 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 | EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
 
 > **Agent instruction**: When the user says "Functions Premium EP2", query `Premium Functions` for the generic per-vCPU and per-GiB hourly rates, then multiply by the EP2 specs (2 vCPU, 7 GiB) from the table above.
+
+## Notes
+
+- Consumption plan has a generous free grant — many small workloads cost $0
+- Premium plan is billed per-second with a minimum of one instance
+- Sub-cent pricing — see shared.md § Common Traps for mandatory conversion
