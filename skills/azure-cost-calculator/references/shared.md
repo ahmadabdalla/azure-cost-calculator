@@ -2,12 +2,13 @@
 
 ## Constants
 
-| Constant        | Value                                        | Notes                   |
-| --------------- | -------------------------------------------- | ----------------------- |
-| Hours per month | 730                                          | 365.25 × 24 ÷ 12        |
-| Days per month  | 30                                           | Simplified              |
-| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required        |
-| API Version     | `2023-01-01-preview`                         | Current preview version |
+| Constant        | Value                                        | Notes                         |
+| --------------- | -------------------------------------------- | ----------------------------- |
+| Hours per month | 730                                          | 365.25 × 24 ÷ 12              |
+| Days per month  | 30                                           | Simplified                    |
+| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required              |
+| API Version     | `2023-01-01-preview`                         | Current preview version       |
+| GB per TB       | 1,000                                        | Azure billing uses decimal TB |
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
@@ -24,7 +25,7 @@ Service reference files are organized by category. To find a service file:
 
 ### Category Index
 
-18 categories, designed to scale to 2000+ services. Each category maps to one or more API `serviceFamily` values. New API `serviceFamily` values (Azure Stack, Azure Arc, Power Platform, Gaming, Microsoft 365 Copilot) are routed to existing categories — primarily Specialist — to avoid category proliferation.
+18 categories. Each maps to one or more API `serviceFamily` values.
 
 | Category        | Path                        | API serviceFamily                                                                                   |
 | --------------- | --------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -46,15 +47,6 @@ Service reference files are organized by category. To find a service file:
 | Web             | `services/web/`             | Web                                                                                                 |
 | Communication   | `services/communication/`   | Azure Communication Services, Telecommunications                                                    |
 | Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Azure Stack, Azure Arc, Power Platform, Gaming, Other |
-
-### Category Design Principles
-
-1. **API-aligned** — categories primarily map to the API `serviceFamily` field, so agents can use `serviceFamily` as a first-pass router to the correct folder.
-2. **Routing over taxonomy** — the goal is _finding the right file_, not building a perfect ontology. When in doubt, place the service where users would look for it.
-3. **Cross-references over duplication** — when a service spans categories (e.g., Site Recovery = Management + Migration), keep the primary file in one category and add a one-line cross-reference note in the other.
-4. **Flat within categories** — no sub-folders within a category. A category with 100+ files is fine; a 3-level folder hierarchy is not.
-5. **Aliases are first-class** — the `aliases` field in each service file's YAML front matter is the primary search index. Invest in comprehensive aliases over perfect folder structure.
-6. **Free/no-meter services need files too** — services like Azure Policy, Advisor, and Cost Management have no retail price, but they still need reference files that say "this service is free" to prevent agents from wasting time querying the API.
 
 ## Common Traps (read once, apply to all affected services)
 

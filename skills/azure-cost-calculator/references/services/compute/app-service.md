@@ -60,3 +60,10 @@ Monthly = retailPrice × 730 hours × instanceCount
 | `P1 v3` | 2     | 8        | Premium v3 |
 | `P2 v3` | 4     | 16       | Premium v3 |
 | `P3 v3` | 8     | 32       | Premium v3 |
+
+## Notes
+
+- App Service Plans are billed whether or not apps are running on them — deleting all apps does not stop billing; delete the plan itself
+- Multiple apps can share one plan; cost is per-plan, not per-app
+- Windows plans omit the OS suffix in `productName` (e.g., `Azure App Service Premium v3 Plan`); Linux plans append `- Linux`
+- Free (F1) and Shared (D1) tiers exist but are not recommended for production and may not appear in all regions

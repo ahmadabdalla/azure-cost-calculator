@@ -98,10 +98,19 @@ function Get-FrontMatter {
             $key = $Matches[1]
             $index++
 
-            # Check if next line is an indented bracketed list [a, b]
-            if ($index -lt $frontMatterLines.Count -and $frontMatterLines[$index] -match '^\s+(\[.*\])\s*$') {
-                $result.Fields[$key] = $Matches[1].Trim()
-                $index++
+            # Check if next line is a bracketed list (single or multi-line)
+            if ($index -lt $frontMatterLines.Count -and $frontMatterLines[$index] -match '^\s+\[') {
+                # Accumulate lines until we find the closing bracket
+                $bracketContent = ''
+                while ($index -lt $frontMatterLines.Count) {
+                    $bracketContent += $frontMatterLines[$index].Trim()
+                    if ($frontMatterLines[$index] -match '\]\s*$') {
+                        $index++
+                        break
+                    }
+                    $index++
+                }
+                $result.Fields[$key] = $bracketContent
                 continue
             }
 
