@@ -70,5 +70,6 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - **Default CU assumption (MANDATORY)**: When the user does NOT specify expected traffic or CU count, use a default of **10 CUs** (light-to-moderate workload baseline). Do NOT use 0 CUs and do NOT omit CU costs — the fixed cost alone underestimates real-world spend. Always state the CU assumption to the user.
 - Capacity Units (CU) are consumption-based — if the user specifies their expected traffic, calculate CUs from that instead of using the default
 - A CU measures: ~2,500 concurrent connections, ~2.22 Mbps throughput, or ~1 compute unit
+- **CU from data volume**: 1 CU ≈ 2.22 Mbps sustained ≈ 0.98 GB/hr. For monthly data: `CUs = dataGB / (0.98 × 730)`. Example: 5 TB (5,000 GB) → ~7 CU average. Add headroom for burst — use 1.5–2× for production.
 - For light workloads, estimate ~5-10 CU average; for moderate, ~10-30 CU
 - WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher

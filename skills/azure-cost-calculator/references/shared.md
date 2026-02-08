@@ -2,12 +2,13 @@
 
 ## Constants
 
-| Constant        | Value                                        | Notes                   |
-| --------------- | -------------------------------------------- | ----------------------- |
-| Hours per month | 730                                          | 365.25 × 24 ÷ 12        |
-| Days per month  | 30                                           | Simplified              |
-| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required        |
-| API Version     | `2023-01-01-preview`                         | Current preview version |
+| Constant        | Value                                        | Notes                         |
+| --------------- | -------------------------------------------- | ----------------------------- |
+| Hours per month | 730                                          | 365.25 × 24 ÷ 12              |
+| Days per month  | 30                                           | Simplified                    |
+| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required              |
+| API Version     | `2023-01-01-preview`                         | Current preview version       |
+| GB per TB       | 1,000                                        | Azure billing uses decimal TB |
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
