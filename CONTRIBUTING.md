@@ -12,7 +12,7 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 - **PowerShell 7+** — required to run the validation script after the AI generates the file.
 
-> **Note:** All skill files (scripts, references, templates) live under `.github/skills/azure-cost-calculator/` in this repo. Paths in this guide are given from the repo root.
+> **Note:** All skill files (scripts, references, templates) live under `skills/azure-cost-calculator/` in this repo. Paths in this guide are given from the repo root.
 
 ## The Prompt
 
@@ -25,32 +25,32 @@ Follow these steps exactly:
 
 ### Step 1 — Check eligibility
 
-1. Read the file `.github/skills/azure-cost-calculator/references/service-routing.md`.
+1. Read the file `skills/azure-cost-calculator/references/service-routing.md`.
 2. Confirm that {SERVICE_NAME} appears in the routing map. Note the exact API `serviceName`, the suggested filename, the category folder, and the aliases listed.
 3. If {SERVICE_NAME} is not in the routing map, stop and tell the user to open an issue first.
 
 ### Step 2 — Check for duplicates
 
-1. List the files in `.github/skills/azure-cost-calculator/references/services/{category}/` (using the category from step 1).
+1. List the files in `skills/azure-cost-calculator/references/services/{category}/` (using the category from step 1).
 2. If a file already exists for this service, stop and tell the user.
 
 ### Step 3 — Read the template
 
-1. Read `.github/skills/azure-cost-calculator/references/services/TEMPLATE.md` for the full format rules and section structure.
-2. Read `.github/skills/azure-cost-calculator/references/shared.md` for the category index and constants.
+1. Read `skills/azure-cost-calculator/references/services/TEMPLATE.md` for the full format rules and section structure.
+2. Read `skills/azure-cost-calculator/references/shared.md` for the category index and constants.
 
 ### Step 4 — Discover exact API values
 
 Run the exploration script to find case-sensitive filter values:
 
 ```powershell
-.github/skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{serviceName from routing map}'
+skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{serviceName from routing map}'
 ```
 
 If results are sparse, also try:
 
 ```powershell
-.github/skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -SearchTerm '{keyword}' -Top 50
+skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -SearchTerm '{keyword}' -Top 50
 ```
 
 Record every unique `serviceName`, `productName`, `skuName`, and `meterName` value. These are case-sensitive — use them exactly as returned.
@@ -62,7 +62,7 @@ If the service has **multiple `productName` values**, explore each one individua
 For each query you plan to document, run it with the pricing script and verify the output:
 
 ```powershell
-.github/skills/azure-cost-calculator/scripts/Get-AzurePricing.ps1 `
+skills/azure-cost-calculator/scripts/Get-AzurePricing.ps1 `
     -ServiceName '{serviceName}' `
     -ProductName '{productName}' `
     -SkuName '{skuName}' `
@@ -92,7 +92,7 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 
 ### Step 7 — Generate the service reference file
 
-Create the file at: `.github/skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).
+Create the file at: `skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).
 
 The file MUST follow these rules:
 - **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (common names, abbreviations, synonyms — be comprehensive).
@@ -121,8 +121,8 @@ All paths above are given from the repo root.
 Run the validation script against the generated file:
 
 ```powershell
-.github/skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1 `
-    -Path .github/skills/azure-cost-calculator/references/services/{category}/{filename}.md `
+skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1 `
+    -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md `
     -CheckAliasUniqueness
 ```
 
@@ -136,7 +136,7 @@ Push your branch and open a pull request. CI runs the validation automatically.
 
 If the AI-generated file fails validation or looks wrong, check these common issues:
 
-**Wrong `serviceName` casing** — The API value is case-sensitive. The exploration script returns the exact value; the AI should have used it verbatim. If it didn't, re-run `.github/skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1` and correct the YAML front matter.
+**Wrong `serviceName` casing** — The API value is case-sensitive. The exploration script returns the exact value; the AI should have used it verbatim. If it didn't, re-run `skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1` and correct the YAML front matter.
 
 **Missing filters causing inflated totals** — If `totalMonthlyCost` looks unreasonably high, the query is probably returning extra meters. Add `-MeterName` or `-ProductName` filters to narrow results.
 
