@@ -35,7 +35,8 @@ aliases: [container apps, ACA]
 ```
 Consumption (Standard):
   Monthly = (vCPU_seconds × $0.000024) + (GiB_seconds × $0.000003)
-  Free grant: 180K vCPU-s + 360K GiB-s per subscription/month
+           + max(0, requests − 2M) / 1M × $request_rate
+  Free grant: 180K vCPU-s + 360K GiB-s + 2M requests per subscription/month
 
 Dedicated:
   Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
@@ -76,7 +77,7 @@ Total = $117.80/mo
 
 ## Notes
 
-- Consumption (Standard) meters return `$0.00` from the API — always use the Known Rates table above
+- Consumption vCPU and memory meters return `$0.00` from the API — always use the Known Rates table above
 - Dedicated plan charges per-environment management fee in addition to vCPU/memory
 - GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps

@@ -21,7 +21,7 @@ aliases: [service bus, messaging, queues, topics]
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Service Bus' `
     -SkuName 'Basic' `
-    -MeterName 'Basic Operations'
+    -MeterName 'Basic Messaging Operations'
 ```
 
 ```powershell
@@ -33,31 +33,29 @@ aliases: [service bus, messaging, queues, topics]
 ```
 
 ```powershell
-# Standard tier — operations (per 13M, first 13M included)
+# Standard tier — operations (per 1M, first 13M included)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Service Bus' `
     -SkuName 'Standard' `
-    -MeterName 'Standard Operations'
+    -MeterName 'Standard Messaging Operations'
 ```
 
 ```powershell
-# Premium tier — messaging unit (use -InstanceCount for multi-unit)
+# Premium — messaging unit (-InstanceCount for multi-unit)
 .\Get-AzurePricing.ps1 `
-    -ServiceName 'Service Bus' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Messaging Unit' `
-    -InstanceCount 2
+    -ServiceName 'Service Bus' -SkuName 'Premium' `
+    -MeterName 'Premium Messaging Unit' -InstanceCount 2
 ```
 
 ## Meter Names
 
-| Meter                    | SKU      | Purpose                                      |
-| ------------------------ | -------- | -------------------------------------------- |
-| `Basic Operations`       | Basic    | Per 1M operations                            |
-| `Standard Base Unit`     | Standard | Namespace hourly charge                      |
-| `Standard Operations`    | Standard | Per 13M operations (first 13M included)      |
-| `Standard Relay Hours`   | Standard | Hybrid Connections (hourly)                  |
-| `Premium Messaging Unit` | Premium  | Messaging Unit (hourly, operations included) |
+| Meter                           | SKU      | Purpose                                      |
+| ------------------------------- | -------- | -------------------------------------------- |
+| `Basic Messaging Operations`    | Basic    | Per 1M operations                            |
+| `Standard Base Unit`            | Standard | Namespace hourly charge                      |
+| `Standard Messaging Operations` | Standard | Per 1M operations (first 13M included)       |
+| `Standard Relay Hours`          | Standard | Hybrid Connections (hourly)                  |
+| `Premium Messaging Unit`        | Premium  | Messaging Unit (hourly, operations included) |
 
 ## Cost Formula
 
