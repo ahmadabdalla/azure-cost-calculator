@@ -47,39 +47,6 @@ Service reference files are organized by category. To find a service file:
 | Communication   | `services/communication/`   | Azure Communication Services, Telecommunications                                                    |
 | Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Azure Stack, Azure Arc, Power Platform, Gaming, Other |
 
-### Common Alias Index
-
-Quick lookup for the most commonly requested services. Maps aliases to their reference file paths.
-
-| Alias                                  | File Path                                   |
-| -------------------------------------- | ------------------------------------------- |
-| VMs, Virtual Machines, VMSS            | `services/compute/virtual-machines.md`      |
-| App Service, Web Apps, ASP             | `services/compute/app-service.md`           |
-| Functions, Azure Functions             | `services/compute/functions.md`             |
-| Container Apps, ACA                    | `services/compute/container-apps.md`        |
-| AKS, Kubernetes, K8s                   | `services/compute/aks.md`                   |
-| ACR, Container Registry                | `services/containers/container-registry.md` |
-| Azure SQL, SQL DB, SQL Database        | `services/databases/sql-database.md`        |
-| Cosmos DB, CosmosDB, DocumentDB        | `services/databases/cosmos-db.md`           |
-| PostgreSQL, Postgres, Flexible Server  | `services/databases/postgresql-flexible.md` |
-| Redis, Azure Cache for Redis           | `services/databases/redis-cache.md`         |
-| App Gateway, AGW, WAF v2               | `services/networking/app-gateway.md`        |
-| Azure Firewall                         | `services/networking/azure-firewall.md`     |
-| DDoS Protection                        | `services/networking/ddos-protection.md`    |
-| Load Balancer, ALB                     | `services/networking/load-balancer.md`      |
-| Private Link, Private Endpoint         | `services/networking/private-link.md`       |
-| Blob Storage, Azure Files, ADLS        | `services/storage/storage.md`               |
-| Managed Disks, Premium SSD, Ultra Disk | `services/storage/managed-disks.md`         |
-| Key Vault, AKV                         | `services/security/key-vault.md`            |
-| Defender for Cloud, CSPM               | `services/security/defender-for-cloud.md`   |
-| Azure Monitor, Metrics, Alerts         | `services/monitoring/monitor.md`            |
-| Log Analytics, OMS                     | `services/monitoring/monitor.md`            |
-| App Insights, APM                      | `services/monitoring/monitor.md`            |
-| Service Bus, ASB, Queues, Topics       | `services/integration/service-bus.md`       |
-| APIM, API Management, API Gateway      | `services/integration/api-management.md`    |
-
-For the full service routing map (all 160+ services), see [service-routing.md](service-routing.md).
-
 ### Category Design Principles
 
 1. **API-aligned** — categories primarily map to the API `serviceFamily` field, so agents can use `serviceFamily` as a first-pass router to the correct folder.

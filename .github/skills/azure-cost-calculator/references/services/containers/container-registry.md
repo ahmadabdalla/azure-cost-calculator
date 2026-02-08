@@ -1,6 +1,6 @@
 ---
 serviceName: Container Registry
-category: compute
+category: containers
 aliases: [ACR, container registry]
 ---
 
