@@ -69,7 +69,7 @@ Total = Compute + Storage
 
 ## Notes
 
-- **License included**: vCore prices include SQL Server license by default. Use Azure Hybrid Benefit (AHB) for existing SQL Server licenses at reduced rates — query with DevTestConsumption or check the Azure pricing page.
+- **License included vs AHB**: Public vCore prices are typically license-included. Azure Hybrid Benefit (AHB) prices are exposed as separate items, often with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`. When estimating, choose either the license-included or AHB SKUs based on whether the customer has eligible SQL Server licenses, and confirm the exact identifiers on the Azure pricing page or via the Retail Prices API.
 - **Storage**: GP storage is billed separately per-GB. BC tier includes local SSD storage; the storage meter covers data stored beyond the included allocation.
 - **Backup storage**: PITR backup storage equal to instance max storage is free. Additional PITR and LTR backup storage are billed separately via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage` products.
 
