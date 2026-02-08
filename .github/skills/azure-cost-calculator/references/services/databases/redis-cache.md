@@ -79,3 +79,10 @@ RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms
 ```
 
 > **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost.
+
+## Notes
+
+- Basic tier has no SLA or replication — dev/test only
+- Standard tier includes replication (2 nodes)
+- Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
+- Use `-ProductName` to disambiguate tiers sharing the same meter names

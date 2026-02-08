@@ -76,3 +76,9 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 | EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
 
 > **Agent instruction**: When the user says "Functions Premium EP2", query `Premium Functions` for the generic per-vCPU and per-GiB hourly rates, then multiply by the EP2 specs (2 vCPU, 7 GiB) from the table above.
+
+## Notes
+
+- Consumption plan has a generous free grant — many small workloads cost $0
+- Premium plan is billed per-second with a minimum of one instance
+- Sub-cent pricing — see shared.md § Common Traps for mandatory conversion

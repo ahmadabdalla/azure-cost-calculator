@@ -18,7 +18,7 @@ VNets themselves are free. Costs come from:
 
 > ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback below.
 
-### Query Pattern
+## Query Pattern
 
 ```powershell
 .\Get-AzurePricing.ps1 `
@@ -26,7 +26,7 @@ VNets themselves are free. Costs come from:
     -SkuName 'Standard'
 ```
 
-### Manual Fallback (API unavailable for public regions)
+## Manual Fallback (API unavailable for public regions)
 
 The API has no data for any standard Azure public region. Use the known rates below (USD):
 
@@ -38,7 +38,7 @@ The API has no data for any standard Azure public region. Use the known rates be
 
 > Source: [Azure Load Balancer pricing](https://azure.microsoft.com/pricing/details/load-balancer/). USD-only — see shared.md § Common Traps for mandatory currency conversion.
 
-### Manual Cost Formula
+## Cost Formula
 
 ```
 Base      = $0.025 × 730                          = ~$18.25/month
@@ -47,7 +47,7 @@ Data      = processedGB × $0.005
 Monthly   = Base + Overage + Data
 ```
 
-### Example (8 rules, 200 GB)
+## Example (8 rules, 200 GB)
 
 ```
 Base:    $0.025 × 730         = $18.25
@@ -56,7 +56,13 @@ Data:    200 × $0.005         = $1.00
 Total:   ~$41.15 USD/month
 ```
 
-### Meter Names
+## Notes
+
+- Basic SKU is free but lacks SLA and zone redundancy
+- Standard SKU requires Standard public IPs
+- USD-only — see shared.md § Common Traps for mandatory currency conversion
+
+## Meter Names
 
 | Meter                                           | unitOfMeasure | Notes                            |
 | ----------------------------------------------- | ------------- | -------------------------------- |
