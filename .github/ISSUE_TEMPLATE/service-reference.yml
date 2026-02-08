@@ -1,0 +1,39 @@
+name: Service Reference
+description: Request a new service reference or report an issue with an existing one
+labels: ["service-reference"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - New service
+        - Fix existing service
+    validations:
+      required: true
+
+  - type: input
+    id: service-name
+    attributes:
+      label: Service name
+      description: The Azure service name (for fixes, the name of the affected service)
+      placeholder: e.g., Azure Container Apps
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: |
+        For new services: why is this needed?
+        For fixes: what is wrong and what should it be?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: self-submit
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to submit this change myself
