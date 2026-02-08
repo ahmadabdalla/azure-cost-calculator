@@ -80,7 +80,7 @@ Monthly retention cost = retentionPrice × 295
 
 ## Commitment Tiers (optional, for high-volume)
 
-For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) offer discounts:
+For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) save 15–30% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 200 ≈ 20%, 500 ≈ 25%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
 
 ```powershell
 # Example: 100 GB/day commitment tier
