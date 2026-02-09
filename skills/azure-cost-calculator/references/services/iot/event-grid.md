@@ -10,7 +10,7 @@ aliases: [Event Routing, Event-driven]
 
 > **Trap (unfiltered query)**: Querying `-ServiceName 'Event Grid'` without `-MeterName` returns **seven** rows — four distinct meters, three of which have both a free-tier row ($0.00) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `-MeterName` for precise costs.
 
-> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, retailPrice = $0.00) and a paid tier (tierMinimumUnits = 1). The script returns both rows. Use the paid-tier row for cost estimation — the free grant covers the first 100K operations/month.
+> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, retailPrice = $0.00) and a paid tier (tierMinimumUnits = 1). The script returns both rows and `totalMonthlyCost` does not subtract the free grant. Ignore `summary.totalMonthlyCost` — manually calculate billable units as `max(0, totalOps - 100K)` using the paid-tier `retailPrice`.
 
 ## Query Pattern
 
@@ -66,18 +66,23 @@ aliases: [Event Routing, Event-driven]
 ## Cost Formula
 
 ```
-Operations monthly     = (operations / 100K) × retailPrice        (first 100K/month free)
-Event Ops monthly      = (events / 1M) × retailPrice              (first 100K events/month free)
-MQTT Ops monthly       = (mqttMessages / 1M) × retailPrice        (first 100K messages/month free)
+billableOps            = max(0, operations   - 100K)
+billableEventOps       = max(0, events       - 100K)
+billableMqttOps        = max(0, mqttMessages - 100K)
+
+Operations monthly     = (billableOps      / 100K) × retailPrice
+Event Ops monthly      = (billableEventOps / 1M)   × retailPrice
+MQTT Ops monthly       = (billableMqttOps  / 1M)   × retailPrice
 Throughput monthly     = retailPrice × 730 × unitCount
 Total                  = Operations + Event Ops + MQTT Ops + Throughput (as applicable)
 ```
 
 ## Notes
 
-- Event Grid has three operation types: Standard Operations (custom/system topics), Event Operations (namespace topics), and MQTT Operations (MQTT broker)
-- First 100,000 operations per month are free for each operation type
+- Event Grid has three operation types: Standard Operations (custom/system topics, partner topics, domains — push delivery), Event Operations (namespace topics — push/pull delivery), and MQTT Operations (MQTT broker)
+- First 100,000 operations per month are free for each operation type (manual deduction — see trap)
 - Standard Operations are priced per 100K; Event Operations and MQTT Operations are priced per 1M
+- Topic type does not affect meter choice: system, custom, partner topics and domains all use `Standard Operations`; namespace topics use `Standard Event Operations`
 - Throughput Units are only needed for namespace topics (MQTT/pull delivery) — not required for push-based event subscriptions
 - No reserved instance pricing — `-PriceType Reservation` returns 0 results
 - All meters use a single productName `Event Grid` and skuName `Standard` — no tier selection needed
