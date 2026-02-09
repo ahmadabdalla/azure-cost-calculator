@@ -17,6 +17,10 @@ PowerShell script that queries the Azure Retail Prices REST API (no auth require
 - `-InstanceCount` — Number of instances, default 1
 - `-OutputFormat` — `Json` (default), `Table`, `Summary`
 
+### Cross-Platform Note
+
+> On Linux/macOS, always use `pwsh -File script.ps1 ...` — not `pwsh -Command '...'`. Bash strips OData quotes. See [pitfalls.md](pitfalls.md).
+
 ### Examples
 
 ```powershell
