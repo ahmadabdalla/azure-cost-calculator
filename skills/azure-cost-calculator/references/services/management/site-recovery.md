@@ -51,8 +51,8 @@ aliases: [ASR, Disaster Recovery, DR]
 ```
 Monthly = retailPrice × protectedVMCount
 
-Azure target:          retailPrice ($25) × VM count
-System Center target:  retailPrice ($16) × VM count
+Azure target:          retailPrice (Azure SKU) × VM count
+System Center target:  retailPrice (System Center SKU) × VM count
 ```
 
 > Capacity planning: count each VM with replication enabled. A single VM = 1 protected instance regardless of disk count or VM size.
