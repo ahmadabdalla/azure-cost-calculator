@@ -1,5 +1,5 @@
 ---
-serviceName: Azure App Service
+serviceName: Azure Static Web Apps
 category: web
 aliases: [SWA, JAMstack]
 ---
