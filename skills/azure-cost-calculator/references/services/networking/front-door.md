@@ -63,11 +63,13 @@ aliases: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
 
 > WAF meters (Policy, Rule, Default Ruleset, Bot Protection) use productName `Azure Front Door Service` — query separately if WAF is enabled.
 
+> **Trap (Tiered egress)**: Data transfer out queries return **multiple rows** with `tierMinimumUnits` (0 GB, 10 TB, 50 TB, etc.). The script's `totalMonthlyCost` sums `retailPrice × Quantity` per row without applying tier boundaries — ignore it. Manually calculate: sum each tier's volume × its `retailPrice`.
+
 ## Cost Formula
 
 ```
 Monthly = baseFee_retailPrice
-        + dataOut_retailPrice × estimatedOutGB
+        + Σ(dataOut_tier_retailPrice × GB_in_tier)
         + dataIn_retailPrice × estimatedInGB
         + requests_retailPrice × (estimatedRequests / 10,000)
 ```
