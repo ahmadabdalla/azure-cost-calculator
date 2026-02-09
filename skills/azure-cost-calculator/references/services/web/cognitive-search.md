@@ -32,12 +32,17 @@ aliases: [Azure AI Search, Search Service, Full-text Search]
 ```
 
 ```powershell
-# Semantic Ranker add-on (daily billing)
+# Semantic Ranker add-on — use -Quantity 30 (billed per day, not per hour)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Cognitive Search' `
     -SkuName 'Semantic Ranker' `
-    -MeterName 'Semantic Ranker Unit'
+    -MeterName 'Semantic Ranker Unit' `
+    -Quantity 30
 ```
+
+> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. Without `-Quantity 30`, the script's `MonthlyCost` reports only the **daily** price (~$16). Always use `-Quantity 30` and ignore the script's `MonthlyCost` for this meter.
+>
+> **Agent instruction**: For Semantic Ranker, always check `unitOfMeasure`. If `1/Day`, multiply `unitPrice × 30` for monthly cost. Never trust the script's `MonthlyCost` for daily-billed meters.
 
 ## Key Fields
 
