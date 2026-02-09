@@ -22,12 +22,20 @@ aliases: [HPC Batch, Batch Compute]
     -ProductName 'Virtual Machines Dsv5 Series' `
     -InstanceCount 4
 
-# Spot/Low Priority pool nodes (significant discount, may be evicted)
+# Spot pool nodes (significant discount, may be evicted)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Virtual Machines' `
     -ArmSkuName 'Standard_D4s_v5' `
     -ProductName 'Virtual Machines Dsv5 Series' `
-    -MeterName 'D4s v5 Spot' `
+    -SkuName 'D4s v5 Spot' `
+    -InstanceCount 4
+
+# Low Priority pool nodes (classic discount tier, may be evicted)
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Virtual Machines' `
+    -ArmSkuName 'Standard_D4s_v5' `
+    -ProductName 'Virtual Machines Dsv5 Series' `
+    -SkuName 'D4s v5 Low Priority' `
     -InstanceCount 4
 ```
 
@@ -42,11 +50,9 @@ aliases: [HPC Batch, Batch Compute]
 
 ## Meter Names
 
-| Meter         | unitOfMeasure | Notes                                      |
-| ------------- | ------------- | ------------------------------------------ |
-| _(VM size)_   | `1 Hour`      | Standard dedicated node hourly rate        |
-| _(VM size) Spot_ | `1 Hour`   | Spot/evictable node rate (up to 90% off)   |
-| _(VM size) Low Priority_ | `1 Hour` | Low Priority rate (up to 80% off)  |
+| Meter         | unitOfMeasure | Notes                                          |
+| ------------- | ------------- | ---------------------------------------------- |
+| _(VM size, e.g. `D4s v5`)_ | `1 Hour` | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority — use `skuName` to select pricing tier |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
 
