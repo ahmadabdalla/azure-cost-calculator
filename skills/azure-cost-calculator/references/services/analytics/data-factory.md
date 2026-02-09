@@ -94,6 +94,6 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow clusters require a minimum of 8 vCores (General Purpose); scale in 4-vCore increments
 - Data Flow types: General Purpose, Compute Optimized, Memory Optimized — each has a separate `productName`
 - SSIS Integration Runtime is billed as VMs under this service — query with `-ProductName 'SSIS ...'` product names
-- Reserved pricing available for Data Flow vCores only (Compute Optimized, General Purpose) — use `-PriceType Reservation`; the script's `MonthlyCost` is wrong for Reservation items — manually calculate as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year)
+- Reserved pricing available for Data Flow vCores only (Compute Optimized, General Purpose) — use `-PriceType Reservation`. The script's `MonthlyCost` is wrong for Reservation items — manually calculate as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year)
 - Orchestration runs are billed per 1,000; pipeline/external activities are billed per hour of execution
 - Monitoring operations billed per 50K; read/write operations billed per 50K
