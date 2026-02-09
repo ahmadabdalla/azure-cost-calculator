@@ -46,6 +46,7 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 5. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user before proceeding. Do not silently pick a default. The only exceptions are constants defined in service reference files (e.g., mandatory default CU counts) — those are pre-approved defaults.
 6. **Default output format is Json** — do not use Summary (invisible to agents)
 7. **Lazy-load service references** — only read files from `references/services/` that are directly required by the user's query. Never bulk-read all service files. Use the file-search workflow (Step 2) to locate the specific file(s). If the user asks about App Service and SQL Database, search for each and read only those files — not the other 20+.
+8. **Use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`.
 
 ## Universal Traps
 

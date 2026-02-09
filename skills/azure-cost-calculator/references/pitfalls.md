@@ -4,6 +4,12 @@
 
 Cross-cutting traps that apply across **all** services. These are API-level and script-level behaviours — not specific to any one resource type. For service-specific traps, see each service's reference file in `services/`.
 
+### Cross-Platform Shell Traps
+
+| Trap                                                  | Fix                                                                         |
+| ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| **Bash/zsh strips OData quotes from `pwsh -Command`** | Use `pwsh -File script.ps1 ...` instead. Scripts handle quoting internally. |
+
 ### API Query Traps
 
 | Trap                                                | Detail                                                                                                                                                                                                                                                                                                                                    | Fix                                                                                                                                                   |
