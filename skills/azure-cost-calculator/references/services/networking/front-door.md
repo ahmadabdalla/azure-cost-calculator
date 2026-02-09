@@ -68,7 +68,7 @@ aliases: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
 ## Cost Formula
 
 ```
-Monthly = baseFee_retailPrice
+Monthly = baseFee_retailPrice × profileCount
         + Σ(dataOut_tier_retailPrice × GB_in_tier)
         + dataIn_retailPrice × estimatedInGB
         + requests_retailPrice × (estimatedRequests / 10,000)
