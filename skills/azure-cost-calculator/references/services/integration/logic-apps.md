@@ -10,9 +10,9 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 > **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` exceeds $10K. Always filter by `-ProductName` and `-SkuName`.
 
-> **Trap (sub-cent actions)**: Consumption connector actions cost $0.000125 (Standard) or $0.001 (Enterprise) each — the script shows `$0.00` for single actions. Use `-Quantity` with expected monthly volume.
+> **Trap (sub-cent actions)**: Consumption connector actions are priced well below $0.01 per action — the script shows `$0.00` for low volumes. Use `-Quantity` with expected monthly volume.
 
-> **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — first 4,000/month free ($0), then $0.000025/action. Sum both tiers.
+> **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — a free monthly allocation then a low per-action rate. Sum both tiers.
 
 ## Query Pattern
 
@@ -48,6 +48,13 @@ aliases: [Workflows, Logic App Standard/Consumption]
 ```
 
 ```powershell
+# Hybrid — on-premises vCPU hours
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps' `
+    -SkuName 'Hybrid' -MeterName 'Hybrid vCPU Duration'
+```
+
+```powershell
 # Integration Account (add-on for B2B) — substitute tier: Basic, Standard, Premium
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Logic Apps' -ProductName 'Logic Apps Integration Account' `
@@ -73,6 +80,7 @@ aliases: [Workflows, Logic App Standard/Consumption]
 ```
 Consumption: Monthly = (stdActions × $stdPrice) + (entActions × $entPrice) + max(0, builtInActions − 4000) × $builtInPrice + retentionGB × $retentionPrice
 Standard:    Monthly = vCPU_retailPrice × 730 × vCPUs + memory_retailPrice × 730 × memoryGiB
+Hybrid:      Monthly = vCPU_retailPrice × 730 × vCPUs
 Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 ```
 
