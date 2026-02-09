@@ -26,7 +26,7 @@ aliases: [SWA, JAMstack]
 ```
 
 ```powershell
-# Bandwidth overage — use -Quantity for estimated GB beyond 100 GB free
+# Bandwidth — pass -Quantity with total GB to see per-tier unit prices
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure App Service' `
     -ProductName 'Static Web Apps' `
@@ -34,6 +34,8 @@ aliases: [SWA, JAMstack]
     -Quantity 500 `
     -Region 'eastus2'
 ```
+
+> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at $0.00 (`tierMinimumUnits=0`, first 100 GB) and one at $0.20 (`tierMinimumUnits=100`, overage). The script multiplies `-Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
 
 ```powershell
 # Azure Front Door add-on (enterprise-grade edge, hourly)
@@ -65,7 +67,7 @@ aliases: [SWA, JAMstack]
 
 ```
 App         = app_retailPrice × appCount
-Bandwidth   = max(0, totalGB - 100) × bandwidth_retailPrice
+Bandwidth   = max(0, totalGB - 100) × overage_retailPrice  (manual calc — see trap)
 AFD Add-on  = afd_retailPrice × 730 (if enabled)
 Total       = App + Bandwidth + AFD Add-on
 ```
