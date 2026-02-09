@@ -49,7 +49,7 @@ aliases: [CDN, Azure CDN, Content Delivery]
 | ------------- | --------------------------------------- | --------------------------------------------------------------------------- |
 | `serviceName` | Always `Content Delivery Network`       | `Content Delivery Network`                                                  |
 | `productName` | CDN provider chosen by user             | `Azure CDN from Microsoft`, `Azure CDN from Verizon`, `Azure CDN from Akamai` |
-| `skuName`     | Tier selected                           | `Standard`, `Premium`                                                       |
+| `skuName`     | Tier selected                           | `Standard`, `Premium`, `WAF` (Microsoft WAF add-on)                         |
 | `Region`      | Delivery zone (not ARM region)          | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `Zone 5`                           |
 
 ## Meter Names
@@ -78,5 +78,5 @@ Monthly        = Data transfer + Requests
 - Data transfer is tiered: 0–10 TB, 10–50 TB, 50–150 TB, 150–500 TB, 500 TB–1 PB, 1 PB+
 - Zone 1 (North America/Europe) typically has the lowest per-GB rates
 - Reserved pricing is not available for CDN
-- **Azure Front Door Standard/Premium** is the recommended successor for new deployments — see `networking/` for the Front Door reference
+- **Azure Front Door Standard/Premium** is the recommended successor for new deployments
 - 1 TB/month on Standard Microsoft (Zone 1) ≈ 1000 GB × the per-GB rate from the first tier
