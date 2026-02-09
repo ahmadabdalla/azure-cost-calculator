@@ -25,6 +25,10 @@ build_odata_filter() {
         fi
     done
 
+    if (( ${#parts[@]} == 0 )); then
+        echo ""
+        return
+    fi
     local result="${parts[0]}"
     local i
     for (( i=1; i<${#parts[@]}; i++ )); do

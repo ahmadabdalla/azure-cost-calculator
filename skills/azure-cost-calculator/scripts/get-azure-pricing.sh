@@ -32,6 +32,14 @@ validate_number() {
     fi
 }
 
+validate_integer() {
+    local name="$1" value="$2"
+    if ! [[ "$value" =~ ^[0-9]+$ ]]; then
+        echo "Error: $name must be an integer, got '$value'" >&2
+        exit 1
+    fi
+}
+
 # ============================================================
 # Defaults
 # ============================================================
@@ -53,6 +61,11 @@ verbose=false
 # Argument parsing
 # ============================================================
 while [[ $# -gt 0 ]]; do
+    # Guard against missing value for flags that require one
+    case "$1" in
+        --verbose|-v|--help|-h) ;; # no value needed
+        --*) [[ $# -lt 2 ]] && { echo "Error: $1 requires a value" >&2; exit 1; } ;;
+    esac
     case "$1" in
         --service-name)   service_name="$2"; shift 2 ;;
         --region)         region="$2"; shift 2 ;;
@@ -68,7 +81,7 @@ while [[ $# -gt 0 ]]; do
         --output-format)  output_format="$2"; shift 2 ;;
         --verbose|-v)     verbose=true; shift ;;
         --help|-h)
-            cat >&2 <<'USAGE'
+            cat <<'USAGE'
 get-azure-pricing.sh - Query Azure Retail Prices API and calculate monthly costs.
 
 Flags:
@@ -99,7 +112,7 @@ done
 # Validate numeric arguments
 validate_number "quantity" "$quantity"
 validate_number "hours_per_month" "$hours_per_month"
-validate_number "instance_count" "$instance_count"
+validate_integer "instance_count" "$instance_count"
 
 # Validate enum arguments
 case "$output_format" in

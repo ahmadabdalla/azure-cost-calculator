@@ -24,10 +24,10 @@ done
 source "$SCRIPT_DIR/lib/build-odata-filter.sh"
 source "$SCRIPT_DIR/lib/invoke-retail-prices-query.sh"
 
-validate_number() {
+validate_integer() {
     local name="$1" value="$2"
-    if ! [[ "$value" =~ ^[0-9]+\.?[0-9]*$ ]]; then
-        echo "Error: $name must be a number, got '$value'" >&2
+    if ! [[ "$value" =~ ^[0-9]+$ ]]; then
+        echo "Error: $name must be an integer, got '$value'" >&2
         exit 1
     fi
 }
@@ -48,6 +48,10 @@ verbose=false
 # ============================================================
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --verbose|-v|--help|-h) ;;
+        --*) [[ $# -lt 2 ]] && { echo "Error: $1 requires a value" >&2; exit 1; } ;;
+    esac
+    case "$1" in
         --service-name)   service_name="$2"; shift 2 ;;
         --search-term)    search_term="$2"; shift 2 ;;
         --region)         region="$2"; shift 2 ;;
@@ -56,7 +60,7 @@ while [[ $# -gt 0 ]]; do
         --output-format)  output_format="$2"; shift 2 ;;
         --verbose|-v)     verbose=true; shift ;;
         --help|-h)
-            cat >&2 <<'USAGE'
+            cat <<'USAGE'
 explore-azure-pricing.sh - Discover available Azure pricing filter values.
 
 Flags:
@@ -79,7 +83,7 @@ USAGE
 done
 
 # Validate numeric arguments
-validate_number "top" "$top"
+validate_integer "top" "$top"
 
 # Validate enum arguments
 case "$output_format" in
