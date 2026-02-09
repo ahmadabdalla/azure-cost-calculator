@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # Builds an OData $filter string from field=value pairs.
 # Supports equality filters and contains() operators.
 #
@@ -8,28 +7,28 @@
 
 build_odata_filter() {
     local parts=()
+    local arg
+    local rest field value
     for arg in "$@"; do
         if [[ "$arg" == contains:* ]]; then
             # contains:field=value -> contains(field, 'value')
-            local rest="${arg#contains:}"
-            local field="${rest%%=*}"
-            local value="${rest#*=}"
+            rest="${arg#contains:}"
+            field="${rest%%=*}"
+            value="${rest#*=}"
             parts+=("contains($field, '$value')")
         else
-            local field="${arg%%=*}"
-            local value="${arg#*=}"
+            field="${arg%%=*}"
+            value="${arg#*=}"
             if [[ -n "$value" ]]; then
                 parts+=("$field eq '$value'")
             fi
         fi
     done
 
-    local result=""
-    for (( i=0; i<${#parts[@]}; i++ )); do
-        if (( i > 0 )); then
-            result+=" and "
-        fi
-        result+="${parts[$i]}"
+    local result="${parts[0]}"
+    local i
+    for (( i=1; i<${#parts[@]}; i++ )); do
+        result+=" and ${parts[$i]}"
     done
     echo "$result"
 }
