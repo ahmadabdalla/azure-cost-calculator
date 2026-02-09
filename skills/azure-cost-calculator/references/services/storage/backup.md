@@ -48,7 +48,7 @@ aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 | Meter                                      | skuName                  | unitOfMeasure | Notes                       |
 | ------------------------------------------ | ------------------------ | ------------- | --------------------------- |
 | `Azure VM Protected Instances`             | `Azure VM`               | `1/Month`     | Per VM                      |
-| `SQL Server in Azure VM Protected Instances` | `SQL Server in Azure VM` | `1/Month`   | Per SQL instance            |
+| `SQL Server in Azure VM Protected Instances` | `SQL Server in Azure VM` | `1/Month`     | Per SQL instance            |
 | `SAP HANA on Azure VM Protected Instances` | `SAP HANA on Azure VM`   | `1/Month`     | Per SAP HANA instance       |
 | `Azure Files Protected Instances`          | `Azure Files`            | `1/Month`     | Snapshot-based (no vault)   |
 | `Azure Files Vaulted Protected Instances`  | `Azure Files Vaulted`    | `1/Month`     | Vaulted backup              |
