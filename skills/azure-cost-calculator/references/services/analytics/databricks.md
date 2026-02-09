@@ -15,7 +15,7 @@ aliases: [DBX, Spark on Azure]
 ## Query Pattern
 
 ```powershell
-# Premium Jobs Compute — e.g., 10 DBU-hours of job clusters
+# Premium Jobs Compute — e.g., 10 DBUs running full month
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Databricks' `
     -ProductName 'Azure Databricks' `
@@ -64,7 +64,7 @@ aliases: [DBX, Spark on Azure]
 ## Cost Formula
 
 ```
-DBU Monthly     = dbu_retailPrice × dbuHoursPerMonth
+DBU Monthly     = dbu_retailPrice × 730 × dbuCount
 VM Monthly      = vm_retailPrice × 730 × nodeCount   (billed under Virtual Machines)
 Total Monthly   = DBU Monthly + VM Monthly
 ```
