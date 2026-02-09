@@ -49,32 +49,25 @@ aliases: [ADF, ETL, Data Pipeline]
     -HoursPerMonth 160
 ```
 
-```powershell
-# v1 Cloud — activity runs and data movement (legacy)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Data Factory' `
-    -SkuName 'Cloud'
-```
-
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-| --- | --- | --- |
-| `serviceName` | v2 (current) or v1 (legacy) | `Azure Data Factory v2`, `Azure Data Factory` |
+| Parameter     | How to determine               | Example values                                                               |
+| ------------- | ------------------------------ | ---------------------------------------------------------------------------- |
+| `serviceName` | v2 (current) or v1 (legacy)    | `Azure Data Factory v2`, `Azure Data Factory`                                |
 | `productName` | Base service or Data Flow tier | `Azure Data Factory v2`, `Azure Data Factory v2 Data Flow - General Purpose` |
-| `skuName` | Runtime type or Data Flow | `Cloud`, `Self Hosted`, `Azure Managed VNET`, `vCore` |
-| `meterName` | Billing dimension | `Cloud Orchestration Activity Run`, `Cloud Data Movement`, `vCore` |
+| `skuName`     | Runtime type or Data Flow      | `Cloud`, `Self Hosted`, `Azure Managed VNET`, `vCore`                        |
+| `meterName`   | Billing dimension              | `Cloud Orchestration Activity Run`, `Cloud Data Movement`, `vCore`           |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `Cloud Orchestration Activity Run` | `Cloud` | `1K` | Per 1,000 activity runs (v2) |
-| `Cloud Pipeline Activity` | `Cloud` | `1 Hour` | Execute pipeline activity hours (v2) |
-| `Cloud Data Movement` | `Cloud` | `1 Hour` | Data movement runtime hours (v2) |
-| `Cloud Read Write Operations` | `Cloud` | `50K` | Entity read/write/monitoring (v2) |
-| `Inactive Pipeline` | `Cloud` | `1/Month` | Per inactive pipeline/month (v2) |
-| `vCore` | `vCore` | `1 Hour` | Data Flow vCore hours (v2) |
+| Meter                              | skuName | unitOfMeasure | Notes                                |
+| ---------------------------------- | ------- | ------------- | ------------------------------------ |
+| `Cloud Orchestration Activity Run` | `Cloud` | `1K`          | Per 1,000 activity runs (v2)         |
+| `Cloud Pipeline Activity`          | `Cloud` | `1 Hour`      | Execute pipeline activity hours (v2) |
+| `Cloud Data Movement`              | `Cloud` | `1 Hour`      | Data movement runtime hours (v2)     |
+| `Cloud Read Write Operations`      | `Cloud` | `50K`         | Entity read/write/monitoring (v2)    |
+| `Inactive Pipeline`                | `Cloud` | `1/Month`     | Per inactive pipeline/month (v2)     |
+| `vCore`                            | `vCore` | `1 Hour`      | Data Flow vCore hours (v2)           |
 
 > Self Hosted and Azure Managed VNET meters follow the same pattern with prefixed names (e.g., `Self Hosted Data Movement`). v1 meters use `Cloud High Frequency Activity` and `Cloud Low Frequency Activity` (per month).
 
@@ -90,10 +83,18 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 
 ## Notes
 
-- **v2 is the current version** — v1 is legacy; new factories always deploy as v2
-- Data Flow clusters require a minimum of 8 vCores (General Purpose); scale in 4-vCore increments
-- Data Flow types: General Purpose, Compute Optimized, Memory Optimized — each has a separate `productName`
+- **v2 is the current version** — v1 is legacy (`-ServiceName 'Azure Data Factory' -SkuName 'Cloud'`); new factories always deploy as v2
+- Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - SSIS Integration Runtime is billed as VMs under this service — query with `-ProductName 'SSIS ...'` product names
-- Reserved pricing available for Data Flow vCores only (Compute Optimized, General Purpose) — use `-PriceType Reservation`. The script's `MonthlyCost` is wrong for Reservation items — manually calculate as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year)
-- Orchestration runs are billed per 1,000; pipeline/external activities are billed per hour of execution
-- Monitoring operations billed per 50K; read/write operations billed per 50K
+- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K
+
+## Reserved Instance Pricing
+
+```powershell
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Azure Data Factory v2' `
+    -ProductName 'Azure Data Factory v2 Data Flow - General Purpose' `
+    -SkuName 'vCore' -PriceType Reservation
+```
+
+> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. Data Flow vCores only (General Purpose, Compute Optimized). Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
