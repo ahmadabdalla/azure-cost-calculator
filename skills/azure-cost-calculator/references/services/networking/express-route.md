@@ -9,7 +9,7 @@ aliases: [ER, Dedicated Circuit]
 **Primary cost**: Circuit fee (flat monthly by bandwidth/plan) + gateway hourly cost
 
 > **Trap**: Unfiltered queries return **circuit meters AND gateway meters** combined. Circuit fees are flat monthly rates while gateways are hourly — the `totalMonthlyCost` is meaningless. Always query circuits and gateways separately.
-> **Trap (Circuit regions)**: Circuit pricing varies by **peering location zone**, not ARM region. The script returns results for the selected ARM region, but circuit prices are zone-based. Verify the peering location zone applies to the user's scenario.
+> **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone) — the default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE.
 
 ## Query Pattern
 
@@ -21,23 +21,26 @@ aliases: [ER, Dedicated Circuit]
     -MeterName 'ErGw2AZ Gateway' `
     -InstanceCount 1
 
-# Circuit — Standard Metered 1 Gbps (flat monthly fee)
+# Circuit — Standard Metered 1 Gbps (flat monthly fee, Zone 1 = US/Europe)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'ExpressRoute' `
     -ProductName 'ExpressRoute' `
-    -MeterName 'Standard Metered Data 1 Gbps Circuit'
+    -MeterName 'Standard Metered Data 1 Gbps Circuit' `
+    -Region 'Zone 1'
 
 # Circuit — Standard Unlimited 1 Gbps
 .\Get-AzurePricing.ps1 `
     -ServiceName 'ExpressRoute' `
     -ProductName 'ExpressRoute' `
-    -MeterName 'Standard Unlimited Data 1 Gbps Circuit'
+    -MeterName 'Standard Unlimited Data 1 Gbps Circuit' `
+    -Region 'Zone 1'
 
 # Circuit — Premium Metered 1 Gbps (adds global reach)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'ExpressRoute' `
     -ProductName 'ExpressRoute' `
-    -MeterName 'Premium Metered Data 1 Gbps Circuit'
+    -MeterName 'Premium Metered Data 1 Gbps Circuit' `
+    -Region 'Zone 1'
 
 # Metered outbound data (per-GB egress on Metered circuits)
 .\Get-AzurePricing.ps1 `
@@ -45,17 +48,9 @@ aliases: [ER, Dedicated Circuit]
     -ProductName 'ExpressRoute' `
     -SkuName '1 Gbps Metered Data' `
     -MeterName 'Metered Data - Data Transfer Out' `
-    -Quantity 1000
+    -Quantity 1000 `
+    -Region 'Zone 1'
 ```
-
-## Key Fields
-
-| Parameter     | How to determine                                  | Example values                                                    |
-| ------------- | ------------------------------------------------- | ----------------------------------------------------------------- |
-| `serviceName` | Always `ExpressRoute`                             | `ExpressRoute`                                                    |
-| `productName` | `ExpressRoute` for circuits, `ExpressRoute Gateway` / `ExpressRoute Standard Gateway` etc. for gateways | `ExpressRoute`, `ExpressRoute Gateway` |
-| `skuName`     | Bandwidth + plan for circuits; SKU tier for gateways | `1 Gbps Metered Data`, `ErGw2AZ`, `Standard`                  |
-| `meterName`   | Circuit: `Standard Metered Data {bw} Circuit`; Gateway: `{sku} Gateway` | `Standard Metered Data 1 Gbps Circuit`, `ErGw2AZ Gateway`  |
 
 ## Meter Names — Gateways
 
