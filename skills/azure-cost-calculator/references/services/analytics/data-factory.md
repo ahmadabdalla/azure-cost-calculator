@@ -10,7 +10,7 @@ aliases: [ADF, ETL, Data Pipeline]
 
 > **Trap (v1 vs v2)**: The API has two separate service names: `Azure Data Factory` (v1, legacy) and `Azure Data Factory v2` (current). Most deployments use v2. Always confirm which version the user has before querying.
 
-> **Trap (inflated totals)**: Unfiltered `-ServiceName 'Azure Data Factory v2'` returns hundreds of SSIS VM meters — `totalMonthlyCost` exceeds $100K. Always filter by `-ProductName 'Azure Data Factory v2'` and `-SkuName`.
+> **Trap (inflated totals)**: Unfiltered `-ServiceName 'Azure Data Factory v2'` returns hundreds of SSIS VM meters — `totalMonthlyCost` inflates by orders of magnitude. Always filter by `-ProductName 'Azure Data Factory v2'` and `-SkuName`.
 
 ## Query Pattern
 
@@ -29,14 +29,15 @@ aliases: [ADF, ETL, Data Pipeline]
     -ServiceName 'Azure Data Factory v2' `
     -ProductName 'Azure Data Factory v2' `
     -SkuName 'Cloud' -MeterName 'Cloud Data Movement' `
-    -InstanceCount 4
+    -InstanceCount 4 -HoursPerMonth 160
 ```
 
 ```powershell
 # v2 Data Flow — General Purpose vCores (per hour, min 8 vCores per cluster)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Data Factory v2' `
-    -ProductName 'Azure Data Factory v2 Data Flow - General Purpose'
+    -ProductName 'Azure Data Factory v2 Data Flow - General Purpose' `
+    -SkuName 'vCore' -HoursPerMonth 200
 ```
 
 ```powershell
@@ -44,7 +45,8 @@ aliases: [ADF, ETL, Data Pipeline]
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Azure Data Factory v2' `
     -ProductName 'Azure Data Factory v2' `
-    -SkuName 'Self Hosted' -MeterName 'Self Hosted Pipeline Activity'
+    -SkuName 'Self Hosted' -MeterName 'Self Hosted Pipeline Activity' `
+    -HoursPerMonth 160
 ```
 
 ```powershell
@@ -53,6 +55,15 @@ aliases: [ADF, ETL, Data Pipeline]
     -ServiceName 'Azure Data Factory' `
     -SkuName 'Cloud'
 ```
+
+## Key Fields
+
+| Parameter | How to determine | Example values |
+| --- | --- | --- |
+| `serviceName` | v2 (current) or v1 (legacy) | `Azure Data Factory v2`, `Azure Data Factory` |
+| `productName` | Base service or Data Flow tier | `Azure Data Factory v2`, `Azure Data Factory v2 Data Flow - General Purpose` |
+| `skuName` | Runtime type or Data Flow | `Cloud`, `Self Hosted`, `Azure Managed VNET`, `vCore` |
+| `meterName` | Billing dimension | `Cloud Orchestration Activity Run`, `Cloud Data Movement`, `vCore` |
 
 ## Meter Names
 
@@ -83,6 +94,6 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow clusters require a minimum of 8 vCores (General Purpose); scale in 4-vCore increments
 - Data Flow types: General Purpose, Compute Optimized, Memory Optimized — each has a separate `productName`
 - SSIS Integration Runtime is billed as VMs under this service — query with `-ProductName 'SSIS ...'` product names
-- Reserved pricing is available for Data Flow vCores only (Compute Optimized and General Purpose), 1-Year and 3-Year terms
+- Reserved pricing available for Data Flow vCores only (Compute Optimized, General Purpose) — use `-PriceType Reservation`; the script's `MonthlyCost` is wrong for Reservation items — manually calculate as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year)
 - Orchestration runs are billed per 1,000; pipeline/external activities are billed per hour of execution
 - Monitoring operations billed per 50K; read/write operations billed per 50K
