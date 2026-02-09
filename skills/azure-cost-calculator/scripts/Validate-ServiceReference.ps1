@@ -317,18 +317,23 @@ function Test-ServiceReference {
         })
 
     # --- Scaling parameter: -InstanceCount or -Quantity ---
-    $codeBlockLines = [System.Collections.Generic.List[string]]::new()
-    $insideCode = $false
+    # Only scan ```powershell / ```pwsh blocks (query patterns), not other code blocks
+    $queryBlockLines = [System.Collections.Generic.List[string]]::new()
+    $insidePwshBlock = $false
     foreach ($line in $lines) {
-        if ($line -match '^\s*```') {
-            $insideCode = -not $insideCode
+        if ($line -match '(?i)^\s*```(powershell|pwsh)') {
+            $insidePwshBlock = $true
             continue
         }
-        if ($insideCode) {
-            $codeBlockLines.Add($line)
+        if ($insidePwshBlock -and $line -match '^\s*```') {
+            $insidePwshBlock = $false
+            continue
+        }
+        if ($insidePwshBlock) {
+            $queryBlockLines.Add($line)
         }
     }
-    $hasScalingParam = @($codeBlockLines | Where-Object { $_ -match '-InstanceCount\b|-Quantity\b' }).Count -gt 0
+    $hasScalingParam = @($queryBlockLines | Where-Object { $_ -match '-InstanceCount\b|-Quantity\b' }).Count -gt 0
     $checks.Add(@{
             Name    = 'scaling_parameter'
             Pass    = $hasScalingParam
