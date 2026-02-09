@@ -10,7 +10,7 @@ aliases: [Device Messaging]
 
 > **Trap (unfiltered query)**: Querying `-ServiceName 'IoT Hub'` without `-ProductName 'IoT Hub'` returns meters from **Device Update for IoT Hub** and **IoT Hub Device Provisioning** — separate services with their own pricing. Always add `-ProductName 'IoT Hub'` to isolate hub unit costs.
 
-> **Trap (unitOfMeasure)**: All hub unit meters use `1/Month` — the script's `MonthlyCost` equals `retailPrice` directly (no ×730 needed). The displayed cost is already monthly.
+> **Trap (unitOfMeasure)**: All hub unit meters use `1/Month` — the monthly multiplier is 1, so `MonthlyCost = retailPrice × InstanceCount` (× Quantity if used); no ×730 hours conversion is needed.
 
 ## Query Pattern
 
@@ -40,7 +40,7 @@ aliases: [Device Messaging]
 ```
 
 ```powershell
-# IoT Hub Device Provisioning Service — operations
+# IoT Hub Device Provisioning Service — 100K operations (-Quantity in 1K units)
 .\Get-AzurePricing.ps1 `
     -ServiceName 'IoT Hub' `
     -ProductName 'IoT Hub Device Provisioning' `
