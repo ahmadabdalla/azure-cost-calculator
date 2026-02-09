@@ -73,7 +73,7 @@ Total = Monthly Base + Semantic
 
 ## Notes
 
-- **Storage included**: Each tier includes a fixed amount of storage per SU (e.g., Basic 2 GB, S1 25 GB, S2 100 GB, L1 1 TB). No separate storage meter.
+- **Storage included**: Each tier includes a fixed amount of storage per SU (Basic 2 GB, S1 25 GB, S2 100 GB, S3 200 GB, L1 1 TB, L2 2 TB). No separate storage meter.
 - **Search units (SU)**: replicas × partitions. Scale replicas for query throughput and HA; scale partitions for index size. Max 36 SUs per service (12 for Basic).
 - **Free tier**: 1 index, 50 MB storage, no SLA. Use `skuName='Free'`.
 - **No reserved pricing**: RI queries return zero results. Do not attempt `-PriceType Reservation`.
