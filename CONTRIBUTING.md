@@ -38,6 +38,7 @@ Follow these steps exactly:
 
 1. Read `skills/azure-cost-calculator/references/services/TEMPLATE.md` for the full format rules and section structure.
 2. Read `skills/azure-cost-calculator/references/shared.md` for the category index and constants.
+3. Read one existing service reference from the same `{category}` folder as a style exemplar. Use it to calibrate section length, trap density, and cost formula format.
 
 ### Step 4 — Discover exact API values
 
@@ -74,10 +75,18 @@ Check that:
 - The `summary.totalMonthlyCost` is reasonable. If it looks inflated, you likely need additional filters (e.g., `-MeterName`) to exclude unwanted meters.
 - Sub-cent prices are handled (the script may round to `$0.00`).
 - **Reservation availability**: Run one query with `-PriceType Reservation`. If it returns 0 results, note in the final file's Notes section that reserved pricing is not available — this prevents future agents from wasting queries on dead-end RI lookups.
+- **Storage-meter verification**: For each tier the service offers, independently query the storage product (e.g., `-ProductName '...Storage'` or `-MeterName '...Data Stored'`). If storage returns results, the service bills storage separately — document it. If storage returns zero results, explicitly state in the file that storage is included in the compute price. This prevents factual disagreements about billing models.
 
 ### Step 6 — Identify traps and gotchas
 
-From the API results, identify any pricing traps. Common ones include:
+Before documenting traps, run these mandatory checks:
+
+1. **Broad query test**: Run a query with only `-ServiceName` (no `-SkuName`, no `-MeterName`). If `totalMonthlyCost` looks inflated, document which extra meters are being summed and what filters are needed.
+2. **Zone-redundancy / geo-replication meters**: Query for zone-redundant or geo-replication meters (e.g., append "Zone Redundancy" to meter names). Document any surcharge meters that exist.
+3. **RI availability**: Run one query with `-PriceType Reservation`. If `skuName` differs from consumption queries (e.g., `vCore` vs `8 vCore`), document the difference. If zero results, note RI is unavailable.
+4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
+
+Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
 - **RI MonthlyCost**: Reservation items where the script's `MonthlyCost` multiplies the full term price by 730 — always manually calculate RI monthly cost as `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
 - **Multiple product names**: A single service spanning several `productName` values (e.g., "Key Vault" vs "Key Vault - Premium").
@@ -95,7 +104,7 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 Create the file at: `skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).
 
 The file MUST follow these rules:
-- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (common names, abbreviations, synonyms — be comprehensive).
+- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map — do not add extras beyond those listed).
 - **Primary cost** line: a one-sentence summary of the main billing dimensions.
 - **First query pattern must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, primary cost line, and trap concise to ensure this.
 - **Total file length**: under 100 lines of markdown content.
@@ -104,12 +113,20 @@ The file MUST follow these rules:
 - **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
 - **Demonstrate scaling parameters**: At least one query pattern should use `-InstanceCount` (for multi-unit resources) or `-Quantity` (for event/request-based meters), with a comment explaining the parameter.
 - **Section order**: YAML → Title → Primary cost → Trap(s) → Query Pattern → Key Fields or Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
+- **Meter Names table scope**: Include meters needed for a standard cost estimate: compute, storage, and backup. Omit niche variants (IO rates, zone-redundant storage, per-operation surcharges) unless they represent a major cost component (>10% of typical monthly spend). Mention omitted meter families in a one-line note below the table.
+- **Cost Formula variables**: Use `compute_retailPrice`, `storage_retailPrice`, `backup_retailPrice` as variable names when the formula has multiple components. Show one generic formula. Add a separate line per tier only if the formula structure (not just the price) changes between tiers.
 - **Do NOT** include "verified" dates anywhere.
 - **Do NOT** annotate headers with "(case-sensitive)".
 - **Capacity planning notes**: When a service has scalable units (e.g., throughput units, processing units, compute units, DTUs, RU/s), include a note documenting what 1 unit provides in terms of throughput, requests, or connections so agents can map user workloads to unit counts.
 - **Tier limitations**: When a service has multiple tiers, document key per-tier limitations that affect pricing (e.g., features unavailable in lower tiers, meters that don't exist for certain tiers, maximum retention or throughput caps).
 - **Trap format**: `> **Trap**: ...` or `> **Trap ({descriptive name})**: ...`
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
+
+**Pre-submission checklist** (all must be true):
+1. First `powershell` query pattern appears within lines 1–45
+2. At least one query uses `-InstanceCount` or `-Quantity`
+3. Capacity planning note included if the service has scalable units
+4. Tier limitations documented if multiple tiers exist
 
 All paths above are given from the repo root.
 ````

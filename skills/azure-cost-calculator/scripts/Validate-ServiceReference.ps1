@@ -316,6 +316,30 @@ function Test-ServiceReference {
             }
         })
 
+    # --- Scaling parameter: -InstanceCount or -Quantity ---
+    $codeBlockLines = [System.Collections.Generic.List[string]]::new()
+    $insideCode = $false
+    foreach ($line in $lines) {
+        if ($line -match '^\s*```') {
+            $insideCode = -not $insideCode
+            continue
+        }
+        if ($insideCode) {
+            $codeBlockLines.Add($line)
+        }
+    }
+    $hasScalingParam = @($codeBlockLines | Where-Object { $_ -match '-InstanceCount\b|-Quantity\b' }).Count -gt 0
+    $checks.Add(@{
+            Name    = 'scaling_parameter'
+            Pass    = $hasScalingParam
+            Message = if ($hasScalingParam) {
+                'At least one query uses -InstanceCount or -Quantity'
+            }
+            else {
+                'No query pattern uses -InstanceCount or -Quantity. At least one query must demonstrate scaling parameters.'
+            }
+        })
+
     return $checks
 }
 
