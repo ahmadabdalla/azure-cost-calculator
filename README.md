@@ -8,7 +8,9 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 npx skills add ahmadabdalla/azure-cost-calculator-skill
 ```
 
-Or manually point your agent's config to `skills/azure-cost-calculator/SKILL.md` in this repo.
+> **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator-skill`.
+
+The CLI auto-detects your agent (Claude Code, Cursor, GitHub Copilot, Codex, etc.) and installs the skill to the correct directory.
 
 ## Usage
 
@@ -51,6 +53,23 @@ References load on demand — keeping token consumption low even for 10+ service
 ## Supported Services
 
 140+ Azure services are mapped across 18 categories (Compute, Databases, Networking, Storage, Security, Monitoring, Integration, AI + ML, and more). ~25+ services have full reference files with documented query patterns. For services without reference files, `Explore-AzurePricing.ps1` discovers filter values directly from the API.
+
+### With vs. Without a Service Reference File
+
+The skill works for **any** Azure service — with or without a reference file. Reference files just make it better:
+
+|                      | With reference file                                               | Without (discovery mode)                                                            |
+| -------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **API query**        | Pre-verified filters, ready to go                                 | Agent discovers filters from the live API                                           |
+| **Known gotchas**    | Documented — the agent avoids common pricing quirks automatically | Agent still works, but may not catch edge cases like $0.00 rounding or RI math      |
+| **Multi-part costs** | Each component (compute, storage, IP, etc.) has its own query     | Agent queries the main component; secondary costs may need a follow-up              |
+| **Cost formula**     | Correct multipliers, free-tier deductions, tiered pricing         | Uses the API's unit of measure — usually right, occasionally off for unusual meters |
+| **Speed**            | Fast — minimal tokens                                             | A bit slower — runs a discovery step first                                          |
+| **Accuracy**         | High — patterns tested against the live API                       | Good — but the agent flags the estimate for manual verification                     |
+
+### Found a Gap? Open an Issue
+
+If you query a service and the skill falls back to discovery mode, that's a signal we're missing a reference file. **Please [open an issue](../../issues/new)** with the service name rather than accepting the best-effort result. Even if the estimate looked correct this time, the next user (or the next API change) may not be so lucky. Issues help us prioritise which reference files to add next.
 
 ## Prerequisites
 
