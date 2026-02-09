@@ -8,7 +8,7 @@ aliases: [ASR, Disaster Recovery, DR]
 
 **Primary cost**: Per protected VM instance per month — flat rate varies by replication target (Azure or System Center).
 
-> **Trap**: Unfiltered `-ServiceName 'Azure Site Recovery'` returns both Azure and System Center SKUs, inflating `totalMonthlyCost` to $41. Always filter with `-SkuName 'Azure'` for Azure-to-Azure DR (most common scenario).
+> **Trap**: Unfiltered `-ServiceName 'Azure Site Recovery'` returns both Azure and System Center SKUs, inflating `totalMonthlyCost` by summing charges for both SKUs. Always filter with `-SkuName 'Azure'` for Azure-to-Azure DR (most common scenario).
 
 > **Trap (hidden costs)**: The per-instance fee covers orchestration only. Replicated storage, compute at the DR site during failover, bandwidth, and managed disks are billed separately through their respective services. Always price these components independently.
 
