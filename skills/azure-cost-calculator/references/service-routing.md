@@ -294,6 +294,8 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Dynamics 365 for Customer Insights"
   f: dynamics-365-customer-insights.md
   a: [Customer Insights, D365 CI, Dynamics 365 Analytics]
+- s: "Management Groups"
+  a: [Management Group, Azure Management Groups, Subscription Organization]
 ```
 
 ## Integration (`services/integration/`)
