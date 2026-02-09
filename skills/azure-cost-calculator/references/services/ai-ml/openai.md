@@ -24,12 +24,12 @@ aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 ```
 
 ```powershell
-# Step 2: Query a specific model — substitute discovered skuName values
+# Step 2: Query a specific model — use exact productName and skuName from discovery
 # Example: chat model input tokens, Global deployment, 10M tokens
 .\Get-AzurePricing.ps1 `
     -ServiceName 'Foundry Models' `
-    -ProductName '{Azure OpenAI GPT*}' `
-    -SkuName '{model} Inpt Glbl' `
+    -ProductName 'Azure OpenAI GPT5' `
+    -SkuName 'GPT 5 Mini Inpt Glbl' `
     -Quantity 10
 ```
 
@@ -46,9 +46,9 @@ aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 
 | Parameter     | How to determine                               | Stable pattern                                                      |
 | ------------- | ---------------------------------------------- | ------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Models`                        | `Foundry Models`                                                    |
-| `productName` | Model family — discover via Explore            | `Azure OpenAI GPT*`, `Azure OpenAI Embedding`, `Azure OpenAI Media` |
-| `skuName`     | `{model} {Inpt\|outpt\|inp\|out} {deployment}` | Deployment: `Glbl`, `DZone`/`Dz`/`DZ`, `regnl`                      |
+| `serviceName` | Always `Foundry Models`                        | `Foundry Models`                                                     |
+| `productName` | Model family — use exact value from discovery  | `Azure OpenAI GPT5`, `Azure OpenAI Embedding`, `Azure OpenAI Media`  |
+| `skuName`     | `{model} {Inpt/outpt/inp/out} {deployment}`   | Deployment: `Glbl`, `DZone`/`Dz`/`DZ`, `regnl`                      |
 | `meterName`   | skuName + ` 1M Tokens` or ` Tokens`            | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
 
 ## SKU Naming Conventions
