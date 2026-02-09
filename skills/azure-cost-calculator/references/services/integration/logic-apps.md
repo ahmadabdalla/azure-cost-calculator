@@ -1,0 +1,86 @@
+---
+serviceName: Logic Apps
+category: integration
+aliases: [Workflows, Logic App Standard/Consumption]
+---
+
+# Logic Apps
+
+**Primary cost**: Per-action executions (Consumption) or vCPU + memory hours (Standard)
+
+> **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` exceeds $10K. Always filter by `-ProductName` and `-SkuName`.
+
+> **Trap (sub-cent actions)**: Consumption connector actions cost $0.000125 (Standard) or $0.001 (Enterprise) each — the script shows `$0.00` for single actions. Use `-Quantity` with expected monthly volume.
+
+> **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — first 4,000/month free ($0), then $0.000025/action. Sum both tiers.
+
+## Query Pattern
+
+```powershell
+# Consumption — standard connector actions (use -Quantity for monthly volume)
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps' `
+    -SkuName 'Consumption' -MeterName 'Consumption Standard Connector Actions' `
+    -Quantity 10000
+```
+
+```powershell
+# Consumption — enterprise connector actions
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps' `
+    -SkuName 'Consumption' -MeterName 'Consumption Enterprise Connector Actions' `
+    -Quantity 5000
+```
+
+```powershell
+# Standard — vCPU hours (per-vCPU, use -InstanceCount for multiple vCPUs)
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps' `
+    -SkuName 'Standard' -MeterName 'Standard vCPU Duration' `
+    -InstanceCount 2
+```
+
+```powershell
+# Standard — memory (per GiB-hour)
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps' `
+    -SkuName 'Standard' -MeterName 'Standard Memory Duration'
+```
+
+```powershell
+# Integration Account (add-on for B2B) — substitute tier: Basic, Standard, Premium
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Logic Apps' -ProductName 'Logic Apps Integration Account' `
+    -MeterName '{Tier} Unit'
+```
+
+## Meter Names
+
+| Meter | skuName | unitOfMeasure | Notes |
+| --- | --- | --- | --- |
+| `Consumption Standard Connector Actions` | `Consumption` | `1` | Per-action |
+| `Consumption Enterprise Connector Actions` | `Consumption` | `1` | Per-action |
+| `Consumption Built-in Actions` | `Consumption` | `1` | Tiered — first 4,000 free |
+| `Consumption Data Retention` | `Consumption` | `1 GB/Month` | Run history storage |
+| `Standard vCPU Duration` | `Standard` | `1 Hour` | Per vCPU |
+| `Standard Memory Duration` | `Standard` | `1 GiB Hour` | Per GiB |
+| `Hybrid vCPU Duration` | `Hybrid` | `1 Hour` | On-premises vCPU |
+
+> Integration Account meters (`Basic Unit`, `Standard Unit`, `Premium Unit`) are flat monthly — query with `-ProductName 'Logic Apps Integration Account'`.
+
+## Cost Formula
+
+```
+Consumption: Monthly = (stdActions × $stdPrice) + (entActions × $entPrice) + max(0, builtInActions − 4000) × $builtInPrice + retentionGB × $retentionPrice
+Standard:    Monthly = vCPU_retailPrice × 730 × vCPUs + memory_retailPrice × 730 × memoryGiB
+Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
+```
+
+## Notes
+
+- Consumption: per-execution, first 4,000 built-in actions/month free, auto-scales to zero
+- Standard: runs on App Service Plan (WS1–WS3) or as container; vCPU+memory billed per-second
+- Integration Account is a separate add-on for B2B/EDI scenarios — not required for basic workflows
+- ISE (Integration Service Environment) is deprecated — use Standard tier with VNet integration instead
+- No reserved instance pricing available
+- Standard tier supports VNet integration, private endpoints, and stateful/stateless workflows
