@@ -39,7 +39,7 @@ aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 | Parameter     | How to determine              | Example values                                              |
 | ------------- | ----------------------------- | ----------------------------------------------------------- |
 | `serviceName` | Always `Backup`               | `Backup`                                                    |
-| `productName` | Always `Backup`               | `Backup`                                                    |
+| `productName` | `Backup` (PAYG) or `Backup Reserved Capacity` (RC) | `Backup`, `Backup Reserved Capacity`                  |
 | `skuName`     | Workload type or storage tier | `Azure VM`, `SQL Server in Azure VM`, `Standard`, `Archive` |
 | `meterName`   | Instance fee or data stored   | `Azure VM Protected Instances`, `LRS Data Stored`           |
 
@@ -76,5 +76,17 @@ Example: 10 VMs with 500 GB LRS storage
 - Redundancy options: LRS, GRS, ZRS, RA-GRS — each has a different storage rate
 - Archive tier offers lower storage cost but applies to long-term retention points only; early delete fees apply
 - Reserved capacity available via `productName = 'Backup Reserved Capacity'` for 100 TB or 1 PB commitments (1-Year / 3-Year)
-- Protected instance fees vary significantly by workload: VM/Files ~$5–10, SQL ~$25, SAP HANA/ASE ~$80
+- Protected instance fees vary significantly by workload: VM/Files are lower-cost per protected instance, SQL is mid-range, and SAP HANA/ASE are among the highest-cost options
 - First 31 days of Azure VM backup storage (up to 50 GB per VM) are free (not reflected in API)
+
+## Reserved Instance Pricing
+
+```powershell
+.\Get-AzurePricing.ps1 `
+    -ServiceName 'Backup' `
+    -ProductName 'Backup Reserved Capacity' `
+    -MeterName 'LRS Data Stored' `
+    -PriceType Reservation
+```
+
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it reports the full term price. Manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI SKUs use volume tiers (e.g., `Standard - 100 TB LRS`, `Standard - 1 PB GRS`).
