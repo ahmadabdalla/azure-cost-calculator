@@ -4,7 +4,6 @@ category: networking
 aliases: [private link, private endpoint, PL]
 ---
 
-````markdown
 # Private Link / Private Endpoints
 
 **Multiple meters**: Endpoint hours (per-endpoint) + data processed (ingress/egress per-GB)
@@ -64,4 +63,3 @@ Total: ~$22.90/month (USD)
 - Private endpoints are per-resource (e.g., one for SQL, one for Storage, one for Key Vault)
 - Data processing charges are typically negligible compared to endpoint hours for moderate usage
 - Each private endpoint consumes an IP address from the VNet subnet
-````

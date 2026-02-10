@@ -4,7 +4,6 @@ category: networking
 aliases: [private DNS, DNS zones]
 ---
 
-````markdown
 # Private DNS Zones
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
@@ -67,4 +66,3 @@ Total: $7.00/month (USD)
 - Private DNS zones are commonly paired with Private Endpoints (one zone per service type)
 - Typical private endpoint zones: `privatelink.database.windows.net`, `privatelink.blob.core.windows.net`, etc.
 - Query volume is usually very low — the zone hosting fee dominates for most deployments
-````
