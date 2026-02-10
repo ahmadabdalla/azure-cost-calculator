@@ -15,7 +15,7 @@ aliases:
 
 ## Query Pattern
 
-Template: `ServiceName: Storage`, `SkuName: <Tier> <Redundancy>`, `ProductName: <see Product Names>`, `MeterName: <see Meter Names>`
+Template: `ServiceName: Storage`, `SkuName: {Tier} {Redundancy}`, `ProductName: {see Product Names}`, `MeterName: {see Meter Names}`
 
 ### LRS/GRS storage (productName: Blob Storage)
 
@@ -53,7 +53,7 @@ MeterName: Hot ZRS Data Stored
 | `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | Redundancy-specific              |
 | `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS         |
 
-Meter pattern: `<Tier> <Redundancy> Data Stored`, `<Tier> Read Operations`, `<Tier> <Redundancy> Write Operations`
+Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations`, `{Tier} {Redundancy} Write Operations`
 
 ## Cost Formula
 

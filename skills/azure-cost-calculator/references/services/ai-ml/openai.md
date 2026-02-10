@@ -18,25 +18,24 @@ aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 
 ## Query Pattern
 
-### Step 1: Discover current OpenAI models and SKU names
+### Discover available models (always run first — model names change frequently)
 
-Use the explore script with SearchTerm Azure OpenAI and Top 20
+SearchTerm: Azure OpenAI
+Top: 20
 
-### Step 2: Query a specific model — use exact productName and skuName from discovery
-
-### Example: chat model input tokens, Global deployment, 10M tokens
+### Chat / completion model — substitute discovered values
 
 ServiceName: Foundry Models
-ProductName: Azure OpenAI GPT5
-SkuName: GPT 5 Mini Inpt Glbl
-Quantity: 10
+ProductName: {productName from discovery}
+SkuName: {model} {direction} {deployment}
+Quantity: {tokenCount in units matching unitOfMeasure}
 
-### Embeddings — substitute discovered embedding skuName, 50M tokens (50K × 1K)
+### Embeddings — substitute discovered embedding skuName
 
 ServiceName: Foundry Models
 ProductName: Azure OpenAI Embedding
-SkuName: {embedding model} DZ
-Quantity: 50000
+SkuName: {embedding model} {deployment}
+Quantity: {tokenCount in units matching unitOfMeasure}
 
 ## Key Fields
 

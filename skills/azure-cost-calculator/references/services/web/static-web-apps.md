@@ -14,6 +14,8 @@ aliases: [SWA, JAMstack]
 
 > **Trap (Inflated totals)**: Omitting `MeterName` returns app + AFD + bandwidth meters summed together (~$26.72). Always filter by `MeterName` to get individual component costs.
 
+> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at $0.00 (`tierMinimumUnits=0`, first 100 GB) and one at $0.20 (`tierMinimumUnits=100`, overage). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
+
 ## Query Pattern
 
 ### Standard plan — per-app monthly fee (use Region eastus2; eastus has no data)
@@ -30,8 +32,6 @@ ProductName: Static Web Apps
 MeterName: Standard Bandwidth Usage
 Quantity: 500
 Region: eastus2
-
-> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at $0.00 (`tierMinimumUnits=0`, first 100 GB) and one at $0.20 (`tierMinimumUnits=100`, overage). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
 
 ### Azure Front Door add-on (enterprise-grade edge, hourly)
 
