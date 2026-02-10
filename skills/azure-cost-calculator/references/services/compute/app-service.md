@@ -10,13 +10,13 @@ aliases: [app service, web app, webapp]
 
 ## Query Pattern
 
-# Linux
+### Linux
 
 ServiceName: Azure App Service
 SkuName: P1 v3
 ProductName: Azure App Service Premium v3 Plan - Linux
 
-# Windows
+### Windows
 
 ServiceName: Azure App Service
 SkuName: P1 v3

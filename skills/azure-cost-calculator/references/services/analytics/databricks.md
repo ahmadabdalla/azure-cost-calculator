@@ -14,20 +14,20 @@ aliases: [DBX, Spark on Azure]
 
 ## Query Pattern
 
-# Premium Jobs Compute — e.g., 10 DBUs running full month
+### Premium Jobs Compute — e.g., 10 DBUs running full month
 
 ServiceName: Azure Databricks
 ProductName: Azure Databricks
 SkuName: Premium Jobs Compute
 Quantity: 10
 
-# Premium All-purpose Compute — interactive clusters
+### Premium All-purpose Compute — interactive clusters
 
 ServiceName: Azure Databricks
 ProductName: Azure Databricks
 SkuName: Premium All-purpose Compute
 
-# Premium Serverless SQL — serverless SQL warehouse
+### Premium Serverless SQL — serverless SQL warehouse
 
 ServiceName: Azure Databricks
 ProductName: Azure Databricks Regional

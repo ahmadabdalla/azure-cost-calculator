@@ -13,35 +13,35 @@ aliases: [ER, Dedicated Circuit]
 
 ## Query Pattern
 
-# Gateway — zone-redundant (most common) — use InstanceCount for multiple gateways
+### Gateway — zone-redundant (most common) — use InstanceCount for multiple gateways
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute Gateway
 MeterName: ErGw2AZ Gateway
 InstanceCount: 1
 
-# Circuit — Standard Metered 1 Gbps (flat monthly fee, Zone 1 = US/Europe)
+### Circuit — Standard Metered 1 Gbps (flat monthly fee, Zone 1 = US/Europe)
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
 MeterName: Standard Metered Data 1 Gbps Circuit
 Region: Zone 1
 
-# Circuit — Standard Unlimited 1 Gbps
+### Circuit — Standard Unlimited 1 Gbps
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
 MeterName: Standard Unlimited Data 1 Gbps Circuit
 Region: Zone 1
 
-# Circuit — Premium Metered 1 Gbps (adds global reach)
+### Circuit — Premium Metered 1 Gbps (adds global reach)
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
 MeterName: Premium Metered Data 1 Gbps Circuit
 Region: Zone 1
 
-# Metered outbound data (per-GB egress on Metered circuits)
+### Metered outbound data (per-GB egress on Metered circuits)
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute

@@ -16,14 +16,14 @@ aliases: [SWA, JAMstack]
 
 ## Query Pattern
 
-# Standard plan — per-app monthly fee (use Region eastus2; eastus has no data)
+### Standard plan — per-app monthly fee (use Region eastus2; eastus has no data)
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard App
 Region: eastus2
 
-# Bandwidth — pass Quantity with total GB to see per-tier unit prices
+### Bandwidth — pass Quantity with total GB to see per-tier unit prices
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
@@ -33,7 +33,7 @@ Region: eastus2
 
 > **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at $0.00 (`tierMinimumUnits=0`, first 100 GB) and one at $0.20 (`tierMinimumUnits=100`, overage). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
 
-# Azure Front Door add-on (enterprise-grade edge, hourly)
+### Azure Front Door add-on (enterprise-grade edge, hourly)
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps

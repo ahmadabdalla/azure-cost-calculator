@@ -12,13 +12,13 @@ aliases: [VMs, virtual machine, VM]
 
 ## Query Pattern
 
-# Recommended: Filter to Linux standard only using ProductName
+### Recommended: Filter to Linux standard only using ProductName
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series
 
-# Windows standard only
+### Windows standard only
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
@@ -54,7 +54,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 ## Reserved Instance Pricing
 
-# RI for Linux D2s v5 (returns both 1-Year and 3-Year terms)
+### RI for Linux D2s v5 (returns both 1-Year and 3-Year terms)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5

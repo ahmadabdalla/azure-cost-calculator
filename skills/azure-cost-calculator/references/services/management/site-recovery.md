@@ -14,14 +14,14 @@ aliases: [ASR, Disaster Recovery, DR]
 
 ## Query Pattern
 
-# Azure-to-Azure replication — 10 protected VMs
+### Azure-to-Azure replication — 10 protected VMs
 
 ServiceName: Azure Site Recovery
 SkuName: Azure
 MeterName: VM Replicated to Azure
 InstanceCount: 10
 
-# System Center (on-premises VMM) replication — 5 protected VMs
+### System Center (on-premises VMM) replication — 5 protected VMs
 
 ServiceName: Azure Site Recovery
 SkuName: System Center

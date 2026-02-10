@@ -13,13 +13,13 @@ aliases: [azure functions, serverless, function app]
 
 ## Query Pattern
 
-# Consumption plan meters
+### Consumption plan meters
 
 ServiceName: Functions
 SkuName: Standard
 ProductName: Functions
 
-# Premium plan meters
+### Premium plan meters
 
 ServiceName: Functions
 SkuName: Premium

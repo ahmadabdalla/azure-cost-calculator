@@ -14,11 +14,11 @@ aliases: [Management Group, Azure Management Groups, Subscription Organization]
 
 ## Query Pattern
 
-# No pricing meters exist — included for validation only
-# Management Groups is a free governance service
+### No pricing meters exist — included for validation only
+### Management Groups is a free governance service
 ServiceName: Management Groups
 Quantity: 1
-# Expected: 0 results — this service has no retail meter
+### Expected: 0 results — this service has no retail meter
 
 ## Cost Formula
 

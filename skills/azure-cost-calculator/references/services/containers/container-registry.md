@@ -17,12 +17,12 @@ aliases: [ACR, container registry]
 
 Substitute `{Tier}` with `Basic`, `Standard`, or `Premium`:
 
-# {Tier} registry unit (daily cost)
+### {Tier} registry unit (daily cost)
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: {Tier} Registry Unit
 
-# Data stored (excess beyond included quota)
+### Data stored (excess beyond included quota)
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: Data Stored

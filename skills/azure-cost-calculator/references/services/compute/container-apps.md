@@ -12,7 +12,7 @@ aliases: [container apps, ACA]
 
 ## Query Pattern
 
-# $sku: 'Standard' (Consumption, per-second — UnitPrice shows $0.00) | 'Dedicated' (per-hour, prices correct) | 'Hybrid'
+### $sku: 'Standard' (Consumption, per-second — UnitPrice shows $0.00) | 'Dedicated' (per-hour, prices correct) | 'Hybrid'
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps

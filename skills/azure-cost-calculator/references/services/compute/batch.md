@@ -14,14 +14,14 @@ aliases: [HPC Batch, Batch Compute]
 
 ## Query Pattern
 
-# Dedicated pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
+### Dedicated pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
 ProductName: Virtual Machines Dsv5 Series
 InstanceCount: 4
 
-# Spot pool nodes (significant discount, may be evicted)
+### Spot pool nodes (significant discount, may be evicted)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
@@ -29,7 +29,7 @@ ProductName: Virtual Machines Dsv5 Series
 SkuName: D4s v5 Spot
 InstanceCount: 4
 
-# Low Priority pool nodes (classic discount tier, may be evicted)
+### Low Priority pool nodes (classic discount tier, may be evicted)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5

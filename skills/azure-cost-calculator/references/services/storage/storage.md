@@ -17,14 +17,14 @@ aliases:
 
 Template: `ServiceName: Storage`, `SkuName: <Tier> <Redundancy>`, `ProductName: <see Product Names>`, `MeterName: <see Meter Names>`
 
-# LRS/GRS storage (productName: Blob Storage)
+### LRS/GRS storage (productName: Blob Storage)
 
 ServiceName: Storage
 SkuName: Hot LRS
 ProductName: Blob Storage
 MeterName: Hot LRS Data Stored
 
-# ZRS/GZRS storage (productName: General Block Blob v2)
+### ZRS/GZRS storage (productName: General Block Blob v2)
 
 ServiceName: Storage
 SkuName: Hot ZRS

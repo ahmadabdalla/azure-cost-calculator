@@ -22,13 +22,13 @@ aliases:
 
 ## Query Pattern
 
-# Application Insights data ingestion (via Log Analytics workspace)
+### Application Insights data ingestion (via Log Analytics workspace)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
 
-# Application Insights data retention (via Log Analytics workspace)
+### Application Insights data retention (via Log Analytics workspace)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs

@@ -25,7 +25,7 @@ aliases:
 
 ## Query Pattern
 
-# Standard Linux — vCPU and memory (most common)
+### Standard Linux — vCPU and memory (most common)
 
 ServiceName: Container Instances
 ProductName: Container Instances
@@ -37,20 +37,20 @@ ProductName: Container Instances
 SkuName: Standard
 MeterName: Standard Memory Duration
 
-# Windows surcharge — add to Linux cost above
+### Windows surcharge — add to Linux cost above
 
 ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard
 MeterName: Standard Windows Software Duration
 
-# Spot containers (up to 70% discount, may be evicted)
+### Spot containers (up to 70% discount, may be evicted)
 
 ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard Spot
 
-# GPU containers — substitute $gpu: K80, P100, V100
+### GPU containers — substitute $gpu: K80, P100, V100
 
 ServiceName: Container Instances
 ProductName: Container Instances with GPU

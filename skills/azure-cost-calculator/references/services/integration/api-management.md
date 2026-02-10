@@ -14,15 +14,15 @@ aliases: [APIM, API gateway, API management]
 
 ## Query Pattern
 
-# All tiers — substitute {Tier} from Meter Names table
+### All tiers — substitute {Tier} from Meter Names table
 
 ServiceName: API Management
 SkuName: {Tier}
 MeterName: {Tier} Unit
 
-# v2 secondary units: MeterName '{Tier} Secondary Unit'
+### v2 secondary units: MeterName '{Tier} Secondary Unit'
 
-# Self-hosted gateway (Std v2/Prem v2): MeterName '{Tier} Self-hosted Gateway'
+### Self-hosted gateway (Std v2/Prem v2): MeterName '{Tier} Self-hosted Gateway'
 
 ## Key Fields
 
@@ -53,9 +53,9 @@ MeterName: {Tier} Unit
 ## Cost Formula
 
 ```
-# Hourly tiers: Monthly = retailPrice × 730 × unitCount
-# Consumption:  Monthly = retailPrice × (apiCalls / 10,000)  [first 1M calls/month free]
-# Add-ons:      Monthly += componentPrice × 730 × count  (secondary units, gateways, workspace packs)
+### Hourly tiers: Monthly = retailPrice × 730 × unitCount
+### Consumption:  Monthly = retailPrice × (apiCalls / 10,000)  [first 1M calls/month free]
+### Add-ons:      Monthly += componentPrice × 730 × count  (secondary units, gateways, workspace packs)
 ```
 
 ## Common SKUs

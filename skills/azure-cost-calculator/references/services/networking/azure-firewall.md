@@ -15,14 +15,14 @@ aliases: [firewall]
 
 Substitute `{Tier}` with `Standard`, `Premium`, or `Basic` (see Meter Names table). Run **two queries per tier**:
 
-# {Tier} — fixed deployment cost
+### {Tier} — fixed deployment cost
 
 ServiceName: Azure Firewall
 ProductName: Azure Firewall
 SkuName: {Tier}
 MeterName: {Tier} Deployment
 
-# {Tier} — data processing
+### {Tier} — data processing
 
 ServiceName: Azure Firewall
 ProductName: Azure Firewall
