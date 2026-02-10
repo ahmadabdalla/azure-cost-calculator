@@ -8,25 +8,25 @@ aliases: [keyvault, KV, vault]
 
 **Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 
-> **Trap**: Querying with only `-SkuName 'Standard'` (no `-ProductName`) returns **Azure Dedicated HSM** (thousands/month) mixed with Key Vault ops. Always filter by `-ProductName 'Key Vault'`.
+> **Trap**: Querying with only `SkuName 'Standard'` (no `ProductName`) returns **Azure Dedicated HSM** (thousands/month) mixed with Key Vault ops. Always filter by `ProductName 'Key Vault'`.
 
 ## Query Pattern
 
-```powershell
 # Standard tier — filter by productName to exclude Dedicated HSM
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Key Vault' `
-    -SkuName 'Standard' `
-    -ProductName 'Key Vault'
-# Add -MeterName 'Operations' or 'Advanced Key Operations' to isolate specific meters
+
+ServiceName: Key Vault
+SkuName: Standard
+ProductName: Key Vault
+
+# Add MeterName 'Operations' or 'Advanced Key Operations' to isolate specific meters
 
 # Premium tier — HSM-backed keys
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Key Vault' `
-    -SkuName 'Premium' `
-    -ProductName 'Key Vault'
-# Add -MeterName for specific Premium meters (see table below)
-```
+
+ServiceName: Key Vault
+SkuName: Premium
+ProductName: Key Vault
+
+# Add MeterName for specific Premium meters (see table below)
 
 ## Meter Names
 

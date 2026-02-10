@@ -15,21 +15,19 @@ aliases: [firewall]
 
 Substitute `{Tier}` with `Standard`, `Premium`, or `Basic` (see Meter Names table). Run **two queries per tier**:
 
-```powershell
 # {Tier} — fixed deployment cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName '{Tier}' `
-    -MeterName '{Tier} Deployment'
+
+ServiceName: Azure Firewall
+ProductName: Azure Firewall
+SkuName: {Tier}
+MeterName: {Tier} Deployment
 
 # {Tier} — data processing
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Firewall' `
-    -ProductName 'Azure Firewall' `
-    -SkuName '{Tier}' `
-    -MeterName '{Tier} Data Processed'
-```
+
+ServiceName: Azure Firewall
+ProductName: Azure Firewall
+SkuName: {Tier}
+MeterName: {Tier} Data Processed
 
 ## Meter Names
 
@@ -39,7 +37,7 @@ Substitute `{Tier}` with `Standard`, `Premium`, or `Basic` (see Meter Names tabl
 | Premium  | `Premium`  | `Premium Deployment`  | `Premium Data Processed`  |
 | Basic    | `Basic`    | `Basic Deployment`    | `Basic Data Processed`    |
 
-> **Note**: Secured Virtual Hub variants also exist with a different skuName (e.g., `'Standard Secure Virtual Hub'`). Query with `Explore-AzurePricing.ps1` if the firewall is deployed in a Virtual WAN hub.
+> **Note**: Secured Virtual Hub variants also exist with a different skuName (e.g., `'Standard Secure Virtual Hub'`). Query with Explore-AzurePricing if the firewall is deployed in a Virtual WAN hub.
 
 ## Cost Formula
 

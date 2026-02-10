@@ -1,7 +1,7 @@
 ---
 serviceName: Content Delivery Network
 category: networking
-aliases: [CDN, Azure CDN, Content Delivery]
+aliases: [CDN Classic, Azure CDN Classic, Content Delivery]
 ---
 
 # Azure Content Delivery Network
@@ -16,50 +16,48 @@ aliases: [CDN, Azure CDN, Content Delivery]
 
 ## Query Pattern
 
-```powershell
 # Standard Microsoft — data transfer (Zone 1, most common)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Content Delivery Network' `
-    -ProductName 'Azure CDN from Microsoft' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Data Transfer' `
-    -Region 'Zone 1'
+
+ServiceName: Content Delivery Network
+ProductName: Azure CDN from Microsoft
+SkuName: Standard
+MeterName: Standard Data Transfer
+Region: Zone 1
 
 # Standard Microsoft — request pricing (per 1M requests)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Content Delivery Network' `
-    -ProductName 'Azure CDN from Microsoft' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Requests' `
-    -Region 'Zone 1'
+
+ServiceName: Content Delivery Network
+ProductName: Azure CDN from Microsoft
+SkuName: Standard
+MeterName: Standard Requests
+Region: Zone 1
 
 # Premium Verizon — data transfer with volume estimate
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Content Delivery Network' `
-    -ProductName 'Azure CDN from Verizon' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Data Transfer' `
-    -Quantity 10000 `
-    -Region 'Zone 1'
-```
+
+ServiceName: Content Delivery Network
+ProductName: Azure CDN from Verizon
+SkuName: Premium
+MeterName: Premium Data Transfer
+Quantity: 10000
+Region: Zone 1
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                                                              |
-| ------------- | --------------------------------------- | --------------------------------------------------------------------------- |
-| `serviceName` | Always `Content Delivery Network`       | `Content Delivery Network`                                                  |
-| `productName` | CDN provider chosen by user             | `Azure CDN from Microsoft`, `Azure CDN from Verizon`, `Azure CDN from Akamai` |
-| `skuName`     | Tier selected                           | `Standard`, `Premium`, `WAF` (Microsoft WAF add-on)                         |
-| `Region`      | Delivery zone (not ARM region)          | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `Zone 5`                           |
+| Parameter     | How to determine                  | Example values                                                                |
+| ------------- | --------------------------------- | ----------------------------------------------------------------------------- |
+| `serviceName` | Always `Content Delivery Network` | `Content Delivery Network`                                                    |
+| `productName` | CDN provider chosen by user       | `Azure CDN from Microsoft`, `Azure CDN from Verizon`, `Azure CDN from Akamai` |
+| `skuName`     | Tier selected                     | `Standard`, `Premium`, `WAF` (Microsoft WAF add-on)                           |
+| `Region`      | Delivery zone (not ARM region)    | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `Zone 5`                              |
 
 ## Meter Names
 
-| Meter                           | skuName    | productName              | unitOfMeasure | Notes                              |
-| ------------------------------- | ---------- | ------------------------ | ------------- | ---------------------------------- |
-| `Standard Data Transfer`        | `Standard` | All three providers      | 1 GB          | Tiered by volume                   |
-| `Standard Requests`             | `Standard` | Azure CDN from Microsoft | 1M/Month      | HTTP request count                 |
-| `Standard Acceleration Data Transfer` | `Standard` | Akamai / Verizon   | 1 GB          | DSA acceleration traffic           |
-| `Premium Data Transfer`         | `Premium`  | Verizon / Akamai         | 1 GB          | Premium tier, tiered by volume     |
+| Meter                                 | skuName    | productName              | unitOfMeasure | Notes                          |
+| ------------------------------------- | ---------- | ------------------------ | ------------- | ------------------------------ |
+| `Standard Data Transfer`              | `Standard` | All three providers      | 1 GB          | Tiered by volume               |
+| `Standard Requests`                   | `Standard` | Azure CDN from Microsoft | 1M/Month      | HTTP request count             |
+| `Standard Acceleration Data Transfer` | `Standard` | Akamai / Verizon         | 1 GB          | DSA acceleration traffic       |
+| `Premium Data Transfer`               | `Premium`  | Verizon / Akamai         | 1 GB          | Premium tier, tiered by volume |
 
 > WAF and Custom meters also exist under `Azure CDN from Microsoft`. Query with `-SkuName 'WAF'` for WAF policy/rule/request pricing.
 

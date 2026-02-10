@@ -8,43 +8,41 @@ aliases: [ASR, Disaster Recovery, DR]
 
 **Primary cost**: Per protected VM instance per month — flat rate varies by replication target (Azure or System Center).
 
-> **Trap**: Unfiltered `-ServiceName 'Azure Site Recovery'` returns both Azure and System Center SKUs, inflating `totalMonthlyCost` by summing charges for both SKUs. Always filter with `-SkuName 'Azure'` for Azure-to-Azure DR (most common scenario).
+> **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns both Azure and System Center SKUs, inflating costs by summing charges for both SKUs. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
 
 > **Trap (hidden costs)**: The per-instance fee covers orchestration only. Replicated storage, compute at the DR site during failover, bandwidth, and managed disks are billed separately through their respective services. Always price these components independently.
 
 ## Query Pattern
 
-```powershell
 # Azure-to-Azure replication — 10 protected VMs
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Site Recovery' `
-    -SkuName 'Azure' `
-    -MeterName 'VM Replicated to Azure' `
-    -InstanceCount 10
+
+ServiceName: Azure Site Recovery
+SkuName: Azure
+MeterName: VM Replicated to Azure
+InstanceCount: 10
 
 # System Center (on-premises VMM) replication — 5 protected VMs
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Site Recovery' `
-    -SkuName 'System Center' `
-    -MeterName 'VM Replicated to System Center' `
-    -InstanceCount 5
-```
+
+ServiceName: Azure Site Recovery
+SkuName: System Center
+MeterName: VM Replicated to System Center
+InstanceCount: 5
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                      |
-| ------------- | --------------------------------------- | ----------------------------------- |
-| `serviceName` | Always `Azure Site Recovery`            | `Azure Site Recovery`               |
-| `productName` | Always `Azure Site Recovery`            | `Azure Site Recovery`               |
-| `skuName`     | Replication target                      | `Azure`, `System Center`            |
-| `meterName`   | Matches the SKU target                  | `VM Replicated to Azure`, `VM Replicated to System Center` |
+| Parameter     | How to determine             | Example values                                             |
+| ------------- | ---------------------------- | ---------------------------------------------------------- |
+| `serviceName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
+| `productName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
+| `skuName`     | Replication target           | `Azure`, `System Center`                                   |
+| `meterName`   | Matches the SKU target       | `VM Replicated to Azure`, `VM Replicated to System Center` |
 
 ## Meter Names
 
-| Meter                             | skuName          | unitOfMeasure | Notes                              |
-| --------------------------------- | ---------------- | ------------- | ---------------------------------- |
-| `VM Replicated to Azure`          | `Azure`          | `1/Month`     | Azure-to-Azure or on-prem-to-Azure |
-| `VM Replicated to System Center`  | `System Center`  | `1/Month`     | On-prem to System Center VMM       |
+| Meter                            | skuName         | unitOfMeasure | Notes                              |
+| -------------------------------- | --------------- | ------------- | ---------------------------------- |
+| `VM Replicated to Azure`         | `Azure`         | `1/Month`     | Azure-to-Azure or on-prem-to-Azure |
+| `VM Replicated to System Center` | `System Center` | `1/Month`     | On-prem to System Center VMM       |
 
 ## Cost Formula
 

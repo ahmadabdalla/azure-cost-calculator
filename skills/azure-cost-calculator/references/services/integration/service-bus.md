@@ -8,7 +8,7 @@ aliases: [service bus, messaging, queues, topics]
 
 **Primary cost**: Namespace hours (Standard/Premium) + operations (Basic/Standard)
 
-> **Trap (unfiltered query)**: Querying without `-MeterName` returns multiple meters (Base Unit + Operations + Relay Hours). The `summary.totalMonthlyCost` sums all, inflating the estimate. Always filter by `-MeterName`.
+> **Trap (unfiltered query)**: Querying without `MeterName` returns multiple meters (Base Unit + Operations + Relay Hours). The `summary.totalMonthlyCost` sums all, inflating the estimate. Always filter by `MeterName`.
 
 > **Trap (Premium operations)**: Premium Messaging Units include operations at no extra charge — do NOT add an operations cost line for Premium tier.
 
@@ -16,36 +16,30 @@ aliases: [service bus, messaging, queues, topics]
 
 ## Query Pattern
 
-```powershell
 # Basic tier — operations only (per 1M)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Service Bus' `
-    -SkuName 'Basic' `
-    -MeterName 'Basic Messaging Operations'
-```
 
-```powershell
+ServiceName: Service Bus
+SkuName: Basic
+MeterName: Basic Messaging Operations
+
 # Standard tier — namespace base unit (hourly)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Service Bus' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Base Unit'
-```
 
-```powershell
+ServiceName: Service Bus
+SkuName: Standard
+MeterName: Standard Base Unit
+
 # Standard tier — operations (per 1M, first 13M included)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Service Bus' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Messaging Operations'
-```
 
-```powershell
-# Premium — messaging unit (-InstanceCount for multi-unit)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Service Bus' -SkuName 'Premium' `
-    -MeterName 'Premium Messaging Unit' -InstanceCount 2
-```
+ServiceName: Service Bus
+SkuName: Standard
+MeterName: Standard Messaging Operations
+
+# Premium — messaging unit (InstanceCount for multi-unit)
+
+ServiceName: Service Bus
+SkuName: Premium
+MeterName: Premium Messaging Unit
+InstanceCount: 2
 
 ## Meter Names
 

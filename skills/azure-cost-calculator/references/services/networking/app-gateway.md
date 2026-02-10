@@ -13,43 +13,41 @@ aliases: [app gateway, application gateway, appgw]
 
 ## Query Pattern
 
-```powershell
 # WAF v2 — fixed cost (gateway hours)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway WAF v2' `
-    -MeterName 'Standard Fixed Cost'
+
+ServiceName: Application Gateway
+ProductName: Application Gateway WAF v2
+MeterName: Standard Fixed Cost
 
 # WAF v2 — capacity units
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway WAF v2' `
-    -MeterName 'Standard Capacity Units'
+
+ServiceName: Application Gateway
+ProductName: Application Gateway WAF v2
+MeterName: Standard Capacity Units
 
 # Standard v2 — fixed cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway Standard v2' `
-    -MeterName 'Standard Fixed Cost'
+
+ServiceName: Application Gateway
+ProductName: Application Gateway Standard v2
+MeterName: Standard Fixed Cost
 
 # Standard v2 — capacity units
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway Standard v2' `
-    -MeterName 'Standard Capacity Units'
+
+ServiceName: Application Gateway
+ProductName: Application Gateway Standard v2
+MeterName: Standard Capacity Units
 
 # Basic v2 — fixed cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway Basic v2' `
-    -MeterName 'Basic Fixed Cost'
+
+ServiceName: Application Gateway
+ProductName: Application Gateway Basic v2
+MeterName: Basic Fixed Cost
 
 # Basic v2 — capacity units
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Application Gateway' `
-    -ProductName 'Application Gateway Basic v2' `
-    -MeterName 'Basic Capacity Units'
-```
+
+ServiceName: Application Gateway
+ProductName: Application Gateway Basic v2
+MeterName: Basic Capacity Units
 
 ## Product Names
 

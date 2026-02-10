@@ -18,21 +18,17 @@ aliases: [ACR, container registry]
 
 Substitute `{Tier}` with `Basic`, `Standard`, or `Premium`:
 
-```powershell
 # {Tier} registry unit (daily cost)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Container Registry' `
-    -ProductName 'Container Registry' `
-    -MeterName '{Tier} Registry Unit'
+ServiceName: Container Registry
+ProductName: Container Registry
+MeterName: {Tier} Registry Unit
 
 # Data stored (excess beyond included quota)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Container Registry' `
-    -ProductName 'Container Registry' `
-    -MeterName 'Data Stored'
-```
+ServiceName: Container Registry
+ProductName: Container Registry
+MeterName: Data Stored
 
-> **Note**: For geo-replication storage (Premium only), use `-MeterName 'Premium GB Registry Replication Data Stored'`.
+> **Note**: For geo-replication storage (Premium only), use `MeterName 'Premium GB Registry Replication Data Stored'`.
 
 ## Meter Names
 

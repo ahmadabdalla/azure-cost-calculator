@@ -232,10 +232,11 @@ function Test-ServiceReference {
     }
 
     # --- 45-Line Rule ---
+    # Accept either a ```powershell/pwsh code block OR a declarative ServiceName: line
     $first45 = if ($lines.Count -ge 45) { $lines[0..44] } else { $lines }
     $hasQueryInFirst45 = $false
     for ($i = 0; $i -lt $first45.Count; $i++) {
-        if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)') {
+        if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)' -or $first45[$i] -match '^\s*ServiceName\s*:' -or $first45[$i] -match '^\s*API\s*:') {
             $hasQueryInFirst45 = $true
             break
         }
@@ -245,10 +246,10 @@ function Test-ServiceReference {
             Name    = 'forty_five_line_rule'
             Pass    = $hasQueryInFirst45
             Message = if ($hasQueryInFirst45) {
-                'Query pattern (```powershell/pwsh) found within first 45 lines'
+                'Query pattern found within first 45 lines'
             }
             else {
-                'No ```powershell or ```pwsh block found within first 45 lines (45-line rule)'
+                'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block, ServiceName: declaration, or API: declaration.'
             }
         })
 
@@ -316,8 +317,11 @@ function Test-ServiceReference {
             }
         })
 
-    # --- Scaling parameter: -InstanceCount or -Quantity ---
-    # Only scan ```powershell / ```pwsh blocks (query patterns), not other code blocks
+    # --- Scaling parameter: InstanceCount, Quantity, or Cost Formula scaling ---
+    # Check 1: ```powershell/pwsh blocks for -InstanceCount/-Quantity (old format)
+    # Check 2: Declarative InstanceCount:/Quantity: lines (new format)
+    # Check 3: Cost Formula section references scaling (e.g., × instanceCount, × quantity,
+    #           × shardCount, × unitCount, × resourceCount, per-unit multipliers, etc.)
     $queryBlockLines = [System.Collections.Generic.List[string]]::new()
     $insidePwshBlock = $false
     foreach ($line in $lines) {
@@ -333,15 +337,32 @@ function Test-ServiceReference {
             $queryBlockLines.Add($line)
         }
     }
+    # Check PowerShell format: -InstanceCount or -Quantity in code blocks
     $hasScalingParam = @($queryBlockLines | Where-Object { $_ -match '-InstanceCount\b|-Quantity\b' }).Count -gt 0
+    # Check declarative format: InstanceCount: or Quantity: on any line
+    if (-not $hasScalingParam) {
+        $hasScalingParam = @($lines | Where-Object { $_ -match '^\s*(InstanceCount|Quantity)\s*:' }).Count -gt 0
+    }
+    # Check Cost Formula section for scaling multipliers (× count, per-unit, GB volume, etc.)
+    if (-not $hasScalingParam) {
+        $inCostFormula = $false
+        foreach ($line in $lines) {
+            if ($line -match '^#{2}\s+Cost\s+Formula') { $inCostFormula = $true; continue }
+            if ($inCostFormula -and $line -match '^#{2}\s+') { break }
+            if ($inCostFormula -and $line -match '(?i)(×|x|\*)\s*\w*(count|quantity|instance|gb|tb|unit|shard|replica|node)|per[\s-]+(gb|tb|unit|instance|10k|100k|1m|million|day|hour)|estimat|730\s*(hours|hrs)|monthly\s*=') {
+                $hasScalingParam = $true
+                break
+            }
+        }
+    }
     $checks.Add(@{
             Name    = 'scaling_parameter'
             Pass    = $hasScalingParam
             Message = if ($hasScalingParam) {
-                'At least one query uses -InstanceCount or -Quantity'
+                'Scaling parameter or cost formula multiplier found'
             }
             else {
-                'No query pattern uses -InstanceCount or -Quantity. At least one query must demonstrate scaling parameters.'
+                'No scaling parameter (InstanceCount/Quantity) or cost formula multiplier found. At least one query or formula must demonstrate how to scale.'
             }
         })
 

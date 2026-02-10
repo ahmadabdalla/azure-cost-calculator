@@ -20,11 +20,8 @@ VNets themselves are free. Costs come from:
 
 ## Query Pattern
 
-```powershell
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Load Balancer' `
-    -SkuName 'Standard'
-```
+ServiceName: Load Balancer
+SkuName: Standard
 
 ## Manual Fallback (API unavailable for public regions)
 

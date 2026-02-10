@@ -22,19 +22,17 @@ aliases:
 
 ## Query Pattern
 
-```powershell
 # Application Insights data ingestion (via Log Analytics workspace)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Analyzed'
+
+ServiceName: Log Analytics
+SkuName: Analytics Logs
+MeterName: Analytics Logs Data Analyzed
 
 # Application Insights data retention (via Log Analytics workspace)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Retention'
-```
+
+ServiceName: Log Analytics
+SkuName: Analytics Logs
+MeterName: Analytics Logs Data Retention
 
 ## Key Fields
 

@@ -26,6 +26,15 @@ Both produce identical JSON output. Use Bash on macOS/Linux; use PowerShell on W
 
 Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`). Run `./scripts/get-azure-pricing.sh --help` for the full flag list.
 
+### Declarative Parameters
+
+Service reference files specify query parameters as `Key: Value` pairs. To execute a query, translate each parameter to the detected runtime's syntax:
+
+- **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
+- **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
+
+String values with spaces require quoting when passed to scripts. Numeric values (Quantity, InstanceCount) do not.
+
 ## Workflow
 
 1. **Identify** the resource type(s) the user wants to estimate

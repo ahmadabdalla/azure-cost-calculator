@@ -14,14 +14,11 @@ aliases: [Management Group, Azure Management Groups, Subscription Organization]
 
 ## Query Pattern
 
-```powershell
 # No pricing meters exist — included for validation only
 # Management Groups is a free governance service
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Management Groups' `
-    -Quantity 1
+ServiceName: Management Groups
+Quantity: 1
 # Expected: 0 results — this service has no retail meter
-```
 
 ## Cost Formula
 

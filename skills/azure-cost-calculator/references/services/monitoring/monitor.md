@@ -14,12 +14,10 @@ aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics]
 
 ## Query Pattern
 
-```powershell
 # Azure Monitor — custom metrics
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Monitor' `
-    -MeterName 'Monitored Time Series'
-```
+
+ServiceName: Azure Monitor
+MeterName: Monitored Time Series
 
 ## Key Fields
 

@@ -9,23 +9,24 @@ aliases: [private link, private endpoint, PL]
 
 **Multiple meters**: Endpoint hours (per-endpoint) + data processed (ingress/egress per-GB)
 
-> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require `-Region` and return nothing; call the API directly using query below.
+> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
 
 ## Query Pattern
 
-```powershell
 # Private Endpoint hourly cost
-$uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Private Endpoint'"
-(Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Private Endpoint'
+Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 # Data Processed — Ingress
-$uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Ingress'"
-(Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Ingress'
+Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 # Data Processed — Egress
-$uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Egress'"
-(Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
-```
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Egress'
+Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 ## Key Fields
 

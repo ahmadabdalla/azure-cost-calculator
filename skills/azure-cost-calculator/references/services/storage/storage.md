@@ -15,15 +15,21 @@ aliases:
 
 ## Query Pattern
 
-Template: `-ServiceName 'Storage' -SkuName '<Tier> <Redundancy>' -ProductName '<see Product Names>' -MeterName '<see Meter Names>'`
+Template: `ServiceName: Storage`, `SkuName: <Tier> <Redundancy>`, `ProductName: <see Product Names>`, `MeterName: <see Meter Names>`
 
-```powershell
-# LRS/GRS storage (productName: 'Blob Storage')
-.\Get-AzurePricing.ps1 -ServiceName 'Storage' -SkuName 'Hot LRS' -ProductName 'Blob Storage' -MeterName 'Hot LRS Data Stored'
+# LRS/GRS storage (productName: Blob Storage)
 
-# ZRS/GZRS storage (productName: 'General Block Blob v2')
-.\Get-AzurePricing.ps1 -ServiceName 'Storage' -SkuName 'Hot ZRS' -ProductName 'General Block Blob v2' -MeterName 'Hot ZRS Data Stored'
-```
+ServiceName: Storage
+SkuName: Hot LRS
+ProductName: Blob Storage
+MeterName: Hot LRS Data Stored
+
+# ZRS/GZRS storage (productName: General Block Blob v2)
+
+ServiceName: Storage
+SkuName: Hot ZRS
+ProductName: General Block Blob v2
+MeterName: Hot ZRS Data Stored
 
 ## Key Fields
 

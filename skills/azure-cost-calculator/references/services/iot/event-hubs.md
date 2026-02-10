@@ -8,45 +8,37 @@ aliases: [Event Hubs, Kafka on Azure, Event Streaming]
 
 **Primary cost**: Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons
 
-> **Trap (Standard unfiltered)**: Querying `-SkuName 'Standard'` without `-MeterName` returns **four** meters: Throughput Unit, Ingress Events, Capture, and Kafka Endpoint. The `summary.totalMonthlyCost` sums all four, inflating the estimate ~7×. Always filter with `-MeterName 'Standard Throughput Unit'` for the base cost.
+> **Trap (Standard unfiltered)**: Querying with `SkuName Standard` without `MeterName` returns **four** meters: Throughput Unit, Ingress Events, Capture, and Kafka Endpoint. The `summary.totalMonthlyCost` sums all four, inflating the estimate ~7×. Always filter with `MeterName Standard Throughput Unit` for the base cost.
 
-> **Trap (Ingress Events unit)**: Ingress Events is priced per **1M events** (`UnitOfMeasure: "1M"`). The default `MonthlyCost` assumes quantity 1 = 1 million events. Use `-Quantity` with the number of millions of events expected.
+> **Trap (Ingress Events unit)**: Ingress Events is priced per **1M events** (`UnitOfMeasure: "1M"`). The default `MonthlyCost` assumes quantity 1 = 1 million events. Use `Quantity` with the number of millions of events expected.
 
 ## Query Pattern
 
-```powershell
 # Standard tier — throughput unit (base cost)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Event Hubs' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Throughput Unit'
-```
 
-```powershell
+ServiceName: Event Hubs
+SkuName: Standard
+MeterName: Standard Throughput Unit
+
 # Standard tier — ingress events (per 1M events)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Event Hubs' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Ingress Events' `
-    -Quantity 10
-```
 
-```powershell
-# Premium tier — 3 processing units (use -InstanceCount for multi-unit)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Event Hubs' `
-    -SkuName 'Premium' `
-    -MeterName 'Premium Processing Unit' `
-    -InstanceCount 3
-```
+ServiceName: Event Hubs
+SkuName: Standard
+MeterName: Standard Ingress Events
+Quantity: 10
 
-```powershell
+# Premium tier — 3 processing units (use InstanceCount for multi-unit)
+
+ServiceName: Event Hubs
+SkuName: Premium
+MeterName: Premium Processing Unit
+InstanceCount: 3
+
 # Dedicated tier — capacity unit
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Event Hubs' `
-    -SkuName 'Dedicated' `
-    -MeterName 'Dedicated Capacity Unit'
-```
+
+ServiceName: Event Hubs
+SkuName: Dedicated
+MeterName: Dedicated Capacity Unit
 
 ## Meter Names
 
@@ -81,6 +73,6 @@ Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transfe
 - Premium/Dedicated include ingress events at no extra charge
 - Capacity: 1 TU = 1 MB/s ingress / ~1K events/s; 1 PU ≈ 5–10 MB/s; 1 CU ≈ 20 MB/s
 - Geo-DR requires two separate Premium/Dedicated namespaces — budget 2× namespace cost plus replication transfer
-- No reserved instance pricing — `-PriceType Reservation` returns 0 results for Event Hubs
+- No reserved instance pricing — `PriceType Reservation` returns 0 results for Event Hubs
 - All throughput/processing/capacity units are billed hourly — use 730 hours/month
 - Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API
