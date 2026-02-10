@@ -10,19 +10,17 @@ aliases: [app service, web app, webapp]
 
 ## Query Pattern
 
-```powershell
 # Linux
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure App Service' `
-    -SkuName 'P1 v3' `
-    -ProductName 'Azure App Service Premium v3 Plan - Linux'
+
+ServiceName: Azure App Service
+SkuName: P1 v3
+ProductName: Azure App Service Premium v3 Plan - Linux
 
 # Windows
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure App Service' `
-    -SkuName 'P1 v3' `
-    -ProductName 'Azure App Service Premium v3 Plan'
-```
+
+ServiceName: Azure App Service
+SkuName: P1 v3
+ProductName: Azure App Service Premium v3 Plan
 
 ## Key Fields
 

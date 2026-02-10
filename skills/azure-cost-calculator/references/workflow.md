@@ -1,57 +1,79 @@
 # Workflow Reference — Script Parameters, Multi-Resource Estimates, Output Formats
 
-## Get-AzurePricing.ps1 Parameters
+## Script Parameters
 
-PowerShell script that queries the Azure Retail Prices REST API (no auth required). Run it to get live, deterministic prices.
+Both pricing scripts (Bash and PowerShell) query the Azure Retail Prices REST API (no auth required). Run them to get live, deterministic prices. Service reference files use declarative `Key: Value` parameters — translate to the detected runtime:
 
-- `-ServiceName` (required) — Case-sensitive service name (e.g., `'Virtual Machines'`)
-- `-Region` — Azure region, default `eastus`. Accepts multiple for comparison.
-- `-ArmSkuName` — ARM SKU (used for VMs: `'Standard_D2s_v5'`)
-- `-SkuName` — SKU name (e.g., `'P1 v3'`, `'Hot LRS'`)
-- `-ProductName` — Product filter, case-sensitive
-- `-MeterName` — Specific meter (e.g., `'vCore'`, `'100 RU/s'`)
-- `-PriceType` — `Consumption` (default), `Reservation`, `DevTestConsumption`
-- `-Currency` — Default `USD`. Supports: AUD, EUR, GBP, JPY, CAD, INR, etc.
-- `-Quantity` — Usage multiplier (e.g., 4 for 400 RU/s Cosmos)
-- `-HoursPerMonth` — Default 730
-- `-InstanceCount` — Number of instances, default 1
-- `-OutputFormat` — `Json` (default), `Table`, `Summary`
+| Parameter     | Description                                                  | Default       |
+| ------------- | ------------------------------------------------------------ | ------------- |
+| ServiceName   | Case-sensitive service name (e.g., `Virtual Machines`)       | _(required)_  |
+| Region        | Azure region. Accepts multiple for comparison.               | `eastus`      |
+| ArmSkuName    | ARM SKU (used for VMs: `Standard_D2s_v5`)                    | —             |
+| SkuName       | SKU name (e.g., `P1 v3`, `Hot LRS`)                          | —             |
+| ProductName   | Product filter, case-sensitive                               | —             |
+| MeterName     | Specific meter (e.g., `vCore`, `100 RU/s`)                   | —             |
+| PriceType     | `Consumption` (default), `Reservation`, `DevTestConsumption` | `Consumption` |
+| Currency      | Supports: USD, AUD, EUR, GBP, JPY, CAD, INR, etc.            | `USD`         |
+| Quantity      | Usage multiplier (e.g., 4 for 400 RU/s Cosmos)               | —             |
+| HoursPerMonth | Hours in billing month                                       | `730`         |
+| InstanceCount | Number of instances                                          | `1`           |
+| OutputFormat  | `Json` (default), `Table`, `Summary`                         | `Json`        |
 
-### Cross-Platform Note
+### Runtime Translation
 
-> On Linux/macOS, always use `pwsh -File script.ps1 ...` — not `pwsh -Command '...'`. Bash strips OData quotes. See [pitfalls.md](pitfalls.md).
+- **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
+- **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
+
+> On Linux/macOS with PowerShell, always use `pwsh -File script.ps1 ...` — not `pwsh -Command '...'`. Bash strips OData quotes. See [pitfalls.md](pitfalls.md).
 
 ### Examples
 
-```powershell
 # VM monthly cost
-.\Get-AzurePricing.ps1 -ServiceName 'Virtual Machines' -ArmSkuName 'Standard_D2s_v5'
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D2s_v5
 
 # App Service Linux P1v3
-.\Get-AzurePricing.ps1 -ServiceName 'Azure App Service' -SkuName 'P1 v3' -ProductName 'Azure App Service Premium v3 Plan - Linux'
+
+ServiceName: Azure App Service
+SkuName: P1 v3
+ProductName: Azure App Service Premium v3 Plan - Linux
 
 # Compare VM price across 3 regions
-.\Get-AzurePricing.ps1 -ServiceName 'Virtual Machines' -ArmSkuName 'Standard_D4s_v5' -Region 'eastus','australiaeast','westeurope' -OutputFormat Table
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D4s_v5
+Region: eastus, australiaeast, westeurope
+OutputFormat: Table
 
 # Cosmos DB 400 RU/s
-.\Get-AzurePricing.ps1 -ServiceName 'Azure Cosmos DB' -MeterName '100 RU/s' -SkuName 'RUs' -Quantity 4
+
+ServiceName: Azure Cosmos DB
+MeterName: 100 RU/s
+SkuName: RUs
+Quantity: 4
 
 # Storage: Blob Hot LRS per-GB
-.\Get-AzurePricing.ps1 -ServiceName 'Storage' -SkuName 'Hot LRS' -ProductName 'Blob Storage' -MeterName 'Hot LRS Data Stored'
-```
 
-## Discovery Script: Explore-AzurePricing.ps1
+ServiceName: Storage
+SkuName: Hot LRS
+ProductName: Blob Storage
+MeterName: Hot LRS Data Stored
+
+## Discovery Script
 
 Discovers available filter values for resource types not yet in the reference files. Returns distinct combinations of serviceName, productName, skuName, meterName, armSkuName, unitOfMeasure, and a sample price.
 
 **Key parameters:**
 
-- `-ServiceName` — Exact service name match
-- `-SearchTerm` — Fuzzy search via OData `contains()` on productName
-- `-Region` — Default `eastus`
-- `-Currency` — Default `USD`. Pass user's preferred currency for localised sample prices.
-- `-Top` — Max distinct results, default 20
-- `-OutputFormat` — `Json` (default) or `Table`
+| Parameter    | Description                                                | Default  |
+| ------------ | ---------------------------------------------------------- | -------- |
+| ServiceName  | Exact service name match                                   | —        |
+| SearchTerm   | Fuzzy search via OData `contains()` on productName         | —        |
+| Region       | Azure region                                               | `eastus` |
+| Currency     | Pass user's preferred currency for localised sample prices | `USD`    |
+| Top          | Max distinct results                                       | `20`     |
+| OutputFormat | `Json` (default) or `Table`                                | `Json`   |
 
 ## Multi-Resource Estimates
 

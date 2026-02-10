@@ -9,20 +9,20 @@ aliases: [private DNS, DNS zones]
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
-> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require `-Region` and return nothing; call the API directly using query below.
+> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
 > **Trap**: Zone pricing is **tiered** — first 25 zones at $0.50/zone/month, additional at $0.10/zone/month. Pick the tier matching expected zone count, do NOT sum all tiers.
 
 ## Query Pattern
 
-```powershell
 # Private Zone hosting cost
-$uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Zone'"
-(Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Zone'
+Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 # Private DNS queries
-$uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Queries'"
-(Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
-```
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Queries'
+Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 ## Key Fields
 

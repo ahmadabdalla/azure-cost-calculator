@@ -37,9 +37,10 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
   0. 45-LINE RULE: The first Query Pattern example MUST be the most common/default
      configuration and MUST appear within the first 45 lines of the file. This enables
      batch estimation mode to read only lines 1–45 for multi-service estimates.
-     Ensure the first usable default Query Pattern (not including comments or purely
-     instructional content) appears within lines 1–45. Do not rely on exact line
-     ranges for YAML front matter, titles, or trap warnings — their length may vary.
+     Ensure the first usable default Query Pattern (declarative Key: Value block,
+     not including comments or purely instructional content) appears within lines
+     1–45. Do not rely on exact line ranges for YAML front matter, titles, or
+     trap warnings — their length may vary.
 
   1. TITLE: Use the official Azure service name as shown in the portal.
 
@@ -63,9 +64,9 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
      Use a descriptive name in parentheses for traps that need identification,
      e.g., **Trap (RI MonthlyCost)**: ...
 
-  4. QUERY PATTERN: Provide copy-paste-ready Get-AzurePricing.ps1 commands.
+  4. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
      If the service requires direct API calls (e.g., Global-only pricing),
-     provide raw Invoke-RestMethod examples instead and explain why.
+     provide API URL and Fields in declarative format instead and explain why.
 
   5. KEY FIELDS: Document the exact API field values (case-sensitive).
      Organize as a table with Parameter, How to determine, Example values.
@@ -107,30 +108,29 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
 
 ## Query Pattern
 
-```powershell
 # {Description of what this query returns}
-.\Get-AzurePricing.ps1 `
-    -ServiceName '{serviceName}' `
-    -SkuName '{skuName}' `
-    -ProductName '{productName}' `
-    -MeterName '{meterName}'
-```
+
+ServiceName: {serviceName}
+SkuName: {skuName}
+ProductName: {productName}
+MeterName: {meterName}
 
 <!--
   QUERY PATTERN GUIDANCE:
-  - Always include -ServiceName at minimum
-  - Add -ProductName, -SkuName, -MeterName as needed to get precise results
+  - Use declarative Key: Value pairs — no code fences, no script names
+  - Always include ServiceName at minimum
+  - Add ProductName, SkuName, MeterName as needed to get precise results
   - Show the recommended (most filtered) query first
   - Add variants for different tiers, OS types, or SKUs
   - If the script doesn't work for this service (e.g., Global-only pricing),
-    provide direct API calls using Invoke-RestMethod instead:
+    provide direct API calls in declarative format:
 
-    $uri = "https://prices.azure.com/api/retail/prices?`$filter=serviceName eq '{serviceName}' and ..."
-    (Invoke-RestMethod -Uri $uri).Items | Select-Object meterName, unitPrice, unitOfMeasure
+    API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq '{serviceName}' and ...
+    Fields: meterName, unitPrice, unitOfMeasure
 
-  - Use -PriceType Reservation for reserved instance queries
-  - Use -Quantity N for meters priced per-unit (e.g., per 100 RU/s)
-  - Use -InstanceCount N for multiple identical resources
+  - Use PriceType: Reservation for reserved instance queries
+  - Use Quantity: N for meters priced per-unit (e.g., per 100 RU/s)
+  - Use InstanceCount: N for multiple identical resources
 -->
 
 ## Key Fields
@@ -200,12 +200,9 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 <!--
 ## Reserved Instance Pricing
 
-```powershell
-.\Get-AzurePricing.ps1 `
-    -ServiceName '{serviceName}' `
-    -MeterName '{meterName}' `
-    -PriceType Reservation
-```
+ServiceName: {serviceName}
+MeterName: {meterName}
+PriceType: Reservation
 
 > **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wildly wrong for
 > Reservation items — it multiplies the total term price by 730 hours.

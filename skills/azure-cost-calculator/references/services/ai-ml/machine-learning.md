@@ -8,63 +8,57 @@ aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
 
 **Primary cost**: Managed online endpoint capacity (`Managed Model Hosting Service`, hourly × 730) + ML service surcharges (`Machine Learning service`). Training clusters and compute instances are a separate cost billed under the `Virtual Machines` service.
 
-> **Trap (inflated totals)**: An unfiltered `-ServiceName 'Azure Machine Learning'` query returns ~28 meters across three product families — legacy Enterprise Inferencing (all $0.00), ML service surcharges, and Managed Model Hosting endpoints. The `totalMonthlyCost` sums all of them (~$49K) which is meaningless. Always filter by `-ProductName`.
+> **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Machine Learning'` query returns ~28 meters across three product families — legacy Enterprise Inferencing (all $0.00), ML service surcharges, and Managed Model Hosting endpoints. The `totalMonthlyCost` sums all of them (~$49K) which is meaningless. Always filter by `ProductName`.
 
 > **Trap (compute billing split)**: Managed endpoints are billed here under `Azure Machine Learning` (Managed Model Hosting Service). Training clusters and compute instances run on **Virtual Machines** and are billed separately under the `Virtual Machines` service. The meters in this service cover managed endpoint capacity and ML service surcharges only.
 
 ## Query Pattern
 
-```powershell
 # Managed online endpoint — e.g., NC4asT4 v3 GPU instance (2 endpoints)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Machine Learning' `
-    -ProductName 'Managed Model Hosting Service' `
-    -SkuName 'NC4asT4 v3' `
-    -InstanceCount 2
-```
 
-```powershell
+ServiceName: Azure Machine Learning
+ProductName: Managed Model Hosting Service
+SkuName: NC4asT4 v3
+InstanceCount: 2
+
 # ML service surcharge — Standard GPU
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Machine Learning' `
-    -ProductName 'Machine Learning service' `
-    -MeterName 'Standard GPU Surcharge'
-```
 
-```powershell
+ServiceName: Azure Machine Learning
+ProductName: Machine Learning service
+MeterName: Standard GPU Surcharge
+
 # Safety evaluation tokens (input) — 100K tokens
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Machine Learning' `
-    -ProductName 'Machine Learning service' `
-    -MeterName 'Evaluation Input Tokens' `
-    -Quantity 100
-```
+
+ServiceName: Azure Machine Learning
+ProductName: Machine Learning service
+MeterName: Evaluation Input Tokens
+Quantity: 100
 
 ## Key Fields
 
-| Parameter     | How to determine                             | Example values                                                          |
-| ------------- | -------------------------------------------- | ----------------------------------------------------------------------- |
-| `serviceName` | Always `Azure Machine Learning`              | `Azure Machine Learning`                                                |
-| `productName` | Component type                               | `Managed Model Hosting Service`, `Machine Learning service`             |
-| `skuName`     | VM size for endpoints; tier for surcharges    | `NC4asT4 v3`, `NCadsA100v4`, `Standard`, `PB`                          |
-| `meterName`   | Matches skuName + "Capacity Unit" or surcharge type | `NC4asT4 v3 Capacity Unit`, `Standard GPU Surcharge`              |
+| Parameter     | How to determine                                    | Example values                                              |
+| ------------- | --------------------------------------------------- | ----------------------------------------------------------- |
+| `serviceName` | Always `Azure Machine Learning`                     | `Azure Machine Learning`                                    |
+| `productName` | Component type                                      | `Managed Model Hosting Service`, `Machine Learning service` |
+| `skuName`     | VM size for endpoints; tier for surcharges          | `NC4asT4 v3`, `NCadsA100v4`, `Standard`, `PB`               |
+| `meterName`   | Matches skuName + "Capacity Unit" or surcharge type | `NC4asT4 v3 Capacity Unit`, `Standard GPU Surcharge`        |
 
 ## Meter Names
 
-| Meter                              | skuName              | unitOfMeasure | Notes                           |
-| ---------------------------------- | -------------------- | ------------- | ------------------------------- |
-| `NC4asT4 v3 Capacity Unit`         | `NC4asT4 v3`         | `1 Hour`      | Managed endpoint — T4 GPU       |
-| `NCadsA100v4 Capacity Unit`        | `NCadsA100v4`        | `1 Hour`      | Managed endpoint — A100 GPU     |
-| `NCadsH100 v5 Capacity Unit`       | `NCadsH100 v5`       | `1 Hour`      | Managed endpoint — H100 GPU     |
-| `NDisrH100v5 Capacity Unit`        | `NDisrH100v5`        | `1 Hour`      | Managed endpoint — H100 multi   |
-| `Standard GPU Surcharge`           | `Standard`           | `1 Hour`      | ML service GPU surcharge        |
-| `PB vCPU Surcharge`                | `PB`                 | `1 Hour`      | ML service vCPU surcharge       |
-| `Evaluation Input Tokens`          | `Evaluation Input Tokens`  | `1K`    | Safety evaluation input tokens  |
-| `Evaluation Ouput Tokens`          | `Evaluation Ouput Tokens`  | `1K`    | Safety evaluation output tokens |
+| Meter                        | skuName                   | unitOfMeasure | Notes                           |
+| ---------------------------- | ------------------------- | ------------- | ------------------------------- |
+| `NC4asT4 v3 Capacity Unit`   | `NC4asT4 v3`              | `1 Hour`      | Managed endpoint — T4 GPU       |
+| `NCadsA100v4 Capacity Unit`  | `NCadsA100v4`             | `1 Hour`      | Managed endpoint — A100 GPU     |
+| `NCadsH100 v5 Capacity Unit` | `NCadsH100 v5`            | `1 Hour`      | Managed endpoint — H100 GPU     |
+| `NDisrH100v5 Capacity Unit`  | `NDisrH100v5`             | `1 Hour`      | Managed endpoint — H100 multi   |
+| `Standard GPU Surcharge`     | `Standard`                | `1 Hour`      | ML service GPU surcharge        |
+| `PB vCPU Surcharge`          | `PB`                      | `1 Hour`      | ML service vCPU surcharge       |
+| `Evaluation Input Tokens`    | `Evaluation Input Tokens` | `1K`          | Safety evaluation input tokens  |
+| `Evaluation Ouput Tokens`    | `Evaluation Ouput Tokens` | `1K`          | Safety evaluation output tokens |
 
 > Note: The spelling `Evaluation Ouput Tokens` matches the Retail Prices API meter name exactly and is intentional; do not change it to `Output` in queries or in this table.
 
-> Additional Managed Model Hosting SKUs (NV-series, ND-series) are available — query with `-ProductName 'Managed Model Hosting Service'` to list all.
+> Additional Managed Model Hosting SKUs (NV-series, ND-series) are available — query with `ProductName 'Managed Model Hosting Service'` to list all.
 
 ## Cost Formula
 

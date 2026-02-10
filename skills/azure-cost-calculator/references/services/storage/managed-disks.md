@@ -22,19 +22,27 @@ aliases: [managed disks, disks, disk storage]
 
 ## Query Pattern
 
-```powershell
 # Fixed-size disks — substitute {Prefix}, {Size}, {productName} from Disk Types table
-.\Get-AzurePricing.ps1 -ServiceName 'Storage' -SkuName '{Prefix}{Size} LRS' -ProductName '{productName}'
-# Add -MeterName '{Prefix}{Size} LRS Disk' to isolate disk cost from mount fee
-# ZRS: -SkuName '{Prefix}{Size} ZRS' (Premium/Standard SSD only, ~50% more). HDD is LRS only.
+
+ServiceName: Storage
+SkuName: {Prefix}{Size} LRS
+ProductName: {productName}
+
+# Add MeterName {Prefix}{Size} LRS Disk to isolate disk cost from mount fee
+
+# ZRS: SkuName {Prefix}{Size} ZRS (Premium/Standard SSD only, ~50% more). HDD is LRS only.
 
 # Provisioned disks (Ultra / Premium SSD v2) — query each meter separately:
-#   -MeterName '{sku} LRS Provisioned Capacity'
-#   -MeterName '{sku} LRS Provisioned IOPS'
-#   -MeterName '{sku} LRS Provisioned Throughput (MBps)'
-# Ultra: -SkuName 'Ultra LRS' -ProductName 'Ultra Disks'
-# PremiumV2: -SkuName 'Premium LRS' -ProductName 'Azure Premium SSD v2' (includes 3K IOPS + 125 MBps free)
-```
+
+# MeterName {sku} LRS Provisioned Capacity
+
+# MeterName {sku} LRS Provisioned IOPS
+
+# MeterName {sku} LRS Provisioned Throughput (MBps)
+
+# Ultra: SkuName Ultra LRS, ProductName Ultra Disks
+
+# PremiumV2: SkuName Premium LRS, ProductName Azure Premium SSD v2 (includes 3K IOPS + 125 MBps free)
 
 > Standard SSD/HDD return an additional `Disk Operations` meter (per 10K IO). Premium SSD does NOT — IOPS included in price.
 

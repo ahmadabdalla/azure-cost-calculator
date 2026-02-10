@@ -13,19 +13,17 @@ aliases: [azure functions, serverless, function app]
 
 ## Query Pattern
 
-```powershell
 # Consumption plan meters
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Functions' `
-    -SkuName 'Standard' `
-    -ProductName 'Functions'
+
+ServiceName: Functions
+SkuName: Standard
+ProductName: Functions
 
 # Premium plan meters
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Functions' `
-    -SkuName 'Premium' `
-    -ProductName 'Premium Functions'
-```
+
+ServiceName: Functions
+SkuName: Premium
+ProductName: Premium Functions
 
 ## Known Consumption Plan Rates
 

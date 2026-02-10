@@ -8,25 +8,23 @@ aliases: [VMs, virtual machine, VM]
 
 **Primary cost**: Compute hours (hourly rate × 730)
 
-> **Trap**: A query with only `-ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
+> **Trap**: A query with only `ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
 
 ## Query Pattern
 
-```powershell
-# Recommended: Filter to Linux standard only using -ProductName
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D2s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series'
+# Recommended: Filter to Linux standard only using ProductName
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D2s_v5
+ProductName: Virtual Machines Dsv5 Series
 
 # Windows standard only
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D2s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series Windows'
-```
 
-> **Tip (productName pattern)**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover exact values.
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D2s_v5
+ProductName: Virtual Machines Dsv5 Series Windows
+
+> **Tip (productName pattern)**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact values.
 
 ## Key Fields
 
@@ -52,18 +50,16 @@ Monthly = retailPrice × 730 hours × instanceCount
 ## Notes
 
 - Node VMs (e.g., AKS, Batch) are priced as Virtual Machines
-- Use `Explore-AzurePricing.ps1 -ServiceName 'Virtual Machines' -SearchTerm '{series}'` to discover exact `productName` values
+- Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
 
 ## Reserved Instance Pricing
 
-```powershell
 # RI for Linux D2s v5 (returns both 1-Year and 3-Year terms)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D2s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series' `
-    -PriceType Reservation
-```
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D2s_v5
+ProductName: Virtual Machines Dsv5 Series
+PriceType: Reservation
 
 > **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. Select desired `reservationTerm` from results.
 

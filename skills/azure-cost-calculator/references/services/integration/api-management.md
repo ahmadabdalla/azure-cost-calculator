@@ -14,15 +14,15 @@ aliases: [APIM, API gateway, API management]
 
 ## Query Pattern
 
-```powershell
 # All tiers — substitute {Tier} from Meter Names table
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'API Management' `
-    -SkuName '{Tier}' `
-    -MeterName '{Tier} Unit'
-# v2 secondary units: -MeterName '{Tier} Secondary Unit'
-# Self-hosted gateway (Std v2/Prem v2): -MeterName '{Tier} Self-hosted Gateway'
-```
+
+ServiceName: API Management
+SkuName: {Tier}
+MeterName: {Tier} Unit
+
+# v2 secondary units: MeterName '{Tier} Secondary Unit'
+
+# Self-hosted gateway (Std v2/Prem v2): MeterName '{Tier} Self-hosted Gateway'
 
 ## Key Fields
 

@@ -8,54 +8,52 @@ aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 
 **Primary cost**: Per protected instance/month (varies by workload type) + storage per-GB/month (varies by redundancy)
 
-> **Trap**: Unfiltered `-ServiceName 'Backup'` returns ~36 meters across all workload types plus storage, inflating `totalMonthlyCost`. Always filter with `-SkuName` for the specific workload (e.g., `Azure VM`) or storage tier (e.g., `Standard`).
+> **Trap**: Unfiltered `ServiceName: Backup` returns ~36 meters across all workload types plus storage, inflating `totalMonthlyCost`. Always filter with `SkuName` for the specific workload (e.g., `Azure VM`) or storage tier (e.g., `Standard`).
 
 ## Query Pattern
 
-```powershell
 # Azure VM backup — 10 protected VMs
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Backup' `
-    -SkuName 'Azure VM' `
-    -MeterName 'Azure VM Protected Instances' `
-    -InstanceCount 10
+
+ServiceName: Backup
+SkuName: Azure VM
+MeterName: Azure VM Protected Instances
+InstanceCount: 10
 
 # Backup storage — 500 GB LRS
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Backup' `
-    -SkuName 'Standard' `
-    -MeterName 'LRS Data Stored' `
-    -Quantity 500
+
+ServiceName: Backup
+SkuName: Standard
+MeterName: LRS Data Stored
+Quantity: 500
 
 # SQL Server in Azure VM backup
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Backup' `
-    -SkuName 'SQL Server in Azure VM' `
-    -MeterName 'SQL Server in Azure VM Protected Instances'
-```
+
+ServiceName: Backup
+SkuName: SQL Server in Azure VM
+MeterName: SQL Server in Azure VM Protected Instances
 
 ## Key Fields
 
-| Parameter     | How to determine              | Example values                                              |
-| ------------- | ----------------------------- | ----------------------------------------------------------- |
-| `serviceName` | Always `Backup`               | `Backup`                                                    |
-| `productName` | `Backup` (PAYG) or `Backup Reserved Capacity` (RC) | `Backup`, `Backup Reserved Capacity`                  |
-| `skuName`     | Workload type or storage tier | `Azure VM`, `SQL Server in Azure VM`, `Standard`, `Archive` |
-| `meterName`   | Instance fee or data stored   | `Azure VM Protected Instances`, `LRS Data Stored`           |
+| Parameter     | How to determine                                   | Example values                                              |
+| ------------- | -------------------------------------------------- | ----------------------------------------------------------- |
+| `serviceName` | Always `Backup`                                    | `Backup`                                                    |
+| `productName` | `Backup` (PAYG) or `Backup Reserved Capacity` (RC) | `Backup`, `Backup Reserved Capacity`                        |
+| `skuName`     | Workload type or storage tier                      | `Azure VM`, `SQL Server in Azure VM`, `Standard`, `Archive` |
+| `meterName`   | Instance fee or data stored                        | `Azure VM Protected Instances`, `LRS Data Stored`           |
 
 ## Meter Names
 
-| Meter                                      | skuName                  | unitOfMeasure | Notes                       |
-| ------------------------------------------ | ------------------------ | ------------- | --------------------------- |
-| `Azure VM Protected Instances`             | `Azure VM`               | `1/Month`     | Per VM                      |
+| Meter                                        | skuName                  | unitOfMeasure | Notes                       |
+| -------------------------------------------- | ------------------------ | ------------- | --------------------------- |
+| `Azure VM Protected Instances`               | `Azure VM`               | `1/Month`     | Per VM                      |
 | `SQL Server in Azure VM Protected Instances` | `SQL Server in Azure VM` | `1/Month`     | Per SQL instance            |
-| `SAP HANA on Azure VM Protected Instances` | `SAP HANA on Azure VM`   | `1/Month`     | Per SAP HANA instance       |
-| `Azure Files Protected Instances`          | `Azure Files`            | `1/Month`     | Snapshot-based (no vault)   |
-| `Azure Files Vaulted Protected Instances`  | `Azure Files Vaulted`    | `1/Month`     | Vaulted backup              |
-| `On Premises Server Protected Instances`   | `On Premises Server`     | `1/Month`     | MARS agent                  |
-| `LRS Data Stored`                          | `Standard`               | `1 GB/Month`  | Standard vault storage      |
-| `GRS Data Stored`                          | `Standard`               | `1 GB/Month`  | Geo-redundant vault storage |
-| `Archive LRS Data Stored`                  | `Archive`                | `1 GB/Month`  | Archive tier LRS            |
+| `SAP HANA on Azure VM Protected Instances`   | `SAP HANA on Azure VM`   | `1/Month`     | Per SAP HANA instance       |
+| `Azure Files Protected Instances`            | `Azure Files`            | `1/Month`     | Snapshot-based (no vault)   |
+| `Azure Files Vaulted Protected Instances`    | `Azure Files Vaulted`    | `1/Month`     | Vaulted backup              |
+| `On Premises Server Protected Instances`     | `On Premises Server`     | `1/Month`     | MARS agent                  |
+| `LRS Data Stored`                            | `Standard`               | `1 GB/Month`  | Standard vault storage      |
+| `GRS Data Stored`                            | `Standard`               | `1 GB/Month`  | Geo-redundant vault storage |
+| `Archive LRS Data Stored`                    | `Archive`                | `1 GB/Month`  | Archive tier LRS            |
 
 Other workload types: `PostgreSQL`, `Azure Kubernetes`, `Azure Blob`, `ADLS Gen2 Vaulted`, `SAP ASE on Azure VM`. ZRS and RA-GRS storage meters also available.
 
@@ -81,12 +79,9 @@ Example: 10 VMs with 500 GB LRS storage
 
 ## Reserved Instance Pricing
 
-```powershell
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Backup' `
-    -ProductName 'Backup Reserved Capacity' `
-    -MeterName 'LRS Data Stored' `
-    -PriceType Reservation
-```
+ServiceName: Backup
+ProductName: Backup Reserved Capacity
+MeterName: LRS Data Stored
+PriceType: Reservation
 
 > **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it reports the full term price. Manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI SKUs use volume tiers (e.g., `Standard - 100 TB LRS`, `Standard - 1 PB GRS`).

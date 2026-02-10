@@ -22,19 +22,17 @@ aliases:
 
 ## Query Pattern
 
-```powershell
 # Log Analytics — pay-as-you-go ingestion (per GB)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Analyzed'
+
+ServiceName: Log Analytics
+SkuName: Analytics Logs
+MeterName: Analytics Logs Data Analyzed
 
 # Log Analytics — data retention (beyond 31 days free)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Log Analytics' `
-    -SkuName 'Analytics Logs' `
-    -MeterName 'Analytics Logs Data Retention'
-```
+
+ServiceName: Log Analytics
+SkuName: Analytics Logs
+MeterName: Analytics Logs Data Retention
 
 ## Key Fields
 
@@ -82,13 +80,11 @@ Monthly retention cost = retentionPrice × 295
 
 For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) save 15–30% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 200 ≈ 20%, 500 ≈ 25%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
 
-```powershell
 # Example: 100 GB/day commitment tier
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Monitor' `
-    -SkuName '100 GB Commitment Tier' `
-    -MeterName '100 GB Commitment Tier Capacity Reservation'
-```
+
+ServiceName: Azure Monitor
+SkuName: 100 GB Commitment Tier
+MeterName: 100 GB Commitment Tier Capacity Reservation
 
 > **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
 

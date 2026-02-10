@@ -10,7 +10,7 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 ## Prerequisites
 
-- **PowerShell 7+** — required to run the validation script after the AI generates the file.
+- **PowerShell 7+** or **Bash with curl + jq** — required to run query validation after the AI generates the file. The validation script requires PowerShell.
 
 > **Note:** All skill files (scripts, references, templates) live under `skills/azure-cost-calculator/` in this repo. Paths in this guide are given from the repo root.
 
@@ -39,6 +39,7 @@ Follow these steps exactly:
 1. Read `skills/azure-cost-calculator/references/services/TEMPLATE.md` for the full format rules and section structure.
 2. Read `skills/azure-cost-calculator/references/shared.md` for the category index and constants.
 3. Read one existing service reference from the same `{category}` folder as a style exemplar. Use it to calibrate section length, trap density, and cost formula format.
+4. Note that query patterns use **declarative `Key: Value`** format (no code fences, no script names). See TEMPLATE.md for examples.
 
 ### Step 4 — Discover exact API values
 
@@ -68,6 +69,16 @@ skills/azure-cost-calculator/scripts/Get-AzurePricing.ps1 `
     -ProductName '{productName}' `
     -SkuName '{skuName}' `
     -MeterName '{meterName}'
+```
+
+Or with Bash:
+
+```bash
+./skills/azure-cost-calculator/scripts/get-azure-pricing.sh \
+    --service-name '{serviceName}' \
+    --product-name '{productName}' \
+    --sku-name '{skuName}' \
+    --meter-name '{meterName}'
 ```
 
 Check that:
@@ -107,6 +118,7 @@ The file MUST follow these rules:
 - **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map — do not add extras beyond those listed).
 - **Primary cost** line: a one-sentence summary of the main billing dimensions.
 - **First query pattern must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, primary cost line, and trap concise to ensure this.
+- **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
 - **Total file length**: under 100 lines of markdown content.
 - **Never hardcode prices** — always reference `retailPrice` from the API query results.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
@@ -123,7 +135,7 @@ The file MUST follow these rules:
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
 
 **Pre-submission checklist** (all must be true):
-1. First `powershell` query pattern appears within lines 1–45
+1. First declarative query pattern appears within lines 1–45
 2. At least one query uses `-InstanceCount` or `-Quantity`
 3. Capacity planning note included if the service has scalable units
 4. Tier limitations documented if multiple tiers exist
@@ -157,7 +169,7 @@ If the AI-generated file fails validation or looks wrong, check these common iss
 
 **Missing filters causing inflated totals** — If `totalMonthlyCost` looks unreasonably high, the query is probably returning extra meters. Add `-MeterName` or `-ProductName` filters to narrow results.
 
-**Query pattern below line 45** — The YAML, title, primary cost, and trap must be concise enough that the first ```powershell block starts within the first 45 lines. Shorten the trap text or remove unnecessary blank lines.
+**Query pattern below line 45** — The YAML, title, primary cost, and trap must be concise enough that the first declarative query block starts within the first 45 lines. Shorten the trap text or remove unnecessary blank lines.
 
 **Hardcoded prices** — The file should use `retailPrice` in formulas, never literal dollar amounts (except in a Known Rates table for sub-cent pricing where the script shows `$0.00`).
 

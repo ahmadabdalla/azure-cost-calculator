@@ -12,25 +12,24 @@ aliases: [AKS, kubernetes, k8s]
 
 ## Query Pattern
 
-```powershell
 # AKS management fee — Standard tier (filter to Uptime SLA only)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Kubernetes Service' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Uptime SLA'
+
+ServiceName: Azure Kubernetes Service
+SkuName: Standard
+MeterName: Standard Uptime SLA
 
 # AKS management fee — Standard LTS (only if user needs Long Term Support)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Kubernetes Service' `
-    -SkuName 'Standard' `
-    -MeterName 'Standard Long Term Support'
+
+ServiceName: Azure Kubernetes Service
+SkuName: Standard
+MeterName: Standard Long Term Support
 
 # Node VMs - query as Virtual Machines
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D4s_v5' `
-    -Quantity 1 -InstanceCount 3
-```
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D4s_v5
+Quantity: 1
+InstanceCount: 3
 
 ## Meter Names
 

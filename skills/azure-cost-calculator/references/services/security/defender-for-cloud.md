@@ -4,7 +4,7 @@ category: security
 aliases: [defender, security center, MDC]
 ---
 
-````markdown
+```markdown
 # Microsoft Defender for Cloud
 
 **Multiple sub-products** — query each separately by its own productName/skuName/meterName.
@@ -18,13 +18,10 @@ aliases: [defender, security center, MDC]
 
 All sub-products use the same pattern — substitute values from the Meter Names table:
 
-```powershell
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Microsoft Defender for Cloud' `
-    -ProductName '<productName from table>' `
-    -SkuName '<skuName from table>' `
-    -MeterName '<meterName from table>'
-```
+ServiceName: Microsoft Defender for Cloud
+ProductName: <productName from table>
+SkuName: <skuName from table>
+MeterName: <meterName from table>
 
 ## Meter Names
 
@@ -49,7 +46,7 @@ All sub-products use the same pattern — substitute values from the Meter Names
 
 - Containers has free trial tiers (Free vCore, Free Images at £0.00) — always use `Standard` SKU meters for estimation.
 - Containers vCore pricing = total vCores across all protected AKS nodes (e.g., 6× E4s_v5 @ 4 vCPU = 24 vCores).
-- App Service, DNS, and Resource Manager plans also exist — use `Explore-AzurePricing.ps1 -SearchTerm 'Defender'` to discover.
+- App Service, DNS, and Resource Manager plans also exist — use the explore script with SearchTerm Defender to discover.
 
 ## Defender CSPM (Cloud Security Posture Management)
 
@@ -66,4 +63,4 @@ All sub-products use the same pattern — substitute values from the Meter Names
 **Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `$5.11 × 8 = $40.88/mo`.
 
 **Formula**: `$5.11 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.
-````
+```

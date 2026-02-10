@@ -14,45 +14,43 @@ aliases: [HPC Batch, Batch Compute]
 
 ## Query Pattern
 
-```powershell
 # Dedicated pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D4s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series' `
-    -InstanceCount 4
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D4s_v5
+ProductName: Virtual Machines Dsv5 Series
+InstanceCount: 4
 
 # Spot pool nodes (significant discount, may be evicted)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D4s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series' `
-    -SkuName 'D4s v5 Spot' `
-    -InstanceCount 4
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D4s_v5
+ProductName: Virtual Machines Dsv5 Series
+SkuName: D4s v5 Spot
+InstanceCount: 4
 
 # Low Priority pool nodes (classic discount tier, may be evicted)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Virtual Machines' `
-    -ArmSkuName 'Standard_D4s_v5' `
-    -ProductName 'Virtual Machines Dsv5 Series' `
-    -SkuName 'D4s v5 Low Priority' `
-    -InstanceCount 4
-```
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D4s_v5
+ProductName: Virtual Machines Dsv5 Series
+SkuName: D4s v5 Low Priority
+InstanceCount: 4
 
 ## Key Fields
 
-| Parameter     | How to determine                                | Example values                                    |
-| ------------- | ----------------------------------------------- | ------------------------------------------------- |
-| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)   | `Virtual Machines`                                |
-| `armSkuName`  | VM size chosen for the Batch pool               | `Standard_D4s_v5`, `Standard_HB120rs_v3`          |
-| `productName` | Series + OS (Linux omits suffix, Windows adds)  | `Virtual Machines Dsv5 Series`, `… Series Windows` |
-| `skuName`     | Size + pricing tier suffix                      | `D4s v5`, `D4s v5 Spot`, `D4s v5 Low Priority`    |
+| Parameter     | How to determine                               | Example values                                     |
+| ------------- | ---------------------------------------------- | -------------------------------------------------- |
+| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)  | `Virtual Machines`                                 |
+| `armSkuName`  | VM size chosen for the Batch pool              | `Standard_D4s_v5`, `Standard_HB120rs_v3`           |
+| `productName` | Series + OS (Linux omits suffix, Windows adds) | `Virtual Machines Dsv5 Series`, `… Series Windows` |
+| `skuName`     | Size + pricing tier suffix                     | `D4s v5`, `D4s v5 Spot`, `D4s v5 Low Priority`     |
 
 ## Meter Names
 
-| Meter         | unitOfMeasure | Notes                                          |
-| ------------- | ------------- | ---------------------------------------------- |
-| _(VM size, e.g. `D4s v5`)_ | `1 Hour` | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority — use `skuName` to select pricing tier |
+| Meter                      | unitOfMeasure | Notes                                                                                                                                         |
+| -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority — use `skuName` to select pricing tier |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
 

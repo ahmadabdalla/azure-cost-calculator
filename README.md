@@ -26,7 +26,7 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 
 ## How It Works
 
-The skill uses service reference files as an index. Each file contains exact API filter values, cost formulas, and traps. The agent locates the right file, runs `Get-AzurePricing.ps1` against the live API, and presents a structured estimate.
+The skill uses service reference files as an index. Each file contains exact API filter values as declarative `Key: Value` parameters, cost formulas, and traps. The agent locates the right file, translates the parameters to the detected runtime (Bash or PowerShell), runs the pricing script against the live API, and presents a structured estimate.
 
 - **Deterministic** — same query → same API call → same price. All values from the live API, nothing hardcoded.
 - **Token-efficient** — only SKILL.md and shared.md load on every query. Service files load on demand. Batch mode (3+ services) reads only the first 45 lines per file.
@@ -37,7 +37,7 @@ flowchart LR
     A[User Query] --> B[AI Agent]
     B --> C[SKILL.md]
     C --> D[Service Reference File]
-    D --> E[Get-AzurePricing.ps1]
+    D --> E[get-azure-pricing.sh\nor Get-AzurePricing.ps1]
     E --> F[Azure Retail Prices API]
     F --> E
     E --> B
@@ -73,7 +73,7 @@ If you query a service and the skill falls back to discovery mode, that's a sign
 
 ## Prerequisites
 
-- PowerShell 5.1+ (pre-installed on Windows; [install on macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell))
+- **Bash** with `curl` and `jq` (macOS/Linux — preferred), **or** PowerShell 5.1+ ([install on macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell))
 - Internet access to `https://prices.azure.com`
 - No Azure subscription or authentication required
 

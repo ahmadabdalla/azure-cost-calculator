@@ -10,22 +10,18 @@ aliases: [SQL DB, Azure SQL, sql]
 
 ## Query Pattern
 
-```powershell
 # vCore compute (e.g., 2 vCore GP; swap productName for Business Critical)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'SQL Database' `
-    -ProductName 'SQL Database Single/Elastic Pool General Purpose - Compute Gen5' `
-    -SkuName '2 vCore' `
-    -MeterName 'vCore'
-```
 
-```powershell
+ServiceName: SQL Database
+ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5
+SkuName: 2 vCore
+MeterName: vCore
+
 # Storage — for BC: use '...Business Critical - Storage' + 'Business Critical Data Stored'
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'SQL Database' `
-    -ProductName 'SQL Database Single/Elastic Pool General Purpose - Storage' `
-    -MeterName 'General Purpose Data Stored'
-```
+
+ServiceName: SQL Database
+ProductName: SQL Database Single/Elastic Pool General Purpose - Storage
+MeterName: General Purpose Data Stored
 
 ## Key Fields
 
@@ -57,15 +53,14 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 
 ## Reserved Instance Pricing
 
-```powershell
 # RI compute only (swap productName for BC). Returns 1-Year + 3-Year terms.
-# Omit -SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'SQL Database' `
-    -ProductName 'SQL Database Single/Elastic Pool General Purpose - Compute Gen5' `
-    -MeterName 'vCore' `
-    -PriceType Reservation
-```
+
+# Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
+
+ServiceName: SQL Database
+ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5
+MeterName: vCore
+PriceType: Reservation
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
 > **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost. SQL-specific: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).

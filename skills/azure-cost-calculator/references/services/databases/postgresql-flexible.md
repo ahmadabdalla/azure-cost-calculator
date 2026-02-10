@@ -4,7 +4,6 @@ category: databases
 aliases: [PostgreSQL, postgres, flexible server]
 ---
 
-
 # Azure Database for PostgreSQL Flexible Server
 
 **Multiple meters**: vCore compute (hourly) + storage (per-GB/month)
@@ -13,21 +12,19 @@ aliases: [PostgreSQL, postgres, flexible server]
 
 ## Query Pattern
 
-```powershell
 # Compute cost (General Purpose, Ddsv5 series, 4 vCore)
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Database for PostgreSQL' `
-    -ProductName 'Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv5 Series Compute' `
-    -SkuName '4 vCore' `
-    -MeterName 'vCore'
+
+ServiceName: Azure Database for PostgreSQL
+ProductName: Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv5 Series Compute
+SkuName: 4 vCore
+MeterName: vCore
 
 # Storage cost
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Database for PostgreSQL' `
-    -ProductName 'Az DB for PostgreSQL Flexible Server Storage' `
-    -SkuName 'Storage' `
-    -MeterName 'Storage Data Stored'
-```
+
+ServiceName: Azure Database for PostgreSQL
+ProductName: Az DB for PostgreSQL Flexible Server Storage
+SkuName: Storage
+MeterName: Storage Data Stored
 
 ## Key Fields
 
@@ -65,7 +62,10 @@ Query storage rate from the API — it varies by region and currency.
 ## Notes
 
 - `skuName` determines the vCore count — no quantity multiplier needed for compute
-- Use `Explore-AzurePricing.ps1 -SearchTerm 'PostgreSQL Flexible'` to discover available series
+- Use the explore script with SearchTerm PostgreSQL Flexible to discover available series
 - High Availability doubles the compute cost (deploys a standby replica)
 - Backup storage: first backup equal to DB size is free; excess is charged per-GB/month
-````
+
+```
+
+```

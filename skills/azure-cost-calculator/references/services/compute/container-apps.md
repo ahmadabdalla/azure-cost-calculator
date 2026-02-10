@@ -8,17 +8,15 @@ aliases: [container apps, ACA]
 
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `-SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
 
 ## Query Pattern
 
-```powershell
 # $sku: 'Standard' (Consumption, per-second — UnitPrice shows $0.00) | 'Dedicated' (per-hour, prices correct) | 'Hybrid'
-.\Get-AzurePricing.ps1 `
-    -ServiceName 'Azure Container Apps' `
-    -ProductName 'Azure Container Apps' `
-    -SkuName $sku
-```
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: $sku
 
 ## Known Consumption Plan Rates
 
