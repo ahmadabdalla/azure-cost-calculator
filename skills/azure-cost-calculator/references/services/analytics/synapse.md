@@ -20,13 +20,6 @@ ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Dedicated SQL Pool
 SkuName: DW100c
 
-### Dedicated SQL Pool — scale to DW1000c (use InstanceCount for multiple pools)
-
-ServiceName: Azure Synapse Analytics
-ProductName: Azure Synapse Analytics Dedicated SQL Pool
-SkuName: DW1000c
-InstanceCount: 2
-
 ### Serverless SQL Pool — per TB of data processed
 
 ServiceName: Azure Synapse Analytics
@@ -37,21 +30,34 @@ ProductName: Azure Synapse Analytics Serverless SQL Pool
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Serverless Apache Spark Pool - Memory Optimized
 
-### Pipelines — orchestration activity runs (per 1K)
+### Data Flow — Standard vCores (per hour)
+
+ServiceName: Azure Synapse Analytics
+ProductName: Azure Synapse Analytics Data Flow - Standard
+
+### Pipelines — orchestration activity runs (per 1K; Quantity = billable 1K-unit count)
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Pipelines
 SkuName: Azure Hosted IR
 MeterName: Azure Hosted IR Orchestration Activity Run
-Quantity: 10000
+Quantity: 10
+
+### Storage — workspace managed storage (use Quantity for GB)
+
+ServiceName: Azure Synapse Analytics
+ProductName: Azure Synapse Analytics Storage
+SkuName: Standard LRS
+Quantity: 100
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                                                                  |
-| ------------- | --------------------------------------- | ------------------------------------------------------------------------------- |
-| `serviceName` | Always `Azure Synapse Analytics`        | `Azure Synapse Analytics`                                                       |
-| `productName` | Component being priced                  | `Azure Synapse Analytics Dedicated SQL Pool`, `Azure Synapse Analytics Serverless SQL Pool` |
-| `skuName`     | Pool size (Dedicated) or tier (Pipelines) | `DW100c`, `DW1000c`, `Standard`, `Azure Hosted IR`, `vCore`                   |
+| Parameter     | How to determine                          | Example values                                                                             |
+| ------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `serviceName` | Always `Azure Synapse Analytics`          | `Azure Synapse Analytics`                                                                  |
+| `productName` | Component being priced                    | `Azure Synapse Analytics Dedicated SQL Pool`, `Azure Synapse Analytics Serverless SQL Pool` |
+| `skuName`     | Pool size (Dedicated) or tier (Pipelines) | `DW100c`, `DW1000c`, `Standard`, `Azure Hosted IR`, `vCore`                                |
+| `meterName`   | Specific billing meter for the component  | `100 DWUs`, `Standard Data Processed`, `vCore`, `Azure Hosted IR Orchestration Activity Run` |
 
 ## Meter Names
 
@@ -82,8 +88,7 @@ Total Monthly  = Dedicated SQL + Serverless SQL + Spark Pool + Pipelines + Stora
 - **Serverless SQL Pool**: Pay-per-query at per-TB scanned; no provisioning needed
 - **Spark Pools**: Auto-pause available; billed per vCore-hour while active; Memory Optimized and GPU variants
 - **Pipelines**: Mirror Data Factory v2 pricing structure with Azure Hosted IR, Managed VNET IR, and Self Hosted IR options
-- SSIS Integration Runtime VMs are billed under this service — filter by `ProductName` containing `SSIS` if needed
-- Storage includes LRS, ZRS, RA-GRS, and RA-GZRS redundancy options
+- SSIS Integration Runtime VMs are billed under this service — filter by `ProductName` containing `SSIS`. Storage supports LRS, ZRS, RA-GRS, and RA-GZRS
 
 ## Reserved Instance Pricing
 
