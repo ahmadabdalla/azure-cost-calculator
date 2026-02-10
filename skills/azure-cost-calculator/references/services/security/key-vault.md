@@ -17,16 +17,18 @@ aliases: [keyvault, KV, vault]
 ServiceName: Key Vault
 SkuName: Standard
 ProductName: Key Vault
+MeterName: Operations
 
-### Add MeterName 'Operations' or 'Advanced Key Operations' to isolate specific meters
+> For cryptographic operations, use `MeterName: Advanced Key Operations` instead.
 
 ### Premium tier — HSM-backed keys
 
 ServiceName: Key Vault
 SkuName: Premium
 ProductName: Key Vault
+MeterName: Operations
 
-### Add MeterName for specific Premium meters (see table below)
+> For HSM-protected keys, see the Meter Names table for Premium-specific meters.
 
 ## Meter Names
 

@@ -12,11 +12,9 @@ aliases: [DDoS, DDoS protection]
 
 ## Query Pattern
 
-### Not applicable — DDoS Protection has no data in the Retail Prices API.
+### Not applicable — use manual fallback table below
 
-### Use the manual fallback table below.
-
-**Not applicable** — no script can query this service. Return the manual estimates below and note the limitation to the user.
+DDoS Protection has no data in the Retail Prices API. Return the manual estimates below and note the limitation to the user.
 
 ## Pricing (manual fallback)
 

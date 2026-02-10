@@ -17,11 +17,13 @@ ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5
 SkuName: 2 vCore
 MeterName: vCore
 
-### Storage — for BC: use '...Business Critical - Storage' + 'Business Critical Data Stored'
+### Storage
 
 ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - Storage
 MeterName: General Purpose Data Stored
+
+> For Business Critical: use `ProductName: SQL Database Single/Elastic Pool Business Critical - Storage` and `MeterName: Business Critical Data Stored`.
 
 ## Key Fields
 

@@ -14,23 +14,14 @@ aliases: [Device Messaging]
 
 ## Query Pattern
 
-### Standard S1 tier — per unit/month
+All patterns below use `ServiceName: IoT Hub` and `ProductName: IoT Hub` unless noted otherwise.
 
-ServiceName: IoT Hub
-ProductName: IoT Hub
+### Standard S1 tier — per unit/month (use InstanceCount: N for multi-unit)
+
 MeterName: S1 Unit
-
-### Standard S1 — 5 units (use InstanceCount for multi-unit)
-
-ServiceName: IoT Hub
-ProductName: IoT Hub
-MeterName: S1 Unit
-InstanceCount: 5
 
 ### Basic B1 tier
 
-ServiceName: IoT Hub
-ProductName: IoT Hub
 MeterName: B1 Unit
 
 ### IoT Hub Device Provisioning Service — 100K operations (Quantity in 1K units)

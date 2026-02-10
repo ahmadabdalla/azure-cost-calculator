@@ -14,37 +14,23 @@ aliases: [HPC Batch, Batch Compute]
 
 ## Query Pattern
 
-### Dedicated pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
+### Pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
 ProductName: Virtual Machines Dsv5 Series
 InstanceCount: 4
 
-### Spot pool nodes (significant discount, may be evicted)
-
-ServiceName: Virtual Machines
-ArmSkuName: Standard_D4s_v5
-ProductName: Virtual Machines Dsv5 Series
-SkuName: D4s v5 Spot
-InstanceCount: 4
-
-### Low Priority pool nodes (classic discount tier, may be evicted)
-
-ServiceName: Virtual Machines
-ArmSkuName: Standard_D4s_v5
-ProductName: Virtual Machines Dsv5 Series
-SkuName: D4s v5 Low Priority
-InstanceCount: 4
+> For **Spot** nodes (up to 90% discount, may be evicted), add `SkuName: {ArmSkuName} Spot` (e.g., `Standard_D4s_v5 Spot`). For **Low Priority** nodes (up to 80% discount), add `SkuName: {ArmSkuName} Low Priority`.
 
 ## Key Fields
 
-| Parameter     | How to determine                               | Example values                                     |
-| ------------- | ---------------------------------------------- | -------------------------------------------------- |
-| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)  | `Virtual Machines`                                 |
-| `armSkuName`  | VM size chosen for the Batch pool              | `Standard_D4s_v5`, `Standard_HB120rs_v3`           |
-| `productName` | Series + OS (Linux omits suffix, Windows adds) | `Virtual Machines Dsv5 Series`, `… Series Windows` |
-| `skuName`     | Size + pricing tier suffix                     | `D4s v5`, `D4s v5 Spot`, `D4s v5 Low Priority`     |
+| Parameter     | How to determine                               | Example values                                                   |
+| ------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)  | `Virtual Machines`                                               |
+| `armSkuName`  | VM size chosen for the Batch pool              | `Standard_D4s_v5`, `Standard_HB120rs_v3`                         |
+| `productName` | Series + OS (Linux omits suffix, Windows adds) | `Virtual Machines Dsv5 Series`, `… Series Windows`               |
+| `skuName`     | Size + pricing tier suffix                     | `D4s v5`, `Standard_D4s_v5 Spot`, `Standard_D4s_v5 Low Priority` |
 
 ## Meter Names
 
