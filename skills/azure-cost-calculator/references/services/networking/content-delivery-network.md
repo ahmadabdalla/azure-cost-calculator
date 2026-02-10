@@ -1,7 +1,7 @@
 ---
 serviceName: Content Delivery Network
 category: networking
-aliases: [CDN, Azure CDN, Content Delivery]
+aliases: [CDN Classic, Azure CDN Classic, Content Delivery]
 ---
 
 # Azure Content Delivery Network
