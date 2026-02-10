@@ -2,8 +2,7 @@
 name: azure-cost-calculator
 description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources".
 license: MIT
-compatibility: Requires PowerShell 5.1+ (pwsh) and internet access to prices.azure.com. No Azure subscription needed.
-allowed-tools: Bash(pwsh:*)
+compatibility: Requires curl + jq (macOS/Linux) or PowerShell 5.1+ (Windows), and internet access to prices.azure.com. No Azure subscription needed.
 metadata:
   author: ahmadabdalla
   version: "1.0.0"
@@ -14,6 +13,19 @@ metadata:
 
 Deterministic Azure cost estimation using the public Retail Prices API. Never guess prices — always query the live API via the scripts.
 
+## Runtime Detection
+
+Choose the script runtime based on what is available:
+
+| Runtime              | Condition                 | Pricing script                 | Explore script                     |
+| -------------------- | ------------------------- | ------------------------------ | ---------------------------------- |
+| **Bash** (preferred) | `curl` and `jq` available | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
+| **PowerShell**       | `pwsh` available          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+
+Both produce identical JSON output. Use Bash on macOS/Linux; use PowerShell on Windows or when `pwsh` is available.
+
+Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`). Run `./scripts/get-azure-pricing.sh --help` for the full flag list.
+
 ## Workflow
 
 1. **Identify** the resource type(s) the user wants to estimate
@@ -21,9 +33,9 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
    a. **File search** — search for files matching `references/services/**/*<keyword>*.md` (e.g., "Cosmos DB" → `services/**/cosmos*.md`)
    b. **Category browse** — if search returns 0 or ambiguous results, read the category index in [references/shared.md](references/shared.md) and list the matching category directory
    c. **Broad search** — list or search `references/services/**/*.md` to see all available files
-   d. **Discovery** — if no file exists, use `scripts/Explore-AzurePricing.ps1` to find the service in the API
+   d. **Discovery** — if no file exists, use the explore script to find the service in the API
 3. **Read** only the matching service file(s) for query parameters, cost formula, and the exact `serviceName`
-4. **Run** `scripts/Get-AzurePricing.ps1` with the parameters from the service reference
+4. **Run** the pricing script with the parameters from the service reference (use the appropriate runtime)
 5. **Present** the estimate with breakdown: unit price, multiplier, monthly cost, assumptions
 
 ## Reference Index (load on demand)
@@ -46,7 +58,7 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 5. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user before proceeding. Do not silently pick a default. The only exceptions are constants defined in service reference files (e.g., mandatory default CU counts) — those are pre-approved defaults.
 6. **Default output format is Json** — do not use Summary (invisible to agents)
 7. **Lazy-load service references** — only read files from `references/services/` that are directly required by the user's query. Never bulk-read all service files. Use the file-search workflow (Step 2) to locate the specific file(s). If the user asks about App Service and SQL Database, search for each and read only those files — not the other 20+.
-8. **Use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`.
+8. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`. For Bash scripts, invoke directly: `./scripts/get-azure-pricing.sh ...`.
 
 ## Universal Traps
 
@@ -67,5 +79,5 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - The user requests a non-default tier, SKU, or configuration
    - The service has complex multi-meter billing that needs the full meter table
    - The query returns 0 or unexpected results
-3. **Parallel queries** — run `Get-AzurePricing.ps1` calls in parallel where possible. Independent services have no query dependencies.
+3. **Parallel queries** — run pricing script calls in parallel where possible. Independent services have no query dependencies.
 4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.
