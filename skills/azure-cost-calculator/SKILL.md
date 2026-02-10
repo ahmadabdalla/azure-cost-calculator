@@ -17,10 +17,10 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 
 Choose the script runtime based on what is available:
 
-| Runtime | Condition | Pricing script | Explore script |
-|---------|-----------|----------------|----------------|
+| Runtime              | Condition                 | Pricing script                 | Explore script                     |
+| -------------------- | ------------------------- | ------------------------------ | ---------------------------------- |
 | **Bash** (preferred) | `curl` and `jq` available | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
-| **PowerShell** | `pwsh` available | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| **PowerShell**       | `pwsh` available          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
 
 Both produce identical JSON output. Use Bash on macOS/Linux; use PowerShell on Windows or when `pwsh` is available.
 
