@@ -675,9 +675,8 @@ if ($CheckAliasUniqueness) {
 Write-Output ''
 if ($hasFailures) {
     Write-Output 'RESULT: FAIL - One or more checks failed'
-    exit 1
+    throw 'Validation failed. One or more checks did not pass.'
 }
 else {
     Write-Output 'RESULT: PASS - All checks passed'
-    exit 0
 }
