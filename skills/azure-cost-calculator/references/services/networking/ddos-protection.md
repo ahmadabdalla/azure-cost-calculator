@@ -6,7 +6,9 @@ aliases: [DDoS, DDoS protection]
 
 # DDoS Protection
 
-> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback table below.
+**Primary cost**: Fixed monthly fee per protection plan (Network Protection ~$2,944/month or IP Protection ~$199/month per public IP)
+
+> **Warning**: **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback table below.
 
 **This service requires manual estimation only.**
 

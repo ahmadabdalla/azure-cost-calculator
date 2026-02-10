@@ -6,6 +6,8 @@ aliases: [LB, load balancer]
 
 # Virtual Network / Load Balancer
 
+**Primary cost**: Per-hour base fee + per-GB data processed + overage rules (Standard SKU); VNet peering per-GB transfer
+
 ## Virtual Network
 
 VNets themselves are free. Costs come from:
@@ -16,7 +18,7 @@ VNets themselves are free. Costs come from:
 
 ## Load Balancer
 
-> ⚠ **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback below.
+> **Warning**: **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback below.
 
 ## Query Pattern
 

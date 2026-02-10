@@ -456,6 +456,10 @@ function Test-ServiceReference {
             $effective = $effective -replace '<!--.*$', ''
         }
         if ($effective -match '^\s*ServiceName\s*:\s*(.+)$') {
+            # Skip ServiceName lines annotated with cross-service comment
+            if ($lines[$i] -match '<!--\s*cross-service\s*-->') {
+                continue
+            }
             $serviceNameLines.Add(@{ Value = $Matches[1].Trim(); LineNum = $i + 1 })
         }
     }

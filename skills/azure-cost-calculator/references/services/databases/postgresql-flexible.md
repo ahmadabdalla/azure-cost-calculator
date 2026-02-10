@@ -6,6 +6,8 @@ aliases: [PostgreSQL, postgres, flexible server]
 
 # Azure Database for PostgreSQL Flexible Server
 
+**Primary cost**: vCore hourly rate x 730 + storage per-GB/month
+
 **Multiple meters**: vCore compute (hourly) + storage (per-GB/month)
 
 > **Trap**: `productName` has inconsistent hyphen usage across series. Some use `General Purpose - Ddsv5` (with hyphen) while others use `General Purpose Dadsv5` (no hyphen). Always use the exact string from discovery — do not construct productName by pattern.

@@ -6,9 +6,9 @@ aliases: [private link, private endpoint, PL]
 
 # Private Link / Private Endpoints
 
-**Multiple meters**: Endpoint hours (per-endpoint) + data processed (ingress/egress per-GB)
+**Primary cost**: Per-endpoint hourly fee + per-GB data processed (ingress/egress)
 
-> ⚠ **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
+> **Warning**: **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
 
 ## Query Pattern
 

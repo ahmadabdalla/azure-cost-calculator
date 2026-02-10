@@ -6,6 +6,8 @@ aliases: [defender, security center, MDC]
 
 # Microsoft Defender for Cloud
 
+**Primary cost**: Per-resource hourly or monthly rate x resource count (per sub-product)
+
 **Multiple sub-products** — query each separately by its own productName/skuName/meterName.
 
 > **Trap (separate queries)**: Each sub-product needs its **own query** — unfiltered `serviceName` query mixes all products, `summary.totalMonthlyCost` is meaningless.

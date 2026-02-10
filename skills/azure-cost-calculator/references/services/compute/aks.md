@@ -26,7 +26,7 @@ MeterName: Standard Long Term Support
 
 ### Node VMs - query as Virtual Machines
 
-ServiceName: Virtual Machines
+ServiceName: Virtual Machines <!-- cross-service -->
 ArmSkuName: Standard_D4s_v5
 InstanceCount: 3
 

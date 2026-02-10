@@ -6,10 +6,12 @@ aliases: [azure functions, serverless, function app]
 
 # Azure Functions
 
+**Primary cost**: Execution count + execution time (GB-seconds)
+
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> ⚠ **Sub-cent pricing** — see shared.md § Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
+> **Warning**: **Sub-cent pricing** — see shared.md § Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
 
 ## Query Pattern
 
