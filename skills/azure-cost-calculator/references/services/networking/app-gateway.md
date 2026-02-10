@@ -13,49 +13,27 @@ aliases: [app gateway, application gateway, appgw]
 
 ## Query Pattern
 
-### WAF v2 — fixed cost (gateway hours)
+Substitute `{Variant}` with `WAF v2`, `Standard v2`, or `Basic v2` (see Product Names table). WAF v2 and Standard v2 use `Standard` meter prefix; Basic v2 uses `Basic` meter prefix. Run **two queries per variant**:
+
+### {Variant} — fixed cost
 
 ServiceName: Application Gateway
-ProductName: Application Gateway WAF v2
-MeterName: Standard Fixed Cost
+ProductName: Application Gateway {Variant}
+MeterName: {MeterPrefix} Fixed Cost
 
-### WAF v2 — capacity units
-
-ServiceName: Application Gateway
-ProductName: Application Gateway WAF v2
-MeterName: Standard Capacity Units
-
-### Standard v2 — fixed cost
+### {Variant} — capacity units
 
 ServiceName: Application Gateway
-ProductName: Application Gateway Standard v2
-MeterName: Standard Fixed Cost
-
-### Standard v2 — capacity units
-
-ServiceName: Application Gateway
-ProductName: Application Gateway Standard v2
-MeterName: Standard Capacity Units
-
-### Basic v2 — fixed cost
-
-ServiceName: Application Gateway
-ProductName: Application Gateway Basic v2
-MeterName: Basic Fixed Cost
-
-### Basic v2 — capacity units
-
-ServiceName: Application Gateway
-ProductName: Application Gateway Basic v2
-MeterName: Basic Capacity Units
+ProductName: Application Gateway {Variant}
+MeterName: {MeterPrefix} Capacity Units
 
 ## Product Names
 
-| Variant     | productName                       | Fixed Cost Meter      | CU Meter                  |
-| ----------- | --------------------------------- | --------------------- | ------------------------- |
-| WAF v2      | `Application Gateway WAF v2`      | `Standard Fixed Cost` | `Standard Capacity Units` |
-| Standard v2 | `Application Gateway Standard v2` | `Standard Fixed Cost` | `Standard Capacity Units` |
-| Basic v2    | `Application Gateway Basic v2`    | `Basic Fixed Cost`    | `Basic Capacity Units`    |
+| Variant     | productName                       | MeterPrefix | Fixed Cost Meter      | CU Meter                  |
+| ----------- | --------------------------------- | ----------- | --------------------- | ------------------------- |
+| WAF v2      | `Application Gateway WAF v2`      | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
+| Standard v2 | `Application Gateway Standard v2` | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
+| Basic v2    | `Application Gateway Basic v2`    | `Basic`     | `Basic Fixed Cost`    | `Basic Capacity Units`    |
 
 ## Cost Formula
 

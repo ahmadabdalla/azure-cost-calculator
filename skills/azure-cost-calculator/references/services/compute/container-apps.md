@@ -12,11 +12,23 @@ aliases: [container apps, ACA]
 
 ## Query Pattern
 
-### {sku}: 'Standard' (Consumption, per-second — UnitPrice shows $0.00) | 'Dedicated' (per-hour, prices correct) | 'Hybrid'
+### Consumption (Standard) — per-second billing (UnitPrice shows $0.00; use Known Rates table)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
-SkuName: {sku}
+SkuName: Standard
+
+### Dedicated — per-hour billing (prices correct in API)
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Dedicated
+
+### Hybrid — per-hour billing (Arc-enabled environments)
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Hybrid
 
 ## Known Consumption Plan Rates
 

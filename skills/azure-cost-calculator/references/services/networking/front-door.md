@@ -13,37 +13,31 @@ aliases: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
 
 ## Query Pattern
 
-### Standard profile — base fee (Zone 1 = US/Europe)
+Substitute `{Tier}` with `Standard` or `Premium`.
+
+### {Tier} profile — base fee (Zone 1 = US/Europe)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
-SkuName: Standard
-MeterName: Standard Base Fees
+SkuName: {Tier}
+MeterName: {Tier} Base Fees
 Region: Zone 1
 
-### Premium profile — base fee
+### {Tier} — data transfer out (use Quantity for estimated monthly GB)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
-SkuName: Premium
-MeterName: Premium Base Fees
-Region: Zone 1
-
-### Standard — data transfer out (use Quantity for estimated monthly GB)
-
-ServiceName: Azure Front Door Service
-ProductName: Azure Front Door
-SkuName: Standard
-MeterName: Standard Data Transfer Out
+SkuName: {Tier}
+MeterName: {Tier} Data Transfer Out
 Quantity: 500
 Region: Zone 1
 
-### Standard — requests (per 10K)
+### {Tier} — requests (per 10K)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
-SkuName: Standard
-MeterName: Standard Requests
+SkuName: {Tier}
+MeterName: {Tier} Requests
 Region: Zone 1
 
 ## Meter Names

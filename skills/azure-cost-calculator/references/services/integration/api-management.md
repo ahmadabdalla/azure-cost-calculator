@@ -20,9 +20,17 @@ ServiceName: API Management
 SkuName: {Tier}
 MeterName: {Tier} Unit
 
-### v2 secondary units: MeterName '{Tier} Secondary Unit'
+### v2 secondary units (Standard v2 / Premium v2)
 
-### Self-hosted gateway (Std v2/Prem v2): MeterName '{Tier} Self-hosted Gateway'
+ServiceName: API Management
+SkuName: {Tier}
+MeterName: {Tier} Secondary Unit
+
+### Self-hosted gateway (Standard v2 / Premium v2)
+
+ServiceName: API Management
+SkuName: {Tier}
+MeterName: {Tier} Self-hosted Gateway
 
 ## Key Fields
 

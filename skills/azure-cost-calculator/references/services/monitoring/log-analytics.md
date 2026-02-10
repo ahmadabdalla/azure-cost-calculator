@@ -34,6 +34,14 @@ ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Retention
 
+### Commitment tier (100+ GB/day) — uses ServiceName: Azure Monitor
+
+ServiceName: Azure Monitor
+SkuName: 100 GB Commitment Tier
+MeterName: 100 GB Commitment Tier Capacity Reservation
+
+> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
+
 ## Key Fields
 
 | Parameter     | How to determine                                | Example values                                                  |
@@ -76,17 +84,9 @@ Retained GB = 5 × 59 = 295 GB
 Monthly retention cost = retentionPrice × 295
 ```
 
-## Commitment Tiers (optional, for high-volume)
+## Commitment Tier Details
 
 For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) save 15–30% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 200 ≈ 20%, 500 ≈ 25%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
-
-### Example: 100 GB/day commitment tier
-
-ServiceName: Azure Monitor
-SkuName: 100 GB Commitment Tier
-MeterName: 100 GB Commitment Tier Capacity Reservation
-
-> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
 
 ## Notes
 

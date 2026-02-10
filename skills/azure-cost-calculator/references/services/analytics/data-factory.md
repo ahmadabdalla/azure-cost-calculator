@@ -22,29 +22,26 @@ SkuName: Cloud
 MeterName: Cloud Orchestration Activity Run
 Quantity: 10000
 
-### v2 Cloud — data movement hours (use InstanceCount for parallel copy units)
+### v2 Cloud — data movement (per hour; multiply retailPrice × estimated monthly hours)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2
 SkuName: Cloud
 MeterName: Cloud Data Movement
 InstanceCount: 4
-HoursPerMonth: 160
 
-### v2 Data Flow — General Purpose vCores (per hour, min 8 vCores per cluster)
+### v2 Data Flow — General Purpose vCores (per hour; min 8 vCores per cluster)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
-HoursPerMonth: 200
 
-### v2 Self Hosted — pipeline activity hours
+### v2 Self Hosted — pipeline activity (per hour)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2
 SkuName: Self Hosted
 MeterName: Self Hosted Pipeline Activity
-HoursPerMonth: 160
 
 ## Key Fields
 

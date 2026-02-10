@@ -12,18 +12,14 @@ aliases: [CosmosDB, Cosmos, documentdb]
 
 ## Query Pattern
 
-### Provisioned throughput (use Quantity for multiples of 100 RU/s)
-
-### Example: 400 RU/s = Quantity 4
+### Provisioned throughput (e.g., 400 RU/s → Quantity: 4)
 
 ServiceName: Azure Cosmos DB
 MeterName: 100 RU/s
 SkuName: RUs
 Quantity: 4
 
-### Autoscale provisioned throughput (use Quantity for multiples of 100 RU/s)
-
-### Example: 10,000 max RU/s = Quantity 100
+### Autoscale provisioned throughput (e.g., 10,000 max RU/s → Quantity: 100)
 
 ServiceName: Azure Cosmos DB
 ProductName: Azure Cosmos DB autoscale
