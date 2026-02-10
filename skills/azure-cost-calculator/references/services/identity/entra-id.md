@@ -10,7 +10,7 @@ aliases: [Azure AD, Azure Active Directory, AAD, Directory]
 
 > **Warning**: Microsoft Entra ID has **no meters** in the Azure Retail Prices API. All tiers (Free, P1, P2) return zero results. Use the published rates below.
 >
-> **Agent instruction**: Do NOT query the pricing scripts — they return zero results. Use the Known Rates table to estimate. Report $0.00 for Free tier. For P1/P2, multiply the per-user rate by user count.
+> **Agent instruction**: Do NOT query the pricing scripts — they return zero results. Use the Known Rates table to estimate. Report 0 cost for Free tier. For P1/P2, multiply the per-user rate by user count.
 
 > **Trap**: Do not confuse `Microsoft Entra ID` (this service — identity platform, no API meters) with `Microsoft Entra` (External ID / CIAM — separate service with consumption meters) or `Microsoft Entra Domain Services` (managed AD DS — separate service with hourly meters).
 
@@ -19,9 +19,8 @@ aliases: [Azure AD, Azure Active Directory, AAD, Directory]
 ### No pricing meters exist — included for validation only
 
 ServiceName: Microsoft Entra ID
-Quantity: 1
 
-### Expected: 0 results — this service has no retail meter
+### Expected: 0 results — this service has no retail meters
 
 ## Key Fields
 
@@ -44,10 +43,10 @@ Quantity: 1
 ## Cost Formula
 
 ```
-Monthly = per_user_rate × userCount
-P1: Monthly = $6.00 × userCount
-P2: Monthly = $9.00 × userCount
-Free: Monthly = $0.00
+Monthly(tier) = per_user_rate(tier) × userCount
+P1:   Monthly(P1)   = per_user_rate(P1)   × userCount
+P2:   Monthly(P2)   = per_user_rate(P2)   × userCount
+Free: Monthly(Free) = per_user_rate(Free) × userCount
 ```
 
 ## Notes
