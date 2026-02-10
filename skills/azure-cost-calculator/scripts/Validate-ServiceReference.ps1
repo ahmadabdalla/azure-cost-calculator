@@ -147,7 +147,7 @@ function Test-ServiceReference {
         return $checks
     }
 
-    $lines = Get-Content -Path $fullPath
+    $lines = @(Get-Content -Path $fullPath)
 
     # --- YAML Front Matter ---
     $fm = Get-FrontMatter -Lines $lines
@@ -206,7 +206,7 @@ function Test-ServiceReference {
         # --- File placement ---
         $pathStr = $fullPath.ToString().Replace('\', '/')
         if ($fm.Fields.ContainsKey('category')) {
-            if ($pathStr -match 'services/([^/]+)/') {
+            if ($pathStr -match 'references/services/([^/]+)/') {
                 $folderCategory = $Matches[1]
                 $expectedCategory = $fm.Fields['category'].Trim()
                 $placementOk = $folderCategory -eq $expectedCategory
@@ -303,7 +303,7 @@ function Test-ServiceReference {
         })
 
     # --- Style: Trap format ---
-    $trapLines = $lines | Where-Object { $_ -match '>\s*\*\*Trap' }
+    $trapLines = $nonCodeLines | Where-Object { $_ -match '>\s*\*\*Trap' }
     $badTraps = @($trapLines | Where-Object { $_ -notmatch '>\s*\*\*Trap\*\*:' -and $_ -notmatch '>\s*\*\*Trap\s*\(.*\)\*\*:' })
     $trapFormatOk = $badTraps.Count -eq 0
     $checks.Add(@{
@@ -320,8 +320,8 @@ function Test-ServiceReference {
     # --- Scaling parameter: InstanceCount, Quantity, or Cost Formula scaling ---
     # Check 1: ```powershell/pwsh blocks for -InstanceCount/-Quantity (old format)
     # Check 2: Declarative InstanceCount:/Quantity: lines (new format)
-    # Check 3: Cost Formula section references scaling (e.g., × instanceCount, × quantity,
-    #           × shardCount, × unitCount, × resourceCount, per-unit multipliers, etc.)
+    # Check 3: Cost Formula section references scaling (e.g., x instanceCount, x quantity,
+    #           x shardCount, x unitCount, x resourceCount, per-unit multipliers, etc.)
     $queryBlockLines = [System.Collections.Generic.List[string]]::new()
     $insidePwshBlock = $false
     foreach ($line in $lines) {
@@ -343,13 +343,13 @@ function Test-ServiceReference {
     if (-not $hasScalingParam) {
         $hasScalingParam = @($lines | Where-Object { $_ -match '^\s*(InstanceCount|Quantity)\s*:' }).Count -gt 0
     }
-    # Check Cost Formula section for scaling multipliers (× count, per-unit, GB volume, etc.)
+    # Check Cost Formula section for scaling multipliers (x count, per-unit, GB volume, etc.)
     if (-not $hasScalingParam) {
         $inCostFormula = $false
         foreach ($line in $lines) {
             if ($line -match '^#{2}\s+Cost\s+Formula') { $inCostFormula = $true; continue }
-            if ($inCostFormula -and $line -match '^#{2}\s+') { break }
-            if ($inCostFormula -and $line -match '(?i)(×|x|\*)\s*\w*(count|quantity|instance|gb|tb|unit|shard|replica|node)|per[\s-]+(gb|tb|unit|instance|10k|100k|1m|million|day|hour)|estimat|730\s*(hours|hrs)|monthly\s*=') {
+            if ($inCostFormula -and $line -match '^##(?!#)\s+') { break }
+            if ($inCostFormula -and $line -match "(?i)(\u00D7|x|\*)\s*\w*(count|quantity|instance|gb|tb|unit|shard|replica|node)|per[\s-]+(gb|tb|unit|instance|10k|100k|1m|million|day|hour)|estimat|730\s*(hours|hrs)|monthly\s*=") {
                 $hasScalingParam = $true
                 break
             }
@@ -366,6 +366,202 @@ function Test-ServiceReference {
             }
         })
 
+    # --- Line count limit: file must be <= 100 lines ---
+    $checks.Add(@{
+            Name    = 'line_count_limit'
+            Pass    = $lines.Count -le 100
+            Message = if ($lines.Count -le 100) {
+                "File is $($lines.Count) lines (limit: 100)"
+            }
+            else {
+                "File is $($lines.Count) lines -- exceeds 100-line limit by $($lines.Count - 100) lines"
+            }
+        })
+
+    # --- Primary cost line: file must contain **Primary cost**: ---
+    $hasPrimaryCost = @($lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
+    $checks.Add(@{
+            Name    = 'primary_cost_line'
+            Pass    = $hasPrimaryCost
+            Message = if ($hasPrimaryCost) { 'Primary cost line found' } else { 'Missing **Primary cost**: line after title' }
+        })
+
+    # --- No code fences in Query Pattern section ---
+    $codeFenceInQueryPattern = $false
+    $inQueryPatternSection = $false
+    foreach ($line in $lines) {
+        if ($line -match '^##\s+Query\s+Pattern') {
+            $inQueryPatternSection = $true
+            continue
+        }
+        if ($inQueryPatternSection -and $line -match '^##(?!#)\s+') {
+            $inQueryPatternSection = $false
+            continue
+        }
+        if ($inQueryPatternSection -and $line -match '^\s*```') {
+            $codeFenceInQueryPattern = $true
+            break
+        }
+    }
+    $checks.Add(@{
+            Name    = 'no_code_fences_in_query_pattern'
+            Pass    = -not $codeFenceInQueryPattern
+            Message = if (-not $codeFenceInQueryPattern) {
+                'No code fences in Query Pattern section'
+            }
+            else {
+                'Code fence found in Query Pattern section -- use declarative Key: Value format instead'
+            }
+        })
+
+    # --- No template instruction comments ---
+    $hasTemplateComments = @($lines | Where-Object { $_ -match 'INSTRUCTIONS FOR AUTHORS' -or $_ -match 'DELETE THIS COMMENT BLOCK' }).Count -gt 0
+    $checks.Add(@{
+            Name    = 'no_template_comments'
+            Pass    = -not $hasTemplateComments
+            Message = if (-not $hasTemplateComments) {
+                'No template instruction comments found'
+            }
+            else {
+                'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'
+            }
+        })
+
+    # --- ServiceName consistency: YAML serviceName must match all ServiceName: declarations ---
+    $yamlValue = $null
+    if ($fm.Found -and $fm.Fields.ContainsKey('serviceName')) {
+        $yamlValue = $fm.Fields['serviceName'].Trim() -replace "^'|'$", ''
+    }
+    # Check if file uses API: pattern (Global-only services)
+    $hasApiLines = @($lines | Where-Object { $_ -match '^\s*API\s*:' }).Count -gt 0
+    # Collect ServiceName: lines (excluding HTML comments)
+    $serviceNameLines = [System.Collections.Generic.List[object]]::new()
+    $insideHtmlComment = $false
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        $line = $lines[$i]
+        $effective = $line
+        if ($insideHtmlComment) {
+            if ($effective -match '-->(.*)$') {
+                $insideHtmlComment = $false
+                $effective = $Matches[1]
+            }
+            else {
+                continue
+            }
+        }
+        # Remove any inline comment that opens and closes on this line
+        $effective = $effective -replace '<!--.*?-->', ''
+        if ($effective -match '<!--') {
+            $insideHtmlComment = $true
+            $effective = $effective -replace '<!--.*$', ''
+        }
+        if ($effective -match '^\s*ServiceName\s*:\s*(.+)$') {
+            $serviceNameLines.Add(@{ Value = $Matches[1].Trim(); LineNum = $i + 1 })
+        }
+    }
+    if ($hasApiLines -and $serviceNameLines.Count -eq 0) {
+        $checks.Add(@{
+                Name    = 'servicename_consistency'
+                Pass    = $true
+                Message = 'File uses API: pattern -- serviceName consistency check skipped'
+            })
+    }
+    elseif ($serviceNameLines.Count -eq 0 -and -not $hasApiLines) {
+        $checks.Add(@{
+                Name    = 'servicename_consistency'
+                Pass    = $false
+                Message = 'No ServiceName: or API: declarations found in file'
+            })
+    }
+    elseif ($null -eq $yamlValue -and $serviceNameLines.Count -gt 0) {
+        $checks.Add(@{
+                Name    = 'servicename_consistency'
+                Pass    = $false
+                Message = 'ServiceName: declarations found but YAML serviceName is missing -- cannot verify consistency'
+            })
+    }
+    else {
+        $snMismatch = $null
+        foreach ($entry in $serviceNameLines) {
+            $queryValue = $entry.Value -replace "^'|'$", ''
+            if ($queryValue -ne $yamlValue) {
+                $snMismatch = @{ QueryValue = $queryValue; LineNum = $entry.LineNum; YamlValue = $yamlValue }
+                break
+            }
+        }
+        $checks.Add(@{
+                Name    = 'servicename_consistency'
+                Pass    = $null -eq $snMismatch
+                Message = if ($null -eq $snMismatch) {
+                    'All ServiceName declarations match YAML front matter'
+                }
+                else {
+                    "ServiceName '$($snMismatch.QueryValue)' on line $($snMismatch.LineNum) does not match YAML serviceName '$($snMismatch.YamlValue)'"
+                }
+            })
+    }
+
+    # --- Inline aliases: aliases must use inline [...] format, not multi-line YAML ---
+    if ($fm.Found -and $fm.Fields.ContainsKey('aliases')) {
+        $aliasLineInline = $false
+        $fmStarted = $false
+        foreach ($line in $lines) {
+            if ($line.Trim() -eq '---' -and -not $fmStarted) {
+                $fmStarted = $true
+                continue
+            }
+            if ($fmStarted -and $line.Trim() -eq '---') {
+                break
+            }
+            if ($fmStarted -and $line -match '^\s*aliases\s*:') {
+                if ($line -match '^\s*aliases\s*:\s*\[') {
+                    $aliasLineInline = $true
+                }
+                break
+            }
+        }
+        $checks.Add(@{
+                Name    = 'inline_aliases'
+                Pass    = $aliasLineInline
+                Message = if ($aliasLineInline) {
+                    'Aliases use inline [...] format'
+                }
+                else {
+                    'Aliases must use inline format: aliases: [term1, term2]. Multi-line YAML wastes line budget.'
+                }
+            })
+    }
+
+    # --- Single H1 heading ---
+    $h1Count = @($lines | Where-Object { $_ -match '^#\s+[^#]' }).Count
+    $checks.Add(@{
+            Name    = 'single_h1_heading'
+            Pass    = $h1Count -eq 1
+            Message = if ($h1Count -eq 1) {
+                'Single H1 heading found'
+            }
+            elseif ($h1Count -eq 0) {
+                'No H1 heading found -- file must have a service title'
+            }
+            else {
+                "Found $h1Count H1 headings -- file must have exactly one"
+            }
+        })
+
+    # --- Warning format: no emoji prefixes in blockquotes ---
+    $warnChar = [char]0x26A0  # WARNING SIGN (U+26A0)
+    $hasEmojiWarning = @($lines | Where-Object { $_ -match ">\s*$warnChar" }).Count -gt 0
+    $checks.Add(@{
+            Name    = 'warning_format'
+            Pass    = -not $hasEmojiWarning
+            Message = if (-not $hasEmojiWarning) {
+                'No non-standard warning formats found'
+            }
+            else {
+                "Found $warnChar emoji in blockquote -- use > **Warning**: ... format instead"
+            }
+        })
+
     return $checks
 }
 
@@ -379,7 +575,7 @@ function Test-AliasUniqueness {
     Where-Object { $_.Name -ne 'TEMPLATE.md' }
 
     foreach ($file in $files) {
-        $fileLines = Get-Content -Path $file.FullName
+        $fileLines = @(Get-Content -Path $file.FullName)
         $fm = Get-FrontMatter -Lines $fileLines
         if (-not $fm.Found -or -not $fm.Fields.ContainsKey('aliases')) { continue }
 

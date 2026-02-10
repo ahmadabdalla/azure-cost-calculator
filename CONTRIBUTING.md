@@ -115,16 +115,17 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 Create the file at: `skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).
 
 The file MUST follow these rules:
-- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map — do not add extras beyond those listed).
+- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map — do not add extras beyond those listed). Use inline `[...]` array format for aliases — never multi-line YAML sequences.
 - **Primary cost** line: a one-sentence summary of the main billing dimensions.
-- **First query pattern must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, primary cost line, and trap concise to ensure this.
+- **First query pattern must be the most common/default configuration and must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, primary cost line, and trap concise to ensure this.
 - **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
+- **ServiceName in every query block**: Always include `ServiceName:` in each individual query pattern block. Do not rely on "All patterns below use..." preambles — batch mode parses individual blocks.
 - **Total file length**: under 100 lines of markdown content.
-- **Never hardcode prices** — always reference `retailPrice` from the API query results.
+- **Never hardcode prices** — always reference `retailPrice` from the API query results. Exception: Known Rates tables for sub-cent pricing where the script shows `$0.00` may include published USD rates.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
 - **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
-- **Demonstrate scaling parameters**: At least one query pattern should use `-InstanceCount` (for multi-unit resources) or `-Quantity` (for event/request-based meters), with a comment explaining the parameter.
-- **Section order**: YAML → Title → Primary cost → Trap(s) → Query Pattern → Key Fields or Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
+- **Demonstrate scaling parameters**: At least one query pattern should use `InstanceCount` (for multi-unit resources) or `Quantity` (for event/request-based meters), with a comment explaining the parameter.
+- **Section order**: YAML → Title → Primary cost → Trap(s) → Query Pattern → Key Fields → Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
 - **Meter Names table scope**: Include meters needed for a standard cost estimate: compute, storage, and backup. Omit niche variants (IO rates, zone-redundant storage, per-operation surcharges) unless they represent a major cost component (>10% of typical monthly spend). Mention omitted meter families in a one-line note below the table.
 - **Cost Formula variables**: Use `compute_retailPrice`, `storage_retailPrice`, `backup_retailPrice` as variable names when the formula has multiple components. Show one generic formula. Add a separate line per tier only if the formula structure (not just the price) changes between tiers.
 - **Do NOT** include "verified" dates anywhere.
@@ -132,11 +133,14 @@ The file MUST follow these rules:
 - **Capacity planning notes**: When a service has scalable units (e.g., throughput units, processing units, compute units, DTUs, RU/s), include a note documenting what 1 unit provides in terms of throughput, requests, or connections so agents can map user workloads to unit counts.
 - **Tier limitations**: When a service has multiple tiers, document key per-tier limitations that affect pricing (e.g., features unavailable in lower tiers, meters that don't exist for certain tiers, maximum retention or throughput caps).
 - **Trap format**: `> **Trap**: ...` or `> **Trap ({descriptive name})**: ...`
+- **Warning format**: `> **Warning**: ...` for API-unavailable or USD-only notices. Do not use emoji prefixes like ⚠.
+- **Note format**: `> **Note**: ...` for informational blockquotes that are not traps or warnings.
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
+- **Placement**: Include capacity planning notes and tier limitations in the Notes section.
 
 **Pre-submission checklist** (all must be true):
-1. First declarative query pattern appears within lines 1–45
-2. At least one query uses `-InstanceCount` or `-Quantity`
+1. First declarative query pattern (most common/default config) appears within lines 1–45
+2. At least one query uses `InstanceCount` or `Quantity`
 3. Capacity planning note included if the service has scalable units
 4. Tier limitations documented if multiple tiers exist
 
@@ -183,12 +187,3 @@ If the AI-generated file fails validation or looks wrong, check these common iss
 4. **Flat within categories** — no sub-folders; 100+ files per category is fine
 5. **Aliases are first-class** — the `aliases` YAML field is the primary search index
 6. **Free/no-meter services need files too** — prevents agents from wasting queries on free services
-
-## Style Rules
-
-- Use 730 hours/month for hourly billing, 30 days/month for daily billing
-- No "verified" dates anywhere in the file
-- No "(case-sensitive)" annotations on section headers
-- Clean section headers: `## Meter Names`, `## Cost Formula`, etc.
-- Trap format: `> **Trap**: ...` or `> **Trap ({name})**: ...`
-- Filenames: lowercase with hyphens (e.g., `app-service.md`)
