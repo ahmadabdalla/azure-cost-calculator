@@ -50,11 +50,11 @@ ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard Spot
 
-### GPU containers — substitute $gpu: K80, P100, V100
+### GPU containers — substitute {gpu}: K80, P100, V100
 
 ServiceName: Container Instances
 ProductName: Container Instances with GPU
-SkuName: $gpu
+SkuName: {gpu}
 
 ## Meter Names
 
@@ -70,8 +70,8 @@ SkuName: $gpu
 | `K80 vGPU Duration`                           | `K80`                         | `100 Seconds`    | GPU meter              |
 | `P100 vGPU Duration`                          | `P100`                        | `100 Seconds`    | GPU meter              |
 | `V100 vGPU Duration`                          | `V100`                        | `100 Seconds`    | GPU meter              |
-| `$gpu vCPU Duration`                          | `$gpu`                        | `100 Seconds`    | GPU compute (per vCPU) |
-| `$gpu Memory Duration`                        | `$gpu`                        | `100 GB Seconds` | GPU memory (per GiB)   |
+| `vCPU Duration`                               | `{gpu}`                       | `100 Seconds`    | GPU compute (per vCPU) |
+| `Memory Duration`                             | `{gpu}`                       | `100 GB Seconds` | GPU memory (per GiB)   |
 
 ## Cost Formula
 

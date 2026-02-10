@@ -4,7 +4,6 @@ category: security
 aliases: [defender, security center, MDC]
 ---
 
-```markdown
 # Microsoft Defender for Cloud
 
 **Multiple sub-products** — query each separately by its own productName/skuName/meterName.
@@ -19,9 +18,9 @@ aliases: [defender, security center, MDC]
 All sub-products use the same pattern — substitute values from the Meter Names table:
 
 ServiceName: Microsoft Defender for Cloud
-ProductName: <productName from table>
-SkuName: <skuName from table>
-MeterName: <meterName from table>
+ProductName: {productName}
+SkuName: {skuName}
+MeterName: {meterName}
 
 ## Meter Names
 
@@ -63,4 +62,3 @@ MeterName: <meterName from table>
 **Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `$5.11 × 8 = $40.88/mo`.
 
 **Formula**: `$5.11 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.
-```

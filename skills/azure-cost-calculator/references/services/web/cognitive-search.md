@@ -12,20 +12,16 @@ aliases: [Azure AI Search, Search Service, Full-text Search]
 
 > **Trap (CC variants)**: Each tier has a customer-controlled encryption variant (e.g., `Standard S1 CC`). These are separate SKUs with higher prices — do not confuse with the standard tier.
 
+> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. Without `Quantity 30`, the script's `MonthlyCost` reports only the **daily** price (~$16). Always use `Quantity 30` and ignore the script's `MonthlyCost` for this meter. For Semantic Ranker, always check `unitOfMeasure`. If `1/Day`, multiply `unitPrice × 30` for monthly cost.
+
 ## Query Pattern
 
-### Standard S1 — 1 search unit (swap SkuName/MeterName for other tiers)
+### {SkuName} tier — use InstanceCount for multi-SU deployments
 
 ServiceName: Azure Cognitive Search
-SkuName: Standard S1
-MeterName: Standard S1 Unit
-
-### Standard S1 — 3 search units (use InstanceCount for multi-SU deployments)
-
-ServiceName: Azure Cognitive Search
-SkuName: Standard S1
-MeterName: Standard S1 Unit
-InstanceCount: 3
+SkuName: {SkuName}
+MeterName: {SkuName} Unit
+InstanceCount: {searchUnits}
 
 ### Semantic Ranker add-on — use Quantity 30 (billed per day, not per hour)
 
@@ -33,10 +29,6 @@ ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker
 MeterName: Semantic Ranker Unit
 Quantity: 30
-
-> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. Without `Quantity 30`, the script's `MonthlyCost` reports only the **daily** price (~$16). Always use `Quantity 30` and ignore the script's `MonthlyCost` for this meter.
->
-> **Agent instruction**: For Semantic Ranker, always check `unitOfMeasure`. If `1/Day`, multiply `unitPrice × 30` for monthly cost. Never trust the script's `MonthlyCost` for daily-billed meters.
 
 ## Key Fields
 
