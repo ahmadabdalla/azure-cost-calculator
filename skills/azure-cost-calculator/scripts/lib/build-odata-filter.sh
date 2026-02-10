@@ -8,17 +8,19 @@
 build_odata_filter() {
     local parts=()
     local arg
-    local rest field value
+    local rest field value sq="'"
     for arg in "$@"; do
         if [[ "$arg" == contains:* ]]; then
             # contains:field=value -> contains(field, 'value')
             rest="${arg#contains:}"
             field="${rest%%=*}"
             value="${rest#*=}"
+            value="${value//$sq/$sq$sq}"
             parts+=("contains($field, '$value')")
         else
             field="${arg%%=*}"
             value="${arg#*=}"
+            value="${value//$sq/$sq$sq}"
             if [[ -n "$value" ]]; then
                 parts+=("$field eq '$value'")
             fi

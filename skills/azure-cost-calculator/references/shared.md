@@ -19,7 +19,7 @@ Service reference files are organized by category. To find a service file:
 1. **File search** — search for files matching `services/**/*<keyword>*.md`
 2. **Category browse** — pick the category below and list the directory
 3. **Broad search** — list `services/**/*.md` to see all files
-4. **Discovery** — use `scripts/Explore-AzurePricing.ps1` for services not yet documented
+4. **Discovery** — use the explore script for services not yet documented
 
 > Each service file contains its own `serviceName`, `category`, and `aliases` metadata. The routing information lives with the service it describes — no central lookup needed.
 
@@ -53,7 +53,7 @@ Service reference files are organized by category. To find a service file:
 ### API-Unavailable Services
 
 Some services have **no data** in the Retail Prices API at all. Scripts return zero results.
-**Do NOT** query via `Get-AzurePricing.ps1` or `Explore-AzurePricing.ps1` — use the manual fallback table in the service file.
+**Do NOT** query via the pricing/explore scripts — use the manual fallback table in the service file.
 Affected: DDoS Protection, Defender CSPM.
 Full list: [regions-and-currencies.md § Known API-Unavailable Services](regions-and-currencies.md#known-api-unavailable-services).
 

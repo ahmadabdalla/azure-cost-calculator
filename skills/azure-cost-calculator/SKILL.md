@@ -3,7 +3,6 @@ name: azure-cost-calculator
 description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources".
 license: MIT
 compatibility: Requires curl + jq (macOS/Linux) or PowerShell 5.1+ (Windows), and internet access to prices.azure.com. No Azure subscription needed.
-allowed-tools: Bash(pwsh:*), Bash(./scripts/*.sh:*), Bash(bash:*), Bash(curl:*)
 metadata:
   author: ahmadabdalla
   version: "1.0.0"
@@ -25,24 +24,7 @@ Choose the script runtime based on what is available:
 
 Both produce identical JSON output. Use Bash on macOS/Linux; use PowerShell on Windows or when `pwsh` is available.
 
-**Parameter mapping** — service reference files show PowerShell parameter names. Convert to Bash flags:
-
-| PowerShell | Bash |
-|------------|------|
-| `-ServiceName` | `--service-name` |
-| `-Region` | `--region` (comma-separated for multiple) |
-| `-ArmSkuName` | `--arm-sku-name` |
-| `-SkuName` | `--sku-name` |
-| `-ProductName` | `--product-name` |
-| `-MeterName` | `--meter-name` |
-| `-PriceType` | `--price-type` |
-| `-Currency` | `--currency` |
-| `-Quantity` | `--quantity` |
-| `-HoursPerMonth` | `--hours-per-month` |
-| `-InstanceCount` | `--instance-count` |
-| `-OutputFormat` | `--output-format` |
-| `-SearchTerm` | `--search-term` |
-| `-Top` | `--top` |
+Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`). Run `./scripts/get-azure-pricing.sh --help` for the full flag list.
 
 ## Workflow
 
@@ -97,5 +79,5 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - The user requests a non-default tier, SKU, or configuration
    - The service has complex multi-meter billing that needs the full meter table
    - The query returns 0 or unexpected results
-3. **Parallel queries** — run `Get-AzurePricing.ps1` calls in parallel where possible. Independent services have no query dependencies.
+3. **Parallel queries** — run pricing script calls in parallel where possible. Independent services have no query dependencies.
 4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.
