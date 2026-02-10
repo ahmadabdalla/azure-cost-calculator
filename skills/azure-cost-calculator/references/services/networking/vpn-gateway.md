@@ -12,26 +12,26 @@ aliases: [VPN, Site-to-Site, Point-to-Site, S2S, P2S]
 
 ## Query Pattern
 
-### Gateway hourly cost — substitute {Sku} from SKU table
+### Gateway hourly cost — substitute {GatewayMeter} from Meter Names table
 
 ServiceName: VPN Gateway
-MeterName: {Sku}
+MeterName: {GatewayMeter}
 
 ### S2S tunnel connections (use Quantity for number of tunnels)
 
 ServiceName: VPN Gateway
-SkuName: {Sku}
+SkuName: {GatewaySku}
 MeterName: S2S Connection
 Quantity: 2
 
 ### P2S client connections (use Quantity for concurrent connections)
 
 ServiceName: VPN Gateway
-SkuName: {Sku}
+SkuName: {GatewaySku}
 MeterName: P2S Connection
 Quantity: 50
 
-> **Gateway placeholders**: `{Sku}` = Basic Gateway, VpnGw1, VpnGw1AZ, VpnGw2, VpnGw2AZ, VpnGw3, VpnGw3AZ, VpnGw4, VpnGw4AZ, VpnGw5, VpnGw5AZ. AZ variants are zone-redundant.
+> **Gateway placeholders**: `{GatewayMeter}` (for `MeterName`) = Basic Gateway, VpnGw1, VpnGw1AZ, VpnGw2, VpnGw2AZ, VpnGw3, VpnGw3AZ, VpnGw4, VpnGw4AZ, VpnGw5, VpnGw5AZ. `{GatewaySku}` (for `SkuName`) = Basic, VpnGw1, VpnGw1AZ, VpnGw2, VpnGw2AZ, VpnGw3, VpnGw3AZ, VpnGw4, VpnGw4AZ, VpnGw5, VpnGw5AZ. AZ variants are zone-redundant.
 
 ## Key Fields
 
