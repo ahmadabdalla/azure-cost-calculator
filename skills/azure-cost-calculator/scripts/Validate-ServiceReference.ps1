@@ -383,7 +383,7 @@ function Test-ServiceReference {
     $checks.Add(@{
             Name    = 'primary_cost_line'
             Pass    = $hasPrimaryCost
-            Message = if ($hasPrimaryCost) { 'Primary cost line found' } else { 'Missing **Primary cost**: line after title' }
+            Message = if ($hasPrimaryCost) { 'Primary cost line found' } else { 'Missing **Primary cost**: line' }
         })
 
     # --- No code fences in Query Pattern section ---
@@ -550,7 +550,7 @@ function Test-ServiceReference {
 
     # --- Warning format: no emoji prefixes in blockquotes ---
     $warnChar = [char]0x26A0  # WARNING SIGN (U+26A0)
-    $hasEmojiWarning = @($lines | Where-Object { $_ -match ">\s*$warnChar" }).Count -gt 0
+    $hasEmojiWarning = @($lines | Where-Object { $_ -match "^\s*>\s*$warnChar(\uFE0F)?" }).Count -gt 0
     $checks.Add(@{
             Name    = 'warning_format'
             Pass    = -not $hasEmojiWarning
