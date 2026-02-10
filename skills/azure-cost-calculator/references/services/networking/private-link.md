@@ -12,34 +12,26 @@ aliases: [private link, private endpoint, PL]
 
 ## Query Pattern
 
-### Private Endpoint hourly cost
+### Substitute {meterName} from Meter Names table
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Private Endpoint'
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq '{meterName}'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
-### Data Processed — Ingress
-
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Ingress'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
-
-### Data Processed — Egress
-
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Egress'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+Meter names: `Standard Private Endpoint` (hourly), `Standard Data Processed - Ingress` (per-GB), `Standard Data Processed - Egress` (per-GB)
 
 ## Key Fields
 
-| Parameter       | Value                          |
-| --------------- | ------------------------------ |
-| `serviceName`   | `Virtual Network`              |
-| `productName`   | `Virtual Network Private Link` |
-| `armRegionName` | `''` (empty) or `'Global'`     |
+| Parameter       | Value                                                                                                                 |
+| --------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `serviceName`   | `Virtual Network`                                                                                                     |
+| `productName`   | `Virtual Network Private Link`                                                                                        |
+| `armRegionName` | `Global` (not a real ARM region — omit region filter or use `'Global'` explicitly; empty string returns zero results) |
 
 ## Meter Names
 
 | Meter                               | Unit Price (USD) | unitOfMeasure | Notes                  |
 | ----------------------------------- | ---------------- | ------------- | ---------------------- |
-| `Standard Private Endpoint`         | $0.01/hr         | `1/Hour`      | Per endpoint, per hour |
+| `Standard Private Endpoint`         | $0.01/hr         | `1 Hour`      | Per endpoint, per hour |
 | `Standard Data Processed - Ingress` | $0.01/GB         | `1 GB`        | Inbound data           |
 | `Standard Data Processed - Egress`  | $0.01/GB         | `1 GB`        | Outbound data          |
 
