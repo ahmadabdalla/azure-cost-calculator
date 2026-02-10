@@ -16,7 +16,7 @@ aliases: [CDN Classic, Azure CDN Classic, Content Delivery]
 
 ## Query Pattern
 
-# Standard Microsoft — data transfer (Zone 1, most common)
+### Standard Microsoft — data transfer (Zone 1, most common)
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Microsoft
@@ -24,7 +24,7 @@ SkuName: Standard
 MeterName: Standard Data Transfer
 Region: Zone 1
 
-# Standard Microsoft — request pricing (per 1M requests)
+### Standard Microsoft — request pricing (per 1M requests)
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Microsoft
@@ -32,7 +32,7 @@ SkuName: Standard
 MeterName: Standard Requests
 Region: Zone 1
 
-# Premium Verizon — data transfer with volume estimate
+### Premium Verizon — data transfer with volume estimate
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Verizon

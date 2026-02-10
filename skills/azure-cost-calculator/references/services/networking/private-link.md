@@ -12,17 +12,17 @@ aliases: [private link, private endpoint, PL]
 
 ## Query Pattern
 
-# Private Endpoint hourly cost
+### Private Endpoint hourly cost
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Private Endpoint'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
-# Data Processed — Ingress
+### Data Processed — Ingress
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Ingress'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
-# Data Processed — Egress
+### Data Processed — Egress
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq 'Standard Data Processed - Egress'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName

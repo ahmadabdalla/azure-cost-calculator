@@ -12,21 +12,21 @@ aliases: [keyvault, KV, vault]
 
 ## Query Pattern
 
-# Standard tier — filter by productName to exclude Dedicated HSM
+### Standard tier — filter by productName to exclude Dedicated HSM
 
 ServiceName: Key Vault
 SkuName: Standard
 ProductName: Key Vault
 
-# Add MeterName 'Operations' or 'Advanced Key Operations' to isolate specific meters
+### Add MeterName 'Operations' or 'Advanced Key Operations' to isolate specific meters
 
-# Premium tier — HSM-backed keys
+### Premium tier — HSM-backed keys
 
 ServiceName: Key Vault
 SkuName: Premium
 ProductName: Key Vault
 
-# Add MeterName for specific Premium meters (see table below)
+### Add MeterName for specific Premium meters (see table below)
 
 ## Meter Names
 
@@ -48,7 +48,7 @@ ProductName: Key Vault
 
 ```
 Monthly = (operations/10000 × ops_price) + (advancedOps/10000 × advOps_price)
-# Premium: add per-key HSM charges (RSA 2048 + Advanced Key at applicable tier)
+### Premium: add per-key HSM charges (RSA 2048 + Advanced Key at applicable tier)
 ```
 
 ## Notes

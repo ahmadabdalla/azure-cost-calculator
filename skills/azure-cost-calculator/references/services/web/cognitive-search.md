@@ -14,20 +14,20 @@ aliases: [Azure AI Search, Search Service, Full-text Search]
 
 ## Query Pattern
 
-# Standard S1 — 1 search unit (swap SkuName/MeterName for other tiers)
+### Standard S1 — 1 search unit (swap SkuName/MeterName for other tiers)
 
 ServiceName: Azure Cognitive Search
 SkuName: Standard S1
 MeterName: Standard S1 Unit
 
-# Standard S1 — 3 search units (use InstanceCount for multi-SU deployments)
+### Standard S1 — 3 search units (use InstanceCount for multi-SU deployments)
 
 ServiceName: Azure Cognitive Search
 SkuName: Standard S1
 MeterName: Standard S1 Unit
 InstanceCount: 3
 
-# Semantic Ranker add-on — use Quantity 30 (billed per day, not per hour)
+### Semantic Ranker add-on — use Quantity 30 (billed per day, not per hour)
 
 ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker

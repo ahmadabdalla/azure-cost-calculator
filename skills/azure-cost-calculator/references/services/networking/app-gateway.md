@@ -13,37 +13,37 @@ aliases: [app gateway, application gateway, appgw]
 
 ## Query Pattern
 
-# WAF v2 — fixed cost (gateway hours)
+### WAF v2 — fixed cost (gateway hours)
 
 ServiceName: Application Gateway
 ProductName: Application Gateway WAF v2
 MeterName: Standard Fixed Cost
 
-# WAF v2 — capacity units
+### WAF v2 — capacity units
 
 ServiceName: Application Gateway
 ProductName: Application Gateway WAF v2
 MeterName: Standard Capacity Units
 
-# Standard v2 — fixed cost
+### Standard v2 — fixed cost
 
 ServiceName: Application Gateway
 ProductName: Application Gateway Standard v2
 MeterName: Standard Fixed Cost
 
-# Standard v2 — capacity units
+### Standard v2 — capacity units
 
 ServiceName: Application Gateway
 ProductName: Application Gateway Standard v2
 MeterName: Standard Capacity Units
 
-# Basic v2 — fixed cost
+### Basic v2 — fixed cost
 
 ServiceName: Application Gateway
 ProductName: Application Gateway Basic v2
 MeterName: Basic Fixed Cost
 
-# Basic v2 — capacity units
+### Basic v2 — capacity units
 
 ServiceName: Application Gateway
 ProductName: Application Gateway Basic v2

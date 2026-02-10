@@ -108,7 +108,7 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
 
 ## Query Pattern
 
-# {Description of what this query returns}
+### {Description of what this query returns}
 
 ServiceName: {serviceName}
 SkuName: {skuName}

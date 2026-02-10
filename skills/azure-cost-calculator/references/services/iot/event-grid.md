@@ -14,25 +14,25 @@ aliases: [Event Routing, Event-driven]
 
 ## Query Pattern
 
-# Standard operations — event delivery (per 100K), 10 units = 1M operations
+### Standard operations — event delivery (per 100K), 10 units = 1M operations
 
 ServiceName: Event Grid
 MeterName: Standard Operations
 Quantity: 10
 
-# Namespace topic event operations (per 1M events)
+### Namespace topic event operations (per 1M events)
 
 ServiceName: Event Grid
 MeterName: Standard Event Operations
 Quantity: 5
 
-# MQTT messaging operations (per 1M)
+### MQTT messaging operations (per 1M)
 
 ServiceName: Event Grid
 MeterName: Standard MQTT Operations
 Quantity: 5
 
-# MQTT throughput unit (hourly, for namespace topics)
+### MQTT throughput unit (hourly, for namespace topics)
 
 ServiceName: Event Grid
 MeterName: Standard Throughput Unit

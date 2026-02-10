@@ -14,20 +14,20 @@ aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
 
 ## Query Pattern
 
-# Managed online endpoint — e.g., NC4asT4 v3 GPU instance (2 endpoints)
+### Managed online endpoint — e.g., NC4asT4 v3 GPU instance (2 endpoints)
 
 ServiceName: Azure Machine Learning
 ProductName: Managed Model Hosting Service
 SkuName: NC4asT4 v3
 InstanceCount: 2
 
-# ML service surcharge — Standard GPU
+### ML service surcharge — Standard GPU
 
 ServiceName: Azure Machine Learning
 ProductName: Machine Learning service
 MeterName: Standard GPU Surcharge
 
-# Safety evaluation tokens (input) — 100K tokens
+### Safety evaluation tokens (input) — 100K tokens
 
 ServiceName: Azure Machine Learning
 ProductName: Machine Learning service

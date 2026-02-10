@@ -37,19 +37,19 @@ Format: `{tier_prefix}{size} Cache Instance`
 
 ### Recommended Query Pattern (with productName filter)
 
-# Basic C1
+### Basic C1
 
 ServiceName: Redis Cache
 ProductName: Azure Redis Cache Basic
 MeterName: C1 Cache
 
-# Standard C1
+### Standard C1
 
 ServiceName: Redis Cache
 ProductName: Azure Redis Cache Standard
 MeterName: C1 Cache Instance
 
-# Premium P1
+### Premium P1
 
 ServiceName: Redis Cache
 ProductName: Azure Redis Cache Premium
@@ -65,7 +65,7 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
 
-# RI for Premium — substitute {Size} with P1-P5
+### RI for Premium — substitute {Size} with P1-P5
 
 ServiceName: Redis Cache
 MeterName: {Size} Cache Instance

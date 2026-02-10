@@ -12,21 +12,21 @@ aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 
 ## Query Pattern
 
-# Azure VM backup — 10 protected VMs
+### Azure VM backup — 10 protected VMs
 
 ServiceName: Backup
 SkuName: Azure VM
 MeterName: Azure VM Protected Instances
 InstanceCount: 10
 
-# Backup storage — 500 GB LRS
+### Backup storage — 500 GB LRS
 
 ServiceName: Backup
 SkuName: Standard
 MeterName: LRS Data Stored
 Quantity: 500
 
-# SQL Server in Azure VM backup
+### SQL Server in Azure VM backup
 
 ServiceName: Backup
 SkuName: SQL Server in Azure VM

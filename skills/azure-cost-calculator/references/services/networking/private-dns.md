@@ -13,12 +13,12 @@ aliases: [private DNS, DNS zones]
 
 ## Query Pattern
 
-# Private Zone hosting cost
+### Private Zone hosting cost
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Zone'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
-# Private DNS queries
+### Private DNS queries
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Queries'
 Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName

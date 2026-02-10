@@ -12,14 +12,14 @@ aliases: [PostgreSQL, postgres, flexible server]
 
 ## Query Pattern
 
-# Compute cost (General Purpose, Ddsv5 series, 4 vCore)
+### Compute cost (General Purpose, Ddsv5 series, 4 vCore)
 
 ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv5 Series Compute
 SkuName: 4 vCore
 MeterName: vCore
 
-# Storage cost
+### Storage cost
 
 ServiceName: Azure Database for PostgreSQL
 ProductName: Az DB for PostgreSQL Flexible Server Storage

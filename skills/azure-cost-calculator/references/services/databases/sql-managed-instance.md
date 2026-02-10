@@ -14,14 +14,14 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 
 ## Query Pattern
 
-# vCore compute (e.g., 8 vCore GP Gen5; swap productName for tier/series)
+### vCore compute (e.g., 8 vCore GP Gen5; swap productName for tier/series)
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Compute Gen5
 SkuName: 8 vCore
 MeterName: vCore
 
-# Storage (General Purpose) — use Quantity for provisioned GB
+### Storage (General Purpose) — use Quantity for provisioned GB
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Storage
@@ -66,9 +66,9 @@ Total = Monthly Compute + Monthly Storage
 
 ## Reserved Instance Pricing
 
-# RI compute (swap productName for BC). Returns 1-Year + 3-Year terms.
+### RI compute (swap productName for BC). Returns 1-Year + 3-Year terms.
 
-# Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
+### Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Compute Gen5

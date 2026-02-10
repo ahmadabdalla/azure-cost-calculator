@@ -10,14 +10,14 @@ aliases: [SQL DB, Azure SQL, sql]
 
 ## Query Pattern
 
-# vCore compute (e.g., 2 vCore GP; swap productName for Business Critical)
+### vCore compute (e.g., 2 vCore GP; swap productName for Business Critical)
 
 ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5
 SkuName: 2 vCore
 MeterName: vCore
 
-# Storage — for BC: use '...Business Critical - Storage' + 'Business Critical Data Stored'
+### Storage — for BC: use '...Business Critical - Storage' + 'Business Critical Data Stored'
 
 ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - Storage
@@ -53,9 +53,9 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 
 ## Reserved Instance Pricing
 
-# RI compute only (swap productName for BC). Returns 1-Year + 3-Year terms.
+### RI compute only (swap productName for BC). Returns 1-Year + 3-Year terms.
 
-# Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
+### Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
 
 ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5

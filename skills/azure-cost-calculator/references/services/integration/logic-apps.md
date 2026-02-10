@@ -16,7 +16,7 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 ## Query Pattern
 
-# Consumption — standard connector actions (use Quantity for monthly volume)
+### Consumption — standard connector actions (use Quantity for monthly volume)
 
 ServiceName: Logic Apps
 ProductName: Logic Apps
@@ -24,7 +24,7 @@ SkuName: Consumption
 MeterName: Consumption Standard Connector Actions
 Quantity: 10000
 
-# Consumption — enterprise connector actions
+### Consumption — enterprise connector actions
 
 ServiceName: Logic Apps
 ProductName: Logic Apps
@@ -32,7 +32,7 @@ SkuName: Consumption
 MeterName: Consumption Enterprise Connector Actions
 Quantity: 5000
 
-# Standard — vCPU hours (per-vCPU, use InstanceCount for multiple vCPUs)
+### Standard — vCPU hours (per-vCPU, use InstanceCount for multiple vCPUs)
 
 ServiceName: Logic Apps
 ProductName: Logic Apps
@@ -40,21 +40,21 @@ SkuName: Standard
 MeterName: Standard vCPU Duration
 InstanceCount: 2
 
-# Standard — memory (per GiB-hour)
+### Standard — memory (per GiB-hour)
 
 ServiceName: Logic Apps
 ProductName: Logic Apps
 SkuName: Standard
 MeterName: Standard Memory Duration
 
-# Hybrid — on-premises vCPU hours
+### Hybrid — on-premises vCPU hours
 
 ServiceName: Logic Apps
 ProductName: Logic Apps
 SkuName: Hybrid
 MeterName: Hybrid vCPU Duration
 
-# Integration Account (add-on for B2B) — substitute tier: Basic, Standard, Premium
+### Integration Account (add-on for B2B) — substitute tier: Basic, Standard, Premium
 
 ServiceName: Logic Apps
 ProductName: Logic Apps Integration Account

@@ -14,7 +14,7 @@ aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics]
 
 ## Query Pattern
 
-# Azure Monitor — custom metrics
+### Azure Monitor — custom metrics
 
 ServiceName: Azure Monitor
 MeterName: Monitored Time Series

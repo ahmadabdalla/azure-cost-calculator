@@ -12,19 +12,19 @@ aliases: [AKS, kubernetes, k8s]
 
 ## Query Pattern
 
-# AKS management fee — Standard tier (filter to Uptime SLA only)
+### AKS management fee — Standard tier (filter to Uptime SLA only)
 
 ServiceName: Azure Kubernetes Service
 SkuName: Standard
 MeterName: Standard Uptime SLA
 
-# AKS management fee — Standard LTS (only if user needs Long Term Support)
+### AKS management fee — Standard LTS (only if user needs Long Term Support)
 
 ServiceName: Azure Kubernetes Service
 SkuName: Standard
 MeterName: Standard Long Term Support
 
-# Node VMs - query as Virtual Machines
+### Node VMs - query as Virtual Machines
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5

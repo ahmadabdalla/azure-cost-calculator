@@ -22,13 +22,13 @@ aliases:
 
 ## Query Pattern
 
-# Log Analytics — pay-as-you-go ingestion (per GB)
+### Log Analytics — pay-as-you-go ingestion (per GB)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
 
-# Log Analytics — data retention (beyond 31 days free)
+### Log Analytics — data retention (beyond 31 days free)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
@@ -80,7 +80,7 @@ Monthly retention cost = retentionPrice × 295
 
 For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) save 15–30% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 200 ≈ 20%, 500 ≈ 25%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
 
-# Example: 100 GB/day commitment tier
+### Example: 100 GB/day commitment tier
 
 ServiceName: Azure Monitor
 SkuName: 100 GB Commitment Tier
