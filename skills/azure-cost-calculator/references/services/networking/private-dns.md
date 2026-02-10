@@ -1,7 +1,7 @@
 ---
 serviceName: Azure DNS
 category: networking
-aliases: [private DNS, Private DNS Zone]
+aliases: [private DNS, Private DNS Zones]
 ---
 
 # Private DNS Zones

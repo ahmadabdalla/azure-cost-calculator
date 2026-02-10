@@ -1,7 +1,7 @@
 ---
 serviceName: Azure DNS
 category: networking
-aliases: [DNS Zones, Private DNS Zones]
+aliases: [DNS Zones]
 ---
 
 # Azure DNS
@@ -10,7 +10,7 @@ aliases: [DNS Zones, Private DNS Zones]
 
 > **Trap (mixed SKUs)**: Unfiltered queries return Public, Private, Private Resolver, and DNS Security Policy meters. Always filter with `SkuName: Public` for public DNS zones.
 >
-> **Trap (tiered pricing)**: Zone and query meters each have two tiers. First 25 zones at higher rate, zones 26+ at lower rate. First 1B queries at higher rate, 1B+ at lower rate. Do NOT sum both tiers — pick the tier matching expected volume.
+> **Trap (tiered pricing)**: Zone and query meters each return two rows (one per tier). For zones: apply tier 1 rate to the first 25, tier 2 rate to the remainder. For queries: apply tier 1 rate to the first 1B, tier 2 to the remainder. Do NOT use a single tier's rate for all units.
 
 > **Warning**: **Zone-based regions / Global pricing** — use `Region: Zone 1` (not ARM regions) or query the API directly with empty armRegionName.
 
@@ -21,6 +21,7 @@ aliases: [DNS Zones, Private DNS Zones]
 ServiceName: Azure DNS
 SkuName: Public
 MeterName: Public Zone
+Region: Zone 1
 Quantity: 10
 
 ### Public DNS queries
@@ -28,6 +29,7 @@ Quantity: 10
 ServiceName: Azure DNS
 SkuName: Public
 MeterName: Public Queries
+Region: Zone 1
 
 ### Direct API (Global pricing)
 
@@ -36,12 +38,13 @@ Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields
 
-| Parameter     | How to determine               | Example values           |
-| ------------- | ------------------------------ | ------------------------ |
-| `serviceName` | Always `Azure DNS`             | `Azure DNS`              |
-| `productName` | Single product                 | `Azure DNS`              |
-| `skuName`     | `Public` for public DNS zones  | `Public`, `Private`      |
-| `meterName`   | Zone hosting or query volume   | `Public Zone`, `Public Queries` |
+| Parameter     | How to determine                                        | Example values                                    |
+| ------------- | ------------------------------------------------------- | ------------------------------------------------- |
+| `serviceName` | Always `Azure DNS`                                      | `Azure DNS`                                       |
+| `productName` | Single product                                          | `Azure DNS`                                       |
+| `skuName`     | `Public` for public DNS zones                           | `Public`, `Private`                               |
+| `Region`      | Delivery zone (Zone 1–4 / Global), **not** ARM regions  | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`            |
+| `meterName`   | Zone hosting or query volume                            | `Public Zone`, `Public Queries`                   |
 
 ## Meter Names
 
@@ -62,10 +65,11 @@ Queries = queryPrice × queriesInMillions
 Monthly = Zones + Queries
 ```
 
-For 25+ zones (tiered):
+For 25+ zones or 1B+ queries (tiered):
 
 ```
 Zones   = (tier1_retailPrice × 25) + (tier2_retailPrice × (zoneCount - 25))
+Queries = (tier1_retailPrice × 1000) + (tier2_retailPrice × (queriesInMillions - 1000))
 Monthly = Zones + Queries
 ```
 
