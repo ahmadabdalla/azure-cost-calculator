@@ -1,15 +1,7 @@
 ---
 serviceName: Application Insights
 category: monitoring
-aliases:
-  [
-    App Insights,
-    APM,
-    Application Performance Monitoring,
-    Application Performance,
-    AppInsights,
-    Azure Application Insights,
-  ]
+aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 ---
 
 # Application Insights
@@ -24,13 +16,13 @@ aliases:
 
 ### Application Insights data ingestion (via Log Analytics workspace)
 
-ServiceName: Log Analytics
+ServiceName: Log Analytics  <!-- cross-service -->
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
 
 ### Application Insights data retention (via Log Analytics workspace)
 
-ServiceName: Log Analytics
+ServiceName: Log Analytics  <!-- cross-service -->
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Retention
 

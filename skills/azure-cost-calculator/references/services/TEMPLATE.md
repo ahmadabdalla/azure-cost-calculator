@@ -24,7 +24,7 @@ category:
     communication,
     specialist,
   }
-aliases: [{ comma-separated common names, abbreviations, and synonyms }]
+aliases: [{ from routing map — use exactly the aliases listed, do not add extras }]
 ---
 
 # {Service Display Name}
@@ -42,12 +42,18 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
      1–45. Do not rely on exact line ranges for YAML front matter, titles, or
      trap warnings — their length may vary.
 
+  0b. 100-LINE LIMIT: The total file length must not exceed 100 lines of markdown
+      content. This budget covers YAML, title, primary cost, traps, query patterns,
+      tables, formulas, and notes. Optimize for density — every line costs tokens
+      at runtime.
+
   1. TITLE: Use the official Azure service name as shown in the portal.
 
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
      - serviceName: The exact case-sensitive value from the Retail Prices API
      - category: The category folder this file lives in (compute, databases, etc.)
      - aliases: Common names, abbreviations, and synonyms users might search for
+       Always use inline [...] format for aliases — never multi-line YAML sequences.
 
   2. PRIMARY COST: A concise summary of the main billing dimensions.
      Examples:
@@ -67,6 +73,10 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
   4. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
      If the service requires direct API calls (e.g., Global-only pricing),
      provide API URL and Fields in declarative format instead and explain why.
+
+  4b. SCALING: At least one query pattern must demonstrate scaling with
+      InstanceCount: N (for multi-unit resources) or Quantity: N (for
+      usage-based meters), with a brief comment explaining the parameter.
 
   5. KEY FIELDS: Document the exact API field values (case-sensitive).
      Organize as a table with Parameter, How to determine, Example values.
@@ -98,6 +108,9 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
   - Keep section headers clean: ## Meter Names, ## Product Names, etc.
   - Trap format: > **Trap**: ... or > **Trap ({descriptive name})**: ...
   - Agent instruction format: > **Agent instruction**: ...
+  - Warning format: > **Warning**: ... (for API-unavailable or USD-only notices)
+  - Note format: > **Note**: ... (for informational blockquotes)
+  - Do not use emoji prefixes (⚠) in blockquotes
 
   DELETE THIS COMMENT BLOCK BEFORE PUBLISHING.
 -->
@@ -105,6 +118,10 @@ aliases: [{ comma-separated common names, abbreviations, and synonyms }]
 > **Trap**: {Description of a common pricing API gotcha — e.g., unfiltered queries returning too many meters, summary totals being inflated, wrong meter names, sub-cent rounding to $0.00, etc. Explain what goes wrong and how to avoid it.}
 >
 > **Agent instruction**: {Optional — specific guidance for the AI agent, e.g., "Do NOT report $0.00 to the user", "Always ignore the script's MonthlyCost for Reservation items", etc.}
+
+> **Warning**: {For API-unavailable, Global-only, or USD-only pricing notices — e.g., "This service has no regional pricing — use direct API query with USD only."}
+
+> **Note**: {For informational context that is not a trap or warning — e.g., "The Azure Portal calls this service 'X' but the API uses 'Y'."}
 
 ## Query Pattern
 
@@ -119,6 +136,8 @@ MeterName: {meterName}
   QUERY PATTERN GUIDANCE:
   - Use declarative Key: Value pairs — no code fences, no script names
   - Always include ServiceName at minimum
+  - Repeat ServiceName: in every query block — do not omit it with an
+    "All patterns below use..." preamble. Batch mode parses blocks individually.
   - Add ProductName, SkuName, MeterName as needed to get precise results
   - Show the recommended (most filtered) query first
   - Add variants for different tiers, OS types, or SKUs
@@ -131,6 +150,11 @@ MeterName: {meterName}
   - Use PriceType: Reservation for reserved instance queries
   - Use Quantity: N for meters priced per-unit (e.g., per 100 RU/s)
   - Use InstanceCount: N for multiple identical resources
+
+  Available declarative keys (translated to runtime flags automatically):
+    ServiceName, ProductName, SkuName, MeterName, PriceType,
+    Quantity, InstanceCount, Region, ArmSkuName, Currency,
+    HoursPerMonth, OutputFormat
 -->
 
 ## Key Fields
@@ -181,6 +205,10 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
     Tiered:        Monthly = Σ(retailPrice_tier × units_in_tier)
     Composite:     Monthly = Compute + Storage + Operations
     Free grant:    Billable = max(0, total - freeGrant)
+
+  Variable naming convention:
+    Single component:   retailPrice
+    Multi-component:    compute_retailPrice, storage_retailPrice, backup_retailPrice
 -->
 
 ## Notes
@@ -188,6 +216,8 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 - {Free tier details, if any}
 - {Default configuration assumptions}
 - {Common mistakes to avoid}
+- {Capacity planning: what 1 scalable unit provides in throughput/requests/connections}
+- {Tier limitations: features or meters that differ between tiers}
 - {Links to Azure pricing page if useful}
 - {Relationship to other services, e.g., "Node VMs are priced as Virtual Machines"}
 

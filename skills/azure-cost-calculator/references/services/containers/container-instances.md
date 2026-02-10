@@ -1,16 +1,7 @@
 ---
 serviceName: Container Instances
 category: containers
-aliases:
-  [
-    ACI,
-    Azure Container Instances,
-    serverless containers,
-    container instances,
-    container groups,
-    ACI containers,
-    ACI serverless,
-  ]
+aliases: [ACI, Azure Container Instances, serverless containers, container instances, container groups, ACI containers, ACI serverless]
 ---
 
 # Azure Container Instances

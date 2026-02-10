@@ -6,6 +6,8 @@ aliases: [firewall]
 
 # Azure Firewall
 
+**Primary cost**: Deployment hourly rate x 730 + data processing per-GB
+
 **Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
 
 > **Trap**: You need **TWO separate queries** per tier — one for the fixed deployment cost and one for data processing. A single unfiltered query returns both meters mixed together, and the `summary.totalMonthlyCost` is meaningless because it sums a per-hour rate with a per-GB rate.

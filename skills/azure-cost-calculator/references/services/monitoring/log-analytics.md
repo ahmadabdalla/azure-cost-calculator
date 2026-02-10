@@ -1,15 +1,7 @@
 ---
 serviceName: Log Analytics
 category: monitoring
-aliases:
-  [
-    OMS,
-    Workspace,
-    Logs,
-    Log Analytics Workspace,
-    Azure Monitor Logs,
-    Operations Management Suite,
-  ]
+aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
 ---
 
 # Log Analytics
@@ -36,7 +28,7 @@ MeterName: Analytics Logs Data Retention
 
 ### Commitment tier (100+ GB/day) — uses ServiceName: Azure Monitor
 
-ServiceName: Azure Monitor
+ServiceName: Azure Monitor  <!-- cross-service -->
 SkuName: 100 GB Commitment Tier
 MeterName: 100 GB Commitment Tier Capacity Reservation
 

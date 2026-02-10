@@ -16,7 +16,7 @@ aliases: [HPC Batch, Batch Compute]
 
 ### Pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
 
-ServiceName: Virtual Machines
+ServiceName: Virtual Machines <!-- cross-service -->
 ArmSkuName: Standard_D4s_v5
 ProductName: Virtual Machines Dsv5 Series
 InstanceCount: 4

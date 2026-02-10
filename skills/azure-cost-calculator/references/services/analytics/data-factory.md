@@ -1,5 +1,5 @@
 ---
-serviceName: Azure Data Factory
+serviceName: Azure Data Factory v2
 category: analytics
 aliases: [ADF, ETL, Data Pipeline]
 ---
