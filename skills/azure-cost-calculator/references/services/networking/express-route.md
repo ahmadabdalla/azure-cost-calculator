@@ -13,42 +13,29 @@ aliases: [ER, Dedicated Circuit]
 
 ## Query Pattern
 
-### Gateway — zone-redundant (most common) — use InstanceCount for multiple gateways
+### Gateway — substitute {GatewaySku} from Gateways table
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute Gateway
-MeterName: ErGw2AZ Gateway
-InstanceCount: 1
+MeterName: {GatewaySku} Gateway
 
-### Circuit — Standard Metered 1 Gbps (flat monthly fee, Zone 1 = US/Europe)
-
-ServiceName: ExpressRoute
-ProductName: ExpressRoute
-MeterName: Standard Metered Data 1 Gbps Circuit
-Region: Zone 1
-
-### Circuit — Standard Unlimited 1 Gbps
+### Circuit — substitute {Plan}, {DataModel}, {Bandwidth} from Circuits table
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
-MeterName: Standard Unlimited Data 1 Gbps Circuit
-Region: Zone 1
+MeterName: {Plan} {DataModel} {Bandwidth} Circuit
+Region: {Zone}
 
-### Circuit — Premium Metered 1 Gbps (adds global reach)
-
-ServiceName: ExpressRoute
-ProductName: ExpressRoute
-MeterName: Premium Metered Data 1 Gbps Circuit
-Region: Zone 1
-
-### Metered outbound data (per-GB egress on Metered circuits)
+### Metered outbound data (per-GB egress on Metered circuits only)
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
-SkuName: 1 Gbps Metered Data
 MeterName: Metered Data - Data Transfer Out
-Quantity: 1000
-Region: Zone 1
+Region: {Zone}
+
+> **Circuit placeholders**: `{Plan}` = Standard / Premium / Local. `{DataModel}` = Metered Data / Unlimited Data. `{Bandwidth}` = 50 Mbps, 100 Mbps, 200 Mbps, 500 Mbps, 1 Gbps, 2 Gbps, 5 Gbps, 10 Gbps. `{Zone}` = Zone 1 (US/Europe), Zone 2 (APAC/Australia/Japan), Zone 3 (Brazil/South Africa/UAE).
+> **Gateway placeholders**: `{GatewaySku}` = ErGw1AZ, ErGw2AZ, ErGw3AZ, ErGwScale (zone-redundant) or Standard, High Performance, Ultra High Performance (legacy non-AZ). Legacy SKUs use separate productNames — see Gateways table.
+> **Trap (skuName collision)**: Standard and Premium circuits share the same `skuName` (e.g., `1 Gbps Metered Data`). The only differentiator is `meterName`. Always filter by `meterName`, not `skuName`.
 
 ## Meter Names — Gateways
 
