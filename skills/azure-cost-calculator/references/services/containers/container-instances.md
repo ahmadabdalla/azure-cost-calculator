@@ -17,7 +17,7 @@ aliases:
 
 **Primary cost**: vCPU per-hour + memory per-GB-hour (Linux); add Windows software surcharge for Windows containers
 
-> **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU) totalling ~$71/mo — always filter with `ProductName 'Container Instances' SkuName 'Standard'` for standard Linux pricing.
+> **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU) — always filter with `ProductName: Container Instances`, `SkuName: Standard` for standard Linux pricing.
 >
 > **Trap (memory & per-second MonthlyCost)**: The script reports `$0.0` for `Standard Memory Duration` (unit `1 GB Hour`) and `Standard Windows Software Duration` (unit `1 Second`) because it cannot infer quantity. Memory: `retailPrice × GiB × 730`. Windows: `retailPrice × vCPUs × 730 × 3600`.
 >

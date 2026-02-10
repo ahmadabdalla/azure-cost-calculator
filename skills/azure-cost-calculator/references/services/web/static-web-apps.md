@@ -8,9 +8,9 @@ aliases: [SWA, JAMstack]
 
 **Primary cost**: Fixed monthly per-app fee (Standard) + bandwidth overage per-GB + optional Azure Front Door add-on hourly
 
-> **Trap (serviceName mismatch)**: The API `serviceName` is `Azure App Service`, not `Azure Static Web Apps`. You **must** include `ProductName 'Static Web Apps'` to isolate SWA meters from regular App Service meters.
+> **Trap (serviceName mismatch)**: The API `serviceName` is `Azure App Service`, not `Azure Static Web Apps`. You **must** include `ProductName: Static Web Apps` to isolate SWA meters from regular App Service meters.
 
-> **Trap (Region availability)**: SWA pricing is not available in `eastus`. Use `Region 'eastus2'` or another supported region (centralus, westus2, westeurope, etc.).
+> **Trap (Region availability)**: SWA pricing is not available in `eastus`. Use `Region: eastus2` or another supported region (centralus, westus2, westeurope, etc.).
 
 > **Trap (Inflated totals)**: Omitting `MeterName` returns app + AFD + bandwidth meters summed together (~$26.72). Always filter by `MeterName` to get individual component costs.
 

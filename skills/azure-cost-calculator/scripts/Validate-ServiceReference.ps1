@@ -236,7 +236,7 @@ function Test-ServiceReference {
     $first45 = if ($lines.Count -ge 45) { $lines[0..44] } else { $lines }
     $hasQueryInFirst45 = $false
     for ($i = 0; $i -lt $first45.Count; $i++) {
-        if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)' -or $first45[$i] -match '^\s*ServiceName\s*:') {
+        if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)' -or $first45[$i] -match '^\s*ServiceName\s*:' -or $first45[$i] -match '^\s*API\s*:') {
             $hasQueryInFirst45 = $true
             break
         }
@@ -249,7 +249,7 @@ function Test-ServiceReference {
                 'Query pattern found within first 45 lines'
             }
             else {
-                'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block or ServiceName: declaration.'
+                'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block, ServiceName: declaration, or API: declaration.'
             }
         })
 

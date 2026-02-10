@@ -43,7 +43,7 @@ ProductName: Azure App Service Premium v3 Plan - Linux
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
-Region: eastus, australiaeast, westeurope
+Region: eastus,australiaeast,westeurope
 OutputFormat: Table
 
 # Cosmos DB 400 RU/s
