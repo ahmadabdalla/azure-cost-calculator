@@ -16,6 +16,7 @@ function Get-MonthlyMultiplier {
         '1 Hour*' { return $HoursMonth }
         '1/Hour' { return $HoursMonth }
         '1 GiB Hour' { return $HoursMonth }
+        '1/Day' { return 30 }
         default { return 1 }
     }
 }

@@ -18,6 +18,9 @@ get_monthly_multiplier() {
         "1 GiB Hour")
             echo "$hours_month"
             ;;
+        "1/Day")
+            echo 30
+            ;;
         *)
             echo 1
             ;;
