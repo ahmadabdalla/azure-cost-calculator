@@ -8,14 +8,16 @@ aliases: [private link, private endpoint, PL]
 
 **Primary cost**: Per-endpoint hourly fee + per-GB data processed (ingress/egress)
 
-> **Warning**: **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
+> **Note**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion.
 
 ## Query Pattern
 
 ### Substitute {meterName} from Meter Names table
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq '{meterName}'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+ServiceName: Virtual Network
+ProductName: Virtual Network Private Link
+MeterName: {meterName}
+Region: Global
 
 Meter names: `Standard Private Endpoint` (hourly), `Standard Data Processed - Ingress` (per-GB), `Standard Data Processed - Egress` (per-GB)
 
@@ -29,11 +31,11 @@ Meter names: `Standard Private Endpoint` (hourly), `Standard Data Processed - In
 
 ## Meter Names
 
-| Meter                               | Unit Price (USD) | unitOfMeasure | Notes                  |
-| ----------------------------------- | ---------------- | ------------- | ---------------------- |
-| `Standard Private Endpoint`         | $0.01/hr         | `1 Hour`      | Per endpoint, per hour |
-| `Standard Data Processed - Ingress` | $0.01/GB         | `1 GB`        | Inbound data           |
-| `Standard Data Processed - Egress`  | $0.01/GB         | `1 GB`        | Outbound data          |
+| Meter                               | unitOfMeasure | Notes                  |
+| ----------------------------------- | ------------- | ---------------------- |
+| `Standard Private Endpoint`         | `1 Hour`      | Per endpoint, per hour |
+| `Standard Data Processed - Ingress` | `1 GB`        | Inbound data (tiered)  |
+| `Standard Data Processed - Egress`  | `1 GB`        | Outbound data (tiered) |
 
 ## Cost Formula
 
@@ -43,15 +45,17 @@ Monthly = endpointPrice × 730 × endpointCount + dataIngressPrice × ingressGB 
 
 ## Example (3 endpoints, 100 GB total data)
 
+Query each meter via the script, then calculate:
+
 ```
-Endpoints: $0.01/hr × 730 × 3 = ~$21.90/month
-Data: $0.01/GB × 100 = ~$1.00/month
-Total: ~$22.90/month (USD)
+Endpoints: endpointPrice × 730 × 3
+Data: dataIngressPrice × ingressGB + dataEgressPrice × egressGB
+Total: Endpoints + Data (USD)
 ```
 
 ## Notes
 
-- USD-only (Global region) — see shared.md § Common Traps for mandatory currency conversion
+- USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
 - Private endpoints are per-resource (e.g., one for SQL, one for Storage, one for Key Vault)
 - Data processing charges are typically negligible compared to endpoint hours for moderate usage
 - Each private endpoint consumes an IP address from the VNet subnet

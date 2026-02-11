@@ -8,7 +8,7 @@ aliases: [private DNS, Private DNS Zones]
 
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
-> **Warning**: **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
+> **Warning**: **Global-only pricing / USD-only** — see shared.md & Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
 > **Trap**: Zone pricing is **tiered** — first 25 zones at $0.50/zone/month, additional at $0.10/zone/month. Pick the tier matching expected zone count, do NOT sum all tiers.
 
 ## Query Pattern
@@ -62,7 +62,7 @@ Total: $7.00/month (USD)
 
 ## Notes
 
-- USD-only (Global region) — see shared.md § Common Traps for mandatory currency conversion
+- USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
 - Private DNS zones are commonly paired with Private Endpoints (one zone per service type)
 - Typical private endpoint zones: `privatelink.database.windows.net`, `privatelink.blob.core.windows.net`, etc.
 - Query volume is usually very low — the zone hosting fee dominates for most deployments

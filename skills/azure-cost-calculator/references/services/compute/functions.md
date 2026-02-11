@@ -11,7 +11,7 @@ aliases: [azure functions, serverless, function app]
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> **Warning**: **Sub-cent pricing** — see shared.md § Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
+> **Warning**: **Sub-cent pricing** — see shared.md & Common Traps. The script's `MonthlyCost` shows `$0` because quantity is unknown — use the `UnitPrice` from API results directly. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -27,16 +27,16 @@ ServiceName: Functions
 SkuName: Premium
 ProductName: Premium Functions
 
-## Known Consumption Plan Rates
+## Consumption Plan Meters
 
-| Meter                       | Unit        | Published Rate (USD)  | Free Grant      |
-| --------------------------- | ----------- | --------------------- | --------------- |
-| `Standard Total Executions` | per 10 exec | $0.000002 per 10 exec | 1M executions   |
-| `Standard Execution Time`   | per 1 GB-s  | $0.000016 per GB-s    | 400K GB-seconds |
+| Meter                       | Unit        | Free Grant      |
+| --------------------------- | ----------- | --------------- |
+| `Standard Total Executions` | per 10 exec | 1M executions   |
+| `Standard Execution Time`   | per 1 GB-s  | 400K GB-seconds |
 
-> These rates are from the [Azure Functions pricing page](https://azure.microsoft.com/en-au/pricing/details/functions/). The API returns them but at precision below what the script rounds to — the script shows `$0.00` for both.
+> Query the API for current `UnitPrice` values. The script's `MonthlyCost` shows `$0` because it cannot infer quantity — use `UnitPrice` directly in your calculation.
 
-> **For non-USD currencies**: USD-only due to sub-cent rounding — see shared.md § Common Traps for mandatory conversion.
+> **For non-USD currencies**: Sub-cent rates may not convert cleanly — see shared.md & Common Traps.
 
 ## Manual Calculation Example
 
@@ -48,10 +48,12 @@ GB-seconds = 2,000,000 × 0.5 GB × 1s = 1,000,000 GB-s
 Billable executions = max(0, 2,000,000 - 1,000,000) = 1,000,000
 Billable GB-seconds = max(0, 1,000,000 - 400,000)   = 600,000
 
-Execution cost = 1,000,000 × ($0.000002 / 10) = $0.20 USD
-Duration cost  = 600,000 × $0.000016          = $9.60 USD
-Total          = $9.80 USD/month
+Execution cost = billable_executions × (executions_UnitPrice / 10)
+Duration cost  = billable_GB_seconds × execution_time_UnitPrice
+Total          = Execution cost + Duration cost
 ```
+
+> Query API for `Standard Total Executions` and `Standard Execution Time` UnitPrice values.
 
 ## Cost Formula
 
@@ -81,4 +83,4 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 
 - Consumption plan has a generous free grant — many small workloads cost $0
 - Premium plan is billed per-second with a minimum of one instance
-- Sub-cent pricing — see shared.md § Common Traps for mandatory conversion
+- The script's `MonthlyCost` shows `$0` for Consumption because quantity is unknown — use `UnitPrice` directly

@@ -75,7 +75,7 @@ ProductName: SQL Managed Instance General Purpose - Compute Gen5
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results for reservations. MonthlyCost is wildly wrong — see shared.md § RI MonthlyCost. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results for reservations. MonthlyCost is wildly wrong — see shared.md & RI MonthlyCost. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Product Names
 

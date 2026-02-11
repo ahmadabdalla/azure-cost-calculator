@@ -8,7 +8,7 @@ aliases: [container apps, ACA]
 
 **Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) incl. GPU at ~$6,666/mo — always use `SkuName`. Consumption (`Standard`) meters show `$0.00` (sub-cent precision); use published rates below. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
+> **Trap**: Unfiltered query returns 13+ meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU — always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows `$0` because quantity is unknown — use the `UnitPrice` from API results directly. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
 
 ## Query Pattern
 
@@ -30,22 +30,22 @@ ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: Hybrid
 
-## Known Consumption Plan Rates
+## Consumption Plan Meters
 
-| Meter               | Published Rate (USD)                      | Free Grant              |
-| ------------------- | ----------------------------------------- | ----------------------- |
-| vCPU Active Usage   | $0.000024 per vCPU-second                 | 180,000 vCPU-seconds/mo |
-| Memory Active Usage | $0.000003 per GiB-second                  | 360,000 GiB-seconds/mo  |
-| Requests            | ~$0.40 per 1M requests (varies by region) | 2M requests/mo          |
+| Meter                          | Free Grant              |
+| ------------------------------ | ----------------------- |
+| `Standard vCPU Active Usage`   | 180,000 vCPU-seconds/mo |
+| `Standard Memory Active Usage` | 360,000 GiB-seconds/mo  |
+| `Standard Requests`            | 2M requests/mo          |
 
-> **Note**: Rates from [Azure Container Apps pricing page](https://azure.microsoft.com/pricing/details/container-apps/). API returns `$0.00` for vCPU/memory in all currencies (sub-cent rounding). Use USD rates above; for other currencies convert via [regions-and-currencies.md](../../regions-and-currencies.md).
+> Query the API for current `UnitPrice` values. The script's `MonthlyCost` shows `$0` because it cannot infer quantity — use `UnitPrice` directly in your calculation.
 
 ## Cost Formula
 
 ```
 Consumption (Standard):
-  Monthly = (vCPU_seconds × $0.000024) + (GiB_seconds × $0.000003)
-           + max(0, requests − 2M) / 1M × $request_rate
+  Monthly = (billable_vCPU_seconds × vCPU_UnitPrice) + (billable_GiB_seconds × mem_UnitPrice)
+           + max(0, requests − 2M) / 1M × request_UnitPrice
   Free grant: 180K vCPU-s + 360K GiB-s + 2M requests per subscription/month
 
 Dedicated:
@@ -70,11 +70,11 @@ Dedicated:
 | Dedicated | `Dedicated Memory Usage`       | 1 Hour        | Per GiB per hour                     |
 | Dedicated | `Dedicated Plan Management`    | 1 Hour        | Per environment (shared across apps) |
 | Dedicated | `Dedicated GPU Usage`          | 1 Hour        | GPU workloads only                   |
-| Standard  | `Standard vCPU Active Usage`   | 1 Second      | Shows $0.00 — sub-cent               |
-| Standard  | `Standard vCPU Idle Usage`     | 1 Second      | Shows $0.00 — sub-cent               |
-| Standard  | `Standard Memory Active Usage` | 1 GiB Second  | Shows $0.00 — sub-cent               |
-| Standard  | `Standard Memory Idle Usage`   | 1 GiB Second  | Shows $0.00 — sub-cent               |
-| Standard  | `Standard Requests`            | 1M            | Only meter returning non-zero price  |
+| Standard  | `Standard vCPU Active Usage`   | 1 Second      | Use `UnitPrice` from API             |
+| Standard  | `Standard vCPU Idle Usage`     | 1 Second      | Use `UnitPrice` from API             |
+| Standard  | `Standard Memory Active Usage` | 1 GiB Second  | Use `UnitPrice` from API             |
+| Standard  | `Standard Memory Idle Usage`   | 1 GiB Second  | Use `UnitPrice` from API             |
+| Standard  | `Standard Requests`            | 1M            | Use `UnitPrice` from API             |
 
 ### Manual Calculation Example
 
@@ -83,13 +83,14 @@ Dedicated:
 ```
 Active-s = 10M × 0.8 = 8M | vCPU-s = 8M × 0.5 = 4M | GiB-s = 8M × 1 = 8M
 Billable: vCPU-s = 4M − 180K = 3,820K · GiB-s = 8M − 360K = 7,640K · reqs = 10M − 2M = 8M
-Cost: vCPU 3,820K × $0.000024 = $91.68 + mem 7,640K × $0.000003 = $22.92 + reqs 8 × $0.40 = $3.20
-Total = $117.80/mo
+Cost: (billable_vCPU-s × vCPU_UnitPrice) + (billable_GiB-s × mem_UnitPrice) + (billable_reqs × req_UnitPrice)
 ```
+
+> Query API for `Standard vCPU Active Usage`, `Standard Memory Active Usage`, and `Standard Requests` UnitPrice values.
 
 ## Notes
 
-- Consumption vCPU and memory meters return `$0.00` from the API — always use the Known Rates table above
+- The script's `MonthlyCost` for Consumption shows `$0` because quantity is unknown — use the `UnitPrice` field directly
 - Dedicated plan charges per-environment management fee in addition to vCPU/memory
 - GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps

@@ -9,7 +9,7 @@ aliases: [ACR, container registry]
 **Primary cost**: Registry unit (daily) + excess storage (per-GB/month)
 
 > **Critical trap**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. Multiplying by 730 gives a result ~24× too high. Always multiply by **30** (days/month).
-> **Trap**: The script's auto-calculated `MonthlyCost` is **wrong** for this service. Because the unit is `1/Day`, the script reports only the daily price (e.g., `$2.38`) instead of the correct monthly cost (`$2.38 × 30 = $71.44`). **Always ignore the script's `MonthlyCost`** and manually calculate: `unitPrice × 30`.
+> **Trap**: The script's auto-calculated `MonthlyCost` is **wrong** for this service. Because the unit is `1/Day`, the script reports only the daily price instead of the correct monthly cost (`unitPrice × 30`). **Always ignore the script's `MonthlyCost`** and manually calculate: `unitPrice × 30`.
 >
 > **Agent instruction**: When reporting ACR costs, always check the `unitOfMeasure` field. If it's `1/Day`, multiply by 30 (not 730). Never trust the script's `MonthlyCost` for this service.
 
