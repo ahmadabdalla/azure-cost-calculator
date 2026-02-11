@@ -60,7 +60,7 @@ Full list: [regions-and-currencies.md & Known API-Unavailable Services](regions-
 ### Global/Empty-Region Services
 
 Some services have pricing only under `Global`/empty `armRegionName`, not standard regions.
-For services that use `armRegionName = 'Global'` (e.g., Load Balancer, Private Link), pass `-Region Global` to the scripts — they work normally.
+For services that use `armRegionName = 'Global'` (e.g., Load Balancer, Private Link), pass `Region: Global` to the scripts — they work normally.
 For services that use empty `armRegionName` (e.g., Private DNS), scripts cannot query them — **query the Retail Prices API directly** (see each service file for the query). Prices are USD-only.
 Affected (script workaround needed): Private DNS.
 
@@ -80,9 +80,9 @@ Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). See [reserve
 
 ## Pricing Factors
 
-- **Reserved Instances**: 1yr/3yr commitments save 30-70%. Use `-PriceType Reservation`.
+- **Reserved Instances**: 1yr/3yr commitments save 30-70%. Use `PriceType: Reservation`.
 - **Savings Plans**: Flexible compute commitment, 11-65% savings
 - **Azure Hybrid Benefit**: Existing Windows/SQL licenses reduce costs 40-55%
-- **Dev/Test**: Use `-PriceType DevTestConsumption` for dev/test subscriptions
+- **Dev/Test**: Use `PriceType: DevTestConsumption` for dev/test subscriptions
 - **Regional variance**: Same resource can vary ~9%+ across regions
 - **Data transfer**: Intra-region free, inter-region ~$0.02/GB, outbound ~$0.087/GB (first 5GB free)
