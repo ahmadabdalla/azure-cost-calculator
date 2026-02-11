@@ -24,7 +24,8 @@ ServiceName: Foundry Tools
 ProductName: Azure Language
 SkuName: Standard
 MeterName: Standard Text Records
-Quantity: 100
+
+> Note: This meter is tiered — run without `Quantity` to see tier rows, then manually calculate cost.
 
 ### Document Intelligence — OCR read pages (10K pages/month)
 
@@ -60,40 +61,40 @@ Quantity: 10
 
 ## Key Fields
 
-| Parameter     | How to determine                                       | Example values                                                                   |
-| ------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools`                                 | `Foundry Tools`                                                                  |
-| `productName` | Cognitive domain — each sub-service has its own        | `Azure Language`, `Azure Vision - Face`, `Azure Document Intelligence`           |
-| `skuName`     | Tier — varies by sub-service                           | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`                            |
-| `meterName`   | Feature-specific meter within the sub-service          | `Standard Text Records`, `S0 Read Pages`, `Standard Transactions`                |
+| Parameter     | How to determine                                | Example values                                                         |
+| ------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`                          | `Foundry Tools`                                                        |
+| `productName` | Cognitive domain — each sub-service has its own | `Azure Language`, `Azure Vision - Face`, `Azure Document Intelligence` |
+| `skuName`     | Tier — varies by sub-service                    | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`                  |
+| `meterName`   | Feature-specific meter within the sub-service   | `Standard Text Records`, `S0 Read Pages`, `Standard Transactions`      |
 
 ## Product Names
 
-| Cognitive Domain       | productName                    | Common skuNames              |
-| ---------------------- | ------------------------------ | ---------------------------- |
-| Language (NLP)         | `Azure Language`               | `Standard`, `S0`–`S4`       |
-| Vision — Face          | `Azure Vision - Face`          | `Standard`                   |
-| Vision — Custom        | `Azure Custom Vision`          | `S0`, `Free`                 |
-| Document Intelligence  | `Azure Document Intelligence`  | `S0`, `Free`                 |
-| Speech                 | `Azure Speech`                 | Commitment tiers only (PAYG) |
-| Translator             | `Translator Text`              | `S1`–`S4`, `Free`           |
-| Content Safety         | `Content Safety`               | `Standard`                   |
-| Anomaly Detector       | `Anomaly Detector`             | `Standard`, `Free`           |
+| Cognitive Domain      | productName                   | Common skuNames                            |
+| --------------------- | ----------------------------- | ------------------------------------------ |
+| Language (NLP)        | `Azure Language`              | `Standard`, `S0`–`S4`                      |
+| Vision — Face         | `Azure Vision - Face`         | `Standard`                                 |
+| Vision — Custom       | `Azure Custom Vision`         | `S0`, `Free`                               |
+| Document Intelligence | `Azure Document Intelligence` | `S0`, `Free`                               |
+| Speech                | `Azure Speech`                | `Free`, commitment tiers, specialized SKUs |
+| Translator            | `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`               |
+| Content Safety        | `Content Safety`              | `Standard`                                 |
+| Anomaly Detector      | `Anomaly Detector`            | `Standard`, `Free`                         |
 
 ## Cost Formula
 
-```
-Monthly = retailPrice × Quantity
-```
+- **Block meters (`1K`, `1M`)**: `Monthly = retailPrice × Quantity`
+- **Daily meters (`1/Day`)**: Script shows daily cost — multiply by 30 for monthly
+- **Hourly meters (`1 Hour`)**: Script auto-multiplies by 730
+- **Monthly meters (`1/Month`)**: `Monthly = retailPrice × Quantity`
 
-`Quantity` = number of billable unit blocks (e.g., 100 = 100K text records when `unitOfMeasure` is `1K`). Check `unitOfMeasure` from query results: `1K`, `1M`, `1 Hour`, or `1/Month`.
+`Quantity` = billable units (e.g., 100 = 100K text records when `unitOfMeasure` is `1K`).
 
 ## Notes
 
 - **Scope**: This file covers AI Services (formerly Cognitive Services). Azure OpenAI (GPT/DALL-E) is a separate service — see `openai.md`
 - **Free tiers**: Most sub-services offer a Free SKU with limited monthly quota (e.g., Language: 5K text records, Vision: 20 transactions/minute)
-- **Tiered pricing**: Language Standard Text Records uses volume tiers — the script returns multiple rows with different `TierMinUnits` values
 - **Commitment tiers**: Speech and Language offer monthly commitment tiers (e.g., `Commitment Tier Custom Speech to Text Azure 10K`) with lower per-unit overage rates
-- **Daily billing**: Translator S2–S4 and C2–C4 tiers use `1/Day` billing — multiply by 30 for monthly estimates or use `Quantity: 30`
+- **Daily billing**: Translator S2–S4 and C2–C4 tiers use `1/Day` billing — script shows daily cost; multiply by 30 for monthly estimates
 - **Disconnected containers**: Products ending in `- Disconnected` are air-gapped container deployments with annual billing (`1/Year`) — exclude unless specifically requested
 - Reserved pricing is **not available** — all meters are Consumption-based
