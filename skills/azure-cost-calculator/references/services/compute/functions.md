@@ -11,7 +11,7 @@ aliases: [azure functions, serverless, function app]
 **Consumption plan**: Execution count + execution time (GB-seconds). Free grant: 1M executions + 400K GB-s.
 **Premium plan**: vCPU duration + memory duration (hourly).
 
-> **Warning**: **Sub-cent pricing** — see shared.md § Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
+> **Warning**: **Sub-cent pricing** — see shared.md & Common Traps. Scripts show `$0.00`. Use Known Rates table below and calculate manually. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -36,7 +36,7 @@ ProductName: Premium Functions
 
 > These rates are from the [Azure Functions pricing page](https://azure.microsoft.com/en-au/pricing/details/functions/). The API returns them but at precision below what the script rounds to — the script shows `$0.00` for both.
 
-> **For non-USD currencies**: USD-only due to sub-cent rounding — see shared.md § Common Traps for mandatory conversion.
+> **For non-USD currencies**: USD-only due to sub-cent rounding — see shared.md & Common Traps for mandatory conversion.
 
 ## Manual Calculation Example
 
@@ -81,4 +81,4 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 
 - Consumption plan has a generous free grant — many small workloads cost $0
 - Premium plan is billed per-second with a minimum of one instance
-- Sub-cent pricing — see shared.md § Common Traps for mandatory conversion
+- Sub-cent pricing — see shared.md & Common Traps for mandatory conversion

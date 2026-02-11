@@ -8,7 +8,7 @@ aliases: [DDoS, DDoS protection]
 
 **Primary cost**: Fixed monthly fee per protection plan (Network Protection ~$2,944/month or IP Protection ~$199/month per public IP)
 
-> **Warning**: **API unavailable / USD-only** — see shared.md § Common Traps. Do not query via scripts. Use manual fallback table below.
+> **Warning**: **API unavailable / USD-only** — see shared.md & Common Traps. Do not query via scripts. Use manual fallback table below.
 
 **This service requires manual estimation only.**
 
@@ -43,4 +43,4 @@ IP Protection:
 - IP Protection is better for small deployments with 1-14 public IPs
 - Both plans include DDoS rapid response (DRR) support
 - Overage charges may apply for data processing above included limits
-- USD-only — see shared.md § Common Traps for mandatory currency conversion
+- USD-only — see shared.md & Common Traps for mandatory currency conversion

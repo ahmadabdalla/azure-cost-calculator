@@ -51,7 +51,7 @@ MeterName: {meterName}
 
 ## Defender CSPM (Cloud Security Posture Management)
 
-> **Trap**: Defender CSPM has **no meter** in the Retail Prices API. USD-only — see shared.md § Common Traps. Use the published rate below.
+> **Trap**: Defender CSPM has **no meter** in the Retail Prices API. USD-only — see shared.md & Common Traps. Use the published rate below.
 
 **Pricing**: $5.11 USD per billable resource/month ([Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)). Foundational CSPM is free (not estimated).
 

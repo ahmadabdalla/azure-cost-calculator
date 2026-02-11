@@ -8,14 +8,16 @@ aliases: [private link, private endpoint, PL]
 
 **Primary cost**: Per-endpoint hourly fee + per-GB data processed (ingress/egress)
 
-> **Warning**: **Global-only pricing / USD-only** — see shared.md § Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
+> **Note**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion.
 
 ## Query Pattern
 
 ### Substitute {meterName} from Meter Names table
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Virtual Network' and productName eq 'Virtual Network Private Link' and meterName eq '{meterName}'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+ServiceName: Virtual Network
+ProductName: Virtual Network Private Link
+MeterName: {meterName}
+Region: Global
 
 Meter names: `Standard Private Endpoint` (hourly), `Standard Data Processed - Ingress` (per-GB), `Standard Data Processed - Egress` (per-GB)
 
@@ -51,7 +53,7 @@ Total: ~$22.90/month (USD)
 
 ## Notes
 
-- USD-only (Global region) — see shared.md § Common Traps for mandatory currency conversion
+- USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
 - Private endpoints are per-resource (e.g., one for SQL, one for Storage, one for Key Vault)
 - Data processing charges are typically negligible compared to endpoint hours for moderate usage
 - Each private endpoint consumes an IP address from the VNet subnet

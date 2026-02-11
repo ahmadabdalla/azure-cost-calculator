@@ -59,7 +59,7 @@ ServiceName: Redis Cache
 MeterName: {Size} Cache Instance
 PriceType: Reservation
 
-> **RI MonthlyCost trap** — see shared.md § Reserved Instance MonthlyCost.
+> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
 ## Notes
 
