@@ -53,30 +53,29 @@ InstanceCount: 3
 ServiceName: Azure Bastion
 SkuName: {Tier}
 MeterName: {Tier} Data Transfer Out
-Quantity: 100
 
-> **Agent instruction**: Data transfer is tiered pricing (first 5 GB free, then tiered rates). The query returns multiple rows with `TierMinUnits` — sum the applicable tiers for accurate estimates.
+> **Agent instruction**: Data transfer uses tiered pricing (first 5 GB free, then tiered rates). This query returns multiple rows with `TierMinUnits`; ignore any `summary.totalMonthlyCost` from tooling and manually compute `Σ(tierRate × GB_in_tier)` with the first 5 GB at $0. `ArmSkuName` is not required for data transfer queries — `SkuName` alone is sufficient for all tiers.
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values                    |
-| ------------- | ----------------------------------------- | --------------------------------- |
-| `serviceName` | Always `Azure Bastion`                    | `Azure Bastion`                   |
-| `productName` | Single product for all meters             | `Azure Bastion`                   |
-| `skuName`     | Matches the Bastion tier deployed         | `Basic`, `Standard`, `Premium`    |
-| `meterName`   | Tier-prefixed meter name                  | `Basic Gateway`, `Standard Additional Gateway` |
-| `armSkuName`  | Only needed for Premium tier              | `Premium` (empty for Basic/Standard) |
+| Parameter     | How to determine                       | Example values                                 |
+| ------------- | -------------------------------------- | ---------------------------------------------- |
+| `serviceName` | Always `Azure Bastion`                 | `Azure Bastion`                                |
+| `productName` | Single product for all meters          | `Azure Bastion`                                |
+| `skuName`     | Matches the Bastion tier deployed      | `Basic`, `Standard`, `Premium`                 |
+| `meterName`   | Tier-prefixed meter name               | `Basic Gateway`, `Standard Additional Gateway` |
+| `armSkuName`  | Only needed for Premium gateway meters | `Premium` (empty for Basic/Standard)           |
 
 ## Meter Names
 
-| Meter                          | skuName    | unitOfMeasure | Notes                              |
-| ------------------------------ | ---------- | ------------- | ---------------------------------- |
-| `Basic Gateway`                | `Basic`    | 1 Hour        | Always-on base gateway             |
-| `Standard Gateway`             | `Standard` | 1 Hour        | Always-on base gateway (2 instances) |
-| `Standard Additional Gateway`  | `Standard` | 1 Hour        | Per scale unit beyond base 2       |
-| `Premium Gateway`              | `Premium`  | 1 Hour        | Always-on base gateway (2 instances) |
-| `Premium Additional Gateway`   | `Premium`  | 1 Hour        | Per scale unit beyond base 2       |
-| `{Tier} Data Transfer Out`     | per tier   | 1 GB          | Tiered outbound pricing, first 5 GB free |
+| Meter                         | skuName    | unitOfMeasure | Notes                                    |
+| ----------------------------- | ---------- | ------------- | ---------------------------------------- |
+| `Basic Gateway`               | `Basic`    | 1 Hour        | Always-on base gateway                   |
+| `Standard Gateway`            | `Standard` | 1 Hour        | Always-on base gateway (2 instances)     |
+| `Standard Additional Gateway` | `Standard` | 1 Hour        | Per scale unit beyond base 2             |
+| `Premium Gateway`             | `Premium`  | 1 Hour        | Always-on base gateway (2 instances)     |
+| `Premium Additional Gateway`  | `Premium`  | 1 Hour        | Per scale unit beyond base 2             |
+| `{Tier} Data Transfer Out`    | per tier   | 1 GB          | Tiered outbound pricing, first 5 GB free |
 
 ## Cost Formula
 
@@ -91,6 +90,7 @@ Total monthly          = Gateway + Scale units + Data transfer
 
 - **Always-on cost**: Basic tier minimum is gateway hourly × 730/month with zero connections
 - **Scale unit math**: Base gateway includes 2 instances. Additional scale units = (totalInstances − 2), billed via "Additional Gateway" meter
+- **Capacity per scale unit**: Each scale unit supports ~20 concurrent SSH connections or ~40 concurrent RDP connections
 - **Basic tier**: Fixed at 2 instances, no scaling — supports RDP/SSH only, no file transfer or IP-based connections
 - **Standard tier**: 2–50 instances, adds native client support, file transfer, IP-based connections, shareable links
 - **Premium tier**: 2–200 instances, adds session recording and private-only access
