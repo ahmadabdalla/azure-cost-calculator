@@ -8,7 +8,7 @@ aliases: [AKS, kubernetes, k8s]
 
 **Primary cost**: AKS management fee + VM node costs (priced separately as VMs)
 
-> **Trap**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` ($0.10/hr) and `Standard Long Term Support` ($0.60/hr). The `summary.totalMonthlyCost` sums both, inflating the estimate ~7× (~$511/mo instead of ~$73/mo). Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
+> **Trap**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` and `Standard Long Term Support`. The `summary.totalMonthlyCost` sums both, inflating the estimate ~7×. Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
 
 ## Query Pattern
 

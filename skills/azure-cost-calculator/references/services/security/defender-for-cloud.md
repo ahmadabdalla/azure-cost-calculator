@@ -51,9 +51,22 @@ MeterName: {meterName}
 
 ## Defender CSPM (Cloud Security Posture Management)
 
-> **Trap**: Defender CSPM has **no meter** in the Retail Prices API. USD-only — see shared.md & Common Traps. Use the published rate below.
+> **Trap (Global region only)**: Defender CSPM meters are in `Global` region — not regional endpoints. USD-only — see shared.md & Common Traps.
 
-**Pricing**: $5.11 USD per billable resource/month ([Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)). Foundational CSPM is free (not estimated).
+**Query Pattern**:
+
+ServiceName: Microsoft Defender for Cloud
+ProductName: Microsoft Defender CSPM
+SkuName: Standard
+MeterName: Standard Node
+Region: Global
+
+| skuName    | meterName       | unitOfMeasure | Notes                       |
+| ---------- | --------------- | ------------- | --------------------------- |
+| `Standard` | `Standard Node` | `1/Hour`      | Query API for current price |
+| `Trial`    | `Trial Node`    | `1/Hour`      | Free tier ($0.00)           |
+
+**Pricing**: Query API with Global region for current per-resource/month rate. Foundational CSPM is free (not estimated).
 
 **Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (billing starts Feb 27 2026).
 
@@ -61,6 +74,6 @@ MeterName: {meterName}
 
 > **AKS counting**: AKS node pools are VMSS-based — count the individual node VMs as VMSS VMs. Do NOT count the AKS resource separately. E.g., 1 AKS cluster with 3 nodes = 3 billable resources, not 4.
 
-**Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `$5.11 × 8 = $40.88/mo`.
+**Counting example**: Architecture with 2 VMs, 1 AKS (3 nodes), 2 Storage accounts, 1 PostgreSQL, 1 Key Vault, 1 Container Registry, 1 Load Balancer → billable = 2 + 3 + 2 + 1 = **8 resources** (Key Vault, ACR, LB excluded). Cost = `unitPrice × 730 × 8`.
 
-**Formula**: `$5.11 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.
+**Formula**: `unitPrice × 730 × billableResourceCount` — count only eligible types above; use Azure Resource Graph to enumerate.

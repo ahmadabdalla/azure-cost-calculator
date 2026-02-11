@@ -31,11 +31,11 @@ Meter names: `Standard Private Endpoint` (hourly), `Standard Data Processed - In
 
 ## Meter Names
 
-| Meter                               | Unit Price (USD) | unitOfMeasure | Notes                  |
-| ----------------------------------- | ---------------- | ------------- | ---------------------- |
-| `Standard Private Endpoint`         | $0.01/hr         | `1 Hour`      | Per endpoint, per hour |
-| `Standard Data Processed - Ingress` | $0.01/GB         | `1 GB`        | Inbound data           |
-| `Standard Data Processed - Egress`  | $0.01/GB         | `1 GB`        | Outbound data          |
+| Meter                               | unitOfMeasure | Notes                  |
+| ----------------------------------- | ------------- | ---------------------- |
+| `Standard Private Endpoint`         | `1 Hour`      | Per endpoint, per hour |
+| `Standard Data Processed - Ingress` | `1 GB`        | Inbound data (tiered)  |
+| `Standard Data Processed - Egress`  | `1 GB`        | Outbound data (tiered) |
 
 ## Cost Formula
 
@@ -45,10 +45,12 @@ Monthly = endpointPrice × 730 × endpointCount + dataIngressPrice × ingressGB 
 
 ## Example (3 endpoints, 100 GB total data)
 
+Query each meter via the script, then calculate:
+
 ```
-Endpoints: $0.01/hr × 730 × 3 = ~$21.90/month
-Data: $0.01/GB × 100 = ~$1.00/month
-Total: ~$22.90/month (USD)
+Endpoints: endpointPrice × 730 × 3
+Data: dataIngressPrice × ingressGB + dataEgressPrice × egressGB
+Total: Endpoints + Data (USD)
 ```
 
 ## Notes
