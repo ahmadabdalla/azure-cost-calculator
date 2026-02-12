@@ -51,26 +51,26 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                             |
-| ------------- | --------------------------------------- | ------------------------------------------ |
-| `serviceName` | Always `Traffic Manager`                | `Traffic Manager`                          |
-| `productName` | Single product                          | `Traffic Manager`                          |
-| `skuName`     | Endpoint type or feature                | `Azure Endpoint`, `Non-Azure Endpoint`     |
-| `meterName`   | Billing dimension                       | `DNS Queries`, `Azure Endpoint Health Checks` |
-| `Region`      | Always `Global` (commercial)            | `Global`, `US Gov`                         |
+| Parameter     | How to determine             | Example values                                |
+| ------------- | ---------------------------- | --------------------------------------------- |
+| `serviceName` | Always `Traffic Manager`     | `Traffic Manager`                             |
+| `productName` | Single product               | `Traffic Manager`                             |
+| `skuName`     | Endpoint type or feature     | `Azure Endpoint`, `Non-Azure Endpoint`        |
+| `meterName`   | Billing dimension            | `DNS Queries`, `Azure Endpoint Health Checks` |
+| `Region`      | Always `Global` (commercial) | `Global`, `US Gov`                            |
 
 ## Meter Names
 
-| Meter                                                | skuName                | unitOfMeasure | Notes                              |
-| ---------------------------------------------------- | ---------------------- | ------------- | ---------------------------------- |
-| `DNS Queries`                                        | `Azure Endpoint`       | `1M`          | Tiered: 0–1B at higher rate, 1B+ lower |
-| `Azure Endpoint Health Checks`                       | `Azure Endpoint`       | `1`           | Per endpoint per month             |
-| `Azure Endpoint Fast Interval Health Check Add-ons`  | `Azure Endpoint`       | `1`           | 10s interval add-on per endpoint   |
-| `Non-Azure Endpoint Health Checks`                   | `Non-Azure Endpoint`   | `1`           | Per endpoint per month             |
-| `Non-Azure Endpoint Fast Interval Health Check Add-ons` | `Non-Azure Endpoint` | `1`          | 10s interval add-on per endpoint   |
-| `Azure Region Real User Measurements`                | `Azure Region`         | `1M`          | Free (retailPrice = 0)             |
-| `Non-Azure Region Real User Measurements`            | `Non-Azure Region`     | `1M`          | Free (retailPrice = 0)             |
-| `Traffic View Data Points Processed`                 | `Traffic View`         | `1M`          | Per million data points            |
+| Meter                                                   | skuName              | unitOfMeasure | Notes                                  |
+| ------------------------------------------------------- | -------------------- | ------------- | -------------------------------------- |
+| `DNS Queries`                                           | `Azure Endpoint`     | `1M`          | Tiered: 0–1B at higher rate, 1B+ lower |
+| `Azure Endpoint Health Checks`                          | `Azure Endpoint`     | `1`           | Per endpoint per month                 |
+| `Azure Endpoint Fast Interval Health Check Add-ons`     | `Azure Endpoint`     | `1`           | 10s interval add-on per endpoint       |
+| `Non-Azure Endpoint Health Checks`                      | `Non-Azure Endpoint` | `1`           | Per endpoint per month                 |
+| `Non-Azure Endpoint Fast Interval Health Check Add-ons` | `Non-Azure Endpoint` | `1`           | 10s interval add-on per endpoint       |
+| `Azure Region Real User Measurements`                   | `Azure Region`       | `1M`          | Free (retailPrice = 0)                 |
+| `Non-Azure Region Real User Measurements`               | `Non-Azure Region`   | `1M`          | Free (retailPrice = 0)                 |
+| `Traffic View Data Points Processed`                    | `Traffic View`       | `1M`          | Per million data points                |
 
 > **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000M). The script sums both tiers — ignore `totalMonthlyCost` and manually calculate using tier boundaries.
 
