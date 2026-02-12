@@ -110,6 +110,8 @@ Then, from the API results, identify any additional pricing traps. Common ones i
 
 Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: ...`
 
+**Important**: Do NOT hardcode dollar figures (e.g., `$0.00`, `$0.01`) in trap sections. Use descriptive text instead: "zero price", "minimal cost", "sub-cent levels", etc. This keeps documentation focused on API behavior rather than specific price points. Exception: Known Rates tables for services with no API meters may include published rates.
+
 ### Step 7 - Generate the service reference file
 
 Create the file at: `skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).

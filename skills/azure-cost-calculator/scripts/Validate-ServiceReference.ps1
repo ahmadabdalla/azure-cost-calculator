@@ -317,6 +317,38 @@ function Test-ServiceReference {
             }
         })
 
+    # --- Style: No hardcoded dollar figures in Trap sections ---
+    # Collect trap blockquote sections (multi-line blockquotes starting with > **Trap)
+    $trapSections = [System.Collections.Generic.List[string]]::new()
+    $inTrapSection = $false
+    foreach ($line in $nonCodeLines) {
+        if ($line -match '>\s*\*\*Trap') {
+            $inTrapSection = $true
+            $trapSections.Add($line)
+        }
+        elseif ($inTrapSection) {
+            if ($line -match '^>\s+') {
+                $trapSections.Add($line)
+            }
+            else {
+                $inTrapSection = $false
+            }
+        }
+    }
+    # Check for dollar figures: $0, $0.0, $0.00, $0.01, etc.
+    $trapsWithDollarFigures = @($trapSections | Where-Object { $_ -match '\$\d+(\.\d+)?' })
+    $noDollarFiguresInTraps = $trapsWithDollarFigures.Count -eq 0
+    $checks.Add(@{
+            Name    = 'no_hardcoded_prices_in_traps'
+            Pass    = $noDollarFiguresInTraps
+            Message = if ($noDollarFiguresInTraps) {
+                'No hardcoded dollar figures in trap sections'
+            }
+            else {
+                "Found $($trapsWithDollarFigures.Count) trap line(s) with hardcoded dollar figures (e.g., `$0.00`). Use descriptive text like 'zero price', 'minimal cost', or reference 'retailPrice' instead."
+            }
+        })
+
     # --- Scaling parameter: InstanceCount, Quantity, or Cost Formula scaling ---
     # Check 1: ```powershell/pwsh blocks for -InstanceCount/-Quantity (old format)
     # Check 2: Declarative InstanceCount:/Quantity: lines (new format)
