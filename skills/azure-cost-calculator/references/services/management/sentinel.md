@@ -8,7 +8,7 @@ aliases: [SIEM, SOAR]
 
 **Primary cost**: Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, and add-on analysis fees.
 
-> **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier, returning ~$6M/month. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
+> **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
 > **Trap (Sentinel vs Log Analytics)**: Sentinel meters cover analysis/SIEM only. The underlying Log Analytics workspace ingestion, retention, and storage are billed separately under `ServiceName: Log Analytics`. Always price both services.
 

@@ -8,7 +8,7 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 **Primary cost**: Per-action executions (Consumption) or vCPU + memory hours (Standard)
 
-> **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` exceeds $10K. Always filter by `ProductName` and `SkuName`.
+> **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` is wildly inflated. Always filter by `ProductName` and `SkuName`.
 
 > **Trap (sub-cent actions)**: Consumption connector actions are priced well below $0.01 per action — the script shows `$0.00` for low volumes. Use `Quantity` with expected monthly volume.
 
