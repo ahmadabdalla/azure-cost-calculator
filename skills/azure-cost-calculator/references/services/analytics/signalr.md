@@ -10,7 +10,7 @@ aliases: [Azure SignalR Service, Real-time Messaging]
 
 > **Trap (daily billing)**: Unit meters use `1/Day` billing. `Get-MonthlyMultiplier` returns `30` for these meters, so the script's `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 
-> **Trap (free tier rows)**: The `Standard Unit - Free` meter returns `$0.00`. This is a free-tier grant (1 unit with 20 concurrent connections and 20K messages/day). Its price does not inflate `totalMonthlyCost`, but including it adds noise — filter by `MeterName` to exclude free-tier rows when estimating paid usage.
+> **Trap (free tier rows)**: The `Standard Unit - Free` meter returns a zero price. This is a free-tier grant (1 unit with 20 concurrent connections and 20K messages/day). Its price does not inflate `totalMonthlyCost`, but including it adds noise — filter by `MeterName` to exclude free-tier rows when estimating paid usage.
 
 ## Query Pattern
 

@@ -10,7 +10,7 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 > **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` is wildly inflated. Always filter by `ProductName` and `SkuName`.
 
-> **Trap (sub-cent actions)**: Consumption connector actions are priced well below $0.01 per action — the script shows `$0.00` for low volumes. Use `Quantity` with expected monthly volume.
+> **Trap (sub-cent actions)**: Consumption connector actions are priced at sub-cent levels per action — the script shows minimal cost for low volumes. Use `Quantity` with expected monthly volume.
 
 > **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — a free monthly allocation then a low per-action rate. Sum both tiers.
 
