@@ -71,7 +71,7 @@ Edge:              Monthly = retailPrice × deviceCount
 
 - **Capacity per SU**: 1 Streaming Unit ≈ 1 MB/s input throughput; complex queries (joins, aggregates, windowed functions) require more SUs for the same data volume
 - **Standard vs V2**: Standard (legacy) has flat $0.11/SU/hour; Standard V2 (current) starts at $0.33/SU/hour but offers volume discounts at 730+ and 5,840+ SU-hours
-- **Dedicated**: Same pricing structure as Standard (legacy flat rate vs V2 tiered); intended for isolated, high-throughput workloads
+- **Dedicated tiers**: Same pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
 - **Edge**: Flat $1.00/device/month; runs on IoT Edge devices for local stream processing
 - **No ArmSkuName**: All meters return empty `armSkuName` — do not filter by this field
 - Reserved pricing is **not available** — `PriceType Reservation` returns 0 results
