@@ -14,7 +14,7 @@ aliases: [Push Notifications, ANH]
 
 ## Query Pattern
 
-### Standard tier — base subscription (200M pushes included)
+### Standard tier — base subscription (10M pushes included)
 
 ServiceName: Notification Hubs
 SkuName: Standard
@@ -78,10 +78,10 @@ MeterName: Availability Zones Unit
 Free monthly    = $0 (hard limit: 1M pushes/month)
 Basic monthly   = $10 + max(0, (pushes - 10M) / 1M) × $1
 Standard monthly = $200 + overage_cost
-  where overage_cost = max(0, (pushes - 10M) / 1M × $10) for 10-100M pushes
-                     + max(0, (pushes - 100M) / 1M × $2.50) for 100M+ pushes
-Add-ons monthly = [Private Link: $35] + [Availability Zones: $350]
-Total           = Namespace cost × instanceCount + add-ons
+  where overage_cost = max(0, min(pushes - 10M, 90M) / 1M × $10)
+                     + max(0, (pushes - 100M) / 1M × $2.50)
+Add-ons per-namespace monthly = [Private Link: $35] + [Availability Zones: $350]
+Total           = (Namespace cost + add-ons per namespace) × instanceCount
 ```
 
 ## Notes
