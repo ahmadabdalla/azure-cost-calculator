@@ -71,7 +71,7 @@ Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice ×
 ## Notes
 
 - Reserved pricing is **not available** — RI queries return zero results
-- Commitment tiers use `1/Day` billing (retailPrice × 30); overage billed at PAYG rate — query `Pay-as-you-go` SKU
+- Commitment tiers use `1/Day` billing — script auto-multiplies by 30; overage billed at PAYG rate — query `Pay-as-you-go` SKU
 - Commitment tiers: 50, 100, 200, 300, 400, 500, 1000, 2000, 5000, 10000, 25000, 50000 GB/day
 - Basic Logs: search-only (no alerts/detections), 30-day retention, for high-volume low-value logs
 - Regional price variance is significant: commitment tiers cost ~25% more in uksouth vs eastus

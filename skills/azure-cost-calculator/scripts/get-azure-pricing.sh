@@ -177,14 +177,16 @@ for region_name in "${regions[@]}"; do
     ' <<< "$items")
 
     # Calculate monthly costs and build result objects in a single jq call.
-    # Monthly multiplier: hourly units (1 Hour*, 1/Hour, 1 GiB Hour) use hours_per_month; else 1.
+    # Monthly multiplier: hourly units use hours_per_month; daily units use 30; else 1.
     processed=$(jq -c --argjson qty "$quantity" \
         --argjson hpm "$hours_per_month" \
         --argjson ic "$instance_count" '
         [.[] |
             (.unitOfMeasure) as $uom |
             (if ($uom | startswith("1 Hour")) or $uom == "1/Hour" or $uom == "1 GiB Hour"
-             then $hpm else 1 end) as $multiplier |
+             then $hpm
+             elif $uom == "1/Day" then 30
+             else 1 end) as $multiplier |
             (.retailPrice) as $up |
             (if $qty > 0 then $up * $qty * $multiplier * $ic
              else $up * $multiplier * $ic end) as $raw_cost |

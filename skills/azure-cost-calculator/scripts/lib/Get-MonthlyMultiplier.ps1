@@ -1,7 +1,7 @@
 ﻿<#
 .SYNOPSIS
     Maps a unitOfMeasure string to a monthly multiplier.
-    Hourly units return $HoursMonth; everything else returns 1.
+    Hourly units return $HoursMonth; daily units return 30; everything else returns 1.
 #>
 function Get-MonthlyMultiplier {
     param(
