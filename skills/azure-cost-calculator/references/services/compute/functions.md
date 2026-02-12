@@ -38,23 +38,6 @@ ProductName: Premium Functions
 
 > **For non-USD currencies**: Sub-cent rates may not convert cleanly — see shared.md & Common Traps.
 
-## Manual Calculation Example
-
-For 2M executions/month at 512 MB memory, 1 second average duration:
-
-```
-GB-seconds = 2,000,000 × 0.5 GB × 1s = 1,000,000 GB-s
-
-Billable executions = max(0, 2,000,000 - 1,000,000) = 1,000,000
-Billable GB-seconds = max(0, 1,000,000 - 400,000)   = 600,000
-
-Execution cost = billable_executions × (executions_UnitPrice / 10)
-Duration cost  = billable_GB_seconds × execution_time_UnitPrice
-Total          = Execution cost + Duration cost
-```
-
-> Query API for `Standard Total Executions` and `Standard Execution Time` UnitPrice values.
-
 ## Cost Formula
 
 ```
@@ -84,3 +67,20 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 - Consumption plan has a generous free grant — many small workloads cost $0
 - Premium plan is billed per-second with a minimum of one instance
 - The script's `MonthlyCost` shows `$0` for Consumption because quantity is unknown — use `UnitPrice` directly
+
+## Manual Calculation Example
+
+For 2M executions/month at 512 MB memory, 1 second average duration:
+
+```
+GB-seconds = 2,000,000 × 0.5 GB × 1s = 1,000,000 GB-s
+
+Billable executions = max(0, 2,000,000 - 1,000,000) = 1,000,000
+Billable GB-seconds = max(0, 1,000,000 - 400,000)   = 600,000
+
+Execution cost = billable_executions × (executions_UnitPrice / 10)
+Duration cost  = billable_GB_seconds × execution_time_UnitPrice
+Total          = Execution cost + Duration cost
+```
+
+> Query API for `Standard Total Executions` and `Standard Execution Time` UnitPrice values.

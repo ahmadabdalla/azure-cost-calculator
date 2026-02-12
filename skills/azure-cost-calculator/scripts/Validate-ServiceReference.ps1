@@ -51,7 +51,7 @@ $RequiredSections = @(
     'Notes'
 )
 
-# Canonical order for required sections (used for ordering validation)
+# Canonical order for ordered sections — includes sections that are not existence-required but must maintain relative order when present
 $RequiredSectionOrder = @(
     'Query Pattern',
     'Key Fields',
@@ -324,6 +324,7 @@ function Test-ServiceReference {
         })
 
     # Check optional sections appear after Notes
+    # Notes is guaranteed present by the required-section check above; if absent, this check is a no-op
     $notesLine = $null
     foreach ($heading in $h2Headings) {
         if ($heading.Name -eq 'Notes') {

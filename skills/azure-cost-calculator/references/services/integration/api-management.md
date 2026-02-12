@@ -66,6 +66,12 @@ MeterName: {Tier} Self-hosted Gateway
 ### Add-ons:      Monthly += componentPrice × 730 × count  (secondary units, gateways, workspace packs)
 ```
 
+## Notes
+
+- API Management does **not** offer Reserved Instance pricing.
+- All tiers support unlimited APIs except Consumption (max 50).
+- `productName` is always `API Management` for all tiers.
+
 ## Common SKUs
 
 | Tier        | SLA          | Key Features                                  |
@@ -78,9 +84,3 @@ MeterName: {Tier} Self-hosted Gateway
 | Standard v2 | 99.95%       | Self-hosted gateway, VNet integration         |
 | Premium v2  | 99.95–99.99% | Multi-region, VNet, zone redundancy           |
 | Consumption | 99.95%       | Serverless, per-call, auto-scale, max 50 APIs |
-
-## Notes
-
-- API Management does **not** offer Reserved Instance pricing.
-- All tiers support unlimited APIs except Consumption (max 50).
-- `productName` is always `API Management` for all tiers.
