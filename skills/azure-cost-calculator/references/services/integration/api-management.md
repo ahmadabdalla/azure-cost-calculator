@@ -9,7 +9,7 @@ aliases: [APIM, API gateway, API management]
 **Primary cost**: Unit hours based on tier
 
 > **Trap (multiple meters)**: Tiers have multiple meters (e.g., `Standard v2 Unit`, `Secondary Unit`, `Self-hosted Gateway`, `Calls`). Use the primary `{Tier} Unit` meter for base cost. Secondary units, gateways, and workspace packs are additional — only include if user requests.
-> **Trap (v2 Calls)**: v2 tiers have a `Calls` meter — free up to threshold, then overage applies. Basic v2: first 10M free, then $0.030/10K. Standard v2: first 50M free, then $0.025/10K. Premium v2: unlimited included. Safe to ignore for typical workloads; include for high-volume APIs exceeding thresholds.
+> **Trap (v2 Calls)**: v2 tiers have a `Calls` meter — free up to threshold, then overage at `retailPrice` per 10K. Basic v2: first 10M free. Standard v2: first 50M free. Premium v2: unlimited included. Safe to ignore for typical workloads; include for high-volume APIs exceeding thresholds.
 > **Trap (Consumption)**: Uses per-call pricing (`Consumption Calls`), not hourly units. Do NOT multiply by 730.
 
 ## Query Pattern
