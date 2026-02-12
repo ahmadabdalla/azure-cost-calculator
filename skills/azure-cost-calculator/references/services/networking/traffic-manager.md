@@ -72,13 +72,14 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `Non-Azure Region Real User Measurements`               | `Non-Azure Region`   | `1M`          | Free (retailPrice = 0)                 |
 | `Traffic View Data Points Processed`                    | `Traffic View`       | `1M`          | Per million data points                |
 
-> **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000M). The script sums both tiers — ignore `totalMonthlyCost` and manually calculate using tier boundaries.
+> **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000, i.e. 0–1B and >1B queries). The script sums both tiers — ignore `totalMonthlyCost` and manually calculate using tier boundaries.
 
 ## Cost Formula
 
 ```
-DNS         = dnsPrice_tier1 × queriesInMillions  (first 1000M)
-            + dnsPrice_tier2 × (queriesInMillions - 1000)  (above 1000M)
+DNS         = dnsPrice_tier1 × queriesInMillions                      (if ≤ 1000, i.e. ≤ 1B queries)
+            = (dnsPrice_tier1 × 1000)                                 (first 1B queries)
+              + dnsPrice_tier2 × (queriesInMillions - 1000)           (above 1B, if > 1000)
 HealthCheck = healthCheckPrice × endpointCount
 FastInterval = fastIntervalPrice × endpointCount  (if enabled)
 TrafficView = trafficViewPrice × dataPointsInMillions
@@ -87,6 +88,7 @@ Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 
 ## Notes
 
-- **Real User Measurements**: Free (retailPrice = 0) — **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
+- **Real User Measurements**: Free (retailPrice = 0)
+- **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
 - **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month — use `retailPrice` from query results to calculate totals
 - Reserved pricing is not available for Traffic Manager
