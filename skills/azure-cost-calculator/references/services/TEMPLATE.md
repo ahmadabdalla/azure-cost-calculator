@@ -47,6 +47,14 @@ aliases: [{ from routing map — use exactly the aliases listed, do not add extr
       tables, formulas, and notes. Optimize for density — every line costs tokens
       at runtime.
 
+  0c. SECTION ORDER (enforced by validation): Sections must appear in this order:
+        YAML front matter → Title (H1) → Primary cost → Trap(s) →
+        Query Pattern → Key Fields → Meter Names → Cost Formula →
+        Notes → Optional sections
+      Required sections (Query Pattern, Key Fields, Meter Names, Cost Formula,
+      Notes) must maintain their relative order even if some are absent.
+      All optional sections must appear after Notes.
+
   1. TITLE: Use the official Azure service name as shown in the portal.
 
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:

@@ -27,14 +27,6 @@ ServiceName: Application Gateway
 ProductName: Application Gateway {Variant}
 MeterName: {MeterPrefix} Capacity Units
 
-## Product Names
-
-| Variant     | productName                       | MeterPrefix | Fixed Cost Meter      | CU Meter                  |
-| ----------- | --------------------------------- | ----------- | --------------------- | ------------------------- |
-| WAF v2      | `Application Gateway WAF v2`      | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
-| Standard v2 | `Application Gateway Standard v2` | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
-| Basic v2    | `Application Gateway Basic v2`    | `Basic`     | `Basic Fixed Cost`    | `Basic Capacity Units`    |
-
 ## Cost Formula
 
 ```
@@ -49,3 +41,11 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - **CU from data volume**: 1 CU ≈ 2.22 Mbps sustained ≈ 0.98 GB/hr. For monthly data: `CUs = dataGB / (0.98 × 730)`. Example: 5 TB (5,000 GB) → ~7 CU average. Add headroom for burst — use 1.5–2× for production.
 - For light workloads, estimate ~5-10 CU average; for moderate, ~10-30 CU
 - WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher
+
+## Product Names
+
+| Variant     | productName                       | MeterPrefix | Fixed Cost Meter      | CU Meter                  |
+| ----------- | --------------------------------- | ----------- | --------------------- | ------------------------- |
+| WAF v2      | `Application Gateway WAF v2`      | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
+| Standard v2 | `Application Gateway Standard v2` | `Standard`  | `Standard Fixed Cost` | `Standard Capacity Units` |
+| Basic v2    | `Application Gateway Basic v2`    | `Basic`     | `Basic Fixed Cost`    | `Basic Capacity Units`    |

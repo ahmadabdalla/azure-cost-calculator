@@ -29,6 +29,15 @@ SkuName: Standard
 MeterName: {meterName}
 Region: Global
 
+## Meter Names
+
+| Meter                                           | unitOfMeasure | Notes                            |
+| ----------------------------------------------- | ------------- | -------------------------------- |
+| `Standard Data Processed`                       | `1 GB`        | Per-GB processed                 |
+| `Standard Included LB Rules and Outbound Rules` | `1 Hour`      | First 5 rules included           |
+| `Standard Overage LB Rules and Outbound Rules`  | `1/Hour`      | Per additional rule beyond 5     |
+| `Standard Data Processed - Free`                | `1 GB`        | Free tier (Basic SKU equivalent) |
+
 ## Cost Formula
 
 ```
@@ -53,12 +62,3 @@ Total:   Base + Overage + Data (USD)
 
 - Basic SKU is free but lacks SLA and zone redundancy
 - Standard SKU requires Standard public IPs
-
-## Meter Names
-
-| Meter                                           | unitOfMeasure | Notes                            |
-| ----------------------------------------------- | ------------- | -------------------------------- |
-| `Standard Data Processed`                       | `1 GB`        | Per-GB processed                 |
-| `Standard Included LB Rules and Outbound Rules` | `1 Hour`      | First 5 rules included           |
-| `Standard Overage LB Rules and Outbound Rules`  | `1/Hour`      | Per additional rule beyond 5     |
-| `Standard Data Processed - Free`                | `1 GB`        | Free tier (Basic SKU equivalent) |

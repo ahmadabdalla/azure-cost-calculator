@@ -30,7 +30,21 @@ ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: Hybrid
 
-## Consumption Plan Meters
+## Meter Names
+
+| Plan      | Meter                          | unitOfMeasure | Notes                                |
+| --------- | ------------------------------ | ------------- | ------------------------------------ |
+| Dedicated | `Dedicated vCPU Usage`         | 1 Hour        | Per vCPU per hour                    |
+| Dedicated | `Dedicated Memory Usage`       | 1 Hour        | Per GiB per hour                     |
+| Dedicated | `Dedicated Plan Management`    | 1 Hour        | Per environment (shared across apps) |
+| Dedicated | `Dedicated GPU Usage`          | 1 Hour        | GPU workloads only                   |
+| Standard  | `Standard vCPU Active Usage`   | 1 Second      | Use `UnitPrice` from API             |
+| Standard  | `Standard vCPU Idle Usage`     | 1 Second      | Use `UnitPrice` from API             |
+| Standard  | `Standard Memory Active Usage` | 1 GiB Second  | Use `UnitPrice` from API             |
+| Standard  | `Standard Memory Idle Usage`   | 1 GiB Second  | Use `UnitPrice` from API             |
+| Standard  | `Standard Requests`            | 1M            | Use `UnitPrice` from API             |
+
+### Consumption Plan Meters
 
 | Meter                          | Free Grant              |
 | ------------------------------ | ----------------------- |
@@ -54,6 +68,13 @@ Dedicated:
 
 > **Agent defaults** (when not specified): Use Consumption plan. If request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s` — never assume `730 × 3600` (always-on) for Standard SKU.
 
+## Notes
+
+- The script's `MonthlyCost` for Consumption shows `$0` because quantity is unknown — use the `UnitPrice` field directly
+- Dedicated plan charges per-environment management fee in addition to vCPU/memory
+- GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
+- Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
+
 ## SKU Selection Guide
 
 | Workload Type                   | SKU         | Pricing Model | Notes                                    |
@@ -62,21 +83,7 @@ Dedicated:
 | Always-on, minimum replicas > 0 | `Dedicated` | Per-hour      | Use for background workers, ML pipelines |
 | Hybrid (on-prem connected)      | `Hybrid`    | Per-hour      | For Arc-enabled environments             |
 
-## Meter Names
-
-| Plan      | Meter                          | unitOfMeasure | Notes                                |
-| --------- | ------------------------------ | ------------- | ------------------------------------ |
-| Dedicated | `Dedicated vCPU Usage`         | 1 Hour        | Per vCPU per hour                    |
-| Dedicated | `Dedicated Memory Usage`       | 1 Hour        | Per GiB per hour                     |
-| Dedicated | `Dedicated Plan Management`    | 1 Hour        | Per environment (shared across apps) |
-| Dedicated | `Dedicated GPU Usage`          | 1 Hour        | GPU workloads only                   |
-| Standard  | `Standard vCPU Active Usage`   | 1 Second      | Use `UnitPrice` from API             |
-| Standard  | `Standard vCPU Idle Usage`     | 1 Second      | Use `UnitPrice` from API             |
-| Standard  | `Standard Memory Active Usage` | 1 GiB Second  | Use `UnitPrice` from API             |
-| Standard  | `Standard Memory Idle Usage`   | 1 GiB Second  | Use `UnitPrice` from API             |
-| Standard  | `Standard Requests`            | 1M            | Use `UnitPrice` from API             |
-
-### Manual Calculation Example
+## Manual Calculation Example
 
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
 
@@ -87,10 +94,3 @@ Cost: (billable_vCPU-s × vCPU_UnitPrice) + (billable_GiB-s × mem_UnitPrice) + 
 ```
 
 > Query API for `Standard vCPU Active Usage`, `Standard Memory Active Usage`, and `Standard Requests` UnitPrice values.
-
-## Notes
-
-- The script's `MonthlyCost` for Consumption shows `$0` because quantity is unknown — use the `UnitPrice` field directly
-- Dedicated plan charges per-environment management fee in addition to vCPU/memory
-- GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
-- Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps

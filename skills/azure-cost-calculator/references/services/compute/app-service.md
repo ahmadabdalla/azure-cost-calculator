@@ -29,6 +29,19 @@ ProductName: Azure App Service Premium v3 Plan
 | `skuName`     | App Service Plan tier+size | `B1`, `B2`, `S1`, `P1 v3`, `P2 v3` |
 | `productName` | Includes plan tier and OS  | See below                          |
 
+## Cost Formula
+
+```
+Monthly = retailPrice × 730 hours × instanceCount
+```
+
+## Notes
+
+- App Service Plans are billed whether or not apps are running on them — deleting all apps does not stop billing; delete the plan itself
+- Multiple apps can share one plan; cost is per-plan, not per-app
+- Windows plans omit the OS suffix in `productName` (e.g., `Azure App Service Premium v3 Plan`); Linux plans append `- Linux`
+- Free (F1) and Shared (D1) tiers exist but are not recommended for production and may not appear in all regions
+
 ## Product Names
 
 | Tier       | Linux                                       | Windows                             |
@@ -37,12 +50,6 @@ ProductName: Azure App Service Premium v3 Plan
 | Standard   | `Azure App Service Standard Plan - Linux`   | `Azure App Service Standard Plan`   |
 | Premium v2 | `Azure App Service Premium v2 Plan - Linux` | `Azure App Service Premium v2 Plan` |
 | Premium v3 | `Azure App Service Premium v3 Plan - Linux` | `Azure App Service Premium v3 Plan` |
-
-## Cost Formula
-
-```
-Monthly = retailPrice × 730 hours × instanceCount
-```
 
 ## Common SKUs
 
@@ -58,10 +65,3 @@ Monthly = retailPrice × 730 hours × instanceCount
 | `P1 v3` | 2     | 8        | Premium v3 |
 | `P2 v3` | 4     | 16       | Premium v3 |
 | `P3 v3` | 8     | 32       | Premium v3 |
-
-## Notes
-
-- App Service Plans are billed whether or not apps are running on them — deleting all apps does not stop billing; delete the plan itself
-- Multiple apps can share one plan; cost is per-plan, not per-app
-- Windows plans omit the OS suffix in `productName` (e.g., `Azure App Service Premium v3 Plan`); Linux plans append `- Linux`
-- Free (F1) and Shared (D1) tiers exist but are not recommended for production and may not appear in all regions

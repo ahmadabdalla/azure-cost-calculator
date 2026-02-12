@@ -73,6 +73,12 @@ ProductName: Azure Premium SSD v2
 
 **Premium SSD v2**: `Monthly = (GiB × capacityPrice + max(0, IOPS - 3000) × iopsPrice + max(0, MBps - 125) × tputPrice) × 730`
 
+## Notes
+
+- Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
+- Premium SSD P1–P20 include free burst (up to 3,500 IOPS / 170 MBps). On-demand burst for P20+ is a separate meter.
+- Snapshots billed separately (`Managed Disk Snapshots`). Ultra/Premium SSD v2 have per-vCPU reservation charge on attached VM.
+
 ## Reserved Instance Pricing
 
 Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
@@ -92,9 +98,3 @@ Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`
 | `P50` | 4,096      | 7,500    | 250      | Data warehouses      |
 
 > E (Standard SSD) and S (Standard HDD) follow the same size tiers (4/6/10/15/20/30/40/50/60/70/80). Substitute prefix in SKU name.
-
-## Notes
-
-- Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
-- Premium SSD P1–P20 include free burst (up to 3,500 IOPS / 170 MBps). On-demand burst for P20+ is a separate meter.
-- Snapshots billed separately (`Managed Disk Snapshots`). Ultra/Premium SSD v2 have per-vCPU reservation charge on attached VM.

@@ -51,6 +51,25 @@ $RequiredSections = @(
     'Notes'
 )
 
+# Canonical order for ordered sections — includes sections that are not existence-required but must maintain relative order when present
+$RequiredSectionOrder = @(
+    'Query Pattern',
+    'Key Fields',
+    'Meter Names',
+    'Cost Formula',
+    'Notes'
+)
+
+# Optional sections — must appear after Notes
+$OptionalSections = @(
+    'Reserved Instance Pricing',
+    'Manual Calculation Example',
+    'Known Rates',
+    'Common SKUs',
+    'Product Names',
+    'SKU Selection Guide'
+)
+
 function Get-FrontMatter {
     param([string[]]$Lines)
 
@@ -263,6 +282,77 @@ function Test-ServiceReference {
                 Message = if ($hasSection) { "Section '$section' found" } else { "Missing required section: ## $section" }
             })
     }
+
+    # --- Section Ordering ---
+    # Extract all H2 headings with their line numbers
+    $h2Headings = [System.Collections.Generic.List[object]]::new()
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -match '^##\s+(.+?)\s*$') {
+            $h2Headings.Add(@{ Name = $Matches[1]; Line = $i + 1 })
+        }
+    }
+
+    # Check required sections appear in correct relative order
+    $requiredPositions = [System.Collections.Generic.List[object]]::new()
+    foreach ($heading in $h2Headings) {
+        $orderIndex = [System.Array]::IndexOf($RequiredSectionOrder, $heading.Name)
+        if ($orderIndex -ge 0) {
+            $requiredPositions.Add(@{ Name = $heading.Name; Line = $heading.Line; OrderIndex = $orderIndex })
+        }
+    }
+
+    $orderingOk = $true
+    $orderingMessages = [System.Collections.Generic.List[string]]::new()
+    for ($i = 1; $i -lt $requiredPositions.Count; $i++) {
+        if ($requiredPositions[$i].OrderIndex -lt $requiredPositions[$i - 1].OrderIndex) {
+            $orderingOk = $false
+            $orderingMessages.Add(
+                "'$($requiredPositions[$i].Name)' (L$($requiredPositions[$i].Line)) appears before '$($requiredPositions[$i - 1].Name)' (L$($requiredPositions[$i - 1].Line)) but should come after it"
+            )
+        }
+    }
+
+    $checks.Add(@{
+            Name    = 'section_order'
+            Pass    = $orderingOk
+            Message = if ($orderingOk) {
+                'Required sections are in correct order'
+            }
+            else {
+                'Section ordering violation: ' + ($orderingMessages -join '; ')
+            }
+        })
+
+    # Check optional sections appear after Notes
+    # Notes is guaranteed present by the required-section check above; if absent, this check is a no-op
+    $notesLine = $null
+    foreach ($heading in $h2Headings) {
+        if ($heading.Name -eq 'Notes') {
+            $notesLine = $heading.Line
+            break
+        }
+    }
+
+    $optionalBeforeNotes = [System.Collections.Generic.List[string]]::new()
+    if ($null -ne $notesLine) {
+        foreach ($heading in $h2Headings) {
+            if ($OptionalSections -contains $heading.Name -and $heading.Line -lt $notesLine) {
+                $optionalBeforeNotes.Add("'$($heading.Name)' (L$($heading.Line))")
+            }
+        }
+    }
+
+    $optionalOrderOk = $optionalBeforeNotes.Count -eq 0
+    $checks.Add(@{
+            Name    = 'optional_sections_after_notes'
+            Pass    = $optionalOrderOk
+            Message = if ($optionalOrderOk) {
+                'All optional sections appear after Notes (or no optional sections present)'
+            }
+            else {
+                'Optional sections before Notes: ' + ($optionalBeforeNotes -join ', ') + ' — must move after Notes'
+            }
+        })
 
     # --- Style: No "verified" dates (skip fenced code blocks) ---
     $nonCodeLines = [System.Collections.Generic.List[string]]::new()

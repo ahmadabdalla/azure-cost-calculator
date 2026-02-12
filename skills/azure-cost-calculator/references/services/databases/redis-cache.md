@@ -60,21 +60,18 @@ PriceType: Consumption
 
 > Use this only when calculating costs for **sharded clusters** where you need per-node cost × shard count.
 
-## Product Names
-
-| Tier             | productName                          | skuName examples                                        | Notes                               |
-| ---------------- | ------------------------------------ | ------------------------------------------------------- | ----------------------------------- |
-| Basic            | `Azure Redis Cache Basic`            | `C0`–`C6`                                               | No HA, no replication               |
-| Standard         | `Azure Redis Cache Standard`         | `C0`–`C6`                                               | HA with replication                 |
-| Premium          | `Azure Redis Cache Premium`          | `P1`–`P5`                                               | Clustering, persistence, VNet       |
-| Enterprise       | `Azure Redis Cache Enterprise`       | `E1`, `E5`, `E10`, `E20`, `E50`, `E100`, `E200`, `E400` | Redis Stack, active geo-replication |
-| Enterprise Flash | `Azure Redis Cache Enterprise Flash` | `F300`, `F700`, `F1500`                                 | Flash-optimized, large datasets     |
-
 ## Cost Formula
 
 ```
 Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 ```
+
+## Notes
+
+- Basic tier has no SLA or replication — dev/test only
+- Standard tier includes replication (2 nodes)
+- Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
+- Use `ProductName` to disambiguate tiers sharing the same meter names
 
 ## Reserved Instance Pricing
 
@@ -92,9 +89,12 @@ PriceType: Reservation
 
 > **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
-## Notes
+## Product Names
 
-- Basic tier has no SLA or replication — dev/test only
-- Standard tier includes replication (2 nodes)
-- Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
-- Use `ProductName` to disambiguate tiers sharing the same meter names
+| Tier             | productName                          | skuName examples                                        | Notes                               |
+| ---------------- | ------------------------------------ | ------------------------------------------------------- | ----------------------------------- |
+| Basic            | `Azure Redis Cache Basic`            | `C0`–`C6`                                               | No HA, no replication               |
+| Standard         | `Azure Redis Cache Standard`         | `C0`–`C6`                                               | HA with replication                 |
+| Premium          | `Azure Redis Cache Premium`          | `P1`–`P5`                                               | Clustering, persistence, VNet       |
+| Enterprise       | `Azure Redis Cache Enterprise`       | `E1`, `E5`, `E10`, `E20`, `E50`, `E100`, `E200`, `E400` | Redis Stack, active geo-replication |
+| Enterprise Flash | `Azure Redis Cache Enterprise Flash` | `F300`, `F700`, `F1500`                                 | Flash-optimized, large datasets     |
