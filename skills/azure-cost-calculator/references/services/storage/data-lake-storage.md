@@ -1,7 +1,7 @@
 ---
 serviceName: Storage
 category: storage
-aliases: [Data Lake Gen2, ADLS, Azure Data Lake Storage]
+aliases: [Data Lake Gen2, ADLS]
 ---
 
 # Data Lake Storage Gen2
@@ -38,13 +38,20 @@ ProductName: Azure Data Lake Storage Gen2 Hierarchical Namespace
 SkuName: Cool LRS
 MeterName: Cool LRS Data Stored
 
+### Cold LRS storage
+
+ServiceName: Storage
+ProductName: Azure Data Lake Storage Gen2 Hierarchical Namespace
+SkuName: Cold LRS
+MeterName: Cold LRS Data Stored
+
 ## Key Fields
 
 | Parameter     | How to determine         | Example values                                                 |
 | ------------- | ------------------------ | -------------------------------------------------------------- |
 | `serviceName` | Always `Storage`         | `Storage`                                                      |
 | `productName` | HNS vs Flat namespace    | `Azure Data Lake Storage Gen2 Hierarchical Namespace`          |
-| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Archive GRS`                           |
+| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Cold LRS`, `Archive GRS`               |
 | `meterName`   | See Meter Names          | `Hot LRS Data Stored`, `Hot LRS Index`, `Hot Write Operations` |
 
 ## Meter Names
@@ -59,9 +66,13 @@ MeterName: Cool LRS Data Stored
 | `Hot Iterative Write Operations` | `Hot LRS`       | `100`         | Directory listing; unit is per-100                  |
 | `Cool Data Retrieval`            | _(any Cool)_    | `1 GB`        | Per-GB retrieval charge                             |
 | `Cool LRS Early Delete`          | `Cool LRS`      | `1 GB`        | Deleted before 30-day minimum                       |
+| `Cold LRS Data Stored`           | `Cold LRS`      | `1 GB/Month`  | Between Cool and Archive pricing                    |
+| `Cold Data Retrieval`            | _(any Cold)_    | `1 GB`        | Per-GB retrieval charge                             |
+| `Cold LRS Early Delete`          | `Cold LRS`      | `1 GB`        | Deleted before 90-day minimum                       |
 | `Archive LRS Data Stored`        | `Archive LRS`   | `1 GB/Month`  | Cheapest storage; no ZRS/GZRS                       |
 | `Archive Data Retrieval`         | _(any Archive)_ | `1 GB`        | Standard rehydration                                |
-| `Priority Data Retrieval`        | _(any Archive)_ | `1 GB`        | 5x cost; also `Priority Read Operations` at $65/10K |
+| `Priority Data Retrieval`        | _(any Archive)_ | `1 GB`        | Higher-cost urgent rehydration (5x standard)        |
+| `Priority Read Operations`       | _(any Archive)_ | `10K`         | Higher-cost read ops for priority rehydration       |
 
 ## Cost Formula
 
