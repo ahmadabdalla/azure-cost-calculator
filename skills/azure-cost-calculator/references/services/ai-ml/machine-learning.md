@@ -8,7 +8,7 @@ aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
 
 **Primary cost**: Managed online endpoint capacity (`Managed Model Hosting Service`, hourly × 730) + ML service surcharges (`Machine Learning service`). Training clusters and compute instances are a separate cost billed under the `Virtual Machines` service.
 
-> **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Machine Learning'` query returns ~28 meters across three product families — legacy Enterprise Inferencing (all $0.00), ML service surcharges, and Managed Model Hosting endpoints. The `totalMonthlyCost` sums all of them, which is meaningless. Always filter by `ProductName`.
+> **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Machine Learning'` query returns ~28 meters across three product families — legacy Enterprise Inferencing (all zero price), ML service surcharges, and Managed Model Hosting endpoints. The `totalMonthlyCost` sums all of them, which is meaningless. Always filter by `ProductName`.
 
 > **Trap (compute billing split)**: Managed endpoints are billed here under `Azure Machine Learning` (Managed Model Hosting Service). Training clusters and compute instances run on **Virtual Machines** and are billed separately under the `Virtual Machines` service. The meters in this service cover managed endpoint capacity and ML service surcharges only.
 

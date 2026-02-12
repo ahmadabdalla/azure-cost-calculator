@@ -12,7 +12,7 @@ aliases: [Cognitive Services, Vision, Speech, Language, Decision]
 
 > **Trap (inflated totals)**: Unfiltered queries return 300+ meters across 37 product families. Always filter by `ProductName`.
 
-> **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as `$0.00`. Use large `Quantity`.
+> **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
 
 > **Trap (no Standard Speech)**: Azure Speech has no `Standard` SKU — only Free, commitment, and specialized SKUs.
 

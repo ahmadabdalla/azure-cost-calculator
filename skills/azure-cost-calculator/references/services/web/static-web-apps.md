@@ -14,7 +14,7 @@ aliases: [SWA, JAMstack]
 
 > **Trap (Inflated totals)**: Omitting `MeterName` returns app + AFD + bandwidth meters summed together. Always filter by `MeterName` to get individual component costs.
 
-> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at $0.00 (`tierMinimumUnits=0`, first 100 GB free) and one at the overage rate (`tierMinimumUnits=100`). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
+> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at zero price (`tierMinimumUnits=0`, first 100 GB free) and one at the overage rate (`tierMinimumUnits=100`). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
 
 ## Query Pattern
 

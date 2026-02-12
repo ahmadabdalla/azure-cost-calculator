@@ -8,9 +8,9 @@ aliases: [Event Routing, Event-driven]
 
 **Primary cost**: Per-operation pricing (per 100K or per 1M) + optional MQTT throughput units (hourly)
 
-> **Trap (unfiltered query)**: Querying with `ServiceName Event Grid` without `MeterName` returns **seven** rows — four distinct meters, three of which have both a free-tier row ($0.00) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `MeterName` for precise costs.
+> **Trap (unfiltered query)**: Querying with `ServiceName Event Grid` without `MeterName` returns **seven** rows — four distinct meters, three of which have both a free-tier row (zero price) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `MeterName` for precise costs.
 
-> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, retailPrice = $0.00) and a paid tier (tierMinimumUnits = 1). The script returns both rows and `totalMonthlyCost` does not subtract the free grant. Ignore `summary.totalMonthlyCost` — manually calculate billable units as `max(0, totalOps - 100K)` using the paid-tier `retailPrice`.
+> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, zero retailPrice) and a paid tier (tierMinimumUnits = 1). The script returns both rows and `totalMonthlyCost` does not subtract the free grant. Ignore `summary.totalMonthlyCost` — manually calculate billable units as `max(0, totalOps - 100K)` using the paid-tier `retailPrice`.
 
 ## Query Pattern
 

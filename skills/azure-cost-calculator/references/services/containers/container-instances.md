@@ -10,7 +10,7 @@ aliases: [ACI, Azure Container Instances, serverless containers, container insta
 
 > **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU) — always filter with `ProductName: Container Instances`, `SkuName: Standard` for standard Linux pricing.
 >
-> **Trap (memory & per-second MonthlyCost)**: The script reports `$0.0` for `Standard Memory Duration` (unit `1 GB Hour`) and `Standard Windows Software Duration` (unit `1 Second`) because it cannot infer quantity. Memory: `retailPrice × GiB × 730`. Windows: `retailPrice × vCPUs × 730 × 3600`.
+> **Trap (memory & per-second MonthlyCost)**: The script cannot calculate monthly cost for `Standard Memory Duration` (unit `1 GB Hour`) and `Standard Windows Software Duration` (unit `1 Second`) without quantity. Memory: `retailPrice × GiB × 730`. Windows: `retailPrice × vCPUs × 730 × 3600`.
 >
 > **Trap (Windows surcharge)**: The `Standard` SKU includes a `Standard Windows Software Duration` meter priced per-second. This only applies to Windows containers. Exclude it for Linux workloads.
 

@@ -50,7 +50,7 @@ ProductName: Azure Premium SSD v2
 | Ultra Disk     | Provisioned Capacity, IOPS, Throughput, vCPU Reservation |     —      |        —        |
 | Premium SSD v2 |          Provisioned Capacity, IOPS, Throughput          |     —      |        —        |
 
-> **Trap (Premium SSD v2 free tier)**: The API returns **two rows** each for IOPS and Throughput — one at $0.00 (the included 3,000 IOPS / 125 MBps) and one at the paid rate. Use the non-zero price and subtract free units: `max(0, IOPS - 3000)` and `max(0, MBps - 125)`.
+> **Trap (Premium SSD v2 free tier)**: The API returns **two rows** each for IOPS and Throughput — one at zero price (the included 3,000 IOPS / 125 MBps) and one at the paid rate. Use the non-zero `retailPrice` and subtract free units: `max(0, IOPS - 3000)` and `max(0, MBps - 125)`.
 > **Trap (Ultra vCPU charge)**: Ultra Disk returns a 4th meter `Ultra LRS Reservation per vCPU Provisioned` — billed per vCPU on the attached VM.
 
 ## Key Fields

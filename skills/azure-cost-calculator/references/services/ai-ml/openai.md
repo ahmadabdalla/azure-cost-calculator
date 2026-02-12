@@ -12,7 +12,7 @@ aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'Foundry Models'` query returns hundreds of meters across all AI Foundry models (GPT, DeepSeek, Llama, Grok, etc.). Always filter by `ProductName` to isolate OpenAI models.
 
-> **Trap (sub-cent embeddings)**: Embedding prices are sub-cent. The script shows `$0.00` — use `Quantity` with a large value to see meaningful costs.
+> **Trap (sub-cent embeddings)**: Embedding prices are sub-cent. The script shows minimal cost — use `Quantity` with a large value to see meaningful costs.
 
 > **Agent instruction**: Model names change frequently. Always discover current models before querying. Run the discovery query below first, then construct pricing queries using the naming conventions documented in this file.
 

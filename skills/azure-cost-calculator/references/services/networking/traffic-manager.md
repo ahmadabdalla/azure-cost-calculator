@@ -8,7 +8,7 @@ aliases: [DNS Load Balancer]
 
 **Primary cost**: Per million DNS queries (tiered) + per health check endpoint per month + optional Fast Failover / Real User Measurements add-ons
 
-> **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce `$0.00` in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
+> **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
 > **Warning**: **Global-only pricing** — Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
 
