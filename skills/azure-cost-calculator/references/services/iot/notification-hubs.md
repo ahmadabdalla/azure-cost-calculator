@@ -65,9 +65,9 @@ MeterName: Availability Zones Unit
 | ---------------------------- | --------------------- | ------------- | ---------------------------------------------- |
 | `Free Unit`                  | Free                  | 1/Month       | 1M pushes/month hard limit                     |
 | `Basic Unit`                 | Basic                 | 1/Month       | Base subscription, 10M pushes included         |
-| `Basic Pushes`               | Basic                 | 1M            | Overage: $1/M beyond 10M (TierMinUnits: 10.0)  |
+| `Basic Pushes`               | Basic                 | 1M            | Overage beyond 10M (TierMinUnits: 10.0)        |
 | `Standard Unit`              | Standard              | 1/Month       | Base subscription, 10M pushes included         |
-| `Standard Pushes`            | Standard              | 1M            | Overage tiers: 10-100M @ $10/M, 100M+ @ $2.50/M |
+| `Standard Pushes`            | Standard              | 1M            | Tiered overage: tier 1 @ 10M, tier 2 @ 100M    |
 | `1P Direct Send Pushes`      | 1P Direct Send        | 1M            | First-party direct send capability             |
 | `Private Link Unit`          | Private Link          | 1/Month       | Private endpoint add-on                        |
 | `Availability Zones Unit`    | Availability Zones SKU | 1/Month       | Zone-redundancy add-on                         |
@@ -75,22 +75,22 @@ MeterName: Availability Zones Unit
 ## Cost Formula
 
 ```
-Free monthly    = $0 (hard limit: 1M pushes/month)
-Basic monthly   = $10 + max(0, (pushes - 10M) / 1M) × $1
-Standard monthly = $200 + overage_cost
-  where overage_cost = max(0, min(pushes - 10M, 90M) / 1M × $10)
-                     + max(0, (pushes - 100M) / 1M × $2.50)
-Add-ons per-namespace monthly = [Private Link: $35] + [Availability Zones: $350]
+Free monthly    = 0 (hard limit: 1M pushes/month)
+Basic monthly   = basic_retailPrice + max(0, (pushes - 10M) / 1M) × basicOverage_retailPrice
+Standard monthly = standard_retailPrice + overage_cost
+  where overage_cost = max(0, min(pushes - 10M, 90M) / 1M) × standardOverageTier1_retailPrice
+                     + max(0, (pushes - 100M) / 1M) × standardOverageTier2_retailPrice
+Add-ons per-namespace = privateLink_retailPrice + availabilityZones_retailPrice
 Total           = (Namespace cost + add-ons per namespace) × instanceCount
 ```
 
 ## Notes
 
-- Free tier: 1M pushes/month hard limit, no overage charges, max 1 namespace
-- Basic tier: $10/month base + 10M included pushes, then $1/million beyond 10M
-- Standard tier: $200/month base + 10M included pushes, then tiered overages ($10/M for 10-100M, $2.50/M beyond 100M)
+- **Free tier**: 1M pushes/month hard limit, no overage charges, max 1 namespace
+- **Basic tier**: Monthly base subscription + 10M included pushes, then per-million overage beyond 10M
+- **Standard tier**: Monthly base subscription + 10M included pushes, then tiered per-million overages (10-100M tier 1, 100M+ tier 2)
 - Included push quotas apply **per namespace** — a 3-namespace deployment gets 3× the quota
 - Capacity: 1 Standard namespace = 10M pushes/month included, supports up to 10M devices
 - Private Link and Availability Zones are separate per-namespace add-ons that stack with any paid tier
-- 1P Direct Send is a usage-based SKU billed at $0.36/million pushes (no base subscription)
+- 1P Direct Send is a usage-based SKU billed per-million pushes (no base subscription)
 - No reserved instance pricing — `PriceType Reservation` returns 0 results
