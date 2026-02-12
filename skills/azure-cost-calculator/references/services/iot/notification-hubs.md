@@ -26,6 +26,12 @@ ServiceName: Notification Hubs
 SkuName: Basic
 MeterName: Basic Unit
 
+### Free tier — base subscription (1M pushes included)
+
+ServiceName: Notification Hubs
+SkuName: Free
+MeterName: Free Unit
+
 ### Multi-namespace deployment — 3 Standard namespaces
 
 ServiceName: Notification Hubs
@@ -86,11 +92,8 @@ Total           = (Namespace cost + add-ons per namespace) × instanceCount
 
 ## Notes
 
-- **Free tier**: 1M pushes/month hard limit, no overage charges, max 1 namespace
-- **Basic tier**: Monthly base subscription + 10M included pushes, then per-million overage beyond 10M
-- **Standard tier**: Monthly base subscription + 10M included pushes, then tiered per-million overages (10-100M tier 1, 100M+ tier 2)
+- **Tiers**: Free (1M pushes/month hard limit, max 1 namespace), Basic (monthly base + 10M included, then overage), Standard (monthly base + 10M included, then tiered overages: tier 1 for 10-100M, tier 2 for 100M+)
 - Included push quotas apply **per namespace** — a 3-namespace deployment gets 3× the quota
 - Capacity: 1 Standard namespace = 10M pushes/month included, supports up to 10M devices
-- Private Link and Availability Zones are separate per-namespace add-ons that stack with any paid tier
-- 1P Direct Send is a usage-based SKU billed per-million pushes (no base subscription)
+- Private Link and Availability Zones are per-namespace add-ons; 1P Direct Send is usage-based (no base subscription)
 - No reserved instance pricing — `PriceType Reservation` returns 0 results
