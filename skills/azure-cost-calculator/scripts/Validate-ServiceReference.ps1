@@ -295,7 +295,7 @@ function Test-ServiceReference {
     # Check required sections appear in correct relative order
     $requiredPositions = [System.Collections.Generic.List[object]]::new()
     foreach ($heading in $h2Headings) {
-        $orderIndex = $RequiredSectionOrder.IndexOf($heading.Name)
+        $orderIndex = [System.Array]::IndexOf($RequiredSectionOrder, $heading.Name)
         if ($orderIndex -ge 0) {
             $requiredPositions.Add(@{ Name = $heading.Name; Line = $heading.Line; OrderIndex = $orderIndex })
         }
