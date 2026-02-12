@@ -9,7 +9,7 @@ aliases: [private DNS, Private DNS Zones]
 **Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
 > **Warning**: **Global-only pricing / USD-only** — see shared.md & Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
-> **Trap**: Zone pricing is **tiered** — first 25 zones at tier-1 `retailPrice`, additional zones at tier-2 `retailPrice`. Pick the tier matching expected zone count, do NOT sum all tiers.
+> **Trap**: Zone pricing is **tiered** — the API returns two rows per region (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 25+ zones, apply tier-1 `retailPrice` to the first 25 and tier-2 `retailPrice` to the remainder. Do NOT sum all tiers as a flat total.
 
 ## Query Pattern
 
@@ -33,12 +33,13 @@ Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 ## Meter Names
 
-| Meter             | Unit Price (USD) | unitOfMeasure | Notes                                    |
-| ----------------- | ---------------- | ------------- | ---------------------------------------- |
-| `Private Zone`    | $0.50/zone       | `1/Month`     | First 25 zones; $0.10/zone for 26+ zones |
-| `Private Queries` | $0.40/1M         | `1M`          | Per million DNS queries                  |
+| Meter             | unitOfMeasure | Tier         | Notes                         |
+| ----------------- | ------------- | ------------ | ----------------------------- |
+| `Private Zone`    | `1/Month`     | First 25     | Per zone per month            |
+| `Private Zone`    | `1/Month`     | 26+          | Lower rate for additional zones |
+| `Private Queries` | `1M`          | —            | Per million DNS queries       |
 
-> **Note**: Zone pricing is **tiered** — first 25 zones at $0.50/zone/month, additional zones at $0.10/zone/month.
+> **Note**: Zone pricing is **tiered** — first 25 zones at tier-1 `retailPrice`, additional zones at tier-2 `retailPrice` (based on `tierMinimumUnits`).
 
 ## Cost Formula
 
@@ -49,15 +50,15 @@ Monthly = zonePrice × zoneCount + queryPrice × (queriesInMillions)
 For 25+ zones:
 
 ```
-Monthly = ($0.50 × 25) + ($0.10 × (zoneCount - 25)) + queryPrice × queriesInMillions
+Monthly = (tier1_retailPrice × 25) + (tier2_retailPrice × (zoneCount - 25)) + queryPrice × queriesInMillions
 ```
 
 ## Example (10 zones, 5M queries/month)
 
 ```
-Zones: $0.50 × 10 = $5.00/month
-Queries: $0.40 × 5 = $2.00/month
-Total: $7.00/month (USD)
+Zones:   tier1_retailPrice × 10
+Queries: queryPrice × 5
+Total:   Zones + Queries (USD)
 ```
 
 ## Notes
