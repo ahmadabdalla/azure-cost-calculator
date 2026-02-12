@@ -32,7 +32,7 @@ ServiceName: Azure Monitor  <!-- cross-service -->
 SkuName: 100 GB Commitment Tier
 MeterName: 100 GB Commitment Tier Capacity Reservation
 
-> **Trap**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script's `MonthlyCost` reports the **daily price**. **Always ignore** and manually calculate: `unitPrice × 30`.
+> **Note**: Commitment tier meters have `unitOfMeasure = '1/Day'`. The script now auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost.
 
 ## Key Fields
 

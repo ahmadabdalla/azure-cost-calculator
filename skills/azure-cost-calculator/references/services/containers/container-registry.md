@@ -8,21 +8,20 @@ aliases: [ACR, container registry]
 
 **Primary cost**: Registry unit (daily) + excess storage (per-GB/month)
 
-> **Critical trap**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. Multiplying by 730 gives a result ~24× too high. Always multiply by **30** (days/month).
-> **Trap**: The script's auto-calculated `MonthlyCost` is **wrong** for this service. Because the unit is `1/Day`, the script reports only the daily price instead of the correct monthly cost (`unitPrice × 30`). **Always ignore the script's `MonthlyCost`** and manually calculate: `unitPrice × 30`.
->
-> **Agent instruction**: When reporting ACR costs, always check the `unitOfMeasure` field. If it's `1/Day`, multiply by 30 (not 730). Never trust the script's `MonthlyCost` for this service.
+> **Trap (daily billing)**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. The script now auto-multiplies `1/Day` units by 30, so `MonthlyCost` is already the correct **monthly** cost. Do NOT manually multiply by 30 again.
 
 ## Query Pattern
 
 Substitute `{Tier}` with `Basic`, `Standard`, or `Premium`:
 
 ### {Tier} registry unit (daily cost)
+
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: {Tier} Registry Unit
 
 ### Data stored (excess beyond included quota)
+
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: Data Stored
@@ -53,7 +52,7 @@ MeterName: Data Stored
 Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 ```
 
-> **Remember**: Use `× 30` (days), NOT `× 730` (hours). Check `unitOfMeasure` in the API response.
+> **Note**: The script auto-multiplies `1/Day` units by 30. `MonthlyCost` is already the monthly cost.
 
 ## Notes
 

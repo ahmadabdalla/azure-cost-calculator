@@ -8,18 +8,17 @@ aliases: [Azure SignalR Service, Real-time Messaging]
 
 **Primary cost**: Per-unit daily rate (by tier) + messages per 1M/month
 
-> **Trap (daily billing)**: Unit meters use `1/Day` billing, not hourly. For these meters, `Get-MonthlyMultiplier` returns `1`, so the script's `MonthlyCost` is actually the **daily** cost. To get a monthly estimate, run with `Quantity: 30` for unit meters, or manually multiply the reported cost by 30.
+> **Trap (daily billing)**: Unit meters use `1/Day` billing. `Get-MonthlyMultiplier` returns `30` for these meters, so the script's `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 
 > **Trap (free tier rows)**: The `Standard Unit - Free` meter returns `$0.00`. This is a free-tier grant (1 unit with 20 concurrent connections and 20K messages/day). Its price does not inflate `totalMonthlyCost`, but including it adds noise — filter by `MeterName` to exclude free-tier rows when estimating paid usage.
 
 ## Query Pattern
 
-### Standard tier — 1 unit monthly (billed per day, Quantity 30 = 1 month)
+### Standard tier — 1 unit monthly (script auto-multiplies daily rate × 30)
 
 ServiceName: SignalR
 SkuName: Standard
 MeterName: Standard Unit
-Quantity: 30
 InstanceCount: 1
 
 ### Standard tier — messages (per 1M, use Quantity for monthly volume)
@@ -29,12 +28,11 @@ SkuName: Standard
 MeterName: Standard Message
 Quantity: 10
 
-### Premium tier — 1 unit monthly (billed per day, Quantity 30 = 1 month)
+### Premium tier — 1 unit monthly (script auto-multiplies daily rate × 30)
 
 ServiceName: SignalR
 SkuName: Premium
 MeterName: Premium Unit
-Quantity: 30
 InstanceCount: 1
 
 ### Premium tier — messages (per 1M)

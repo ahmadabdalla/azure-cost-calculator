@@ -12,7 +12,7 @@ aliases: [Azure AI Search, Search Service, Full-text Search]
 
 > **Trap (CC variants)**: Each tier has a customer-controlled encryption variant (e.g., `Standard S1 CC`). These are separate SKUs with higher prices — do not confuse with the standard tier.
 
-> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. Without `Quantity 30`, the script's `MonthlyCost` reports only the **daily** price (~$16). Always use `Quantity 30` and ignore the script's `MonthlyCost` for this meter. For Semantic Ranker, always check `unitOfMeasure`. If `1/Day`, multiply `unitPrice × 30` for monthly cost.
+> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. The script now auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 
 ## Query Pattern
 
@@ -23,12 +23,11 @@ SkuName: {SkuName}
 MeterName: {SkuName} Unit
 InstanceCount: {searchUnits}
 
-### Semantic Ranker add-on — use Quantity 30 (billed per day, not per hour)
+### Semantic Ranker add-on (script auto-multiplies daily rate × 30)
 
 ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker
 MeterName: Semantic Ranker Unit
-Quantity: 30
 
 ## Key Fields
 
@@ -69,4 +68,4 @@ Total = Monthly Base + Semantic
 - **Free tier**: 1 index, 50 MB storage, no SLA. Use `skuName='Free'`.
 - **No reserved pricing**: RI queries return zero results. Do not attempt `PriceType Reservation`.
 - **Tier limits**: Basic supports up to 3 replicas, 1 partition. Standard tiers support up to 12 replicas, 12 partitions. L1/L2 support up to 12 replicas, 12 partitions.
-- **Semantic Ranker**: Billed daily, not hourly. Formula: `retailPrice × 30`. Also has per-query overage meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`).
+- **Semantic Ranker**: Billed daily, not hourly. Script auto-multiplies `1/Day` by 30. Also has per-query overage meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`).

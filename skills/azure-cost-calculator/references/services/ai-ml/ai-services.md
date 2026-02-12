@@ -70,7 +70,7 @@ Quantity: 10
 
 ```
 Block meters (1K, 1M): Monthly = retailPrice × Quantity
-Daily meters (1/Day):  Script shows daily — multiply by 30
+Daily meters (1/Day):  Script auto-multiplies by 30
 Hourly meters (1 Hour): Script auto-multiplies by 730
 ```
 
@@ -80,7 +80,7 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 
 - **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate — see `openai.md`
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
-- **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day` — script shows daily cost
+- **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day` — script auto-multiplies by 30
 - **Disconnected**: Products ending `- Disconnected` have annual billing — exclude unless requested
 - Reserved pricing is **not available**
 
