@@ -8,7 +8,7 @@ aliases: [DNS Load Balancer]
 
 **Primary cost**: Per million DNS queries (tiered) + per health check endpoint per month + optional Fast Failover / Real User Measurements add-ons
 
-> **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce `$0.00` in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). See Known Rates table for published rates.
+> **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce `$0.00` in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
 > **Warning**: **Global-only pricing** — Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
 
@@ -68,8 +68,8 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `Azure Endpoint Fast Interval Health Check Add-ons`  | `Azure Endpoint`       | `1`           | 10s interval add-on per endpoint   |
 | `Non-Azure Endpoint Health Checks`                   | `Non-Azure Endpoint`   | `1`           | Per endpoint per month             |
 | `Non-Azure Endpoint Fast Interval Health Check Add-ons` | `Non-Azure Endpoint` | `1`          | 10s interval add-on per endpoint   |
-| `Azure Region Real User Measurements`                | `Azure Region`         | `1M`          | Free ($0)                          |
-| `Non-Azure Region Real User Measurements`            | `Non-Azure Region`     | `1M`          | Free ($0)                          |
+| `Azure Region Real User Measurements`                | `Azure Region`         | `1M`          | Free (retailPrice = 0)             |
+| `Non-Azure Region Real User Measurements`            | `Non-Azure Region`     | `1M`          | Free (retailPrice = 0)             |
 | `Traffic View Data Points Processed`                 | `Traffic View`         | `1M`          | Per million data points            |
 
 > **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000M). The script sums both tiers — ignore `totalMonthlyCost` and manually calculate using tier boundaries.
@@ -85,14 +85,8 @@ TrafficView = trafficViewPrice × dataPointsInMillions
 Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 ```
 
-## Known Rates
-| Meter | Unit | Published Rate (USD) |
-| ----- | ---- | -------------------- |
-| `DNS Queries` (tier 1, 0–1B) | per 1M | $0.54 |
-| `DNS Queries` (tier 2, >1B) | per 1M | $0.375 |
-
 ## Notes
 
-- **Real User Measurements**: Free ($0) — **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
+- **Real User Measurements**: Free (retailPrice = 0) — **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
 - **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month — use `retailPrice` from query results to calculate totals
 - Reserved pricing is not available for Traffic Manager
