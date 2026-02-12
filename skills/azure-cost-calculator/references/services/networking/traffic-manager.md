@@ -90,11 +90,9 @@ Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 | ----- | ---- | -------------------- |
 | `DNS Queries` (tier 1, 0–1B) | per 1M | $0.54 |
 | `DNS Queries` (tier 2, >1B) | per 1M | $0.375 |
-| `Azure Endpoint Health Checks` | per endpoint | $0.36 |
-| `Non-Azure Endpoint Health Checks` | per endpoint | $0.75 |
 
 ## Notes
 
 - **Real User Measurements**: Free ($0) — **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
-- **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month ≈ $1.80 (health checks) + $5.40 (DNS) = ~$7.20/month
+- **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month — use `retailPrice` from query results to calculate totals
 - Reserved pricing is not available for Traffic Manager
