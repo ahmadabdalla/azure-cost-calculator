@@ -8,7 +8,7 @@ aliases: [Push Notifications, ANH]
 
 **Primary cost**: Per-namespace monthly flat rate by tier (Free/Basic/Standard) + per-million push overages beyond included quota
 
-> **Trap (tiered pricing inflation)**: Querying Basic or Standard tiers returns **multiple tiered pricing rows** for the overage meters. The script sums all tier rows, inflating totals (Basic shows $11 instead of $10, Standard shows $212.50 instead of $200). For base cost estimation, filter to the base unit meter only (`Basic Unit` or `Standard Unit`). Overage tiers apply only when usage exceeds the included 10M pushes/month.
+> **Trap (tiered pricing inflation)**: Querying Basic or Standard tiers without `MeterName` returns **multiple tiered pricing rows** for the overage meters. The script sums all tier rows, inflating `totalMonthlyCost` above the actual base price. For base cost estimation, filter to the base unit meter only (`Basic Unit` or `Standard Unit`). Overage tiers apply only when usage exceeds the included 10M pushes/month.
 
 > **Trap (namespace billing)**: Each namespace is billed independently — use `InstanceCount: N` to model multi-namespace deployments. The included push quota (10M for Basic/Standard) applies **per namespace**, not across all namespaces.
 
@@ -44,6 +44,7 @@ InstanceCount: 3
 ServiceName: Notification Hubs
 SkuName: Standard
 MeterName: Standard Pushes
+Quantity: 5
 
 ### Private Link add-on (stacks with base tier)
 
@@ -59,24 +60,24 @@ MeterName: Availability Zones Unit
 
 ## Key Fields
 
-| Parameter     | How to determine                                  | Example values                                                     |
-| ------------- | ------------------------------------------------- | ------------------------------------------------------------------ |
-| `serviceName` | Always `Notification Hubs`                        | `Notification Hubs`                                                |
-| `skuName`     | Tier or add-on feature                            | `Free`, `Basic`, `Standard`, `1P Direct Send`, `Private Link`, `Availability Zones SKU` |
-| `meterName`   | Base unit, overage pushes, or add-on unit         | `Free Unit`, `Basic Unit`, `Standard Unit`, `Basic Pushes`, `Standard Pushes`, `Private Link Unit` |
+| Parameter     | How to determine                          | Example values                                                                                     |
+| ------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Notification Hubs`                | `Notification Hubs`                                                                                |
+| `skuName`     | Tier or add-on feature                    | `Free`, `Basic`, `Standard`, `1P Direct Send`, `Private Link`, `Availability Zones SKU`            |
+| `meterName`   | Base unit, overage pushes, or add-on unit | `Free Unit`, `Basic Unit`, `Standard Unit`, `Basic Pushes`, `Standard Pushes`, `Private Link Unit` |
 
 ## Meter Names
 
-| Meter                        | SKU                   | unitOfMeasure | Notes                                          |
-| ---------------------------- | --------------------- | ------------- | ---------------------------------------------- |
-| `Free Unit`                  | Free                  | 1/Month       | 1M pushes/month hard limit                     |
-| `Basic Unit`                 | Basic                 | 1/Month       | Base subscription, 10M pushes included         |
-| `Basic Pushes`               | Basic                 | 1M            | Overage beyond 10M (TierMinUnits: 10.0)        |
-| `Standard Unit`              | Standard              | 1/Month       | Base subscription, 10M pushes included         |
-| `Standard Pushes`            | Standard              | 1M            | Tiered overage: tier 1 @ 10M, tier 2 @ 100M    |
-| `1P Direct Send Pushes`      | 1P Direct Send        | 1M            | First-party direct send capability             |
-| `Private Link Unit`          | Private Link          | 1/Month       | Private endpoint add-on                        |
-| `Availability Zones Unit`    | Availability Zones SKU | 1/Month       | Zone-redundancy add-on                         |
+| Meter                     | SKU                    | unitOfMeasure | Notes                                       |
+| ------------------------- | ---------------------- | ------------- | ------------------------------------------- |
+| `Free Unit`               | Free                   | 1/Month       | 1M pushes/month hard limit                  |
+| `Basic Unit`              | Basic                  | 1/Month       | Base subscription, 10M pushes included      |
+| `Basic Pushes`            | Basic                  | 1M            | Overage beyond 10M (TierMinUnits: 10.0)     |
+| `Standard Unit`           | Standard               | 1/Month       | Base subscription, 10M pushes included      |
+| `Standard Pushes`         | Standard               | 1M            | Tiered overage: tier 1 @ 10M, tier 2 @ 100M |
+| `1P Direct Send Pushes`   | 1P Direct Send         | 1M            | First-party direct send capability          |
+| `Private Link Unit`       | Private Link           | 1/Month       | Private endpoint add-on                     |
+| `Availability Zones Unit` | Availability Zones SKU | 1/Month       | Zone-redundancy add-on                      |
 
 ## Cost Formula
 
