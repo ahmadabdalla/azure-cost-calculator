@@ -59,7 +59,7 @@ function Test-AliasUniqueness {
         }
 
         foreach ($alias in $aliases) {
-            $key = $alias.ToLower()
+            $key = $alias.ToLowerInvariant()
             if ($aliasMap.ContainsKey($key)) {
                 $checks.Add((New-ValidationCheck -Name 'alias_uniqueness' -Pass $false `
                     -PassMessage 'n/a' `

@@ -89,7 +89,12 @@ function Get-FrontMatter {
                 break
             }
             # Normalise to bracket string so downstream sees the same format as inline aliases
-            $result.Fields[$key] = '[' + ($items -join ', ') + ']'
+            if ($items.Count -eq 0) {
+                $result.Fields[$key] = ''
+            }
+            else {
+                $result.Fields[$key] = '[' + ($items -join ', ') + ']'
+            }
             continue
         }
 

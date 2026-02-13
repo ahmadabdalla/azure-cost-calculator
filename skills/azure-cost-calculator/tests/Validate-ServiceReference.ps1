@@ -52,8 +52,9 @@ function Test-ServiceReference {
     $fullPath = Resolve-Path -Path $FilePath -ErrorAction SilentlyContinue
 
     if (-not $fullPath) {
-        $checks.Add(@{ Name = 'file_exists'; Pass = $false; Message = "File not found: $FilePath" })
-        return $checks
+        $checks.Add((New-ValidationCheck -Name 'file_exists' -Pass $false `
+            -PassMessage 'n/a' -FailMessage "File not found: $FilePath"))
+        return , $checks
     }
 
     $lines = @(Get-Content -Path $fullPath -Encoding UTF8)
@@ -64,7 +65,7 @@ function Test-ServiceReference {
     foreach ($c in (Test-StyleCompliance -Lines $lines)) { $checks.Add($c) }
     foreach ($c in (Test-ContentRule -Lines $lines -FrontMatter $fm)) { $checks.Add($c) }
 
-    return $checks
+    , $checks
 }
 
 $allResults = @{}
@@ -85,8 +86,9 @@ foreach ($filePath in $Path) {
 
     foreach ($rp in $resolvedPaths) {
         $checks = Test-ServiceReference -FilePath $rp
-        $pathParts = $rp -replace '\\', '/' -split '/'
-        $fileName = ($pathParts[-2..-1] -join '/')
+        $leaf = Split-Path -Path $rp -Leaf
+        $parent = Split-Path -Path (Split-Path -Path $rp -Parent) -Leaf
+        $fileName = if ($parent) { "$parent/$leaf" } else { $leaf }
         $allResults[$fileName] = $checks
 
         foreach ($check in $checks) {
