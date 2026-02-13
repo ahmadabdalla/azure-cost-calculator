@@ -102,7 +102,7 @@ foreach ($filePath in $Path) {
 
 if ($CheckAliasUniqueness) {
     $root = if ($ServicesRoot) { $ServicesRoot } else {
-        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'references', 'services'
+        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
     }
     if (Test-Path $root) {
         $aliasChecks = Test-AliasUniqueness -RootPath $root
