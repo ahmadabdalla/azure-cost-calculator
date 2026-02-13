@@ -3,6 +3,7 @@ serviceName: Azure Site Recovery
 category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
+billingConsiderations: [Azure Hybrid Benefit]
 ---
 
 # Azure Site Recovery

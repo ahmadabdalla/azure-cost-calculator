@@ -2,6 +2,7 @@
 serviceName: Storage
 category: storage
 aliases: [Data Lake Gen2, ADLS]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Data Lake Storage Gen2

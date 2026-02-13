@@ -2,6 +2,7 @@
 serviceName: Azure Database for PostgreSQL
 category: databases
 aliases: [PostgreSQL, postgres, flexible server]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure Database for PostgreSQL Flexible Server

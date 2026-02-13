@@ -2,6 +2,7 @@
 serviceName: Azure App Service
 category: compute
 aliases: [app service, web app, webapp]
+billingConsiderations: [Reserved Instances]
 ---
 
 # App Service Plans

@@ -2,6 +2,7 @@
 serviceName: Foundry Models
 category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure OpenAI Service

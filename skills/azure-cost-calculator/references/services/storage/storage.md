@@ -2,6 +2,7 @@
 serviceName: Storage
 category: storage
 aliases: [blob storage, file storage, table storage, queue storage, Azure Storage]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Storage Accounts (Blob)

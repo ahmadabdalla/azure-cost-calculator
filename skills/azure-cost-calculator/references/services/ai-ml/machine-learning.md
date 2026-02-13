@@ -2,7 +2,7 @@
 serviceName: Azure Machine Learning
 category: ai-ml
 aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
-billingNeeds: [Virtual Machines, Storage, Key Vault, Application Insights]
+billingNeeds: [Storage, Key Vault, Application Insights]
 ---
 
 # Azure Machine Learning

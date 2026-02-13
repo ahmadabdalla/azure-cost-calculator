@@ -64,5 +64,4 @@ HCI vCPU:         Monthly = retailPrice × 730 × vCPUCount
 
 ## Notes
 
-- M365 E3/E5/A3/A5/Business Premium and Windows E3/E5 per-user license holders pay **no AVD access fee** — estimate only VM, storage, and networking costs
 - Multi-session Windows 11/10 Enterprise is unique to AVD and allows multiple users per VM, reducing per-user compute cost

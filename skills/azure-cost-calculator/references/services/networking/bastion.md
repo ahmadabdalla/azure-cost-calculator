@@ -2,6 +2,7 @@
 serviceName: Azure Bastion
 category: networking
 aliases: [Jump Host, Bastion Host]
+billingNeeds: [IP Addresses]
 ---
 
 # Azure Bastion

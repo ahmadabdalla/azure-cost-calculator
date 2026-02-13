@@ -11,7 +11,7 @@ billingNeeds: [Virtual Machines]
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Databricks'` query returns ~41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `SkuName` for a specific workload type.
 
-> **Trap (VM compute split)**: DBU charges cover the Databricks platform fee only. The underlying cluster VMs are billed separately — see `billingNeeds`.
+> **Trap (VM compute split)**: DBU charges cover the Databricks platform fee only.
 
 ## Query Pattern
 
