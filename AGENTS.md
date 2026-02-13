@@ -11,6 +11,7 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - `skills/azure-cost-calculator/SKILL.md` -- entry point; defines the agent workflow
 - `skills/azure-cost-calculator/references/` -- service reference files and shared context
 - `skills/azure-cost-calculator/scripts/` -- PowerShell helpers (Get-AzurePricing, Explore-AzurePricing)
+- `tests/` -- Validation scripts (Validate-ServiceReference)
 
 ## For contributors
 
@@ -19,6 +20,6 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - Each service file must stay under 100 lines.
 - Run the validation script before submitting:
   ```
-  pwsh skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1
+  pwsh tests/Validate-ServiceReference.ps1
   ```
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.

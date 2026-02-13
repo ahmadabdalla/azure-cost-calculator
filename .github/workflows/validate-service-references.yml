@@ -53,7 +53,7 @@ jobs:
           $files | ForEach-Object { Write-Output "  - $_" }
           Write-Output ""
 
-          $scriptPath = "skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1"
+          $scriptPath = "tests/Validate-ServiceReference.ps1"
           $servicesRoot = "skills/azure-cost-calculator/references/services"
 
           & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness

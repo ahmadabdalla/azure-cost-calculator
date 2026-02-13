@@ -156,7 +156,7 @@ All paths above are given from the repo root.
 Run the validation script against the generated file:
 
 ```powershell
-skills/azure-cost-calculator/scripts/Validate-ServiceReference.ps1 `
+tests/Validate-ServiceReference.ps1 `
     -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md `
     -CheckAliasUniqueness
 ```
