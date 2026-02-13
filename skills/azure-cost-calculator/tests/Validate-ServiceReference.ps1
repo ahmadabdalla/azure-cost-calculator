@@ -73,8 +73,8 @@ $hasFailures = $false
 foreach ($filePath in $Path) {
     $resolvedPaths = @()
     if ($filePath -match '[*?]') {
-        $resolvedPaths = Get-ChildItem -Path $filePath -ErrorAction SilentlyContinue |
-        Select-Object -ExpandProperty FullName
+        $resolvedPaths = @(Get-ChildItem -Path $filePath -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty FullName)
         if ($resolvedPaths.Count -eq 0) {
             Write-Warning "No files matched pattern: $filePath"
         }

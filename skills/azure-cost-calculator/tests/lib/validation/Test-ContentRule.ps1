@@ -35,7 +35,7 @@ function Test-ContentRule {
 
     # 45-line rule: query pattern must appear early so the agent finds it quickly
     $deadline = $config.QueryPatternDeadline
-    $first45 = if ($Lines.Count -ge $deadline) { $Lines[0..($deadline - 1)] } else { $Lines }
+    $first45 = @(if ($Lines.Count -ge $deadline) { $Lines[0..($deadline - 1)] } else { $Lines })
     $hasQueryInFirst45 = $false
     for ($i = 0; $i -lt $first45.Count; $i++) {
         if ($first45[$i] -match '(?i)^\s*```(powershell|pwsh)' -or $first45[$i] -match '^\s*ServiceName\s*:' -or $first45[$i] -match '^\s*API\s*:') {
