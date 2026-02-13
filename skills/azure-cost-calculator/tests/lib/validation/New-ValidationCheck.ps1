@@ -21,7 +21,7 @@ function New-ValidationCheck {
     .EXAMPLE
         New-ValidationCheck -Name 'HasTitle' -Pass $true -PassMessage 'Title found' -FailMessage 'Missing title'
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     [OutputType([hashtable])]
     param(
         [Parameter(Mandatory)]
@@ -37,9 +37,11 @@ function New-ValidationCheck {
         [string]$FailMessage
     )
 
-    @{
-        Name    = $Name
-        Pass    = $Pass
-        Message = if ($Pass) { $PassMessage } else { $FailMessage }
+    if ($PSCmdlet.ShouldProcess($Name, 'Create validation check')) {
+        @{
+            Name    = $Name
+            Pass    = $Pass
+            Message = if ($Pass) { $PassMessage } else { $FailMessage }
+        }
     }
 }

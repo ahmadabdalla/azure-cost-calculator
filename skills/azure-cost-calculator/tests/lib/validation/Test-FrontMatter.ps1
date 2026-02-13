@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
 
@@ -15,12 +15,12 @@ function Test-FrontMatter {
     .PARAMETER FilePath
         Path to the service reference file being validated.
     .OUTPUTS
-        System.Collections.Generic.List[object]
+        System.Array
     .EXAMPLE
         Test-FrontMatter -FrontMatter $fm -FilePath 'services/compute/virtual-machines.md'
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[object]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [hashtable]$FrontMatter,
@@ -44,7 +44,7 @@ function Test-FrontMatter {
                 -FailMessage "Missing required front matter field: $field"))
         }
 
-        # Alias-specific: ensure at least one alias actually exists
+        # aliases field may be present but empty — require at least one entry
         if ($FrontMatter.Fields.ContainsKey('aliases')) {
             $aliasValue = $FrontMatter.Fields['aliases']
             $parsedAliases = @()
@@ -61,7 +61,6 @@ function Test-FrontMatter {
                 -FailMessage 'aliases field is present but empty - at least one alias is required'))
         }
 
-        # Category validation
         if ($FrontMatter.Fields.ContainsKey('category')) {
             $rawCategory = $FrontMatter.Fields['category'].Trim()
             $isValidCategory = $config.ValidCategories -contains $rawCategory
@@ -70,7 +69,7 @@ function Test-FrontMatter {
                 -FailMessage "Invalid category '$rawCategory'. Must be one of: $($config.ValidCategories -join ', ')"))
         }
 
-        # File placement
+        # File must reside under references/services/<category>/ matching its front matter category
         $fullPath = Resolve-Path -Path $FilePath -ErrorAction SilentlyContinue
         $pathStr = if ($fullPath) { $fullPath.ToString().Replace('\', '/') } else { $FilePath.Replace('\', '/') }
         if ($FrontMatter.Fields.ContainsKey('category')) {

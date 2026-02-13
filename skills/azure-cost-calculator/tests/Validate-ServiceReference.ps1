@@ -36,13 +36,12 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Dot-source modular validators
-$validationDir = Join-Path $PSScriptRoot 'lib' 'validation'
+$validationDir = Join-Path -Path $PSScriptRoot -ChildPath 'lib' -AdditionalChildPath 'validation'
 . (Join-Path $validationDir 'Get-FrontMatter.ps1')
 . (Join-Path $validationDir 'Test-FrontMatter.ps1')
 . (Join-Path $validationDir 'Test-DocumentStructure.ps1')
 . (Join-Path $validationDir 'Test-StyleCompliance.ps1')
-. (Join-Path $validationDir 'Test-ContentRules.ps1')
+. (Join-Path $validationDir 'Test-ContentRule.ps1')
 . (Join-Path $validationDir 'Test-AliasUniqueness.ps1')
 
 function Test-ServiceReference {
@@ -62,12 +61,11 @@ function Test-ServiceReference {
     foreach ($c in (Test-FrontMatter -FrontMatter $fm -FilePath $fullPath)) { $checks.Add($c) }
     foreach ($c in (Test-DocumentStructure -Lines $lines)) { $checks.Add($c) }
     foreach ($c in (Test-StyleCompliance -Lines $lines)) { $checks.Add($c) }
-    foreach ($c in (Test-ContentRules -Lines $lines -FrontMatter $fm)) { $checks.Add($c) }
+    foreach ($c in (Test-ContentRule -Lines $lines -FrontMatter $fm)) { $checks.Add($c) }
 
     return $checks
 }
 
-# --- Main ---
 $allResults = @{}
 $hasFailures = $false
 

@@ -1,7 +1,7 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
-. (Join-Path $PSScriptRoot 'Get-H2Sections.ps1')
+. (Join-Path $PSScriptRoot 'Get-H2Section.ps1')
 
 function Test-DocumentStructure {
     <#
@@ -13,12 +13,12 @@ function Test-DocumentStructure {
     .PARAMETER Lines
         The full set of file lines to validate.
     .OUTPUTS
-        System.Collections.Generic.List[object]
+        System.Array
     .EXAMPLE
         Test-DocumentStructure -Lines @(Get-Content -Path 'service.md')
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[object]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [AllowEmptyString()]
@@ -28,7 +28,6 @@ function Test-DocumentStructure {
     $config = Import-PowerShellDataFile -Path (Join-Path $PSScriptRoot 'ValidationConfig.psd1')
     $checks = [System.Collections.Generic.List[object]]::new()
 
-    # Required sections must exist as H2
     foreach ($section in $config.RequiredSections) {
         $pattern = "^#{2}\s+$([regex]::Escape($section))\s*$"
         $hasSection = @($Lines | Where-Object { $_ -match $pattern }).Count -gt 0
@@ -39,10 +38,9 @@ function Test-DocumentStructure {
             -FailMessage "Missing required section: ## $section"))
     }
 
-    # Extract all H2 headings with their line numbers
-    $h2Headings = Get-H2Sections -Lines $Lines
+    $h2Headings = Get-H2Section -Lines $Lines
 
-    # Check required sections appear in correct relative order
+    # Verify required sections appear in the order defined by RequiredSectionOrder
     $requiredPositions = [System.Collections.Generic.List[object]]::new()
     foreach ($heading in $h2Headings) {
         $orderIndex = [System.Array]::IndexOf($config.RequiredSectionOrder, $heading.Name)
@@ -66,7 +64,7 @@ function Test-DocumentStructure {
         -PassMessage 'Required sections are in correct order' `
         -FailMessage ('Section ordering violation: ' + ($orderingMessages -join '; '))))
 
-    # Check optional sections appear after Notes
+    # Per TEMPLATE.md, optional sections must appear after the Notes section
     $notesLine = $null
     foreach ($heading in $h2Headings) {
         if ($heading.Name -eq 'Notes') {

@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 function Get-FrontMatter {
     <#
@@ -30,7 +30,6 @@ function Get-FrontMatter {
         return $result
     }
 
-    # Find the closing --- delimiter
     for ($i = 1; $i -lt $Lines.Count; $i++) {
         if ($Lines[$i].Trim() -eq '---') {
             $result.Found = $true
@@ -43,18 +42,15 @@ function Get-FrontMatter {
         return $result
     }
 
-    # Extract front matter lines (between the --- markers)
     $frontMatterLines = @()
     if ($result.EndLine -gt 1) {
         $frontMatterLines = $Lines[1..($result.EndLine - 1)]
     }
 
-    # Parse supporting both single-line "key: value" and multi-line "key:" followed by "- item" lines
     $index = 0
     while ($index -lt $frontMatterLines.Count) {
         $line = $frontMatterLines[$index]
 
-        # Match single-line "key: value" (value is non-empty)
         if ($line -match '^\s*(\w+)\s*:\s*(.+)$') {
             $key = $Matches[1]
             $value = $Matches[2].Trim()
@@ -63,14 +59,12 @@ function Get-FrontMatter {
             continue
         }
 
-        # Match "key:" with no value -- consume subsequent lines
+        # "key:" with no value — consume bracketed list or YAML sequence below it
         if ($line -match '^\s*(\w+)\s*:\s*$') {
             $key = $Matches[1]
             $index++
 
-            # Check if next line is a bracketed list (single or multi-line)
             if ($index -lt $frontMatterLines.Count -and $frontMatterLines[$index] -match '^\s+\[') {
-                # Accumulate lines until we find the closing bracket
                 $bracketContent = ''
                 while ($index -lt $frontMatterLines.Count) {
                     $bracketContent += $frontMatterLines[$index].Trim()
@@ -84,7 +78,6 @@ function Get-FrontMatter {
                 continue
             }
 
-            # Otherwise consume "- item" YAML sequence lines
             $items = @()
             while ($index -lt $frontMatterLines.Count) {
                 $nextLine = $frontMatterLines[$index]
@@ -95,7 +88,7 @@ function Get-FrontMatter {
                 }
                 break
             }
-            # Store as comma-joined bracket string to match inline format downstream
+            # Normalise to bracket string so downstream sees the same format as inline aliases
             $result.Fields[$key] = '[' + ($items -join ', ') + ']'
             continue
         }

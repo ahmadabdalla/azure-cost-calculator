@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-function Get-NonCodeLines {
+function Get-NonCodeLine {
     <#
     .SYNOPSIS
         Returns lines that are outside fenced code blocks.
@@ -11,12 +11,12 @@ function Get-NonCodeLines {
     .PARAMETER Lines
         The full set of file lines to filter.
     .OUTPUTS
-        System.Collections.Generic.List[string]
+        System.Array
     .EXAMPLE
-        Get-NonCodeLines -Lines @('hello', '```', 'code', '```', 'world')
+        Get-NonCodeLine -Lines @('hello', '```', 'code', '```', 'world')
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[string]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [AllowEmptyString()]

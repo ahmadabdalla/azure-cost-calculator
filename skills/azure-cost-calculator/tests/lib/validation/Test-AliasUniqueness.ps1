@@ -14,12 +14,12 @@ function Test-AliasUniqueness {
     .PARAMETER RootPath
         Root directory of the services folder to scan for alias collisions.
     .OUTPUTS
-        System.Collections.Generic.List[object]
+        System.Array
     .EXAMPLE
         Test-AliasUniqueness -RootPath 'skills/azure-cost-calculator/references/services'
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[object]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [string]$RootPath
@@ -39,7 +39,6 @@ function Test-AliasUniqueness {
         $aliasRaw = $fm.Fields['aliases']
         $aliases = @()
 
-        # Handle both YAML sequences (array objects) and inline bracket strings
         if ($aliasRaw -is [System.Collections.IEnumerable] -and -not ($aliasRaw -is [string])) {
             foreach ($item in $aliasRaw) {
                 if ($null -ne $item -and $item.ToString().Trim()) {
@@ -53,7 +52,6 @@ function Test-AliasUniqueness {
             $aliases = $aliasString -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
         }
 
-        # Use relative path for clearer reporting
         $relativePath = $file.Name
         if ($file.FullName.StartsWith($RootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
             $relativePath = $file.FullName.Substring($RootPath.Length).TrimStart('\', '/')

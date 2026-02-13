@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-function Get-H2Sections {
+function Get-H2Section {
     <#
     .SYNOPSIS
         Parses H2 headings and their 1-based line numbers.
@@ -10,12 +10,12 @@ function Get-H2Sections {
     .PARAMETER Lines
         The full set of file lines to scan.
     .OUTPUTS
-        System.Collections.Generic.List[object]
+        System.Array
     .EXAMPLE
-        Get-H2Sections -Lines @('# Title', '## Section One', 'text', '## Section Two')
+        Get-H2Section -Lines @('# Title', '## Section One', 'text', '## Section Two')
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[object]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [AllowEmptyString()]

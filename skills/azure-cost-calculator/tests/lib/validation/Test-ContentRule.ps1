@@ -2,7 +2,7 @@ Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
 
-function Test-ContentRules {
+function Test-ContentRule {
     <#
     .SYNOPSIS
         Validates content rules for service reference files.
@@ -15,12 +15,12 @@ function Test-ContentRules {
     .PARAMETER FrontMatter
         Hashtable returned by Get-FrontMatter (with Found, Fields, EndLine).
     .OUTPUTS
-        System.Collections.Generic.List[object]
+        System.Array
     .EXAMPLE
-        Test-ContentRules -Lines @(Get-Content -Path 'service.md') -FrontMatter $fm
+        Test-ContentRule -Lines @(Get-Content -Path 'service.md') -FrontMatter $fm
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Generic.List[object]])]
+    [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
         [AllowEmptyString()]
@@ -33,7 +33,7 @@ function Test-ContentRules {
     $config = Import-PowerShellDataFile -Path (Join-Path $PSScriptRoot 'ValidationConfig.psd1')
     $checks = [System.Collections.Generic.List[object]]::new()
 
-    # --- 45-Line Rule ---
+    # 45-line rule: query pattern must appear early so the agent finds it quickly
     $deadline = $config.QueryPatternDeadline
     $first45 = if ($Lines.Count -ge $deadline) { $Lines[0..($deadline - 1)] } else { $Lines }
     $hasQueryInFirst45 = $false
@@ -47,7 +47,7 @@ function Test-ContentRules {
         -PassMessage 'Query pattern found within first 45 lines' `
         -FailMessage 'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block, ServiceName: declaration, or API: declaration.'))
 
-    # --- Scaling parameter ---
+    # At least one query or Cost Formula must show how to scale (InstanceCount/Quantity/multiplier)
     $queryBlockLines = [System.Collections.Generic.List[string]]::new()
     $insidePwshBlock = $false
     foreach ($line in $Lines) {
@@ -82,19 +82,17 @@ function Test-ContentRules {
         -PassMessage 'Scaling parameter or cost formula multiplier found' `
         -FailMessage 'No scaling parameter (InstanceCount/Quantity) or cost formula multiplier found. At least one query or formula must demonstrate how to scale.'))
 
-    # --- Line count limit ---
     $maxLines = $config.MaxLineCount
     $checks.Add((New-ValidationCheck -Name 'line_count_limit' -Pass ($Lines.Count -le $maxLines) `
         -PassMessage "File is $($Lines.Count) lines (limit: $maxLines)" `
         -FailMessage "File is $($Lines.Count) lines -- exceeds $($maxLines)-line limit by $($Lines.Count - $maxLines) lines"))
 
-    # --- Primary cost line ---
     $hasPrimaryCost = @($Lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'primary_cost_line' -Pass $hasPrimaryCost `
         -PassMessage 'Primary cost line found' `
         -FailMessage 'Missing **Primary cost**: line'))
 
-    # --- No code fences in Query Pattern section ---
+    # Query Pattern uses declarative Key: Value format, not fenced code blocks
     $codeFenceInQueryPattern = $false
     $inQueryPatternSection = $false
     foreach ($line in $Lines) {
@@ -115,13 +113,12 @@ function Test-ContentRules {
         -PassMessage 'No code fences in Query Pattern section' `
         -FailMessage 'Code fence found in Query Pattern section -- use declarative Key: Value format instead'))
 
-    # --- No template instruction comments ---
     $hasTemplateComments = @($Lines | Where-Object { $_ -match 'INSTRUCTIONS FOR AUTHORS' -or $_ -match 'DELETE THIS COMMENT BLOCK' }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'no_template_comments' -Pass (-not $hasTemplateComments) `
         -PassMessage 'No template instruction comments found' `
         -FailMessage 'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'))
 
-    # --- ServiceName consistency ---
+    # Every ServiceName: in a query must match the YAML serviceName to avoid silent API mismatches
     $yamlValue = $null
     if ($FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('serviceName')) {
         $yamlValue = $FrontMatter.Fields['serviceName'].Trim() -replace "^'|'$", ''
@@ -141,14 +138,13 @@ function Test-ContentRules {
                 continue
             }
         }
-        # Remove any inline comment that opens and closes on this line
         $effective = $effective -replace '<!--.*?-->', ''
         if ($effective -match '<!--') {
             $insideHtmlComment = $true
             $effective = $effective -replace '<!--.*$', ''
         }
         if ($effective -match '^\s*ServiceName\s*:\s*(.+)$') {
-            # Skip ServiceName lines annotated with cross-service comment
+            # cross-service ServiceName lines are intentionally different from YAML
             if ($Lines[$i] -match '<!--\s*cross-service\s*-->') {
                 continue
             }
@@ -191,7 +187,7 @@ function Test-ContentRules {
         }
     }
 
-    # --- Inline aliases ---
+    # Multi-line YAML aliases waste line budget; require inline [term1, term2] format
     if ($FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('aliases')) {
         $aliasLineInline = $false
         $fmStarted = $false
@@ -215,7 +211,6 @@ function Test-ContentRules {
             -FailMessage 'Aliases must use inline format: aliases: [term1, term2]. Multi-line YAML wastes line budget.'))
     }
 
-    # --- Single H1 heading ---
     $h1Count = @($Lines | Where-Object { $_ -match '^#\s+[^#]' }).Count
     if ($h1Count -eq 1) {
         $checks.Add((New-ValidationCheck -Name 'single_h1_heading' -Pass $true `
