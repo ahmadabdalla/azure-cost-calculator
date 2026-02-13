@@ -22,6 +22,7 @@ function Test-AliasUniqueness {
     [OutputType([System.Array])]
     param(
         [Parameter(Mandatory)]
+        [ValidateScript({ Test-Path $_ })]
         [string]$RootPath
     )
 
@@ -32,7 +33,7 @@ function Test-AliasUniqueness {
         Where-Object { $_.Name -ne 'TEMPLATE.md' }
 
     foreach ($file in $files) {
-        $fileLines = @(Get-Content -Path $file.FullName)
+        $fileLines = @(Get-Content -Path $file.FullName -Encoding UTF8)
         $fm = Get-FrontMatter -Lines $fileLines
         if (-not $fm.Found -or -not $fm.Fields.ContainsKey('aliases')) { continue }
 

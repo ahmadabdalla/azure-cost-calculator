@@ -1,3 +1,4 @@
+#requires -Version 7.0
 <#
 .SYNOPSIS
     Validates service reference markdown files against contribution rules.
@@ -55,7 +56,7 @@ function Test-ServiceReference {
         return $checks
     }
 
-    $lines = @(Get-Content -Path $fullPath)
+    $lines = @(Get-Content -Path $fullPath -Encoding UTF8)
     $fm = Get-FrontMatter -Lines $lines
 
     foreach ($c in (Test-FrontMatter -FrontMatter $fm -FilePath $fullPath)) { $checks.Add($c) }
@@ -74,6 +75,9 @@ foreach ($filePath in $Path) {
     if ($filePath -match '[*?]') {
         $resolvedPaths = Get-ChildItem -Path $filePath -ErrorAction SilentlyContinue |
         Select-Object -ExpandProperty FullName
+        if ($resolvedPaths.Count -eq 0) {
+            Write-Warning "No files matched pattern: $filePath"
+        }
     }
     else {
         $resolvedPaths = @($filePath)
@@ -81,7 +85,8 @@ foreach ($filePath in $Path) {
 
     foreach ($rp in $resolvedPaths) {
         $checks = Test-ServiceReference -FilePath $rp
-        $fileName = Split-Path -Leaf $rp
+        $pathParts = $rp -replace '\\', '/' -split '/'
+        $fileName = ($pathParts[-2..-1] -join '/')
         $allResults[$fileName] = $checks
 
         foreach ($check in $checks) {

@@ -14,4 +14,5 @@
     )
     MaxLineCount = 100
     QueryPatternDeadline = 45
+    ServicesFolderPattern = 'references/services/([^/]+)/'
 }

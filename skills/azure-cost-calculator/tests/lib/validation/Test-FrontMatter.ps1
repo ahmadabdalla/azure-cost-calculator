@@ -73,7 +73,7 @@ function Test-FrontMatter {
         $fullPath = Resolve-Path -Path $FilePath -ErrorAction SilentlyContinue
         $pathStr = if ($fullPath) { $fullPath.ToString().Replace('\', '/') } else { $FilePath.Replace('\', '/') }
         if ($FrontMatter.Fields.ContainsKey('category')) {
-            if ($pathStr -match 'references/services/([^/]+)/') {
+            if ($pathStr -match $config.ServicesFolderPattern) {
                 $folderCategory = $Matches[1]
                 $expectedCategory = $FrontMatter.Fields['category'].Trim()
                 $placementOk = $folderCategory -eq $expectedCategory
