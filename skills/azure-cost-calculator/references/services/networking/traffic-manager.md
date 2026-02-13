@@ -91,4 +91,3 @@ Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 - **Real User Measurements**: Free (retailPrice = 0)
 - **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
 - **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month — use `retailPrice` from query results to calculate totals
-- Reserved pricing is not available for Traffic Manager

@@ -76,5 +76,4 @@ Total                  = Operations + Event Ops + MQTT Ops + Throughput (as appl
 - Standard Operations are priced per 100K; Event Operations and MQTT Operations are priced per 1M
 - Topic type does not affect meter choice: system, custom, partner topics and domains all use `Standard Operations`; namespace topics use `Standard Event Operations`
 - Throughput Units are only needed for namespace topics (MQTT/pull delivery) — not required for push-based event subscriptions
-- No reserved instance pricing — `PriceType Reservation` returns 0 results
 - All meters use a single productName `Event Grid` and skuName `Standard` — no tier selection needed

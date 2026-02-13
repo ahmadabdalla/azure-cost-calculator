@@ -89,7 +89,7 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
 
 ## Notes
 
-- No reservation pricing; Archive tier supports only LRS, GRS, RA-GRS (no ZRS/GZRS)
+- Archive tier supports only LRS, GRS, RA-GRS (no ZRS/GZRS)
 - Cold tier `Data Write` meter exists (e.g., `Cold LRS Data Write`) but priced at $0.00 — ingress is free
 - Early Delete charges: Cool 30 days, Cold 90 days, Archive 180 days
 - Iterative operations (directory listing) use per-100 unit for writes, per-10K for reads; Hot tier only

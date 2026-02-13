@@ -2,6 +2,7 @@
 serviceName: Redis Cache
 category: databases
 aliases: [Redis, Azure Cache for Redis, cache]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Redis Cache

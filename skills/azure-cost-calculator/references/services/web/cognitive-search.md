@@ -66,6 +66,5 @@ Total = Monthly Base + Semantic
 - **Storage included**: Each tier includes a fixed amount of storage per SU (Basic 2 GB, S1 25 GB, S2 100 GB, S3 200 GB, L1 1 TB, L2 2 TB). No separate storage meter.
 - **Search units (SU)**: replicas × partitions. Scale replicas for query throughput and HA; scale partitions for index size. Max 36 SUs per service (12 for Basic).
 - **Free tier**: 1 index, 50 MB storage, no SLA. Use `skuName='Free'`.
-- **No reserved pricing**: RI queries return zero results. Do not attempt `PriceType Reservation`.
 - **Tier limits**: Basic supports up to 3 replicas, 1 partition. Standard tiers support up to 12 replicas, 12 partitions. L1/L2 support up to 12 replicas, 12 partitions.
 - **Semantic Ranker**: Billed daily, not hourly. Script auto-multiplies `1/Day` by 30. Also has per-query overage meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`).

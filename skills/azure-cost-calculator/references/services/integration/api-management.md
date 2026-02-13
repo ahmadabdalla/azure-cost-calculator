@@ -68,7 +68,6 @@ MeterName: {Tier} Self-hosted Gateway
 
 ## Notes
 
-- API Management does **not** offer Reserved Instance pricing.
 - All tiers support unlimited APIs except Consumption (max 50).
 - `productName` is always `API Management` for all tiers.
 

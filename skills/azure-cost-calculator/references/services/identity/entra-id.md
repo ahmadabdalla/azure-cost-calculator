@@ -2,6 +2,7 @@
 serviceName: Microsoft Entra ID
 category: identity
 aliases: [Azure AD, Azure Active Directory, AAD, Directory]
+billingConsiderations: [M365 licensing]
 ---
 
 # Microsoft Entra ID
@@ -45,7 +46,6 @@ Free: Monthly(Free) = per_user_rate(Free) × userCount
 - **P1/P2 licensing**: Sold per-user/month with annual commitment; also bundled in M365 E3/E5 — check existing licenses before estimating standalone cost
 - P1 adds Conditional Access policies, group-based MFA, SSPR writeback, and App Proxy
 - P2 adds risk-based Conditional Access (Identity Protection), Privileged Identity Management (PIM), and access reviews
-- **No reserved pricing** — not available via the Retail Prices API; licensing is flat per-user/month
 - Related services billed separately: `Microsoft Entra Domain Services` (managed AD DS), `Microsoft Entra` (External ID / CIAM), `Multi-Factor Authentication` (legacy per-authentication billing)
 
 ## Known Rates

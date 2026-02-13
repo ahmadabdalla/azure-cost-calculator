@@ -2,6 +2,8 @@
 serviceName: Azure Synapse Analytics
 category: analytics
 aliases: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
+billingNeeds: [Data Lake Storage]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure Synapse Analytics

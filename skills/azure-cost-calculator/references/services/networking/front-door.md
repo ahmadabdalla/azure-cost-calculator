@@ -71,5 +71,4 @@ Monthly = baseFee_retailPrice × profileCount
 - **Zone mapping**: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Japan/Australia, Zone 3 = South America/Africa/Middle East. Additional zones (4-8) exist for specific geographies
 - **Standard vs Premium**: Premium adds Private Link origins, enhanced WAF with bot protection and managed rule sets, and Microsoft Threat Intelligence
 - **Data transfer out is tiered** — the first 10 TB is the highest rate; volume discounts apply at 50 TB+
-- Reserved pricing is not available for Azure Front Door
 - Classic Front Door (productName `Azure Front Door Service`) has different meters: routing rules (hourly), per-request, WAF policies — being retired in favor of Standard/Premium

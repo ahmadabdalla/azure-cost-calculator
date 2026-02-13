@@ -2,6 +2,8 @@
 serviceName: Azure Batch
 category: compute
 aliases: [HPC Batch, Batch Compute]
+billingNeeds: [Virtual Machines]
+billingConsiderations: [Reserved Instances, Spot Pricing]
 ---
 
 # Azure Batch
@@ -9,8 +11,6 @@ aliases: [HPC Batch, Batch Compute]
 **Primary cost**: No charge for the Batch service itself — pay for underlying VM compute, storage, and networking resources consumed by pool nodes.
 
 > **Trap (no Batch meters)**: `serviceName eq 'Azure Batch'` returns **zero results** from the Retail Prices API. The Batch service is free; all cost comes from pool node VMs (priced as `Virtual Machines`), managed disks, and data egress. Do NOT query with `-ServiceName 'Azure Batch'`.
->
-> **Agent instruction**: Always price Batch workloads by querying `Virtual Machines` for the node VM size. Use Low Priority or Spot SKUs when the user mentions interruptible/preemptible nodes.
 
 ## Query Pattern
 
@@ -55,10 +55,8 @@ Job cost = VM_retailPrice × hoursPerJob × nodeCount × jobsPerMonth
 ## Notes
 
 - The Batch management service is free — no meters exist in the API
-- Pool nodes are billed as standard Virtual Machines; see `virtual-machines.md` for full VM pricing details
 - **Spot nodes** offer up to 90% discount but can be evicted at any time — best for fault-tolerant HPC and rendering workloads
 - **Low Priority nodes** (classic pools) offer up to 80% discount with similar eviction risk
 - Batch supports auto-scale pools — estimate average node count rather than peak for monthly cost
-- Reserved VM Instances apply to dedicated Batch nodes; query with `-PriceType Reservation` against `Virtual Machines`
 - Common HPC VM sizes: `Standard_HB120rs_v3` (HPC), `Standard_NC24ads_A100_v4` (GPU), `Standard_D16s_v5` (general)
 - Capacity planning: 1 Batch node = 1 VM; node count × hours determines compute cost

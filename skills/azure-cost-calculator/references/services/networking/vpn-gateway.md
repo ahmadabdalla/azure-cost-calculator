@@ -2,6 +2,7 @@
 serviceName: VPN Gateway
 category: networking
 aliases: [VPN, Site-to-Site, Point-to-Site, S2S, P2S]
+billingNeeds: [IP Addresses]
 ---
 
 # VPN Gateway
@@ -71,5 +72,4 @@ Total monthly      = Gateway + S2S + P2S
 - **AZ variants** provide zone redundancy at a slightly higher cost than non-AZ equivalents
 - **Basic SKU** is legacy with limited features (no BGP, no IKEv2, no P2S OpenVPN) — use VpnGw1+ for production
 - **Data transfer**: Outbound data egress is billed separately under the Bandwidth service, not VPN Gateway
-- Reserved pricing is not available for VPN Gateway
 - **Companion service**: Often deployed alongside ExpressRoute for failover connectivity

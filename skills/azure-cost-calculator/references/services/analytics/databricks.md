@@ -2,6 +2,7 @@
 serviceName: Azure Databricks
 category: analytics
 aliases: [DBX, Spark on Azure]
+billingNeeds: [Virtual Machines]
 ---
 
 # Azure Databricks
@@ -10,7 +11,7 @@ aliases: [DBX, Spark on Azure]
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Databricks'` query returns ~41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `SkuName` for a specific workload type.
 
-> **Trap (VM compute split)**: DBU charges cover the Databricks platform fee only. The underlying cluster VMs are billed separately under the `Virtual Machines` service. Always price both components.
+> **Trap (VM compute split)**: DBU charges cover the Databricks platform fee only. The underlying cluster VMs are billed separately — see `billingNeeds`.
 
 ## Query Pattern
 
@@ -68,6 +69,4 @@ Total Monthly   = DBU Monthly + VM Monthly
 - **Two tiers**: Standard (data engineering) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher
 - **Photon variants**: Photon-accelerated SKUs (e.g., `Premium All-Purpose Photon`) have the same DBU rate but process data faster, reducing total DBU-hours consumed
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
-- Underlying cluster VMs are priced via the `Virtual Machines` service — not included in Databricks meters
-- Reserved pricing is **not available** for Azure Databricks DBU meters
 - **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return $0.00 — ignore these for cost estimation

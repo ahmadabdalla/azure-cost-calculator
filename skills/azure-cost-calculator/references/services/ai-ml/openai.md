@@ -71,6 +71,5 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 - **Deployment types**: Global is cheapest, Data Zone and Regional add ~10%. Prefer Global unless data residency requires otherwise
 - **Batch pricing**: ~50% discount for async workloads — meters include `Batch` in skuName
 - **Provisioned throughput (PTU)**: Hourly per-unit billing under `Azure AI Foundry Provisioned Throughput Reservation` productName. Query separately — PTU is Global-only pricing
-- Reserved pricing is **not available** for token-based consumption meters
 - **Embeddings regional availability**: Embedding models may not be available in all regions — if a query returns zero results, try `westus` or `westeurope`
 - **Media models**: Audio and image generation meters are under `Azure OpenAI Media` productName — query separately

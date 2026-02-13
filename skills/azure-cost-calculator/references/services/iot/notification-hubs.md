@@ -97,4 +97,3 @@ Total           = (Namespace cost + add-ons per namespace) × instanceCount
 - Included push quotas apply **per namespace** — a 3-namespace deployment gets 3× the quota
 - Capacity: 1 Standard namespace = 10M pushes/month included, supports up to 10M devices
 - Private Link and Availability Zones are per-namespace add-ons; 1P Direct Send is usage-based (no base subscription)
-- No reserved instance pricing — `PriceType Reservation` returns 0 results

@@ -2,6 +2,7 @@
 serviceName: Azure Firewall
 category: networking
 aliases: [firewall]
+billingNeeds: [IP Addresses]
 ---
 
 # Azure Firewall

@@ -2,6 +2,7 @@
 serviceName: SQL Managed Instance
 category: databases
 aliases: [SQL MI, Azure SQL MI, Managed Instance]
+billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 ---
 
 # Azure SQL Managed Instance

@@ -2,6 +2,8 @@
 serviceName: Windows Virtual Desktop
 category: compute
 aliases: [Azure Virtual Desktop, AVD, WVD]
+billingNeeds: [Virtual Machines]
+billingConsiderations: [M365 licensing]
 ---
 
 # Azure Virtual Desktop
@@ -63,7 +65,4 @@ HCI vCPU:         Monthly = retailPrice × 730 × vCPUCount
 ## Notes
 
 - M365 E3/E5/A3/A5/Business Premium and Windows E3/E5 per-user license holders pay **no AVD access fee** — estimate only VM, storage, and networking costs
-- Session host VMs are billed under **Virtual Machines** — price them separately using the VM service reference
-- OS disk and user profile storage are billed under **Managed Disks** or **Storage** — price separately
-- Reserved Instance pricing is **not available** for the AVD access fee (use VM RIs for session host compute)
 - Multi-session Windows 11/10 Enterprise is unique to AVD and allows multiple users per VM, reducing per-user compute cost

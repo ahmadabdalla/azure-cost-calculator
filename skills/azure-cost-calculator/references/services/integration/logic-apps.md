@@ -81,5 +81,4 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 - Standard: runs on App Service Plan (WS1–WS3) or as container; vCPU+memory billed per-second
 - Integration Account is a separate add-on for B2B/EDI scenarios — not required for basic workflows
 - ISE (Integration Service Environment) is deprecated — use Standard tier with VNet integration instead
-- No reserved instance pricing available
 - Standard tier supports VNet integration, private endpoints, and stateful/stateless workflows

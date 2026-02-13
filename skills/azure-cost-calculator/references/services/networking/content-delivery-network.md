@@ -75,6 +75,5 @@ Monthly        = Data transfer + Requests
 - Azure CDN from Microsoft includes rules engine (first 5 rules free, then per additional rule/month)
 - Data transfer is tiered: 0–10 TB, 10–50 TB, 50–150 TB, 150–500 TB, 500 TB–1 PB, 1 PB+
 - Zone 1 (North America/Europe) typically has the lowest per-GB rates
-- Reserved pricing is not available for CDN
 - **Azure Front Door Standard/Premium** is the recommended successor for new deployments
 - 1 TB/month on Standard Microsoft (Zone 1) ≈ 1000 GB × the per-GB rate from the first tier

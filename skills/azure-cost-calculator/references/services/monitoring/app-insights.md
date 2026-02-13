@@ -2,13 +2,14 @@
 serviceName: Application Insights
 category: monitoring
 aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
+billingNeeds: [Log Analytics]
 ---
 
 # Application Insights
 
 **Primary cost**: Data ingestion per-GB + retention (via Log Analytics workspace)
 
-> **Trap (workspace-based billing)**: **Workspace-based Application Insights has no separate cost** beyond Log Analytics ingestion and retention. Do NOT query a separate Application Insights meter — all telemetry costs are captured by the Log Analytics workspace. Only classic (non-workspace-based) Application Insights has separate billing, and it is being retired.
+> **Trap**: Workspace-based Application Insights has no separate cost — all telemetry is billed through Log Analytics. Classic (non-workspace-based) is deprecated.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free per Log Analytics workspace. Always deduct this from the billable total: `billable_GB = total_GB - 5`.
 > **Trap (retention calculation)**: The first **31 days** of retention are free. For extended retention, the chargeable window is `retentionDays - 31`. At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - 31)`.
 
@@ -83,7 +84,6 @@ Typical Application Insights telemetry volume per application instance:
 
 - Application Insights requires a Log Analytics workspace (workspace-based model)
 - Classic Application Insights (non-workspace-based) is deprecated and scheduled for retirement
-- All Application Insights data is stored in and priced via the connected Log Analytics workspace
 - First 5 GB/month ingestion free per workspace (shared with all services using the workspace)
 - First 31 days of retention included free
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)

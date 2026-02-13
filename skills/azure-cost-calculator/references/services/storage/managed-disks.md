@@ -2,6 +2,7 @@
 serviceName: Storage
 category: storage
 aliases: [managed disks, disks, disk storage]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Managed Disks

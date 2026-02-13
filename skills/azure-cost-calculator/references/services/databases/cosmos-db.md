@@ -2,6 +2,7 @@
 serviceName: Azure Cosmos DB
 category: databases
 aliases: [CosmosDB, Cosmos, documentdb]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure Cosmos DB
