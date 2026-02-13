@@ -2,6 +2,7 @@
 serviceName: Azure Static Web Apps
 category: web
 aliases: [SWA, JAMstack]
+billingNeeds: [Azure App Service]
 ---
 
 # Azure Static Web Apps

@@ -2,6 +2,7 @@
 serviceName: Log Analytics
 category: monitoring
 aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
+billingNeeds: [Azure Monitor]
 ---
 
 # Log Analytics

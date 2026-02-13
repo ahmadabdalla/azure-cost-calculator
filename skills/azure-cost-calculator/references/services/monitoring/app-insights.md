@@ -1,15 +1,7 @@
 ---
 serviceName: Application Insights
 category: monitoring
-aliases:
-  [
-    App Insights,
-    APM,
-    Application Performance Monitoring,
-    Application Performance,
-    AppInsights,
-    Azure Application Insights,
-  ]
+aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 billingNeeds: [Log Analytics]
 ---
 
