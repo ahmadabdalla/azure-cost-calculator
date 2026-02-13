@@ -1,7 +1,8 @@
 ---
 serviceName: Storage
 category: storage
-aliases: [blob storage, file storage, table storage, queue storage, Azure Storage]
+aliases:
+  [blob storage, file storage, table storage, queue storage, Azure Storage]
 billingConsiderations: [Reserved Instances]
 ---
 
@@ -12,6 +13,8 @@ billingConsiderations: [Reserved Instances]
 > **Trap**: `productName = 'Blob Storage'` only covers **LRS/GRS/RA-GRS**. For ZRS/GZRS/RA-GZRS use `productName = 'General Block Blob v2'` — wrong productName returns zero results.
 
 > **Trap (RA-GZRS)**: RA-GZRS storage is **~25% more expensive** than GZRS but they **share** write/read operation meters (skuName `Hot GZRS`). Using GZRS skuName for RA-GZRS storage will significantly under-price.
+
+> **Trap (Default Redundancy)**: Default to **Hot LRS** unless user explicitly requests otherwise. Always include `skuName` in filters — GRS is ~2× LRS, RA-GZRS ~3×. Wrong redundancy row inflates cost 200–300%.
 
 ## Query Pattern
 

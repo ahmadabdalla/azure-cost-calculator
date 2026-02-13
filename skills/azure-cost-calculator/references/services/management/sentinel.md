@@ -2,6 +2,7 @@
 serviceName: Sentinel
 category: management
 aliases: [SIEM, SOAR]
+billingConsiderations: [Commitment Tiers, Azure Sentinel Add-ons]
 ---
 
 # Microsoft Sentinel
@@ -11,6 +12,8 @@ aliases: [SIEM, SOAR]
 > **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
 > **Trap (DO NOT double-count Log Analytics)**: Sentinel PAYG and Commitment Tier prices **already include** Log Analytics workspace ingestion — DO NOT add a separate Log Analytics ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
+
+> **Trap (DO NOT substitute commitment tiers)**: Always default to **PAYG** pricing unless the user explicitly requests a specific commitment tier. Never proactively "optimise" by switching to a commitment tier — this causes cost variance. If a commitment tier would save money, note the potential saving in Assumptions but still calculate with `SkuName: Pay-as-you-go`. When the prompt says "PAYG", specifies no tier, or just states a daily ingestion volume, use PAYG.
 
 ## Query Pattern
 

@@ -47,6 +47,7 @@ String values with spaces require quoting when passed to scripts. Numeric values
    - Check `billingNeeds` and `billingConsiderations` in the YAML front matter and act on them (see Service File Metadata below)
 4. **Run** the pricing script with the parameters from the service reference (use the appropriate runtime)
 5. **Present** the estimate with breakdown: unit price, multiplier, monthly cost, assumptions
+   - **Verify grand total**: before presenting, re-sum all line-item monthly costs independently and confirm the grand total matches. If there is a discrepancy, use the re-summed value.
 
 ## Reference Index (load on demand)
 
@@ -69,6 +70,9 @@ String values with spaces require quoting when passed to scripts. Numeric values
 6. **Default output format is Json** — do not use Summary (invisible to agents)
 7. **Lazy-load service references** — only read files from `references/services/` that are directly required by the user's query. Never bulk-read all service files. Use the file-search workflow (Step 2) to locate the specific file(s). If the user asks about App Service and SQL Database, search for each and read only those files — not the other 20+.
 8. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`. For Bash scripts, invoke directly: `./scripts/get-azure-pricing.sh ...`.
+9. **Use consistent output categories** — when grouping line items in output, use the category directory names from `references/services/` (compute, databases, networking, storage, etc.). Place each service in the category where its reference file lives. Do not invent ad-hoc groupings.
+10. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture in the main estimate and grand total. Required companion resources declared via `billingNeeds` in front matter are included automatically.
+
 ## Service File Metadata
 
 YAML front matter may include these optional billing fields:
