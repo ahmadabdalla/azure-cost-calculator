@@ -8,7 +8,7 @@
 | Days per month  | 30                                           | Simplified                    |
 | API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required              |
 | API Version     | `2023-01-01-preview`                         | Current preview version       |
-| GB per TB       | 1,000                                        | Azure billing uses decimal TB |
+| GB per TB       | **1,000**                                    | **DECIMAL: 1 TB = 1,000 GB (NOT 1,024). Azure billing uses SI units.** |
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 

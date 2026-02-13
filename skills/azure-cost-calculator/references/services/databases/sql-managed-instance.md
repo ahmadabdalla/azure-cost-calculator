@@ -54,11 +54,14 @@ Zone-redundant storage meters append `Zone Redundancy` (e.g., `General Purpose Z
 Monthly Compute = retailPrice × 730
 Monthly Storage = storage_retailPrice × sizeInGB
 Total = Monthly Compute + Monthly Storage
+Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 ```
+
+> **Trap (ZR arithmetic)**: The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Query both `vCore` and `Zone Redundancy vCore` meters, sum their hourly rates, then × 730.
 
 ## Notes
 
-- **License included vs AHB**: vCore prices are license-included by default. AHB prices appear as separate items with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`.
+- **License included vs AHB**: vCore prices are license-included by default. For AHB pricing, query with `productName` containing `Azure Hybrid Benefit` (e.g., `SQL Managed Instance General Purpose - Compute Gen5 Azure Hybrid Benefit`). NEVER manually discount license-included prices.
 - **Storage**: GP and BC storage billed separately per-GB. For BC storage, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`.
 - **Backup**: PITR backup equal to max storage is free. Extra PITR/LTR billed via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage`.
 - **Tier limits**: GP supports 4–80 vCores (Gen5/Premium Series). BC supports 4–80 vCores and includes In-Memory OLTP. Premium Series Memory Optimized offers higher memory-per-vCore.

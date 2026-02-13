@@ -68,15 +68,17 @@ String values with spaces require quoting when passed to scripts. Numeric values
 6. **Default output format is Json** — do not use Summary (invisible to agents)
 7. **Lazy-load service references** — only read files from `references/services/` that are directly required by the user's query. Never bulk-read all service files. Use the file-search workflow (Step 2) to locate the specific file(s). If the user asks about App Service and SQL Database, search for each and read only those files — not the other 20+.
 8. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`. For Bash scripts, invoke directly: `./scripts/get-azure-pricing.sh ...`.
+9. **Licensing: always ask about Azure Hybrid Benefit** — for Windows VMs and SQL services, ask the user whether they have Azure Hybrid Benefit (AHUB/AHB) before calculating. For AHUB VMs, query the **Linux base rate** (`productName` without "Windows") — do not query Windows and manually discount. For SQL AHB, use the AHB-specific `productName`. Never assume PAYG or AHB without user confirmation.
 
 ## Universal Traps
 
-These 4 traps apply to EVERY query — do not skip them:
+These 5 traps apply to EVERY query — do not skip them:
 
 1. **`serviceName` and all filter values are case-sensitive** — always use exact values from the service reference file. Never guess from portal/docs names.
 2. **Unfiltered queries return mixed SKU variants** — without `productName`/`skuName` filters, results mix Spot, Low Priority, and OS variants. Always filter to the specific variant needed.
 3. **Multi-meter resources need separate queries** — many resources have multiple cost components (compute + storage, fixed + variable). Run one query per meter with `-MeterName`.
 4. **`Write-Host` output is invisible to agents** — always use `-OutputFormat Json` (the default). Never use `Summary` format.
+5. **DO NOT double-count Sentinel + Log Analytics ingestion** — Sentinel PAYG and Commitment Tier prices already include Log Analytics workspace ingestion. DO NOT add a separate Log Analytics ingestion charge for Sentinel-ingested data. Only add LA costs for extended retention, non-Sentinel workspaces, or data not ingested through Sentinel.
 
 ## Batch Estimation Mode
 

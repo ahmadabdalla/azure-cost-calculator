@@ -10,7 +10,7 @@ aliases: [SIEM, SOAR]
 
 > **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
-> **Trap (Sentinel vs Log Analytics)**: Sentinel meters cover analysis/SIEM only. The underlying Log Analytics workspace ingestion, retention, and storage are billed separately under `ServiceName: Log Analytics`. Always price both services.
+> **Trap (DO NOT double-count Log Analytics)**: Sentinel PAYG and Commitment Tier prices **already include** Log Analytics workspace ingestion — DO NOT add a separate Log Analytics ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
 
 ## Query Pattern
 

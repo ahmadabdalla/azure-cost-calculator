@@ -20,6 +20,8 @@ VNets themselves are free. Costs come from:
 
 > **Note**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion.
 
+> **Trap**: Load Balancer is billed **per-resource**. If a user requests N Load Balancers, calculate the full cost for one LB, then **multiply the total by N**. Do NOT query once and assume it covers multiple LBs.
+
 ## Query Pattern
 
 ### Standard SKU (substitute {meterName} from Meter Names table)

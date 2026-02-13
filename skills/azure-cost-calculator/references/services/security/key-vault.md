@@ -46,6 +46,8 @@ MeterName: Operations
 
 > **Trap (Premium HSM Advanced Key)**: Has **4 pricing tiers** based on `tierMinimumUnits` (0–249, 250–1499, 1500–3999, 4000+). Query returns all tiers — summary total is meaningless. Most deployments use <250 keys.
 
+> **Trap (Premium HSM meter relationships)**: `Operations (Premium)` is **always charged**. For each HSM key, charge **exactly one** key meter — `Premium HSM-protected RSA 2048-bit key` and `Premium HSM-protected Advanced Key` are **mutually exclusive** (RSA 2048 → RSA meter; RSA 3072/4096 or EC → Advanced Key meter). Never charge both for the same key.
+
 ## Cost Formula
 
 ```

@@ -52,6 +52,22 @@ Monthly = retailPrice × 730 hours × instanceCount
 - Node VMs (e.g., AKS, Batch) are priced as Virtual Machines
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
 
+## Azure Hybrid Benefit (AHUB)
+
+When a customer has **Windows Server licenses with Software Assurance**, they pay the **Linux compute rate** — the Windows license cost is covered by the benefit.
+
+- **Query the Linux `productName`** (e.g., `Virtual Machines Dsv5 Series`), NOT the Windows one
+- **DO NOT** query the Windows `productName` and manually discount — this produces wrong results
+- Always **ask the user** whether they have Azure Hybrid Benefit before assuming PAYG or AHUB
+
+### Example: D2s v5 with AHUB
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_D2s_v5
+ProductName: Virtual Machines Dsv5 Series
+
+> This returns the Linux rate, which is the correct AHUB price for Windows VMs with Software Assurance.
+
 ## Reserved Instance Pricing
 
 ### RI for Linux D2s v5 (returns both 1-Year and 3-Year terms)
