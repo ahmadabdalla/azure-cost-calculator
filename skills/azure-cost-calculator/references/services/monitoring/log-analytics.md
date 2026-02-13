@@ -28,7 +28,7 @@ MeterName: Analytics Logs Data Retention
 
 ### Commitment tier (100+ GB/day) — uses ServiceName: Azure Monitor
 
-ServiceName: Azure Monitor  <!-- cross-service -->
+ServiceName: Azure Monitor
 SkuName: 100 GB Commitment Tier
 MeterName: 100 GB Commitment Tier Capacity Reservation
 

@@ -12,7 +12,7 @@ billingConsiderations: [Azure Hybrid Benefit]
 
 > **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns both Azure and System Center SKUs, inflating costs by summing charges for both SKUs. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
 
-> **Trap (hidden costs)**: The per-instance fee covers orchestration only. Compute at the DR site during failover is billed separately.
+> **Trap (hidden costs)**: The per-instance fee covers orchestration only. Compute at the DR site during failover is billed separately (AHUB can apply to those VMs).
 
 ## Query Pattern
 

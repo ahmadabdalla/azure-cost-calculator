@@ -1,7 +1,15 @@
 ---
 serviceName: Application Insights
 category: monitoring
-aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
+aliases:
+  [
+    App Insights,
+    APM,
+    Application Performance Monitoring,
+    Application Performance,
+    AppInsights,
+    Azure Application Insights,
+  ]
 billingNeeds: [Log Analytics]
 ---
 
@@ -17,13 +25,13 @@ billingNeeds: [Log Analytics]
 
 ### Application Insights data ingestion (via Log Analytics workspace)
 
-ServiceName: Log Analytics  <!-- cross-service -->
+ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
 
 ### Application Insights data retention (via Log Analytics workspace)
 
-ServiceName: Log Analytics  <!-- cross-service -->
+ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Retention
 
@@ -58,8 +66,10 @@ The first 31 days of retention are **free**. Charges apply for data retained bey
 
 ```
 Retained GB = dailyIngestionGB × chargeableDays
-where chargeableDays = min(retentionPeriodDays - 31, actualDaysOfData - 31)
+where chargeableDays = retentionPeriodDays - 31  (at steady-state)
 ```
+
+> **Note**: For newly created workspaces that haven't accumulated a full retention period of data, use `min(retentionPeriodDays - 31, actualDaysOfData - 31)`. At steady state, `actualDaysOfData` always exceeds the retention period, so the formula simplifies to `retentionPeriodDays - 31`.
 
 For example, with 90-day retention and 5 GB/day steady ingestion:
 

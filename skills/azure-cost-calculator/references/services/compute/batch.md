@@ -16,7 +16,7 @@ billingConsiderations: [Reserved Instances, Spot Pricing]
 
 ### Pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
 
-ServiceName: Virtual Machines <!-- cross-service -->
+ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
 ProductName: Virtual Machines Dsv5 Series
 InstanceCount: 4

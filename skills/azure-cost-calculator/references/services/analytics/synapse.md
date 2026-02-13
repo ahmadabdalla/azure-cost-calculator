@@ -88,7 +88,7 @@ Total Monthly  = Dedicated SQL + Serverless SQL + Spark Pool + Pipelines + Stora
 - **Dedicated SQL Pool**: 16 SKUs from DW100c to DW30000c; pausing stops compute billing but storage continues
 - **Serverless SQL Pool**: Pay-per-query at per-TB scanned; no provisioning needed
 - **Spark Pools**: Auto-pause available; billed per vCore-hour while active; Memory Optimized and GPU variants
-- **Pipelines**: Mirror Data Factory v2 pricing structure with Azure Hosted IR, Managed VNET IR, and Self Hosted IR options. SSIS VMs filter by `ProductName` containing `SSIS`. Storage supports LRS, ZRS, RA-GRS, and RA-GZRS
+- **Pipelines**: Mirror Data Factory v2 pricing structure with Azure Hosted IR, Managed VNET IR, and Self-Hosted IR options. SSIS VMs filter by `ProductName` containing `SSIS`. Storage supports LRS, ZRS, RA-GRS, and RA-GZRS
 
 ## Reserved Instance Pricing
 

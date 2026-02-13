@@ -78,7 +78,7 @@ String values with spaces require quoting when passed to scripts. Numeric values
 YAML front matter may include these optional billing fields:
 
 - **`billingNeeds`**: Services billed under a different `serviceName` when deploying this service. Values are service display names (e.g., `Virtual Machines`, `Managed Disks`, `Log Analytics`, `Storage Accounts`). Always read and price those services alongside the current one.
-- **`billingConsiderations`**: Pricing factors to ask the user about before calculating. Possible values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 licensing`
+- **`billingConsiderations`**: Pricing factors to ask the user about before calculating. Possible values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`
 
 If neither field is present, the service is self-contained with standard PAYG pricing only.
 
