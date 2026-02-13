@@ -83,7 +83,6 @@ ProductName: Azure Premium SSD v2
 ## Reserved Instance Pricing
 
 Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
-
 > **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
 ## Common SKUs
