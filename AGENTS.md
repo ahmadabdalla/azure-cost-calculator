@@ -23,3 +23,9 @@ The installable skill lives at `skills/azure-cost-calculator/`.
   pwsh tests/Validate-ServiceReference.ps1
   ```
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
+
+## For maintainers
+
+- Operational documentation lives in `docs/ops/`.
+- When implementing or changing a repo feature (workflows, automation, infrastructure), create or update the corresponding ops doc.
+- Each ops doc should cover: what the feature does, prerequisites, how to make changes, troubleshooting, and external references.
