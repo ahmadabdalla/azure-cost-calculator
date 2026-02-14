@@ -14,6 +14,8 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 > **Note:** All skill files (scripts, references, templates) live under `skills/azure-cost-calculator/` in this repo. Paths in this guide are given from the repo root.
 
+> **Note:** The skill uses a two-phase workflow (Analysis → Estimation) with a Specification Review gate. See `skills/azure-cost-calculator/SKILL.md` for the full workflow. For tips on writing deterministic prompts, see `prompts/usage-guide.md`.
+
 ## The Prompt
 
 Copy the prompt below, replace `{SERVICE_NAME}` with the Azure service you want to add, and paste it into your AI assistant. The AI must have access to this repository's files and the ability to run terminal commands.
@@ -37,7 +39,7 @@ Follow these steps exactly:
 ### Step 3 - Read the template
 
 1. Read `docs/TEMPLATE.md` for the full format rules and section structure.
-2. Read `skills/azure-cost-calculator/references/shared.md` for the category index and constants.
+2. Read `skills/azure-cost-calculator/references/shared.md` for the category index, constants, and the Disambiguation Protocol (which classifies parameters as "never-assume" or "safe-default").
 3. Read one existing service reference from the same `{category}` folder as a style exemplar. Use it to calibrate section length, trap density, and cost formula format.
 4. Note that query patterns use **declarative `Key: Value`** format (no code fences, no script names). See TEMPLATE.md for examples.
 
