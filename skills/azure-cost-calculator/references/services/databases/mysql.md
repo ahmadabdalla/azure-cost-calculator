@@ -23,7 +23,7 @@ ServiceName: Azure Database for MySQL
 ProductName: Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute
 SkuName: vCore
 MeterName: vCore
-InstanceCount: 4    # vCore count
+InstanceCount: 4 # vCore count
 
 ### Storage (100 GB)
 
@@ -31,7 +31,7 @@ ServiceName: Azure Database for MySQL
 ProductName: Azure Database for MySQL Flexible Server Storage
 SkuName: Storage
 MeterName: Storage Data Stored
-Quantity: 100    # storage size in GB
+Quantity: 100 # storage size in GB
 
 ### Compute — Burstable (B4MS)
 
@@ -49,21 +49,21 @@ MeterName: 8 vCore
 
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-|---|---|---|
-| `productName` | Tier + series (exact match) | See Product Names below |
-| `skuName` | Per-vCore series: `'vCore'`; Burstable: SKU name; Edsv5: `Standard_E*` | `'vCore'`, `'Standard_B4ms'` |
-| `meterName` | Per-vCore: `'vCore'`; Burstable: SKU code; Edsv5: `'N vCore'` | `'vCore'`, `'B4MS'`, `'8 vCore'` |
+| Parameter     | How to determine                                                       | Example values                   |
+| ------------- | ---------------------------------------------------------------------- | -------------------------------- |
+| `productName` | Tier + series (exact match)                                            | See Product Names below          |
+| `skuName`     | Per-vCore series: `'vCore'`; Burstable: SKU name; Edsv5: `Standard_E*` | `'vCore'`, `'Standard_B4ms'`     |
+| `meterName`   | Per-vCore: `'vCore'`; Burstable: SKU code; Edsv5: `'N vCore'`          | `'vCore'`, `'B4MS'`, `'8 vCore'` |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-|---|---|---|---|
-| `vCore` | `vCore` | `1 Hour` | Per-vCore rate — multiply via InstanceCount (GP/BC/MO v5/v6) |
-| `B4MS` | `Standard_B4ms` | `1 Hour` | Fixed Burstable SKU — includes vCPU+RAM |
-| `8 vCore` | `Standard_E8d_v5` | `1 Hour` | Fixed MO Edsv5 size — includes vCPU+RAM |
-| `Storage Data Stored` | `Storage` | `1 GB/Month` | Data storage |
-| `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month` | Backup storage (LRS redundancy) |
+| Meter                            | skuName              | unitOfMeasure | Notes                                                        |
+| -------------------------------- | -------------------- | ------------- | ------------------------------------------------------------ |
+| `vCore`                          | `vCore`              | `1 Hour`      | Per-vCore rate — multiply via InstanceCount (GP/BC/MO v5/v6) |
+| `B4MS`                           | `Standard_B4ms`      | `1 Hour`      | Fixed Burstable SKU — includes vCPU+RAM                      |
+| `8 vCore`                        | `Standard_E8d_v5`    | `1 Hour`      | Fixed MO Edsv5 size — includes vCPU+RAM                      |
+| `Storage Data Stored`            | `Storage`            | `1 GB/Month`  | Data storage                                                 |
+| `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month`  | Backup storage (LRS redundancy)                              |
 
 ## Cost Formula
 
@@ -85,14 +85,14 @@ Total = Compute + Storage
 
 ## Product Names
 
-| Config | productName |
-|---|---|
-| GP, Ddsv5 | `Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute` |
-| GP, Dadsv5 | `Azure Database for MySQL Flexible Server General Purpose Dadsv5 Series Compute` |
-| GP, Dv3 | `Azure Database for MySQL Flexible Server General Purpose Dv3 Series Compute` |
-| MO, Edsv5 | `Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute` |
-| MO, Eadsv5 | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
-| BC, Ev3 | `Azure Database for MySQL Flexible Server Business Critical Ev3 Series Compute` |
-| Burstable, BS | `Azure Database for MySQL Flexible Server Burstable BS Series Compute` |
-| Storage | `Azure Database for MySQL Flexible Server Storage` |
-| Backup | `Azure Database for MySQL Flexible Server Backup Storage` |
+| Config        | productName                                                                       |
+| ------------- | --------------------------------------------------------------------------------- |
+| GP, Ddsv5     | `Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute`   |
+| GP, Dadsv5    | `Azure Database for MySQL Flexible Server General Purpose Dadsv5 Series Compute`  |
+| GP, Dv3       | `Azure Database for MySQL Flexible Server General Purpose Dv3 Series Compute`     |
+| MO, Edsv5     | `Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute`  |
+| MO, Eadsv5    | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
+| BC, Ev3       | `Azure Database for MySQL Flexible Server Business Critical Ev3 Series Compute`   |
+| Burstable, BS | `Azure Database for MySQL Flexible Server Burstable BS Series Compute`            |
+| Storage       | `Azure Database for MySQL Flexible Server Storage`                                |
+| Backup        | `Azure Database for MySQL Flexible Server Backup Storage`                         |
