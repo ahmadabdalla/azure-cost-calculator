@@ -6,7 +6,9 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 # Logic Apps
 
-**Primary cost**: Per-action executions (Consumption) or vCPU + memory hours (Standard)
+**Primary cost**: Per-action (Consumption) or vCPU + memory hours (Standard)
+
+> **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One workflow execution may contain 5–50+ actions (each trigger, HTTP call, condition, loop iteration, etc. is one action). If user says "25,000 executions/month," clarify whether they mean 25,000 workflow runs — if so, multiply by estimated actions per run (e.g., 10 actions/run = 250,000 billable actions).
 
 > **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` is wildly inflated. Always filter by `ProductName` and `SkuName`.
 
@@ -77,7 +79,8 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 
 ## Notes
 
-- Consumption: per-execution, first 4,000 built-in actions/month free, auto-scales to zero
+- **Billing unit is actions, not workflow executions** — each step (trigger, HTTP, condition, loop iteration, etc.) counts as one action
+- Consumption: per-action pricing, first 4,000 built-in actions/month free, auto-scales to zero
 - Standard: runs on App Service Plan (WS1–WS3) or as container; vCPU+memory billed per-second
 - Integration Account is a separate add-on for B2B/EDI scenarios — not required for basic workflows
 - ISE (Integration Service Environment) is deprecated — use Standard tier with VNet integration instead
