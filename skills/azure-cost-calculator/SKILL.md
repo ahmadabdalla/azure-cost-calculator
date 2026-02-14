@@ -101,5 +101,6 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - The user requests a non-default tier, SKU, or configuration
    - The service has complex multi-meter billing that needs the full meter table
    - The query returns 0 or unexpected results
+   - The YAML front matter contains `billingConsiderations` entries that apply to the user's request (e.g., user requests Azure Hybrid Benefit and the file lists it in `billingConsiderations`)
 3. **Parallel queries** — run pricing script calls in parallel where possible. Independent services have no query dependencies.
 4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.

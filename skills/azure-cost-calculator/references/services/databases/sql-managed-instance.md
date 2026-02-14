@@ -13,6 +13,8 @@ billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 
 > **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. Query the standard `vCore` meter first, then add the zone-redundancy surcharge.
 
+> **Trap (AHUB)**: vCore prices are license-included by default. For Azure Hybrid Benefit, you MUST query the SQL License product and subtract — see the Azure Hybrid Benefit section below. NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
+
 ## Query Pattern
 
 ### vCore compute (e.g., 8 vCore GP Gen5; swap productName for tier/series)
@@ -59,10 +61,8 @@ Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 
 ## Notes
 
-- **Storage**: GP and BC storage billed separately per-GB. For BC storage, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`.
-- **Backup**: PITR backup equal to max storage is free. Extra billed via `SQL Managed Instance PITR Backup Storage` / `...LTR Backup Storage`.
-- **Tier limits**: GP 4–80 vCores (Gen5/Premium Series). BC 4–80 vCores with In-Memory OLTP. Premium Series Memory Optimized offers higher memory-per-vCore.
-- **Hardware**: Gen5 default. Premium Series / Premium Series Memory Optimized offer newer hardware.
+- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free; extra billed via `SQL Managed Instance PITR Backup Storage` / `...LTR Backup Storage`.
+- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series and Premium Series Memory Optimized offer newer hardware.
 
 ## Reserved Instance Pricing
 
@@ -76,6 +76,7 @@ PriceType: Reservation
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Azure Hybrid Benefit
+
 ### SQL License cost (Global-only, per-vCore; swap productName for BC)
 
 ServiceName: SQL Managed Instance
