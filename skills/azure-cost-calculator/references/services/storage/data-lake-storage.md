@@ -15,6 +15,8 @@ billingConsiderations: [Reserved Instances]
 
 > **Trap (Default Redundancy)**: Default to **Hot LRS** unless user specifies otherwise. Always include `skuName` in filters — GRS is ~2× LRS, GZRS ~3×. Wrong redundancy row inflates cost 200–300%.
 
+> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
+
 ## Query Pattern
 
 Template: `ServiceName: Storage`, `ProductName: Azure Data Lake Storage Gen2 Hierarchical Namespace`, `SkuName: {Tier} {Redundancy}`, `MeterName: {see Meter Names}`
@@ -89,8 +91,6 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
         + (readOps / 10K × read_retailPrice)
         + (retrieval_retailPrice × retrievedGB)  [Cool/Cold/Archive only]
 ```
-
-> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
 
 ## Notes
 

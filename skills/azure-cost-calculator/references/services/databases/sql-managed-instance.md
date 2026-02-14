@@ -11,7 +11,7 @@ billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `SkuName` for compute queries.
 
-> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. Query the standard `vCore` meter first, then add the zone-redundancy surcharge.
+> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier — sum both hourly rates, then × 730.
 
 > **Trap (AHUB)**: vCore prices are license-included by default. For Azure Hybrid Benefit, you MUST query the SQL License product and subtract — see the Azure Hybrid Benefit section below. NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
 
@@ -57,12 +57,10 @@ Total = Monthly Compute + Monthly Storage
 Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 ```
 
-> **Trap (ZR arithmetic)**: The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Sum both hourly rates, then × 730.
-
 ## Notes
 
-- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free; extra billed via `SQL Managed Instance PITR Backup Storage` / `...LTR Backup Storage`.
-- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series and Premium Series Memory Optimized offer newer hardware.
+- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free.
+- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series / Memory Optimized offer newer hardware.
 
 ## Reserved Instance Pricing
 
@@ -83,7 +81,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-AHUB hourly = license-included `retailPrice` − (`sql_license_retailPrice` × vCoreCount). × 730 for monthly. vCore prices are license-included by default. NEVER apply a percentage discount.
+AHUB hourly per-vCore = license-included `retailPrice` − `sql_license_retailPrice`. Monthly = AHUB hourly × vCoreCount × 730. vCore prices are license-included by default. NEVER apply a percentage discount.
 
 ## Product Names
 

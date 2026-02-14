@@ -9,7 +9,7 @@ billingConsiderations: [Commitment Tiers, Azure Sentinel Add-ons]
 
 **Primary cost**: Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, and add-on analysis fees.
 
-> **Trap (MANDATORY — DO NOT substitute commitment tiers)**: ALWAYS use `SkuName: Pay-as-you-go` unless the user **explicitly names** a commitment tier (e.g., "use the 400 GB commitment tier"). A daily ingestion volume like "400 GB/day" is NOT a request for the 400 GB Commitment Tier — it is a volume figure; multiply by 30 and price at PAYG. Even when the daily volume exactly matches a tier name, use PAYG. If a commitment tier would save money, note the saving in Assumptions but calculate with PAYG. Ignoring this rule causes ~40% cost variance.
+> **Trap (MANDATORY — DO NOT substitute commitment tiers)**: ALWAYS use `SkuName: Pay-as-you-go` unless the user **explicitly names** a commitment tier (e.g., "use the 400 GB commitment tier"). A daily ingestion volume like "400 GB/day" is NOT a request for the 400 GB Commitment Tier — it is a volume figure; multiply by 30 and price at PAYG. Even when the daily volume exactly matches a tier name, use PAYG. If a commitment tier would save money, note the saving in Assumptions but calculate with PAYG. Ignoring this rule causes significant cost variance.
 >
 > **Agent instruction**: Before submitting any Sentinel estimate, verify that `SkuName` is `Pay-as-you-go` unless the user's exact words requested a commitment tier by name. If you selected a commitment tier, STOP and recalculate with PAYG.
 
@@ -60,7 +60,7 @@ Quantity: 500
 | `Basic Logs Analysis`                         | `Basic Logs`                   | `1 GB`        | Reduced-cost log analysis           |
 | `Data lake storage Data Stored`               | `Data lake storage`            | `1 GB/Month`  | Long-term storage                   |
 | `Data lake ingestion Data Processed`          | `Data lake ingestion`          | `1 GB`        | Ingestion into data lake            |
-| `Free Benefit - M365 Defender Analysis`       | `Free Benefit - M365 Defender` | `1 GB`        | $0 — free M365 data                 |
+| `Free Benefit - M365 Defender Analysis`       | `Free Benefit - M365 Defender` | `1 GB`        | Zero cost — free M365 data          |
 
 > Other SKUs (query individually): `Data lake query` (1 GB, sub-cent), `Advanced Data Insights` (1 Hour), `Data processing` (1 GB), `Solution for SAP Applications` (1/Hour), `Classic Auxiliary Logs Analysis` (1 GB), `Free Trial` (1 GB).
 
