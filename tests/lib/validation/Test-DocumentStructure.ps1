@@ -64,7 +64,7 @@ function Test-DocumentStructure {
         -PassMessage 'Required sections are in correct order' `
         -FailMessage ('Section ordering violation: ' + ($orderingMessages -join '; '))))
 
-    # Per TEMPLATE.md, optional sections must appear after the Notes section
+    # Per docs/TEMPLATE.md, optional sections must appear after the Notes section
     $notesLine = $null
     foreach ($heading in $h2Headings) {
         if ($heading.Name -eq 'Notes') {

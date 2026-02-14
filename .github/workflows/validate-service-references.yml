@@ -26,7 +26,7 @@ jobs:
             "${{ github.event.pull_request.base.sha }}" \
             "${{ github.event.pull_request.head.sha }}" \
             -- 'skills/azure-cost-calculator/references/services/' \
-            | grep '\.md$' | grep -v 'TEMPLATE.md' || true)
+            | grep '\.md$' || true)
 
           if [ -z "$CHANGED" ]; then
             echo "any_changed=false" >> "$GITHUB_OUTPUT"

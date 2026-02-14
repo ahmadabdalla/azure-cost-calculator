@@ -8,8 +8,8 @@ function Test-AliasUniqueness {
     .SYNOPSIS
         Checks for alias collisions across all service reference files.
     .DESCRIPTION
-        Scans all markdown files under the given root path (excluding
-        TEMPLATE.md), parses their YAML front matter aliases, and reports
+        Scans all markdown files under the given root path, parses
+        their YAML front matter aliases, and reports
         any duplicates. Returns one or more check results.
     .PARAMETER RootPath
         Root directory of the services folder to scan for alias collisions.
@@ -29,8 +29,7 @@ function Test-AliasUniqueness {
     $checks = [System.Collections.Generic.List[object]]::new()
     $RootPath = (Resolve-Path -Path $RootPath).Path
     $aliasMap = @{}
-    $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse |
-        Where-Object { $_.Name -ne 'TEMPLATE.md' }
+    $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse
 
     foreach ($file in $files) {
         $fileLines = @(Get-Content -Path $file.FullName -Encoding UTF8)
