@@ -55,7 +55,14 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 ## Azure Hybrid Benefit (AHUB)
 
-For AHUB VMs, query the **Linux** `productName` (no "Windows" suffix) — do not query Windows and manually discount. Always confirm AHUB eligibility with the user first.
+For AHUB VMs, query the **Linux** `productName` (no "Windows" suffix) — the Linux rate IS the AHUB rate. There is no separate "Base Compute" or AHUB-specific `productName` for VMs. Do not query Windows and manually discount. Always confirm AHUB eligibility with the user first.
+
+### AHUB for Windows E16s v5 (example — queries Linux rate)
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_E16s_v5
+ProductName: Virtual Machines Esv5 Series
+InstanceCount: 15
 
 ## Reserved Instance Pricing
 
