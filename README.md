@@ -28,16 +28,16 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 
 The skill uses service reference files as an index. Each file contains exact API filter values as declarative `Key: Value` parameters, cost formulas, and traps. The agent reads the matching file, translates the parameters to the detected runtime (Bash or PowerShell), runs the pricing script against the live API, and presents a structured estimate.
 
-The skill optimises for two KPIs:
+The skill optimises for two goals:
 
-- **Determinism** - target ≤ 1% cost variance. Same query → same API call → same price. All values from the live API, nothing hardcoded.
+- **Determinism** - target ≤ 5% cost variance. Same query → same API call → same price. All values from the live API, nothing hardcoded. LLMs are non-deterministic by nature, so this skill is designed to constrain them where possible — pre-verified filters, explicit formulas, and scripted API calls reduce the surface area where the model can drift.
 - **Token efficiency** - target ≤ 5% token usage variance. Only SKILL.md and shared.md load on every query. Service files load on demand. Batch mode (3+ services) reads only the first 45 lines per file.
 
 Other design goals:
 
 - **Multi-currency, all regions** - supports USD, AUD, EUR, GBP, JPY, CAD, INR, etc. Works with any Azure region.
 
-> **Note:** These targets are measured via A/B testing across independent sessions with clean context, using the same prompt against complex Azure architectures (regulated industries, migrations, AI platforms, security, observability, cloud-native, etc.). Testing has been done with **Claude Opus 4.6** and **Sonnet 4.5**. Results with other models may vary - the skill is only as accurate as the model driving it.
+> **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Opus 4.6** and **Gemini Pro 3**. Results with other models may vary.
 
 ```mermaid
 flowchart LR
@@ -90,17 +90,26 @@ Each service reference file you add improves accuracy for everyone. See [CONTRIB
 
 ## FAQ
 
-**Why is this free?**
-The [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) itself is free and requires no authentication. This skill is just a set of reference files and scripts - your own AI agent does all the work. Accuracy depends on the model used.
+<details>
+<summary><strong>Why is this free?</strong></summary>
 
-**Why contribute service references?**
+The [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) is free and requires no authentication. LLMs are non-deterministic by nature, so we can't guarantee identical results for identical prompts — and we don't think it's right to charge for something we can't make fully deterministic. This skill is a best-effort framework that constrains the model where possible, but the final answer still depends on the model driving it.
+
+</details>
+
+<details>
+<summary><strong>Why contribute service references?</strong></summary>
+
 Without a reference file the agent still works, but it has to discover API filter values on the fly, using more tokens and risking inconsistent results. A reference file provides pre-verified query patterns, documented traps, and correct cost formulas, so every user gets consistent results.
 
-**Should I install as a global or project skill?**
+</details>
+
+<details>
+<summary><strong>Should I install as a global or project skill?</strong></summary>
+
 Global installs the skill once and makes it available across all your projects without duplicating files. Project-scoped installs it inside a single project. Use global if you estimate Azure costs regularly; use project if you only need it for a specific repo.
 
-**Do I have to use `npx` to install?**
-No. `npx skills add` (via [skills.sh](https://skills.sh)) handles directory detection and structure for you, but you can also copy the `skills/azure-cost-calculator/` folder directly into your agent's skill files.
+</details>
 
 ## License
 
