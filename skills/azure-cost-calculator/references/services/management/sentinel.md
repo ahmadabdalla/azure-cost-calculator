@@ -9,10 +9,13 @@ billingConsiderations: [Commitment Tiers, Azure Sentinel Add-ons]
 
 **Primary cost**: Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, and add-on analysis fees.
 
+> **Trap (MANDATORY — DO NOT substitute commitment tiers)**: ALWAYS use `SkuName: Pay-as-you-go` unless the user **explicitly names** a commitment tier (e.g., "use the 400 GB commitment tier"). A daily ingestion volume like "400 GB/day" is NOT a request for the 400 GB Commitment Tier — it is a volume figure; multiply by 30 and price at PAYG. Even when the daily volume exactly matches a tier name, use PAYG. If a commitment tier would save money, note the saving in Assumptions but calculate with PAYG. Ignoring this rule causes ~40% cost variance.
+>
+> **Agent instruction**: Before submitting any Sentinel estimate, verify that `SkuName` is `Pay-as-you-go` unless the user's exact words requested a commitment tier by name. If you selected a commitment tier, STOP and recalculate with PAYG.
+
 > **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
 > **Trap (DO NOT double-count Log Analytics)**: Sentinel PAYG and Commitment Tier prices **already include** Log Analytics workspace ingestion — DO NOT add a separate Log Analytics ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
-> **Trap (DO NOT substitute commitment tiers)**: Always default to **PAYG** pricing unless the user explicitly requests a specific commitment tier. Never proactively "optimise" by switching to a commitment tier — this causes cost variance. If a commitment tier would save money, note the potential saving in Assumptions but still calculate with `SkuName: Pay-as-you-go`. When the prompt says "PAYG", specifies no tier, or just states a daily ingestion volume, use PAYG.
 
 ## Query Pattern
 
