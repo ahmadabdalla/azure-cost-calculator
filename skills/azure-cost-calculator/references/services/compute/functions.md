@@ -2,6 +2,7 @@
 serviceName: Functions
 category: compute
 aliases: [azure functions, serverless, function app]
+billingNeeds: [Storage]
 ---
 
 # Azure Functions

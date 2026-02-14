@@ -69,4 +69,3 @@ Total = Hub units + DPS (if used)
 - Units are purchased per hub; scale by adding units (max 200 per hub for paid tiers)
 - Capacity: 1 S1 unit = 400K messages/day (4 KB each); 1 S2 = 6M msgs/day; 1 S3 = 300M msgs/day
 - Device Update for IoT Hub is a separate service — query with ProductName `Device Update for IoT Hub`
-- No reserved instance pricing — `PriceType Reservation` returns 0 results

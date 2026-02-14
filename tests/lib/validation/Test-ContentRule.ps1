@@ -148,6 +148,14 @@ function Test-ContentRule {
             if ($Lines[$i] -match '<!--\s*cross-service\s*-->') {
                 continue
             }
+            # billingNeeds lists services billed under a different serviceName
+            if ($FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('billingNeeds')) {
+                $rawNeeds = $FrontMatter.Fields['billingNeeds'] -replace '^\[|\]$', ''
+                $needsList = $rawNeeds -split ',' | ForEach-Object { $_.Trim() }
+                if ($needsList -contains $Matches[1].Trim()) {
+                    continue
+                }
+            }
             $serviceNameLines.Add(@{ Value = $Matches[1].Trim(); LineNum = $i + 1 })
         }
     }

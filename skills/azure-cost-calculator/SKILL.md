@@ -44,8 +44,10 @@ String values with spaces require quoting when passed to scripts. Numeric values
    c. **Broad search** — list or search `references/services/**/*.md` to see all available files
    d. **Discovery** — if no file exists, use the explore script to find the service in the API
 3. **Read** only the matching service file(s) for query parameters, cost formula, and the exact `serviceName`
+   - Check `billingNeeds` and `billingConsiderations` in the YAML front matter and act on them (see Service File Metadata below)
 4. **Run** the pricing script with the parameters from the service reference (use the appropriate runtime)
 5. **Present** the estimate with breakdown: unit price, multiplier, monthly cost, assumptions
+   - **Verify grand total**: before presenting, re-sum all line-item monthly costs independently and confirm the grand total matches. If there is a discrepancy, use the re-summed value.
 
 ## Reference Index (load on demand)
 
@@ -68,6 +70,17 @@ String values with spaces require quoting when passed to scripts. Numeric values
 6. **Default output format is Json** — do not use Summary (invisible to agents)
 7. **Lazy-load service references** — only read files from `references/services/` that are directly required by the user's query. Never bulk-read all service files. Use the file-search workflow (Step 2) to locate the specific file(s). If the user asks about App Service and SQL Database, search for each and read only those files — not the other 20+.
 8. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands. Always use `pwsh -File scripts/Get-AzurePricing.ps1 ...`. For Bash scripts, invoke directly: `./scripts/get-azure-pricing.sh ...`.
+9. **Use consistent output categories** — when grouping line items in output, use the category directory names from `references/services/` (compute, databases, networking, storage, etc.). Place each service in the category where its reference file lives. Do not invent ad-hoc groupings.
+10. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture in the main estimate and grand total. Required companion resources declared via `billingNeeds` in front matter are included automatically.
+
+## Service File Metadata
+
+YAML front matter may include these optional billing fields:
+
+- **`billingNeeds`**: Services billed under a different `serviceName` when deploying this service. Values are service display names (e.g., `Virtual Machines`, `Managed Disks`, `Log Analytics`, `Storage`). Always read and price those services alongside the current one.
+- **`billingConsiderations`**: Pricing factors to ask the user about before calculating. Possible values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`
+
+If neither field is present, the service is self-contained with standard PAYG pricing only.
 
 ## Universal Traps
 
@@ -88,5 +101,6 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - The user requests a non-default tier, SKU, or configuration
    - The service has complex multi-meter billing that needs the full meter table
    - The query returns 0 or unexpected results
+   - The YAML front matter contains `billingConsiderations` entries that apply to the user's request (e.g., user requests Azure Hybrid Benefit and the file lists it in `billingConsiderations`)
 3. **Parallel queries** — run pricing script calls in parallel where possible. Independent services have no query dependencies.
 4. **Skip redundant references** — do not re-read shared.md or pitfalls.md between services. Read them once at the start.

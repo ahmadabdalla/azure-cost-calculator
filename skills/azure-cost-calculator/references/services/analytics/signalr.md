@@ -75,4 +75,3 @@ Total monthly      = Unit monthly + Message monthly
 - **Standard tier**: Each unit provides 1K concurrent connections and 1M messages/day; auto-scale up to 100 units
 - **Premium tier**: Same connection/message capacity as Standard plus availability zones, private endpoints, and higher SLA
 - Messages included per unit per day scale with unit count; overage charged per 1M messages above the daily included amount
-- Reserved pricing is **not available** — `PriceType Reservation` returns 0 results

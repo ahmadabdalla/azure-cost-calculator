@@ -2,6 +2,7 @@
 serviceName: Azure Machine Learning
 category: ai-ml
 aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
+billingNeeds: [Storage, Key Vault, Application Insights]
 ---
 
 # Azure Machine Learning
@@ -71,8 +72,6 @@ Training Compute         = billed under Virtual Machines (see compute/virtual-ma
 
 ## Notes
 
-- Training clusters and compute instances use underlying VMs — price them via the `Virtual Machines` service, not this one
 - Managed online endpoints (`Managed Model Hosting Service`) are the primary billable meters under this service
 - Enterprise Inferencing products (`Azure Machine Learning Enterprise *`) return $0.00 — these are legacy meters
-- Reserved pricing is **not available** for Azure Machine Learning meters
 - Storage for ML workspaces is billed under Azure Storage (Blob/File) separately

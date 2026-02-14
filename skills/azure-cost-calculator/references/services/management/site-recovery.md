@@ -2,6 +2,8 @@
 serviceName: Azure Site Recovery
 category: management
 aliases: [ASR, Disaster Recovery, DR]
+billingNeeds: [Storage]
+billingConsiderations: [Azure Hybrid Benefit]
 ---
 
 # Azure Site Recovery
@@ -10,7 +12,7 @@ aliases: [ASR, Disaster Recovery, DR]
 
 > **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns both Azure and System Center SKUs, inflating costs by summing charges for both SKUs. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
 
-> **Trap (hidden costs)**: The per-instance fee covers orchestration only. Replicated storage, compute at the DR site during failover, bandwidth, and managed disks are billed separately through their respective services. Always price these components independently.
+> **Trap (hidden costs)**: The per-instance fee covers orchestration only. Compute at the DR site during failover is billed separately (AHUB can apply to those VMs).
 
 ## Query Pattern
 
@@ -57,10 +59,7 @@ System Center target:  retailPrice (System Center SKU) × VM count
 
 ## Notes
 
-- Reserved pricing is **not available** — RI queries return zero results
 - First 31 days of protection for each new instance are free (not reflected in API)
 - The ASR license fee is per-instance; VM size and disk count do not affect the rate
-- Additional costs to estimate separately: target-region Managed Disks (replica), storage account for cache, bandwidth egress, and compute during test/actual failover
 - `Azure` SKU covers both Azure-to-Azure and on-premises-to-Azure scenarios
 - `System Center` SKU is for on-premises-to-on-premises replication via VMM
-- Storage replication is **not included** in the ASR fee — always query Managed Disks or Storage separately for the DR replica

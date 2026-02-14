@@ -2,6 +2,7 @@
 serviceName: SQL Managed Instance
 category: databases
 aliases: [SQL MI, Azure SQL MI, Managed Instance]
+billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 ---
 
 # Azure SQL Managed Instance
@@ -10,7 +11,9 @@ aliases: [SQL MI, Azure SQL MI, Managed Instance]
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `SkuName` for compute queries.
 
-> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. Query the standard `vCore` meter first, then add the zone-redundancy surcharge.
+> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier — sum both hourly rates, then × 730.
+
+> **Trap (AHUB)**: vCore prices are license-included by default. For Azure Hybrid Benefit, you MUST query the SQL License product and subtract — see the Azure Hybrid Benefit section below. NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
 
 ## Query Pattern
 
@@ -46,36 +49,39 @@ Quantity: 256
 | `General Purpose Data Stored`   | `1 GB/Month`  | Storage for GP tier                |
 | `Business Critical Data Stored` | `1 GB/Month`  | Storage for BC tier                |
 
-Zone-redundant storage meters append `Zone Redundancy` (e.g., `General Purpose Zone Redundancy Data Stored`). IO meters: `General Purpose IO Rate Operations` / `Business Critical IO Rate Operations` (`1M`).
-
 ## Cost Formula
 
 ```
-Monthly Compute = retailPrice × 730
-Monthly Storage = storage_retailPrice × sizeInGB
+Monthly Compute = retailPrice × 730 | Monthly Storage = storage_retailPrice × sizeInGB
 Total = Monthly Compute + Monthly Storage
+Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 ```
 
 ## Notes
 
-- **License included vs AHB**: vCore prices are license-included by default. AHB prices appear as separate items with "Azure Hybrid Benefit" or "Base rate" in `productName`/`skuName`.
-- **Storage**: GP and BC storage billed separately per-GB. For BC storage, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`.
-- **Backup**: PITR backup equal to max storage is free. Extra PITR/LTR billed via `SQL Managed Instance PITR Backup Storage` and `SQL Managed Instance - LTR Backup Storage`.
-- **Tier limits**: GP supports 4–80 vCores (Gen5/Premium Series). BC supports 4–80 vCores and includes In-Memory OLTP. Premium Series Memory Optimized offers higher memory-per-vCore.
-- **Hardware**: Gen5 is the default. Premium Series and Premium Series Memory Optimized offer newer hardware. Gen4 is legacy (limited availability).
+- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free.
+- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series / Memory Optimized offer newer hardware.
 
 ## Reserved Instance Pricing
 
-### RI compute (swap productName for BC). Returns 1-Year + 3-Year terms.
-
-### Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
+### RI compute (swap productName for BC; omit SkuName — unitPrice is per-vCore)
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Compute Gen5
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results for reservations. MonthlyCost is wildly wrong — see shared.md & RI MonthlyCost. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+
+## Azure Hybrid Benefit
+
+### SQL License cost (Global-only, per-vCore; swap productName for BC)
+
+ServiceName: SQL Managed Instance
+ProductName: SQL Managed Instance General Purpose - SQL License
+Region: Global
+
+For license-included per-vCore price, query compute (line 20-25) but omit SkuName—same as RI pattern. AHUB hourly per-vCore = compute `retailPrice` − `sql_license_retailPrice`. Monthly = AHUB hourly × vCoreCount × 730. NEVER apply a percentage discount.
 
 ## Product Names
 
@@ -87,5 +93,7 @@ PriceType: Reservation
 | Business Critical, Gen5                         | `SQL Managed Instance Business Critical - Compute Gen5`                            |
 | Business Critical, Premium Series               | `SQL Managed Instance Business Critical - Premium Series Compute`                  |
 | Business Critical, Premium Series Mem Optimized | `SQL Managed Instance Business Critical - Premium Series Memory Optimized Compute` |
+| SQL License (General Purpose)                   | `SQL Managed Instance General Purpose - SQL License`                               |
+| SQL License (Business Critical)                 | `SQL Managed Instance Business Critical - SQL License`                             |
 | Storage (General Purpose)                       | `SQL Managed Instance General Purpose - Storage`                                   |
 | Storage (Business Critical)                     | `SQL Managed Instance Business Critical - Storage`                                 |

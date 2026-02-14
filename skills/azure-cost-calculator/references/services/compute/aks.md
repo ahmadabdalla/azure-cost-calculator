@@ -2,6 +2,8 @@
 serviceName: Azure Kubernetes Service
 category: compute
 aliases: [AKS, kubernetes, k8s]
+billingNeeds: [Virtual Machines]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure Kubernetes Service (AKS)
@@ -26,7 +28,7 @@ MeterName: Standard Long Term Support
 
 ### Node VMs - query as Virtual Machines
 
-ServiceName: Virtual Machines <!-- cross-service -->
+ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
 InstanceCount: 3
 
@@ -48,4 +50,3 @@ Monthly = AKS_uptime_SLA_fee × 730 + (VM_hourly × 730 × nodeCount)
 - Free tier: no uptime SLA fee, limited cluster management
 - Standard tier: hourly fee for uptime SLA — query live price
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested — it's an optional add-on for extended Kubernetes version support
-- Main cost is in the node VMs — price those as Virtual Machines

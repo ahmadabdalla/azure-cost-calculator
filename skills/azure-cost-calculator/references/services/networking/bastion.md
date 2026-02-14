@@ -2,6 +2,7 @@
 serviceName: Azure Bastion
 category: networking
 aliases: [Jump Host, Bastion Host]
+billingNeeds: [IP Addresses]
 ---
 
 # Azure Bastion
@@ -95,4 +96,3 @@ Total monthly          = Gateway + Scale units + Data transfer
 - **Standard tier**: 2–50 instances, adds native client support, file transfer, IP-based connections, shareable links
 - **Premium tier**: 2–200 instances, adds session recording and private-only access
 - **Data transfer tiers**: 0–5 GB free, then tiered rates starting at 5 GB — identical across all Bastion tiers
-- Reserved pricing is not available for Azure Bastion

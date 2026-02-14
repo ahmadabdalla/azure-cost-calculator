@@ -75,7 +75,6 @@ Monthly = Zones + Queries
 
 ## Notes
 
-- No reserved instance pricing available
 - Zone pricing is per month; query pricing is per million queries
 - First 25 zones are at the higher rate; zones 26+ at a lower rate
 - First 1 billion queries at higher rate; queries beyond 1B at lower rate

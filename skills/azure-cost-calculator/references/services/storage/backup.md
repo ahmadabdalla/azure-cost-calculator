@@ -2,6 +2,7 @@
 serviceName: Backup
 category: storage
 aliases: [Recovery Services Vault, MARS Agent, VM Backup]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure Backup

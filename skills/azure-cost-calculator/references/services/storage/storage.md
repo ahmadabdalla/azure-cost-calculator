@@ -2,6 +2,7 @@
 serviceName: Storage
 category: storage
 aliases: [blob storage, file storage, table storage, queue storage, Azure Storage]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Storage Accounts (Blob)
@@ -11,6 +12,10 @@ aliases: [blob storage, file storage, table storage, queue storage, Azure Storag
 > **Trap**: `productName = 'Blob Storage'` only covers **LRS/GRS/RA-GRS**. For ZRS/GZRS/RA-GZRS use `productName = 'General Block Blob v2'` — wrong productName returns zero results.
 
 > **Trap (RA-GZRS)**: RA-GZRS storage is **~25% more expensive** than GZRS but they **share** write/read operation meters (skuName `Hot GZRS`). Using GZRS skuName for RA-GZRS storage will significantly under-price.
+
+> **Trap (Default Redundancy)**: Default to **Hot LRS** unless user explicitly requests otherwise. Always include `skuName` in filters — GRS is ~2× LRS, RA-GZRS ~3×. Wrong redundancy row inflates cost 200–300%.
+
+> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
 
 ## Query Pattern
 
@@ -57,12 +62,16 @@ Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations`, `{Ti
 ## Cost Formula
 
 ```
-Tiered pricing — API returns multiple items per meter with different tierMinimumUnits:
-  0-50 TB / 50-500 TB / 500+ TB (descending price)
+Tiered pricing — API returns multiple rows per meter with different tierMinimumUnits.
+Tiers: 0–50 TB (0–51,200 GB) / 50–500 TB / 500+ TB (descending rate per GB).
+Each tier's rate applies ONLY to GB within that band, not the entire volume.
 
-Monthly Total = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)
+Example: 60 TB (61,440 GB) Hot LRS →
+  Tier 1: 51,200 GB × tier1_retailPrice
+  Tier 2: 10,240 GB × tier2_retailPrice  (61,440 − 51,200)
+  Total storage = sum of both tiers
 
-Operation meters use tier prefix: 'Hot Read Operations', 'Cool LRS Write Operations', etc.
+Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)
 ```
 
 ## Notes

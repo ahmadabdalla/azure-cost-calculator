@@ -2,6 +2,7 @@
 serviceName: SQL Database
 category: databases
 aliases: [SQL DB, Azure SQL, sql]
+billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 ---
 
 # Azure SQL Database

@@ -2,13 +2,13 @@
 
 ## Constants
 
-| Constant        | Value                                        | Notes                         |
-| --------------- | -------------------------------------------- | ----------------------------- |
-| Hours per month | 730                                          | 365.25 × 24 ÷ 12              |
-| Days per month  | 30                                           | Simplified                    |
-| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required              |
-| API Version     | `2023-01-01-preview`                         | Current preview version       |
-| GB per TB       | 1,000                                        | Azure billing uses decimal TB |
+| Constant        | Value                                        | Notes                                                                  |
+| --------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
+| Hours per month | 730                                          | 365.25 × 24 ÷ 12                                                       |
+| Days per month  | 30                                           | Simplified                                                             |
+| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required                                                       |
+| API Version     | `2023-01-01-preview`                         | Current preview version                                                |
+| GB per TB       | **1,000**                                    | **DECIMAL: 1 TB = 1,000 GB (NOT 1,024). Azure billing uses SI units.** |
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
@@ -78,11 +78,37 @@ Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. 
 RI queries return the **total prepaid cost** for the full term, not monthly. The script's `MonthlyCost` is wrong for RIs.
 Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). See [reserved-instances.md](reserved-instances.md) for full RI traps.
 
-## Pricing Factors
+## Pricing Factor Rules
 
-- **Reserved Instances**: 1yr/3yr commitments save 30-70%. Use `PriceType: Reservation`.
-- **Savings Plans**: Flexible compute commitment, 11-65% savings
-- **Azure Hybrid Benefit**: Existing Windows/SQL licenses reduce costs 40-55%
-- **Dev/Test**: Use `PriceType: DevTestConsumption` for dev/test subscriptions
-- **Regional variance**: Same resource can vary ~9%+ across regions
-- **Data transfer**: Intra-region free, inter-region ~$0.02/GB, outbound ~$0.087/GB (first 5GB free)
+### Azure Hybrid Benefit (AHUB)
+
+AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly — **NEVER manually compute a percentage discount**.
+
+| Workload                                | How to query                                                                                                                                                                                                                   | Why                                                                                                     |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                               | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate — no math needed.                |
+| **SQL Database / SQL Managed Instance** | Query the `SQL License` product (Global-only, per-vCore): e.g., `"SQL Managed Instance General Purpose - SQL License"`. AHUB per-vCore rate = `retailPrice − sql_license_retailPrice`. Monthly = AHUB rate × vCoreCount × 730. | The API has no regional AHUB SKU. The SQL License product gives the per-vCore license cost to subtract. |
+
+**Rules:**
+
+1. NEVER apply a percentage discount (40%, 55%, etc.) to a non-AHUB price. The API gives the exact AHUB price.
+2. NEVER double-apply: if you queried the Linux meter or the AHUB `productName`, the price already reflects the benefit — do not reduce it further.
+3. For VMs: AHUB rate = Linux rate for the same SKU. Do NOT start from the Windows rate and subtract.
+
+### Zone Redundancy (ZR)
+
+**Default rule:** Assume **non-zone-redundant** unless the user explicitly requests zone redundancy.
+
+**Rules:**
+
+1. ZR surcharge is a **separate additive meter** in the API (a distinct `meterName`), NOT a percentage multiplier on the base price. Query it separately and add it.
+2. DR / failover / geo-secondary replicas do **NOT** include ZR surcharge unless the user explicitly states the secondary is also zone-redundant.
+3. If the user says "zone redundant" for a primary instance only, query the ZR meter and add it to the primary base cost. Do NOT propagate ZR to other instances.
+
+### Other Pricing Factors
+
+- **Reserved Instances**: Use `PriceType: Reservation`. See [reserved-instances.md](reserved-instances.md) for RI traps and monthly calculation rules.
+- **Savings Plans**: Flexible compute commitment. Not queryable via scripts — note to user if requested.
+- **Dev/Test**: Use `PriceType: DevTestConsumption` for dev/test subscriptions.
+- **Regional variance**: Same SKU can vary ~9%+ across regions — always query the user's specified region.
+- **Data transfer**: Intra-region free, inter-region ~$0.02/GB, outbound ~$0.087/GB (first 5 GB/month free).

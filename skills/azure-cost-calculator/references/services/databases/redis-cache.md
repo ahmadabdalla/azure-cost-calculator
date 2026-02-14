@@ -2,6 +2,7 @@
 serviceName: Redis Cache
 category: databases
 aliases: [Redis, Azure Cache for Redis, cache]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Redis Cache
@@ -86,7 +87,6 @@ PriceType: Reservation
 **Example meterName values:** `P1 Cache Instance`, `P2 Cache Instance`, `P3 Cache Instance`, `P4 Cache Instance`, `P5 Cache Instance`
 
 > **Important:** RI pricing uses `{Size} Cache Instance` (per-node), not `{Size} Cache`. Multiply by 2 for HA cluster cost.
-
 > **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
 ## Product Names

@@ -24,7 +24,26 @@ category:
     communication,
     specialist,
   }
-aliases: [{ from routing map — use exactly the aliases listed, do not add extras }]
+aliases:
+  [{ from routing map — use exactly the aliases listed, do not add extras }]
+billingNeeds:
+  [
+    {
+      optional — services billed under a different serviceName,
+      e.g.,
+      Virtual Machines,
+      Managed Disks,
+    },
+  ]
+billingConsiderations:
+  [
+    {
+      optional — pricing factors to ask user about: Reserved Instances,
+      Spot Pricing,
+      Azure Hybrid Benefit,
+      M365 / Windows per-user licensing,
+    },
+  ]
 ---
 
 # {Service Display Name}
@@ -62,6 +81,13 @@ aliases: [{ from routing map — use exactly the aliases listed, do not add extr
      - category: The category folder this file lives in (compute, databases, etc.)
      - aliases: Common names, abbreviations, and synonyms users might search for
        Always use inline [...] format for aliases — never multi-line YAML sequences.
+     - billingNeeds (optional): Other Azure services billed under a different
+       serviceName when deploying this service. Values are service display names
+       (e.g., Virtual Machines, Managed Disks). Omit if the service is self-contained.
+     - billingConsiderations (optional): Pricing factors the agent should ask the
+       user about before calculating. Use only these values:
+       Reserved Instances, Spot Pricing, Azure Hybrid Benefit, M365 / Windows per-user licensing.
+       Omit entirely if none apply — absence means standard PAYG pricing only.
 
   2. PRIMARY COST: A concise summary of the main billing dimensions.
      Examples:

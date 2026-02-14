@@ -2,13 +2,14 @@
 serviceName: Storage
 category: storage
 aliases: [managed disks, disks, disk storage]
+billingConsiderations: [Reserved Instances]
 ---
 
 # Managed Disks
 
 **Primary cost**: Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)
 
-> **Trap (meter count varies by type)**: Premium SSD returns 2 meters (Disk + Disk Mount). Standard SSD returns 3 (Disk + Disk Mount + Disk Operations). Standard HDD returns 2 (Disk + Disk Operations — **no** mount fee). The `summary.totalMonthlyCost` sums all meters correctly — but present them separately for transparency.
+> **Warning (Premium/Standard SSD two-meter trap)**: The API returns **both** "Disk" **and** "Disk Mount" meters. **You MUST sum both** — the mount fee alone is ~5% of cost. Using only mount fee = **~20× too cheap**. Always use `summary.totalMonthlyCost` which sums correctly. Premium SSD returns 2 meters, Standard SSD returns 3 (+ Operations), Standard HDD returns 2 (Disk + Operations, no mount fee).
 
 ## Query Pattern
 
@@ -40,6 +41,10 @@ ProductName: Azure Premium SSD v2
 > **ZRS**: For Premium/Standard SSD, replace `LRS` with `ZRS` in SkuName (~50% more). HDD is LRS only.
 > **Standard HDD**: Use `ProductName: Standard HDD Managed Disks`, `SkuName: S{Size} LRS`.
 
+## Expected API Response (Premium SSD)
+
+P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P30 LRS Disk Mount` (~5%). **Mount fee alone = ~20× underestimate**.
+
 ## Meters per Disk Type
 
 | Disk Type      |                           Disk                           | Disk Mount | Disk Operations |
@@ -50,40 +55,34 @@ ProductName: Azure Premium SSD v2
 | Ultra Disk     | Provisioned Capacity, IOPS, Throughput, vCPU Reservation |     —      |        —        |
 | Premium SSD v2 |          Provisioned Capacity, IOPS, Throughput          |     —      |        —        |
 
-> **Trap (Premium SSD v2 free tier)**: The API returns **two rows** each for IOPS and Throughput — one at zero price (the included 3,000 IOPS / 125 MBps) and one at the paid rate. Use the non-zero `retailPrice` and subtract free units: `max(0, IOPS - 3000)` and `max(0, MBps - 125)`.
-> **Trap (Ultra vCPU charge)**: Ultra Disk returns a 4th meter `Ultra LRS Reservation per vCPU Provisioned` — billed per vCPU on the attached VM.
+> **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput — one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
+> **Trap (Ultra vCPU)**: Ultra Disk has 4th meter `Ultra LRS Reservation per vCPU Provisioned` — per vCPU on attached VM.
 
 ## Key Fields
 
-| Parameter     | How to determine        | Example values                                                                                   |
-| ------------- | ----------------------- | ------------------------------------------------------------------------------------------------ |
-| `productName` | Disk type               | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
-| `skuName`     | Disk size + redundancy  | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                           |
-| `meterName`   | Specific cost component | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                  |
+| Parameter     | Example values                                                                                   |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `productName` | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
+| `skuName`     | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                           |
+| `meterName`   | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                  |
 
 ## Cost Formula
 
-**Premium SSD**: `Monthly = (diskPrice + mountFee) × diskCount`
-
-**Standard SSD**: `Monthly = (diskPrice + mountFee + txnOps/10000 × opsPrice) × diskCount`
-
-**Standard HDD**: `Monthly = (diskPrice + txnOps/10000 × opsPrice) × diskCount`
-
-**Ultra Disk**: `Monthly = (GiB × capacityPrice + IOPS × iopsPrice + MBps × tputPrice + vCPUs × vcpuPrice) × 730`
-
-**Premium SSD v2**: `Monthly = (GiB × capacityPrice + max(0, IOPS - 3000) × iopsPrice + max(0, MBps - 125) × tputPrice) × 730`
+- **Premium SSD**: `Monthly = (diskPrice + mountFee) × diskCount`
+- **Standard SSD**: `Monthly = (diskPrice + mountFee + txnOps/10000 × opsPrice) × diskCount`
+- **Standard HDD**: `Monthly = (diskPrice + txnOps/10000 × opsPrice) × diskCount`
+- **Ultra Disk**: `Monthly = (GiB × capacityPrice + IOPS × iopsPrice + MBps × tputPrice + vCPUs × vcpuPrice) × 730`
+- **Premium SSD v2**: `Monthly = (GiB × capacityPrice + max(0, IOPS - 3000) × iopsPrice + max(0, MBps - 125) × tputPrice) × 730`
 
 ## Notes
 
 - Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
-- Premium SSD P1–P20 include free burst (up to 3,500 IOPS / 170 MBps). On-demand burst for P20+ is a separate meter.
-- Snapshots billed separately (`Managed Disk Snapshots`). Ultra/Premium SSD v2 have per-vCPU reservation charge on attached VM.
+- Premium SSD P1–P20 include free burst. On-demand burst for P20+ is a separate meter.
+- Snapshots billed separately. Ultra/Premium SSD v2 have per-vCPU reservation charge.
 
 ## Reserved Instance Pricing
 
-Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
-
-> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
+Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`. **RI MonthlyCost trap** — see shared.md.
 
 ## Common SKUs
 

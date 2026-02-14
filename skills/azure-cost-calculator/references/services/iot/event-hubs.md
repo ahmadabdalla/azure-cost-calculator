@@ -73,6 +73,5 @@ Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transfe
 - Premium/Dedicated include ingress events at no extra charge
 - Capacity: 1 TU = 1 MB/s ingress / ~1K events/s; 1 PU ≈ 5–10 MB/s; 1 CU ≈ 20 MB/s
 - Geo-DR requires two separate Premium/Dedicated namespaces — budget 2× namespace cost plus replication transfer
-- No reserved instance pricing — `PriceType Reservation` returns 0 results for Event Hubs
 - All throughput/processing/capacity units are billed hourly — use 730 hours/month
 - Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API

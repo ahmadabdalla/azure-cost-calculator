@@ -2,6 +2,8 @@
 serviceName: Virtual Machines
 category: compute
 aliases: [VMs, virtual machine, VM]
+billingNeeds: [Managed Disks]
+billingConsiderations: [Azure Hybrid Benefit, Reserved Instances, Spot Pricing]
 ---
 
 # Virtual Machines
@@ -49,8 +51,18 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 ## Notes
 
-- Node VMs (e.g., AKS, Batch) are priced as Virtual Machines
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
+
+## Azure Hybrid Benefit (AHUB)
+
+For AHUB VMs, query the **Linux** `productName` (no "Windows" suffix) — the Linux rate IS the AHUB rate. There is no separate "Base Compute" or AHUB-specific `productName` for VMs. Do not query Windows and manually discount. Always confirm AHUB eligibility with the user first.
+
+### AHUB for Windows E16s v5 (example — queries Linux rate)
+
+ServiceName: Virtual Machines
+ArmSkuName: Standard_E16s_v5
+ProductName: Virtual Machines Esv5 Series
+InstanceCount: 15
 
 ## Reserved Instance Pricing
 

@@ -2,6 +2,7 @@
 serviceName: Azure Static Web Apps
 category: web
 aliases: [SWA, JAMstack]
+billingNeeds: [Azure App Service]
 ---
 
 # Azure Static Web Apps
@@ -20,14 +21,14 @@ aliases: [SWA, JAMstack]
 
 ### Standard plan — per-app monthly fee (use Region eastus2; eastus has no data)
 
-ServiceName: Azure App Service  <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard App
 Region: eastus2
 
 ### Bandwidth — pass Quantity with total GB to see per-tier unit prices
 
-ServiceName: Azure App Service  <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard Bandwidth Usage
 Quantity: 500
@@ -35,7 +36,7 @@ Region: eastus2
 
 ### Azure Front Door add-on (enterprise-grade edge, hourly)
 
-ServiceName: Azure App Service  <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard Azure Front Door Add-on
 Region: eastus2
@@ -72,5 +73,4 @@ Total       = App + Bandwidth + AFD Add-on
 - **Standard tier**: Query API with eastus2 for current per-app monthly fee. Adds custom auth, SLA, and more APIs.
 - **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB — the API returns two bandwidth rows per region (free tier and overage tier).
 - **Azure Front Door add-on**: Optional. Provides enterprise-grade edge with WAF, custom rules, and bot protection. Query API for current hourly rate.
-- **No reserved pricing**: RI queries return zero results. Do not attempt `-PriceType Reservation`.
 - **Tier limitations**: Free tier — 2 custom domains, 0.5 GB storage, community support. Standard tier — 5 custom domains, 2 GB storage, SLA-backed.

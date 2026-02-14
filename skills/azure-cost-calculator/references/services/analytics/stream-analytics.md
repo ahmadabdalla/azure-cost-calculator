@@ -74,4 +74,3 @@ Edge:              Monthly = retailPrice × deviceCount
 - **Dedicated tiers**: Same pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
 - **Edge**: Per-device monthly flat rate; runs on IoT Edge devices for local stream processing
 - **No ArmSkuName**: All meters return empty `armSkuName` — do not filter by this field
-- Reserved pricing is **not available** — `PriceType Reservation` returns 0 results
