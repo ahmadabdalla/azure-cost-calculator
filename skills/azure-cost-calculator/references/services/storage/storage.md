@@ -60,13 +60,19 @@ Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations`, `{Ti
 ## Cost Formula
 
 ```
-Tiered pricing — API returns multiple items per meter with different tierMinimumUnits:
-  0-50 TB / 50-500 TB / 500+ TB (descending price)
+Tiered pricing — API returns multiple rows per meter with different tierMinimumUnits.
+Tiers: 0–50 TB (0–51,200 GB) / 50–500 TB / 500+ TB (descending rate per GB).
+Each tier's rate applies ONLY to GB within that band, not the entire volume.
 
-Monthly Total = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)
+Example: 60 TB (60,000 GB) Hot LRS →
+  Tier 1: 51,200 GB × tier1_retailPrice
+  Tier 2:  8,800 GB × tier2_retailPrice  (60,000 − 51,200)
+  Total storage = sum of both tiers
 
-Operation meters use tier prefix: 'Hot Read Operations', 'Cool LRS Write Operations', etc.
+Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)
 ```
+
+> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
 
 ## Notes
 

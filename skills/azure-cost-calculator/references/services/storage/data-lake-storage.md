@@ -80,9 +80,9 @@ MeterName: Cold LRS Data Stored
 ## Cost Formula
 
 ```
-Tiered storage — API returns multiple items with different tierMinimumUnits:
-  0-50 TB / 50-500 TB / 500+ TB (descending price)
-
+Tiered storage — API returns multiple rows per meter with different tierMinimumUnits.
+Tiers: 0–50 TB (0–51,200 GB) / 50–500 TB / 500+ TB (descending rate per GB).
+Each tier's rate applies ONLY to GB within that band, not the entire volume.
 Monthly = Σ(storage_retailPrice × GB_in_tier)
         + (index_retailPrice × indexGB)          [HNS only, Hot tier]
         + (writeOps / 10K × write_retailPrice)
@@ -90,10 +90,11 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
         + (retrieval_retailPrice × retrievedGB)  [Cool/Cold/Archive only]
 ```
 
+> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
+
 ## Notes
 
 - Archive tier supports only LRS, GRS, RA-GRS (no ZRS/GZRS)
-- Cold tier `Data Write` meter exists (e.g., `Cold LRS Data Write`) but priced at $0.00 — ingress is free
 - Early Delete charges: Cool 30 days, Cold 90 days, Archive 180 days
 - Iterative operations (directory listing) use per-100 unit for writes, per-10K for reads; Hot tier only
 - Flat Namespace product has identical storage pricing but no Index meter and lower transaction costs
