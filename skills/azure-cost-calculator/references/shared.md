@@ -87,7 +87,7 @@ AHUB means the customer already owns Windows Server or SQL Server licenses. The 
 | Workload                                | How to query                                                                                                                                                                     | Why                                                                                                   |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`. | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate — no math needed.              |
-| **SQL Database / SQL Managed Instance** | Query with `productName` containing `"Azure Hybrid Benefit"`. E.g., `"SQL Managed Instance General Purpose - SQL License - Azure Hybrid Benefit"`.                               | The API has dedicated AHUB SKUs for SQL services. The returned `unitPrice` is the correct AHUB price. |
+| **SQL Database / SQL Managed Instance** | Query the `SQL License` product (Global-only, per-vCore): e.g., `"SQL Managed Instance General Purpose - SQL License"`. Subtract `sql_license_retailPrice × vCoreCount` from the license-included `retailPrice`. | The API has no regional AHUB SKU. The SQL License product gives the per-vCore license cost to subtract. |
 
 **Rules:**
 
