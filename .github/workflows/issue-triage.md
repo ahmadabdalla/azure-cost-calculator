@@ -103,7 +103,7 @@ When you do leave a comment, follow these principles:
 
 - **Thank the contributor** for opening the issue.
 - Keep the comment **concise and actionable** — no more than a short paragraph plus a bulleted list if needed.
-- **Include specific file paths** when referencing existing service references (e.g., `services/compute/aks.md`).
+- **Include specific file paths** when referencing existing service references (e.g., `skills/azure-cost-calculator/references/services/compute/aks.md`).
 - For **new service** issues, mention the prompt-driven contributor workflow described in `CONTRIBUTING.md`.
 - For **pricing inaccuracy** issues, suggest verifying rates with the `Get-AzurePricing` PowerShell script.
 - Use a friendly, welcoming tone appropriate for open-source contributors.
