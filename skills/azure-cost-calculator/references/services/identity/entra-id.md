@@ -2,7 +2,7 @@
 serviceName: Microsoft Entra ID
 category: identity
 aliases: [Azure AD, Azure Active Directory, AAD, Directory]
-billingConsiderations: [M365 licensing]
+billingConsiderations: [M365 / Windows per-user licensing]
 ---
 
 # Microsoft Entra ID

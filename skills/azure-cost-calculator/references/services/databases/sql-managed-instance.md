@@ -81,7 +81,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-AHUB hourly per-vCore = license-included `retailPrice` − `sql_license_retailPrice`. Monthly = AHUB hourly × vCoreCount × 730. vCore prices are license-included by default. NEVER apply a percentage discount.
+For license-included per-vCore price, query compute (line 20-25) but omit SkuName—same as RI pattern. AHUB hourly per-vCore = compute `retailPrice` − `sql_license_retailPrice`. Monthly = AHUB hourly × vCoreCount × 730. NEVER apply a percentage discount.
 
 ## Product Names
 

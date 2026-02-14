@@ -66,9 +66,9 @@ Tiered pricing — API returns multiple rows per meter with different tierMinimu
 Tiers: 0–50 TB (0–51,200 GB) / 50–500 TB / 500+ TB (descending rate per GB).
 Each tier's rate applies ONLY to GB within that band, not the entire volume.
 
-Example: 60 TB (60,000 GB) Hot LRS →
+Example: 60 TB (61,440 GB) Hot LRS →
   Tier 1: 51,200 GB × tier1_retailPrice
-  Tier 2:  8,800 GB × tier2_retailPrice  (60,000 − 51,200)
+  Tier 2: 10,240 GB × tier2_retailPrice  (61,440 − 51,200)
   Total storage = sum of both tiers
 
 Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)

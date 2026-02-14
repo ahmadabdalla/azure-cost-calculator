@@ -97,7 +97,7 @@ Before documenting traps, run these mandatory checks:
 3. **RI availability**: Run one query with `-PriceType Reservation`. If it returns results, add `Reserved Instances` to the `billingConsiderations` YAML field. If `skuName` differs from consumption queries (e.g., `vCore` vs `8 vCore`), document the difference. If zero results, do not add Reserved Instances — absence signals RI is unavailable.
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
-6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
+6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
