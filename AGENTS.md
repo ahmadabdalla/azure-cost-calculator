@@ -29,3 +29,5 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - Operational documentation lives in `docs/ops/`.
 - When implementing or changing a repo feature (workflows, automation, infrastructure), create or update the corresponding ops doc.
 - Each ops doc should cover: what the feature does, prerequisites, how to make changes, troubleshooting, and external references.
+- Tests must be created or updated in the `tests/` folder, not inside `skills/`.
+- The `skills/` folder is for end-users installing the skill — it should only contain artifacts they use. Do not place maintainer-only files (tests, docs, tooling) there.
