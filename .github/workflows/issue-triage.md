@@ -66,7 +66,7 @@ Analyze the following issue content:
 
 When the title matches `[Service]: {service name}`:
 
-1. **Extract the service name** from the title (everything after `[Service]: `).
+1. **Extract the service name** from the title (everything after `[Service]:`).
 2. **Search `skills/azure-cost-calculator/references/service-routing.md`** for a match:
    - Compare against `s:` (serviceName) values — use case-insensitive comparison.
    - Compare against entries in `a:` (alias) arrays — use case-insensitive comparison.
