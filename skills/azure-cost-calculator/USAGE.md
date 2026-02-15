@@ -6,21 +6,21 @@ Write prompts that produce deterministic cost estimates. A/B testing showed vagu
 
 **Step 1: Identify your architecture pattern**
 
-| Pattern | Key Cost Drivers |
-| ------- | ---------------- |
-| Lift-and-shift VMs | VM SKUs, managed disks, AHUB licensing, RI commitment |
-| SQL modernization | SQL MI tier/vCores, storage per instance, AHUB, zone redundancy |
-| Hub-spoke networking | Firewall SKU, data processed, VPN/ExpressRoute, Private Endpoints |
-| SIEM/Security | Sentinel ingestion volume, Defender plan, Key Vault HSM |
-| DR/BCDR | Site Recovery VM count, SQL failover groups, geo-redundant storage |
+| Pattern              | Key Cost Drivers                                                   |
+| -------------------- | ------------------------------------------------------------------ |
+| Lift-and-shift VMs   | VM SKUs, managed disks, AHUB licensing, RI commitment              |
+| SQL modernization    | SQL MI tier/vCores, storage per instance, AHUB, zone redundancy    |
+| Hub-spoke networking | Firewall SKU, data processed, VPN/ExpressRoute, Private Endpoints  |
+| SIEM/Security        | Sentinel ingestion volume, Defender plan, Key Vault HSM            |
+| DR/BCDR              | Site Recovery VM count, SQL failover groups, geo-redundant storage |
 
 **Step 2: Group by environment tier**
 
-| Environment | Commitment Strategy | Rationale |
-| ----------- | ------------------- | --------- |
-| Production | 3-Year RI | Maximum savings for predictable workloads |
-| Pre-prod/UAT | 1-Year RI or PAYG | Shorter commitment for changing requirements |
-| Dev/Test | PAYG or Spot | No commitment for ephemeral workloads |
+| Environment  | Commitment Strategy | Rationale                                    |
+| ------------ | ------------------- | -------------------------------------------- |
+| Production   | 3-Year RI           | Maximum savings for predictable workloads    |
+| Pre-prod/UAT | 1-Year RI or PAYG   | Shorter commitment for changing requirements |
+| Dev/Test     | PAYG or Spot        | No commitment for ephemeral workloads        |
 
 **Step 3: State what you know — if no SKU, describe requirements**
 
@@ -39,26 +39,26 @@ The agent performs a **Specification Review** before pricing — verifying input
 
 ## Required Parameters by Category
 
-| Category | Must Specify | Omission Impact |
-| -------- | ------------ | --------------- |
-| **VMs** | SKU (e.g., D4s_v5), OS, count, AHUB yes/no, RI/PAYG | AHUB: +$9K–$115K |
-| **SQL MI** | Tier (GP/BC), Gen, vCores, storage GB/instance, AHUB, ZR | Storage: +$30K–$63K |
-| **SQL Database** | Tier, vCores or DTUs, max storage GB, AHUB | Tier: ±$20K+ |
-| **Storage** | Redundancy (LRS/ZRS/GRS), tier (Hot/Cool), capacity GB | GRS vs LRS: 2× |
-| **Sentinel** | Pricing model (PAYG/commitment), daily ingestion GB | PAYG override: ~$57K |
-| **Defender** | Plan (P1/P2), server count | Plan: ~50% swing |
-| **Networking** | SKU, capacity units, data processed GB/month | SKU: 3–10× |
-| **Key Vault** | Tier (Standard/Premium), ops/month, HSM key count | Premium+HSM: 5×+ |
+| Category         | Must Specify                                             | Omission Impact      |
+| ---------------- | -------------------------------------------------------- | -------------------- |
+| **VMs**          | SKU (e.g., D4s_v5), OS, count, AHUB yes/no, RI/PAYG      | AHUB: +$9K–$115K     |
+| **SQL MI**       | Tier (GP/BC), Gen, vCores, storage GB/instance, AHUB, ZR | Storage: +$30K–$63K  |
+| **SQL Database** | Tier, vCores or DTUs, max storage GB, AHUB               | Tier: ±$20K+         |
+| **Storage**      | Redundancy (LRS/ZRS/GRS), tier (Hot/Cool), capacity GB   | GRS vs LRS: 2×       |
+| **Sentinel**     | Pricing model (PAYG/commitment), daily ingestion GB      | PAYG override: ~$57K |
+| **Defender**     | Plan (P1/P2), server count                               | Plan: ~50% swing     |
+| **Networking**   | SKU, capacity units, data processed GB/month             | SKU: 3–10×           |
+| **Key Vault**    | Tier (Standard/Premium), ops/month, HSM key count        | Premium+HSM: 5×+     |
 
 Always specify: **region** and **currency**.
 
 ## Good vs Bad Examples
 
-| Category | ❌ Bad | ✅ Good | Variance |
-| -------- | ------ | ------- | -------- |
-| Database | "Some SQL MI with Hybrid Benefit" | "30× SQL MI BC Gen5 8 vCores, 512 GB each, SQL AHUB" | $131K |
-| Compute | "Windows VMs with AHUB" | "80× D4s_v5 Windows, AHUB, PAYG" | $9K–$115K |
-| Security | "Sentinel for SIEM" | "Sentinel: 500 GB/day, PAYG" | ~$57K |
+| Category | ❌ Bad                            | ✅ Good                                              | Variance  |
+| -------- | --------------------------------- | ---------------------------------------------------- | --------- |
+| Database | "Some SQL MI with Hybrid Benefit" | "30× SQL MI BC Gen5 8 vCores, 512 GB each, SQL AHUB" | $131K     |
+| Compute  | "Windows VMs with AHUB"           | "80× D4s_v5 Windows, AHUB, PAYG"                     | $9K–$115K |
+| Security | "Sentinel for SIEM"               | "Sentinel: 500 GB/day, PAYG"                         | ~$57K     |
 
 ## Pre-flight Checklist
 
@@ -76,51 +76,51 @@ Always specify: **region** and **currency**.
 
 ## Strategic Do's and Don'ts
 
-| ✅ DO | ❌ DON'T |
-| ----- | -------- |
-| Separate environments into distinct sections (different commitment strategies) | Apply 3-Year RI to Dev/Test environments |
-| State licensing position up front (EA/CSP with core counts, not just "AHUB yes") | Mix primary and DR costs in one flat list |
-| Specify DR topology explicitly (active-active vs warm standby vs cold DR) | Just say "migrate 400 VMs" — tier by workload, OS, sizing |
-| Request comparative scenarios ("SQL MI vs SQL DB — give me both") | Assume AHUB applies universally — it's constrained by license inventory |
+| ✅ DO                                                                            | ❌ DON'T                                                                |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Separate environments into distinct sections (different commitment strategies)   | Apply 3-Year RI to Dev/Test environments                                |
+| State licensing position up front (EA/CSP with core counts, not just "AHUB yes") | Mix primary and DR costs in one flat list                               |
+| Specify DR topology explicitly (active-active vs warm standby vs cold DR)        | Just say "migrate 400 VMs" — tier by workload, OS, sizing               |
+| Request comparative scenarios ("SQL MI vs SQL DB — give me both")                | Assume AHUB applies universally — it's constrained by license inventory |
 
 ## Ambiguity Traps (by Dollar Impact)
 
-| Trap | Variance | Fix |
-| ---- | -------- | --- |
-| AHUB method unspecified | $9K–$115K | State "AHUB enabled" per service |
-| SQL MI storage omitted | $30K–$63K | "X GB storage per instance" |
-| Sentinel tier vague | ~$57K | "PAYG" or "X GB/day commitment" |
-| Zone redundancy scope | ±$30K | "ZR on primary BC instances only" |
-| SQL DB vs SQL MI confused | ±$20K+ | Use exact service name |
-| Storage redundancy missing | up to 2× | Always specify LRS/ZRS/GRS |
-| Companion services omitted | varies | See Hidden Dependencies below |
+| Trap                       | Variance  | Fix                               |
+| -------------------------- | --------- | --------------------------------- |
+| AHUB method unspecified    | $9K–$115K | State "AHUB enabled" per service  |
+| SQL MI storage omitted     | $30K–$63K | "X GB storage per instance"       |
+| Sentinel tier vague        | ~$57K     | "PAYG" or "X GB/day commitment"   |
+| Zone redundancy scope      | ±$30K     | "ZR on primary BC instances only" |
+| SQL DB vs SQL MI confused  | ±$20K+    | Use exact service name            |
+| Storage redundancy missing | up to 2×  | Always specify LRS/ZRS/GRS        |
+| Companion services omitted | varies    | See Hidden Dependencies below     |
 
 ## Hidden Cost Dependencies
 
 These services bill companion components separately — include them or the estimate is incomplete:
 
-| Service | Also Include | Why |
-| ------- | ------------ | --- |
-| SQL MI | Storage (per-GB) | Storage billed separately from compute |
-| AKS | VMs, Load Balancer, Managed Disks | Node pool compute billed as VMs |
-| App Service | App Service Plan | Plan is the compute layer |
-| Azure Firewall | Public IP, data processing | Each component billed separately |
-| Application Gateway | Capacity Units, data processed | Base + consumption billing |
-| Site Recovery | Storage replication | Replicated data storage costs |
-| Azure Backup | Protected instance fee + storage | Two billing components |
-| Virtual Network Gateway | Per-tunnel charges, data egress | S2S/P2S tunnels billed per connection |
-| Private Endpoints | Per-endpoint + data processed | Inbound and outbound data charges |
+| Service                 | Also Include                      | Why                                    |
+| ----------------------- | --------------------------------- | -------------------------------------- |
+| SQL MI                  | Storage (per-GB)                  | Storage billed separately from compute |
+| AKS                     | VMs, Load Balancer, Managed Disks | Node pool compute billed as VMs        |
+| App Service             | App Service Plan                  | Plan is the compute layer              |
+| Azure Firewall          | Public IP, data processing        | Each component billed separately       |
+| Application Gateway     | Capacity Units, data processed    | Base + consumption billing             |
+| Site Recovery           | Storage replication               | Replicated data storage costs          |
+| Azure Backup            | Protected instance fee + storage  | Two billing components                 |
+| Virtual Network Gateway | Per-tunnel charges, data egress   | S2S/P2S tunnels billed per connection  |
+| Private Endpoints       | Per-endpoint + data processed     | Inbound and outbound data charges      |
 
 ## DR Topology Cost Patterns
 
 Your disaster recovery strategy dramatically affects costs. State it explicitly in your prompt:
 
-| Strategy | Compute in DR | Storage in DR | Cost vs Primary | Typical RTO |
-| -------- | ------------- | ------------- | --------------- | ----------- |
-| Active-Active | 100% | 100% | ~100% | <1 min |
-| Warm Standby | 50% (scaled down) | 100% | ~30–60% | Minutes |
-| Cold DR (Site Recovery) | 0% standing | Replica only | ~5–15% | Hours |
-| Backup Only | 0% | GRS backup | ~3–5% | Hours–Days |
+| Strategy                | Compute in DR     | Storage in DR | Cost vs Primary | Typical RTO |
+| ----------------------- | ----------------- | ------------- | --------------- | ----------- |
+| Active-Active           | 100%              | 100%          | ~100%           | <1 min      |
+| Warm Standby            | 50% (scaled down) | 100%          | ~30–60%         | Minutes     |
+| Cold DR (Site Recovery) | 0% standing       | Replica only  | ~5–15%          | Hours       |
+| Backup Only             | 0%                | GRS backup    | ~3–5%           | Hours–Days  |
 
 **Critical billing notes:**
 
@@ -135,13 +135,23 @@ The agent analyzes your prompt and presents a **Specification Review** — what 
 
 **Refine with specific follow-ups:**
 
-| ✅ Good Follow-ups | ❌ Bad Follow-ups |
-| ------------------ | ----------------- |
-| "Switch all VMs to 3-year RI" | "Make it cheaper" |
-| "Add zone redundancy to the 8 BC instances" | "Add some redundancy" |
+| ✅ Good Follow-ups                              | ❌ Bad Follow-ups            |
+| ----------------------------------------------- | ---------------------------- |
+| "Switch all VMs to 3-year RI"                   | "Make it cheaper"            |
+| "Add zone redundancy to the 8 BC instances"     | "Add some redundancy"        |
 | "Change Sentinel to 400 GB/day commitment tier" | "Use a better Sentinel tier" |
-| "Remove the DR region" | "Change stuff" |
+| "Remove the DR region"                          | "Change stuff"               |
 
 ## Reference Architectures
 
 Well-specified architecture prompts follow a consistent pattern: group by environment tier, specify every SKU/count/storage parameter, state licensing and commitment strategy per tier, and separate DR resources from primary. See the [Good vs Bad Examples](#good-vs-bad-examples) and [Architect's Quick Start](#architects-quick-start) sections above for structural guidance.
+
+Complete example architectures are available in [`references/examples/`](references/examples/):
+
+| Example                                                                   |
+| ------------------------------------------------------------------------- |
+| [3-Tier Web App](references/examples/3-tier-web-app.md)                   |
+| [Event-Driven Serverless](references/examples/event-driven-serverless.md) |
+| [Data Analytics Platform](references/examples/data-analytics-platform.md) |
+
+Each example is a self-contained architecture prompt ready to paste into the agent. They demonstrate the fully-specified format that produces deterministic results (0% cost variance across paired runs).
