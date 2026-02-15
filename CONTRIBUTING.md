@@ -14,7 +14,7 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 > **Note:** All skill files (scripts, references, templates) live under `skills/azure-cost-calculator/` in this repo. Paths in this guide are given from the repo root.
 
-> **Note:** The skill uses a two-phase workflow (Analysis → Estimation) with a Specification Review gate. See `skills/azure-cost-calculator/SKILL.md` for the full workflow. For tips on writing deterministic prompts, see `prompts/usage-guide.md`.
+> **Note:** The skill uses a two-phase workflow (Analysis → Estimation) with a Specification Review gate. See `skills/azure-cost-calculator/SKILL.md` for the full workflow. For tips on writing deterministic prompts, see `skills/azure-cost-calculator/USAGE.md`.
 
 ## The Prompt
 

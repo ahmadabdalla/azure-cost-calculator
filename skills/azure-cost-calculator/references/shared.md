@@ -95,8 +95,8 @@ Before querying prices, classify every sizing parameter against this table. Miss
 
 | Modifier    | How to Query                                                           | Monthly Calculation                            |
 | ----------- | ---------------------------------------------------------------------- | ---------------------------------------------- |
-| AHUB (VMs)  | Query Linux meter for same SKU (`productName` NOT contains "Windows")  | Linux rate IS the AHUB rate                    |
-| AHUB (SQL)  | Query `SQL License` product (Global region) for per-vCore license cost | Base rate − license rate = AHUB rate per vCore |
+| AHUB (VMs)  | Query Linux meter for same SKU — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate                    |
+| AHUB (SQL)  | Query `SQL License` product (Global region) — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | `(Base − license) × vCores × 730`             |
 | Reserved 1Y | Add `PriceType: Reservation`                                           | `unitPrice ÷ 12`                               |
 | Reserved 3Y | Add `PriceType: Reservation`                                           | `unitPrice ÷ 36`                               |
 | Spot        | Filter `skuName` contains "Spot"                                       | Use returned rate directly                     |

@@ -144,8 +144,4 @@ The agent analyzes your prompt and presents a **Specification Review** — what 
 
 ## Reference Architectures
 
-| File | Scenario | Key Services | Scale |
-| ---- | -------- | ------------ | ----- |
-| `AB-Test-1.md` | UK healthcare migration (NHS) | 280 VMs, SQL MI, Sentinel, Site Recovery | Large |
-| `AB-Test-2.md` | Australian financial services (APRA) | 300 VMs, SQL MI, Defender, Backup | Large |
-| `AB-Test-3.md` | US Federal multi-region DR (FedRAMP) | 400 VMs, SQL MI + SQL DB, HSM Key Vault | Enterprise |
+Well-specified architecture prompts follow a consistent pattern: group by environment tier, specify every SKU/count/storage parameter, state licensing and commitment strategy per tier, and separate DR resources from primary. See the [Good vs Bad Examples](#good-vs-bad-examples) and [Architect's Quick Start](#architects-quick-start) sections above for structural guidance.
