@@ -24,13 +24,19 @@ What's the cost of a General Purpose SQL Database with 4 vCores in West Europe i
 How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 ```
 
+**Planning a larger architecture?** Start with:
+
+> _I'd like to perform a cost analysis on an Azure architecture. What do I need to consider to get consistent results?_
+
+The agent will walk you through the key parameters that affect pricing accuracy. For the full guide on writing prompts that produce deterministic estimates, see the [Usage Guide](skills/azure-cost-calculator/USAGE.md).
+
 ## How It Works
 
 The skill uses service reference files as an index. Each file contains exact API filter values as declarative `Key: Value` parameters, cost formulas, and traps. The agent reads the matching file, translates the parameters to the detected runtime (Bash or PowerShell), runs the pricing script against the live API, and presents a structured estimate.
 
 The skill optimises for two goals:
 
-- **Determinism** - target ≤ 5% cost variance. Same query → same API call → same price. All values from the live API, nothing hardcoded. LLMs are non-deterministic by nature, so this skill is designed to constrain them where possible — pre-verified filters, explicit formulas, and scripted API calls reduce the surface area where the model can drift.
+- **Determinism** - target ≤ 5% cost variance. Same query → same API call → same price. All values from the live API, nothing hardcoded. LLMs are non-deterministic by nature, so this skill is designed to constrain them where possible: pre-verified filters, explicit formulas, and scripted API calls reduce the surface area where the model can drift.
 - **Token efficiency** - target ≤ 5% token usage variance. Only SKILL.md and shared.md load on every query. Service files load on demand. Batch mode (3+ services) reads only the first 45 lines per file.
 
 Other design goals:
@@ -93,7 +99,9 @@ Each service reference file you add improves accuracy for everyone. See [CONTRIB
 <details>
 <summary><strong>Why is this free?</strong></summary>
 
-The [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) is free and requires no authentication. LLMs are non-deterministic by nature, so we can't guarantee identical results for identical prompts — and we don't think it's right to charge for something we can't make fully deterministic. This skill is a best-effort framework that constrains the model where possible, but the final answer still depends on the model driving it.
+1. **The API is free.** The [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) is public and requires no authentication or Azure subscription.
+2. **We can't guarantee determinism.** LLMs are non-deterministic by nature. While this skill constrains the model for consistency, we can't commit to identical results for identical prompts, and we don't think it's right to charge for something we can't make fully deterministic.
+3. **Community-driven by design.** Some things are meant to be open source because they rely on community support to grow. This project is one of them, and every service reference file contributed improves accuracy for everyone.
 
 </details>
 

@@ -80,6 +80,42 @@ Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). See [reserve
 
 ## Pricing Factor Rules
 
+### Disambiguation Protocol
+
+Before querying prices, classify every sizing parameter against this table. Missing never-assume params → stop and ask. Missing safe-default params → use default and disclose.
+
+| Category         | Parameters                                                                          | Rule                                       |
+| ---------------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| **Never-assume** | tier, SKU, vCores, instance count, storage size, node count, DTU, throughput (RU/s) | MUST ask user — do not guess               |
+| **Safe-default** | region, zone redundancy, storage redundancy, reserved term, hybrid benefit          | Use default below, disclose in assumptions |
+
+**Safe defaults when unspecified:** region = eastus, zone redundancy = disabled, storage redundancy = LRS, commitment = PAYG, AHUB = none.
+
+#### Modifier Query Methods
+
+| Modifier    | How to Query                                                           | Monthly Calculation                            |
+| ----------- | ---------------------------------------------------------------------- | ---------------------------------------------- |
+| AHUB (VMs)  | Query Linux meter for same SKU — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate                    |
+| AHUB (SQL)  | Query `SQL License` product (Global region) — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | `(Base − license) × vCores × 730`             |
+| Reserved 1Y | Add `PriceType: Reservation`                                           | `unitPrice ÷ 12`                               |
+| Reserved 3Y | Add `PriceType: Reservation`                                           | `unitPrice ÷ 36`                               |
+| Spot        | Filter `skuName` contains "Spot"                                       | Use returned rate directly                     |
+| Dev/Test    | Add `PriceType: DevTestConsumption`                                    | Use returned rate directly                     |
+
+#### Assumptions Disclosure
+
+Every estimate MUST begin with an assumptions block before presenting cost numbers:
+
+**Assumptions**
+
+- Region: {region used}
+- Commitment: {PAYG | 1-Year RI | 3-Year RI}
+- Hybrid Benefit: {Applied | Not applied} per service
+- Zone Redundancy: {Enabled | Disabled}
+- {any other safe-defaults used}
+
+Omit lines where the user explicitly specified the value. Only disclose values that were defaulted.
+
 ### Azure Hybrid Benefit (AHUB)
 
 AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly — **NEVER manually compute a percentage discount**.

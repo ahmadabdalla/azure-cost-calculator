@@ -37,17 +37,40 @@ String values with spaces require quoting when passed to scripts. Numeric values
 
 ## Workflow
 
-1. **Identify** the resource type(s) the user wants to estimate
-2. **Locate** the service reference:
-   a. **File search** — search for files matching `references/services/**/*<keyword>*.md` (e.g., "Cosmos DB" → `services/**/cosmos*.md`)
-   b. **Category browse** — if search returns 0 or ambiguous results, read the category index in [references/shared.md](references/shared.md) and list the matching category directory
+### Phase 1 — Analysis (no API queries)
+
+1. **Parse** — extract resource types, quantities, and sizing from user's architecture
+2. **Locate** each service reference:
+   a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
+   b. **Category browse** — if search returns 0 or ambiguous results, read the category index in [references/shared.md](references/shared.md)
    c. **Broad search** — list or search `references/services/**/*.md` to see all available files
    d. **Discovery** — if no file exists, use the explore script to find the service in the API
-3. **Read** only the matching service file(s) for query parameters, cost formula, and the exact `serviceName`
-   - Check `billingNeeds` and `billingConsiderations` in the YAML front matter and act on them (see Service File Metadata below)
-4. **Run** the pricing script with the parameters from the service reference (use the appropriate runtime)
-5. **Present** the estimate with breakdown: unit price, multiplier, monthly cost, assumptions
-   - **Verify grand total**: before presenting, re-sum all line-item monthly costs independently and confirm the grand total matches. If there is a discrepancy, use the re-summed value.
+3. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
+4. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
+   - **Specified** — user provided value (use verbatim)
+   - **Never-assume gap** — required parameter missing (must ask)
+   - **Safe-default gap** — optional parameter missing (use default, disclose)
+5. **Specification Review** — present a summary:
+
+   | Service | Specified | Missing (will ask) | Defaults (will assume) |
+   | ------- | --------- | ------------------ | ---------------------- |
+   - If **any never-assume parameter** is missing → ask user before proceeding
+   - If only safe-default gaps remain → disclose defaults and proceed to Phase 2
+   - **Single-service shortcut**: skip this table for single-service estimates where all parameters are specified
+
+### Phase 2 — Estimation
+
+6. **Query** — run the pricing script for each service using parameters from service files + user input + resolved defaults
+   - Check `billingConsiderations` in YAML front matter and act on applicable modifiers
+7. **Calculate** — apply cost formulas from service files; multiply by quantities
+8. **Present** — output the estimate with:
+   - **Assumptions block** (see Disambiguation Protocol in shared.md) — listed before cost numbers
+   - **Line items**: service, unit price, quantity/hours, monthly cost
+   - **Grand total**: re-sum all line-item monthly costs independently; if discrepancy, use re-summed value
+
+### Post-Estimate Iteration
+
+After presenting the estimate, the user may request changes (switch region, add RI, resize instances, add/remove services). Re-run only the affected queries — do not restart the full workflow.
 
 ## Reference Index (load on demand)
 
