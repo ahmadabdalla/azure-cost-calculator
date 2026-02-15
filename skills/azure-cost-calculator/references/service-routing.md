@@ -124,7 +124,7 @@ Only entries with explicit `f:` field deviate from this convention.
 ```yaml
 - s: "Application Gateway"
   f: app-gateway.md
-  a: [App Gateway, AGW, WAF v2, Web Application Firewall]
+  a: [App Gateway, AGW]
 - s: "Azure Firewall"
   f: azure-firewall.md
   a: [Azure Firewall Premium/Standard/Basic]
@@ -240,6 +240,9 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [Entra Suite, Microsoft Entra (exact API name), Entra ID metered]
 - s: "Microsoft Entra Verified ID"
   a: [Verified ID, Verifiable Credentials, Decentralized Identity, DID]
+- s: "Application Gateway"
+  f: waf.md
+  a: [WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, Front Door WAF]
 ```
 
 ## Monitoring (`services/monitoring/`)
