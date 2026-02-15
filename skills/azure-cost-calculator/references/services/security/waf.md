@@ -10,7 +10,7 @@ billingNeeds: [Azure Front Door Service]
 **Primary cost**: App Gateway WAF — fixed hourly + capacity units; Front Door WAF — per-policy monthly + per-request
 
 > **Trap (two services)**: WAF has no dedicated serviceName — meters split across `Application Gateway` (gateway WAF) and `Azure Front Door Service` (CDN WAF). Query each separately.
-> **Trap (Front Door productName)**: Classic WAF uses productName `Azure Front Door Service`; Standard/Premium uses `Azure Front Door`. Filter by productName to avoid mixing tiers.
+> **Trap (Front Door productName)**: All listed WAF meters use productName `Azure Front Door Service` (Classic). Front Door Premium includes WAF in its base fee — only `Premium Captcha Sessions` exists separately under productName `Azure Front Door`.
 
 ## Query Pattern
 
@@ -55,6 +55,7 @@ Quantity: 10
 | --- | --- | --- |
 | `Standard Fixed Cost` | `1/Hour` | Per-gateway hourly |
 | `Standard Capacity Units` | `1/Hour` | Per-CU hourly |
+| `Standard Captcha Sessions` | `1K` | CAPTCHA challenges |
 
 ### Front Door WAF (productName: `Azure Front Door Service`)
 
@@ -87,3 +88,5 @@ Monthly = policy_retailPrice × policyCount
 - **Custom vs managed rules (Front Door)**: Custom rules and managed rulesets billed separately. Bot protection is an additional add-on.
 - **Sub-cent per-request**: Front Door WAF request meters are sub-cent per million — use `Quantity` to calculate meaningful costs.
 - **App Gateway for Containers WAF**: Uses productName `Application Gateway for Containers WAF` — separate product with different meters.
+- **Front Door Premium WAF**: Included in base fee. Only `Premium Captcha Sessions` (productName `Azure Front Door`) is billed separately.
+- **Azure CDN WAF**: Separate service under `Content Delivery Network` serviceName with its own WAF meters — not covered here.
