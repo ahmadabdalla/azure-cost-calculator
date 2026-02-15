@@ -95,4 +95,4 @@ Total:   Monthly = Voice + Email + Chat + SMS (sum active components)
 | `Basic Sent Message`          | `Messaging` | Per msg    | $0.0008              |
 | `Standard Outbound`           | `Voice`     | Per minute | $0.004               |
 | `Standard Inbound`            | `Voice`     | Per minute | $0.004               |
-| `A2AGroupCalling User Minute` | `Voice`     | Per minute | $0.004               |
+| `A2AGroupCalling User Minute` | `Voice`     | Per unit   | $0.004               |
