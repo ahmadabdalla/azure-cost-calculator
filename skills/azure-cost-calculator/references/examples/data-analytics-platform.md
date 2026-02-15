@@ -43,7 +43,7 @@ A mid-size UK wealth management firm processing daily LSE/global market feeds, c
 
 - 1× Azure SQL Database, Business Critical tier, 8 vCores, 1-Year Reserved, SQL AHUB enabled — regulatory reporting warehouse
 - 500 GB included storage
-- Long-term retention enabled, 52 weekly backups
+- Long-term retention enabled, 52 weekly backups, 500 GB LTR retained storage
 
 ## Caching Layer
 
@@ -58,7 +58,7 @@ A mid-size UK wealth management firm processing daily LSE/global market feeds, c
 ## Disaster Recovery
 
 - 1× Azure Backup, backing up Azure SQL Database (500 GB protected instance, LRS redundancy)
-- 1× Azure Backup, backing up 50,000 GB Azure Data Lake Storage Gen2 (LRS redundancy)
+- 1× Azure Backup, backing up 50,000 GB Azure Data Lake Storage Gen2 (1 protected instance, LRS redundancy, 50,000 GB backup storage)
 - 30-day retention policy for daily backups
 
 ## Network Security
