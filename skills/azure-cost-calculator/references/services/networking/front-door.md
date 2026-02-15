@@ -53,7 +53,7 @@ Region: Zone 1
 | `Premium Data Transfer In`   | `Premium`  | `1 GB`        | Ingress                  |
 | `Premium Requests`           | `Premium`  | `10K`         | Per 10K requests         |
 
-> WAF meters (Policy, Rule, Default Ruleset, Bot Protection) use productName `Azure Front Door Service` — query separately if WAF is enabled.
+> WAF meters (Policy, Rule, Default Ruleset, Bot Protection) use productName `Azure Front Door Service` — see `security/waf.md` for dedicated WAF pricing details.
 
 > **Trap (Tiered egress)**: Data transfer out queries return **multiple rows** with `tierMinimumUnits` (0 GB, 10 TB, 50 TB, etc.). The script's `totalMonthlyCost` sums `retailPrice × Quantity` per row without applying tier boundaries — ignore it. Manually calculate: sum each tier's volume × its `retailPrice`.
 
