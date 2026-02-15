@@ -50,8 +50,8 @@ MeterName: ROW Consumption Unit - Outbound
 | Parameter     | How to determine             | Example values                                     |
 | ------------- | ---------------------------- | -------------------------------------------------- |
 | `serviceName` | Component determines service | `Voice`, `Email`, `SMS`, `Messaging`               |
-| `productName` | Feature within component     | `Direct Routing`, `Email`, `Chat`, `Toll Free SMS` |
-| `skuName`     | Tier or country variant      | `Standard`, `Basic`, `A2AGroupCalling`, `US`       |
+| `productName` | Feature within component     | `Direct Routing`, `Email`, `Chat`, `Toll Free SMS - Outbound` |
+| `skuName`     | Tier or country variant      | `Standard`, `Basic`, `A2AGroupCalling`, `ROW`      |
 | `meterName`   | Billing dimension            | `Standard Outbound`, `Basic Sent Email`            |
 
 ## Meter Names
@@ -81,10 +81,10 @@ Total:   Monthly = Voice + Email + Chat + SMS (sum active components)
 - **Multi-serviceName architecture**: Each ACS capability uses a separate API serviceName — always include `ServiceName:` per query
 - **VoIP leg only**: Voice Direct Routing rates cover the VoIP/SBC leg; PSTN legs have separate, higher country-dependent rates
 - **Country-dependent pricing**: Voice, SMS, and Phone Numbers rates vary by destination country; query defaults to USD
-- **Phone Numbers**: serviceName `Phone Numbers` — per-number monthly lease (US geographic $1.00/mo, US toll-free $2.00/mo)
-- **Network Traversal**: serviceName `Network Traversal` — TURN relay, $0.40–$0.80/GB depending on region
-- **Consumption unit pattern**: SMS and Voice local/toll-free calls use abstract consumption unit pricing ($1.00/unit) — Direct Routing provides actual per-minute rates
-- **Additional billable features**: Call Recording (per-minute), Advanced Messaging/WhatsApp ($0.005/msg), and Closed Captions ($0.021/min) exist under Voice serviceName
+- **Phone Numbers**: serviceName `Phone Numbers` — per-number monthly lease; rates vary by country and number type (geographic vs toll-free)
+- **Network Traversal**: serviceName `Network Traversal` — TURN relay, per-GB pricing varies by region
+- **Consumption unit pattern**: SMS and Voice local/toll-free calls use abstract consumption unit pricing — Direct Routing provides actual per-minute rates
+- **Additional billable features**: Call Recording (per-minute), Advanced Messaging/WhatsApp (per-message), and Closed Captions (per-minute) exist under Voice serviceName
 
 ## Known Rates
 
