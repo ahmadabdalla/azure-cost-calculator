@@ -67,6 +67,7 @@ PriceType: Reservation
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
 > **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost. SQL-specific: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI + AHUB)**: RI `unitPrice` is already compute-only (license excluded). Do NOT subtract the SQL License rate from RI prices — the shared.md AHUB subtraction applies to PAYG rates only.
 
 ## Product Names
 

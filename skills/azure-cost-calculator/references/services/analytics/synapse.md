@@ -88,7 +88,7 @@ Total Monthly  = Dedicated SQL + Serverless SQL + Spark Pool + Pipelines + Stora
 - **Dedicated SQL Pool**: 16 SKUs from DW100c to DW30000c; pausing stops compute billing but storage continues
 - **Serverless SQL Pool**: Pay-per-query at per-TB scanned; no provisioning needed
 - **Spark Pools**: Auto-pause available; billed per vCore-hour while active; Memory Optimized and GPU variants
-- **Pipelines**: Mirror Data Factory v2 pricing structure with Azure Hosted IR, Managed VNET IR, and Self-Hosted IR options. SSIS VMs filter by `ProductName` containing `SSIS`. Storage supports LRS, ZRS, RA-GRS, and RA-GZRS
+- **Pipelines**: Mirror Data Factory v2 pricing structure with Azure Hosted IR, Managed VNET IR, and Self-Hosted IR options. SSIS VMs filter by `ProductName` containing `SSIS`
 
 ## Reserved Instance Pricing
 
@@ -97,4 +97,4 @@ ProductName: Azure Synapse Analytics Dedicated SQL Pool
 SkuName: DW100c
 PriceType: Reservation
 
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI is available for Dedicated SQL Pool only.
+> **Trap (RI DW100c only)**: The API only returns RI pricing for `DW100c` (Dedicated SQL Pool only). For larger SKUs, multiply: `unitPrice × (targetDWU ÷ 100)`, then `÷ 12` (1Y) or `÷ 36` (3Y). The script's `MonthlyCost` is wrong for RI items.
