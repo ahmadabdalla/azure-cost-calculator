@@ -41,6 +41,7 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - **CU from data volume**: 1 CU ≈ 2.22 Mbps sustained ≈ 0.98 GB/hr. For monthly data: `CUs = dataGB / (0.98 × 730)`. Example: 5 TB (5,000 GB) → ~7 CU average. Add headroom for burst — use 1.5–2× for production.
 - For light workloads, estimate ~5-10 CU average; for moderate, ~10-30 CU
 - WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher
+- **WAF-specific pricing details**: See `security/waf.md` for dedicated WAF pricing including Front Door WAF policies, managed rulesets, and bot protection
 
 ## Product Names
 
