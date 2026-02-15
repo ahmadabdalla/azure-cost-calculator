@@ -243,6 +243,7 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Application Gateway"
   f: waf.md
   a: [WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, Front Door WAF]
+# WAF has no dedicated API serviceName; meters split across Application Gateway and Azure Front Door Service
 ```
 
 ## Monitoring (`services/monitoring/`)
