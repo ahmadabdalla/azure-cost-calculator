@@ -38,11 +38,12 @@ SkuName: Basic
 MeterName: Basic Sent Message
 Quantity: 100000
 
-### SMS — Toll Free outbound
+### SMS — Toll Free outbound (consumption units)
 
 ServiceName: SMS  <!-- cross-service -->
 ProductName: Toll Free SMS - Outbound
-SkuName: Standard
+SkuName: ROW
+MeterName: ROW Consumption Unit - Outbound
 
 ## Key Fields
 
@@ -59,7 +60,7 @@ SkuName: Standard
 | ---------------------------------- | ----------- | ------------- | --------------------------- |
 | `Standard Outbound`                | `Voice`     | `1 Minute`    | Direct Routing per-minute   |
 | `Standard Inbound`                 | `Voice`     | `1 Minute`    | Direct Routing per-minute   |
-| `A2AGroupCalling`                  | `Voice`     | `1`           | Video/group call per-minute |
+| `A2AGroupCalling User Minute`      | `Voice`     | `1`           | Video/group call per-participant |
 | `Basic Sent Email`                 | `Email`     | `1`           | Per email sent              |
 | `Basic Data Transferred`           | `Email`     | `1 MB`        | Email attachment data       |
 | `Basic Sent Message`               | `Messaging` | `1`           | Chat per message            |
@@ -78,17 +79,20 @@ Total:   Monthly = Voice + Email + Chat + SMS (sum active components)
 ## Notes
 
 - **Multi-serviceName architecture**: Each ACS capability uses a separate API serviceName — always include `ServiceName:` per query
-- **Country-dependent pricing**: Voice and SMS rates vary by destination country; query defaults to USD
-- **Phone Numbers**: serviceName `Phone Numbers` — per-number monthly lease across 19+ country SKUs
-- **Network Traversal**: serviceName `Network Traversal` — TURN relay, per-GB pricing
-- **Consumption unit pattern**: SMS and Voice local/toll-free calls use abstract consumption unit pricing — Direct Routing provides actual per-minute rates
+- **VoIP leg only**: Voice Direct Routing rates cover the VoIP/SBC leg; PSTN legs have separate, higher country-dependent rates
+- **Country-dependent pricing**: Voice, SMS, and Phone Numbers rates vary by destination country; query defaults to USD
+- **Phone Numbers**: serviceName `Phone Numbers` — per-number monthly lease (US geographic $1.00/mo, US toll-free $2.00/mo)
+- **Network Traversal**: serviceName `Network Traversal` — TURN relay, $0.40–$0.80/GB depending on region
+- **Consumption unit pattern**: SMS and Voice local/toll-free calls use abstract consumption unit pricing ($1.00/unit) — Direct Routing provides actual per-minute rates
+- **Additional billable features**: Call Recording (per-minute), Advanced Messaging/WhatsApp ($0.005/msg), and Closed Captions ($0.021/min) exist under Voice serviceName
 
 ## Known Rates
 
-| Meter                    | serviceName | Unit       | Published Rate (USD) |
-| ------------------------ | ----------- | ---------- | -------------------- |
-| `Basic Sent Email`       | `Email`     | Per email  | $0.00025             |
-| `Basic Data Transferred` | `Email`     | Per MB     | $0.00012             |
-| `Basic Sent Message`     | `Messaging` | Per msg    | $0.0008              |
-| `Standard Outbound`      | `Voice`     | Per minute | $0.004               |
-| `Standard Inbound`       | `Voice`     | Per minute | $0.004               |
+| Meter                         | serviceName | Unit       | Published Rate (USD) |
+| ----------------------------- | ----------- | ---------- | -------------------- |
+| `Basic Sent Email`            | `Email`     | Per email  | $0.00025             |
+| `Basic Data Transferred`      | `Email`     | Per MB     | $0.00012             |
+| `Basic Sent Message`          | `Messaging` | Per msg    | $0.0008              |
+| `Standard Outbound`           | `Voice`     | Per minute | $0.004               |
+| `Standard Inbound`            | `Voice`     | Per minute | $0.004               |
+| `A2AGroupCalling User Minute` | `Voice`     | Per minute | $0.004               |
