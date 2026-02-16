@@ -23,7 +23,7 @@ aliases: [Workflows, Logic App Standard/Consumption]
 ServiceName: Logic Apps
 ProductName: Logic Apps
 SkuName: Consumption
-MeterName: Consumption Standard Connector Actions
+MeterName: Consumption {ConnectorType} Connector Actions
 Quantity: 10000
 
 ### Standard — vCPU + memory (use InstanceCount for plan count)
