@@ -53,9 +53,9 @@ Quantity: 1000000
 
 ## Cost Formula
 
-```
+```text
 Consumption:
-  Executions = max(0, totalExecutions - 1,000,000) × pricePerExecution
+  Executions = (max(0, totalExecutions - 1,000,000) / 10) × execUnitPrice
   Duration   = max(0, gbSeconds - 400,000) × pricePerGBSecond
   Monthly    = Executions + Duration
 

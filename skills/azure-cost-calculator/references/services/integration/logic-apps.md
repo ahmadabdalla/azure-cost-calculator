@@ -9,11 +9,11 @@ aliases: [Workflows, Logic App Standard/Consumption]
 **Primary cost**: Per-action (Consumption) or vCPU + memory hours (Standard)
 
 > **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One run may contain 5–50+ actions. If user says "25,000 executions/month," clarify: multiply workflow runs × estimated actions/run.
-
+>
 > **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — always filter by `ProductName` and `SkuName`.
-
+>
 > **Trap (sub-cent actions)**: Consumption actions are sub-cent — use `Quantity` with expected monthly volume.
-
+>
 > **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — a free allocation then a per-action rate. Sum both tiers.
 
 ## Query Pattern
@@ -62,10 +62,10 @@ MeterName: {Tier} Unit
 
 ## Cost Formula
 
-```
+```text
 Consumption: Monthly = (stdActions × stdPrice) + (entActions × entPrice) + max(0, builtInActions − 4000) × builtInPrice + retentionGB × retentionPrice
-Standard:    Monthly = vCPU_retailPrice × 730 × vCPUs + memory_retailPrice × 730 × memoryGiB
-Hybrid:      Monthly = vCPU_retailPrice × 730 × vCPUs
+Standard:    Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730)
+Hybrid:      Monthly = vCPU_price × vCPUs × 730
 Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 ```
 
