@@ -52,7 +52,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 ## Notes
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
-- **VMSS**: Scale-set instances use the same `serviceName` and meters as standalone VMs. There is no orchestration fee — cost is `retailPrice × 730 × instanceCount`. Flexible and Uniform orchestration modes have no pricing difference.
+- **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no *additional* VMSS/orchestration meter — you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
 
 ## Azure Hybrid Benefit (AHUB)
 
