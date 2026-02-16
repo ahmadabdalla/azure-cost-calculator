@@ -11,11 +11,12 @@ billingConsiderations: [Reserved Instances]
 
 ## Query Pattern
 
-### Linux
+### Linux (use InstanceCount for multiple instances)
 
 ServiceName: Azure App Service
 SkuName: P1 v3
 ProductName: Azure App Service Premium v3 Plan - Linux
+InstanceCount: 2
 
 ### Windows
 
@@ -42,6 +43,8 @@ Monthly = retailPrice × 730 hours × instanceCount
 - Multiple apps can share one plan; cost is per-plan, not per-app
 - Windows plans omit the OS suffix in `productName` (e.g., `Azure App Service Premium v3 Plan`); Linux plans append `- Linux`
 - Free (F1) and Shared (D1) tiers exist but are not recommended for production and may not appear in all regions
+- **Functions on Dedicated plans** (B1/S1/P1v3) are billed entirely through App Service — no meters appear under `Functions`; see functions.md
+- **Logic Apps Standard** creates WS-type App Service Plan resources in the portal, but billing flows through `Logic Apps` meters — not App Service; see logic-apps.md
 
 ## Product Names
 

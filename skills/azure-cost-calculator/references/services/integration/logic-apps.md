@@ -8,43 +8,35 @@ aliases: [Workflows, Logic App Standard/Consumption]
 
 **Primary cost**: Per-action (Consumption) or vCPU + memory hours (Standard)
 
-> **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One workflow execution may contain 5–50+ actions (each trigger, HTTP call, condition, loop iteration, etc. is one action). If user says "25,000 executions/month," clarify whether they mean 25,000 workflow runs — if so, multiply by estimated actions per run (e.g., 10 actions/run = 250,000 billable actions).
-
-> **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — `totalMonthlyCost` is wildly inflated. Always filter by `ProductName` and `SkuName`.
-
-> **Trap (sub-cent actions)**: Consumption connector actions are priced at sub-cent levels per action — the script shows minimal cost for low volumes. Use `Quantity` with expected monthly volume.
-
-> **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — a free monthly allocation then a low per-action rate. Sum both tiers.
+> **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One run may contain 5–50+ actions. If user says "25,000 executions/month," clarify: multiply workflow runs × estimated actions/run.
+>
+> **Trap (inflated totals)**: Unfiltered queries return ISE, Integration Account, and workflow meters combined — always filter by `ProductName` and `SkuName`.
+>
+> **Trap (sub-cent actions)**: Consumption actions are sub-cent — use `Quantity` with expected monthly volume.
+>
+> **Trap (Built-in tiered)**: `Consumption Built-in Actions` returns two rows — a free allocation then a per-action rate. Sum both tiers.
 
 ## Query Pattern
 
-All patterns below use `ServiceName: Logic Apps` and `ProductName: Logic Apps` unless noted otherwise.
+### Consumption — connector actions (use Quantity; substitute Standard/Enterprise connector type)
 
-### Consumption — standard connector actions (use Quantity for monthly volume)
-
+ServiceName: Logic Apps
+ProductName: Logic Apps
 SkuName: Consumption
-MeterName: Consumption Standard Connector Actions
+MeterName: Consumption {ConnectorType} Connector Actions
 Quantity: 10000
 
-### Consumption — enterprise connector actions
+### Standard — vCPU + memory (use InstanceCount for plan count)
 
-SkuName: Consumption
-MeterName: Consumption Enterprise Connector Actions
-Quantity: 5000
-
-### Standard — vCPU hours (per-vCPU, use InstanceCount for multiple vCPUs)
-
+ServiceName: Logic Apps
+ProductName: Logic Apps
 SkuName: Standard
-MeterName: Standard vCPU Duration
 InstanceCount: 2
-
-### Standard — memory (per GiB-hour)
-
-SkuName: Standard
-MeterName: Standard Memory Duration
 
 ### Hybrid — on-premises vCPU hours
 
+ServiceName: Logic Apps
+ProductName: Logic Apps
 SkuName: Hybrid
 MeterName: Hybrid vCPU Duration
 
@@ -70,18 +62,28 @@ MeterName: {Tier} Unit
 
 ## Cost Formula
 
-```
-Consumption: Monthly = (stdActions × $stdPrice) + (entActions × $entPrice) + max(0, builtInActions − 4000) × $builtInPrice + retentionGB × $retentionPrice
-Standard:    Monthly = vCPU_retailPrice × 730 × vCPUs + memory_retailPrice × 730 × memoryGiB
-Hybrid:      Monthly = vCPU_retailPrice × 730 × vCPUs
+```text
+Consumption: Monthly = (stdActions × stdPrice) + (entActions × entPrice) + max(0, builtInActions − 4000) × builtInPrice + retentionGB × retentionPrice
+Standard:    Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730)
+Hybrid:      Monthly = vCPU_price × vCPUs × 730
 Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 ```
 
 ## Notes
 
-- **Billing unit is actions, not workflow executions** — each step (trigger, HTTP, condition, loop iteration, etc.) counts as one action
-- Consumption: per-action pricing, first 4,000 built-in actions/month free, auto-scales to zero
-- Standard: runs on App Service Plan (WS1–WS3) or as container; vCPU+memory billed per-second
-- Integration Account is a separate add-on for B2B/EDI scenarios — not required for basic workflows
-- ISE (Integration Service Environment) is deprecated — use Standard tier with VNet integration instead
-- Standard tier supports VNet integration, private endpoints, and stateful/stateless workflows
+- **Billing unit is actions, not workflow executions** — each step counts as one action
+- Consumption: per-action, first 4,000 built-in actions/month free, auto-scales to zero
+- Standard: runs on App Service Plan (WS1–WS3) or container; billed per-second
+- Integration Account is a separate B2B/EDI add-on; ISE is deprecated — use Standard with VNet instead
+
+## Standard Plan Sizes (WS)
+
+The API returns generic `Standard vCPU Duration` and `Standard Memory Duration` — NO WS1/WS2/WS3-specific meter. Multiply by plan specs below.
+
+| Plan | vCPUs | Memory (GiB) | Monthly Formula                                     |
+| ---- | ----- | ------------ | --------------------------------------------------- |
+| WS1  | 1     | 3.5          | (vCPU_price × 1 × 730) + (memory_price × 3.5 × 730) |
+| WS2  | 2     | 7            | (vCPU_price × 2 × 730) + (memory_price × 7 × 730)   |
+| WS3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
+
+> **Agent instruction**: When the user says "Logic Apps Standard WS2", query `Logic Apps` SkuName `Standard` for generic per-vCPU and per-GiB hourly rates, then multiply by WS2 specs (2 vCPU, 7 GiB).
