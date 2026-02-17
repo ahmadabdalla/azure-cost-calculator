@@ -33,11 +33,11 @@ Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
 
 ## Meter Names
 
-| Meter             | unitOfMeasure | Tier         | Notes                         |
-| ----------------- | ------------- | ------------ | ----------------------------- |
-| `Private Zone`    | `1/Month`     | First 25     | Per zone per month            |
-| `Private Zone`    | `1/Month`     | 26+          | Lower rate for additional zones |
-| `Private Queries` | `1M`          | —            | Per million DNS queries       |
+| Meter             | unitOfMeasure | Tier     | Notes                           |
+| ----------------- | ------------- | -------- | ------------------------------- |
+| `Private Zone`    | `1/Month`     | First 25 | Per zone per month              |
+| `Private Zone`    | `1/Month`     | 26+      | Lower rate for additional zones |
+| `Private Queries` | `1M`          | —        | Per million DNS queries         |
 
 > **Note**: Zone pricing is **tiered** — first 25 zones at tier-1 `retailPrice`, additional zones at tier-2 `retailPrice` (based on `tierMinimumUnits`).
 
@@ -64,6 +64,7 @@ Total:   Zones + Queries (USD)
 ## Notes
 
 - USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
-- Private DNS zones are commonly paired with Private Endpoints (one zone per service type)
-- Typical private endpoint zones: `privatelink.database.windows.net`, `privatelink.blob.core.windows.net`, etc.
+- Private DNS zones are commonly paired with Private Endpoints — one zone per distinct service type, not per endpoint. See `networking/private-link.md` for PE billing
+- AMPLS (Azure Monitor Private Link Scope) requires 5 Private DNS zones (monitor, oms, ods, agentsvc, blob) — AMPLS itself is a free grouping resource
+- For the full list of `privatelink.*` zone names by service, see [Private Endpoint DNS](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns)
 - Query volume is usually very low — the zone hosting fee dominates for most deployments
