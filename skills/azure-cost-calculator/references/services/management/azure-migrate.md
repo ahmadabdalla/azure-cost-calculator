@@ -47,7 +47,7 @@ Migration project costs come from dependent services:
 ## Notes
 
 - Azure Migrate hub (discovery, assessment, business case) is **completely free**
-- Server replication uses Azure Site Recovery — first **180 days free** per instance, then standard ASR rates
+- Server replication uses Azure Site Recovery — first **180 days free** per instance (migration-specific benefit via Azure Migrate; standalone ASR for disaster recovery offers only 31 days free), then standard ASR rates
 - Database Migration Service Standard tier (offline) is **always free**; Premium tier (online) has vCore billing after 180 days
 - Storage consumed during replication and network egress are billed under their respective services regardless of free periods
 - Third-party ISV tools (Carbonite, Cloudamize, etc.) have separate vendor licensing outside Azure billing
