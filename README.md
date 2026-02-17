@@ -86,7 +86,7 @@ If you query a service and the skill falls back to discovery mode, that's a sign
 
 ## Prerequisites
 
-- **Bash** with `curl` and `jq` (macOS/Linux, preferred), **or** PowerShell 5.1+ ([install on macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell))
+- **Bash** with `curl` and `jq` (macOS/Linux, preferred), **or** **PowerShell 7+** (`pwsh`) — [install on Windows/macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell). Windows ships with PowerShell 5.1 (`powershell.exe`) which is **not** the same as `pwsh`; you must install PowerShell 7 separately.
 - Internet access to `https://prices.azure.com`
 - No Azure subscription or authentication required
 
