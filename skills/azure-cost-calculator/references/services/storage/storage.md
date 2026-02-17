@@ -79,7 +79,7 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps
 
 - Read operations meter is generic (no redundancy suffix); write operations include redundancy
 - RA-GZRS write operations use skuName `Hot GZRS`, not `Hot RA-GZRS`
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing. PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) apply only with RA-GRS/RA-GZRS.
 
 ## Product Names
 
