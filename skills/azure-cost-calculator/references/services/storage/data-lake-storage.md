@@ -94,7 +94,7 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
 
 ## Notes
 
-- Archive tier supports only LRS, GRS, RA-GRS (no ZRS/GZRS)
-- Early Delete charges: Cool 30 days, Cold 90 days, Archive 180 days
+- Archive tier: LRS, GRS, RA-GRS only (no ZRS/GZRS); Early Delete charges: Cool 30d, Cold 90d, Archive 180d
 - Iterative operations (directory listing) use per-100 unit for writes, per-10K for reads; Hot tier only
 - Flat Namespace product has identical storage pricing but no Index meter and lower transaction costs
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

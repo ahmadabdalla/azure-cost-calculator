@@ -77,8 +77,8 @@ P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P
 ## Notes
 
 - Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
-- Premium SSD P1–P20 include free burst. On-demand burst for P20+ is a separate meter.
-- Snapshots billed separately. Ultra/Premium SSD v2 have per-vCPU reservation charge.
+- Premium SSD P1–P20 include free burst (on-demand burst P20+ separate meter); snapshots billed separately
+- Supports private endpoints for disk import/export — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 

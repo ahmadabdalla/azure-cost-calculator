@@ -45,6 +45,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 - Free (F1) and Shared (D1) tiers exist but are not recommended for production and may not appear in all regions
 - **Functions on Dedicated plans** (B1/S1/P1v3) are billed entirely through App Service — no meters appear under `Functions`; see functions.md
 - **Logic Apps Standard** creates WS-type App Service Plan resources in the portal, but billing flows through `Logic Apps` meters — not App Service; see logic-apps.md
+- Supports private endpoints (Basic tier or higher required) — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Product Names
 

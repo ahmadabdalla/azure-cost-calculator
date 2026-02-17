@@ -50,3 +50,4 @@ Monthly = AKS_uptime_SLA_fee × 730 + (VM_hourly × 730 × nodeCount)
 - Free tier: no uptime SLA fee, limited cluster management
 - Standard tier: hourly fee for uptime SLA — query live price
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested — it's an optional add-on for extended Kubernetes version support
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

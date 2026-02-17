@@ -58,4 +58,4 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 
 - Premium tier is required for geo-replication, content trust, and private endpoints
 - Build tasks (ACR Tasks) have separate compute-based pricing not covered here
-- Networking: Premium supports private link; Basic/Standard are public only
+- Supports private endpoints (Premium required) — see `networking/private-link.md` for PE and DNS zone pricing

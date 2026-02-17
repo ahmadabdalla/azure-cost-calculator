@@ -48,3 +48,4 @@ Monthly = (customTimeSeries / 10) × retailPrice
 - **Alerts**: Basic metric alerts (platform metrics) are free; multi-resource, multi-condition, or custom metric alerts have separate pricing
 - **Log Analytics and Application Insights** have separate pricing models - see `log-analytics.md` and `app-insights.md`
 - **Diagnostic settings**: Routing platform metrics to destinations (Log Analytics, Storage, Event Hubs) is free, but destination storage/ingestion has costs
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

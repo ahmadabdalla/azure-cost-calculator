@@ -60,3 +60,4 @@ Monthly = (operations/10000 × ops_price) + (advancedOps/10000 × advOps_price)
 - Standard vs Premium: Premium adds HSM-backed keys with separate per-key pricing.
 - Software-protected keys included in operations cost; HSM-protected keys are separate (Premium only).
 - Operations include vault reads, writes, and list operations.
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

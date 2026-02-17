@@ -82,6 +82,7 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - SSIS Integration Runtime is billed as VMs under this service — query with `ProductName 'SSIS ...'` product names
 - Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 
