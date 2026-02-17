@@ -162,7 +162,7 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Route Server"
   a: [BGP Routing]
 - s: "Azure Private Link"
-  a: [Private Endpoint]
+  a: [Private Endpoint, PE]
 - s: "Advanced Container Networking Services"
   f: advanced-cni.md
   a: [Advanced CNI, Container Networking, Cilium, Azure CNI Overlay]
