@@ -59,7 +59,7 @@ System Center target:  retailPrice (System Center SKU) × VM count
 
 ## Notes
 
-- First 31 days of protection for each new instance are free (not reflected in API)
+- First 31 days of protection for each new instance are free (not reflected in API). When ASR is used via Azure Migrate for server migration, a longer **180-day** free period applies — see the Azure Migrate reference
 - The ASR license fee is per-instance; VM size and disk count do not affect the rate
 - `Azure` SKU covers both Azure-to-Azure and on-premises-to-Azure scenarios
 - `System Center` SKU is for on-premises-to-on-premises replication via VMM
