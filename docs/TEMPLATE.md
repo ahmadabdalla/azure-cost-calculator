@@ -123,7 +123,15 @@ billingConsiderations:
      Include free tier/grant deductions where applicable.
 
   8. NOTES: Additional context — free tiers, SKU guidance, common
-     mistakes, links to pricing pages, etc.
+     mistakes, links to pricing pages, private endpoint support, etc.
+     PRIVATE ENDPOINT SUPPORT: Every service reference must document whether
+     the service supports private endpoints. Use this pattern in Notes:
+       - Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
+     If PE requires a specific tier, add it in parentheses before the dash:
+       - Supports private endpoints (Premium required) — see `networking/private-link.md` ...
+     If the service has multiple PE sub-resources, list them as never-assume:
+       - Supports private endpoints — see ... PE sub-resources (never-assume): `blob`, `file`, ...
+     If the service does NOT support PE, omit the line (no negative statement needed).
 
   9. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
@@ -254,6 +262,7 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 - {Tier limitations: features or meters that differ between tiers}
 - {Links to Azure pricing page if useful}
 - {Relationship to other services, e.g., "Node VMs are priced as Virtual Machines"}
+- {Private endpoint support — state whether the service supports PE and reference `networking/private-link.md` for PE and DNS zone pricing. Include tier requirements if PE is only available on certain tiers. If the service has multiple PE sub-resources, list them as never-assume parameters.}
 
 <!--
   OPTIONAL SECTIONS — add any of the below as needed for the service.

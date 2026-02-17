@@ -100,6 +100,7 @@ Before documenting traps, run these mandatory checks:
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
 6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
+7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability) to determine if the service supports private endpoints. If it does, add a note in the Notes section using the pattern: `- Supports private endpoints — see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is only available on certain tiers (e.g., Premium required). If the service has multiple PE sub-resources (e.g., Storage: blob, file, queue, table), list them as never-assume parameters.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
@@ -143,13 +144,15 @@ The file MUST follow these rules:
 - **Warning format**: `> **Warning**: ...` for API-unavailable or USD-only notices. Do not use emoji prefixes like ⚠.
 - **Note format**: `> **Note**: ...` for informational blockquotes that are not traps or warnings.
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
-- **Placement**: Include capacity planning notes and tier limitations in the Notes section.
+- **Placement**: Include capacity planning notes, tier limitations, and private endpoint support in the Notes section.
+- **Private endpoint support**: If the service supports PE, add a note: `- Supports private endpoints — see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is tier-restricted. List PE sub-resources as never-assume if multiple exist.
 
 **Pre-submission checklist** (all must be true):
 1. First declarative query pattern (most common/default config) appears within lines 1–45
 2. At least one query uses `InstanceCount` or `Quantity`
 3. Capacity planning note included if the service has scalable units
 4. Tier limitations documented if multiple tiers exist
+5. Private endpoint support documented in Notes (if the service supports PE)
 
 All paths above are given from the repo root.
 ````
