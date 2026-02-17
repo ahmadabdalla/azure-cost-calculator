@@ -29,18 +29,19 @@ ServiceName: Specialized Compute  <!-- cross-service -->
 ProductName: Specialized Compute Azure VMware Solution
 SkuName: AV36P VCF BYOL
 PriceType: Reservation
-ReservationTerm: 1 Year
 InstanceCount: 3
+
+> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
 ## Key Fields
 
-| Field | Value |
-|-------|-------|
-| serviceName | Specialized Compute |
-| productName | Specialized Compute Azure VMware Solution |
-| skuName | {SKU} VCF BYOL |
-| meterName | {SKU} VCF BYOL Node |
-| unitOfMeasure | 1 Hour |
+| Parameter | How to determine | Example values |
+|-----------|-----------------|----------------|
+| `serviceName` | Always `Specialized Compute` for AVS | `Specialized Compute` |
+| `productName` | AVS product within Specialized Compute | `Specialized Compute Azure VMware Solution` |
+| `skuName` | Node SKU with VCF BYOL suffix | `AV36P VCF BYOL`, `AV64 VCF BYOL` |
+| `meterName` | Node meter matching selected SKU | `AV36P VCF BYOL Node` |
+| `unitOfMeasure` | Hourly billing unit | `1 Hour` |
 
 ## Meter Names
 
@@ -55,7 +56,7 @@ InstanceCount: 3
 
 `monthly = retailPrice × 730 × nodeCount`
 
-Reservation: `effective_monthly = reservationPrice ÷ (12 × termYears)`
+Reservation: `effective_monthly = unitPrice ÷ 12` (1-year), `÷ 36` (3-year), `÷ 60` (5-year)
 
 Minimum 3 hosts per cluster.
 
