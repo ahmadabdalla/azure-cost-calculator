@@ -74,14 +74,15 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 ## Reference Index (load on demand)
 
-| Condition                                                | Read                                                                                    |
-| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Always (entry point)                                     | [references/shared.md](references/shared.md) — constants, category index, alias lookup  |
-| Query returned 0 results or wrong data                   | [references/pitfalls.md](references/pitfalls.md) — troubleshooting and traps            |
-| User asks about Reserved Instances or savings plans      | [references/reserved-instances.md](references/reserved-instances.md)                    |
-| Non-USD currency or non-eastus region                    | [references/regions-and-currencies.md](references/regions-and-currencies.md)            |
-| Category Index + file search both failed                 | [references/service-routing.md](references/service-routing.md) — full 140+ service map  |
-| First time running scripts or unfamiliar with parameters | [references/workflow.md](references/workflow.md) — script parameters and output formats |
+| Condition                                                                       | Read                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Always (entry point)                                                            | [references/shared.md](references/shared.md) — constants, category index, alias lookup                                                                                                                                           |
+| Query returned 0 results or wrong data                                          | [references/pitfalls.md](references/pitfalls.md) — troubleshooting and traps                                                                                                                                                     |
+| User asks about Reserved Instances or savings plans                             | [references/reserved-instances.md](references/reserved-instances.md)                                                                                                                                                             |
+| Non-USD currency or non-eastus region                                           | [references/regions-and-currencies.md](references/regions-and-currencies.md)                                                                                                                                                     |
+| User requests private endpoints or private access — confirm PE intent with user | [references/services/networking/private-link.md](references/services/networking/private-link.md) — PE pricing, [references/services/networking/private-dns.md](references/services/networking/private-dns.md) — DNS zone pricing |
+| Category Index + file search both failed                                        | [references/service-routing.md](references/service-routing.md) — full 140+ service map                                                                                                                                           |
+| First time running scripts or unfamiliar with parameters                        | [references/workflow.md](references/workflow.md) — script parameters and output formats                                                                                                                                          |
 
 ## Critical Rules
 
