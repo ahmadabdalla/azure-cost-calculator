@@ -60,3 +60,4 @@ Job cost = VM_retailPrice × hoursPerJob × nodeCount × jobsPerMonth
 - Batch supports auto-scale pools — estimate average node count rather than peak for monthly cost
 - Common HPC VM sizes: `Standard_HB120rs_v3` (HPC), `Standard_NC24ads_A100_v4` (GPU), `Standard_D16s_v5` (general)
 - Capacity planning: 1 Batch node = 1 VM; node count × hours determines compute cost
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

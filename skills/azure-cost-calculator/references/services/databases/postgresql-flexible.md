@@ -68,3 +68,4 @@ Query storage rate from the API — it varies by region and currency.
 - Use the explore script with SearchTerm PostgreSQL Flexible to discover available series
 - High Availability doubles the compute cost (deploys a standby replica)
 - Backup storage: first backup equal to DB size is free; excess is charged per-GB/month
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

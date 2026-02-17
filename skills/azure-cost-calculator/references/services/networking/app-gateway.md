@@ -42,6 +42,7 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - For light workloads, estimate ~5-10 CU average; for moderate, ~10-30 CU
 - WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher
 - **WAF-specific pricing details**: See `security/waf.md` for dedicated WAF pricing including Front Door WAF policies, managed rulesets, and bot protection
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Product Names
 

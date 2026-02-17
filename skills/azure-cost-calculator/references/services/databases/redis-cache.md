@@ -69,10 +69,9 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 ## Notes
 
-- Basic tier has no SLA or replication — dev/test only
-- Standard tier includes replication (2 nodes)
-- Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
-- Use `ProductName` to disambiguate tiers sharing the same meter names
+- Basic tier has no SLA or replication (dev/test only); use `ProductName` to disambiguate tiers
+- Standard tier includes replication (2 nodes); Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 

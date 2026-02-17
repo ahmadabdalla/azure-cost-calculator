@@ -74,3 +74,4 @@ Total       = App + Bandwidth + AFD Add-on
 - **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB — the API returns two bandwidth rows per region (free tier and overage tier).
 - **Azure Front Door add-on**: Optional. Provides enterprise-grade edge with WAF, custom rules, and bot protection. Query API for current hourly rate.
 - **Tier limitations**: Free tier — 2 custom domains, 0.5 GB storage, community support. Standard tier — 5 custom domains, 2 GB storage, SLA-backed.
+- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

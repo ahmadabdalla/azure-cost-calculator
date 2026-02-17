@@ -63,4 +63,5 @@ Premium:  Monthly = MU_hourly × 730 × muCount (operations included)
 - Standard tier: first 13M operations/month included with Base Unit
 - Premium tier: messaging units provide dedicated resources; 1 MU ≈ sustained throughput for most workloads
 - Premium supports private endpoints, geo-DR, and partitioned entities
+- Supports private endpoints (Premium required) — see `networking/private-link.md` for PE and DNS zone pricing
 - Service Bus is under `serviceFamily eq 'Integration'` in the API
