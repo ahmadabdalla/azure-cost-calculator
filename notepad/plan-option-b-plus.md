@@ -103,14 +103,17 @@ Apply the schema to 6 candidate files covering all archetypes. These files will 
 
 ### Candidate Services
 
-| # | Service | File | Archetype | Why chosen |
-|---|---------|------|-----------|------------|
-| 1 | Virtual Machines | `compute/virtual-machines.md` | Standard hourly | Highest-traffic, RI/AHUB/Spot complexity |
-| 2 | Azure SQL Database | `databases/sql-database.md` | Hourly + tiered | Multi-tier, RI, geo-replication |
-| 3 | Storage (Blob) | `storage/storage.md` | Per-GB + tiered | Per-GB billing, PE support, complex tiers |
-| 4 | Azure Functions | `compute/functions.md` | Composite + free grant | Multi-plan, free tier, cross-billing (App Service) |
-| 5 | Management Groups | `management/management-groups.md` | No-meter / free | API-unavailable, simplest case |
-| 6 | Private Link | `networking/private-link.md` | Global / PE pricing | Global region, PE-specific billing |
+Focus: **bulky files near or at the 100-line cap** — these are the ones where schema expansion creates real pressure and real opportunity.
+
+| # | Service | File | Lines | Archetype | Why chosen |
+|---|---------|------|:-----:|-----------|------------|
+| 1 | Virtual Machines | `compute/virtual-machines.md` | 90 | Standard hourly | Highest-traffic, RI/AHUB/Spot complexity |
+| 2 | Azure SQL Database | `databases/sql-database.md` | 82 | Hourly + tiered | Multi-tier, RI, geo-replication |
+| 3 | Storage (Blob) | `storage/storage.md` | 90 | Per-GB + tiered | Per-GB billing, PE support, complex tiers |
+| 4 | Azure Functions | `compute/functions.md` | 93 | Composite + free grant | Multi-plan, free tier, cross-billing (App Service) |
+| 5 | Redis Cache | `databases/redis-cache.md` | 99 | Hourly + RI | At the cap (99 lines), RI, multiple tiers |
+| 6 | App Service | `compute/app-service.md` | 73 | Fixed hourly | RI, PE tier-restricted, plan SKU complexity |
+| 7 | Private Link | `networking/private-link.md` | 77 | Global / PE pricing | Global region, PE-specific billing |
 
 ### What changes per file
 
@@ -130,7 +133,7 @@ Validate that the schema expansion achieves ≥5% token reduction in a real esti
 
 ### Test Architecture — "Startup SaaS Platform"
 
-A deliberately diverse architecture that exercises all 6 candidate archetypes:
+A deliberately diverse architecture that exercises all 7 candidate archetypes, focusing on bulky services near the 100-line cap:
 
 ```
 Architecture: Multi-tier SaaS platform on Azure (East US)
@@ -139,28 +142,35 @@ Components:
 - 4× Standard_D4s_v5 VMs (Linux) for backend API tier
   - Reserved Instances (1-Year)
   - Each with P30 managed disk
+- 1× App Service Plan (Premium v3 P1v3) for web frontend
+  - 3 instances (auto-scale)
+  - Reserved Instance (1-Year)
 - Azure SQL Database — General Purpose, 8 vCores, 500 GB
   - Geo-replication to West US 2
   - Reserved Instance (3-Year)
+- Azure Cache for Redis — Premium P1 (6 GB)
+  - 2 replicas, clustering enabled
+  - Reserved Instance (1-Year)
 - 2× Storage Accounts (LRS)
   - Hot tier, 5 TB blob storage each
   - 10 million read + 1 million write operations/month
   - Private endpoints enabled
 - Azure Functions — Consumption plan
   - 5 million executions/month, 256 MB memory, 500ms avg duration
-- All resources in a Management Group hierarchy (3 levels)
-- 6 private endpoints total (4 VMs excluded — PaaS only:
-  2× Storage, 1× SQL, 1× Functions, 1× Key Vault, 1× ACR)
-  - 4 Private DNS zones
+- 8 private endpoints total (PaaS only:
+  2× Storage, 1× SQL, 1× Redis, 1× Functions,
+  1× App Service, 1× Key Vault, 1× ACR)
+  - 5 Private DNS zones
 ```
 
 This scenario forces the agent to:
-- Read Virtual Machines (hourly × 730, RI, managed disk dependency)
-- Read SQL Database (vCore pricing, geo-replication, RI)
-- Read Storage (per-GB tiered, operations, PE)
-- Read Functions (consumption with free grant deduction)
-- Read Management Groups (no-meter, skip API)
-- Read Private Link (global region, PE + DNS zone pricing)
+- Read Virtual Machines (hourly × 730, RI, managed disk dependency) — 90 lines
+- Read App Service (fixed hourly, RI, PE tier-restricted) — 73 lines
+- Read SQL Database (vCore pricing, geo-replication, RI) — 82 lines
+- Read Redis Cache (hourly, RI, tiers, clustering) — 99 lines ⚠️ at cap
+- Read Storage (per-GB tiered, operations, PE) — 90 lines
+- Read Functions (consumption with free grant deduction) — 93 lines
+- Read Private Link (global region, PE + DNS zone pricing) — 77 lines
 
 ### Test Protocol
 
@@ -189,7 +199,8 @@ This scenario forces the agent to:
 4. **Token counting method**
    - Use `tiktoken` (cl100k_base) to count tokens in each service reference file before/after
    - Measure full-file token count AND lines-1-to-45 token count (batch mode window)
-   - Record the delta per file and in aggregate across the 6 candidates
+   - Record the delta per file and in aggregate across the 7 candidates
+   - Total candidate lines today: 604 (90+82+90+93+99+73+77) — target ≤574 after changes
 
 ### A/B Test Prompt (to be placed in `prompts/`)
 
@@ -236,7 +247,7 @@ Based on A/B results:
 
 | Criterion | Threshold |
 |-----------|-----------|
-| Token reduction (6-file aggregate) | ≥5% |
+| Token reduction (7-file aggregate) | ≥5% |
 | Cost estimate accuracy | ±2% vs baseline per line item |
 | No regression in API call correctness | 0 failures |
 | Schema is additive (no breaking changes) | All existing files pass current validation on main |
