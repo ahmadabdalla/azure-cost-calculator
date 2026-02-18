@@ -99,7 +99,7 @@ privateEndpoint: false                                           # optional — 
 
 ## Phase 2 — Prototype on Candidate Services
 
-Apply the schema to 6 candidate files covering all archetypes. These files will be modified on this branch for A/B testing.
+Apply the schema to 7 candidate files covering all archetypes. Modified copies live in `tests/` (not `skills/`) — the schema is a test artifact until validated, not a shipped skill component.
 
 ### Candidate Services
 
@@ -118,10 +118,13 @@ Focus: **bulky files near or at the 100-line cap** — these are the ones where 
 ### What changes per file
 
 For each candidate:
-1. Add new YAML fields per schema above
-2. Remove the bold `**Primary cost**` line from body (moved to `primaryCost` YAML field)
-3. No other markdown body changes
-4. Record before/after token counts
+1. Copy the original file from `skills/azure-cost-calculator/references/services/` to `tests/schema-candidates/`
+2. Add new YAML fields per schema above
+3. Remove the bold `**Primary cost**` line from body (moved to `primaryCost` YAML field)
+4. No other markdown body changes
+5. Record before/after token counts
+
+> **Important:** The `skills/` folder is for end-users installing the skill. Schema prototypes, test copies, and validation artifacts live in `tests/`. Only after the schema is validated and approved do changes flow back into `skills/`.
 
 ---
 
@@ -193,7 +196,7 @@ This scenario forces the agent to:
    | Cost estimate accuracy | ±2% vs baseline | Compare line items |
    | API calls made | Same or fewer | Count script invocations |
    | Free grant correctly deducted | Yes | Check Functions line item |
-   | No-meter service skipped API | Yes | Check Management Groups |
+   | No-meter service skipped API | Yes | Verify via pricingRegion field |
    | Global region handled | Yes | Check Private Link query |
 
 4. **Token counting method**
@@ -224,11 +227,12 @@ Based on A/B results:
 
 > **Not started until Phases 1-4 are complete and we're comfortable with the schema.**
 
-1. Update `Validate-ServiceReference.ps1` to handle new YAML fields
-2. Update `docs/TEMPLATE.md` with new schema
-3. Update `CONTRIBUTING.md` with field definitions
-4. Migrate remaining ~65 files (incremental, by category)
-5. Update `SKILL.md` batch mode to exploit metadata for routing
+1. Apply validated schema changes from `tests/schema-candidates/` back into `skills/azure-cost-calculator/references/services/`
+2. Update `Validate-ServiceReference.ps1` to handle new YAML fields
+3. Update `docs/TEMPLATE.md` with new schema
+4. Update `CONTRIBUTING.md` with field definitions
+5. Migrate remaining ~65 files (incremental, by category)
+6. Update `SKILL.md` batch mode to exploit metadata for routing
 
 ---
 
