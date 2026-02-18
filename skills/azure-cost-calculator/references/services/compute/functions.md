@@ -3,11 +3,12 @@ serviceName: Functions
 category: compute
 aliases: [azure functions, serverless, function app]
 billingNeeds: [Storage, Azure App Service]
+primaryCost: "Per-execution + GB-seconds (Consumption/Flex) or App Service Plan rate (Dedicated)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Functions
-
-**Primary cost**: Per-execution + GB-seconds (Consumption/Flex), vCPU + memory hours (Premium), or App Service Plan rate (Dedicated)
 
 > **Warning**: **Sub-cent pricing** — see shared.md & Common Traps. The script's `MonthlyCost` shows `$0` because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
 
@@ -89,4 +90,4 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
 - **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
 - The script's `MonthlyCost` shows `$0` for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
-- Supports private endpoints (Flex Consumption, Premium, or Dedicated plan required) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require Flex Consumption, Premium, or Dedicated plan

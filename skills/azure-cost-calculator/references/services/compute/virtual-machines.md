@@ -4,11 +4,11 @@ category: compute
 aliases: [VMs, virtual machine, VM, VMSS, VM Scale Sets, scale set]
 billingNeeds: [Managed Disks]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances, Spot Pricing]
+primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
+privateEndpoint: true
 ---
 
 # Virtual Machines
-
-**Primary cost**: Compute hours (hourly rate × 730)
 
 > **Trap**: A query with only `ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
 
@@ -52,7 +52,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 ## Notes
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
-- **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no *additional* VMSS/orchestration meter — you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
+- **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter — you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
 
 ## Azure Hybrid Benefit (AHUB)
 

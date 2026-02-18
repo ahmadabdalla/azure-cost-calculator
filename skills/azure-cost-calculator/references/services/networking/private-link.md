@@ -2,11 +2,11 @@
 serviceName: Virtual Network
 category: networking
 aliases: [private link, private endpoint, PL, PE]
+primaryCost: "Per-endpoint hourly rate × 730 × endpointCount + data processed per-GB (tiered)"
+pricingRegion: global
 ---
 
 # Private Link / Private Endpoints
-
-**Primary cost**: Per-endpoint hourly rate × 730 + data processed per-GB (ingress + egress, tiered)
 
 > **Warning**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion. Use `Region: Global` explicitly; empty string returns zero results.
 

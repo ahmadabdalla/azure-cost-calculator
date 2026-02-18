@@ -3,11 +3,11 @@ serviceName: SQL Database
 category: databases
 aliases: [SQL DB, Azure SQL, sql]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
+primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
+privateEndpoint: true
 ---
 
 # Azure SQL Database
-
-**Primary cost**: vCore hourly rate + storage per-GB/month
 
 ## Query Pattern
 
@@ -53,7 +53,6 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 ## Notes
 
 - **Default storage**: GP and BC default to 32 GB max data size. Storage billed separately — no "free included" storage in vCore model. Charged for configured max size, not usage. Backup storage equal to max data size is free.
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 

@@ -87,10 +87,12 @@ function Test-ContentRule {
         -PassMessage "File is $($Lines.Count) lines (limit: $maxLines)" `
         -FailMessage "File is $($Lines.Count) lines -- exceeds $($maxLines)-line limit by $($Lines.Count - $maxLines) lines"))
 
-    $hasPrimaryCost = @($Lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
+    $hasPrimaryCostBody = @($Lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
+    $hasPrimaryCostYaml = $FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('primaryCost')
+    $hasPrimaryCost = $hasPrimaryCostBody -or $hasPrimaryCostYaml
     $checks.Add((New-ValidationCheck -Name 'primary_cost_line' -Pass $hasPrimaryCost `
-        -PassMessage 'Primary cost line found' `
-        -FailMessage 'Missing **Primary cost**: line'))
+        -PassMessage ('Primary cost found' + $(if ($hasPrimaryCostYaml) { ' (YAML frontmatter)' } else { ' (body line)' })) `
+        -FailMessage 'Missing primaryCost in YAML frontmatter or **Primary cost**: line in body'))
 
     # Query Pattern uses declarative Key: Value format, not fenced code blocks
     $codeFenceInQueryPattern = $false
