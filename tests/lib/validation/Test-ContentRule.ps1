@@ -134,9 +134,15 @@ function Test-ContentRule {
     }
     $hasApiLines = @($Lines | Where-Object { $_ -match '^\s*API\s*:' }).Count -gt 0
     $serviceNameLines = [System.Collections.Generic.List[object]]::new()
+    $insideFencedBlock = $false
     $insideHtmlComment = $false
     for ($i = 0; $i -lt $Lines.Count; $i++) {
         $line = $Lines[$i]
+        if ($line -match '^\s*```') {
+            $insideFencedBlock = -not $insideFencedBlock
+            continue
+        }
+        if ($insideFencedBlock) { continue }
         $effective = $line
         if ($insideHtmlComment) {
             if ($effective -match '-->(.*)$') {

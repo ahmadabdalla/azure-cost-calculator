@@ -23,9 +23,14 @@ function Get-H2Section {
     )
 
     $sections = [System.Collections.Generic.List[object]]::new()
+    $insideCodeBlock = $false
 
     for ($i = 0; $i -lt $Lines.Count; $i++) {
-        if ($Lines[$i] -match '^##\s+(.+?)\s*$') {
+        if ($Lines[$i] -match '^\s*```') {
+            $insideCodeBlock = -not $insideCodeBlock
+            continue
+        }
+        if (-not $insideCodeBlock -and $Lines[$i] -match '^##\s+(.+?)\s*$') {
             $sections.Add(@{ Name = $Matches[1]; Line = $i + 1 })
         }
     }

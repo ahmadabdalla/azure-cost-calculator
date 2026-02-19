@@ -58,11 +58,12 @@ function Test-AliasUniqueness {
         }
 
         foreach ($alias in $aliases) {
+            $alias = $alias -replace '^[''"]', '' -replace '[''"]$', ''
             $key = $alias.ToLowerInvariant()
             if ($aliasMap.ContainsKey($key)) {
                 $checks.Add((New-ValidationCheck -Name 'alias_uniqueness' -Pass $false `
-                    -PassMessage 'n/a' `
-                    -FailMessage "Alias '$alias' is used in both '$($aliasMap[$key])' and '$relativePath'"))
+                            -PassMessage 'n/a' `
+                            -FailMessage "Alias '$alias' is used in both '$($aliasMap[$key])' and '$relativePath'"))
             }
             else {
                 $aliasMap[$key] = $relativePath
@@ -72,8 +73,8 @@ function Test-AliasUniqueness {
 
     if ($checks.Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'alias_uniqueness' -Pass $true `
-            -PassMessage 'No alias collisions detected' `
-            -FailMessage 'n/a'))
+                    -PassMessage 'No alias collisions detected' `
+                    -FailMessage 'n/a'))
     }
 
     , $checks

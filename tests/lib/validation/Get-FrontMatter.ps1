@@ -51,7 +51,7 @@ function Get-FrontMatter {
     while ($index -lt $frontMatterLines.Count) {
         $line = $frontMatterLines[$index]
 
-        if ($line -match '^\s*(\w+)\s*:\s*(.+)$') {
+        if ($line -match '^\s*([\w-]+)\s*:\s*(.+)$') {
             $key = $Matches[1]
             $value = $Matches[2].Trim()
             $result.Fields[$key] = $value
@@ -60,7 +60,7 @@ function Get-FrontMatter {
         }
 
         # "key:" with no value — consume bracketed list or YAML sequence below it
-        if ($line -match '^\s*(\w+)\s*:\s*$') {
+        if ($line -match '^\s*([\w-]+)\s*:\s*$') {
             $key = $Matches[1]
             $index++
 

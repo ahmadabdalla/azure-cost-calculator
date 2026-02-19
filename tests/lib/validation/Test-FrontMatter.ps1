@@ -101,7 +101,7 @@ function Test-FrontMatter {
             if ($fieldName -in @('serviceName', 'category', 'aliases')) { continue }
             if (-not $FrontMatter.Fields.ContainsKey($fieldName)) { continue }
 
-            $rawValue = $FrontMatter.Fields[$fieldName].Trim() -replace '^"|"$', ''
+            $rawValue = $FrontMatter.Fields[$fieldName].Trim() -replace '^[''"]', '' -replace '[''"]$', ''
 
             # Type: boolean — must be 'true' or 'false'
             if ($fieldDef.Type -eq 'boolean') {

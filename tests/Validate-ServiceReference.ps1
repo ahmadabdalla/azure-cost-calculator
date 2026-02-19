@@ -68,7 +68,16 @@ function Test-ServiceReference {
     , $checks
 }
 
-$allResults = @{}
+function Write-CheckResult {
+    param(
+        [string]$FileName,
+        [hashtable]$Check
+    )
+    $status = if ($Check.Pass) { 'PASS' } else { 'FAIL' }
+    $icon = if ($Check.Pass) { '+' } else { '-' }
+    Write-Output "[$icon] $status $FileName :: $($Check.Name) - $($Check.Message)"
+}
+
 $hasFailures = $false
 
 foreach ($filePath in $Path) {
@@ -89,12 +98,9 @@ foreach ($filePath in $Path) {
         $leaf = Split-Path -Path $rp -Leaf
         $parent = Split-Path -Path (Split-Path -Path $rp -Parent) -Leaf
         $fileName = if ($parent) { "$parent/$leaf" } else { $leaf }
-        $allResults[$fileName] = $checks
 
         foreach ($check in $checks) {
-            $status = if ($check.Pass) { 'PASS' } else { 'FAIL' }
-            $icon = if ($check.Pass) { '+' } else { '-' }
-            Write-Output "[$icon] $status $fileName :: $($check.Name) - $($check.Message)"
+            Write-CheckResult -FileName $fileName -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
@@ -106,11 +112,8 @@ if ($CheckAliasUniqueness) {
     }
     if (Test-Path $root) {
         $aliasChecks = Test-AliasUniqueness -RootPath $root
-        $allResults['_alias_uniqueness'] = $aliasChecks
         foreach ($check in $aliasChecks) {
-            $status = if ($check.Pass) { 'PASS' } else { 'FAIL' }
-            $icon = if ($check.Pass) { '+' } else { '-' }
-            Write-Output "[$icon] $status alias_check :: $($check.Name) - $($check.Message)"
+            Write-CheckResult -FileName 'alias_check' -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
