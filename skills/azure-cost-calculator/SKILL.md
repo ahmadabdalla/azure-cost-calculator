@@ -120,7 +120,12 @@ These apply to EVERY query:
 
 When estimating **3 or more services**, use these rules to reduce token consumption:
 
-1. **Partial reads** — read only lines 1–45 of each service file (YAML front matter, trap, first query pattern). Use front matter fields to route decisions.
-2. **Full read triggers** — read the full file only if: no usable query pattern in partial read, user requests non-default config, query returns 0 or unexpected results, or `billingConsiderations` entries apply.
-3. **Parallel queries** — run independent service queries in parallel.
-4. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
+1. **Partial reads** — read only lines 1–45 of each service file (YAML front matter, trap, first query pattern).
+2. **Front matter routing** — use YAML metadata to skip unnecessary work:
+   - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
+   - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
+   - `apiServiceName` → use instead of `serviceName` in queries
+   - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
+3. **Full read triggers** — no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
+4. **Parallel queries** — run independent service queries in parallel.
+5. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
