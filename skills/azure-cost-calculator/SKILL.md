@@ -131,4 +131,4 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
 5. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
 6. **Progressive distillation** — after each service query returns, emit a summary row before proceeding:
    `| Category | Service | Resource | Unit Price | Unit | Qty | Monthly Cost | Notes |`
-   Multi-meter services get one row per line item. After all queries complete, assemble the final estimate from the accumulated rows. Do not re-read service files already distilled.
+   Multi-meter services get one row per line item. After all queries complete, assemble the final estimate from the accumulated rows. Do not re-read service files already distilled unless a full read trigger is needed. During Post-Estimate Iteration, replace the distillation row(s) for any re-queried service.
