@@ -2,7 +2,7 @@
 serviceName: Microsoft Genomics
 category: ai-ml
 aliases: [Genomics Workspace]
-primaryCost: "Per-genome flat rate ($1.00) + per-incremental-gigabase ($0.10)"
+primaryCost: "Per-genome flat rate + per-incremental-gigabase volume fee"
 ---
 
 # Microsoft Genomics
