@@ -11,7 +11,7 @@ privateEndpoint: true
 # Log Analytics
 
 > **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
-> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free (Log Analytics workspace). Always deduct this from the billable total: `billable_GB = total_GB - 5`.
+> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free — **PAYG only** (not commitment tiers), per **billing account** (not per workspace). Always deduct this from the billable total when on PAYG: `billable_GB = total_GB - 5`.
 > **Trap (retention calculation)**: The free retention period depends on whether Microsoft Sentinel is enabled: **90 days** for Sentinel-enabled workspaces, **31 days** otherwise. For extended retention, the chargeable window is `retentionDays - freeDays` (where freeDays = 90 if Sentinel is enabled, 31 if not). At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - freeDays)`. This is the most commonly miscalculated component — agents often use 31 days for Sentinel workspaces (significantly overstating cost) or 90 days for non-Sentinel workspaces (understating cost).
 
 ## Query Pattern
@@ -79,7 +79,7 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 
 ## Notes
 
-- First 5 GB/month ingestion free per workspace
+- Non-billable tables (AzureActivity, Heartbeat, Usage, Operation) have zero ingestion and retention cost — deduct from volume estimates
 - Free retention: **90 days** if Microsoft Sentinel is enabled on the workspace, **31 days** otherwise; longer retention charged per-GB/month
 - Maximum retention period: 730 days (2 years)
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
@@ -88,3 +88,4 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 - For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`
 - Data export and archive features have separate pricing
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
+- For Basic Logs, Auxiliary Logs, archive, search, restore, export, and commitment tier meters see `monitoring/monitor.md` (ServiceName: Azure Monitor)
