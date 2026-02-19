@@ -2,11 +2,12 @@
 serviceName: Foundry Tools
 category: ai-ml
 aliases: [Cognitive Services, Vision, Speech, Language, Decision]
+primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure AI Services
-
-**Primary cost**: Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain.
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Services` or `Cognitive Services`. Old names return zero results.
 

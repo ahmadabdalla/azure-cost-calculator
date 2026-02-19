@@ -2,11 +2,10 @@
 serviceName: Microsoft Defender for Cloud
 category: security
 aliases: [defender, security center, MDC]
+primaryCost: "Per-resource hourly or monthly rate × resource count (per sub-product)."
 ---
 
 # Microsoft Defender for Cloud
-
-**Primary cost**: Per-resource hourly or monthly rate x resource count (per sub-product)
 
 **Multiple sub-products** — query each separately by its own productName/skuName/meterName.
 

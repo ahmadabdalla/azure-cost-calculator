@@ -3,11 +3,11 @@ serviceName: Storage
 category: storage
 aliases: [Data Lake Gen2, ADLS]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Data stored per-GB/month + index per-GB/month (HNS) + operations per-10K + data retrieval per-GB"
+privateEndpoint: true
 ---
 
 # Data Lake Storage Gen2
-
-**Primary cost**: Data stored (per-GB/month), index (per-GB/month, HNS only), operations (per-10K), data retrieval (Cool/Cold/Archive per-GB)
 
 > **Trap**: Always filter by `productName` — `serviceName eq 'Storage'` alone returns Blob, Files, Queue, and Table meters. Use `Azure Data Lake Storage Gen2 Hierarchical Namespace` for HNS-enabled accounts (most ADLS deployments). `Azure Data Lake Storage Gen2 Flat Namespace` is a niche variant without directory semantics.
 

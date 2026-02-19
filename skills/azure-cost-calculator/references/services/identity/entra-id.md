@@ -3,11 +3,13 @@ serviceName: Microsoft Entra ID
 category: identity
 aliases: [Azure AD, Azure Active Directory, AAD, Directory]
 billingConsiderations: [M365 / Windows per-user licensing]
+primaryCost: "Per-user/month license fee for premium tiers (P1/P2); Free tier has no cost"
+hasMeters: false
+pricingRegion: api-unavailable
+hasKnownRates: true
 ---
 
 # Microsoft Entra ID
-
-**Primary cost**: Per-user/month license fee for premium tiers (P1/P2); Free tier has no cost
 
 > **Warning**: Microsoft Entra ID has **no meters** in the Azure Retail Prices API. All tiers (Free, P1, P2) return zero results. Use the published rates below.
 >

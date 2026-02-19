@@ -2,11 +2,11 @@
 serviceName: Azure DNS
 category: networking
 aliases: [private DNS, Private DNS Zones]
+primaryCost: "Zone hosting (per-zone/month) + DNS queries"
+pricingRegion: global
 ---
 
 # Private DNS Zones
-
-**Primary cost**: Zone hosting (per-zone/month) + DNS queries
 
 > **Warning**: **Global-only pricing / USD-only** — see shared.md & Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
 > **Trap**: Zone pricing is **tiered** — the API returns two rows per region (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 25+ zones, apply tier-1 `retailPrice` to the first 25 and tier-2 `retailPrice` to the remainder. Do NOT sum all tiers as a flat total.

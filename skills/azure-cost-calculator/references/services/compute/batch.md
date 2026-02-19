@@ -4,11 +4,11 @@ category: compute
 aliases: [HPC Batch, Batch Compute]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances, Spot Pricing]
+primaryCost: "No Batch fee — pay for VM compute, storage, and networking resources"
+privateEndpoint: true
 ---
 
 # Azure Batch
-
-**Primary cost**: No charge for the Batch service itself — pay for underlying VM compute, storage, and networking resources consumed by pool nodes.
 
 > **Trap (no Batch meters)**: `serviceName eq 'Azure Batch'` returns **zero results** from the Retail Prices API. The Batch service is free; all cost comes from pool node VMs (priced as `Virtual Machines`), managed disks, and data egress. Do NOT query with `-ServiceName 'Azure Batch'`.
 

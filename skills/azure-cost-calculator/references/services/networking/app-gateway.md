@@ -2,11 +2,11 @@
 serviceName: Application Gateway
 category: networking
 aliases: [app gateway, application gateway, appgw]
+primaryCost: "Gateway hours (fixed cost) + capacity units processed"
+privateEndpoint: true
 ---
 
 # Application Gateway
-
-**Primary cost**: Gateway hours (fixed cost) + capacity units processed
 
 > **Trap**: Product names do NOT have the "Azure" prefix — use `'Application Gateway WAF v2'`, not `'Azure Application Gateway WAF v2'`.
 > **Trap**: You need TWO separate queries — one for the fixed hourly cost and one for capacity units. A single unfiltered query returns both meters mixed together.

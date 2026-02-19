@@ -4,11 +4,11 @@ category: compute
 aliases: [AKS, kubernetes, k8s]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances]
+primaryCost: "AKS management fee + VM node costs (priced separately as VMs)"
+privateEndpoint: true
 ---
 
 # Azure Kubernetes Service (AKS)
-
-**Primary cost**: AKS management fee + VM node costs (priced separately as VMs)
 
 > **Trap**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` and `Standard Long Term Support`. The `summary.totalMonthlyCost` sums both, inflating the estimate ~7×. Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
 

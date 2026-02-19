@@ -3,11 +3,10 @@ serviceName: Azure Firewall
 category: networking
 aliases: [firewall]
 billingNeeds: [IP Addresses]
+primaryCost: "Deployment hourly rate × 730 + data processing per-GB"
 ---
 
 # Azure Firewall
-
-**Primary cost**: Deployment hourly rate x 730 + data processing per-GB
 
 **Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
 

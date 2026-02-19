@@ -3,11 +3,10 @@ serviceName: Application Gateway
 category: security
 aliases: [WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, Front Door WAF]
 billingNeeds: [Azure Front Door Service]
+primaryCost: "App Gateway WAF — fixed hourly + capacity units; Front Door WAF — per-policy monthly + per-request."
 ---
 
 # Azure Web Application Firewall (WAF)
-
-**Primary cost**: App Gateway WAF — fixed hourly + capacity units; Front Door WAF — per-policy monthly + per-request
 
 > **Trap (two services)**: WAF has no dedicated serviceName — meters split across `Application Gateway` (gateway WAF) and `Azure Front Door Service` (CDN WAF). Query each separately.
 > **Trap (Front Door productName)**: All listed WAF meters use productName `Azure Front Door Service` (Classic). Front Door Premium includes WAF in its base fee — only `Premium Captcha Sessions` exists separately under productName `Azure Front Door`.

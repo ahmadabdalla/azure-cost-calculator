@@ -3,11 +3,11 @@ serviceName: Azure Cosmos DB
 category: databases
 aliases: [CosmosDB, Cosmos, documentdb]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Provisioned throughput (RU/s per-hour) + storage"
+privateEndpoint: true
 ---
 
 # Azure Cosmos DB
-
-**Primary cost**: Provisioned throughput (RU/s per-hour) + storage
 
 > **Trap**: The storage meter is `'Data Stored'` (not `'1 GB Data Stored'`). You also need `-ProductName 'Azure Cosmos DB'` and `-SkuName 'RUs'` to filter to the transactional storage meter and avoid free-tier/multi-master variants.
 

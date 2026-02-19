@@ -2,11 +2,10 @@
 serviceName: Container Instances
 category: containers
 aliases: [ACI, Azure Container Instances, serverless containers, container instances, container groups, ACI containers, ACI serverless]
+primaryCost: "vCPU per-hour + memory per-GB-hour (Linux); add Windows software surcharge for Windows containers"
 ---
 
 # Azure Container Instances
-
-**Primary cost**: vCPU per-hour + memory per-GB-hour (Linux); add Windows software surcharge for Windows containers
 
 > **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU) — always filter with `ProductName: Container Instances`, `SkuName: Standard` for standard Linux pricing.
 >

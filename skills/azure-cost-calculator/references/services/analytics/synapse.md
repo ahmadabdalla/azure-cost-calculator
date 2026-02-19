@@ -4,11 +4,11 @@ category: analytics
 aliases: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
 billingNeeds: [Data Lake Storage]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Dedicated SQL Pool DWU hours + Serverless SQL per-TB + Spark vCore hours + Pipeline runs + storage per-GB"
+privateEndpoint: true
 ---
 
 # Azure Synapse Analytics
-
-**Primary cost**: Dedicated SQL Pool DWU hours × 730 + Serverless SQL per-TB processed + Spark Pool vCore hours + Pipeline activity runs + storage per-GB/month
 
 > **Trap (inflated totals)**: Unfiltered `ServiceName 'Azure Synapse Analytics'` returns ~127 meters including SSIS VM meters across multiple VM series. The `totalMonthlyCost` is meaningless. Always filter by `ProductName` for the specific component.
 > **Trap (multi-component)**: Synapse has separate billing for Dedicated SQL Pool, Serverless SQL, Spark Pools, Pipelines, Data Flow, and Storage. Price each component individually.

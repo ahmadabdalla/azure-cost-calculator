@@ -2,11 +2,10 @@
 serviceName: Content Delivery Network
 category: networking
 aliases: [CDN Classic, Azure CDN Classic, Content Delivery]
+primaryCost: "Data transfer out per-GB (tiered) + HTTP requests per-million, priced by delivery zone"
 ---
 
 # Azure Content Delivery Network
-
-**Primary cost**: Data transfer out per-GB (tiered by volume) + HTTP requests per-million, priced by delivery zone
 
 > **Trap (Zone regions)**: CDN uses delivery zones (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'` — the default `eastus` returns zero results. Zone 1 = North America/Europe, Zone 2 = Asia Pacific, Zone 3 = South America, Zone 4 = Middle East/Africa, Zone 5 = Australia/India.
 >

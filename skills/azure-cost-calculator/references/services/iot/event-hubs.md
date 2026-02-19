@@ -2,11 +2,11 @@
 serviceName: Event Hubs
 category: iot
 aliases: [Event Hubs, Kafka on Azure, Event Streaming]
+primaryCost: "Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons"
+privateEndpoint: true
 ---
 
 # Azure Event Hubs
-
-**Primary cost**: Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons
 
 > **Trap (Standard unfiltered)**: Querying with `SkuName Standard` without `MeterName` returns **four** meters: Throughput Unit, Ingress Events, Capture, and Kafka Endpoint. The `summary.totalMonthlyCost` sums all four, inflating the estimate ~7×. Always filter with `MeterName Standard Throughput Unit` for the base cost.
 

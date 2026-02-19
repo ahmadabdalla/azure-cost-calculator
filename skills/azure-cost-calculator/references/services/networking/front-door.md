@@ -2,11 +2,11 @@
 serviceName: Azure Front Door Service
 category: networking
 aliases: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
+primaryCost: "Base fee (flat monthly per profile) + data transfer out per-GB + requests per-10K"
+privateEndpoint: true
 ---
 
 # Azure Front Door
-
-**Primary cost**: Base fee (flat monthly per profile) + data transfer out per-GB + requests per-10K
 
 > **Trap (Zone regions)**: Front Door uses **zone-based regions** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'` — the default `eastus` returns zero results.
 > **Trap (Two productNames)**: Standard/Premium profile meters use productName `Azure Front Door`. Classic WAF/routing meters use productName `Azure Front Door Service`. Always filter by `ProductName` to avoid mixing them.

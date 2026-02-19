@@ -3,11 +3,11 @@ serviceName: Backup
 category: storage
 aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Protected instance/month (workload type) + storage per-GB/month (redundancy)"
+privateEndpoint: true
 ---
 
 # Azure Backup
-
-**Primary cost**: Per protected instance/month (varies by workload type) + storage per-GB/month (varies by redundancy)
 
 > **Trap**: Unfiltered `ServiceName: Backup` returns ~36 meters across all workload types plus storage, inflating `totalMonthlyCost`. Always filter with `SkuName` for the specific workload (e.g., `Azure VM`) or storage tier (e.g., `Standard`).
 

@@ -3,11 +3,11 @@ serviceName: Azure Data Factory v2
 category: analytics
 aliases: [ADF, ETL, Data Pipeline]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Pipeline activity runs (per month) + data movement hours + inactive pipeline fees"
+privateEndpoint: true
 ---
 
 # Azure Data Factory
-
-**Primary cost**: Pipeline activity runs (per month) + data movement hours + inactive pipeline fees
 
 > **Trap (v1 vs v2)**: The API has two separate service names: `Azure Data Factory` (v1, legacy) and `Azure Data Factory v2` (current). Most deployments use v2. Always confirm which version the user has before querying.
 

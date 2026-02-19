@@ -3,11 +3,14 @@ serviceName: Azure Migrate
 category: management
 aliases: [Server Assessment, Migration Tools]
 billingNeeds: [Azure Site Recovery, Azure Database Migration Service]
+primaryCost: "Free hub — no direct meters. Costs flow through dependent services (Site Recovery, DMS, target infrastructure)."
+hasMeters: false
+pricingRegion: api-unavailable
+hasKnownRates: true
+privateEndpoint: true
 ---
 
 # Azure Migrate
-
-**Primary cost**: Free hub — no direct meters. Costs flow through dependent services (Site Recovery, Database Migration Service, target infrastructure).
 
 > **Warning**: Azure Migrate has **no meters** in the Azure Retail Prices API. All queries return zero results. Estimate costs via the dependent services listed in `billingNeeds`.
 >

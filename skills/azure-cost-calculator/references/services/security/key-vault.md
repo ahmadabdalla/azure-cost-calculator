@@ -2,11 +2,11 @@
 serviceName: Key Vault
 category: security
 aliases: [keyvault, KV, vault]
+primaryCost: "Operations (per-10K) + secrets/keys/certificates stored."
+privateEndpoint: true
 ---
 
 # Key Vault
-
-**Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 
 > **Trap**: Querying with only `SkuName 'Standard'` (no `ProductName`) returns **Azure Dedicated HSM** (thousands/month) mixed with Key Vault ops. Always filter by `ProductName 'Key Vault'`.
 

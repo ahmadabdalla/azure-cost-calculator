@@ -3,11 +3,12 @@ serviceName: Application Insights
 category: monitoring
 aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 billingNeeds: [Log Analytics]
+primaryCost: "Data ingestion per-GB + retention (via Log Analytics workspace)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Application Insights
-
-**Primary cost**: Data ingestion per-GB + retention (via Log Analytics workspace)
 
 > **Trap**: Workspace-based Application Insights has no separate cost — all telemetry is billed through Log Analytics. Classic (non-workspace-based) is deprecated.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free per Log Analytics workspace. Always deduct this from the billable total: `billable_GB = total_GB - 5`.

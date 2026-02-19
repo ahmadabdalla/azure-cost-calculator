@@ -2,11 +2,11 @@
 serviceName: Logic Apps
 category: integration
 aliases: [Workflows, Logic App Standard/Consumption]
+primaryCost: "Per-action (Consumption) or vCPU + memory hours (Standard)"
+privateEndpoint: true
 ---
 
 # Logic Apps
-
-**Primary cost**: Per-action (Consumption) or vCPU + memory hours (Standard)
 
 > **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One run may contain 5–50+ actions. If user says "25,000 executions/month," clarify: multiply workflow runs × estimated actions/run.
 >

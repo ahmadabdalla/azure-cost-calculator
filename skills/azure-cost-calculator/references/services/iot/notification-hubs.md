@@ -2,11 +2,11 @@
 serviceName: Notification Hubs
 category: iot
 aliases: [Push Notifications, ANH]
+primaryCost: "Per-namespace monthly flat rate by tier (Free/Basic/Standard) + per-million push overages beyond quota"
+hasFreeGrant: true
 ---
 
 # Notification Hubs
-
-**Primary cost**: Per-namespace monthly flat rate by tier (Free/Basic/Standard) + per-million push overages beyond included quota
 
 > **Trap (tiered pricing inflation)**: Querying Basic or Standard tiers without `MeterName` returns **multiple tiered pricing rows** for the overage meters. The script sums all tier rows, inflating `totalMonthlyCost` above the actual base price. For base cost estimation, filter to the base unit meter only (`Basic Unit` or `Standard Unit`). Overage tiers apply only when usage exceeds the included 10M pushes/month.
 

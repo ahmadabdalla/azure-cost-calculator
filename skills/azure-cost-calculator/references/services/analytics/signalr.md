@@ -2,11 +2,11 @@
 serviceName: SignalR
 category: analytics
 aliases: [Azure SignalR Service, Real-time Messaging]
+primaryCost: "Per-unit daily rate (by tier) + messages per 1M/month"
+privateEndpoint: true
 ---
 
 # Azure SignalR Service
-
-**Primary cost**: Per-unit daily rate (by tier) + messages per 1M/month
 
 > **Trap (daily billing)**: Unit meters use `1/Day` billing. `Get-MonthlyMultiplier` returns `30` for these meters, so the script's `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 

@@ -2,11 +2,11 @@
 serviceName: Service Bus
 category: integration
 aliases: [service bus, messaging, queues, topics]
+primaryCost: "Namespace hours (Standard/Premium) + operations (Basic/Standard)"
+privateEndpoint: true
 ---
 
 # Service Bus
-
-**Primary cost**: Namespace hours (Standard/Premium) + operations (Basic/Standard)
 
 > **Trap (unfiltered query)**: Querying without `MeterName` returns multiple meters (Base Unit + Operations + Relay Hours). The `summary.totalMonthlyCost` sums all, inflating the estimate. Always filter by `MeterName`.
 

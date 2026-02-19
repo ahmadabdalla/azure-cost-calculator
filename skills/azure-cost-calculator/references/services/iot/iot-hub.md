@@ -2,11 +2,11 @@
 serviceName: IoT Hub
 category: iot
 aliases: [Device Messaging]
+primaryCost: "Per-unit monthly flat rate by tier (Free, B1–B3, S1–S3) × unit count"
+privateEndpoint: true
 ---
 
 # IoT Hub
-
-**Primary cost**: Per-unit monthly flat rate by tier (Free, B1–B3, S1–S3) × unit count
 
 > **Trap (unfiltered query)**: Querying with `ServiceName IoT Hub` without `ProductName IoT Hub` returns meters from **Device Update for IoT Hub** and **IoT Hub Device Provisioning** — separate services with their own pricing. Always add `ProductName IoT Hub` to isolate hub unit costs.
 

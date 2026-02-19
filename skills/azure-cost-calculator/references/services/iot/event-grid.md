@@ -2,11 +2,12 @@
 serviceName: Event Grid
 category: iot
 aliases: [Event Routing, Event-driven]
+primaryCost: "Per-operation pricing (per 100K or per 1M) + optional MQTT throughput units (hourly)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Event Grid
-
-**Primary cost**: Per-operation pricing (per 100K or per 1M) + optional MQTT throughput units (hourly)
 
 > **Trap (unfiltered query)**: Querying with `ServiceName Event Grid` without `MeterName` returns **seven** rows — four distinct meters, three of which have both a free-tier row (zero price) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `MeterName` for precise costs.
 

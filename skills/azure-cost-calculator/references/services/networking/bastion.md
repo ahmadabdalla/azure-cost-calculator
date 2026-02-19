@@ -3,11 +3,10 @@ serviceName: Azure Bastion
 category: networking
 aliases: [Jump Host, Bastion Host]
 billingNeeds: [IP Addresses]
+primaryCost: "Gateway hourly rate × 730 + additional scale unit hours + outbound data transfer per-GB"
 ---
 
 # Azure Bastion
-
-**Primary cost**: Gateway hourly rate × 730 + additional scale unit hours + outbound data transfer per-GB
 
 > **Trap**: Bastion is always-on. It bills per-hour (× 730/month) from deployment, not per-use. Even with zero connections, the gateway meter charges continuously.
 

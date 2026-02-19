@@ -3,11 +3,11 @@ serviceName: SQL Managed Instance
 category: databases
 aliases: [SQL MI, Azure SQL MI, Managed Instance]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
+primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
+pricingRegion: global
 ---
 
 # Azure SQL Managed Instance
-
-**Primary cost**: vCore hourly rate × 730 + storage per-GB/month
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `SkuName` for compute queries.
 

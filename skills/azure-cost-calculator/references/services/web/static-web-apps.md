@@ -3,11 +3,13 @@ serviceName: Azure Static Web Apps
 category: web
 aliases: [SWA, JAMstack]
 billingNeeds: [Azure App Service]
+apiServiceName: Azure App Service
+primaryCost: "Fixed monthly per-app fee (Standard) + bandwidth overage per-GB + optional Azure Front Door add-on hourly"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Static Web Apps
-
-**Primary cost**: Fixed monthly per-app fee (Standard) + bandwidth overage per-GB + optional Azure Front Door add-on hourly
 
 > **Trap (serviceName mismatch)**: The API `serviceName` is `Azure App Service`, not `Azure Static Web Apps`. You **must** include `ProductName: Static Web Apps` to isolate SWA meters from regular App Service meters.
 

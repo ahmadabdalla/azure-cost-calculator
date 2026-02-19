@@ -3,11 +3,11 @@ serviceName: Storage
 category: storage
 aliases: [managed disks, disks, disk storage]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)"
+privateEndpoint: true
 ---
 
 # Managed Disks
-
-**Primary cost**: Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)
 
 > **Warning (Premium/Standard SSD two-meter trap)**: The API returns **both** "Disk" **and** "Disk Mount" meters. **You MUST sum both** — the mount fee alone is ~5% of cost. Using only mount fee = **~20× too cheap**. Always use `summary.totalMonthlyCost` which sums correctly. Premium SSD returns 2 meters, Standard SSD returns 3 (+ Operations), Standard HDD returns 2 (Disk + Operations, no mount fee).
 

@@ -2,11 +2,11 @@
 serviceName: Azure Cognitive Search
 category: web
 aliases: [Azure AI Search, Search Service, Full-text Search]
+primaryCost: "Fixed hourly rate per search unit (SU) × 730, varies by tier"
+privateEndpoint: true
 ---
 
 # Azure AI Search
-
-**Primary cost**: Fixed hourly rate per search unit (SU) × 730, varies by tier
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all tiers, add-ons, and AI enrichment meters summed in `totalMonthlyCost`. Always include `SkuName` to isolate a single tier.
 

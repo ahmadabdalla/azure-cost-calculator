@@ -2,11 +2,11 @@
 serviceName: Container Registry
 category: containers
 aliases: [ACR, container registry]
+primaryCost: "Registry unit (daily) + excess storage (per-GB/month)"
+privateEndpoint: true
 ---
 
 # Container Registry (ACR)
-
-**Primary cost**: Registry unit (daily) + excess storage (per-GB/month)
 
 > **Trap (daily billing)**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. The script now auto-multiplies `1/Day` units by 30, so `MonthlyCost` is already the correct **monthly** cost. Do NOT manually multiply by 30 again.
 

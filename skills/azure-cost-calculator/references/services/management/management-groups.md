@@ -2,11 +2,12 @@
 serviceName: Management Groups
 category: management
 aliases: [Management Group, Azure Management Groups, Subscription Organization]
+primaryCost: "Free — no charges for creating or using management groups."
+hasMeters: false
+pricingRegion: api-unavailable
 ---
 
 # Management Groups
-
-**Primary cost**: Free — no charges for creating or using management groups.
 
 > **Trap**: The API returns no meters for Management Groups. Do NOT query for pricing — this is a free service.
 >

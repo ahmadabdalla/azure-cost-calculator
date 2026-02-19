@@ -2,11 +2,12 @@
 serviceName: Azure Container Apps
 category: compute
 aliases: [container apps, ACA]
+primaryCost: "vCPU seconds + memory GiB seconds (Consumption) or vCPU hours + memory GiB hours (Dedicated)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Container Apps
-
-**Primary cost**: vCPU seconds + memory GiB seconds (Consumption plan) or vCPU hours + memory GiB hours (Dedicated plan)
 
 > **Trap**: Unfiltered query returns 13+ meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU — always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because quantity is unknown — use the `UnitPrice` from API results directly. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
 

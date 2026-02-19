@@ -3,11 +3,12 @@ serviceName: Log Analytics
 category: monitoring
 aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
 billingNeeds: [Azure Monitor]
+primaryCost: "Data ingestion per-GB + retention beyond 31 days"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Log Analytics
-
-**Primary cost**: Data ingestion per-GB + retention beyond 31 days
 
 > **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free (Log Analytics workspace). Always deduct this from the billable total: `billable_GB = total_GB - 5`.

@@ -2,11 +2,11 @@
 serviceName: Load Balancer
 category: networking
 aliases: [LB, load balancer]
+primaryCost: "Per-hour base fee + per-GB data processed + overage rules (Standard); VNet peering per-GB"
+pricingRegion: global
 ---
 
 # Virtual Network / Load Balancer
-
-**Primary cost**: Per-hour base fee + per-GB data processed + overage rules (Standard SKU); VNet peering per-GB transfer
 
 ## Virtual Network
 

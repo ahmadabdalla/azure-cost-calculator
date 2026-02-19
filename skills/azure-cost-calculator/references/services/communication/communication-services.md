@@ -2,11 +2,11 @@
 serviceName: Voice
 category: communication
 aliases: [Azure Communication Services, ACS, ACS Voice, Voice Calling, VOIP]
+primaryCost: "Per-minute voice + per-message SMS/chat + per-email — each component uses a separate serviceName"
+hasKnownRates: true
 ---
 
 # Azure Communication Services
-
-**Primary cost**: Per-minute voice + per-message SMS/chat + per-email — each component uses a separate serviceName
 
 > **Trap (multi-serviceName)**: ACS spans multiple API serviceNames: `Voice`, `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`. Each query must target the correct serviceName — there is no single umbrella serviceName.
 

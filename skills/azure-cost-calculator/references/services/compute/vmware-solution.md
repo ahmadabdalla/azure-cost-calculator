@@ -3,11 +3,11 @@ serviceName: Azure VMware Solution
 category: compute
 aliases: [AVS, VMware on Azure]
 billingConsiderations: [Reserved Instances]
+apiServiceName: Specialized Compute
+primaryCost: "Per-host hourly rate × node count × 730 hours/month"
 ---
 
 # Azure VMware Solution
-
-**Primary cost**: Per-host hourly rate × node count × 730 hours/month
 
 > **Trap**: API serviceName is `Specialized Compute` — always filter by productName
 
