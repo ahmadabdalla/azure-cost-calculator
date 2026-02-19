@@ -54,7 +54,7 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 ## Cost Formula
 
 ```
-Monthly Ingestion = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (PAYG) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
 Monthly Retention = retention_price_per_GB × retainedGB
 Total = Monthly Ingestion + Monthly Retention
 ```
@@ -83,7 +83,7 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 - Free retention: **90 days** if Microsoft Sentinel is enabled on the workspace, **31 days** otherwise; longer retention charged per-GB/month
 - Maximum retention period: 730 days (2 years)
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
-- Sentinel uses Log Analytics workspaces and meters for its data ingestion and retention
+- Sentinel uses Log Analytics workspaces but ingestion is billed via Sentinel meters (`ServiceName: Sentinel`) — do NOT add LA ingestion for Sentinel data; only LA retention meters apply beyond the 90-day free period (see `management/sentinel.md`)
 - Commitment tiers require 100+ GB/day ingestion and provide volume discounts
 - For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`
 - Data export and archive features have separate pricing
