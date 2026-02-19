@@ -87,7 +87,6 @@ Total Monthly  = Dedicated SQL + Serverless SQL + Spark Pool + Pipelines + Stora
 
 - **Dedicated SQL Pool**: Pausing stops compute billing but storage continues; **Serverless SQL**: Pay-per-query, no provisioning
 - **Spark Pools**: Auto-pause, billed per vCore-hour; **Pipelines**: Mirror Data Factory v2 pricing; SSIS VMs filter by `ProductName` containing `SSIS`
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 

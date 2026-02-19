@@ -91,4 +91,4 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 - Sentinel uses Log Analytics workspaces and meters for its data ingestion and retention
 - Commitment tiers require 100+ GB/day ingestion and provide volume discounts
 - Data export and archive features have separate pricing
-- Supports private endpoints (via AMPLS) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require AMPLS (Azure Monitor Private Link Scope)

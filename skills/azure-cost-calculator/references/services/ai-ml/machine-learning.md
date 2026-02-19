@@ -75,4 +75,3 @@ Training Compute         = billed under Virtual Machines (see compute/virtual-ma
 - Managed online endpoints (`Managed Model Hosting Service`) are the primary billable meters under this service
 - Enterprise Inferencing products (`Azure Machine Learning Enterprise *`) return $0.00 — these are legacy meters
 - Storage for ML workspaces is billed under Azure Storage (Blob/File) separately
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

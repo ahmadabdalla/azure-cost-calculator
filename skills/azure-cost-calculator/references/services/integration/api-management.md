@@ -70,7 +70,7 @@ MeterName: {Tier} Self-hosted Gateway
 
 - All tiers support unlimited APIs except Consumption (max 50).
 - `productName` is always `API Management` for all tiers.
-- Supports private endpoints (not available on Consumption or Basic v2 tiers) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints not available on Consumption or Basic v2 tiers
 
 ## Common SKUs
 

@@ -93,4 +93,4 @@ Typical Application Insights telemetry volume per application instance:
 - Availability tests (multi-step web tests) may have additional costs for web test runs
 - Maximum retention period: 730 days (2 years)
 - For commitment tier pricing (100+ GB/day), see `log-analytics.md` commitment tiers section
-- Supports private endpoints (via AMPLS) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require AMPLS (Azure Monitor Private Link Scope)

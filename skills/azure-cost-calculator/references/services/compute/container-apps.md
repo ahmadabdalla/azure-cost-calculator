@@ -75,7 +75,6 @@ Dedicated:
 - Dedicated plan charges per-environment management fee in addition to vCPU/memory
 - GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## SKU Selection Guide
 

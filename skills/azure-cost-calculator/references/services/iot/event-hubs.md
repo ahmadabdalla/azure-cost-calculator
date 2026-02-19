@@ -75,4 +75,4 @@ Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transfe
 - Geo-DR requires two separate Premium/Dedicated namespaces — budget 2× namespace cost plus replication transfer
 - All throughput/processing/capacity units are billed hourly — use 730 hours/month
 - Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API
-- Supports private endpoints (Standard tier or higher) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require Standard tier or higher

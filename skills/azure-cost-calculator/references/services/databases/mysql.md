@@ -82,7 +82,6 @@ Total = Compute + Storage
 - High Availability doubles compute cost (deploys a standby replica)
 - Backup: first backup equal to provisioned storage is free; excess charged per-GB/month
 - Single Server is deprecated — all new deployments use Flexible Server
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Product Names
 

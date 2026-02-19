@@ -68,4 +68,3 @@ Total = Monthly Base + Semantic
 - **Free tier**: 1 index, 50 MB storage, no SLA. Use `skuName='Free'`.
 - **Tier limits**: Basic supports up to 3 replicas, 1 partition. Standard tiers support up to 12 replicas, 12 partitions. L1/L2 support up to 12 replicas, 12 partitions.
 - **Semantic Ranker**: Billed daily, not hourly. Script auto-multiplies `1/Day` by 30. Also has per-query overage meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`).
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
