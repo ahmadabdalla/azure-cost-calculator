@@ -52,8 +52,6 @@ MeterName: Data Stored
 Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 ```
 
-> **Note**: The script auto-multiplies `1/Day` units by 30. `MonthlyCost` is already the monthly cost.
-
 ## Notes
 
 - Premium tier is required for geo-replication, content trust, and private endpoints

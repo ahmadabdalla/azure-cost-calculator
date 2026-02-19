@@ -34,4 +34,3 @@ Monthly = $0.00 (free service, no meters)
 - Each Azure AD tenant gets a single root management group
 - Supports up to six levels of depth (excluding the root and subscription level)
 - Azure Policy and RBAC assignments applied at a management group scope cascade to child subscriptions
-- No retail meter exists in the Azure Retail Prices API — scripts return zero results

@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Warning**: **Sub-cent pricing** — see shared.md & Common Traps. The script's `MonthlyCost` shows `$0` because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
+> **Warning**: The script's `MonthlyCost` shows `$0` because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -50,7 +50,7 @@ Quantity: 1000000
 | `Standard Total Executions` | per 10 exec | 1M executions   |
 | `Standard Execution Time`   | per 1 GB-s  | 400K GB-seconds |
 
-> The script's `MonthlyCost` shows `$0` — use `UnitPrice` directly. For non-USD currencies see shared.md.
+> The script's `MonthlyCost` shows `$0` — use `UnitPrice` directly.
 
 ## Cost Formula
 

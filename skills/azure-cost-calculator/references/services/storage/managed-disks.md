@@ -82,7 +82,7 @@ P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P
 
 ## Reserved Instance Pricing
 
-Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`. **RI MonthlyCost trap** — see shared.md.
+Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
 
 ## Common SKUs
 

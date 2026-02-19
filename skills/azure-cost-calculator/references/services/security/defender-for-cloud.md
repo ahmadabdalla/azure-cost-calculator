@@ -50,7 +50,7 @@ MeterName: {meterName}
 
 ## Defender CSPM (Cloud Security Posture Management)
 
-> **Trap (Global region only)**: Defender CSPM meters are in `Global` region — not regional endpoints. USD-only — see shared.md & Common Traps.
+> **Trap (Global region only)**: Defender CSPM meters are in `Global` region — not regional endpoints.
 
 **Query Pattern**:
 

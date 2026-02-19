@@ -10,7 +10,7 @@ hasKnownRates: true
 
 # DDoS Protection
 
-> **Warning**: **API unavailable / USD-only** — see shared.md & Common Traps. Do not query via scripts. Use manual fallback table below.
+> **Warning**: Do not query via scripts. Use manual fallback table below.
 
 **This service requires manual estimation only.**
 
@@ -45,4 +45,3 @@ IP Protection:
 - IP Protection is better for small deployments with 1-14 public IPs
 - Both plans include DDoS rapid response (DRR) support
 - Overage charges may apply for data processing above included limits
-- USD-only — see shared.md & Common Traps for mandatory currency conversion

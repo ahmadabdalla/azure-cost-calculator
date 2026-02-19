@@ -54,7 +54,6 @@ Job cost = VM_retailPrice × hoursPerJob × nodeCount × jobsPerMonth
 
 ## Notes
 
-- The Batch management service is free — no meters exist in the API
 - **Spot nodes** offer up to 90% discount but can be evicted at any time — best for fault-tolerant HPC and rendering workloads
 - **Low Priority nodes** (classic pools) offer up to 80% discount with similar eviction risk
 - Batch supports auto-scale pools — estimate average node count rather than peak for monthly cost

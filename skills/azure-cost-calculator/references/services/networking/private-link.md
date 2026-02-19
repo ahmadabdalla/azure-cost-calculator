@@ -8,7 +8,7 @@ pricingRegion: global
 
 # Private Link / Private Endpoints
 
-> **Warning**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion. Use `Region: Global` explicitly; empty string returns zero results.
+> **Warning**: Use `Region: Global` explicitly; empty string returns zero results.
 
 > **Trap (Cross-region)**: When the PE and the target PaaS service are in different regions, both PE data processing charges AND standard Azure bandwidth egress charges apply. Deploy PEs in the same region as the target service to avoid double charges.
 
@@ -65,7 +65,6 @@ Monthly = endpoint_retailPrice × 730 × endpointCount
 
 ## Notes
 
-- USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
 - **Companion cost**: PEs typically require a Private DNS Zone per service type — see `networking/private-dns.md` for zone hosting and query costs. Multiple PEs of the same type share one zone
 - **Service availability**: Do not maintain an internal PE support list — refer to [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/availability)
 - **AMPLS**: Azure Monitor Private Link Scope is a free grouping resource with no unique meters — uses standard PE billing. 1 PE per AMPLS-to-VNet connection. Requires 5 Private DNS zones (monitor, oms, ods, agentsvc, blob)

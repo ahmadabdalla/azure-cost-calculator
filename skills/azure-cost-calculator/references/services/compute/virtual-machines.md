@@ -74,7 +74,7 @@ ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series
 PriceType: Reservation
 
-> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost. Select desired `reservationTerm` from results.
+> **RI MonthlyCost trap**: Select desired `reservationTerm` from results.
 
 ## Common SKUs
 

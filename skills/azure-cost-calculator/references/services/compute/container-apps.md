@@ -71,7 +71,6 @@ Dedicated:
 
 ## Notes
 
-- The script's `MonthlyCost` for Consumption shows `$0` because quantity is unknown — use the `UnitPrice` field directly
 - Dedicated plan charges per-environment management fee in addition to vCPU/memory
 - GPU workloads require Dedicated plan with `Dedicated GPU Usage` meter
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps

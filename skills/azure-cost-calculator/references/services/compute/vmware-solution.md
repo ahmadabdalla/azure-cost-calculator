@@ -31,8 +31,6 @@ SkuName: AV36P VCF BYOL
 PriceType: Reservation
 InstanceCount: 3
 
-> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
-
 ## Key Fields
 
 | Parameter       | How to determine                       | Example values                              |

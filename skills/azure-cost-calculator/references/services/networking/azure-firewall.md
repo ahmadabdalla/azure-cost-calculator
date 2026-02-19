@@ -8,8 +8,6 @@ primaryCost: "Deployment hourly rate × 730 + data processing per-GB"
 
 # Azure Firewall
 
-**Multiple meters**: Fixed deployment cost (hourly) + variable data processing (per-GB)
-
 > **Trap**: You need **TWO separate queries** per tier — one for the fixed deployment cost and one for data processing. A single unfiltered query returns both meters mixed together, and the `summary.totalMonthlyCost` is meaningless because it sums a per-hour rate with a per-GB rate.
 > **Trap**: The deployment (fixed) cost is the **dominant expense** — typically 99%+ of the total for moderate traffic. Do not confuse the small data processing charge with the full cost.
 
@@ -49,7 +47,5 @@ Monthly = deploymentPrice × 730 + dataPrice × estimatedGB
 
 ## Notes
 
-- The deployment (fixed) cost is the dominant expense — Azure Firewall is a premium service
-- Data processing costs are typically small relative to the fixed cost for moderate traffic
 - Standard → Premium adds IDPS, TLS inspection, URL filtering (higher fixed cost)
 - Basic is a budget option with limited features and throughput
