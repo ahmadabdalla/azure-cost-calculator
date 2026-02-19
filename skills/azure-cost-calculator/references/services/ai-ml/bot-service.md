@@ -68,4 +68,4 @@ Free = no charge (all meters return zero price)
 - **Underlying compute**: Bot apps typically run on Azure App Service or Functions — billed separately. If secured via API Management, APIM costs also apply
 - **MCU (Message Compute Unit)**: 1 MCU = one Health Bot scenario execution; Standard tier includes daily allowance, overages billed per-unit
 - **Free tier**: Returns zero-price meters — included to prevent unnecessary API queries
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing. PE sub-resources (never-assume): `Bot`, `Token`
+- **PE sub-resources** (never-assume): `Bot`, `Token` — both needed for full network isolation
