@@ -51,8 +51,8 @@ ServiceName: Intelligent Recommendations
 | ------------------------ | ----------- | ------------- | ------------------------------ |
 | `Serving Request Token`  | `Serving`   | `1`           | Per-token inference cost       |
 | `Modelling Token`        | `Modelling` | `1`           | Per-token training cost        |
-| `Serving Request Usage`  | `Serving`   | `1`           | Tracking meter — $0.00         |
-| `Modelling Usage`        | `Modelling` | `1`           | Tracking meter — $0.00         |
+| `Serving Request Usage`  | `Serving`   | `1`           | Tracking meter — zero price    |
+| `Modelling Usage`        | `Modelling` | `1`           | Tracking meter — zero price    |
 
 ## Cost Formula
 
@@ -66,7 +66,7 @@ Total Monthly     = Serving Monthly + Modelling Monthly
 
 - Two SKU categories: **Serving** (inference) and **Modelling** (training) — each has a token meter and a tracking meter
 - Only token meters (`Serving Request Token`, `Modelling Token`) generate billable cost
-- Usage meters (`Serving Request Usage`, `Modelling Usage`) are $0.00 tracking meters — exclude from estimates
+- Usage meters (`Serving Request Usage`, `Modelling Usage`) are zero-price tracking meters — exclude from estimates
 - Single `productName`: all meters share `Intelligent Recommendations`
 
 ## Known Rates
@@ -81,7 +81,9 @@ Total Monthly     = Serving Monthly + Modelling Monthly
 For 5M serving tokens + 200K modelling tokens per month:
 
 ```
-Serving  = 5,000,000 × $0.000001 = $5.00
-Modelling = 200,000 × $0.01     = $2,000.00
-Total    = $5.00 + $2,000.00    = $2,005.00 USD/month
+Serving   = 5,000,000 × serving_token_retailPrice
+Modelling = 200,000 × modelling_token_retailPrice
+Total     = Serving + Modelling
 ```
+
+> Use rates from the Known Rates table above or query the API for `Serving Request Token` and `Modelling Token` retailPrice values.
