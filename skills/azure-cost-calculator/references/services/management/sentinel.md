@@ -77,7 +77,7 @@ Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice ×
 
 - Commitment tiers use `1/Day` billing — script auto-multiplies by 30; overage billed at PAYG rate — query `Pay-as-you-go` SKU
 - Commitment tiers: 50, 100, 200, 300, 400, 500, 1000, 2000, 5000, 10000, 25000, 50000 GB/day
-- Basic Logs: search-only (no alerts/detections), 30-day retention, for high-volume low-value logs
+- Basic Logs: search-only (no alerts/detections), 30-day retention, for high-volume low-value logs; when Sentinel is enabled, Basic and Auxiliary Logs use **Sentinel meters** (not Azure Monitor) — do not bill both
 - Regional price variance is significant: commitment tiers cost ~25% more in uksouth vs eastus
 - Sentinel PAYG and Commitment Tier rates are **unified** — they replace (not add to) standalone Azure Monitor/Log Analytics ingestion charges; do not sum both
 - Post-July 2023 workspaces use **simplified pricing** (single unified meter); legacy workspaces use **classic** meters with `Classic` prefix (e.g., `Classic Pay-as-you-go Analysis`) — do not mix

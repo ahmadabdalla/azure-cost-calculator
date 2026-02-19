@@ -83,6 +83,7 @@ Commitment Tier = retailPrice × 30 (unit is 1/Day)
 - First 10 custom time series per resource are free
 - **Basic Logs**: ~78% cheaper than Analytics; supports search queries only (no alerts/dashboards); fixed 30-day retention
 - **Auxiliary Logs**: Cheapest ingestion tier; custom tables only via Logs Ingestion API
+- **Sentinel-enabled workspaces**: Basic and Auxiliary Logs ingestion is billed using **Sentinel meters** (not Azure Monitor meters listed above) — use `ServiceName: Sentinel` for these when Sentinel is enabled
 - **Data Restore**: Minimum 2 TB × 12-hour duration — plan restores carefully
 - Commitment tiers (100–50000 GB/day) provide volume discounts; overage billed at effective rate
 - Alerts: basic metric alerts (platform metrics) are free; multi-resource/custom metric alerts priced separately
