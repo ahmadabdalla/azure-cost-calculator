@@ -2,7 +2,7 @@
 
 > Issue: #157 — Explore expanding YAML front matter to improve token efficiency
 > Branch: `feature/157-yaml-schema-expansion`
-> Status: Schema design phase — no code changes until schema is validated
+> Status: Phases 1–4 complete (schema validated via A/B testing). Phase 5 in progress.
 
 ---
 
@@ -16,123 +16,123 @@ YAML describes **what kind of service this is** (routing, classification, capabi
 
 ---
 
-## Phase 1 — Schema Design
+## Phase 1 — Schema Design ✅
 
 ### Proposed Schema (Option B+)
 
 ```yaml
 ---
 # ── Identity (existing, unchanged) ────────────────────────
-serviceName: Virtual Machines                                    # required — exact API value
-category: compute                                                # required — folder name enum
-aliases: [VMs, VM, VMSS, VM Scale Sets]                          # required — search index
+serviceName: Virtual Machines # required — exact API value
+category: compute # required — folder name enum
+aliases: [VMs, VM, VMSS, VM Scale Sets] # required — search index
 
 # ── Billing Graph (existing, unchanged) ───────────────────
-billingNeeds: [Managed Disks]                                    # optional
-billingConsiderations: [Reserved Instances, Spot, Azure Hybrid Benefit]  # optional
+billingNeeds: [Managed Disks] # optional
+billingConsiderations: [Reserved Instances, Spot, Azure Hybrid Benefit] # optional
 
 # ── NEW: API Identity ────────────────────────────────────
-apiServiceName: Specialized Compute                              # optional — only when API serviceName ≠ display serviceName
-                                                                 #   e.g., VMware Solution, Static Web Apps, AI Services
-                                                                 #   omit if identical to serviceName
+apiServiceName:
+  Specialized Compute # optional — only when API serviceName ≠ display serviceName
+  #   e.g., VMware Solution, Static Web Apps, AI Services
+  #   omit if identical to serviceName
 
 # ── NEW: Pricing Profile ─────────────────────────────────
-primaryCost: "Compute hours × 730 × instanceCount"              # required — one-line billing summary (max 120 chars)
-                                                                 #   moves from bold markdown line to YAML
-                                                                 #   batch mode reads this from frontmatter directly
+primaryCost:
+  "Compute hours × 730 × instanceCount" # required — one-line billing summary (max 120 chars)
+  #   moves from bold markdown line to YAML
+  #   batch mode reads this from frontmatter directly
 
-hasMeters: true                                                  # optional — default: true
-                                                                 #   false for API-unavailable services
-                                                                 #   (Management Groups, DDoS Protection, Entra ID partial)
+hasMeters:
+  true # optional — default: true
+  #   false for API-unavailable services
+  #   (Management Groups, DDoS Protection, Entra ID partial)
 
-pricingRegion: regional                                          # optional — default: regional
-                                                                 #   enum: regional | global | empty-region | api-unavailable
-                                                                 #   drives region parameter in API queries
+pricingRegion:
+  regional # optional — default: regional
+  #   enum: regional | global | empty-region | api-unavailable
+  #   drives region parameter in API queries
 
-hasKnownRates: false                                             # optional — default: false
-                                                                 #   true when file has Known Rates table
-                                                                 #   (manual pricing for API-unavailable services)
+hasKnownRates:
+  false # optional — default: false
+  #   true when file has Known Rates table
+  #   (manual pricing for API-unavailable services)
 
 # ── NEW: Service Capabilities ─────────────────────────────
-hasFreeGrant: false                                              # optional — default: false
-                                                                 #   true when service has free tier or included units
-                                                                 #   signals agent to look for grant deduction logic
+hasFreeGrant:
+  false # optional — default: false
+  #   true when service has free tier or included units
+  #   signals agent to look for grant deduction logic
 
-privateEndpoint: false                                           # optional — default: false
-                                                                 #   boolean only — tier restrictions stay in Notes section
-                                                                 #   enables cross-service PE cost aggregation
+privateEndpoint:
+  false # optional — default: false
+  #   boolean only — tier restrictions stay in Notes section
+  #   enables cross-service PE cost aggregation
 ---
 ```
 
 ### Key Design Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| Required vs optional | **Optional with defaults** (except `primaryCost`) | Avoids 65-file migration for every future field addition |
-| `billingModel` enum | **Deferred** | >30% of services map to `composite` catch-all, destroying routing signal. Revisit after consumer changes exist |
-| `privateEndpoint` type | **Boolean** | Tier restrictions are prose-heavy and variable; they belong in Notes. Boolean answers the PE audit question |
-| `apiServiceName` | **Included** (from Option A) | Fills a real gap — display name ≠ API name for ~5-10 services |
-| `primaryCost` | **Included, required** | Strongest unique field — machine-queryable billing summary moves from body to YAML |
-| `hasKnownRates` | **Included** (from Option A) | Correlates with `hasMeters: false` but captures the 2 extra cases (Communication Services, DevOps) |
-| `crossServiceNames` | **Deferred** | Overlaps with `billingNeeds`; subtle distinction confuses contributors |
-| Default elision | **Omit when matching default** | Minimizes author burden; only exceptions are explicit |
+| Decision               | Choice                                            | Rationale                                                                                                      |
+| ---------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Required vs optional   | **Optional with defaults** (except `primaryCost`) | Avoids 65-file migration for every future field addition                                                       |
+| `billingModel` enum    | **Deferred**                                      | >30% of services map to `composite` catch-all, destroying routing signal. Revisit after consumer changes exist |
+| `privateEndpoint` type | **Boolean**                                       | Tier restrictions are prose-heavy and variable; they belong in Notes. Boolean answers the PE audit question    |
+| `apiServiceName`       | **Included** (from Option A)                      | Fills a real gap — display name ≠ API name for ~5-10 services                                                  |
+| `primaryCost`          | **Included, required**                            | Strongest unique field — machine-queryable billing summary moves from body to YAML                             |
+| `hasKnownRates`        | **Included** (from Option A)                      | Correlates with `hasMeters: false` but captures the 2 extra cases (Communication Services, DevOps)             |
+| `crossServiceNames`    | **Deferred**                                      | Overlaps with `billingNeeds`; subtle distinction confuses contributors                                         |
+| Default elision        | **Omit when matching default**                    | Minimizes author burden; only exceptions are explicit                                                          |
 
 ### Fields NOT Included (and why)
 
-| Field | Source | Why deferred |
-|-------|--------|-------------|
+| Field                           | Source       | Why deferred                                                          |
+| ------------------------------- | ------------ | --------------------------------------------------------------------- |
 | `billingModel` / `pricingModel` | Both options | Ambiguity problem: >30% → `composite`. No routing consumer exists yet |
-| `crossServiceNames` | Option A | Overlaps with `billingNeeds`; semantic distinction is confusing |
-| `regionType` (2-value) | Option A | Superseded by `pricingRegion` (4-value) from Option B |
+| `crossServiceNames`             | Option A     | Overlaps with `billingNeeds`; semantic distinction is confusing       |
+| `regionType` (2-value)          | Option A     | Superseded by `pricingRegion` (4-value) from Option B                 |
 
 ### Line Budget Impact
 
-| Scenario | Current YAML lines | B+ YAML lines | Delta |
-|----------|:--:|:--:|:--:|
-| Minimal (all defaults) | 5-6 | 7-8 | +2 |
-| Typical (some optional) | 6-7 | 9-11 | +3-4 |
-| Full (all fields) | 7-8 | 13-15 | +6-7 |
+| Scenario                | Current YAML lines | B+ YAML lines | Delta |
+| ----------------------- | :----------------: | :-----------: | :---: |
+| Minimal (all defaults)  |        5-6         |      7-8      |  +2   |
+| Typical (some optional) |        6-7         |     9-11      | +3-4  |
+| Full (all fields)       |        7-8         |     13-15     | +6-7  |
 
 > **Open question:** Should the 100-line cap be raised to 105 to accommodate? Or should YAML not count? Decision deferred until A/B results are in.
 
 ---
 
-## Phase 2 — Prototype on Candidate Services
+## Phase 2 — Prototype on Candidate Services ✅
 
-Apply the schema to 7 candidate files covering all archetypes. Modified copies live in `tests/` (not `skills/`) — the schema is a test artifact until validated, not a shipped skill component.
+Applied the B+ schema in-place to 7 candidate files in `skills/azure-cost-calculator/references/services/`. No separate test copies were created — changes went directly into the service reference files.
 
 ### Candidate Services
 
 Focus: **bulky files near or at the 100-line cap** — these are the ones where schema expansion creates real pressure and real opportunity.
 
-| # | Service | File | Lines | Archetype | Why chosen |
-|---|---------|------|:-----:|-----------|------------|
-| 1 | Virtual Machines | `compute/virtual-machines.md` | 90 | Standard hourly | Highest-traffic, RI/AHUB/Spot complexity |
-| 2 | Azure SQL Database | `databases/sql-database.md` | 82 | Hourly + tiered | Multi-tier, RI, geo-replication |
-| 3 | Storage (Blob) | `storage/storage.md` | 90 | Per-GB + tiered | Per-GB billing, PE support, complex tiers |
-| 4 | Azure Functions | `compute/functions.md` | 93 | Composite + free grant | Multi-plan, free tier, cross-billing (App Service) |
-| 5 | Redis Cache | `databases/redis-cache.md` | 99 | Hourly + RI | At the cap (99 lines), RI, multiple tiers |
-| 6 | App Service | `compute/app-service.md` | 73 | Fixed hourly | RI, PE tier-restricted, plan SKU complexity |
-| 7 | Private Link | `networking/private-link.md` | 77 | Global / PE pricing | Global region, PE-specific billing |
+| #   | Service            | File                          | Lines | Archetype              | Why chosen                                         |
+| --- | ------------------ | ----------------------------- | :---: | ---------------------- | -------------------------------------------------- |
+| 1   | Virtual Machines   | `compute/virtual-machines.md` |  90   | Standard hourly        | Highest-traffic, RI/AHUB/Spot complexity           |
+| 2   | Azure SQL Database | `databases/sql-database.md`   |  82   | Hourly + tiered        | Multi-tier, RI, geo-replication                    |
+| 3   | Storage (Blob)     | `storage/storage.md`          |  90   | Per-GB + tiered        | Per-GB billing, PE support, complex tiers          |
+| 4   | Azure Functions    | `compute/functions.md`        |  93   | Composite + free grant | Multi-plan, free tier, cross-billing (App Service) |
+| 5   | Redis Cache        | `databases/redis-cache.md`    |  99   | Hourly + RI            | At the cap (99 lines), RI, multiple tiers          |
+| 6   | App Service        | `compute/app-service.md`      |  73   | Fixed hourly           | RI, PE tier-restricted, plan SKU complexity        |
+| 7   | Private Link       | `networking/private-link.md`  |  77   | Global / PE pricing    | Global region, PE-specific billing                 |
 
-### What changes per file
+### What changed per file
 
-For each candidate:
-1. Copy the original file from `skills/azure-cost-calculator/references/services/` to `tests/schema-candidates/`
-2. Add new YAML fields per schema above
-3. Remove the bold `**Primary cost**` line from body (moved to `primaryCost` YAML field)
-4. No other markdown body changes
-5. Record before/after token counts
-
-> **Important:** The `skills/` folder is for end-users installing the skill. Schema prototypes, test copies, and validation artifacts live in `tests/`. Only after the schema is validated and approved do changes flow back into `skills/`.
+1. Added new YAML fields per schema above (in-place in `skills/`)
+2. Removed the bold `**Primary cost**` line from body (moved to `primaryCost` YAML field)
+3. No other markdown body changes
 
 ---
 
-## Phase 3 — A/B Testing Plan
+## Phase 3 — A/B Testing ✅
 
-### Objective
-
-Validate that the schema expansion achieves ≥5% token reduction in a real estimation run by comparing identical prompts against `main` (current format) and this branch (B+ format).
+External A/B testing completed with satisfactory results. Schema validated.
 
 ### Test Architecture — "Startup SaaS Platform"
 
@@ -167,6 +167,7 @@ Components:
 ```
 
 This scenario forces the agent to:
+
 - Read Virtual Machines (hourly × 730, RI, managed disk dependency) — 90 lines
 - Read App Service (fixed hourly, RI, PE tier-restricted) — 73 lines
 - Read SQL Database (vCore pricing, geo-replication, RI) — 82 lines
@@ -190,14 +191,14 @@ This scenario forces the agent to:
 
 3. **Comparison metrics**
 
-   | Metric | Target | How measured |
-   |--------|--------|-------------|
-   | Total input tokens | ≥5% reduction | Token counter on service ref content |
-   | Cost estimate accuracy | ±2% vs baseline | Compare line items |
-   | API calls made | Same or fewer | Count script invocations |
-   | Free grant correctly deducted | Yes | Check Functions line item |
-   | No-meter service skipped API | Yes | Verify via pricingRegion field |
-   | Global region handled | Yes | Check Private Link query |
+   | Metric                        | Target          | How measured                         |
+   | ----------------------------- | --------------- | ------------------------------------ |
+   | Total input tokens            | ≥5% reduction   | Token counter on service ref content |
+   | Cost estimate accuracy        | ±2% vs baseline | Compare line items                   |
+   | API calls made                | Same or fewer   | Count script invocations             |
+   | Free grant correctly deducted | Yes             | Check Functions line item            |
+   | No-meter service skipped API  | Yes             | Verify via pricingRegion field       |
+   | Global region handled         | Yes             | Check Private Link query             |
 
 4. **Token counting method**
    - Use `tiktoken` (cl100k_base) to count tokens in each service reference file before/after
@@ -211,27 +212,21 @@ The prompt will be a vanilla estimation request using the architecture above, wi
 
 ---
 
-## Phase 4 — Schema Refinement
+## Phase 4 — Schema Refinement ✅
 
-Based on A/B results:
-- If ≥5% reduction achieved → finalize schema, proceed to Phase 5
-- If <5% reduction → analyze where tokens are spent, consider:
-  - Adding `billingModel` if routing savings justify it
-  - Compressing meter tables (the 44% structural redundancy)
-  - More aggressive `primaryCost` usage to skip body sections
-- Document any schema adjustments and re-test
+A/B results met ≥5% reduction target. Schema finalized as-is. Proceeding to Phase 5.
 
 ---
 
-## Phase 5 — Migration & Tooling (future — after schema is validated)
+## Phase 5 — Migration & Tooling
 
-> **Not started until Phases 1-4 are complete and we're comfortable with the schema.**
+> Phases 1–4 complete. 7 candidate files already upgraded in-place.
 
-1. Apply validated schema changes from `tests/schema-candidates/` back into `skills/azure-cost-calculator/references/services/`
+1. ~~Apply validated schema changes~~ — **Done** (in-place during Phase 2)
 2. Update `Validate-ServiceReference.ps1` to handle new YAML fields
 3. Update `docs/TEMPLATE.md` with new schema
 4. Update `CONTRIBUTING.md` with field definitions
-5. Migrate remaining ~65 files (incremental, by category)
+5. Migrate remaining ~58 files (incremental, by category)
 6. Update `SKILL.md` batch mode to exploit metadata for routing
 
 ---
@@ -249,10 +244,10 @@ Based on A/B results:
 
 ## Success Criteria
 
-| Criterion | Threshold |
-|-----------|-----------|
-| Token reduction (7-file aggregate) | ≥5% |
-| Cost estimate accuracy | ±2% vs baseline per line item |
-| No regression in API call correctness | 0 failures |
-| Schema is additive (no breaking changes) | All existing files pass current validation on main |
-| Contributors can fill new fields without training | Fields are self-evident from names + template |
+| Criterion                                         | Threshold                                          |
+| ------------------------------------------------- | -------------------------------------------------- |
+| Token reduction (7-file aggregate)                | ≥5%                                                |
+| Cost estimate accuracy                            | ±2% vs baseline per line item                      |
+| No regression in API call correctness             | 0 failures                                         |
+| Schema is additive (no breaking changes)          | All existing files pass current validation on main |
+| Contributors can fill new fields without training | Fields are self-evident from names + template      |
