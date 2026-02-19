@@ -126,15 +126,7 @@ primaryCost:
      Optional fields whose value matches the default SHOULD be omitted — only
      exceptions (non-default values) appear in the YAML block.
 
-  2. PRIMARY COST: The `primaryCost` YAML field is the one-line billing summary.
-     It should concisely describe the main billing dimensions in ≤120 chars.
-     Examples:
-       - "Fixed hourly rate for the plan SKU × 730"
-       - "vCore hourly rate + storage per-GB/month"
-       - "Execution count + execution time (GB-seconds)"
-       - "Per-endpoint hours + data processed per-GB"
-
-  3. TRAPS (optional but highly encouraged): Document any pricing API
+  2. TRAPS (optional but highly encouraged): Document any pricing API
      gotchas discovered during verification. Each trap should include:
        - What goes wrong (e.g., inflated totals, wrong meters returned)
        - How to avoid it (specific filter values)
@@ -142,25 +134,25 @@ primaryCost:
      Use a descriptive name in parentheses for traps that need identification,
      e.g., **Trap (RI MonthlyCost)**: ...
 
-  4. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
+  3. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
      If the service requires direct API calls (e.g., Global-only pricing),
      provide API URL and Fields in declarative format instead and explain why.
 
-  4b. SCALING: At least one query pattern must demonstrate scaling with
+  3b. SCALING: At least one query pattern must demonstrate scaling with
       InstanceCount: N (for multi-unit resources) or Quantity: N (for
       usage-based meters), with a brief comment explaining the parameter.
 
-  5. KEY FIELDS: Document the exact API field values (case-sensitive).
+  4. KEY FIELDS: Document the exact API field values (case-sensitive).
      Organize as a table with Parameter, How to determine, Example values.
 
-  6. METER NAMES: Document exact meter names as a table. All meter/SKU/
+  5. METER NAMES: Document exact meter names as a table. All meter/SKU/
      product names are CASE-SENSITIVE — this is assumed throughout and does
      not need to be stated per-section.
 
-  7. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
+  6. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
      Include free tier/grant deductions where applicable.
 
-  8. NOTES: Additional context — free tiers, SKU guidance, common
+  7. NOTES: Additional context — free tiers, SKU guidance, common
      mistakes, links to pricing pages, private endpoint support, etc.
      PRIVATE ENDPOINT SUPPORT: Every service reference must document whether
      the service supports private endpoints. Use this pattern in Notes:
@@ -171,7 +163,7 @@ primaryCost:
        - Supports private endpoints — see ... PE sub-resources (never-assume): `blob`, `file`, ...
      If the service does NOT support PE, omit the line (no negative statement needed).
 
-  9. OPTIONAL SECTIONS (add as needed, after Notes):
+  8. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
      - Manual Calculation Example (for sub-cent or complex pricing)
      - Known Rates table (for services where API returns $0.00)

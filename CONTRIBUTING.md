@@ -87,7 +87,6 @@ Check that:
 - The query returns the expected meters (not extras from unrelated products).
 - The `summary.totalMonthlyCost` is reasonable. If it looks inflated, you likely need additional filters (e.g., `-MeterName`) to exclude unwanted meters.
 - Sub-cent prices are handled (the script may round to `$0.00`).
-- **Reservation availability**: Run one query with `-PriceType Reservation`. If it returns results, add `Reserved Instances` to `billingConsiderations`. If it returns 0 results, do not add `Reserved Instances` — absence signals RI is unavailable.
 - **Storage-meter verification**: For each tier the service offers, independently query the storage product (e.g., `-ProductName '...Storage'` or `-MeterName '...Data Stored'`). If storage returns results, the service bills storage separately - document it. If storage returns zero results, explicitly state in the file that storage is included in the compute price. This prevents factual disagreements about billing models.
 
 ### Step 6 - Identify traps and gotchas
@@ -152,7 +151,6 @@ The file MUST follow these rules:
 - **Note format**: `> **Note**: ...` for informational blockquotes that are not traps or warnings.
 - **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
 - **Placement**: Include capacity planning notes, tier limitations, and private endpoint support in the Notes section.
-- **Private endpoint support**: If the service supports PE, add a note: `- Supports private endpoints — see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is tier-restricted. List PE sub-resources as never-assume if multiple exist.
 
 **Pre-submission checklist** (all must be true):
 1. First declarative query pattern (most common/default config) appears within lines 1–45
