@@ -222,12 +222,46 @@ A/B results met ≥5% reduction target. Schema finalized as-is. Proceeding to Ph
 
 > Phases 1–4 complete. 7 candidate files already upgraded in-place.
 
-1. ~~Apply validated schema changes~~ — **Done** (in-place during Phase 2)
-2. Update `Validate-ServiceReference.ps1` to handle new YAML fields
-3. Update `docs/TEMPLATE.md` with new schema
-4. Update `CONTRIBUTING.md` with field definitions
-5. Migrate remaining ~58 files (incremental, by category)
-6. Update `SKILL.md` batch mode to exploit metadata for routing
+### Step 1 — Apply schema to candidates ✅
+
+Done in-place during Phase 2. No copy-back needed.
+
+### Step 2 — Validation gate ✅
+
+Updated the validation pipeline to enforce B+ schema fields. CI acts as a "migrate-on-touch" gate — any file changed in a PR must have the new required fields.
+
+**Files changed:**
+
+| File                                         | Change                                                                                                                                                     |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tests/lib/validation/ValidationConfig.psd1` | Added `primaryCost` to `RequiredFrontMatterFields`                                                                                                         |
+| `tests/lib/validation/Test-FrontMatter.ps1`  | Imports `frontmatter-schema.psd1`; validates boolean types, enum values (`pricingRegion`, `billingConsiderations`), max length (`primaryCost` ≤ 120 chars) |
+| `tests/lib/validation/Test-ContentRule.ps1`  | Added dual-primaryCost check (fails if both YAML `primaryCost` and body `**Primary cost**:` exist)                                                         |
+| `skills/.../storage/storage.md`              | Fixed multi-line aliases → inline format (pre-existing issue)                                                                                              |
+
+**Gate behavior:**
+
+- Migrated files with B+ schema → all new checks enforced ✅
+- Unmigrated files touched in a PR → fail on missing `primaryCost` (forces migration) ✅
+- Unmigrated files not in a PR → unaffected (CI only validates changed files) ✅
+
+### Step 3 — Migrate remaining ~58 files
+
+Incremental migration by category. Each file needs:
+
+1. Add `primaryCost` to YAML (required)
+2. Remove `**Primary cost**:` body line (moved to YAML)
+3. Add optional B+ fields where non-default (`privateEndpoint`, `hasFreeGrant`, `hasMeters`, `pricingRegion`, `hasKnownRates`, `apiServiceName`)
+4. Validate with `Validate-ServiceReference.ps1`
+
+### Step 4 — Update docs
+
+- Update `docs/TEMPLATE.md` with B+ schema fields
+- Update `CONTRIBUTING.md` with field definitions and examples
+
+### Step 5 — Update SKILL.md batch mode
+
+Modify batch mode to exploit metadata for routing (e.g., skip API calls for `hasMeters: false`, use `pricingRegion` for query construction).
 
 ---
 
@@ -236,7 +270,6 @@ A/B results met ≥5% reduction target. Schema finalized as-is. Proceeding to Ph
 - [ ] Should 100-line cap be raised to 105?
 - [ ] Should `billingModel` be added in v2?
 - [ ] Should `crossServiceNames` be added for multi-serviceName services?
-- [ ] Should `primaryCost` have a max character limit?
 - [ ] How should SKILL.md batch mode change to exploit the new metadata?
 - [ ] Can we get >5% savings by also compressing meter tables in YAML?
 
