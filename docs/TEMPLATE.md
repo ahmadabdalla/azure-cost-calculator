@@ -44,11 +44,29 @@ billingConsiderations:
       M365 / Windows per-user licensing,
     },
   ]
+
+# ── API Identity (optional) ──────────────────────────────
+# apiServiceName: { only when API serviceName ≠ display serviceName,
+#   e.g., VMware Solution → "Specialized Compute", Static Web Apps → "Azure App Service" }
+
+# ── Pricing Profile ──────────────────────────────────────
+primaryCost:
+  {
+    required — one-line billing summary (max 120 chars),
+    e.g.,
+    "Compute hours × 730 × instanceCount",
+    "Per-execution + GB-seconds with free grant deduction",
+  }
+# hasMeters: false                  # optional — default: true; set false for API-unavailable services
+# pricingRegion: global             # optional — default: regional; enum: regional | global | empty-region | api-unavailable
+# hasKnownRates: true               # optional — default: false; set true when file has Known Rates table
+
+# ── Service Capabilities (optional) ──────────────────────
+# hasFreeGrant: true                # optional — default: false; set true for free tier / included units
+# privateEndpoint: true             # optional — default: false; set true for PE support
 ---
 
 # {Service Display Name}
-
-**Primary cost**: {One-line summary of the main billing dimensions, e.g., "Compute hours × 730" or "Operations per-10K + storage per-GB/month"}
 
 <!--
   INSTRUCTIONS FOR AUTHORS:
@@ -62,14 +80,14 @@ billingConsiderations:
      trap warnings — their length may vary.
 
   0b. 100-LINE LIMIT: The total file length must not exceed 100 lines of markdown
-      content. This budget covers YAML, title, primary cost, traps, query patterns,
+      content. This budget covers YAML, title, traps, query patterns,
       tables, formulas, and notes. Optimize for density — every line costs tokens
       at runtime.
 
   0c. SECTION ORDER (enforced by validation): Sections must appear in this order:
-        YAML front matter → Title (H1) → Primary cost → Trap(s) →
-        Query Pattern → Key Fields → Meter Names → Cost Formula →
-        Notes → Optional sections
+        YAML front matter → Title (H1) → Trap(s) → Query Pattern →
+        Key Fields → Meter Names → Cost Formula → Notes →
+        Optional sections
       Required sections (Query Pattern, Key Fields, Meter Names, Cost Formula,
       Notes) must maintain their relative order even if some are absent.
       All optional sections must appear after Notes.
@@ -88,8 +106,28 @@ billingConsiderations:
        user about before calculating. Use only these values:
        Reserved Instances, Spot Pricing, Azure Hybrid Benefit, M365 / Windows per-user licensing.
        Omit entirely if none apply — absence means standard PAYG pricing only.
+     - apiServiceName (optional): Only when API serviceName differs from display
+       serviceName (e.g., VMware Solution uses "Specialized Compute"). Omit if identical.
+     - primaryCost (required): One-line billing summary, max 120 chars. This replaces
+       the old body **Primary cost**: line — it now lives in YAML front matter.
+       Examples: "Compute hours × 730 × instanceCount",
+       "Per-execution + GB-seconds with free grant deduction",
+       "Per-endpoint hours + data processed per-GB".
+     - hasMeters (optional, default: true): Set false for API-unavailable services
+       (e.g., Management Groups, Entra ID). Omit when true.
+     - pricingRegion (optional, default: regional): How region affects API queries.
+       Enum: regional | global | empty-region | api-unavailable. Omit when regional.
+     - hasKnownRates (optional, default: false): Set true when the file contains
+       a Known Rates table with manual pricing. Omit when false.
+     - hasFreeGrant (optional, default: false): Set true when the service has a
+       free tier or included units requiring grant deduction. Omit when false.
+     - privateEndpoint (optional, default: false): Set true when the service
+       supports private endpoints. Tier restrictions stay in Notes. Omit when false.
+     Optional fields whose value matches the default SHOULD be omitted — only
+     exceptions (non-default values) appear in the YAML block.
 
-  2. PRIMARY COST: A concise summary of the main billing dimensions.
+  2. PRIMARY COST: The `primaryCost` YAML field is the one-line billing summary.
+     It should concisely describe the main billing dimensions in ≤120 chars.
      Examples:
        - "Fixed hourly rate for the plan SKU × 730"
        - "vCore hourly rate + storage per-GB/month"
