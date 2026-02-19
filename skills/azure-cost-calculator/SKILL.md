@@ -96,17 +96,17 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 YAML front matter fields. Optional fields use default elision — omitted means the default applies.
 
-| Field                   | Required | Default    | Action                                                       |
-| ----------------------- | :------: | ---------- | ------------------------------------------------------------ |
-| `billingNeeds`          |    —     | omit       | Read and price listed dependency services                    |
-| `billingConsiderations` |    —     | omit       | Ask user about listed pricing factors before calculating     |
-| `primaryCost`           |    ✔     | —          | One-line billing summary for quick cost context              |
-| `apiServiceName`        |    —     | omit       | Use instead of `serviceName` in API queries                  |
-| `hasMeters`             |    —     | `true`     | `false` → skip API, use Known Rates table                    |
-| `pricingRegion`         |    —     | `regional` | `global` → `Region: Global`; `api-unavailable` → skip API    |
-| `hasKnownRates`         |    —     | `false`    | `true` → file contains manual pricing table                  |
-| `hasFreeGrant`          |    —     | `false`    | `true` → apply free grant deduction from Cost Formula        |
-| `privateEndpoint`       |    —     | `false`    | `true` → aggregate PE costs via `networking/private-link.md` |
+| Field                   | Required | Default    | Action                                                                                  |
+| ----------------------- | :------: | ---------- | --------------------------------------------------------------------------------------- |
+| `billingNeeds`          |    —     | omit       | Read and price listed dependency services                                               |
+| `billingConsiderations` |    —     | omit       | Ask user about listed pricing factors before calculating                                |
+| `primaryCost`           |    ✔     | —          | One-line billing summary for quick cost context                                         |
+| `apiServiceName`        |    —     | omit       | Use instead of `serviceName` in API queries                                             |
+| `hasMeters`             |    —     | `true`     | `false` → skip API, use Known Rates table                                               |
+| `pricingRegion`         |    —     | `regional` | `global` → `Region: Global`; `api-unavailable` → skip API; `empty-region` → omit region |
+| `hasKnownRates`         |    —     | `false`    | `true` → file contains manual pricing table                                             |
+| `hasFreeGrant`          |    —     | `false`    | `true` → apply free grant deduction from Cost Formula                                   |
+| `privateEndpoint`       |    —     | `false`    | `true` → aggregate PE costs via `networking/private-link.md`                            |
 
 ## Universal Traps
 

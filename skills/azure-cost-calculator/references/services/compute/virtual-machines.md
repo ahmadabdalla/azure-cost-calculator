@@ -5,7 +5,6 @@ aliases: [VMs, virtual machine, VM, VMSS, VM Scale Sets, scale set]
 billingNeeds: [Managed Disks]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances, Spot Pricing]
 primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
-privateEndpoint: true
 ---
 
 # Virtual Machines
@@ -74,7 +73,7 @@ ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series
 PriceType: Reservation
 
-> **RI MonthlyCost trap**: Select desired `reservationTerm` from results.
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it reports the full term price. Manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). Select desired `reservationTerm` from results.
 
 ## Common SKUs
 

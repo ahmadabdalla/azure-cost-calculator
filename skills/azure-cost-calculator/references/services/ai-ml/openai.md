@@ -4,7 +4,7 @@ category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Per-token billing (input + output tokens per 1M or 1K) — varies by model and deployment type."
-hasKnownRates: true
+privateEndpoint: true
 ---
 
 # Azure OpenAI Service

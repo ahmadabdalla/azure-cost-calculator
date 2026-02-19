@@ -1,15 +1,7 @@
 ---
 serviceName: Log Analytics
 category: monitoring
-aliases:
-  [
-    OMS,
-    Workspace,
-    Logs,
-    Log Analytics Workspace,
-    Azure Monitor Logs,
-    Operations Management Suite,
-  ]
+aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
 billingNeeds: [Azure Monitor]
 primaryCost: "Data ingestion per-GB + retention beyond free period (90 days Sentinel / 31 days standard)"
 hasFreeGrant: true

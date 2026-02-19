@@ -2,7 +2,7 @@
 serviceName: Key Vault
 category: security
 aliases: [keyvault, KV, vault]
-primaryCost: "Operations (per-10K) + secrets/keys/certificates stored."
+primaryCost: "Operations (per-10K); Premium adds per-HSM-key monthly charges"
 privateEndpoint: true
 ---
 
