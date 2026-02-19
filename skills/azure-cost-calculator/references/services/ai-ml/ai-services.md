@@ -2,11 +2,12 @@
 serviceName: Foundry Tools
 category: ai-ml
 aliases: [Cognitive Services, Vision, Speech, Language, Decision]
+primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure AI Services
-
-**Primary cost**: Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain.
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Services` or `Cognitive Services`. Old names return zero results.
 
@@ -82,7 +83,6 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day` — script auto-multiplies by 30
 - **Disconnected**: Products ending `- Disconnected` have annual billing — exclude unless requested
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Product Names
 

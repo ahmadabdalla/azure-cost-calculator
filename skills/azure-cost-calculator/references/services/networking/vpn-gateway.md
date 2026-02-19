@@ -3,11 +3,10 @@ serviceName: VPN Gateway
 category: networking
 aliases: [VPN, Site-to-Site, Point-to-Site, S2S, P2S]
 billingNeeds: [IP Addresses]
+primaryCost: "Gateway SKU hourly rate × 730 + S2S tunnels beyond 10 free + P2S per-connection"
 ---
 
 # VPN Gateway
-
-**Primary cost**: Gateway SKU hourly rate × 730 + S2S/P2S connection fees for tunnels beyond included allowance
 
 > **Trap (S2S included tunnels)**: All VpnGw1+ SKUs include **10 S2S tunnels free** in the base gateway price. Basic SKU supports max 10 tunnels total (cannot exceed 10). The API always returns a non-zero `S2S Connection` rate regardless of SKU — do NOT multiply it by total tunnel count. Only tunnels beyond the first 10 incur the per-tunnel hourly charge. Applying the S2S rate to all tunnels grossly inflates the estimate.
 >

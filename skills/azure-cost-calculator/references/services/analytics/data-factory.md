@@ -3,11 +3,11 @@ serviceName: Azure Data Factory v2
 category: analytics
 aliases: [ADF, ETL, Data Pipeline]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Pipeline activity runs (per month) + data movement hours + inactive pipeline fees"
+privateEndpoint: true
 ---
 
 # Azure Data Factory
-
-**Primary cost**: Pipeline activity runs (per month) + data movement hours + inactive pipeline fees
 
 > **Trap (v1 vs v2)**: The API has two separate service names: `Azure Data Factory` (v1, legacy) and `Azure Data Factory v2` (current). Most deployments use v2. Always confirm which version the user has before querying.
 
@@ -82,7 +82,6 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - SSIS Integration Runtime is billed as VMs under this service — query with `ProductName 'SSIS ...'` product names
 - Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 
@@ -91,4 +90,4 @@ ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
 PriceType: Reservation
 
-> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost. Data Flow vCores only (General Purpose, Compute Optimized). Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
+> **RI MonthlyCost trap**: Data Flow vCores only (General Purpose, Compute Optimized). Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).

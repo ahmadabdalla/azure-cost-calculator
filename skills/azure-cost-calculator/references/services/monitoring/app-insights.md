@@ -3,11 +3,12 @@ serviceName: Application Insights
 category: monitoring
 aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 billingNeeds: [Log Analytics]
+primaryCost: "Data ingestion per-GB + retention (via Log Analytics workspace)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Application Insights
-
-**Primary cost**: Data ingestion per-GB + retention (via Log Analytics workspace)
 
 > **Trap**: Workspace-based Application Insights has no separate cost — all telemetry is billed through Log Analytics. Classic (non-workspace-based) is deprecated.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free per Log Analytics workspace. Always deduct this from the billable total: `billable_GB = total_GB - 5`.
@@ -92,4 +93,4 @@ Typical Application Insights telemetry volume per application instance:
 - Availability tests (multi-step web tests) may have additional costs for web test runs
 - Maximum retention period: 730 days (2 years)
 - For commitment tier pricing (100+ GB/day), see `log-analytics.md` commitment tiers section
-- Supports private endpoints (via AMPLS) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require AMPLS (Azure Monitor Private Link Scope)

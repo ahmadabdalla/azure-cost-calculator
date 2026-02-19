@@ -1,14 +1,13 @@
 ---
 serviceName: Storage
 category: storage
-aliases:
-  [blob storage, file storage, table storage, queue storage, Azure Storage]
+aliases: [blob storage, file storage, table storage, queue storage, Azure Storage]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Data stored per-GB/month (tiered) + operations per-10K + data retrieval per-GB"
+privateEndpoint: true
 ---
 
 # Storage Accounts (Blob)
-
-**Primary cost**: Data stored (per-GB/month), operations (per-10K), data retrieval, write operations
 
 > **Trap**: `productName = 'Blob Storage'` only covers **LRS/GRS/RA-GRS**. For ZRS/GZRS/RA-GZRS use `productName = 'General Block Blob v2'` — wrong productName returns zero results.
 
@@ -79,7 +78,7 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps
 
 - Read operations meter is generic (no redundancy suffix); write operations include redundancy
 - RA-GZRS write operations use skuName `Hot GZRS`, not `Hot RA-GZRS`
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing. PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) apply only with RA-GRS/RA-GZRS.
+- PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) apply only with RA-GRS/RA-GZRS.
 
 ## Product Names
 

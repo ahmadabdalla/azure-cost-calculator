@@ -4,11 +4,11 @@ category: compute
 aliases: [AKS, kubernetes, k8s]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances]
+primaryCost: "AKS management fee + VM node costs (priced separately as VMs)"
+privateEndpoint: true
 ---
 
 # Azure Kubernetes Service (AKS)
-
-**Primary cost**: AKS management fee + VM node costs (priced separately as VMs)
 
 > **Trap**: Querying with just `-SkuName 'Standard'` returns **two** meters: `Standard Uptime SLA` and `Standard Long Term Support`. The `summary.totalMonthlyCost` sums both, inflating the estimate ~7×. Always filter with `-MeterName 'Standard Uptime SLA'` unless the user specifically needs LTS Kubernetes version support.
 
@@ -50,4 +50,3 @@ Monthly = AKS_uptime_SLA_fee × 730 + (VM_hourly × 730 × nodeCount)
 - Free tier: no uptime SLA fee, limited cluster management
 - Standard tier: hourly fee for uptime SLA — query live price
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested — it's an optional add-on for extended Kubernetes version support
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

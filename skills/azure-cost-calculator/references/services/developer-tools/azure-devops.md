@@ -3,11 +3,13 @@ serviceName: Azure DevOps
 category: developer-tools
 aliases: [ADO, Repos, Pipelines, Boards, Artifacts]
 billingConsiderations: [M365 / Windows per-user licensing]
+primaryCost: "Per-user/month license (Basic/Test Plans) + parallel jobs + Artifacts storage per-GB beyond free tier"
+pricingRegion: global
+hasKnownRates: true
+hasFreeGrant: true
 ---
 
 # Azure DevOps
-
-**Primary cost**: Per-user/month license fee (Basic/Basic+Test Plans) + parallel job fees + Artifacts storage per-GB beyond free tier
 
 > **Trap (non-hourly billing)**: All Azure DevOps meters use `1/Month` or `1 GB/Month` units — not hourly rates. The scripts' `MonthlyCost` multiplies `retailPrice × 730`, producing **wrong** values. Use `retailPrice` directly as the monthly cost. All meters are Global-only (`armRegionName: Global`).
 >

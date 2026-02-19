@@ -3,11 +3,11 @@ serviceName: Foundry Models
 category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Per-token billing (input + output tokens per 1M or 1K) — varies by model and deployment type."
+privateEndpoint: true
 ---
 
 # Azure OpenAI Service
-
-**Primary cost**: Per-token billing (input + output tokens per 1M or 1K) — varies by model and deployment type (Global, Data Zone, Regional).
 
 > **Trap (serviceName rebrand)**: The API `serviceName` is `Foundry Models`, NOT `Azure OpenAI Service`. Queries using `Azure OpenAI Service` return zero results. Always use `ServiceName 'Foundry Models'`.
 

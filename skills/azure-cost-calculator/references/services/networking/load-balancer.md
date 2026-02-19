@@ -2,11 +2,11 @@
 serviceName: Load Balancer
 category: networking
 aliases: [LB, load balancer]
+primaryCost: "Per-hour base fee + per-GB data processed + overage rules (Standard); VNet peering per-GB"
+pricingRegion: global
 ---
 
 # Virtual Network / Load Balancer
-
-**Primary cost**: Per-hour base fee + per-GB data processed + overage rules (Standard SKU); VNet peering per-GB transfer
 
 ## Virtual Network
 
@@ -17,8 +17,6 @@ VNets themselves are free. Costs come from:
 - **NAT Gateway**: per-hour + per-GB processed
 
 ## Load Balancer
-
-> **Note**: **Global-region / USD-only** — see shared.md & Common Traps for mandatory currency conversion.
 
 > **Trap**: Load Balancer is billed **per-resource**. If a user requests N Load Balancers, calculate the full cost for one LB, then **multiply the total by N**. Do NOT query once and assume it covers multiple LBs.
 

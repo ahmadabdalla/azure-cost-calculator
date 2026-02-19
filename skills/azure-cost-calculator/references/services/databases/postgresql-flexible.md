@@ -3,11 +3,11 @@ serviceName: Azure Database for PostgreSQL
 category: databases
 aliases: [PostgreSQL, postgres, flexible server]
 billingConsiderations: [Reserved Instances]
+primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
+privateEndpoint: true
 ---
 
 # Azure Database for PostgreSQL Flexible Server
-
-**Primary cost**: vCore hourly rate x 730 + storage per-GB/month
 
 **Multiple meters**: vCore compute (hourly) + storage (per-GB/month)
 
@@ -68,4 +68,3 @@ Query storage rate from the API — it varies by region and currency.
 - Use the explore script with SearchTerm PostgreSQL Flexible to discover available series
 - High Availability doubles the compute cost (deploys a standby replica)
 - Backup storage: first backup equal to DB size is free; excess is charged per-GB/month
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

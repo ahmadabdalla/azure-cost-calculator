@@ -3,11 +3,11 @@ serviceName: Storage
 category: storage
 aliases: [managed disks, disks, disk storage]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)"
+privateEndpoint: true
 ---
 
 # Managed Disks
-
-**Primary cost**: Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)
 
 > **Warning (Premium/Standard SSD two-meter trap)**: The API returns **both** "Disk" **and** "Disk Mount" meters. **You MUST sum both** — the mount fee alone is ~5% of cost. Using only mount fee = **~20× too cheap**. Always use `summary.totalMonthlyCost` which sums correctly. Premium SSD returns 2 meters, Standard SSD returns 3 (+ Operations), Standard HDD returns 2 (Disk + Operations, no mount fee).
 
@@ -78,11 +78,11 @@ P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P
 
 - Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
 - Premium SSD P1–P20 include free burst (on-demand burst P20+ separate meter); snapshots billed separately
-- Supports private endpoints for disk import/export — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints limited to disk import/export operations
 
 ## Reserved Instance Pricing
 
-Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`. **RI MonthlyCost trap** — see shared.md.
+Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
 
 ## Common SKUs
 

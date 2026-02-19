@@ -2,11 +2,11 @@
 serviceName: Azure Database Migration Service
 category: databases
 aliases: [DMS, Database Migration, DB Migration Service]
+primaryCost: "Instance hourly rate × 730 (Premium tier only — Basic/General Purpose are free)"
+hasKnownRates: true
 ---
 
 # Azure Database Migration Service
-
-**Primary cost**: Instance hourly rate × 730 (Premium tier only — Basic/General Purpose are free)
 
 > **Trap**: Meter names (`4 vCore`, `8 vCore`, `16 vCore`) repeat across General Purpose Compute and Premium Compute products. Always filter by `productName` to select the correct tier.
 

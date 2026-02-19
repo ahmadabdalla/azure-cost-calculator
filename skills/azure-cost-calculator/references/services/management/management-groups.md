@@ -2,11 +2,12 @@
 serviceName: Management Groups
 category: management
 aliases: [Management Group, Azure Management Groups, Subscription Organization]
+primaryCost: "Free — no charges for creating or using management groups."
+hasMeters: false
+pricingRegion: api-unavailable
 ---
 
 # Management Groups
-
-**Primary cost**: Free — no charges for creating or using management groups.
 
 > **Trap**: The API returns no meters for Management Groups. Do NOT query for pricing — this is a free service.
 >
@@ -33,4 +34,3 @@ Monthly = $0.00 (free service, no meters)
 - Each Azure AD tenant gets a single root management group
 - Supports up to six levels of depth (excluding the root and subscription level)
 - Azure Policy and RBAC assignments applied at a management group scope cascade to child subscriptions
-- No retail meter exists in the Azure Retail Prices API — scripts return zero results

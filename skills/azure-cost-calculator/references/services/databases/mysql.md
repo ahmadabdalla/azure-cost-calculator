@@ -3,11 +3,11 @@ serviceName: Azure Database for MySQL
 category: databases
 aliases: [MySQL, Azure MySQL]
 billingConsiderations: [Reserved Instances]
+primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
+privateEndpoint: true
 ---
 
 # Azure Database for MySQL Flexible Server
-
-**Primary cost**: vCore hourly rate × 730 + storage per-GB/month
 
 > **Trap**: Unfiltered queries return ~80 meters across deprecated Single Server, all Flexible Server series, and storage — wildly inflated total. Always filter by `ProductName` to target one series.
 
@@ -82,7 +82,6 @@ Total = Compute + Storage
 - High Availability doubles compute cost (deploys a standby replica)
 - Backup: first backup equal to provisioned storage is free; excess charged per-GB/month
 - Single Server is deprecated — all new deployments use Flexible Server
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Product Names
 

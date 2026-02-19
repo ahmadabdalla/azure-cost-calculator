@@ -5,7 +5,7 @@
         'ai-ml', 'iot', 'developer-tools', 'identity', 'migration',
         'web', 'communication', 'specialist'
     )
-    RequiredFrontMatterFields = @('serviceName', 'category', 'aliases')
+    RequiredFrontMatterFields = @('serviceName', 'category', 'aliases', 'primaryCost')
     RequiredSections = @('Query Pattern', 'Cost Formula', 'Notes')
     RequiredSectionOrder = @('Query Pattern', 'Key Fields', 'Meter Names', 'Cost Formula', 'Notes')
     OptionalSections = @(

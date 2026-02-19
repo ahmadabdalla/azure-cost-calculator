@@ -3,11 +3,11 @@ serviceName: Redis Cache
 category: databases
 aliases: [Redis, Azure Cache for Redis, cache]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Cache instance hours based on tier and size × 730 × shardCount"
+privateEndpoint: true
 ---
 
 # Redis Cache
-
-**Primary cost**: Cache instance hours based on tier and size
 
 > **Trap (duplicate meters)**: Standard and Premium tiers return **two meters per size** — e.g., `P1 Cache` AND `P1 Cache Instance`. The `{Size} Cache` meter is the **total cluster cost** (2 nodes with HA); `{Size} Cache Instance` is exactly **half** (per-node). **Use `{Size} Cache` for total cost matching the Azure Portal.** Basic and Enterprise tiers only have `{Size} Cache` (no `Cache Instance` variant).
 
@@ -71,7 +71,6 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 - Basic tier has no SLA or replication (dev/test only); use `ProductName` to disambiguate tiers
 - Standard tier includes replication (2 nodes); Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 
@@ -86,7 +85,6 @@ PriceType: Reservation
 **Example meterName values:** `P1 Cache Instance`, `P2 Cache Instance`, `P3 Cache Instance`, `P4 Cache Instance`, `P5 Cache Instance`
 
 > **Important:** RI pricing uses `{Size} Cache Instance` (per-node), not `{Size} Cache`. Multiply by 2 for HA cluster cost.
-> **RI MonthlyCost trap** — see shared.md & Reserved Instance MonthlyCost.
 
 ## Product Names
 

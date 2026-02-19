@@ -2,11 +2,11 @@
 serviceName: Stream Analytics
 category: analytics
 aliases: [ASA, Real-time Analytics]
+primaryCost: "Streaming Unit (SU) hourly rate × 730 per SU provisioned"
+privateEndpoint: true
 ---
 
 # Azure Stream Analytics
-
-**Primary cost**: Streaming Unit (SU) hourly rate × 730 per SU provisioned
 
 > **Trap (V2 tiered pricing)**: Standard V2 and Dedicated V2 return multiple rows with tiered pricing (TierMinUnits 0, 730, 5840). The rate varies by tier — check each row's `unitPrice` and `tierMinimumUnits` to apply the correct rate per usage band. `totalMonthlyCost` sums all tiers and is misleading. Use `SkuName 'Standard'` (legacy, single flat rate) for simple estimates, or filter V2 rows by TierMinUnits for accurate tiered calculations.
 
@@ -74,4 +74,3 @@ Edge:              Monthly = retailPrice × deviceCount
 - **Dedicated tiers**: Same pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
 - **Edge**: Per-device monthly flat rate; runs on IoT Edge devices for local stream processing
 - **No ArmSkuName**: All meters return empty `armSkuName` — do not filter by this field
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

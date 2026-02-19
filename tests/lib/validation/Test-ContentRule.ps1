@@ -44,8 +44,8 @@ function Test-ContentRule {
         }
     }
     $checks.Add((New-ValidationCheck -Name 'forty_five_line_rule' -Pass $hasQueryInFirst45 `
-        -PassMessage 'Query pattern found within first 45 lines' `
-        -FailMessage 'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block, ServiceName: declaration, or API: declaration.'))
+                -PassMessage 'Query pattern found within first 45 lines' `
+                -FailMessage 'No query pattern found within first 45 lines (45-line rule). Expected ```powershell/pwsh block, ServiceName: declaration, or API: declaration.'))
 
     # At least one query or Cost Formula must show how to scale (InstanceCount/Quantity/multiplier)
     $queryBlockLines = [System.Collections.Generic.List[string]]::new()
@@ -79,18 +79,27 @@ function Test-ContentRule {
         }
     }
     $checks.Add((New-ValidationCheck -Name 'scaling_parameter' -Pass $hasScalingParam `
-        -PassMessage 'Scaling parameter or cost formula multiplier found' `
-        -FailMessage 'No scaling parameter (InstanceCount/Quantity) or cost formula multiplier found. At least one query or formula must demonstrate how to scale.'))
+                -PassMessage 'Scaling parameter or cost formula multiplier found' `
+                -FailMessage 'No scaling parameter (InstanceCount/Quantity) or cost formula multiplier found. At least one query or formula must demonstrate how to scale.'))
 
     $maxLines = $config.MaxLineCount
     $checks.Add((New-ValidationCheck -Name 'line_count_limit' -Pass ($Lines.Count -le $maxLines) `
-        -PassMessage "File is $($Lines.Count) lines (limit: $maxLines)" `
-        -FailMessage "File is $($Lines.Count) lines -- exceeds $($maxLines)-line limit by $($Lines.Count - $maxLines) lines"))
+                -PassMessage "File is $($Lines.Count) lines (limit: $maxLines)" `
+                -FailMessage "File is $($Lines.Count) lines -- exceeds $($maxLines)-line limit by $($Lines.Count - $maxLines) lines"))
 
-    $hasPrimaryCost = @($Lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
+    $hasPrimaryCostBody = @($Lines | Where-Object { $_ -match '^\*\*Primary cost\*\*\s*:' }).Count -gt 0
+    $hasPrimaryCostYaml = $FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('primaryCost')
+    $hasPrimaryCost = $hasPrimaryCostBody -or $hasPrimaryCostYaml
     $checks.Add((New-ValidationCheck -Name 'primary_cost_line' -Pass $hasPrimaryCost `
-        -PassMessage 'Primary cost line found' `
-        -FailMessage 'Missing **Primary cost**: line'))
+                -PassMessage ('Primary cost found' + $(if ($hasPrimaryCostYaml) { ' (YAML frontmatter)' } else { ' (body line)' })) `
+                -FailMessage 'Missing primaryCost in YAML frontmatter or **Primary cost**: line in body'))
+
+    # Dual primaryCost: YAML and body should not both exist — YAML replaces the body line
+    if ($hasPrimaryCostBody -and $hasPrimaryCostYaml) {
+        $checks.Add((New-ValidationCheck -Name 'no_dual_primary_cost' -Pass $false `
+                    -PassMessage 'n/a' `
+                    -FailMessage 'Both YAML primaryCost and body **Primary cost**: found — remove the body line (YAML replaces it)'))
+    }
 
     # Query Pattern uses declarative Key: Value format, not fenced code blocks
     $codeFenceInQueryPattern = $false
@@ -110,13 +119,13 @@ function Test-ContentRule {
         }
     }
     $checks.Add((New-ValidationCheck -Name 'no_code_fences_in_query_pattern' -Pass (-not $codeFenceInQueryPattern) `
-        -PassMessage 'No code fences in Query Pattern section' `
-        -FailMessage 'Code fence found in Query Pattern section -- use declarative Key: Value format instead'))
+                -PassMessage 'No code fences in Query Pattern section' `
+                -FailMessage 'Code fence found in Query Pattern section -- use declarative Key: Value format instead'))
 
     $hasTemplateComments = @($Lines | Where-Object { $_ -match 'INSTRUCTIONS FOR AUTHORS' -or $_ -match 'DELETE THIS COMMENT BLOCK' }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'no_template_comments' -Pass (-not $hasTemplateComments) `
-        -PassMessage 'No template instruction comments found' `
-        -FailMessage 'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'))
+                -PassMessage 'No template instruction comments found' `
+                -FailMessage 'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'))
 
     # Every ServiceName: in a query must match the YAML serviceName to avoid silent API mismatches
     $yamlValue = $null
@@ -125,9 +134,15 @@ function Test-ContentRule {
     }
     $hasApiLines = @($Lines | Where-Object { $_ -match '^\s*API\s*:' }).Count -gt 0
     $serviceNameLines = [System.Collections.Generic.List[object]]::new()
+    $insideFencedBlock = $false
     $insideHtmlComment = $false
     for ($i = 0; $i -lt $Lines.Count; $i++) {
         $line = $Lines[$i]
+        if ($line -match '^\s*```') {
+            $insideFencedBlock = -not $insideFencedBlock
+            continue
+        }
+        if ($insideFencedBlock) { continue }
         $effective = $line
         if ($insideHtmlComment) {
             if ($effective -match '-->(.*)$') {
@@ -161,18 +176,18 @@ function Test-ContentRule {
     }
     if ($hasApiLines -and $serviceNameLines.Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $true `
-            -PassMessage 'File uses API: pattern -- serviceName consistency check skipped' `
-            -FailMessage 'n/a'))
+                    -PassMessage 'File uses API: pattern -- serviceName consistency check skipped' `
+                    -FailMessage 'n/a'))
     }
     elseif ($serviceNameLines.Count -eq 0 -and -not $hasApiLines) {
         $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $false `
-            -PassMessage 'n/a' `
-            -FailMessage 'No ServiceName: or API: declarations found in file'))
+                    -PassMessage 'n/a' `
+                    -FailMessage 'No ServiceName: or API: declarations found in file'))
     }
     elseif ($null -eq $yamlValue -and $serviceNameLines.Count -gt 0) {
         $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $false `
-            -PassMessage 'n/a' `
-            -FailMessage 'ServiceName: declarations found but YAML serviceName is missing -- cannot verify consistency'))
+                    -PassMessage 'n/a' `
+                    -FailMessage 'ServiceName: declarations found but YAML serviceName is missing -- cannot verify consistency'))
     }
     else {
         $snMismatch = $null
@@ -185,13 +200,13 @@ function Test-ContentRule {
         }
         if ($null -eq $snMismatch) {
             $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $true `
-                -PassMessage 'All ServiceName declarations match YAML front matter' `
-                -FailMessage 'n/a'))
+                        -PassMessage 'All ServiceName declarations match YAML front matter' `
+                        -FailMessage 'n/a'))
         }
         else {
             $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $false `
-                -PassMessage 'n/a' `
-                -FailMessage "ServiceName '$($snMismatch.QueryValue)' on line $($snMismatch.LineNum) does not match YAML serviceName '$($snMismatch.YamlValue)'"))
+                        -PassMessage 'n/a' `
+                        -FailMessage "ServiceName '$($snMismatch.QueryValue)' on line $($snMismatch.LineNum) does not match YAML serviceName '$($snMismatch.YamlValue)'"))
         }
     }
 
@@ -215,25 +230,25 @@ function Test-ContentRule {
             }
         }
         $checks.Add((New-ValidationCheck -Name 'inline_aliases' -Pass $aliasLineInline `
-            -PassMessage 'Aliases use inline [...] format' `
-            -FailMessage 'Aliases must use inline format: aliases: [term1, term2]. Multi-line YAML wastes line budget.'))
+                    -PassMessage 'Aliases use inline [...] format' `
+                    -FailMessage 'Aliases must use inline format: aliases: [term1, term2]. Multi-line YAML wastes line budget.'))
     }
 
     $h1Count = @($Lines | Where-Object { $_ -match '^#\s+[^#]' }).Count
     if ($h1Count -eq 1) {
         $checks.Add((New-ValidationCheck -Name 'single_h1_heading' -Pass $true `
-            -PassMessage 'Single H1 heading found' `
-            -FailMessage 'n/a'))
+                    -PassMessage 'Single H1 heading found' `
+                    -FailMessage 'n/a'))
     }
     elseif ($h1Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'single_h1_heading' -Pass $false `
-            -PassMessage 'n/a' `
-            -FailMessage 'No H1 heading found -- file must have a service title'))
+                    -PassMessage 'n/a' `
+                    -FailMessage 'No H1 heading found -- file must have a service title'))
     }
     else {
         $checks.Add((New-ValidationCheck -Name 'single_h1_heading' -Pass $false `
-            -PassMessage 'n/a' `
-            -FailMessage "Found $h1Count H1 headings -- file must have exactly one"))
+                    -PassMessage 'n/a' `
+                    -FailMessage "Found $h1Count H1 headings -- file must have exactly one"))
     }
 
     , $checks

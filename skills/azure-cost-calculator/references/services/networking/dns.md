@@ -2,11 +2,11 @@
 serviceName: Azure DNS
 category: networking
 aliases: [DNS Zones]
+primaryCost: "Per hosted zone per month (tiered) + per million DNS queries (tiered)"
+pricingRegion: empty-region
 ---
 
 # Azure DNS
-
-**Primary cost**: Per hosted zone per month (tiered) + per million DNS queries (tiered)
 
 > **Trap (mixed SKUs)**: Unfiltered queries return Public, Private, Private Resolver, and DNS Security Policy meters. Always filter with `SkuName: Public` for public DNS zones.
 >

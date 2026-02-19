@@ -3,11 +3,11 @@ serviceName: Backup
 category: storage
 aliases: [Recovery Services Vault, MARS Agent, VM Backup]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Protected instance/month (workload type) + storage per-GB/month (redundancy)"
+privateEndpoint: true
 ---
 
 # Azure Backup
-
-**Primary cost**: Per protected instance/month (varies by workload type) + storage per-GB/month (varies by redundancy)
 
 > **Trap**: Unfiltered `ServiceName: Backup` returns ~36 meters across all workload types plus storage, inflating `totalMonthlyCost`. Always filter with `SkuName` for the specific workload (e.g., `Azure VM`) or storage tier (e.g., `Standard`).
 
@@ -77,7 +77,6 @@ Example: 10 VMs with 500 GB LRS storage
 - Reserved capacity available via `productName = 'Backup Reserved Capacity'` for 100 TB or 1 PB commitments (1-Year / 3-Year)
 - Protected instance fees vary significantly by workload: VM/Files are lower-cost per protected instance, SQL is mid-range, and SAP HANA/ASE are among the highest-cost options
 - First 31 days of Azure VM backup storage (up to 50 GB per VM) are free (not reflected in API)
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
 

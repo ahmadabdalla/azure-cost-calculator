@@ -3,11 +3,14 @@ serviceName: Azure Migrate
 category: management
 aliases: [Server Assessment, Migration Tools]
 billingNeeds: [Azure Site Recovery, Azure Database Migration Service]
+primaryCost: "Free hub — no direct meters. Costs flow through dependent services (Site Recovery, DMS, target infrastructure)."
+hasMeters: false
+pricingRegion: api-unavailable
+hasKnownRates: true
+privateEndpoint: true
 ---
 
 # Azure Migrate
-
-**Primary cost**: Free hub — no direct meters. Costs flow through dependent services (Site Recovery, Database Migration Service, target infrastructure).
 
 > **Warning**: Azure Migrate has **no meters** in the Azure Retail Prices API. All queries return zero results. Estimate costs via the dependent services listed in `billingNeeds`.
 >
@@ -51,7 +54,6 @@ Migration project costs come from dependent services:
 - Database Migration Service Standard tier (offline) is **always free**; Premium tier (online) has vCore billing after 180 days
 - Storage consumed during replication and network egress are billed under their respective services regardless of free periods
 - Third-party ISV tools (Carbonite, Cloudamize, etc.) have separate vendor licensing outside Azure billing
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates
 

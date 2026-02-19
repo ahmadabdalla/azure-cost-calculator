@@ -2,13 +2,14 @@
 serviceName: Azure Monitor
 category: monitoring
 aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics]
+primaryCost: "Platform metrics are free; custom metrics billed per time series"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Monitor
 
 > **Note**: Azure Monitor is the umbrella service for monitoring in Azure. For **Log Analytics** and **Application Insights** pricing, see their separate reference files: `log-analytics.md` and `app-insights.md`.
-
-**Primary cost**: Platform metrics are free; custom metrics billed per time series
 
 > **Trap**: Platform metrics (CPU, memory, network, etc.) emitted by Azure resources are **free** — do not include them in cost estimates. Only custom metrics published via the Azure Monitor API are billable.
 
@@ -48,4 +49,3 @@ Monthly = (customTimeSeries / 10) × retailPrice
 - **Alerts**: Basic metric alerts (platform metrics) are free; multi-resource, multi-condition, or custom metric alerts have separate pricing
 - **Log Analytics and Application Insights** have separate pricing models - see `log-analytics.md` and `app-insights.md`
 - **Diagnostic settings**: Routing platform metrics to destinations (Log Analytics, Storage, Event Hubs) is free, but destination storage/ingestion has costs
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

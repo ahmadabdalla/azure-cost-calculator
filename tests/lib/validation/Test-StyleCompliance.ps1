@@ -32,21 +32,21 @@ function Test-StyleCompliance {
     $verifiedPattern = '(?i)\bverified\b.*\d{4}'
     $hasVerifiedDate = @($nonCodeLines | Where-Object { $_ -match $verifiedPattern }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'no_verified_dates' -Pass (-not $hasVerifiedDate) `
-        -PassMessage 'No "verified" dates found' `
-        -FailMessage 'Found "verified" date annotation. Remove all verified dates per style rules.'))
+                -PassMessage 'No "verified" dates found' `
+                -FailMessage 'Found "verified" date annotation. Remove all verified dates per style rules.'))
 
     # Case-sensitivity is assumed per shared.md; explicit annotations are redundant
-    $caseAnnotation = @($Lines | Where-Object { $_ -match '^#+\s+.*\(case-sensitive\)' }).Count -gt 0
+    $caseAnnotation = @($nonCodeLines | Where-Object { $_ -match '^#+\s+.*\(case-sensitive\)' }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'no_case_sensitive_headers' -Pass (-not $caseAnnotation) `
-        -PassMessage 'No "(case-sensitive)" annotations in headers' `
-        -FailMessage 'Found "(case-sensitive)" in section header. Case-sensitivity is assumed per shared.md.'))
+                -PassMessage 'No "(case-sensitive)" annotations in headers' `
+                -FailMessage 'Found "(case-sensitive)" in section header. Case-sensitivity is assumed per shared.md.'))
 
     $trapLines = $nonCodeLines | Where-Object { $_ -match '>\s*\*\*Trap' }
     $badTraps = @($trapLines | Where-Object { $_ -notmatch '>\s*\*\*Trap\*\*:' -and $_ -notmatch '>\s*\*\*Trap\s*\(.*\)\*\*:' })
     $trapFormatOk = $badTraps.Count -eq 0
     $checks.Add((New-ValidationCheck -Name 'trap_format' -Pass $trapFormatOk `
-        -PassMessage 'Trap format is correct' `
-        -FailMessage 'Invalid trap format. Use: > **Trap**: ... or > **Trap ({name})**: ...'))
+                -PassMessage 'Trap format is correct' `
+                -FailMessage 'Invalid trap format. Use: > **Trap**: ... or > **Trap ({name})**: ...'))
 
     # Trap sections must not contain literal dollar amounts — prices change and become stale
     $trapSections = [System.Collections.Generic.List[string]]::new()
@@ -68,14 +68,14 @@ function Test-StyleCompliance {
     $trapsWithDollarFigures = @($trapSections | Where-Object { $_ -match '\$\d+(\.\d+)?' })
     $noDollarFiguresInTraps = $trapsWithDollarFigures.Count -eq 0
     $checks.Add((New-ValidationCheck -Name 'no_hardcoded_prices_in_traps' -Pass $noDollarFiguresInTraps `
-        -PassMessage 'No hardcoded dollar figures in trap sections' `
-        -FailMessage "Found $($trapsWithDollarFigures.Count) trap line(s) with hardcoded dollar figures (e.g., `$0.00`). Use descriptive text like 'zero price', 'minimal cost', or reference 'retailPrice' instead."))
+                -PassMessage 'No hardcoded dollar figures in trap sections' `
+                -FailMessage "Found $($trapsWithDollarFigures.Count) trap line(s) with hardcoded dollar figures (e.g., `$0.00`). Use descriptive text like 'zero price', 'minimal cost', or reference 'retailPrice' instead."))
 
     $warnChar = [char]0x26A0
     $hasEmojiWarning = @($Lines | Where-Object { $_ -match "^\s*>\s*$warnChar(\uFE0F)?" }).Count -gt 0
     $checks.Add((New-ValidationCheck -Name 'warning_format' -Pass (-not $hasEmojiWarning) `
-        -PassMessage 'No non-standard warning formats found' `
-        -FailMessage "Found $warnChar emoji in blockquote -- use > **Warning**: ... format instead"))
+                -PassMessage 'No non-standard warning formats found' `
+                -FailMessage "Found $warnChar emoji in blockquote -- use > **Warning**: ... format instead"))
 
     , $checks
 }

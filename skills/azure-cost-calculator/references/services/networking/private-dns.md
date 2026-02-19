@@ -2,13 +2,13 @@
 serviceName: Azure DNS
 category: networking
 aliases: [private DNS, Private DNS Zones]
+primaryCost: "Zone hosting (per-zone/month) + DNS queries"
+pricingRegion: global
 ---
 
 # Private DNS Zones
 
-**Primary cost**: Zone hosting (per-zone/month) + DNS queries
-
-> **Warning**: **Global-only pricing / USD-only** — see shared.md & Common Traps. Scripts require a Region filter and return nothing; call the API directly using query below.
+> **Warning**: Scripts require a Region filter and return nothing — call the API directly using query below.
 > **Trap**: Zone pricing is **tiered** — the API returns two rows per region (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 25+ zones, apply tier-1 `retailPrice` to the first 25 and tier-2 `retailPrice` to the remainder. Do NOT sum all tiers as a flat total.
 
 ## Query Pattern
@@ -63,7 +63,6 @@ Total:   Zones + Queries (USD)
 
 ## Notes
 
-- USD-only (Global region) — see shared.md & Common Traps for mandatory currency conversion
 - Private DNS zones are commonly paired with Private Endpoints — one zone per distinct service type, not per endpoint. See `networking/private-link.md` for PE billing
 - AMPLS (Azure Monitor Private Link Scope) requires 5 Private DNS zones (monitor, oms, ods, agentsvc, blob) — AMPLS itself is a free grouping resource
 - For the full list of `privatelink.*` zone names by service, see [Private Endpoint DNS](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns)

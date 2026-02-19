@@ -3,11 +3,10 @@ serviceName: Azure Databricks
 category: analytics
 aliases: [DBX, Spark on Azure]
 billingNeeds: [Virtual Machines]
+primaryCost: "DBU hourly rate by workload type and tier + underlying VM compute billed separately under Virtual Machines"
 ---
 
 # Azure Databricks
-
-**Primary cost**: DBU (Databricks Unit) hourly rate by workload type and tier (Standard/Premium) + underlying VM compute billed separately under Virtual Machines
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Databricks'` query returns ~41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `SkuName` for a specific workload type.
 

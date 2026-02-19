@@ -2,11 +2,11 @@
 serviceName: SignalR
 category: analytics
 aliases: [Azure SignalR Service, Real-time Messaging]
+primaryCost: "Per-unit daily rate (by tier) + messages per 1M/month"
+privateEndpoint: true
 ---
 
 # Azure SignalR Service
-
-**Primary cost**: Per-unit daily rate (by tier) + messages per 1M/month
 
 > **Trap (daily billing)**: Unit meters use `1/Day` billing. `Get-MonthlyMultiplier` returns `30` for these meters, so the script's `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 
@@ -74,5 +74,5 @@ Total monthly      = Unit monthly + Message monthly
 - **Free tier**: 1 free Standard unit — 20 concurrent connections and 20K messages/day; no SLA
 - **Standard tier**: Each unit provides 1K concurrent connections and 1M messages/day; auto-scale up to 100 units
 - **Premium tier**: Same connection/message capacity as Standard plus availability zones and higher SLA
-- Supports private endpoints (Standard tier or higher) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require Standard tier or higher
 - Messages included per unit per day scale with unit count; overage charged per 1M messages above the daily included amount

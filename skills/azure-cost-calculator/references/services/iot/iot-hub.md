@@ -2,11 +2,11 @@
 serviceName: IoT Hub
 category: iot
 aliases: [Device Messaging]
+primaryCost: "Per-unit monthly flat rate by tier (Free, B1–B3, S1–S3) × unit count"
+privateEndpoint: true
 ---
 
 # IoT Hub
-
-**Primary cost**: Per-unit monthly flat rate by tier (Free, B1–B3, S1–S3) × unit count
 
 > **Trap (unfiltered query)**: Querying with `ServiceName IoT Hub` without `ProductName IoT Hub` returns meters from **Device Update for IoT Hub** and **IoT Hub Device Provisioning** — separate services with their own pricing. Always add `ProductName IoT Hub` to isolate hub unit costs.
 
@@ -69,4 +69,3 @@ Total = Hub units + DPS (if used)
 - Units are purchased per hub; scale by adding units (max 200 per hub for paid tiers)
 - Capacity: 1 S1 unit = 400K messages/day (4 KB each); 1 S2 = 6M msgs/day; 1 S3 = 300M msgs/day
 - Device Update for IoT Hub is a separate service — query with ProductName `Device Update for IoT Hub`
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

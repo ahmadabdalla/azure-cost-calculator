@@ -44,11 +44,29 @@ billingConsiderations:
       M365 / Windows per-user licensing,
     },
   ]
+
+# ── API Identity (optional) ──────────────────────────────
+# apiServiceName: { only when API serviceName ≠ display serviceName,
+#   e.g., VMware Solution → "Specialized Compute", Static Web Apps → "Azure App Service" }
+
+# ── Pricing Profile ──────────────────────────────────────
+primaryCost:
+  {
+    required — one-line billing summary (max 120 chars),
+    e.g.,
+    "Compute hours × 730 × instanceCount",
+    "Per-execution + GB-seconds with free grant deduction",
+  }
+# hasMeters: false                  # optional — default: true; set false for API-unavailable services
+# pricingRegion: global             # optional — default: regional; enum: regional | global | empty-region | api-unavailable
+# hasKnownRates: true               # optional — default: false; set true when file has Known Rates table
+
+# ── Service Capabilities (optional) ──────────────────────
+# hasFreeGrant: true                # optional — default: false; set true for free tier / included units
+# privateEndpoint: true             # optional — default: false; set true for PE support
 ---
 
 # {Service Display Name}
-
-**Primary cost**: {One-line summary of the main billing dimensions, e.g., "Compute hours × 730" or "Operations per-10K + storage per-GB/month"}
 
 <!--
   INSTRUCTIONS FOR AUTHORS:
@@ -62,14 +80,14 @@ billingConsiderations:
      trap warnings — their length may vary.
 
   0b. 100-LINE LIMIT: The total file length must not exceed 100 lines of markdown
-      content. This budget covers YAML, title, primary cost, traps, query patterns,
+      content. This budget covers YAML, title, traps, query patterns,
       tables, formulas, and notes. Optimize for density — every line costs tokens
       at runtime.
 
   0c. SECTION ORDER (enforced by validation): Sections must appear in this order:
-        YAML front matter → Title (H1) → Primary cost → Trap(s) →
-        Query Pattern → Key Fields → Meter Names → Cost Formula →
-        Notes → Optional sections
+        YAML front matter → Title (H1) → Trap(s) → Query Pattern →
+        Key Fields → Meter Names → Cost Formula → Notes →
+        Optional sections
       Required sections (Query Pattern, Key Fields, Meter Names, Cost Formula,
       Notes) must maintain their relative order even if some are absent.
       All optional sections must appear after Notes.
@@ -88,15 +106,27 @@ billingConsiderations:
        user about before calculating. Use only these values:
        Reserved Instances, Spot Pricing, Azure Hybrid Benefit, M365 / Windows per-user licensing.
        Omit entirely if none apply — absence means standard PAYG pricing only.
+     - apiServiceName (optional): Only when API serviceName differs from display
+       serviceName (e.g., VMware Solution uses "Specialized Compute"). Omit if identical.
+     - primaryCost (required): One-line billing summary, max 120 chars. This replaces
+       the old body **Primary cost**: line — it now lives in YAML front matter.
+       Examples: "Compute hours × 730 × instanceCount",
+       "Per-execution + GB-seconds with free grant deduction",
+       "Per-endpoint hours + data processed per-GB".
+     - hasMeters (optional, default: true): Set false for API-unavailable services
+       (e.g., Management Groups, Entra ID). Omit when true.
+     - pricingRegion (optional, default: regional): How region affects API queries.
+       Enum: regional | global | empty-region | api-unavailable. Omit when regional.
+     - hasKnownRates (optional, default: false): Set true when the file contains
+       a Known Rates table with manual pricing. Omit when false.
+     - hasFreeGrant (optional, default: false): Set true when the service has a
+       free tier or included units requiring grant deduction. Omit when false.
+     - privateEndpoint (optional, default: false): Set true when the service
+       supports private endpoints. Tier restrictions stay in Notes. Omit when false.
+     Optional fields whose value matches the default SHOULD be omitted — only
+     exceptions (non-default values) appear in the YAML block.
 
-  2. PRIMARY COST: A concise summary of the main billing dimensions.
-     Examples:
-       - "Fixed hourly rate for the plan SKU × 730"
-       - "vCore hourly rate + storage per-GB/month"
-       - "Execution count + execution time (GB-seconds)"
-       - "Per-endpoint hours + data processed per-GB"
-
-  3. TRAPS (optional but highly encouraged): Document any pricing API
+  2. TRAPS (optional but highly encouraged): Document any pricing API
      gotchas discovered during verification. Each trap should include:
        - What goes wrong (e.g., inflated totals, wrong meters returned)
        - How to avoid it (specific filter values)
@@ -104,25 +134,25 @@ billingConsiderations:
      Use a descriptive name in parentheses for traps that need identification,
      e.g., **Trap (RI MonthlyCost)**: ...
 
-  4. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
+  3. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
      If the service requires direct API calls (e.g., Global-only pricing),
      provide API URL and Fields in declarative format instead and explain why.
 
-  4b. SCALING: At least one query pattern must demonstrate scaling with
+  3b. SCALING: At least one query pattern must demonstrate scaling with
       InstanceCount: N (for multi-unit resources) or Quantity: N (for
       usage-based meters), with a brief comment explaining the parameter.
 
-  5. KEY FIELDS: Document the exact API field values (case-sensitive).
+  4. KEY FIELDS: Document the exact API field values (case-sensitive).
      Organize as a table with Parameter, How to determine, Example values.
 
-  6. METER NAMES: Document exact meter names as a table. All meter/SKU/
+  5. METER NAMES: Document exact meter names as a table. All meter/SKU/
      product names are CASE-SENSITIVE — this is assumed throughout and does
      not need to be stated per-section.
 
-  7. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
+  6. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
      Include free tier/grant deductions where applicable.
 
-  8. NOTES: Additional context — free tiers, SKU guidance, common
+  7. NOTES: Additional context — free tiers, SKU guidance, common
      mistakes, links to pricing pages, private endpoint support, etc.
      PRIVATE ENDPOINT SUPPORT: Every service reference must document whether
      the service supports private endpoints. Use this pattern in Notes:
@@ -133,7 +163,7 @@ billingConsiderations:
        - Supports private endpoints — see ... PE sub-resources (never-assume): `blob`, `file`, ...
      If the service does NOT support PE, omit the line (no negative statement needed).
 
-  9. OPTIONAL SECTIONS (add as needed, after Notes):
+  8. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
      - Manual Calculation Example (for sub-cent or complex pricing)
      - Known Rates table (for services where API returns $0.00)

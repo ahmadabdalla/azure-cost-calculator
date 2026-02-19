@@ -2,11 +2,11 @@
 serviceName: Event Hubs
 category: iot
 aliases: [Event Hubs, Kafka on Azure, Event Streaming]
+primaryCost: "Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons"
+privateEndpoint: true
 ---
 
 # Azure Event Hubs
-
-**Primary cost**: Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons
 
 > **Trap (Standard unfiltered)**: Querying with `SkuName Standard` without `MeterName` returns **four** meters: Throughput Unit, Ingress Events, Capture, and Kafka Endpoint. The `summary.totalMonthlyCost` sums all four, inflating the estimate ~7×. Always filter with `MeterName Standard Throughput Unit` for the base cost.
 
@@ -75,4 +75,4 @@ Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transfe
 - Geo-DR requires two separate Premium/Dedicated namespaces — budget 2× namespace cost plus replication transfer
 - All throughput/processing/capacity units are billed hourly — use 730 hours/month
 - Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API
-- Supports private endpoints (Standard tier or higher) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require Standard tier or higher

@@ -4,11 +4,10 @@ category: compute
 aliases: [Azure Virtual Desktop, AVD, WVD]
 billingNeeds: [Virtual Machines, Storage]
 billingConsiderations: [M365 / Windows per-user licensing]
+primaryCost: "Per-user access fee per month (varies by SKU) + VM compute, storage, and networking billed separately"
 ---
 
 # Azure Virtual Desktop
-
-**Primary cost**: Per-user access fee per month (varies by SKU) + underlying VM compute, storage, and networking billed separately.
 
 > **Trap**: The per-user access fees under this service apply only to users **without** eligible Microsoft 365 or Windows per-user licenses. M365 E3/E5/A3/A5/Business Premium or Windows E3/E5 users have no separate AVD access fee — their cost is entirely VM compute, storage, and networking (priced under Virtual Machines, Managed Disks, etc.). Always confirm license entitlements before including access fees.
 

@@ -2,11 +2,11 @@
 serviceName: Logic Apps
 category: integration
 aliases: [Workflows, Logic App Standard/Consumption]
+primaryCost: "Per-action (Consumption) or vCPU + memory hours (Standard)"
+privateEndpoint: true
 ---
 
 # Logic Apps
-
-**Primary cost**: Per-action (Consumption) or vCPU + memory hours (Standard)
 
 > **Trap (executions vs actions)**: Azure bills per **action**, not per workflow execution. One run may contain 5–50+ actions. If user says "25,000 executions/month," clarify: multiply workflow runs × estimated actions/run.
 >
@@ -75,7 +75,6 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 - Consumption: per-action, first 4,000 built-in actions/month free, auto-scales to zero
 - Standard: runs on App Service Plan (WS1–WS3) or container; billed per-second
 - Integration Account is a separate B2B/EDI add-on; ISE is deprecated — use Standard with VNet instead
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Standard Plan Sizes (WS)
 

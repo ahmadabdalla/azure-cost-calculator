@@ -3,11 +3,11 @@ serviceName: Azure Machine Learning
 category: ai-ml
 aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
 billingNeeds: [Storage, Key Vault, Application Insights]
+primaryCost: "Managed online endpoint capacity (hourly × 730) + ML service surcharges. Training clusters billed under VMs."
+privateEndpoint: true
 ---
 
 # Azure Machine Learning
-
-**Primary cost**: Managed online endpoint capacity (`Managed Model Hosting Service`, hourly × 730) + ML service surcharges (`Machine Learning service`). Training clusters and compute instances are a separate cost billed under the `Virtual Machines` service.
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Machine Learning'` query returns ~28 meters across three product families — legacy Enterprise Inferencing (all zero price), ML service surcharges, and Managed Model Hosting endpoints. The `totalMonthlyCost` sums all of them, which is meaningless. Always filter by `ProductName`.
 
@@ -75,4 +75,3 @@ Training Compute         = billed under Virtual Machines (see compute/virtual-ma
 - Managed online endpoints (`Managed Model Hosting Service`) are the primary billable meters under this service
 - Enterprise Inferencing products (`Azure Machine Learning Enterprise *`) return $0.00 — these are legacy meters
 - Storage for ML workspaces is billed under Azure Storage (Blob/File) separately
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

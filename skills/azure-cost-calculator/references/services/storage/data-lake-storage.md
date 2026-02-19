@@ -3,11 +3,11 @@ serviceName: Storage
 category: storage
 aliases: [Data Lake Gen2, ADLS]
 billingConsiderations: [Reserved Instances]
+primaryCost: "Data stored per-GB/month + index per-GB/month (HNS) + operations per-10K + data retrieval per-GB"
+privateEndpoint: true
 ---
 
 # Data Lake Storage Gen2
-
-**Primary cost**: Data stored (per-GB/month), index (per-GB/month, HNS only), operations (per-10K), data retrieval (Cool/Cold/Archive per-GB)
 
 > **Trap**: Always filter by `productName` — `serviceName eq 'Storage'` alone returns Blob, Files, Queue, and Table meters. Use `Azure Data Lake Storage Gen2 Hierarchical Namespace` for HNS-enabled accounts (most ADLS deployments). `Azure Data Lake Storage Gen2 Flat Namespace` is a niche variant without directory semantics.
 
@@ -97,4 +97,3 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
 - Archive tier: LRS, GRS, RA-GRS only (no ZRS/GZRS); Early Delete charges: Cool 30d, Cold 90d, Archive 180d
 - Iterative operations (directory listing) use per-100 unit for writes, per-10K for reads; Hot tier only
 - Flat Namespace product has identical storage pricing but no Index meter and lower transaction costs
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

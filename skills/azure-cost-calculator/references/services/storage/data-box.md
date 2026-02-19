@@ -2,11 +2,10 @@
 serviceName: Data Box
 category: storage
 aliases: [Data Box Disk, Data Box Heavy, Import/Export]
+primaryCost: "Per-device service fee + shipping fee + daily overage beyond included days"
 ---
 
 # Azure Data Box
-
-**Primary cost**: Per-device service fee + shipping fee + daily overage beyond included days
 
 > **Trap**: serviceName is `Data Box` — NOT `Azure Data Box` (returns 0 results). Multiple productNames exist under this serviceName; always filter by `productName` to target a specific variant.
 

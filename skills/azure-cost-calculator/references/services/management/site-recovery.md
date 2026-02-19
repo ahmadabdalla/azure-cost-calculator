@@ -4,11 +4,10 @@ category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
 billingConsiderations: [Azure Hybrid Benefit]
+primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure or System Center)."
 ---
 
 # Azure Site Recovery
-
-**Primary cost**: Per protected VM instance per month — flat rate varies by replication target (Azure or System Center).
 
 > **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns both Azure and System Center SKUs, inflating costs by summing charges for both SKUs. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
 

@@ -2,12 +2,10 @@
 serviceName: Sentinel
 category: management
 aliases: [SIEM, SOAR]
-billingConsiderations: [Commitment Tiers, Azure Sentinel Add-ons]
+primaryCost: "Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, add-on fees."
 ---
 
 # Microsoft Sentinel
-
-**Primary cost**: Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, and add-on analysis fees.
 
 > **Trap (MANDATORY — DO NOT substitute commitment tiers)**: ALWAYS use `SkuName: Pay-as-you-go` unless the user **explicitly names** a commitment tier (e.g., "use the 400 GB commitment tier"). A daily ingestion volume like "400 GB/day" is NOT a request for the 400 GB Commitment Tier — it is a volume figure; multiply by 30 and price at PAYG. Even when the daily volume exactly matches a tier name, use PAYG. If a commitment tier would save money, note the saving in Assumptions but calculate with PAYG. Ignoring this rule causes significant cost variance.
 >
@@ -67,11 +65,13 @@ Quantity: 500
 ## Cost Formula
 
 ```
-PAYG:       Monthly = payg_retailPrice × totalGB
+PAYG:       Monthly = payg_retailPrice × billableGB
 Commitment: Monthly = tier_retailPrice × 30 + payg_retailPrice × max(0, dailyGB - tierGB) × 30
 Basic Logs: Monthly = basic_retailPrice × queryGB
 Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice × ingestedGB + query_retailPrice × queriedGB
 ```
+
+> For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`.
 
 ## Notes
 

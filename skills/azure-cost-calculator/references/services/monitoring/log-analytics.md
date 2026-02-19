@@ -3,15 +3,16 @@ serviceName: Log Analytics
 category: monitoring
 aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
 billingNeeds: [Azure Monitor]
+primaryCost: "Data ingestion per-GB + retention beyond free period (90 days Sentinel / 31 days standard)"
+hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Log Analytics
 
-**Primary cost**: Data ingestion per-GB + retention beyond 31 days
-
 > **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free (Log Analytics workspace). Always deduct this from the billable total: `billable_GB = total_GB - 5`.
-> **Trap (retention calculation)**: The first **31 days** of retention are free. For extended retention (e.g., 90 days), the chargeable window is `retentionDays - 31`. At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - 31)`. This is the most commonly miscalculated component — agents often forget to subtract the 31 free days or miscalculate the data volume in the chargeable window.
+> **Trap (retention calculation)**: The free retention period depends on whether Microsoft Sentinel is enabled: **90 days** for Sentinel-enabled workspaces, **31 days** otherwise. For extended retention, the chargeable window is `retentionDays - freeDays` (where freeDays = 90 if Sentinel is enabled, 31 if not). At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - freeDays)`. This is the most commonly miscalculated component — agents often use 31 days for Sentinel workspaces (significantly overstating cost) or 90 days for non-Sentinel workspaces (understating cost).
 
 ## Query Pattern
 
@@ -21,7 +22,7 @@ ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
 
-### Log Analytics — data retention (beyond 31 days free)
+### Log Analytics — data retention (beyond free period: 90 days if Sentinel enabled, 31 days otherwise)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
@@ -45,10 +46,10 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 
 ## Meter Names
 
-| Meter                           | skuName          | unitOfMeasure | Notes                              |
-| ------------------------------- | ---------------- | ------------- | ---------------------------------- |
-| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Pay-as-you-go data ingestion       |
-| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Data retention beyond 31 days free |
+| Meter                           | skuName          | unitOfMeasure | Notes                                                              |
+| ------------------------------- | ---------------- | ------------- | ------------------------------------------------------------------ |
+| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Pay-as-you-go data ingestion                                       |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Retention beyond free period (90 days Sentinel / 31 days standard) |
 
 ## Cost Formula
 
@@ -60,22 +61,17 @@ Total = Monthly Ingestion + Monthly Retention
 
 ### Retention Calculation Detail
 
-The first 31 days of retention are **free**. Charges apply for data retained beyond 31 days (up to the configured retention period, max 730 days).
-
-**How to calculate retained GB**: For steady-state ingestion of X GB/day, the volume of data in the chargeable retention window (days 32 to configured max) is:
+Free retention: **90 days** (Sentinel-enabled workspace) or **31 days** (standard). Charges apply beyond the free period up to max 730 days.
 
 ```
+freeDays = 90 if Sentinel enabled, 31 otherwise
 Retained GB = dailyIngestionGB × chargeableDays
-where chargeableDays = min(retentionPeriodDays - 31, actualDaysOfData - 31)
+where chargeableDays = max(0, min(retentionPeriodDays, actualDaysOfData) - freeDays)
 ```
 
-For example, with 90-day retention and 5 GB/day steady ingestion:
+**Example 1** — 90-day retention, **Sentinel-enabled** workspace, 5 GB/day: chargeableDays = 90 − 90 = 0 → retention cost = 0.
 
-```
-Chargeable days = 90 - 31 = 59 days
-Retained GB = 5 × 59 = 295 GB
-Monthly retention cost = retentionPrice × 295
-```
+**Example 2** — 90-day retention, **standard** workspace, 5 GB/day: chargeableDays = 90 − 31 = 59 → retainedGB = 295 → Monthly retention = retentionPrice × 295.
 
 ## Commitment Tier Details
 
@@ -84,10 +80,11 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 ## Notes
 
 - First 5 GB/month ingestion free per workspace
-- First 31 days of retention included free; longer retention charged per-GB/month
+- Free retention: **90 days** if Microsoft Sentinel is enabled on the workspace, **31 days** otherwise; longer retention charged per-GB/month
 - Maximum retention period: 730 days (2 years)
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
 - Sentinel uses Log Analytics workspaces and meters for its data ingestion and retention
 - Commitment tiers require 100+ GB/day ingestion and provide volume discounts
+- For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`
 - Data export and archive features have separate pricing
-- Supports private endpoints (via AMPLS) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require AMPLS (Azure Monitor Private Link Scope)

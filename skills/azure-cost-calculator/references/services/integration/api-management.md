@@ -2,11 +2,11 @@
 serviceName: API Management
 category: integration
 aliases: [APIM, API gateway, API management]
+primaryCost: "Unit hours based on tier"
+privateEndpoint: true
 ---
 
 # API Management
-
-**Primary cost**: Unit hours based on tier
 
 > **Trap (multiple meters)**: Tiers have multiple meters (e.g., `Standard v2 Unit`, `Secondary Unit`, `Self-hosted Gateway`, `Calls`). Use the primary `{Tier} Unit` meter for base cost. Secondary units, gateways, and workspace packs are additional — only include if user requests.
 > **Trap (v2 Calls)**: v2 tiers have a `Calls` meter — free up to threshold, then overage at `retailPrice` per 10K. Basic v2: first 10M free. Standard v2: first 50M free. Premium v2: unlimited included. Safe to ignore for typical workloads; include for high-volume APIs exceeding thresholds.
@@ -70,7 +70,7 @@ MeterName: {Tier} Self-hosted Gateway
 
 - All tiers support unlimited APIs except Consumption (max 50).
 - `productName` is always `API Management` for all tiers.
-- Supports private endpoints (not available on Consumption or Basic v2 tiers) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints not available on Consumption or Basic v2 tiers
 
 ## Common SKUs
 

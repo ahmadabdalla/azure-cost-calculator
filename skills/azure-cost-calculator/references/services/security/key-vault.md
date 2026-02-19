@@ -2,11 +2,11 @@
 serviceName: Key Vault
 category: security
 aliases: [keyvault, KV, vault]
+primaryCost: "Operations (per-10K); Premium adds per-HSM-key monthly charges"
+privateEndpoint: true
 ---
 
 # Key Vault
-
-**Primary cost**: Operations (per-10K) + secrets/keys/certificates stored
 
 > **Trap**: Querying with only `SkuName 'Standard'` (no `ProductName`) returns **Azure Dedicated HSM** (thousands/month) mixed with Key Vault ops. Always filter by `ProductName 'Key Vault'`.
 
@@ -60,4 +60,3 @@ Monthly = (operations/10000 × ops_price) + (advancedOps/10000 × advOps_price)
 - Standard vs Premium: Premium adds HSM-backed keys with separate per-key pricing.
 - Software-protected keys included in operations cost; HSM-protected keys are separate (Premium only).
 - Operations include vault reads, writes, and list operations.
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing

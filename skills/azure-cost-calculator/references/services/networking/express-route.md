@@ -2,11 +2,10 @@
 serviceName: ExpressRoute
 category: networking
 aliases: [ER, Dedicated Circuit]
+primaryCost: "Circuit fee (flat monthly by bandwidth/plan) + gateway hourly cost"
 ---
 
 # ExpressRoute
-
-**Primary cost**: Circuit fee (flat monthly by bandwidth/plan) + gateway hourly cost
 
 > **Trap**: Unfiltered queries return **circuit meters AND gateway meters** combined. Circuit fees are flat monthly rates while gateways are hourly — the `totalMonthlyCost` is meaningless. Always query circuits and gateways separately.
 > **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone) — the default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE.
