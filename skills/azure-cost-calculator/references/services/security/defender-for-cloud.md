@@ -44,6 +44,7 @@ MeterName: {meterName}
 
 ## Notes
 
+- **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types (SecurityEvent, SecurityAlert, SecurityBaseline, etc.) — pooled across all protected servers. When estimating Sentinel or Log Analytics ingestion, deduct this: `defenderFreeGB = serverCount × 0.5 × 30`. Only applies to data collected via Defender's auto-provisioned agents, not custom log sources.
 - Containers has free trial tiers (Free vCore, Free Images at £0.00) — always use `Standard` SKU meters for estimation.
 - Containers vCore pricing = total vCores across all protected AKS nodes (e.g., 6× E4s_v5 @ 4 vCPU = 24 vCores).
 - App Service, DNS, and Resource Manager plans also exist — use the explore script with SearchTerm Defender to discover.

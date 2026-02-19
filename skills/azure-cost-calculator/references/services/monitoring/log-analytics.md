@@ -1,7 +1,15 @@
 ---
 serviceName: Log Analytics
 category: monitoring
-aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
+aliases:
+  [
+    OMS,
+    Workspace,
+    Logs,
+    Log Analytics Workspace,
+    Azure Monitor Logs,
+    Operations Management Suite,
+  ]
 billingNeeds: [Azure Monitor]
 primaryCost: "Data ingestion per-GB + retention beyond free period (90 days Sentinel / 31 days standard)"
 hasFreeGrant: true
@@ -46,9 +54,9 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 
 ## Meter Names
 
-| Meter                           | skuName          | unitOfMeasure | Notes                              |
-| ------------------------------- | ---------------- | ------------- | ---------------------------------- |
-| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Pay-as-you-go data ingestion       |
+| Meter                           | skuName          | unitOfMeasure | Notes                                                              |
+| ------------------------------- | ---------------- | ------------- | ------------------------------------------------------------------ |
+| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Pay-as-you-go data ingestion                                       |
 | `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Retention beyond free period (90 days Sentinel / 31 days standard) |
 
 ## Cost Formula
@@ -85,5 +93,6 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
 - Sentinel uses Log Analytics workspaces and meters for its data ingestion and retention
 - Commitment tiers require 100+ GB/day ingestion and provide volume discounts
+- For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`
 - Data export and archive features have separate pricing
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
