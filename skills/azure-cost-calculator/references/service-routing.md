@@ -137,7 +137,7 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "ExpressRoute"
   a: [ER, Dedicated Circuit]
 - s: "Virtual Network"
-  a: [VNet, NSG, Peering, Private Link]
+  a: [VNet, Peering]
 - s: "Virtual WAN"
   a: [vWAN, WAN Hub]
 - s: "VPN Gateway"

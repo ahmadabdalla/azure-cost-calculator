@@ -1,7 +1,7 @@
 ---
 serviceName: Virtual Network
 category: networking
-aliases: [VNet, NSG, Peering, Private Link]
+aliases: [VNet, Peering]
 primaryCost: "VNet peering per-GB (bidirectional) + public IP hourly rate × 730 × ipCount"
 ---
 
