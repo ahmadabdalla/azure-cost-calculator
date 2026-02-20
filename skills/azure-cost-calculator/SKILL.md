@@ -38,17 +38,22 @@ String values with spaces require quoting when passed to scripts. Numeric values
 ### Phase 1 — Analysis (no API queries)
 
 1. **Parse** — extract resource types, quantities, and sizing from user's architecture
-2. **Locate** each service reference:
+2. **Clarify** — if any of these are true, stop and ask before continuing:
+   - A resource maps to a category but not a specific service (e.g., "a database") → list 2–4 options
+   - A resource has no count, no sizing/tier, or no workload scale (RU/s, executions, DTUs) → ask for specifics
+   - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
+   - Batch all gaps into one prompt. Offer concrete choices. One round max — if user declines, carry gaps forward as never-assume items in Step 6.
+3. **Locate** each service reference:
    a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
    b. **Category browse** — if search returns 0 or ambiguous results, read the category index in [references/shared.md](references/shared.md)
    c. **Broad search** — list or search `references/services/**/*.md` to see all available files
    d. **Discovery** — if no file exists, use the explore script to find the service in the API
-3. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
-4. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
+4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
+5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified** — user provided value (use verbatim)
    - **Never-assume gap** — required parameter missing (must ask)
    - **Safe-default gap** — optional parameter missing (use default, disclose)
-5. **Specification Review** — present a summary:
+6. **Specification Review** — present a summary:
 
    | Service | Specified | Missing (will ask) | Defaults (will assume) |
    | ------- | --------- | ------------------ | ---------------------- |
@@ -58,9 +63,9 @@ String values with spaces require quoting when passed to scripts. Numeric values
 
 ### Phase 2 — Estimation
 
-6. **Query** — run the pricing script for each service using parameters from service files + user input + resolved defaults
-7. **Calculate** — apply cost formulas from service files; multiply by quantities
-8. **Present** — output the estimate with:
+7. **Query** — run the pricing script for each service using parameters from service files + user input + resolved defaults
+8. **Calculate** — apply cost formulas from service files; multiply by quantities
+9. **Present** — output the estimate with:
    - **Assumptions block** (see Disambiguation Protocol in shared.md) — listed before cost numbers
    - **Line items**: service, unit price, quantity/hours, monthly cost
    - **Grand total**: re-sum all line-item monthly costs independently; if discrepancy, use re-summed value
@@ -85,7 +90,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 1. **Never guess prices** — always run the script against the live API
 2. **Infer currency and region from user context** — if unspecified, ask the user or default to USD and eastus
-3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user
+3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user. At the request level, clarify vague inputs (Step 2). At the parameter level, apply the Disambiguation Protocol (Step 5).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
 6. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands
