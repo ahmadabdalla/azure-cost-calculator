@@ -45,21 +45,9 @@ Other design goals:
 
 > **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Opus 4.6** and **Gemini Pro 3**. Results with other models may vary.
 
-```mermaid
-flowchart LR
-    A[User Query] --> B[AI Agent]
-    B --> C[SKILL.md]
-    C --> D[Service Reference File]
-    D --> E[get-azure-pricing.sh\nor Get-AzurePricing.ps1]
-    E --> F[Azure Retail Prices API]
-    F --> E
-    E --> B
-    B --> G[Cost Estimate]
-
-    P[pitfalls.md] -.->|on error| E
-    RI[reserved-instances.md] -.->|if RI| E
-    RG[regions-and-currencies.md] -.->|non-USD/eastus| E
-```
+<p align="center">
+  <img src="docs/images/how-it-works.svg" alt="How the Azure Cost Calculator skill works — from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
+</p>
 
 References load on demand, keeping token usage low even for 10+ service estimates.
 
