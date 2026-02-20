@@ -196,16 +196,16 @@ Based on exemplar analysis:
    {list each trap with rationale, e.g.:}
    - Trap (meter-filter): {reason this trap applies}
    - Trap (sku-format): {reason}
-4. **Query Pattern** — declarative `Key: Value` format, no code fences, `serviceName` filter in every query block
+4. **Query Pattern** — declarative `Key: Value` format, no code fences, `ServiceName` filter in every query block
 5. **Key Fields** — table with columns: Parameter / How to determine / Example values
-6. **Meter Names** — table with columns: Meter / unitOfMeasure / Notes
-7. **Cost Formula** — using variable names (`retailPrice`, `compute_retailPrice`, etc.), 730 hours/month for hourly, 30 days/month for daily
-8. **Notes** — must include:
+6. **Cost Formula** — using variable names (`retailPrice`, `compute_retailPrice`, etc.), 730 hours/month for hourly, 30 days/month for daily
+7. **Notes** — must include:
    {list each required note with rationale}
 
 ### Optional Sections (include if applicable)
 
 {For each, state whether it applies to this service and why:}
+- **Meter Names** — table with columns: Meter / unitOfMeasure / Notes: {include/exclude — include if service has API meters with notable meter name patterns}
 - **Reserved Instance Pricing**: {include/exclude — rationale}
 - **Manual Calculation Example**: {include/exclude — rationale}
 - **Known Rates**: {include/exclude — rationale}
@@ -222,7 +222,7 @@ Based on exemplar analysis:
 - Use 730 hours/month for hourly-billed resources
 - Use 30 days/month for daily-billed resources
 - Query blocks use plain `Key: Value` pairs — never wrap in code fences
-- `serviceName` must appear in every query block
+- `ServiceName` must appear in every query block (PascalCase for declarative query keys)
 
 ### Pre-submission Checklist
 
@@ -232,7 +232,7 @@ Every item below is a pass/fail gate. The file must satisfy all of them:
 2. [ ] At least one query uses `InstanceCount` or `Quantity` for scaling
 3. [ ] Capacity planning note included if scalable units exist
 4. [ ] Tier limitations documented if multiple tiers exist
-5. [ ] Private endpoint support documented in Notes (if `privateEndpoint: true`)
+5. [ ] Private endpoint support: `privateEndpoint: true` in YAML; Notes entry only if tier restrictions or multiple PE sub-resources
 6. [ ] No hardcoded dollar amounts outside Known Rates
 7. [ ] No verified dates
 8. [ ] All YAML fields pass schema validation (types, lengths, allowed values)

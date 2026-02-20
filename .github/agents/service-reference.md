@@ -53,7 +53,7 @@ Use the `compliance-reviewer` agent. Provide it with:
 - The category folder name
 - Known characteristics from your orientation (e.g., whether this is a global service, whether the routing map notes anything unusual)
 
-The compliance reviewer will read all rule sources, study exemplars, cross-check Microsoft Learn documentation, and return a **Compliance Contract**.
+The compliance reviewer will read all rule sources, study exemplars, and return a **Compliance Contract**.
 
 ---
 
@@ -105,15 +105,15 @@ Cross-reference the high-confidence data set against the Compliance Contract.
 
 For each item in the agreed data set, check it against the Compliance Contract:
 
-| Investigation finding           | Compliance requirement                                           | Action                                          |
-| ------------------------------- | ---------------------------------------------------------------- | ----------------------------------------------- |
-| Meters found with specific SKUs | YAML `serviceName` required                                      | Use exact serviceName from investigation        |
-| RI pricing available            | `billingConsiderations` should include `Reserved Instances`      | Add to YAML                                     |
-| Sub-cent prices detected        | `hasKnownRates: true` + Known Rates table + Manual Calc required | Include all three                               |
-| Multiple productName values     | Trap needed for filter specificity                               | Write trap with exact values from investigation |
-| No API meters                   | `hasMeters: false` + Warning required                            | Follow no-meters pattern                        |
-| Billing dependencies found      | `billingNeeds` required                                          | Add exact service names                         |
-| Private endpoint support        | `privateEndpoint: true` + Notes entry                            | Add both                                        |
+| Investigation finding           | Compliance requirement                                           | Action                                                                            |
+| ------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Meters found with specific SKUs | YAML `serviceName` required                                      | Use exact serviceName from investigation                                          |
+| RI pricing available            | `billingConsiderations` should include `Reserved Instances`      | Add to YAML                                                                       |
+| Sub-cent prices detected        | `hasKnownRates: true` + Known Rates table + Manual Calc required | Include all three                                                                 |
+| Multiple productName values     | Trap needed for filter specificity                               | Write trap with exact values from investigation                                   |
+| No API meters                   | `hasMeters: false` + Warning required                            | Follow no-meters pattern                                                          |
+| Billing dependencies found      | `billingNeeds` required                                          | Add exact service names                                                           |
+| Private endpoint support        | `privateEndpoint: true` in YAML                                  | Add YAML field; add Notes only for tier restrictions or multiple PE sub-resources |
 
 ### 3.2 — Resolve data-vs-rules conflicts
 

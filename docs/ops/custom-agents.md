@@ -55,12 +55,12 @@ service-reference (orchestrator)
 
 ## Prerequisites
 
-| Requirement                      | Notes                                                                                                                                     |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Copilot coding agent enabled** | The repository must have the Copilot coding agent feature turned on.                                                                      |
-| **PowerShell 7+**                | The agent environment needs `pwsh` to run `Explore-AzurePricing` and `Get-AzurePricing`.                                                  |
-| **Network access**               | Scripts call the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices). |
-| **Issue content**                | Issues should include the Azure service name; the agent reads `service-routing.md` to resolve exact API values.                           |
+| Requirement                      | Notes                                                                                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Copilot coding agent enabled** | The repository must have the Copilot coding agent feature turned on.                                                                                    |
+| **PowerShell 7+**                | The agent environment needs `pwsh` to run `Explore-AzurePricing` and `Get-AzurePricing`.                                                                |
+| **Network access**               | Scripts call the [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices).               |
+| **Issue content**                | Issues should include the Azure service name; the agent reads `skills/azure-cost-calculator/references/service-routing.md` to resolve exact API values. |
 
 ---
 
@@ -109,7 +109,7 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | Symptom                        | Likely cause                                                        | Fix                                                                           |
 | ------------------------------ | ------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | Agent not appearing            | File not merged to default branch, or filename doesn't end in `.md` | Merge to main; verify paths in `.github/agents/`                              |
-| Sub-agent not invoked          | Orchestrator's `tools` list missing `agent` alias                   | Ensure `tools: ["read", "search", "edit", "execute", "agent"]`                |
+| Sub-agent not invoked          | Orchestrator's `tools` list missing `agent` alias                   | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`         |
 | Agent not following rules      | Referenced files (`CONTRIBUTING.md`, `TEMPLATE.md`) are out of date | Update upstream files; agents read them at runtime                            |
 | Validation failures            | Generated file doesn't match template or has bad data               | Orchestrator should auto-fix; if not, check validation script output          |
 | Script execution failures      | Missing PowerShell 7+ or no network access                          | Ensure agent environment has `pwsh` and can reach the Azure Retail Prices API |
