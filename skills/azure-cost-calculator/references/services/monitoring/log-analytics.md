@@ -11,7 +11,7 @@ privateEndpoint: true
 # Log Analytics
 
 > **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
-> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free — **PAYG only** (not commitment tiers), per **billing account** (not per workspace). Always deduct this from the billable total when on PAYG: `billable_GB = total_GB - 5`.
+> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free — **PAYG only** (not commitment tiers), per **billing account** (not per workspace). This credit is tied to the LA PAYG meter and does **not** apply when Sentinel simplified pricing is active (default for workspaces created after July 2023), because ingestion shifts to Sentinel meters which have no equivalent free tier. Only deduct when Sentinel is NOT enabled or uses classic pricing: `billable_GB = total_GB - 5`.
 > **Trap (retention calculation)**: The free retention period depends on whether Microsoft Sentinel is enabled: **90 days** for Sentinel-enabled workspaces, **31 days** otherwise. For extended retention, the chargeable window is `retentionDays - freeDays` (where freeDays = 90 if Sentinel is enabled, 31 if not). At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - freeDays)`. This is the most commonly miscalculated component — agents often use 31 days for Sentinel workspaces (significantly overstating cost) or 90 days for non-Sentinel workspaces (understating cost).
 
 ## Query Pattern
@@ -54,7 +54,8 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 ## Cost Formula
 
 ```
-Monthly Ingestion (PAYG) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (PAYG, no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (PAYG, Sentinel simplified pricing)    = billed via Sentinel meters — see management/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB
 Total = Monthly Ingestion + Monthly Retention
 ```
