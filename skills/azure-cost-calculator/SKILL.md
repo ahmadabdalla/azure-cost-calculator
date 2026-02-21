@@ -45,9 +45,10 @@ String values with spaces require quoting when passed to scripts. Numeric values
    - Batch all gaps into one prompt. Offer concrete choices. One round max — if user declines, carry gaps forward as never-assume items in Step 6.
 3. **Locate** each service reference:
    a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
-   b. **Category browse** — if search returns 0 or ambiguous results, read the category index in [references/shared.md](references/shared.md)
-   c. **Broad search** — list or search `references/services/**/*.md` to see all available files
-   d. **Discovery** — if no file exists, use the explore script to find the service in the API
+   b. **Routing map** — if search returns 0 or ambiguous results, check [references/service-routing.md](references/service-routing.md) for the authoritative category and filename
+   c. **Category browse** — if not found in routing map, read the category index in [references/shared.md](references/shared.md)
+   d. **Broad search** — list or search `references/services/**/*.md` to see all available files
+   e. **Discovery** — if no file exists, use the explore script to find the service in the API
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified** — user provided value (use verbatim)
@@ -84,7 +85,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 | User asks about Reserved Instances or savings plans                             | [references/reserved-instances.md](references/reserved-instances.md)                                                                                                                                                             |
 | Non-USD currency or non-eastus region                                           | [references/regions-and-currencies.md](references/regions-and-currencies.md)                                                                                                                                                     |
 | User requests private endpoints or private access — confirm PE intent with user | [references/services/networking/private-link.md](references/services/networking/private-link.md) — PE pricing, [references/services/networking/private-dns.md](references/services/networking/private-dns.md) — DNS zone pricing |
-| Category Index + file search both failed                                        | [references/service-routing.md](references/service-routing.md) — full 140+ service map                                                                                                                                           |
+| File search returned 0 or ambiguous results                                     | [references/service-routing.md](references/service-routing.md) — full 140+ service map                                                                                                                                           |
 | First time running scripts or unfamiliar with parameters                        | [references/workflow.md](references/workflow.md) — script parameters and output formats                                                                                                                                          |
 
 ## Critical Rules
