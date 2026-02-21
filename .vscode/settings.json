@@ -3,5 +3,8 @@
     "*/Get-AzurePricing.ps1 *",
     "*/Explore-AzurePricing.ps1 *",
     "*Invoke-RestMethod*prices.azure.com*"
-  ]
+  ],
+  "[markdown]": {
+    "editor.formatOnSave": false
+  }
 }
