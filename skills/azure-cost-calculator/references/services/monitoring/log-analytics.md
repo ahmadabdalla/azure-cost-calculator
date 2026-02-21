@@ -1,7 +1,15 @@
 ---
 serviceName: Log Analytics
 category: monitoring
-aliases: [OMS, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
+aliases:
+  [
+    OMS,
+    Workspace,
+    Logs,
+    Log Analytics Workspace,
+    Azure Monitor Logs,
+    Operations Management Suite,
+  ]
 billingNeeds: [Azure Monitor]
 primaryCost: "Data ingestion per-GB + retention beyond free period (90 days Sentinel / 31 days standard)"
 hasFreeGrant: true
@@ -53,9 +61,12 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 
 ## Cost Formula
 
+| Ingestion scenario                             | Formula                                                   |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| PAYG — no Sentinel or Sentinel classic pricing | `retailPrice_per_GB × max(0, estimatedGB_per_month - 5)`  |
+| PAYG — Sentinel simplified pricing             | Billed via Sentinel meters — see `management/sentinel.md` |
+
 ```
-Monthly Ingestion (PAYG, no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
-Monthly Ingestion (PAYG, Sentinel simplified pricing)    = billed via Sentinel meters — see management/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB
 Total = Monthly Ingestion + Monthly Retention
 ```
@@ -68,9 +79,9 @@ Free retention: **90 days** (Sentinel-enabled workspace) or **31 days** (standar
 
 | Data category                                           | Ingestion billed? | Retention billed? |
 | ------------------------------------------------------- | ----------------- | ----------------- |
-| Regular data (`_IsBillable=true`)                       | Yes               | **Yes**           |
-| Defender P2 / free-tier grant data (`_IsBillable=true`) | No (credit)       | **Yes**           |
-| AzureActivity, Heartbeat, etc. (`_IsBillable=false`)    | No                | **No**            |
+| Regular data (`_IsBillable=true`)                       | Yes               | Yes               |
+| Defender P2 / free-tier grant data (`_IsBillable=true`) | No (credit)       | Yes               |
+| AzureActivity, Heartbeat, etc. (`_IsBillable=false`)    | No                | No                |
 
 ```
 freeDays = 90 if Sentinel enabled, 31 otherwise
@@ -87,7 +98,6 @@ For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) sa
 ## Notes
 
 - Non-billable tables (AzureActivity, Heartbeat, Usage, Operation) have zero ingestion and retention cost — deduct from volume estimates
-- Free retention: **90 days** if Microsoft Sentinel is enabled on the workspace, **31 days** otherwise; longer retention charged per-GB/month
 - Maximum retention period: 730 days (2 years)
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
 - Sentinel uses Log Analytics workspaces but ingestion is billed via Sentinel meters (`ServiceName: Sentinel`) — do NOT add LA ingestion for Sentinel data; only LA retention meters apply beyond the 90-day free period (see `management/sentinel.md`)
