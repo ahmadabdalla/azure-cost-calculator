@@ -11,7 +11,7 @@ Only entries with explicit `f:` field deviate from this convention.
 ## Routing Notes
 
 - Some services share a `serviceName`; use `productName` filters (Storage, Managed Disks, Data Lake).
-- API `serviceFamily` may differ from category here (Event Hubs → IoT, APIM → Dev Tools, Sentinel → Mgmt, Spring Cloud → Other). Always use this file's category.
+- API `serviceFamily` may differ from category here (Event Hubs → IoT, APIM → Dev Tools, Sentinel → Security, Spring Cloud → Other). Always use this file's category.
 - Services with no retail meter (Policy, Advisor, Cost Mgmt, DevOps, Entra ID free) still need reference files.
 - OpenAI/AI Services may appear as `Foundry Models`/`Foundry Tools` in newer API responses (AI Foundry rebrand).
 
@@ -215,6 +215,8 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [AKV, Managed HSM]
 - s: "Microsoft Defender for Cloud"
   a: [Azure Security Center, CSPM, CWP]
+- s: "Sentinel"
+  a: [SIEM, SOAR]
 - s: "Microsoft Purview"
   a: [Data Governance, Data Catalog]
 - s: "Azure confidential ledger"
@@ -267,8 +269,6 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [Runbooks, DSC, Update Management]
 - s: "Azure Site Recovery"
   a: [ASR, Disaster Recovery, DR]
-- s: "Sentinel"
-  a: [SIEM, SOAR]
 - s: "Azure Chaos Studio"
   a: [Chaos Engineering, Fault Injection]
 - s: "Scheduler"
