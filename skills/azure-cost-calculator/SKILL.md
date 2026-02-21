@@ -65,7 +65,7 @@ String values with spaces require quoting when passed to scripts. Numeric values
 
 7. **Query** — run the pricing script for each service using parameters from service files + user input + resolved defaults
 8. **Calculate** — apply cost formulas from service files; multiply by quantities
-9. **Verify arithmetic** — for each line item, restate the formula with actual numbers, compute, and confirm the result. If any intermediate calculation involves multiplication of two numbers > 10, compute it step-by-step (e.g., `14.5 × 640 → 14 × 640 = 8,960; 0.5 × 640 = 320; total = 9,280`). Do not rely on mental math for multi-digit operations.
+9. **Verify arithmetic** — for each line item, restate the formula with actual numbers, compute, and confirm the result. If any intermediate calculation involves multiplication of two numbers > 10, compute it step-by-step (e.g., `14.5 × 640 → 14 × 640 → 10 × 640 = 6,400; 4 × 640 = 2,560; subtotal = 8,960; 0.5 × 640 = 320; total = 9,280`). Do not rely on mental math for multi-digit operations.
 10. **Present** — output the estimate with:
    - **Assumptions block** (see Disambiguation Protocol in shared.md) — listed before cost numbers
    - **Line items**: service, unit price, quantity/hours, monthly cost
