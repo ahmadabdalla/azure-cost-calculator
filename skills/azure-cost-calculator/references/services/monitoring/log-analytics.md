@@ -54,7 +54,8 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 ## Cost Formula
 
 ```
-Monthly Ingestion (PAYG) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (PAYG, no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (PAYG, Sentinel simplified pricing)    = billed via Sentinel meters — see management/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB
 Total = Monthly Ingestion + Monthly Retention
 ```
