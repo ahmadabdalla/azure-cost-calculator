@@ -64,14 +64,22 @@ Quantity: 500
 
 ## Cost Formula
 
+### Billable GB (simplified pricing)
+
+```
+defender_free_GB = min(security_table_GB, serverCount × 0.5 × 30)   # Defender P2 (see defender-for-cloud.md)
+m365_free_GB    = min(m365_table_GB, userCount × 0.005 × 30)        # M365 E5; tables don't overlap with P2
+billableGB      = total_IsBillable_GB - defender_free_GB - m365_free_GB
+```
+
+> Grants are volume deductions (applied before tier pricing), for ingestion only — retention uses total physical ingestion (see `log-analytics.md`). P2 grant requires Defender auto-provisioned DCRs. No LA 5 GB/month free tier under simplified pricing.
+
 ```
 PAYG:       Monthly = payg_retailPrice × billableGB
-Commitment: Monthly = tier_retailPrice × 30 + (tier_retailPrice ÷ tierGB) × max(0, dailyGB - tierGB) × 30
+Commitment: Monthly = tier_retailPrice × 30 + (tier_retailPrice ÷ tierGB) × max(0, billableGB ÷ 30 - tierGB) × 30
 Basic Logs: Monthly = basic_retailPrice × queryGB
 Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice × ingestedGB + query_retailPrice × queriedGB
 ```
-
-> For Defender for Cloud related free data grants, see `security/defender-for-cloud.md`.
 
 ## Notes
 
