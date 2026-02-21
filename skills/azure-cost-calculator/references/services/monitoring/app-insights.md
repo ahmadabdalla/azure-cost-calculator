@@ -47,7 +47,7 @@ MeterName: Analytics Logs Data Retention
 
 ```
 Monthly Ingestion (no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
-Monthly Ingestion (Sentinel simplified pricing)    = billed via Sentinel meters — see management/sentinel.md
+Monthly Ingestion (Sentinel simplified pricing)    = billed via Sentinel meters — see security/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB
 Total = Monthly Ingestion + Monthly Retention
 ```
