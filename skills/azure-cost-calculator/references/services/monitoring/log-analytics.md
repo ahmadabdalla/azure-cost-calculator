@@ -11,7 +11,7 @@ privateEndpoint: true
 # Log Analytics
 
 > **Trap**: The meter names `'Pay-as-you-go Data Ingested'` and `'Data Ingestion'` do NOT exist in `australiaeast`. The correct Log Analytics meter is `'Analytics Logs Data Analyzed'` with skuName `'Analytics Logs'`.
-> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free — **PAYG only** (not commitment tiers), per **billing account** (not per workspace). Always deduct this from the billable total when on PAYG: `billable_GB = total_GB - 5`.
+> **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free — **PAYG only** (not commitment tiers), per **billing account** (not per workspace). Always deduct this from the billable total when on PAYG: `billable_GB = total_GB - 5`. **This free tier does NOT apply when Microsoft Sentinel is enabled with simplified pricing**: billing for Analytics Logs shifts to Sentinel meters in that case (Azure Monitor pricing page footnote 4; `cost-logs` doc), so no LA PAYG free allocation exists. It **does** apply to the LA portion under Sentinel classic pricing (pre-July 2023, separate meters), but not to the Sentinel analysis meter.
 > **Trap (retention calculation)**: The free retention period depends on whether Microsoft Sentinel is enabled: **90 days** for Sentinel-enabled workspaces, **31 days** otherwise. For extended retention, the chargeable window is `retentionDays - freeDays` (where freeDays = 90 if Sentinel is enabled, 31 if not). At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - freeDays)`. This is the most commonly miscalculated component — agents often use 31 days for Sentinel workspaces (significantly overstating cost) or 90 days for non-Sentinel workspaces (understating cost).
 
 ## Query Pattern
@@ -63,15 +63,21 @@ Total = Monthly Ingestion + Monthly Retention
 
 Free retention: **90 days** (Sentinel-enabled workspace) or **31 days** (standard). Charges apply beyond the free period up to max 730 days.
 
+> **Trap (retention volume)**: `dailyIngestionGB` = total physical ingestion from `_IsBillable=true` tables — NOT billable ingestion after grant deductions. Defender P2 free grants and the PAYG free tier reduce **ingestion** cost but data is still stored and incurs **retention** charges. Only `_IsBillable=false` tables (AzureActivity, Heartbeat, Usage, Operation) are excluded from both.
+
+| Data category                                           | Ingestion billed? | Retention billed? |
+| ------------------------------------------------------- | ----------------- | ----------------- |
+| Regular data (`_IsBillable=true`)                       | Yes               | **Yes**           |
+| Defender P2 / free-tier grant data (`_IsBillable=true`) | No (credit)       | **Yes**           |
+| AzureActivity, Heartbeat, etc. (`_IsBillable=false`)    | No                | **No**            |
+
 ```
 freeDays = 90 if Sentinel enabled, 31 otherwise
-Retained GB = dailyIngestionGB × chargeableDays
+Retained GB = dailyIngestionGB × chargeableDays     # dailyIngestionGB = all _IsBillable=true data
 where chargeableDays = max(0, min(retentionPeriodDays, actualDaysOfData) - freeDays)
 ```
 
-**Example 1** — 90-day retention, **Sentinel-enabled** workspace, 5 GB/day: chargeableDays = 90 − 90 = 0 → retention cost = 0.
-
-**Example 2** — 90-day retention, **standard** workspace, 5 GB/day: chargeableDays = 90 − 31 = 59 → retainedGB = 295 → Monthly retention = retentionPrice × 295.
+**Example** — Sentinel workspace, 2-year retention, 14.5 GB/day total (`_IsBillable=true`), 2 GB/day Defender-granted: chargeableDays = 730 − 90 = 640 → retainedGB = **14.5** × 640 = 9,280 (use 14.5, not 12.5 — grants don't reduce retention volume).
 
 ## Commitment Tier Details
 
