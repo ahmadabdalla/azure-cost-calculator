@@ -36,6 +36,15 @@ ProductName: Azure Cosmos DB
 MeterName: Data Stored
 SkuName: RUs
 
+## Key Fields
+
+| Parameter     | How to determine               | Example values                                                              |
+| ------------- | ------------------------------ | --------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure Cosmos DB`       | `Azure Cosmos DB`                                                           |
+| `productName` | Pricing model variant          | `Azure Cosmos DB`, `Azure Cosmos DB autoscale`, `Azure Cosmos DB serverless` |
+| `skuName`     | Throughput type                | `RUs`, `mRUs`, `AP1`                                                        |
+| `meterName`   | Resource being metered         | `100 RU/s`, `Data Stored`, `1M RUs`                                         |
+
 ## Meter Names
 
 | What           | meterName               | skuName | productName                  | Notes                                   |
@@ -64,3 +73,13 @@ Total              = Throughput + Storage
 - **Multi-region write (multi-master) costs ~2× single-region**: The `100 Multi-master RU/s` meter (skuName `mRUs`) is approximately double the price of the standard `100 RU/s` meter (skuName `RUs`). Always inform users about this multiplier when they request multi-region writes. For cost comparison, query both meters and show the per-region price difference.
 - **Autoscale provisioned throughput**: The API has a **separate product** (`Azure Cosmos DB autoscale`) with its own meter (`AP1 100 RUs`, skuName `AP1`). The autoscale rate is exactly 1.5× the standard provisioned rate and this premium is **already included** in the API price. Do NOT query the standard `100 RU/s` meter and manually multiply by 1.5 — instead query the autoscale product directly. With autoscale, billing is based on the maximum RU/s set; calculate as `autoscale_price × (maxRUs / 100) × 730`.
 - PE sub-resource matches the account API type (never-assume): `Sql`, `MongoDB`, `Cassandra`, `Gremlin`, or `Table`. Conditional: `SqlDedicated` (dedicated gateway), `Analytical` (Synapse Link)
+
+## Reserved Instance Pricing
+
+ServiceName: Azure Cosmos DB
+MeterName: 100 RU/s
+PriceType: Reservation
+Region: Global
+
+> **Trap (RI region)**: Cosmos DB RI uses `Region: Global` — regional queries return zero results.
+> **Trap (RI MonthlyCost)**: The script's MonthlyCost is wrong for RI. Use `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).
