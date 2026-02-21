@@ -71,4 +71,4 @@ Total Monthly   = DBU Monthly + VM Monthly
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
 - **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return $0.00 — ignore these for cost estimation
 - **Capacity per DBU**: 1 DBU maps to a fractional VM — actual throughput depends on node VM size, workload type, and Photon enablement; Databricks auto-scales clusters within configured min/max node bounds
-- Supports private endpoints (Premium required) — see `networking/private-link.md` for PE and DNS zone pricing. PE sub-resources (never-assume): `databricks_ui_api`, `browser_authentication`
+- **PE sub-resources** (never-assume): `databricks_ui_api`, `browser_authentication` — Premium required
