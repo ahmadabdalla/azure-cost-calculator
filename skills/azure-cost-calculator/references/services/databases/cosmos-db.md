@@ -1,9 +1,10 @@
 ---
 serviceName: Azure Cosmos DB
 category: databases
-aliases: [CosmosDB, Cosmos, documentdb]
+aliases: [CosmosDB, DocumentDB, Multi-model DB]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Provisioned throughput (RU/s per-hour) + storage"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
