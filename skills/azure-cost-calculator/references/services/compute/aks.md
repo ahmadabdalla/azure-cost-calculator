@@ -54,5 +54,4 @@ Monthly = AKS_uptime_SLA_fee × 730 + (VM_hourly × 730 × nodeCount)
 - Standard tier: hourly fee for uptime SLA — query live price
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested — it's an optional add-on for extended Kubernetes version support
 - `billingConsiderations: [Reserved Instances]` applies to underlying node VMs via `billingNeeds`, not to AKS management meters
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 - For AKS Automatic (per-vCPU billing model), see `compute/aks-automatic.md`

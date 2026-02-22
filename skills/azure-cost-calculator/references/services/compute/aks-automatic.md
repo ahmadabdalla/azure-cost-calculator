@@ -66,5 +66,4 @@ Monthly = (controlPlane_retailPrice × 730 × clusterCount)
 - Control plane rate is flat across all 59 regions; per-vCPU rates vary ~2.4× by region
 - User must specify total vCPU count and workload type (General Purpose, Compute Optimized, etc.)
 - Managed Disks, Load Balancer/NAT Gateway, Azure Monitor, and data transfer are billed separately
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 - For Standard AKS (separate VM billing model), see `compute/aks.md`
