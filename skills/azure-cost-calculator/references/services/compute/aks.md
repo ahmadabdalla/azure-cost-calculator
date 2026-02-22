@@ -82,4 +82,4 @@ Automatic: Monthly = (control_plane_retailPrice + vCPU_retailPrice × vCPUs) × 
 - Premium tier: uses `Standard Long Term Support` meter (no "Premium" SKU in API) — includes 24-month LTS
 - Automatic mode: bundles compute — no separate VM billing; choose workload meter matching node pool type (never-assume)
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested
-- Supports private endpoints (Standard tier or higher) — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints require Standard tier or higher
