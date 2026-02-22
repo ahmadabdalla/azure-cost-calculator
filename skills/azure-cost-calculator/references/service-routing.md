@@ -28,10 +28,7 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [ACA]
 - s: "Azure Kubernetes Service"
   f: aks.md
-  a: [AKS, Kubernetes, K8s]
-- s: "Azure Kubernetes Service"
-  f: aks-automatic.md
-  a: [AKS Automatic, Kubernetes Automatic]
+  a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
   a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
 - s: "Service Fabric Mesh"
