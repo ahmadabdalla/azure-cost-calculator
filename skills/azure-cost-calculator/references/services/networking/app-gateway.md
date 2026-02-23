@@ -1,7 +1,7 @@
 ---
 serviceName: Application Gateway
 category: networking
-aliases: [app gateway, application gateway, appgw]
+aliases: [App Gateway, AGW, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 primaryCost: "Gateway hours (fixed cost) + capacity units processed"
 privateEndpoint: true
 ---
@@ -40,8 +40,9 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - A CU measures: ~2,500 concurrent connections, ~2.22 Mbps throughput, or ~1 compute unit
 - **CU from data volume**: 1 CU ≈ 2.22 Mbps sustained ≈ 0.98 GB/hr. For monthly data: `CUs = dataGB / (0.98 × 730)`. Example: 5 TB (5,000 GB) → ~7 CU average. Add headroom for burst — use 1.5–2× for production.
 - For light workloads, estimate ~5-10 CU average; for moderate, ~10-30 CU
-- WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher
-- **WAF-specific pricing details**: See `security/waf.md` for dedicated WAF pricing including Front Door WAF policies, managed rulesets, and bot protection
+- WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher. WAF v2 also has `Standard Captcha Sessions` (per 1K) for CAPTCHA challenges
+- **Front Door WAF**: Front Door has its own WAF meters (policies, rulesets, bot protection) — see `networking/front-door.md`
+- **App Gateway for Containers WAF**: Separate product (`Application Gateway for Containers WAF`) with different meters (AGC, Frontend, Association, Capacity Units)
 
 ## Product Names
 
