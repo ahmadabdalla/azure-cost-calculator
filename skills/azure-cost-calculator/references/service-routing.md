@@ -30,9 +30,8 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
   a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
-- s: "Service Fabric Mesh"
-  f: service-fabric.md
-  a: [Service Fabric, SF Mesh, Microservices]
+- s: "Service Fabric"
+  a: [Service Fabric Mesh, SF, SF Mesh, Microservices, Microservices Cluster, Reliable Services]
 - s: "Azure App Service (Linux)"
   a: [App Service Linux, Linux Web Apps]
 - s: "Azure Batch"
@@ -50,9 +49,6 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [Durable Tasks, Workflow Scheduler]
 - s: "Windows Virtual Desktop"
   a: [Azure Virtual Desktop, AVD, WVD]
-- s: "Service Fabric"
-  f: service-fabric-cluster.md
-  a: [SF, Microservices Cluster, Reliable Services]
 - s: "Azure VM Image Builder"
   a: [Image Builder, AIB, VM Image, Custom Image]
 - s: "Virtual Machines Licenses"
@@ -498,22 +494,16 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Phone Numbers"
-  f: communication-services.md
   a: [ACS Phone Numbers, PSTN, Telephony]
 - s: "Voice"
-  f: communication-services.md
   a: [ACS Voice, Voice Calling, VOIP]
 - s: "Email"
-  f: communication-services.md
   a: [ACS Email, Email Communication]
 - s: "Messaging"
-  f: communication-services.md
   a: [ACS Chat, Chat Messaging]
 - s: "SMS"
-  f: communication-services.md
   a: [ACS SMS, Text Messaging]
 - s: "Network Traversal"
-  f: communication-services.md
   a: [ACS TURN, TURN Relay]
 - s: "AI Ops"
   a: [Telecom AI Ops, Azure Operator Insights]
