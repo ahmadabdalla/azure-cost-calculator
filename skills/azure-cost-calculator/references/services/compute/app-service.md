@@ -1,7 +1,7 @@
 ---
 serviceName: Azure App Service
 category: compute
-aliases: [app service, web app, webapp]
+aliases: [Web Apps, App Service Plan, ASP]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Fixed hourly rate for the plan SKU × 730 × instanceCount"
 privateEndpoint: true

@@ -1,7 +1,7 @@
 ---
 serviceName: Storage
 category: storage
-aliases: [managed disks, disks, disk storage]
+aliases: [Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Fixed monthly rate per disk (+ mount fee for Premium/Standard SSD)"
 privateEndpoint: true

@@ -1,7 +1,7 @@
 ---
 serviceName: Load Balancer
 category: networking
-aliases: [LB, load balancer]
+aliases: [ALB, Standard LB, Basic LB]
 primaryCost: "Per-hour base fee + per-GB data processed + overage rules (Standard); VNet peering per-GB"
 pricingRegion: global
 ---

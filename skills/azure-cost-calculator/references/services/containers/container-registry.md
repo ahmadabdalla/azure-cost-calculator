@@ -1,7 +1,7 @@
 ---
 serviceName: Container Registry
 category: containers
-aliases: [ACR, container registry]
+aliases: [ACR, Docker Registry]
 primaryCost: "Registry unit (daily) + excess storage (per-GB/month)"
 privateEndpoint: true
 ---

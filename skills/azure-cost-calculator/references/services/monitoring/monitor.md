@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Monitor
 category: monitoring
-aliases: [Azure Monitor Metrics, Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive]
+aliases: [Metrics, Alerts, Diagnostics]
 primaryCost: "Custom metrics per time series + log-tier ingestion/archive/export per-GB"
 hasFreeGrant: true
 privateEndpoint: true

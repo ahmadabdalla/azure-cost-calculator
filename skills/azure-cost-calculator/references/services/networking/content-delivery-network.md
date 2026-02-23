@@ -1,7 +1,7 @@
 ---
 serviceName: Content Delivery Network
 category: networking
-aliases: [CDN Classic, Azure CDN Classic, Content Delivery]
+aliases: [CDN, Azure CDN, Content Delivery]
 primaryCost: "Data transfer out per-GB (tiered) + HTTP requests per-million, priced by delivery zone"
 ---
 

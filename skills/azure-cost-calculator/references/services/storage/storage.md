@@ -1,7 +1,7 @@
 ---
 serviceName: Storage
 category: storage
-aliases: [blob storage, file storage, table storage, queue storage, Azure Storage]
+aliases: [Blob Storage, Azure Files, Table Storage, Queue Storage]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Data stored per-GB/month (tiered) + operations per-10K + data retrieval per-GB"
 privateEndpoint: true
