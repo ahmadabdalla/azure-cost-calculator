@@ -120,7 +120,7 @@ Only entries with explicit `f:` field deviate from this convention.
 ```yaml
 - s: "Application Gateway"
   f: app-gateway.md
-  a: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
+  a: [App Gateway, AGW, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 - s: "Azure Firewall"
   f: azure-firewall.md
   a: [Azure Firewall Premium/Standard/Basic]

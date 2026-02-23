@@ -1,7 +1,7 @@
 ---
 serviceName: Application Gateway
 category: networking
-aliases: [app gateway, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
+aliases: [App Gateway, AGW, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 primaryCost: "Gateway hours (fixed cost) + capacity units processed"
 privateEndpoint: true
 ---
