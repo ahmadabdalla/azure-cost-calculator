@@ -31,7 +31,9 @@ param(
 
     [string]$ServicesRoot,
 
-    [switch]$CheckAliasUniqueness
+    [switch]$CheckAliasUniqueness,
+
+    [switch]$CheckAliasRoutingSync
 )
 
 Set-StrictMode -Version Latest
@@ -44,6 +46,7 @@ $validationDir = Join-Path -Path $PSScriptRoot -ChildPath 'lib' -AdditionalChild
 . (Join-Path $validationDir 'Test-StyleCompliance.ps1')
 . (Join-Path $validationDir 'Test-ContentRule.ps1')
 . (Join-Path $validationDir 'Test-AliasUniqueness.ps1')
+. (Join-Path $validationDir 'Test-AliasRoutingSync.ps1')
 
 function Test-ServiceReference {
     param([string]$FilePath)
@@ -114,6 +117,19 @@ if ($CheckAliasUniqueness) {
         $aliasChecks = Test-AliasUniqueness -RootPath $root
         foreach ($check in $aliasChecks) {
             Write-CheckResult -FileName 'alias_check' -Check $check
+            if (-not $check.Pass) { $hasFailures = $true }
+        }
+    }
+}
+
+if ($CheckAliasRoutingSync) {
+    $root = if ($ServicesRoot) { $ServicesRoot } else {
+        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
+    }
+    if (Test-Path $root) {
+        $syncChecks = Test-AliasRoutingSync -RootPath $root
+        foreach ($check in $syncChecks) {
+            Write-CheckResult -FileName 'routing_sync' -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }

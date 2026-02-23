@@ -247,7 +247,7 @@ Example: "Azure Data Factory" → `data-factory.md` | "SignalR" → `signalr.md`
 - s: "Azure Policy"
   a: [Compliance, Governance]
 - s: "Azure Advisor"
-  a: [Recommendations, Best Practices]
+  a: [Best Practices]
 - s: "Azure Cost Management"
   a: [Billing, Budgets, Cost Analysis]
 - s: "Azure Blueprints"
