@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Machine Learning
 category: ai-ml
-aliases: [Azure ML, AML, ML Workspace, Machine Learning Studio]
+aliases: [Azure ML, AML, ML Workspace]
 billingNeeds: [Storage, Key Vault, Application Insights]
 primaryCost: "Managed online endpoint capacity (hourly × 730) + ML service surcharges. Training clusters billed under VMs."
 privateEndpoint: true
