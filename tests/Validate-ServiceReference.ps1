@@ -18,11 +18,17 @@
 .PARAMETER CheckAliasUniqueness
     When specified, checks for alias collisions across all service files.
 
+.PARAMETER CheckAliasRoutingSync
+    When specified, checks alias sync between routing map and file frontmatter.
+
+.PARAMETER CheckBillingNeeds
+    When specified, checks that billingNeeds values reference valid serviceNames.
+
 .EXAMPLE
     .\Validate-ServiceReference.ps1 -Path services/compute/my-service.md
 
 .EXAMPLE
-    .\Validate-ServiceReference.ps1 -Path *.md -CheckAliasUniqueness
+    .\Validate-ServiceReference.ps1 -Path *.md -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds
 #>
 [CmdletBinding()]
 param(
@@ -33,7 +39,9 @@ param(
 
     [switch]$CheckAliasUniqueness,
 
-    [switch]$CheckAliasRoutingSync
+    [switch]$CheckAliasRoutingSync,
+
+    [switch]$CheckBillingNeeds
 )
 
 Set-StrictMode -Version Latest
@@ -47,6 +55,10 @@ $validationDir = Join-Path -Path $PSScriptRoot -ChildPath 'lib' -AdditionalChild
 . (Join-Path $validationDir 'Test-ContentRule.ps1')
 . (Join-Path $validationDir 'Test-AliasUniqueness.ps1')
 . (Join-Path $validationDir 'Test-AliasRoutingSync.ps1')
+. (Join-Path $validationDir 'Test-BillingNeedsReference.ps1')
+. (Join-Path $validationDir 'Test-FileNaming.ps1')
+. (Join-Path $validationDir 'Test-PriceHygiene.ps1')
+. (Join-Path $validationDir 'Test-QueryBlockCompleteness.ps1')
 
 function Test-ServiceReference {
     param([string]$FilePath)
@@ -67,6 +79,9 @@ function Test-ServiceReference {
     foreach ($c in (Test-DocumentStructure -Lines $lines)) { $checks.Add($c) }
     foreach ($c in (Test-StyleCompliance -Lines $lines)) { $checks.Add($c) }
     foreach ($c in (Test-ContentRule -Lines $lines -FrontMatter $fm)) { $checks.Add($c) }
+    foreach ($c in (Test-FileNaming -FilePath $fullPath -FrontMatter $fm)) { $checks.Add($c) }
+    foreach ($c in (Test-PriceHygiene -Lines $lines -FrontMatter $fm)) { $checks.Add($c) }
+    foreach ($c in (Test-QueryBlockCompleteness -Lines $lines)) { $checks.Add($c) }
 
     , $checks
 }
@@ -130,6 +145,19 @@ if ($CheckAliasRoutingSync) {
         $syncChecks = Test-AliasRoutingSync -RootPath $root
         foreach ($check in $syncChecks) {
             Write-CheckResult -FileName 'routing_sync' -Check $check
+            if (-not $check.Pass) { $hasFailures = $true }
+        }
+    }
+}
+
+if ($CheckBillingNeeds) {
+    $root = if ($ServicesRoot) { $ServicesRoot } else {
+        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
+    }
+    if (Test-Path $root) {
+        $billingChecks = Test-BillingNeedsReference -RootPath $root
+        foreach ($check in $billingChecks) {
+            Write-CheckResult -FileName 'billing_needs' -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
