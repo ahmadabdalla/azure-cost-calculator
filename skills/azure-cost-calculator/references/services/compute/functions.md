@@ -1,7 +1,7 @@
 ---
 serviceName: Functions
 category: compute
-aliases: [azure functions, serverless, function app]
+aliases: [Serverless Functions, Function App]
 billingNeeds: [Storage, Azure App Service]
 primaryCost: "Per-execution + GB-seconds (Consumption/Flex) or App Service Plan rate (Dedicated)"
 hasFreeGrant: true

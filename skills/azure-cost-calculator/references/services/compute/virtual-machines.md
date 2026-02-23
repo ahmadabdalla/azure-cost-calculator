@@ -1,7 +1,7 @@
 ---
 serviceName: Virtual Machines
 category: compute
-aliases: [VMs, virtual machine, VM, VMSS, VM Scale Sets, scale set]
+aliases: [VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host]
 billingNeeds: [Managed Disks]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances, Spot Pricing]
 primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
