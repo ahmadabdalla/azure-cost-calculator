@@ -120,7 +120,7 @@ Only entries with explicit `f:` field deviate from this convention.
 ```yaml
 - s: "Application Gateway"
   f: app-gateway.md
-  a: [App Gateway, AGW]
+  a: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 - s: "Azure Firewall"
   f: azure-firewall.md
   a: [Azure Firewall Premium/Standard/Basic]
@@ -150,7 +150,7 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Load Balancer"
   a: [ALB, Standard LB, Basic LB]
 - s: "Azure Front Door"
-  a: [AFD, CDN, Azure CDN, Front Door Premium/Standard]
+  a: [AFD, CDN, Azure CDN, Front Door Premium/Standard, Front Door WAF]
 - s: "Azure DNS"
   a: [DNS Zones, Private DNS Zones]
 - s: "Traffic Manager"
@@ -238,10 +238,6 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [Entra Suite, Microsoft Entra (exact API name), Entra ID metered]
 - s: "Microsoft Entra Verified ID"
   a: [Verified ID, Verifiable Credentials, Decentralized Identity, DID]
-- s: "Application Gateway"
-  f: waf.md
-  a: [WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, Front Door WAF]
-# WAF has no dedicated API serviceName; meters split across Application Gateway and Azure Front Door Service
 ```
 
 ## Monitoring (`services/monitoring/`)
