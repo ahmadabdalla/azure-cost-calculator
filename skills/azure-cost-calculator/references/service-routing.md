@@ -339,7 +339,7 @@ Example: "Azure Data Factory" → `data-factory.md`
 
 ```yaml
 - s: "Azure Machine Learning"
-  a: [Azure ML, AML, ML Workspace, Machine Learning Studio]
+  a: [Azure ML, AML, ML Workspace]
 - s: "Foundry Models"
   a: [Azure AI Foundry Models, Model Catalog, AI Foundry]
 - s: "Foundry Tools"
