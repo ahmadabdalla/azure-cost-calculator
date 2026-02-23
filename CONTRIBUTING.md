@@ -28,7 +28,7 @@ Follow these steps exactly:
 ### Step 1 - Check eligibility
 
 1. Read the file `skills/azure-cost-calculator/references/service-routing.md`.
-2. Confirm that {SERVICE_NAME} appears in the routing map. Note the exact API `serviceName`, the suggested filename, the category folder, and the aliases listed.
+2. Confirm that {SERVICE_NAME} appears in the routing map. Note the exact API `serviceName`, the category folder, and the aliases listed. Derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
 3. If {SERVICE_NAME} is not in the routing map, stop and tell the user to open an issue first.
 
 ### Step 2 - Check for duplicates
@@ -118,7 +118,7 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 
 ### Step 7 - Generate the service reference file
 
-Create the file at: `skills/azure-cost-calculator/references/services/{category}/{suggested-filename}` (lowercase, hyphenated, from the routing map).
+Create the file at: `skills/azure-cost-calculator/references/services/{category}/{filename}` (derived from the naming convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`).
 
 The file MUST follow these rules:
 - **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map - do not add extras beyond those listed). Use inline `[...]` array format for aliases - never multi-line YAML sequences. Optionally include `billingNeeds` (services billed under a different serviceName) and `billingConsiderations` (pricing factors to ask about — only these values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`). Omit both fields if they don't apply.

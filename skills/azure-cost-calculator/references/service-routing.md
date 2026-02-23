@@ -6,7 +6,6 @@ For the Category Index and constants, see [shared.md](shared.md).
 
 Filename convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`
 Example: "Azure Data Factory" → `data-factory.md`
-Only entries with explicit `f:` field deviate from this convention.
 
 ## Routing Notes
 
@@ -27,7 +26,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Container Apps"
   a: [ACA]
 - s: "Azure Kubernetes Service"
-  f: aks.md
   a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
   a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
@@ -40,7 +38,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure VMware Solution"
   a: [AVS, VMware on Azure]
 - s: "Azure Red Hat OpenShift"
-  f: openshift.md
   a: [ARO, OpenShift]
 - s: "Specialized Compute"
   a: [SAP HANA Large Instances, Azure Boost]
@@ -49,15 +46,12 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Durable Task Scheduler"
   a: [Durable Tasks, Workflow Scheduler]
 - s: "Windows Virtual Desktop"
-  f: virtual-desktop.md
   a: [Azure Virtual Desktop, AVD, WVD]
 - s: "Azure VM Image Builder"
   a: [Image Builder, AIB, VM Image, Custom Image]
 - s: "Virtual Machines Licenses"
-  f: vm-licenses.md
   a: [VM Licenses, BYOL, Windows Server License, SQL Server License]
 - s: "Azure Local"
-  f: azure-local.md
   a: [Azure Stack Local, Hybrid Compute]
 ```
 
@@ -69,7 +63,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Container Registry"
   a: [ACR, Docker Registry]
 - s: "AKS on Azure Stack HCI"
-  f: aks-on-stack-hci.md
   a: [AKS-HCI, AKS on HCI, Kubernetes on Azure Stack HCI]
 - s: "Azure Arc-enabled AKS"
   a: [Arc AKS, Arc-enabled Kubernetes, Arc K8s]
@@ -85,29 +78,22 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Cosmos DB"
   a: [CosmosDB, DocumentDB, Multi-model DB]
 - s: "Azure Database for PostgreSQL"
-  f: postgresql-flexible.md
   a: [PostgreSQL, Postgres, Azure Postgres, Flexible Server]
 - s: "Azure Database for MySQL"
-  f: mysql.md
   a: [MySQL, Azure MySQL, Flexible Server]
 - s: "Azure Database for MariaDB"
-  f: mariadb.md
   a: [MariaDB, Azure MariaDB]
 - s: "Redis Cache"
   a: [Azure Cache for Redis, Redis, Azure Redis, Managed Redis]
 - s: "Azure Managed Instance for Apache Cassandra"
-  f: cassandra.md
   a: [Cassandra MI, Apache Cassandra, Managed Cassandra]
 - s: "SQL Data Warehouse"
   a: [Azure Synapse SQL Pool (dedicated), DW, Data Warehouse]
 - s: "SQL Server Stretch Database"
-  f: sql-stretch-db.md
   a: [Stretch DB, SQL Stretch]
 - s: "Azure Database Migration Service"
-  f: database-migration.md
   a: [DMS, Database Migration, DB Migration Service]
 - s: "Azure Arc Enabled Databases"
-  f: arc-databases.md
   a: [Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services]
 - s: "Azure SQL Edge"
   a: [Edge Database, IoT SQL]
@@ -119,10 +105,8 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Application Gateway"
-  f: app-gateway.md
   a: [App Gateway, AGW, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 - s: "Azure Firewall"
-  f: azure-firewall.md
   a: [Azure Firewall Premium/Standard/Basic]
 - s: "Azure Firewall Manager"
   a: [Firewall Policy]
@@ -145,7 +129,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Orbital"
   a: [Ground Station, Satellite]
 - s: "Private Mobile Network"
-  f: private-5g-core.md
   a: [Private 5G Core, Mobile Network, MEC]
 - s: "Load Balancer"
   a: [ALB, Standard LB, Basic LB]
@@ -160,7 +143,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Private Link"
   a: [Private Endpoint, PE]
 - s: "Advanced Container Networking Services"
-  f: advanced-cni.md
   a: [Advanced CNI, Container Networking, Cilium, Azure CNI Overlay]
 - s: "Microsoft Azure Peering Service"
   a: [ISP Peering, Internet Peering]
@@ -230,7 +212,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Microsoft Defender Experts"
   a: [XDR Experts, Managed Detection and Response]
 - s: "Multi-Factor Authentication"
-  f: multi-factor-auth.md
   a: [MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication]
 - s: "Trusted Signing"
   a: [Code Signing, Azure Code Signing]
@@ -246,7 +227,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Monitor"
   a: [Metrics, Alerts, Diagnostics]
 - s: "Application Insights"
-  f: app-insights.md
   a: [App Insights, APM, Application Performance]
 - s: "Log Analytics"
   a: [OMS, Workspace, Logs]
@@ -288,7 +268,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Change Tracking and Inventory"
   a: [Change Tracking, Inventory Tracking, Configuration Tracking]
 - s: "Dynamics 365 for Customer Insights"
-  f: dynamics-365-customer-insights.md
   a: [Customer Insights, D365 CI, Dynamics 365 Analytics]
 - s: "Management Groups"
   a: [Management Group, Azure Management Groups, Subscription Organization]
@@ -304,7 +283,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure API Center"
   a: [API Catalog, API Inventory]
 - s: "BizTalk Services"
-  f: biztalk.md
   a: [BizTalk, BizTalk Services (legacy), B2B Integration]
 - s: "API Management"
   a: [APIM, API Gateway]
@@ -314,7 +292,6 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Azure Synapse Analytics"
-  f: synapse.md
   a: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
 - s: "Azure Data Factory"
   a: [ADF, ETL, Data Pipeline]
@@ -337,14 +314,12 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Data Catalog"
   a: [Data Catalog (legacy)]
 - s: "Azure Purview"
-  f: purview-analytics.md
   a: [Purview Data Map, Data Estate Scanning]
 - s: "Azure Data Share"
   a: [Data Sharing]
 - s: "Microsoft Fabric"
   a: [Fabric Capacity, OneLake, Lakehouse]
 - s: "Microsoft Planetary Computer Pro"
-  f: planetary-computer.md
   a: [Planetary Computer, Geospatial Analytics]
 - s: "Data Lake Store"
   a: [ADLS Gen1, Azure Data Lake (legacy)]
@@ -373,12 +348,10 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Microsoft Genomics"
   a: [Genomics Workspace]
 - s: "Azure OpenAI Service"
-  f: openai.md
   a: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 - s: "Azure AI Services"
   a: [Cognitive Services, Vision, Speech, Language, Decision]
 - s: "Machine Learning Studio"
-  f: ml-studio-classic.md
   a: [ML Studio (classic), Classic ML]
 # ML Studio (classic) is separate serviceName from Azure ML (current workspace service)
 ```
@@ -426,10 +399,8 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Fluid Relay"
   a: [Fluid Framework, Real-time Collaboration]
 - s: "Azure Grafana Service"
-  f: grafana.md
   a: [Managed Grafana, Azure Managed Grafana, Grafana Dashboard]
 - s: "Visual Studio Codespaces"
-  f: codespaces.md
   a: [Codespaces (legacy), Cloud Dev Environments]
 - s: "Azure DevOps"
   a: [ADO, Repos, Pipelines, Boards, Artifacts]
@@ -455,10 +426,8 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Azure Active Directory B2C"
-  f: aad-b2c.md
   a: [AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID]
 - s: "Azure Active Directory for External Identities"
-  f: aad-external.md
   a: [AAD External, B2B, Guest Users, Entra External ID]
 - s: "Microsoft Entra Domain Services"
   a: [AAD DS, Azure AD DS, Managed AD]
@@ -473,7 +442,6 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Azure Database Migration Service"
-  f: database-migration.md
   a: [DMS, DB Migration]
 - s: "Azure Migrate"
   a: [Server Assessment, Server Migration]
@@ -490,7 +458,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Static Web Apps"
   a: [SWA, JAMstack]
 - s: "Azure Spring Cloud"
-  f: spring-apps.md
   a: [Azure Spring Apps, Java Microservices]
 - s: "Community Training"
   a: [Learning]
@@ -533,7 +500,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Quantum Computing"
   a: [Azure Quantum, Q#]
 - s: "Azure API for FHIR"
-  f: fhir.md
   a: [FHIR API, Healthcare API, Health Data Services]
 - s: "Energy Data Manager"
   a: [OSDU, Oil & Gas Data]

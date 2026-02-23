@@ -70,7 +70,7 @@ When the title matches `[Service]: {service name}`:
 2. **Search `skills/azure-cost-calculator/references/service-routing.md`** for a match:
    - Compare against `s:` (serviceName) values — use case-insensitive comparison.
    - Compare against entries in `a:` (alias) arrays — use case-insensitive comparison.
-   - If a match is found, note the **category** (the section heading, e.g., `Compute` → `compute`) and, if present, the `f:` field for the filename. If no `f:` field, derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
+   - If a match is found, note the **category** (the section heading, e.g., `Compute` → `compute`) and derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
 3. **Check whether a service reference file already exists** at `skills/azure-cost-calculator/references/services/{category}/{filename}`.
 4. **Read the Type dropdown** from the issue body to determine if this is `New service` or `Fix existing service`.
 
@@ -103,7 +103,7 @@ When you do leave a comment, follow these principles:
 
 - **Thank the contributor** for opening the issue.
 - Keep the comment **concise and actionable** — no more than a short paragraph plus a bulleted list if needed.
-- **Include specific file paths** when referencing existing service references (e.g., `skills/azure-cost-calculator/references/services/compute/aks.md`).
+- **Include specific file paths** when referencing existing service references (e.g., `skills/azure-cost-calculator/references/services/compute/kubernetes-service.md`).
 - For **new service** issues, mention the prompt-driven contributor workflow described in `CONTRIBUTING.md`.
 - For **pricing inaccuracy** issues, suggest verifying rates with the `Get-AzurePricing` PowerShell script.
 - Use a friendly, welcoming tone appropriate for open-source contributors.

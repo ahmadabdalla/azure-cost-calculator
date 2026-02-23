@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure Monitor
 
-> **Note**: This file covers custom metrics AND log-tier meters billed under `ServiceName: Azure Monitor`. For `ServiceName: Log Analytics` meters (Analytics Logs ingestion/retention), see `log-analytics.md`. For Application Insights, see `app-insights.md`.
+> **Note**: This file covers custom metrics AND log-tier meters billed under `ServiceName: Azure Monitor`. For `ServiceName: Log Analytics` meters (Analytics Logs ingestion/retention), see `log-analytics.md`. For Application Insights, see `application-insights.md`.
 
 > **Trap**: Platform metrics (CPU, memory, network, etc.) emitted by Azure resources are **free** — do not include them in cost estimates. Only custom metrics published via the Azure Monitor API are billable.
 
@@ -89,5 +89,5 @@ Commitment Tier = retailPrice × 30 (unit is 1/Day)
 - **Data Restore**: Minimum 2 TB × 12-hour duration — plan restores carefully
 - Commitment tiers (100–50000 GB/day) provide volume discounts; overage billed at effective rate
 - Alerts: basic metric alerts (platform metrics) are free; multi-resource/custom metric alerts priced separately
-- For Log Analytics workspace ingestion/retention, see `log-analytics.md`; for Application Insights, see `app-insights.md`
+- For Log Analytics workspace ingestion/retention, see `log-analytics.md`; for Application Insights, see `application-insights.md`
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
