@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "skills/azure-cost-calculator/references/services/**/*.md"
+      - "skills/azure-cost-calculator/references/service-routing.md"
 
 permissions:
   contents: read
@@ -56,4 +57,4 @@ jobs:
           $scriptPath = "tests/Validate-ServiceReference.ps1"
           $servicesRoot = "skills/azure-cost-calculator/references/services"
 
-          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness
+          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds
