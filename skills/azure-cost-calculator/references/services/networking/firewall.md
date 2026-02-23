@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Firewall
 category: networking
-aliases: [firewall]
+aliases: [AzFW, Azure Firewall Premium/Standard/Basic]
 billingNeeds: [IP Addresses]
 primaryCost: "Deployment hourly rate × 730 + data processing per-GB"
 ---

@@ -1,7 +1,7 @@
 ---
 serviceName: not in API
 category: networking
-aliases: [DDoS, DDoS protection]
+aliases: [DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection]
 primaryCost: "Fixed monthly fee (Network Protection ~$2,944 or IP Protection ~$199/IP)"
 hasMeters: false
 pricingRegion: api-unavailable

@@ -1,7 +1,7 @@
 ---
 serviceName: Azure DNS
 category: networking
-aliases: [private DNS, Private DNS Zones]
+aliases: [Private DNS, Private DNS Zones]
 primaryCost: "Zone hosting (per-zone/month) + DNS queries"
 pricingRegion: global
 ---

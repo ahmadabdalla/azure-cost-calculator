@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Bastion
 category: networking
-aliases: [Jump Host, Bastion Host]
+aliases: [Bastion Host, Jump Host, Jump Box]
 billingNeeds: [IP Addresses]
 primaryCost: "Gateway hourly rate × 730 + additional scale unit hours + outbound data transfer per-GB"
 ---

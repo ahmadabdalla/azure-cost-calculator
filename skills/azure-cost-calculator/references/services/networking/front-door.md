@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Front Door Service
 category: networking
-aliases: [AFD, CDN, Azure CDN, Front Door Premium/Standard, Front Door WAF]
+aliases: [AFD, Front Door, Front Door Premium/Standard, Front Door WAF]
 primaryCost: "Base fee (flat monthly per profile) + data transfer out per-GB + requests per-10K"
 privateEndpoint: true
 ---
