@@ -1,7 +1,7 @@
 ---
 serviceName: Azure DevOps
 category: developer-tools
-aliases: [ADO, Repos, Pipelines, Boards, Artifacts]
+aliases: [ADO, VSTS, Repos, Pipelines, Boards, Artifacts]
 billingConsiderations: [M365 / Windows per-user licensing]
 primaryCost: "Per-user/month license (Basic/Test Plans) + parallel jobs + Artifacts storage per-GB beyond free tier"
 pricingRegion: global

@@ -1,7 +1,7 @@
 ---
 serviceName: Event Hubs
 category: iot
-aliases: [Event Hubs, Kafka on Azure, Event Streaming]
+aliases: [Kafka on Azure, Event Streaming]
 primaryCost: "Throughput/Processing Units (hourly) + ingress events (per million) + optional Capture and Kafka add-ons"
 privateEndpoint: true
 ---

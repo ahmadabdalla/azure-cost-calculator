@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Container Apps
 category: compute
-aliases: [container apps, ACA]
+aliases: [ACA, Container Apps]
 primaryCost: "vCPU seconds + memory GiB seconds (Consumption) or vCPU hours + memory GiB hours (Dedicated)"
 hasFreeGrant: true
 privateEndpoint: true

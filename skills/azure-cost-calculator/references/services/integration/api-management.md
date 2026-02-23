@@ -1,7 +1,7 @@
 ---
 serviceName: API Management
 category: integration
-aliases: [APIM, API gateway, API management]
+aliases: [APIM, API Gateway]
 primaryCost: "Unit hours based on tier"
 privateEndpoint: true
 ---

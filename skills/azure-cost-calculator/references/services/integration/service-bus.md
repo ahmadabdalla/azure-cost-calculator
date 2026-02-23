@@ -1,7 +1,7 @@
 ---
 serviceName: Service Bus
 category: integration
-aliases: [service bus, messaging, queues, topics]
+aliases: [ASB, Queues, Topics]
 primaryCost: "Namespace hours (Standard/Premium) + operations (Basic/Standard)"
 privateEndpoint: true
 ---

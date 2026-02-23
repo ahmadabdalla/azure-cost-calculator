@@ -1,7 +1,7 @@
 ---
 serviceName: Redis Cache
 category: databases
-aliases: [Redis, Azure Cache for Redis, cache]
+aliases: [Azure Cache for Redis, Redis, Azure Redis, Managed Redis]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Cache instance hours based on tier and size × 730 × shardCount"
 privateEndpoint: true

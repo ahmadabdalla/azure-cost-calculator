@@ -1,7 +1,7 @@
 ---
 serviceName: Microsoft Defender for Cloud
 category: security
-aliases: [defender, security center, MDC]
+aliases: [Azure Security Center, CSPM, CWP, MDC]
 primaryCost: "Per-resource hourly or monthly rate × resource count (per sub-product)."
 ---
 

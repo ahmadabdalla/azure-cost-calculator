@@ -1,7 +1,7 @@
 ---
 serviceName: Container Instances
 category: containers
-aliases: [ACI, Azure Container Instances, serverless containers, container instances, container groups, ACI containers, ACI serverless]
+aliases: [ACI, Serverless Containers]
 primaryCost: "vCPU per-hour + memory per-GB-hour (Linux); add Windows software surcharge for Windows containers"
 ---
 
