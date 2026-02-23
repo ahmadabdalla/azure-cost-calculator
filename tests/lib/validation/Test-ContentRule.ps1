@@ -1,4 +1,4 @@
-Set-StrictMode -Version Latest
+﻿Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
 
