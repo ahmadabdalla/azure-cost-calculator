@@ -31,9 +31,8 @@ Only entries with explicit `f:` field deviate from this convention.
   a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
   a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
-- s: "Service Fabric Mesh"
-  f: service-fabric.md
-  a: [Service Fabric, SF Mesh, Microservices]
+- s: "Service Fabric"
+  a: [Service Fabric Mesh, SF, SF Mesh, Microservices, Microservices Cluster, Reliable Services]
 - s: "Azure App Service (Linux)"
   a: [App Service Linux, Linux Web Apps]
 - s: "Azure Batch"
@@ -52,9 +51,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Windows Virtual Desktop"
   f: virtual-desktop.md
   a: [Azure Virtual Desktop, AVD, WVD]
-- s: "Service Fabric"
-  f: service-fabric-cluster.md
-  a: [SF, Microservices Cluster, Reliable Services]
 - s: "Azure VM Image Builder"
   a: [Image Builder, AIB, VM Image, Custom Image]
 - s: "Virtual Machines Licenses"
