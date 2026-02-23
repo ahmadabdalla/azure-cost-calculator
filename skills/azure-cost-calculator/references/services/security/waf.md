@@ -82,8 +82,8 @@ Monthly = policy_retailPrice × policyCount
 
 ## Notes
 
-- **Two pricing models**: App Gateway WAF = hourly (fixed + CU); Front Door WAF = monthly (policy + rules + per-request). See `networking/app-gateway.md` for full App Gateway pricing and `networking/front-door.md` for full Front Door pricing.
-- **Default CU assumption**: For App Gateway WAF, use 10 CUs baseline when user doesn't specify traffic. 1 CU ≈ 2,500 concurrent connections, 2.22 Mbps throughput, or 1 compute unit — see `networking/app-gateway.md` for CU-to-traffic conversion.
+- **Two pricing models**: App Gateway WAF = hourly (fixed + CU); Front Door WAF = monthly (policy + rules + per-request). See `networking/application-gateway.md` for full App Gateway pricing and `networking/front-door.md` for full Front Door pricing.
+- **Default CU assumption**: For App Gateway WAF, use 10 CUs baseline when user doesn't specify traffic. 1 CU ≈ 2,500 concurrent connections, 2.22 Mbps throughput, or 1 compute unit — see `networking/application-gateway.md` for CU-to-traffic conversion.
 - **Custom vs managed rules (Front Door)**: Custom rules and managed rulesets billed separately. Bot protection is an additional add-on.
 - **Sub-cent per-request**: Front Door WAF request meters are sub-cent per million — use `Quantity` to calculate meaningful costs.
 - **App Gateway for Containers WAF**: Uses productName `Application Gateway for Containers WAF` — separate product with different meters.

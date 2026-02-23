@@ -27,7 +27,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Container Apps"
   a: [ACA]
 - s: "Azure Kubernetes Service"
-  f: aks.md
   a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
   a: [Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles]
@@ -50,7 +49,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Durable Task Scheduler"
   a: [Durable Tasks, Workflow Scheduler]
 - s: "Windows Virtual Desktop"
-  f: virtual-desktop.md
   a: [Azure Virtual Desktop, AVD, WVD]
 - s: "Service Fabric"
   f: service-fabric-cluster.md
@@ -89,10 +87,8 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Azure Cosmos DB"
   a: [CosmosDB, DocumentDB, Multi-model DB]
 - s: "Azure Database for PostgreSQL"
-  f: postgresql-flexible.md
   a: [PostgreSQL, Postgres, Azure Postgres, Flexible Server]
 - s: "Azure Database for MySQL"
-  f: mysql.md
   a: [MySQL, Azure MySQL, Flexible Server]
 - s: "Azure Database for MariaDB"
   f: mariadb.md
@@ -108,7 +104,6 @@ Only entries with explicit `f:` field deviate from this convention.
   f: sql-stretch-db.md
   a: [Stretch DB, SQL Stretch]
 - s: "Azure Database Migration Service"
-  f: database-migration.md
   a: [DMS, Database Migration, DB Migration Service]
 - s: "Azure Arc Enabled Databases"
   f: arc-databases.md
@@ -123,10 +118,8 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Application Gateway"
-  f: app-gateway.md
   a: [App Gateway, AGW]
 - s: "Azure Firewall"
-  f: azure-firewall.md
   a: [Azure Firewall Premium/Standard/Basic]
 - s: "Azure Firewall Manager"
   a: [Firewall Policy]
@@ -322,7 +315,6 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Azure Synapse Analytics"
-  f: synapse.md
   a: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
 - s: "Azure Data Factory"
   a: [ADF, ETL, Data Pipeline]
@@ -381,7 +373,6 @@ Only entries with explicit `f:` field deviate from this convention.
 - s: "Microsoft Genomics"
   a: [Genomics Workspace]
 - s: "Azure OpenAI Service"
-  f: openai.md
   a: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 - s: "Azure AI Services"
   a: [Cognitive Services, Vision, Speech, Language, Decision]
@@ -481,7 +472,6 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Azure Database Migration Service"
-  f: database-migration.md
   a: [DMS, DB Migration]
 - s: "Azure Migrate"
   a: [Server Assessment, Server Migration]
