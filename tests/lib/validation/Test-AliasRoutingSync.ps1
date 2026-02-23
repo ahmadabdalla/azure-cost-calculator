@@ -28,6 +28,17 @@ function Get-RoutingMapAliases {
     $inMultiLine = $false
     $bracketBuffer = ''
 
+    # Helper: merge aliases into the map (handles duplicate service entries)
+    function Add-AliasesToMap {
+        param([hashtable]$Map, [string]$Service, [string[]]$Aliases)
+        if ($Map.ContainsKey($Service)) {
+            $Map[$Service] = @($Map[$Service]) + @($Aliases)
+        }
+        else {
+            $Map[$Service] = @($Aliases)
+        }
+    }
+
     for ($i = 0; $i -lt $lines.Count; $i++) {
         $line = $lines[$i]
 
@@ -43,17 +54,13 @@ function Get-RoutingMapAliases {
         }
 
         if ($inMultiLine) {
-            $bracketBuffer += ' ' + $line.Trim()
+            $trimmed = $line.Trim()
+            $bracketBuffer = if ($bracketBuffer) { "$bracketBuffer $trimmed" } else { $trimmed }
             if ($line -match '\]') {
                 $inMultiLine = $false
-                $aliasStr = $bracketBuffer -replace '^\s*\[', '' -replace '\]\s*$', ''
+                $aliasStr = $bracketBuffer -replace '^\[', '' -replace '\]\s*$', ''
                 $aliases = $aliasStr -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-                if ($map.ContainsKey($currentService)) {
-                    $map[$currentService] = @($map[$currentService]) + @($aliases)
-                }
-                else {
-                    $map[$currentService] = @($aliases)
-                }
+                Add-AliasesToMap -Map $map -Service $currentService -Aliases $aliases
                 $currentService = $null
             }
             continue
@@ -63,12 +70,7 @@ function Get-RoutingMapAliases {
         if ($line -match '\[(.+)\]' -and $currentService) {
             $aliasStr = $Matches[1]
             $aliases = $aliasStr -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-            if ($map.ContainsKey($currentService)) {
-                $map[$currentService] = @($map[$currentService]) + @($aliases)
-            }
-            else {
-                $map[$currentService] = @($aliases)
-            }
+            Add-AliasesToMap -Map $map -Service $currentService -Aliases $aliases
             $currentService = $null
         }
     }
