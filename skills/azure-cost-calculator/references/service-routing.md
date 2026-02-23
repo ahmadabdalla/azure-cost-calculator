@@ -6,7 +6,6 @@ For the Category Index and constants, see [shared.md](shared.md).
 
 Filename convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`
 Example: "Azure Data Factory" → `data-factory.md`
-Only entries with explicit `f:` field deviate from this convention.
 
 ## Routing Notes
 

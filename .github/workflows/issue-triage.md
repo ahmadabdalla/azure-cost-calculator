@@ -70,7 +70,7 @@ When the title matches `[Service]: {service name}`:
 2. **Search `skills/azure-cost-calculator/references/service-routing.md`** for a match:
    - Compare against `s:` (serviceName) values — use case-insensitive comparison.
    - Compare against entries in `a:` (alias) arrays — use case-insensitive comparison.
-   - If a match is found, note the **category** (the section heading, e.g., `Compute` → `compute`) and, if present, the `f:` field for the filename. If no `f:` field, derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
+   - If a match is found, note the **category** (the section heading, e.g., `Compute` → `compute`) and derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
 3. **Check whether a service reference file already exists** at `skills/azure-cost-calculator/references/services/{category}/{filename}`.
 4. **Read the Type dropdown** from the issue body to determine if this is `New service` or `Fix existing service`.
 
