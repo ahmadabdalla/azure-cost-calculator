@@ -52,7 +52,7 @@ Monthly = chat_retailPrice × messages + interop_retailPrice × interopMessages
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Phone Numbers`, `Network Traversal`
+- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Phone Numbers`, `Network Traversal`, `Routing`
 - Only 2 meters — standard chat and Teams interop chat
 - Single product and SKU: all queries use `productName: Chat`, `skuName: Basic`
 

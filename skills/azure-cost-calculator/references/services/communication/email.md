@@ -52,7 +52,7 @@ Monthly = email_retailPrice × emails + dataTransfer_retailPrice × dataMB
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Messaging`, `Phone Numbers`, `Network Traversal`
+- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - Only 2 meters — simple per-email + per-MB model
 - Single product and SKU: all queries use `productName: Email`, `skuName: Basic`
 

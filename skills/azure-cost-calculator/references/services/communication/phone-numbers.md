@@ -30,8 +30,8 @@ MeterName: US Leased Number
 
 ServiceName: Phone Numbers
 ProductName: Geographic Numbers - I
-SkuName: GB
-MeterName: GB Leased Number
+SkuName: UK
+MeterName: UK Leased Number
 
 ## Key Fields
 
@@ -39,8 +39,8 @@ MeterName: GB Leased Number
 | ------------- | ----------------------------------- | -------------------------------------------- |
 | `serviceName` | Always `Phone Numbers`              | `Phone Numbers`                              |
 | `productName` | Number type                         | `Geographic Numbers - I`, `Toll Free Numbers - I` |
-| `skuName`     | Country code (ISO 2-letter)         | `US`, `GB`, `CA`, `DE`, `AU`, `FR`          |
-| `meterName`   | Country + Leased Number             | `US Leased Number`, `GB Leased Number`       |
+| `skuName`     | Country code (2-letter)             | `US`, `UK`, `CA`, `DE`, `AU`, `FR`          |
+| `meterName`   | Country + Leased Number             | `US Leased Number`, `UK Leased Number`       |
 
 ## Meter Names
 
@@ -48,21 +48,21 @@ MeterName: GB Leased Number
 | ------------------- | ------------------------- | ------------- | ---------------------------------- |
 | `US Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | US geographic number lease         |
 | `US Leased Number`  | `Toll Free Numbers - I`   | `1/Month`     | US toll-free number lease          |
-| `GB Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | UK geographic number lease         |
+| `UK Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | UK geographic number lease         |
 | `CA Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | Canada geographic number lease     |
 
-> Additional country-specific meters follow the pattern `{CC} Leased Number` where CC is the ISO country code.
+> Additional country-specific meters follow the pattern `{CC} Leased Number` where CC is the country code used by the API (e.g., `UK` not `GB`).
 
 ## Cost Formula
 
 ```
-Monthly = retailPrice × 30 × numberOfPhoneNumbers
+Monthly = retailPrice × numberOfPhoneNumbers
 ```
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Messaging`, `Network Traversal`
+- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Messaging`, `Network Traversal`, `Routing`
 - **Country-dependent pricing**: Rates vary significantly by country (e.g., US geographic ~$1/month, ES ~$5/month, toll-free ~$2–25/month)
 - **121 meters in eastus**: Each country × number type combination has its own meter — always filter by country
-- Products with `-I` suffix (e.g., `Geographic Numbers - I`) and without overlap; use either variant for the target country
+- Products with a `-I` suffix (e.g., `Geographic Numbers - I`) and without that suffix are alternative product-name variants with identical prices; use whichever variant exists for the target country, but note that `AU` and `JP` only appear in the non-I variants
 - Toll-free numbers are generally more expensive than geographic numbers

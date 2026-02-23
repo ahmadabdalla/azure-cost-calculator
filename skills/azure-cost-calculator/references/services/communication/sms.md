@@ -58,13 +58,13 @@ MeterName: ROW Consumption Unit - Inbound
 
 ```
 Toll Free Monthly  = sms_retailPrice × consumptionUnits
-Short Code Monthly = lease_retailPrice × 30 + messaging_retailPrice × consumptionUnits
+Short Code Monthly = lease_retailPrice × shortCodeCount + messaging_retailPrice × consumptionUnits
 Total Monthly      = Toll Free + Short Code (sum active components)
 ```
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`
+- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - **Country-dependent pricing**: SMS rates vary by destination country; `skuName` encodes country (e.g., `US`, `CA`, `UK`, `ROW`)
 - Short code provisioning fees are one-time charges — separate from monthly lease
 - Surcharge products (`Toll Free SMS-OB-Surcharge`, etc.) add carrier-level fees on top of base consumption units

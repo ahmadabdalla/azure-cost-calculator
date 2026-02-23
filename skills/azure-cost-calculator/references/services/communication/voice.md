@@ -66,7 +66,7 @@ Total Monthly          = Direct Routing + Group Calling (sum active components)
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`
+- **Part of ACS family**: Related services use separate API serviceNames — `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - **VoIP leg only**: Direct Routing rates cover the VoIP/SBC leg; PSTN legs have separate, higher country-dependent rates
 - **Country-dependent pricing**: Local/Toll Free call rates vary by destination country via `skuName` (e.g., `US`, `ROW`)
 - **Additional billable features**: Call Recording (per-minute), Advanced Messaging/WhatsApp (per-message), and Closed Captions (per-minute) exist under Voice serviceName
