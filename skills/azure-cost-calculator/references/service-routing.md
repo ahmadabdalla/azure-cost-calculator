@@ -135,7 +135,9 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Azure Front Door"
   a: [Front Door Premium/Standard, Front Door WAF]
 - s: "Azure DNS"
-  a: [DNS Zones, Public DNS Zones, Private DNS, Private DNS Zones]
+  a: [DNS Zones, Public DNS Zones]
+- s: "Private DNS"
+  a: [Private DNS, Private DNS Zones]
 - s: "Traffic Manager"
   a: [DNS Load Balancer]
 - s: "Azure Route Server"
@@ -161,18 +163,9 @@ Example: "Azure Data Factory" → `data-factory.md`
 
 ```yaml
 - s: "Storage"
-  a:
-    [
-      Blob Storage,
-      Azure Files,
-      Table Storage,
-      Queue Storage,
-      Azure Storage,
-      Data Lake Gen2,
-      ADLS,
-      ADLS Gen2,
-      Azure Data Lake,
-    ]
+  a: [Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage]
+- s: "Data Lake Storage"
+  a: [Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake]
 - s: "Backup"
   a: [Azure Backup, Recovery Services Vault, MARS Agent, VM Backup]
 - s: "Azure NetApp Files"
