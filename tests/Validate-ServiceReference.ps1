@@ -18,11 +18,14 @@
 .PARAMETER CheckAliasUniqueness
     When specified, checks for alias collisions across all service files.
 
+.PARAMETER CheckAliasRoutingSync
+    When specified, checks that file aliases are drawn from the routing map.
+
 .EXAMPLE
     .\Validate-ServiceReference.ps1 -Path services/compute/my-service.md
 
 .EXAMPLE
-    .\Validate-ServiceReference.ps1 -Path *.md -CheckAliasUniqueness
+    .\Validate-ServiceReference.ps1 -Path *.md -CheckAliasUniqueness -CheckAliasRoutingSync
 #>
 [CmdletBinding()]
 param(
@@ -31,7 +34,9 @@ param(
 
     [string]$ServicesRoot,
 
-    [switch]$CheckAliasUniqueness
+    [switch]$CheckAliasUniqueness,
+
+    [switch]$CheckAliasRoutingSync
 )
 
 Set-StrictMode -Version Latest
@@ -44,6 +49,7 @@ $validationDir = Join-Path -Path $PSScriptRoot -ChildPath 'lib' -AdditionalChild
 . (Join-Path $validationDir 'Test-StyleCompliance.ps1')
 . (Join-Path $validationDir 'Test-ContentRule.ps1')
 . (Join-Path $validationDir 'Test-AliasUniqueness.ps1')
+. (Join-Path $validationDir 'Test-AliasRoutingSync.ps1')
 
 function Test-ServiceReference {
     param([string]$FilePath)
@@ -114,6 +120,20 @@ if ($CheckAliasUniqueness) {
         $aliasChecks = Test-AliasUniqueness -RootPath $root
         foreach ($check in $aliasChecks) {
             Write-CheckResult -FileName 'alias_check' -Check $check
+            if (-not $check.Pass) { $hasFailures = $true }
+        }
+    }
+}
+
+if ($CheckAliasRoutingSync) {
+    $root = if ($ServicesRoot) { $ServicesRoot } else {
+        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
+    }
+    $routingMapPath = Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'service-routing.md'
+    if ((Test-Path $root) -and (Test-Path $routingMapPath)) {
+        $syncChecks = Test-AliasRoutingSync -RootPath $root -RoutingMapPath $routingMapPath
+        foreach ($check in $syncChecks) {
+            Write-CheckResult -FileName 'routing_sync' -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
