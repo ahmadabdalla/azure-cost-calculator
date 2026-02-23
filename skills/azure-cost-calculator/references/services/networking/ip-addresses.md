@@ -69,4 +69,3 @@ Monthly = ip_retailPrice × 730 × ipCount
 - Basic Dynamic IPs are free when attached to a running VM — charged only when idle or unattached
 - IPv6 Public IPs are free (no API meters)
 - Public IP Prefix reserves a contiguous range — billed per IP in the range
-- Referenced in `billingNeeds` by Azure Bastion, Azure Firewall, NAT Gateway, and VPN Gateway
