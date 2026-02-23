@@ -5,14 +5,14 @@ Authoritative mapping of Azure services to category folders.
 For the Category Index and constants, see [shared.md](shared.md).
 
 Filename convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`
-Example: "Azure Data Factory" → `data-factory.md`
+Branded compound words (SignalR, DevOps, OpenAI, BizTalk, PlayFab, PubSub) are single tokens — lowercase without hyphens.
+Example: "Azure Data Factory" → `data-factory.md` | "SignalR" → `signalr.md` | "Azure DevOps" → `devops.md`
 
 ## Routing Notes
 
-- Some services share a `serviceName`; use `productName` filters (Storage, Managed Disks, Data Lake).
-- API `serviceFamily` may differ from category here (Event Hubs → IoT, APIM → Dev Tools, Sentinel → Security, Spring Cloud → Other). Always use this file's category.
-- Services with no retail meter (Policy, Advisor, Cost Mgmt, DevOps, Entra ID free) still need reference files.
-- OpenAI/AI Services may appear as `Foundry Models`/`Foundry Tools` in newer API responses (AI Foundry rebrand).
+- Some services share a `serviceName`; use `productName` filters to isolate.
+- API `serviceFamily` may differ from category here. Always use this file's category.
+- Services with no retail meter still need reference files.
 
 ## Compute (`services/compute/`)
 
@@ -132,10 +132,12 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [Private 5G Core, Mobile Network, MEC]
 - s: "Load Balancer"
   a: [ALB, LB, Standard LB, Basic LB]
-- s: "Azure Front Door"
-  a: [Front Door Premium/Standard, Front Door WAF]
+- s: "Azure Front Door Service"
+  a: [AFD, Front Door, Front Door Premium/Standard, Front Door WAF]
 - s: "Azure DNS"
-  a: [DNS Zones, Public DNS Zones, Private DNS, Private DNS Zones]
+  a: [DNS Zones, Public DNS Zones]
+- s: "Private DNS"
+  a: [Private DNS, Private DNS Zones]
 - s: "Traffic Manager"
   a: [DNS Load Balancer]
 - s: "Azure Route Server"
@@ -146,33 +148,21 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [Advanced CNI, Container Networking, Cilium, Azure CNI Overlay]
 - s: "Microsoft Azure Peering Service"
   a: [ISP Peering, Internet Peering]
-- s: "Azure Front Door Service"
-  a: [AFD, Front Door]
 - s: "Content Delivery Network"
   a: [CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery]
 - s: "NAT Gateway"
   a: [Azure NAT, SNAT, Outbound Connectivity]
 - s: "Azure Programmable Connectivity"
   a: [APC, Network APIs]
-# Front Door Service is exact API serviceName; CDN is separate; some services nested under others
 ```
 
 ## Storage (`services/storage/`)
 
 ```yaml
 - s: "Storage"
-  a:
-    [
-      Blob Storage,
-      Azure Files,
-      Table Storage,
-      Queue Storage,
-      Azure Storage,
-      Data Lake Gen2,
-      ADLS,
-      ADLS Gen2,
-      Azure Data Lake,
-    ]
+  a: [Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage]
+- s: "Data Lake Storage"
+  a: [Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake]
 - s: "Backup"
   a: [Azure Backup, Recovery Services Vault, MARS Agent, VM Backup]
 - s: "Azure NetApp Files"
@@ -296,10 +286,8 @@ Example: "Azure Data Factory" → `data-factory.md`
 ```yaml
 - s: "Azure Synapse Analytics"
   a: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
-- s: "Azure Data Factory"
-  a: [ADF, ETL, Data Pipeline]
 - s: "Azure Data Factory v2"
-  a: [ADF v2]
+  a: [ADF, ADF v2, ETL, Data Pipeline, Azure Data Factory]
 - s: "Azure Databricks"
   a: [DBX, Spark on Azure]
 - s: "Azure Data Explorer"
@@ -332,7 +320,6 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [WebSocket Service]
 - s: "Microsoft Graph data connect"
   a: [Microsoft 365 Data, M365 Data Export]
-# Data Factory v1+v2 are separate serviceNames; Data Lake Store=Gen1 legacy; Purview in Security+Analytics
 ```
 
 ## AI + ML (`services/ai-ml/`)
@@ -343,7 +330,7 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Foundry Models"
   a: [Azure AI Foundry Models, Model Catalog, AI Foundry]
 - s: "Foundry Tools"
-  a: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace]
+  a: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision]
 - s: "Azure Bot Service"
   a: [Bot Framework, Chatbot]
 - s: "Intelligent Recommendations"
@@ -352,11 +339,8 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [Genomics Workspace]
 - s: "Azure OpenAI Service"
   a: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
-- s: "Azure AI Services"
-  a: [Cognitive Services, Vision, Speech, Language, Decision]
 - s: "Machine Learning Studio"
   a: [ML Studio (classic), Classic ML]
-# ML Studio (classic) is separate serviceName from Azure ML (current workspace service)
 ```
 
 ## IoT (`services/iot/`)
@@ -438,7 +422,6 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [Azure AD, Azure Active Directory, AAD, Directory]
 - s: "Windows 365 Agents"
   a: [Cloud PC Agents]
-# Microsoft Entra (Security) and Microsoft Entra ID (Identity) are separate API entries
 ```
 
 ## Migration (`services/migration/`)
@@ -450,7 +433,7 @@ Example: "Azure Data Factory" → `data-factory.md`
   a: [Server Assessment, Server Migration]
 - s: "Azure Site Recovery"
   a: [ASR (also in Management for DR use case)]
-# Overlaps Management (Site Recovery) and Databases (DMS); cross-reference both
+
 ```
 
 ## Web (`services/web/`)
