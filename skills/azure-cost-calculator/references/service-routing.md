@@ -508,22 +508,16 @@ Only entries with explicit `f:` field deviate from this convention.
 
 ```yaml
 - s: "Phone Numbers"
-  f: communication-services.md
   a: [ACS Phone Numbers, PSTN, Telephony]
 - s: "Voice"
-  f: communication-services.md
   a: [ACS Voice, Voice Calling, VOIP]
 - s: "Email"
-  f: communication-services.md
   a: [ACS Email, Email Communication]
 - s: "Messaging"
-  f: communication-services.md
   a: [ACS Chat, Chat Messaging]
 - s: "SMS"
-  f: communication-services.md
   a: [ACS SMS, Text Messaging]
 - s: "Network Traversal"
-  f: communication-services.md
   a: [ACS TURN, TURN Relay]
 - s: "AI Ops"
   a: [Telecom AI Ops, Azure Operator Insights]
