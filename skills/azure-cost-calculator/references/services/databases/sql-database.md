@@ -1,7 +1,7 @@
 ---
 serviceName: SQL Database
 category: databases
-aliases: [SQL DB, Azure SQL, sql]
+aliases: [Azure SQL, SQL DB]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
 privateEndpoint: true

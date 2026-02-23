@@ -1,7 +1,7 @@
 ---
 serviceName: Key Vault
 category: security
-aliases: [keyvault, KV, vault]
+aliases: [AKV, KV, Managed HSM]
 primaryCost: "Operations (per-10K); Premium adds per-HSM-key monthly charges"
 privateEndpoint: true
 ---

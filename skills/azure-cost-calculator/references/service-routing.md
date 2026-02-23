@@ -24,7 +24,7 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Functions"
   a: [Serverless Functions, Function App]
 - s: "Azure Container Apps"
-  a: [ACA]
+  a: [ACA, Container Apps]
 - s: "Azure Kubernetes Service"
   a: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 - s: "Cloud Services"
@@ -78,9 +78,9 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Azure Cosmos DB"
   a: [CosmosDB, DocumentDB, Multi-model DB]
 - s: "Azure Database for PostgreSQL"
-  a: [PostgreSQL, Postgres, Azure Postgres, Flexible Server]
+  a: [PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server]
 - s: "Azure Database for MySQL"
-  a: [MySQL, Azure MySQL, Flexible Server]
+  a: [MySQL, Azure MySQL, MySQL Flexible Server]
 - s: "Azure Database for MariaDB"
   a: [MariaDB, Azure MariaDB]
 - s: "Redis Cache"
@@ -105,15 +105,15 @@ Example: "Azure Data Factory" → `data-factory.md`
 
 ```yaml
 - s: "Application Gateway"
-  a: [App Gateway, AGW, application gateway, appgw, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
+  a: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
 - s: "Azure Firewall"
-  a: [Azure Firewall Premium/Standard/Basic]
+  a: [AzFW, Azure Firewall Premium/Standard/Basic]
 - s: "Azure Firewall Manager"
   a: [Firewall Policy]
 - s: "Azure Bastion"
-  a: [Jump Host, Bastion Host]
+  a: [Bastion Host, Jump Host, Jump Box]
 - s: "Azure DDOS Protection"
-  a: [DDoS, DDoS Network Protection]
+  a: [DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection]
 - s: "ExpressRoute"
   a: [ER, Dedicated Circuit]
 - s: "Virtual Network"
@@ -131,11 +131,11 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Private Mobile Network"
   a: [Private 5G Core, Mobile Network, MEC]
 - s: "Load Balancer"
-  a: [ALB, Standard LB, Basic LB]
+  a: [ALB, LB, Standard LB, Basic LB]
 - s: "Azure Front Door"
-  a: [AFD, CDN, Azure CDN, Front Door Premium/Standard, Front Door WAF]
+  a: [Front Door Premium/Standard, Front Door WAF]
 - s: "Azure DNS"
-  a: [DNS Zones, Private DNS Zones]
+  a: [DNS Zones, Public DNS Zones, Private DNS, Private DNS Zones]
 - s: "Traffic Manager"
   a: [DNS Load Balancer]
 - s: "Azure Route Server"
@@ -147,9 +147,9 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Microsoft Azure Peering Service"
   a: [ISP Peering, Internet Peering]
 - s: "Azure Front Door Service"
-  a: [Front Door (exact API name), AFD, CDN, Azure CDN]
+  a: [AFD, Front Door]
 - s: "Content Delivery Network"
-  a: [CDN, Azure CDN, Content Delivery]
+  a: [CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery]
 - s: "NAT Gateway"
   a: [Azure NAT, SNAT, Outbound Connectivity]
 - s: "Azure Programmable Connectivity"
@@ -167,17 +167,20 @@ Example: "Azure Data Factory" → `data-factory.md`
       Azure Files,
       Table Storage,
       Queue Storage,
+      Azure Storage,
       Data Lake Gen2,
       ADLS,
+      ADLS Gen2,
+      Azure Data Lake,
     ]
 - s: "Backup"
-  a: [Recovery Services Vault, MARS Agent, VM Backup]
+  a: [Azure Backup, Recovery Services Vault, MARS Agent, VM Backup]
 - s: "Azure NetApp Files"
   a: [NetApp, ANF, Azure NetApp]
 - s: "Data Box"
   a: [Data Box Disk, Data Box Heavy, Import/Export]
 - s: "Managed Disks"
-  a: [Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage]
+  a: [Managed Disks, Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage]
 - s: "Azure Elastic SAN"
   a: [SAN, Block Storage]
 - s: "Azure Managed Lustre"
@@ -190,11 +193,11 @@ Example: "Azure Data Factory" → `data-factory.md`
 
 ```yaml
 - s: "Key Vault"
-  a: [AKV, Managed HSM]
+  a: [AKV, KV, Managed HSM]
 - s: "Microsoft Defender for Cloud"
-  a: [Azure Security Center, CSPM, CWP]
+  a: [Azure Security Center, CSPM, CWP, MDC]
 - s: "Sentinel"
-  a: [SIEM, SOAR]
+  a: [SIEM, SOAR, Azure Sentinel]
 - s: "Microsoft Purview"
   a: [Data Governance, Data Catalog]
 - s: "Azure confidential ledger"
@@ -225,11 +228,11 @@ Example: "Azure Data Factory" → `data-factory.md`
 
 ```yaml
 - s: "Azure Monitor"
-  a: [Metrics, Alerts, Diagnostics]
+  a: [Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive]
 - s: "Application Insights"
-  a: [App Insights, APM, Application Performance]
+  a: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 - s: "Log Analytics"
-  a: [OMS, Workspace, Logs]
+  a: [OMS, LA, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
 - s: "Insight and Analytics"
   a: [OMS (legacy), Insight and Analytics (legacy)]
 ```
@@ -403,7 +406,7 @@ Example: "Azure Data Factory" → `data-factory.md`
 - s: "Visual Studio Codespaces"
   a: [Codespaces (legacy), Cloud Dev Environments]
 - s: "Azure DevOps"
-  a: [ADO, Repos, Pipelines, Boards, Artifacts]
+  a: [ADO, VSTS, Repos, Pipelines, Boards, Artifacts]
 - s: "Azure DevTest Labs"
   a: [Lab VMs, Dev Environments]
 - s: "Microsoft Dev Box"

@@ -1,7 +1,7 @@
 ---
 serviceName: Backup
 category: storage
-aliases: [Recovery Services Vault, MARS Agent, VM Backup]
+aliases: [Azure Backup, Recovery Services Vault, MARS Agent, VM Backup]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Protected instance/month (workload type) + storage per-GB/month (redundancy)"
 privateEndpoint: true

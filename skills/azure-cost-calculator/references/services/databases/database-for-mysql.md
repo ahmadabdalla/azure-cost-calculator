@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Database for MySQL
 category: databases
-aliases: [MySQL, Azure MySQL]
+aliases: [MySQL, Azure MySQL, MySQL Flexible Server]
 billingConsiderations: [Reserved Instances]
 primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
 privateEndpoint: true

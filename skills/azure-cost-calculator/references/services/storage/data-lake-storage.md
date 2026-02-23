@@ -1,7 +1,7 @@
 ---
 serviceName: Storage
 category: storage
-aliases: [Data Lake Gen2, ADLS]
+aliases: [Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Data stored per-GB/month + index per-GB/month (HNS) + operations per-10K + data retrieval per-GB"
 privateEndpoint: true

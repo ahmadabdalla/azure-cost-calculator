@@ -1,7 +1,7 @@
 ---
 serviceName: Azure Database for PostgreSQL
 category: databases
-aliases: [PostgreSQL, postgres, flexible server]
+aliases: [PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server]
 billingConsiderations: [Reserved Instances]
 primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
 privateEndpoint: true
