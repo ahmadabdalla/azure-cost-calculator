@@ -135,6 +135,10 @@ if ($CheckAliasUniqueness) {
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
+    else {
+        Write-Output "[-] FAIL alias_check :: services_root_missing - ServicesRoot path not found: $root"
+        $hasFailures = $true
+    }
 }
 
 if ($CheckAliasRoutingSync) {
@@ -148,6 +152,10 @@ if ($CheckAliasRoutingSync) {
             if (-not $check.Pass) { $hasFailures = $true }
         }
     }
+    else {
+        Write-Output "[-] FAIL routing_sync :: services_root_missing - ServicesRoot path not found: $root"
+        $hasFailures = $true
+    }
 }
 
 if ($CheckBillingNeeds) {
@@ -160,6 +168,10 @@ if ($CheckBillingNeeds) {
             Write-CheckResult -FileName 'billing_needs' -Check $check
             if (-not $check.Pass) { $hasFailures = $true }
         }
+    }
+    else {
+        Write-Output "[-] FAIL billing_needs :: services_root_missing - ServicesRoot path not found: $root"
+        $hasFailures = $true
     }
 }
 

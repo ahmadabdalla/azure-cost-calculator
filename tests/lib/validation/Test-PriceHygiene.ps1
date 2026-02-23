@@ -1,7 +1,6 @@
 ﻿Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
-. (Join-Path $PSScriptRoot 'Get-NonCodeLine.ps1')
 . (Join-Path $PSScriptRoot 'Get-H2Section.ps1')
 
 function Test-PriceHygiene {
@@ -84,8 +83,8 @@ function Test-PriceHygiene {
             $effective = $line -replace '<!--.*?-->', ''
         }
         elseif ($line -match '<!--') {
+            $effective = ($line -split '<!--')[0]
             $insideHtmlComment = $true
-            continue
         }
         else {
             $effective = $line

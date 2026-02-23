@@ -94,7 +94,7 @@ function Test-FileNaming {
             $expectedFile = (($name -split '\s+' | ForEach-Object { $_.ToLower() }) -join '-') + '.md'
         }
 
-        $pass = $actualFile -eq $expectedFile
+        $pass = $actualFile -ceq $expectedFile
         $checks.Add((New-ValidationCheck -Name 'file_naming' -Pass $pass `
                     -PassMessage "Filename '$actualFile' matches expected '$expectedFile'" `
                     -FailMessage "Filename '$actualFile' does not match expected '$expectedFile' (from serviceName '$serviceName')"))

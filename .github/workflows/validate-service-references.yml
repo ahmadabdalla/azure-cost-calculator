@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "skills/azure-cost-calculator/references/services/**/*.md"
+      - "skills/azure-cost-calculator/references/service-routing.md"
 
 permissions:
   contents: read
