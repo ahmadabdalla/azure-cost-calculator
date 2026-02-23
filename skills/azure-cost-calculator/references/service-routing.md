@@ -428,11 +428,11 @@ Example: "Azure Data Factory" → `data-factory.md` | "SignalR" → `signalr.md`
 
 ```yaml
 - s: "Azure Database Migration Service"
-  a: [DMS, DB Migration]
+  a: [DMS, Database Migration, DB Migration Service]
 - s: "Azure Migrate"
-  a: [Server Assessment, Server Migration]
+  a: [Server Assessment, Migration Tools]
 - s: "Azure Site Recovery"
-  a: [ASR (also in Management for DR use case)]
+  a: [ASR, Disaster Recovery, DR]
 
 ```
 
