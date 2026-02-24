@@ -68,10 +68,9 @@ String values with spaces require quoting when passed to scripts. Numeric values
 8. **Calculate** — apply cost formulas from service files; multiply by quantities
 9. **Verify arithmetic** — for each line item, restate the formula with actual numbers, compute, and confirm the result. If any intermediate calculation involves multiplication of two numbers > 10, compute it step-by-step (e.g., `14.5 × 640 → 14 × 640 → 10 × 640 = 6,400; 4 × 640 = 2,560; subtotal = 8,960; 0.5 × 640 = 320; total = 9,280`). Do not rely on mental math for multi-digit operations.
 10. **Present** — output the estimate with:
-
-- **Assumptions block** (see Disambiguation Protocol in shared.md) — listed before cost numbers
-- **Line items**: service, unit price, quantity/hours, monthly cost
-- **Grand total**: re-sum all line-item monthly costs independently; if discrepancy, use re-summed value
+   - **Assumptions block** (see Disambiguation Protocol in shared.md) — listed before cost numbers
+   - **Line items**: service, unit price, quantity/hours, monthly cost
+   - **Grand total**: re-sum all line-item monthly costs independently; if discrepancy, use re-summed value
 
 ### Post-Estimate Iteration
 
@@ -86,7 +85,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 | User asks about Reserved Instances or savings plans                             | [references/reserved-instances.md](references/reserved-instances.md)                                                                                                                                                             |
 | Non-USD currency or non-eastus region                                           | [references/regions-and-currencies.md](references/regions-and-currencies.md)                                                                                                                                                     |
 | User requests private endpoints or private access — confirm PE intent with user | [references/services/networking/private-link.md](references/services/networking/private-link.md) — PE pricing, [references/services/networking/private-dns.md](references/services/networking/private-dns.md) — DNS zone pricing |
-| File search returned 0 or ambiguous results                                     | [references/service-routing.md](references/service-routing.md) - implemented services routing                                                                                                                                    |
+| File search returned 0 or ambiguous results                                     | [references/service-routing.md](references/service-routing.md) — full 140+ service map                                                                                                                                           |
 | First time running scripts or unfamiliar with parameters                        | [references/workflow.md](references/workflow.md) — script parameters and output formats                                                                                                                                          |
 
 ## Critical Rules
