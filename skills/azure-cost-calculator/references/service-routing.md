@@ -152,6 +152,8 @@ Example: "Azure Data Factory" → `data-factory.md` | "SignalR" → `signalr.md`
   a: [CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery]
 - s: "NAT Gateway"
   a: [Azure NAT, SNAT, Outbound Connectivity]
+- s: "IP Addresses"
+  a: [Public IP, PIP, Public IP Address]
 - s: "Azure Programmable Connectivity"
   a: [APC, Network APIs]
 ```

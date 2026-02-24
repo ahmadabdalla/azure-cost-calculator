@@ -82,14 +82,23 @@ function Test-QueryBlockCompleteness {
                 continue
             }
             if ($line -match '<!--') {
-                if ($null -ne $currentBlock) {
-                    $blocks.Add($currentBlock)
-                    $currentBlock = $null
-                }
-                if ($line -notmatch '-->') {
+                $stripped = $line -replace '<!--.*?-->', ''
+                if ($stripped -match '<!--') {
+                    if ($null -ne $currentBlock) {
+                        $blocks.Add($currentBlock)
+                        $currentBlock = $null
+                    }
                     $insideHtmlComment = $true
+                    continue
                 }
-                continue
+                if ([string]::IsNullOrWhiteSpace($stripped)) {
+                    if ($null -ne $currentBlock) {
+                        $blocks.Add($currentBlock)
+                        $currentBlock = $null
+                    }
+                    continue
+                }
+                $line = $stripped
             }
 
             if ([string]::IsNullOrWhiteSpace($line) -or $line -match '^###\s+') {
