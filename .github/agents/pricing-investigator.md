@@ -188,7 +188,7 @@ Add a **Documentation Cross-Check** section to your structured report with findi
 
 If web search/fetch is unavailable, use `curl` as a fallback:
 
-```
+```bash
 curl -s 'https://azure.microsoft.com/en-us/pricing/details/{service}/' | head -500
 ```
 
@@ -202,7 +202,7 @@ Identify other services in the same category to understand billing conventions a
 
 You MUST output your findings in the following structured format. Do not omit any section - use "None found" or "N/A" where appropriate.
 
-```
+```markdown
 ## Pricing Investigation Report: {Service Name}
 
 ### Service Identity

@@ -59,3 +59,13 @@ jobs:
           $servicesRoot = "skills/azure-cost-calculator/references/services"
 
           & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+
+      - name: Validate routing file sync
+        shell: pwsh
+        run: |
+          $scriptPath = "tests/Validate-ServiceReference.ps1"
+          $servicesRoot = "skills/azure-cost-calculator/references/services"
+          $dummyFile = Get-ChildItem -Path $servicesRoot -Filter '*.md' -Recurse | Select-Object -First 1 -ExpandProperty FullName
+          if ($dummyFile) {
+              & $scriptPath -Path $dummyFile -ServicesRoot $servicesRoot -CheckRoutingFileSync
+          }

@@ -197,7 +197,7 @@ Add the service entry to `skills/azure-cost-calculator/references/service-routin
 ### 6.1 - Run the validation script
 
 ```
-pwsh tests/Validate-ServiceReference.ps1 -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md -CheckAliasUniqueness
+pwsh tests/Validate-ServiceReference.ps1 -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md -CheckAliasUniqueness -CheckRoutingFileSync
 ```
 
 Fix ALL failures. Re-run until clean.

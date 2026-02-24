@@ -39,11 +39,7 @@ Agents previously loaded a single routing file containing both implemented and p
 | `skills/azure-cost-calculator/references/service-routing.md` | Runtime routing (implemented) | Yes               |
 | `docs/service-catalog.md`                                    | Pending services only         | On demand         |
 
-The routing file cross-references the catalog:
-
-```markdown
-For the full list of pending services, see [docs/service-catalog.md](...)
-```
+The routing file is self-contained and does not reference the catalog. Agents that need catalog data are instructed to read it separately via their agent configuration files.
 
 ---
 
@@ -58,7 +54,7 @@ When implementing a service from the catalog:
 
 2. **Create the reference file** - add the `.md` file in the appropriate category folder under `skills/azure-cost-calculator/references/services/`.
 
-3. **Add to agent routing** - add the entry to `skills/.../service-routing.md` under the correct category section.
+3. **Add to agent routing** - add the entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section.
 
 4. **Remove from catalog** - delete the entry from `docs/service-catalog.md`.
 
@@ -90,6 +86,7 @@ CI runs these checks to enforce sync between routing and files:
 
 | Test                         | What it checks                                                       |
 | ---------------------------- | -------------------------------------------------------------------- |
+| `Test-RoutingFileSync`       | Routing map entries and service files are bidirectionally in sync    |
 | `Test-AliasRoutingSync`      | Aliases in service files match aliases declared in routing map       |
 | `Test-AliasUniqueness`       | No two services claim the same alias                                 |
 | `Test-BillingNeedsReference` | `billingNeeds` values in files reference valid routing service names |

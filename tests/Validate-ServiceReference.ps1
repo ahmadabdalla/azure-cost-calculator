@@ -102,6 +102,29 @@ function Write-CheckResult {
     Write-Output "[$icon] $status $FileName :: $($Check.Name) - $($Check.Message)"
 }
 
+function Invoke-CrossFileCheck {
+    param(
+        [string]$CheckName,
+        [scriptblock]$TestFunc,
+        [string]$ServicesRoot,
+        [string]$ScriptRoot
+    )
+    $root = if ($ServicesRoot) { $ServicesRoot } else {
+        Join-Path -Path $ScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
+    }
+    if (Test-Path $root) {
+        $results = & $TestFunc $root
+        foreach ($check in $results) {
+            Write-CheckResult -FileName $CheckName -Check $check
+            if (-not $check.Pass) { $script:hasFailures = $true }
+        }
+    }
+    else {
+        Write-Output "[-] FAIL ${CheckName} :: services_root_missing - ServicesRoot path not found: $root"
+        $script:hasFailures = $true
+    }
+}
+
 $hasFailures = $false
 
 foreach ($filePath in $Path) {
@@ -131,71 +154,19 @@ foreach ($filePath in $Path) {
 }
 
 if ($CheckAliasUniqueness) {
-    $root = if ($ServicesRoot) { $ServicesRoot } else {
-        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
-    }
-    if (Test-Path $root) {
-        $aliasChecks = Test-AliasUniqueness -RootPath $root
-        foreach ($check in $aliasChecks) {
-            Write-CheckResult -FileName 'alias_check' -Check $check
-            if (-not $check.Pass) { $hasFailures = $true }
-        }
-    }
-    else {
-        Write-Output "[-] FAIL alias_check :: services_root_missing - ServicesRoot path not found: $root"
-        $hasFailures = $true
-    }
+    Invoke-CrossFileCheck -CheckName 'alias_check' -TestFunc { param($r) Test-AliasUniqueness -RootPath $r } -ServicesRoot $ServicesRoot -ScriptRoot $PSScriptRoot
 }
 
 if ($CheckAliasRoutingSync) {
-    $root = if ($ServicesRoot) { $ServicesRoot } else {
-        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
-    }
-    if (Test-Path $root) {
-        $syncChecks = Test-AliasRoutingSync -RootPath $root
-        foreach ($check in $syncChecks) {
-            Write-CheckResult -FileName 'routing_sync' -Check $check
-            if (-not $check.Pass) { $hasFailures = $true }
-        }
-    }
-    else {
-        Write-Output "[-] FAIL routing_sync :: services_root_missing - ServicesRoot path not found: $root"
-        $hasFailures = $true
-    }
+    Invoke-CrossFileCheck -CheckName 'routing_sync' -TestFunc { param($r) Test-AliasRoutingSync -RootPath $r } -ServicesRoot $ServicesRoot -ScriptRoot $PSScriptRoot
 }
 
 if ($CheckBillingNeeds) {
-    $root = if ($ServicesRoot) { $ServicesRoot } else {
-        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
-    }
-    if (Test-Path $root) {
-        $billingChecks = Test-BillingNeedsReference -RootPath $root
-        foreach ($check in $billingChecks) {
-            Write-CheckResult -FileName 'billing_needs' -Check $check
-            if (-not $check.Pass) { $hasFailures = $true }
-        }
-    }
-    else {
-        Write-Output "[-] FAIL billing_needs :: services_root_missing - ServicesRoot path not found: $root"
-        $hasFailures = $true
-    }
+    Invoke-CrossFileCheck -CheckName 'billing_needs' -TestFunc { param($r) Test-BillingNeedsReference -RootPath $r } -ServicesRoot $ServicesRoot -ScriptRoot $PSScriptRoot
 }
 
 if ($CheckRoutingFileSync) {
-    $root = if ($ServicesRoot) { $ServicesRoot } else {
-        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
-    }
-    if (Test-Path $root) {
-        $routingSyncChecks = Test-RoutingFileSync -RootPath $root
-        foreach ($check in $routingSyncChecks) {
-            Write-CheckResult -FileName 'routing_file_sync' -Check $check
-            if (-not $check.Pass) { $hasFailures = $true }
-        }
-    }
-    else {
-        Write-Output "[-] FAIL routing_file_sync :: services_root_missing - ServicesRoot path not found: $root"
-        $hasFailures = $true
-    }
+    Invoke-CrossFileCheck -CheckName 'routing_file_sync' -TestFunc { param($r) Test-RoutingFileSync -RootPath $r } -ServicesRoot $ServicesRoot -ScriptRoot $PSScriptRoot
 }
 
 Write-Output ''

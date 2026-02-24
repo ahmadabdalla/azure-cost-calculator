@@ -2,7 +2,7 @@ Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
 . (Join-Path $PSScriptRoot 'Get-FrontMatter.ps1')
-. (Join-Path $PSScriptRoot 'Test-AliasRoutingSync.ps1')
+. (Join-Path $PSScriptRoot 'Test-AliasRoutingSync.ps1')  # imports Get-RoutingMapEntry
 
 function Test-RoutingFileSync {
     <#

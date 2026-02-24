@@ -288,17 +288,6 @@ Example: "Azure Data Factory" - `data-factory.md` | "SignalR" - `signalr.md` | "
   a: [Cloud PC Agents]
 ```
 
-## Migration (`services/migration/`)
-
-```yaml
-- s: "Azure Database Migration Service"
-  a: [DMS, Database Migration, DB Migration Service]
-- s: "Azure Migrate"
-  a: [Server Assessment, Migration Tools]
-- s: "Azure Site Recovery"
-  a: [ASR, Disaster Recovery, DR]
-```
-
 ## Web (`services/web/`)
 
 ```yaml
