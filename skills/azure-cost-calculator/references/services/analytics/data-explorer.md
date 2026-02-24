@@ -59,7 +59,7 @@ Total Monthly   = Markup Monthly + VM Monthly + Storage + Networking
 - **Dev/Test tier**: No markup charge — only VM compute costs apply; uses D11 v2 or E2a v4 SKUs (single node, no SLA)
 - **Stopped clusters**: Compute and markup billing stops; storage charges continue
 - **Data Management nodes**: Auto-provisioned Da_v4 series VMs billed under Virtual Machines with no ADX markup
-- **Capacity**: Engine node families include Compute Optimized (D/E-series) and Storage Optimized (L-series); minimum 2 engine + 2 DM nodes for production
+- **Capacity**: Engine node families include Compute Optimized (D/E-series) and Storage Optimized (L-series); minimum 2 engine + 2 Data Management nodes for production
 - **Free cluster**: Trial cluster available (~100 GB storage, up to 10 databases, 1-year, no SLA) — not reflected in the API
 
 ## Reserved Instance Pricing
