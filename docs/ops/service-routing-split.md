@@ -48,8 +48,8 @@ The routing file is self-contained and does not reference the catalog. Agents th
 When implementing a service from the catalog:
 
 1. **Check the catalog** - look up the service in `docs/service-catalog.md` for:
-   - Exact `serviceName` (`s:` field)
-   - Aliases (`a:` field)
+   - Exact `serviceName` (service name before the colon)
+   - Aliases (comma-separated values after the colon)
    - Category (section heading)
 
 2. **Create the reference file** - add the `.md` file in the appropriate category folder under `skills/azure-cost-calculator/references/services/`.
@@ -71,9 +71,8 @@ When tracking a service that does not have a reference file yet:
 
 1. Add entry to `docs/service-catalog.md` under the appropriate category:
 
-   ```yaml
-   - s: "Service Name"
-     a: [Alias1, Alias2]
+   ```
+   - Service Name: Alias1, Alias2
    ```
 
 2. **Do NOT add to agent routing** - the routing file only contains implemented services with existing files.

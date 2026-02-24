@@ -1,14 +1,15 @@
 ﻿Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot 'New-ValidationCheck.ps1')
 . (Join-Path $PSScriptRoot 'Get-FrontMatter.ps1')
+. (Join-Path $PSScriptRoot 'Test-AliasRoutingSync.ps1')  # imports Get-RoutingMapEntry
 function Test-BillingNeedsReference {
     <#
     .SYNOPSIS
         Checks that every billingNeeds entry references a valid routing map service name.
     .DESCRIPTION
-        Reads the service-routing.md file to build a set of known routing
-        map service names (s: values), then verifies every billingNeeds
-        entry in every service file matches an actual routing map name.
+        Uses Get-RoutingMapEntry to build a set of known routing map service
+        names, then verifies every billingNeeds entry in every service file
+        matches an actual routing map name.
         Returns one or more check results.
     .PARAMETER RootPath
         Root directory of the services folder to scan for billingNeeds references.
@@ -27,7 +28,7 @@ function Test-BillingNeedsReference {
     $checks = [System.Collections.Generic.List[object]]::new()
     $RootPath = (Resolve-Path -Path $RootPath).Path
     $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse
-    # First pass: collect all known routing map service names (case-insensitive)
+    # Collect all known routing map service names via shared parser
     $routingMapPath = Join-Path (Split-Path $RootPath -Parent) 'service-routing.md'
     if (-not (Test-Path $routingMapPath)) {
         $checks.Add((New-ValidationCheck -Name 'billing_needs_reference' -Pass $false `
@@ -35,15 +36,10 @@ function Test-BillingNeedsReference {
         , $checks
         return
     }
+    $routingEntries = Get-RoutingMapEntry -RoutingMapPath $routingMapPath
     $routingNames = @{}
-    $routingLines = @(Get-Content -Path $routingMapPath -Encoding UTF8)
-    foreach ($line in $routingLines) {
-        if ($line -match "^\s*-\s*s:\s*[`"']?([^`"']+)[`"']?\s*$") {
-            $name = $Matches[1].Trim()
-            if ($name) {
-                $routingNames[$name.ToLowerInvariant()] = $name
-            }
-        }
+    foreach ($entry in $routingEntries) {
+        $routingNames[$entry.Service.ToLowerInvariant()] = $entry.Service
     }
     # Second pass: validate billingNeeds references
     foreach ($file in $files) {
