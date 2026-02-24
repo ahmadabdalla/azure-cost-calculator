@@ -13,7 +13,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Consumption (Standard) — per-second billing (UnitPrice shows zero; use Known Rates table)
+### Consumption (Standard) — per-second billing (MonthlyCost shows zero; use UnitPrice from API)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps

@@ -38,7 +38,7 @@ function Test-BillingNeedsReference {
     $routingNames = @{}
     $routingLines = @(Get-Content -Path $routingMapPath -Encoding UTF8)
     foreach ($line in $routingLines) {
-        if ($line -match '^\s*-\s*s:\s*"?([^"]+)"?\s*$') {
+        if ($line -match "^\s*-\s*s:\s*[`"']?([^`"']+)[`"']?\s*$") {
             $name = $Matches[1].Trim()
             if ($name) {
                 $routingNames[$name.ToLowerInvariant()] = $name
