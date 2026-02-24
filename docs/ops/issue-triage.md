@@ -1,4 +1,4 @@
-# Issue Triage Automation - Operations Guide
+# Issue Triage Automation — Operations Guide
 
 Automated triage of newly opened issues using [GitHub Agentic Workflows (gh-aw)](https://github.com/github/gh-aw) with the **Copilot** engine.
 
@@ -27,16 +27,13 @@ The agent never closes, locks, transfers, or removes labels from issues.
 
 ### Decision matrix (service-reference issues)
 
-The catalog (`docs/service-catalog.md`) lists all services. The routing map contains implemented services. A service in the catalog but not in the routing map is pending implementation.
-
 | Type         | In routing map? | File exists? | Labels                            | Action                                    |
 | ------------ | --------------- | ------------ | --------------------------------- | ----------------------------------------- |
-| New service  | Yes             | No           | `new-service`, `good first issue` | Welcome; point to CONTRIBUTING.md         |
-| New service  | Yes             | Yes          | `duplicate`                       | Explain file exists; suggest fix issue    |
-| New service  | No (in catalog) | No           | `new-service`, `good first issue` | Pending service; add routing entry in PR  |
-| New service  | No (not found)  | -            | `needs-info`                      | Ask for exact `serviceName` from API      |
-| Fix existing | -               | Yes          | `pricing-inaccuracy`              | Suggest verifying with `Get-AzurePricing` |
-| Fix existing | -               | No           | `needs-info`                      | Ask to clarify service name               |
+| New service  | ✅              | ❌           | `new-service`, `good first issue` | Welcome; point to CONTRIBUTING.md         |
+| New service  | ✅              | ✅           | `duplicate`                       | Explain file exists; suggest fix issue    |
+| New service  | ❌              | —            | `needs-info`                      | Ask for exact `serviceName` from API      |
+| Fix existing | —               | ✅           | `pricing-inaccuracy`              | Suggest verifying with `Get-AzurePricing` |
+| Fix existing | —               | ❌           | `needs-info`                      | Ask to clarify service name               |
 
 ### Label allow-list
 
@@ -50,13 +47,13 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map cont
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Does not need "All public repositories" access. |
 | **Labels**                             | `new-service`, `pricing-inaccuracy`, `service-update` must exist in the repo (the others are GitHub defaults).                         |
-| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes - not at runtime.                                 |
+| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                                 |
 
 ---
 
 ## Making changes to the workflow
 
-> **Never manually edit** `issue-triage.lock.yml` or `actions-lock.json` - they are overwritten on every compile.
+> **Never manually edit** `issue-triage.lock.yml` or `actions-lock.json` — they are overwritten on every compile.
 
 1. Edit `.github/workflows/issue-triage.md`.
 2. Compile:
@@ -75,7 +72,7 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map cont
    ```bash
    gh secret set COPILOT_GITHUB_TOKEN
    ```
-3. No workflow recompile is needed - the secret name hasn't changed.
+3. No workflow recompile is needed — the secret name hasn't changed.
 
 ---
 
@@ -131,7 +128,6 @@ Commit the updated lock files after upgrading.
 
 ## References
 
-- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) - GitHub Agentic Workflows engine
-- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/) - the trigger pattern this workflow uses
-- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md) - service eligibility map queried by the agent (implemented services)
-- [service-catalog.md](../../docs/service-catalog.md) - full service catalog including pending services
+- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) — GitHub Agentic Workflows engine
+- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/) — the trigger pattern this workflow uses
+- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md) — service eligibility map queried by the agent
