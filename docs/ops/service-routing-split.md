@@ -43,6 +43,20 @@ The routing file is self-contained and does not reference the catalog. Agents th
 
 ---
 
+## Terminology
+
+Three related terms appear across documentation. Use these consistently:
+
+| Term                    | Meaning                                                                                   | Example                            |
+| ----------------------- | ----------------------------------------------------------------------------------------- | ---------------------------------- |
+| **Display name**        | Human-readable name in the routing map / catalog (before the colon)                       | `Azure VMware Solution`            |
+| **API serviceName**     | Exact case-sensitive value for the Azure Retail Prices API `serviceName` filter           | `Specialized Compute`              |
+| **`serviceName` field** | The YAML front matter field in a service reference file — holds the API serviceName value | `serviceName: Specialized Compute` |
+
+For most services, display name ≈ API serviceName (e.g., `Virtual Machines`). For split-product services, they differ (e.g., display name `Azure VMware Solution` → API serviceName `Specialized Compute`). The `apiServiceName` YAML field bridges this gap when they differ.
+
+---
+
 ## How to add a new service
 
 When implementing a service from the catalog:

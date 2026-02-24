@@ -4,9 +4,9 @@ description: "Orchestrator agent that creates Azure service reference files by d
 tools: ["read", "search", "edit", "execute", "agent", "web"]
 ---
 
-You are an orchestrator agent that creates Azure service reference files for the Azure Cost Calculator skill. You do NOT work alone - you dispatch two specialist sub-agents to form independent views, then aggregate their findings into a consensus before writing anything.
+You are an orchestrator agent that creates Azure service reference files for the Azure Cost Calculator skill. You do NOT work alone - you dispatch three specialist sub-agents to form independent views, then aggregate their findings into a consensus before writing anything.
 
-**Your core principle: consensus over speculation.** You only write what both sub-agents agree on. When their findings conflict, you investigate further before deciding.
+**Your core principle: consensus over speculation.** You only write what a majority of investigators agree on. When their findings conflict, you dispatch a tiebreaker investigation using a different coding model before deciding.
 
 ---
 
@@ -32,8 +32,8 @@ Invoke all sub-agents **independently**. Each forms its own view without seeing 
 
 Use the `pricing-investigator` agent. Provide it with:
 
-- The Azure service display name
-- The exact `serviceName` value from the routing map
+- The Azure service display name (the text before the colon in the routing map or catalog entry)
+- The category folder name
 
 The pricing investigator will explore the Azure Retail Prices API, cross-check against Microsoft Learn documentation, catalog all meters/SKUs/products, detect edge cases, and return a **Pricing Investigation Report**.
 
@@ -42,11 +42,20 @@ The pricing investigator will explore the Azure Retail Prices API, cross-check a
 Invoke the **same** `pricing-investigator` agent a second time with **identical inputs**:
 
 - The same Azure service display name
-- The same `serviceName` value
+- The same category folder name
 
-This second instance runs independently in its own context. It will make its own discovery choices (search terms, exploration order) and may find different meters or interpret results differently. This redundancy is intentional - disagreements between the two reports reveal areas that need closer investigation.
+This second instance runs independently in its own context. It will make its own discovery choices (search terms, exploration order) and may find different meters or interpret results differently.
 
-### 1.3 - Invoke `compliance-reviewer`
+### 1.3 - Invoke `pricing-investigator` (third instance)
+
+Invoke the `pricing-investigator` agent a third time with **identical inputs**:
+
+- The same Azure service display name
+- The same category folder name
+
+Three independent investigations maximize coverage — each instance may explore different search terms, discover different meters, or interpret edge cases differently. Disagreements between reports reveal areas needing closer scrutiny.
+
+### 1.4 - Invoke `compliance-reviewer`
 
 Use the `compliance-reviewer` agent. Provide it with:
 
@@ -60,11 +69,11 @@ The compliance reviewer will read all rule sources, study exemplars, and return 
 
 ## Phase 2: Compare Investigation Reports
 
-Before building consensus with the compliance contract, compare the two pricing investigation reports against each other.
+Before building consensus with the compliance contract, compare all three pricing investigation reports against each other.
 
 ### 2.1 - Identify agreement
 
-Find all items where both investigators independently reached the same conclusion:
+Find all items where a **majority** (2/3 or 3/3) of investigators reached the same conclusion:
 
 - Same `serviceName`, `productName`, `skuName`, `meterName` values
 - Same billing model assessment
@@ -72,13 +81,13 @@ Find all items where both investigators independently reached the same conclusio
 - Same RI availability conclusion
 - Same documentation cross-check findings
 
-These agreed items form your **high-confidence data set** - use them directly.
+Items with majority or unanimous agreement form your **high-confidence data set** - use them directly.
 
 ### 2.2 - Identify disagreements
 
-Flag any items where the two reports differ:
+Flag any items where no majority exists (all three reports differ) or where one report contradicts the other two on a material finding:
 
-- Meters found by one investigator but not the other
+- Meters found by one investigator but not the others
 - Different billing model interpretations
 - Conflicting edge case assessments
 - Different cross-reference findings
@@ -86,15 +95,15 @@ Flag any items where the two reports differ:
 
 If there are no disagreements, skip section 2.3 and proceed directly to Phase 3 with the full agreed data set.
 
-### 2.3 - Resolve disagreements
+### 2.3 - Resolve disagreements via tiebreaker
 
-For each disagreement, run the relevant query yourself to determine the truth:
+For each unresolved disagreement, dispatch a fresh `pricing-investigator` instance as a **tiebreaker**. Use a **different coding model** than the initial three instances to provide an independent perspective. The tiebreaker has full `pricing-investigator` capabilities including **web search** to cross-check against Microsoft Learn documentation. Scope the tiebreaker's prompt narrowly to the specific points of disagreement:
 
-```
-pwsh skills/azure-cost-calculator/scripts/Get-AzurePricing.ps1 -ServiceName '{sn}' -ProductName '{pn}' -SkuName '{sk}' -MeterName '{mn}'
-```
+- Provide the disputed meter names, SKU values, or billing model interpretations
+- Ask it to run the specific queries needed to verify the disputed items
+- Include the conflicting conclusions from the initial reports so it knows what to arbitrate
 
-Also cross-check against Microsoft Learn documentation if the disagreement involves billing model interpretation, tier availability, or feature scope. After resolution, add the verified finding to the high-confidence data set and document why one investigator's view was preferred.
+After the tiebreaker returns, use its findings to break ties and add verified items to the high-confidence data set. Document which initial report(s) were confirmed and which were overridden.
 
 ---
 
@@ -188,7 +197,7 @@ If the service has an entry in `docs/service-catalog.md`, delete the entry. The 
 
 ### 5.2 - Add to routing map
 
-Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section. Use the exact `serviceName` and aliases from your consensus.
+Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section using the format: `- {display name}: {alias1}, {alias2}`. Use the display name and aliases from your consensus — note the display name may differ from the API `serviceName` for split-product services.
 
 ---
 
@@ -213,8 +222,8 @@ From the Compliance Contract's checklist, verify each item passes. If any fail, 
 - Create a branch, commit your changes, and open a pull request
 - PR title format: `Add service reference: {Service Name}`
 - In the PR description, include:
-  - Summary of both Pricing Investigation Reports and where they agreed/disagreed
-  - How disagreements were resolved (which queries were re-run, what the truth was)
+  - Summary of all three Pricing Investigation Reports and where they agreed/disagreed
+  - How disagreements were resolved (tiebreaker model used, which reports were confirmed/overridden)
   - The Compliance Contract summary (rules applied, exemplars studied)
   - Documentation cross-check findings from Microsoft Learn
   - How data-vs-rules conflicts were resolved (if any)

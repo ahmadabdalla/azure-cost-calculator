@@ -14,6 +14,13 @@ Example: "Azure Data Factory" - `data-factory.md` | "SignalR" - `signalr.md` | "
 - API `serviceFamily` may differ from category here. Always use this file's category.
 - Services with no retail meter still need reference files.
 
+## Entry Format
+
+Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
+
+- **Display name** (before the colon): The human-readable service name. When implementing, verify the exact API `serviceName` using the exploration script.
+- **Aliases** (after the colon): Comma-separated alternate names, abbreviations, and search terms for this service.
+
 ## Compute (services/compute/)
 
 - Cloud Services: Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles

@@ -14,6 +14,8 @@ Example: "Azure Data Factory" → data-factory.md | "SignalR" → signalr.md | "
 - API `serviceFamily` may differ from category here. Always use this file's category.
 - Services with no retail meter still need reference files.
 
+Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may differ from API `serviceName` (see `apiServiceName` field).
+
 ## Compute (services/compute/)
 
 - Virtual Machines: VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host
