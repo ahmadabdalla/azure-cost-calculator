@@ -2,7 +2,7 @@
 serviceName: Azure Synapse Analytics
 category: analytics
 aliases: [Synapse, Synapse Workspace, Synapse SQL, Synapse Spark]
-billingNeeds: [Storage]
+billingNeeds: [Data Lake Storage]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Dedicated SQL Pool DWU hours + Serverless SQL per-TB + Spark vCore hours + Pipeline runs + storage per-GB"
 privateEndpoint: true
