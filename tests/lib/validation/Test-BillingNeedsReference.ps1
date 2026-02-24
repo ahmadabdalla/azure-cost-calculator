@@ -29,15 +29,19 @@ function Test-BillingNeedsReference {
     $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse
     # First pass: collect all known routing map service names (case-insensitive)
     $routingMapPath = Join-Path (Split-Path $RootPath -Parent) 'service-routing.md'
+    if (-not (Test-Path $routingMapPath)) {
+        $checks.Add((New-ValidationCheck -Name 'billing_needs_reference' -Pass $false `
+                    -PassMessage 'n/a' -FailMessage "Routing map not found at '$routingMapPath'"))
+        , $checks
+        return
+    }
     $routingNames = @{}
-    if (Test-Path $routingMapPath) {
-        $routingLines = @(Get-Content -Path $routingMapPath -Encoding UTF8)
-        foreach ($line in $routingLines) {
-            if ($line -match '^\s*-\s*s:\s*"?([^"]+)"?\s*$') {
-                $name = $Matches[1].Trim()
-                if ($name) {
-                    $routingNames[$name.ToLowerInvariant()] = $name
-                }
+    $routingLines = @(Get-Content -Path $routingMapPath -Encoding UTF8)
+    foreach ($line in $routingLines) {
+        if ($line -match '^\s*-\s*s:\s*"?([^"]+)"?\s*$') {
+            $name = $Matches[1].Trim()
+            if ($name) {
+                $routingNames[$name.ToLowerInvariant()] = $name
             }
         }
     }
