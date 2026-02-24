@@ -62,7 +62,7 @@ Monthly = retailPrice × numberOfPhoneNumbers
 ## Notes
 
 - **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Messaging`, `Network Traversal`, `Routing`
-- **Country-dependent pricing**: Rates vary significantly by country (e.g., US geographic ~$1/month, ES ~$5/month, toll-free ~$2–25/month)
+- **Country-dependent pricing**: Rates vary significantly by country and number type — query the API with the target country's `SkuName` for exact pricing
 - **121 meters in eastus**: Each country × number type combination has its own meter — always filter by country
 - Products with a `-I` suffix (e.g., `Geographic Numbers - I`) and without that suffix are alternative product-name variants with identical prices; use whichever variant exists for the target country, but note that `AU` and `JP` only appear in the non-I variants
 - Toll-free numbers are generally more expensive than geographic numbers

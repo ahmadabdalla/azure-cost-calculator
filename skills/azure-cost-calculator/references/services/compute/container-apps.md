@@ -13,7 +13,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Consumption (Standard) — per-second billing (UnitPrice shows $0.00; use Known Rates table)
+### Consumption (Standard) — per-second billing (UnitPrice shows zero; use Known Rates table)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
@@ -53,7 +53,7 @@ SkuName: Hybrid
 | `Standard Memory Active Usage` | 360,000 GiB-seconds/mo  |
 | `Standard Requests`            | 2M requests/mo          |
 
-> Query the API for current `UnitPrice` values. The script's `MonthlyCost` shows `$0` because it cannot infer quantity — use `UnitPrice` directly in your calculation.
+> Query the API for current `UnitPrice` values. The script's `MonthlyCost` shows zero because it cannot infer quantity — use `UnitPrice` directly in your calculation.
 
 ## Cost Formula
 

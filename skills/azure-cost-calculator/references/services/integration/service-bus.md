@@ -20,21 +20,25 @@ All patterns below use `ServiceName: Service Bus`.
 
 ### Basic tier — operations only (per 1M)
 
+ServiceName: Service Bus
 SkuName: Basic
 MeterName: Basic Messaging Operations
 
 ### Standard tier — namespace base unit (hourly)
 
+ServiceName: Service Bus
 SkuName: Standard
 MeterName: Standard Base Unit
 
 ### Standard tier — operations (per 1M, first 13M included)
 
+ServiceName: Service Bus
 SkuName: Standard
 MeterName: Standard Messaging Operations
 
 ### Premium — messaging unit (InstanceCount for multi-unit)
 
+ServiceName: Service Bus
 SkuName: Premium
 MeterName: Premium Messaging Unit
 InstanceCount: 2

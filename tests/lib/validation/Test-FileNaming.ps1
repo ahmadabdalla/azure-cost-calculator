@@ -64,7 +64,18 @@ function Test-FileNaming {
             'not in API'                                     = 'ddos-protection.md'
         }
 
-        if ($exceptions.ContainsKey($serviceName)) {
+        # Split-file services: multiple files share a serviceName — accept the actual filename
+        $splitFileOverrides = @(
+            'private-dns.md',       # serviceName: Azure DNS (split with dns.md)
+            'private-link.md',      # serviceName: Virtual Network (split with virtual-network.md)
+            'data-lake-storage.md', # serviceName: Storage (split with storage.md, managed-disks.md)
+            'managed-disks.md'      # serviceName: Storage (split with storage.md, data-lake-storage.md)
+        )
+
+        if ($actualFile -in $splitFileOverrides) {
+            $expectedFile = $actualFile
+        }
+        elseif ($exceptions.ContainsKey($serviceName)) {
             $expectedFile = $exceptions[$serviceName]
         }
         else {

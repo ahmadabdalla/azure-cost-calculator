@@ -18,23 +18,27 @@ All patterns below use `ServiceName: Event Hubs`.
 
 ### Standard tier — throughput unit (base cost)
 
+ServiceName: Event Hubs
 SkuName: Standard
 MeterName: Standard Throughput Unit
 
 ### Standard tier — ingress events (per 1M events)
 
+ServiceName: Event Hubs
 SkuName: Standard
 MeterName: Standard Ingress Events
 Quantity: 10
 
 ### Premium tier — 3 processing units (use InstanceCount for multi-unit)
 
+ServiceName: Event Hubs
 SkuName: Premium
 MeterName: Premium Processing Unit
 InstanceCount: 3
 
 ### Dedicated tier — capacity unit
 
+ServiceName: Event Hubs
 SkuName: Dedicated
 MeterName: Dedicated Capacity Unit
 

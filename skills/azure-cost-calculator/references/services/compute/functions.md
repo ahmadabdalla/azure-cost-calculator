@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Warning**: The script's `MonthlyCost` shows `$0` because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
+> **Warning**: The script's `MonthlyCost` shows zero because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -50,7 +50,7 @@ Quantity: 1000000
 | `Standard Total Executions` | per 10 exec | 1M executions   |
 | `Standard Execution Time`   | per 1 GB-s  | 400K GB-seconds |
 
-> The script's `MonthlyCost` shows `$0` — use `UnitPrice` directly.
+> The script's `MonthlyCost` shows zero — use `UnitPrice` directly.
 
 ## Cost Formula
 
@@ -85,9 +85,9 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 
 ## Notes
 
-- Consumption: generous free grant — many small workloads cost $0
+- Consumption: generous free grant — many small workloads cost zero
 - Premium: billed per-second with a minimum of one instance
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
 - **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
-- The script's `MonthlyCost` shows `$0` for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
+- The script's `MonthlyCost` shows zero for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
 - Private endpoints require Flex Consumption, Premium, or Dedicated plan

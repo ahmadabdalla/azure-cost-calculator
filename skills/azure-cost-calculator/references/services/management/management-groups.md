@@ -11,7 +11,7 @@ pricingRegion: api-unavailable
 
 > **Trap**: The API returns no meters for Management Groups. Do NOT query for pricing — this is a free service.
 >
-> **Agent instruction**: Report $0.00/month. Management Groups have no cost regardless of quantity.
+> **Agent instruction**: Report zero cost per month. Management Groups have no cost regardless of quantity.
 
 ## Query Pattern
 
@@ -24,7 +24,7 @@ Quantity: 1
 ## Cost Formula
 
 ```
-Monthly = $0.00 (free service, no meters)
+Monthly = zero cost (free service, no meters)
 ```
 
 ## Notes
