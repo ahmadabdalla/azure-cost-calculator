@@ -14,19 +14,42 @@ Multi-agent system that gives the Copilot coding agent a research-first, consens
 
 ## What it does
 
-When the Copilot coding agent is assigned to a service-reference issue using the `service-reference` custom agent, it runs a three-agent consensus workflow:
+When the Copilot coding agent is assigned to a service-reference issue using the `service-reference` custom agent, it runs a multi-agent consensus workflow:
 
-1. **Orchestrator** (`service-reference`) reads the routing map and dispatches three sub-agent invocations independently.
+1. **Orchestrator** (`service-reference`) reads the routing map and dispatches four sub-agent invocations independently.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) explores the Azure Retail Prices API, cross-checks Microsoft Learn documentation, and returns a structured **Pricing Investigation Report**.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently explores the same API — may discover different meters or interpret results differently.
-4. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
-5. **Orchestrator** compares Reports A and B for agreement/disagreement, resolves disagreements by re-running queries, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
+4. **Pricing Investigator C** (`pricing-investigator`, third instance, identical prompt) provides a third independent view for majority-based consensus.
+5. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
+6. **Orchestrator** compares Reports A, B, and C for majority agreement, dispatches a tiebreaker investigator (using a different coding model) for unresolved disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
 
 ### Why multi-agent?
 
-- **Independent views prevent blind spots**: two investigators may explore different search terms and find different meters — disagreement reveals areas needing closer investigation.
-- **Consensus over speculation**: the orchestrator only writes what both investigators agree on.
+- **Independent views prevent blind spots**: three investigators may explore different search terms and find different meters — disagreement reveals areas needing closer investigation.
+- **Majority consensus over speculation**: the orchestrator only writes what a majority (2/3 or 3/3) of investigators agree on. Unresolved disputes trigger a tiebreaker round with a different coding model.
 - **Separation of concerns**: data discovery (shell + web) vs rule interpretation (read-only) vs file authoring.
+
+---
+
+## Assignment
+
+### How issues flow to the agent
+
+1. **Triage** — when a new issue is opened, the [issue triage workflow](issue-triage.md) classifies it and applies labels (e.g., `new-service`, `pricing-inaccuracy`).
+2. **Maintainer review** — a maintainer reviews the triaged issue and decides whether to assign the Copilot coding agent or wait for a human contributor.
+3. **Assignment** — the maintainer assigns the Copilot coding agent to the issue by selecting the `service-reference` custom agent. The agent then runs the multi-agent workflow described below.
+
+### Assignment criteria
+
+- **New service issues** (`new-service` label): Assign the agent when:
+  - The contributor did not indicate they want to submit the change themselves, OR
+  - The issue has been open without a PR for an extended period
+- **Pricing inaccuracy issues** (`pricing-inaccuracy` label): Currently requires manual review — the agent workflow is optimized for new file creation, not updates to existing files.
+- **General enhancements** (`enhancement` label): Evaluate case-by-case; most enhancements are not service reference work.
+
+### Contributor self-service
+
+If the issue template's "I would like to submit this change myself" checkbox is checked, the maintainer should allow time for the contributor to open a PR before assigning the agent. If no PR appears within a reasonable timeframe, the maintainer may assign the agent.
 
 ---
 
@@ -42,12 +65,22 @@ service-reference (orchestrator)
   │     Tools: read, search, execute, web
   │     Output: Pricing Investigation Report B
   │
+  ├── invokes: pricing-investigator (instance C)  ← identical prompt
+  │     Tools: read, search, execute, web
+  │     Output: Pricing Investigation Report C
+  │
   ├── invokes: compliance-reviewer
   │     Tools: read, search (no shell, no edit, no web)
   │     Output: Compliance Contract
   │
-  └── orchestrator: compares A vs B → resolves disagreements →
-        cross-references consensus against contract → writes file → validates
+  ├── orchestrator: compares A vs B vs C → majority agreement
+  │     If unresolved disagreements remain:
+  │     └── invokes: pricing-investigator (tiebreaker, different coding model)
+  │           Scoped to disputed items only
+  │           Output: Tiebreaker Report
+  │
+  └── orchestrator: cross-references consensus against contract →
+        writes file → validates
         Tools: read, search, edit, execute, agent, web
 ```
 
@@ -71,7 +104,7 @@ service-reference (orchestrator)
 | File                                     | Role                                          | Tools                                   |
 | ---------------------------------------- | --------------------------------------------- | --------------------------------------- |
 | `.github/agents/service-reference.md`    | Orchestrator — dispatches, aggregates, writes | read, search, edit, execute, agent, web |
-| `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×2)      | read, search, execute, web              |
+| `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×3, + tiebreaker) | read, search, execute, web              |
 | `.github/agents/compliance-reviewer.md`  | Rules analysis sub-agent                      | read, search                            |
 
 1. Edit the agent file directly.
@@ -86,7 +119,7 @@ service-reference (orchestrator)
 
 Sub-agents use restricted toolsets (principle of least privilege):
 
-- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked twice with identical inputs for redundancy.
+- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for majority-based consensus, plus an optional tiebreaker round with a different coding model for unresolved disputes.
 - `compliance-reviewer` has only `read` and `search` — no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
 - Only the orchestrator has `edit` and `agent` tools
 

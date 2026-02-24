@@ -27,6 +27,7 @@ safe-outputs:
         good first issue,
         question,
         invalid,
+        enhancement,
       ]
     max: 2
 concurrency:
@@ -62,6 +63,8 @@ Analyze the following issue content:
 - **General Enhancement**: The issue has the `enhancement` label (from the `improvement.yml` template) or describes a general improvement to the skill, scripts, or workflow.
 - **Other**: Anything that doesn't match the above categories.
 
+> **Note:** Also check if the issue already has labels like `service-reference` or `enhancement` applied by a template — if so, treat the issue accordingly even if the title doesn't match the expected pattern.
+
 ### Step 2 - Service Reference Issues
 
 When the title matches `[Service]: {service name}`:
@@ -71,8 +74,8 @@ When the title matches `[Service]: {service name}`:
    - Compare against service names and aliases - use case-insensitive comparison.
    - Note the **category** and any alias notes.
 3. **Search `skills/azure-cost-calculator/references/service-routing.md`** for implemented services:
-   - Compare against `s:` (serviceName) values - use case-insensitive comparison.
-   - Compare against entries in `a:` (alias) arrays - use case-insensitive comparison.
+   - Compare against the **service display name** (the text before the colon) — use case-insensitive comparison.
+   - Compare against the **aliases** (comma-separated values after the colon) — use case-insensitive comparison.
    - Derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix, convert to kebab-case, add `.md`.
    - Services in the routing map are implemented; services only in the catalog are pending.
 4. **Check whether a service reference file already exists** at `skills/azure-cost-calculator/references/services/{category}/{filename}`.
@@ -84,16 +87,22 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map (`sk
 
 <!-- NOTE: This file requires recompilation with `gh aw compile` before changes take effect. -->
 
-| Type         | In routing map? | File exists? | Labels                            | Comment                                                                                                                                                                                                                                                                                          |
-| ------------ | --------------- | ------------ | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| New service  | Yes             | No           | `new-service`, `good first issue` | Thank the contributor. Confirm the service is eligible (mention the matched `s:` value and category). Point them to **CONTRIBUTING.md** for the prompt-driven workflow to generate the reference file. If they checked "I would like to submit this change myself", encourage them to open a PR. |
-| New service  | Yes             | Yes          | `duplicate`                       | Thank the contributor. Explain that a reference already exists at the specific path (e.g., `skills/azure-cost-calculator/references/services/compute/virtual-machines.md`). Suggest they open a `Fix existing service` issue instead if they believe the existing file has errors.               |
-| New service  | No (in catalog) | No           | `new-service`, `good first issue` | Thank the contributor. Confirm the service is in the catalog (pending implementation). Point them to **CONTRIBUTING.md** for the prompt-driven workflow. Note that a routing entry will need to be added as part of the PR.                                                                      |
-| New service  | No (not found)  | -            | `needs-info`                      | Thank the contributor. Explain the service was not found in the catalog or routing map. Ask them to confirm the exact `serviceName` value from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices) and provide it so the service can be evaluated for inclusion.           |
-| Fix existing | -               | Yes          | `pricing-inaccuracy`              | Thank the contributor. Identify the file path that needs review. Suggest running `Get-AzurePricing` with the relevant `serviceName` filter to verify current rates against the reference file.                                                                                                   |
-| Fix existing | -               | No           | `needs-info`                      | Thank the contributor. Explain that no existing reference file was found for this service. Ask them to clarify the exact service name or check if the service might be listed under a different name or alias in the catalog.                                                                    |
+| Type         | In routing map? | File exists? | Labels                            | Comment                                                                                                                                                                                                          |
+| ------------ | --------------- | ------------ | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| New service  | Yes             | No           | `new-service`, `good first issue` | Thanks for opening this! {service} ({category}) is eligible. See **CONTRIBUTING.md** for the prompt-driven workflow. If you want to submit it yourself, go ahead and open a PR.                                  |
+| New service  | Yes             | Yes          | `duplicate`                       | Thanks — a reference already exists at `{path}`. If you think it has errors, open a "Fix existing service" issue instead.                                                                                       |
+| New service  | No (in catalog) | No           | `new-service`, `good first issue` | Thanks! {service} is in the catalog and ready to implement. See **CONTRIBUTING.md** for the workflow — you'll also need to add a routing entry in your PR.                                                      |
+| New service  | No (not found)  | -            | `needs-info`                      | Thanks — couldn't find this service in the catalog or routing map. Can you confirm the exact `serviceName` from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices)?                      |
+| Fix existing | -               | Yes          | `pricing-inaccuracy`              | Thanks — the file to review is `{path}`. Try running `Get-AzurePricing` with the `serviceName` filter to verify current rates.                                                                                  |
+| Fix existing | -               | No           | `needs-info`                      | Thanks — no reference file found for this service. Could you double-check the service name? It might be listed under a different alias in the catalog.                                                          |
 
 ### Step 3 - General Enhancement Issues
+
+<!-- Label distinction:
+  - `pricing-inaccuracy`: Applied to service-reference template issues with Type = "Fix existing service" —
+    indicates the reference file has incorrect pricing data that needs correction against the live API.
+  - `service-update`: Applied to improvement template issues about updating an existing reference —
+    indicates structural improvements, missing sections, or non-pricing enhancements to a reference file. -->
 
 If the issue comes from the improvement template or describes a general enhancement:
 
@@ -110,10 +119,9 @@ If the issue comes from the improvement template or describes a general enhancem
 
 When you do leave a comment, follow these principles:
 
-- **Thank the contributor** for opening the issue.
-- Keep the comment **concise and actionable** - no more than a short paragraph plus a bulleted list if needed.
+- Start with a brief **"Thanks"** — one word, not a paragraph of praise.
+- Be **direct and actionable** — say what they need to do next.
+- Do **not** compliment the quality of the issue or call the work "excellent", "comprehensive", etc.
+- Keep the comment **concise** - no more than a short paragraph plus a bulleted list if needed.
 - **Include specific file paths** when referencing existing service references (e.g., `skills/azure-cost-calculator/references/services/compute/kubernetes-service.md`).
-- For **new service** issues, mention the prompt-driven contributor workflow described in `CONTRIBUTING.md`.
-- For **pricing inaccuracy** issues, suggest verifying rates with the `Get-AzurePricing` PowerShell script.
-- Use a friendly, welcoming tone appropriate for open-source contributors.
 - Do not repeat the issue body back to the author.

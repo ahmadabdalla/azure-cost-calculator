@@ -14,21 +14,23 @@ Your output must be grounded in real API data. Never guess filter values, meter 
 
 The orchestrator will provide you with:
 
-- The Azure service name (human-readable)
-- The `serviceName` value from the routing map
+- The Azure service display name (from the routing map or catalog — the text before the colon)
+- The category folder name
 
 ### 1.1 - Confirm service identity
 
 Read `skills/azure-cost-calculator/references/service-routing.md` to confirm:
 
-- The exact `serviceName` (case-sensitive API value)
+- The service's **display name** (text before the colon in the routing map)
 - The category folder
 - The suggested filename
 - Known aliases
 
+Note: The display name may differ from the API `serviceName` for split-product services (e.g., display name "Azure VMware Solution" uses API serviceName `Specialized Compute`). The API discovery phase will confirm the exact `serviceName`.
+
 Optionally, consult `docs/service-catalog.md` for supplementary context (status markers, additional alias notes, pending services), though the routing map remains the primary source for pricing investigations since you only work on services being implemented.
 
-If the provided serviceName does not match the routing map, report the discrepancy immediately.
+If the orchestrator-provided display name or category appears inconsistent with the routing map, or if later API discovery reveals an unexpected API serviceName, report the discrepancy immediately.
 
 ### 1.2 - Load context
 
@@ -43,16 +45,18 @@ Read these files to understand known gotchas and conventions:
 
 ### 2.1 - Primary discovery
 
-Run the discovery script with the exact `serviceName` from the routing map:
+Run the discovery script with the service's display name as a starting point:
 
+```powershell
+pwsh skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{display name}'
 ```
-pwsh skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{serviceName}'
-```
+
+If results are empty, the API `serviceName` may differ from the display name. Use the broader keyword search (2.2) to discover the correct API `serviceName`.
 
 If PowerShell is unavailable or fails, use the Bash equivalent:
 
-```
-bash skills/azure-cost-calculator/scripts/explore-azure-pricing.sh '{serviceName}'
+```bash
+bash skills/azure-cost-calculator/scripts/explore-azure-pricing.sh '{display name}'
 ```
 
 ### 2.2 - Broader keyword search
@@ -206,6 +210,7 @@ You MUST output your findings in the following structured format. Do not omit an
 ## Pricing Investigation Report: {Service Name}
 
 ### Service Identity
+
 - serviceName: {exact case-sensitive value from the API}
 - Category: {from routing map}
 - Suggested filename: {from routing map}
@@ -216,9 +221,10 @@ You MUST output your findings in the following structured format. Do not omit an
 **Row ordering:** Sort by `productName`, then `skuName`, then `meterName` (alphabetical, case-sensitive). This ensures both independent instances produce identical table layouts for comparison.
 
 | productName | skuName | meterName | unitOfMeasure | retailPrice | Notes |
-| --- | --- | --- | --- | --- | --- |
+| ----------- | ------- | --------- | ------------- | ----------- | ----- |
 
 ### Billing Model
+
 - Primary billing unit: {hourly / daily / per-GB / per-operation / etc.}
 - Has compute meters: {yes/no}
 - Has storage meters: {yes/no}
@@ -226,22 +232,27 @@ You MUST output your findings in the following structured format. Do not omit an
 - Billing dependencies: {list of external services needed, or "None"}
 
 ### Reserved Instance Availability
+
 - RI available: {yes/no}
 - RI skuName pattern: {if different from consumption, or "N/A"}
 
 ### Edge Cases & Traps Detected
+
 1. {description of each trap found, or "None detected"}
 
 ### Recommended Query Patterns
+
 - Default query: {ServiceName + ProductName + SkuName + MeterName}
 - Why: {what this returns and why it's the right default}
 - Alternative queries: {for different tiers/variants, or "None needed"}
 
 ### Cross-References
+
 - Related services with billing boundary notes: {list, or "None found"}
 - Pitfalls relevant to this service: {list, or "None found"}
 
 ### Documentation Cross-Check
+
 - Pricing page URL consulted: {URL}
 - Learn docs URL consulted: {URL}
 - Billing model agrees with API: {yes/no - details if no}

@@ -100,7 +100,7 @@ Before documenting traps, run these mandatory checks:
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
 6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
-7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability) to determine if the service supports private endpoints. If it does, add a note in the Notes section using the pattern: `- Supports private endpoints - see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is only available on certain tiers (e.g., Premium required). If the service has multiple PE sub-resources (e.g., Storage: blob, file, queue, table), list them as never-assume parameters.
+7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability). If supported, set `privateEndpoint: true` in YAML. Only add a Notes bullet when there are tier restrictions/caveats (e.g., Premium required) or multiple PE sub-resources to list as never-assume parameters.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
@@ -119,67 +119,76 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 
 ### Step 7 - Generate the service reference file
 
+These rules supplement the full template at `docs/TEMPLATE.md` (read in Step 3). When in doubt, follow the template.
+
 Create the file at: `skills/azure-cost-calculator/references/services/{category}/{filename}` (derived from the naming convention: strip "Azure"/"Microsoft"/"MS" prefix, kebab-case, `.md`).
 
-The file MUST follow these rules:
-- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map - do not add extras beyond those listed). Use inline `[...]` array format for aliases - never multi-line YAML sequences. Optionally include `billingNeeds` (services billed under a different serviceName) and `billingConsiderations` (pricing factors to ask about - only these values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`). Omit both fields if they don't apply.
-- **`primaryCost`** (required): One-line billing summary in YAML front matter, max 120 chars. Examples: `"Compute hours × 730 × instanceCount"`, `"Per-execution + GB-seconds with free grant deduction"`.
-- **Optional B+ YAML fields** - omit when the value matches the default:
-  - `apiServiceName`: Only when API serviceName ≠ display serviceName (e.g., VMware Solution uses `Specialized Compute`).
-  - `hasMeters`: Set `false` for API-unavailable services (default: `true`).
-  - `pricingRegion`: Set to `global`, `empty-region`, or `api-unavailable` when not regional (default: `regional`).
-  - `hasKnownRates`: Set `true` when file has a Known Rates table (default: `false`).
-  - `hasFreeGrant`: Set `true` when service has free tier or included units (default: `false`).
-  - `privateEndpoint`: Set `true` when service supports private endpoints (default: `false`). Tier restrictions stay in Notes.
-- **Do NOT include "reserved pricing is not available" notes** - absence of `Reserved Instances` in `billingConsiderations` signals this. Only document RI details when the service supports them.
-- **First query pattern must be the most common/default configuration and must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, and trap concise to ensure this.
+The file MUST follow these critical constraints:
+- **First query pattern must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, and trap concise to ensure this.
+- **Total file length**: under 100 lines of markdown content.
 - **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
 - **ServiceName in every query block**: Always include `ServiceName:` in each individual query pattern block. Do not rely on "All patterns below use..." preambles - batch mode parses individual blocks.
-- **Total file length**: under 100 lines of markdown content.
 - **Never hardcode prices** - always reference `retailPrice` from the API query results. Exception: Known Rates tables for sub-cent pricing where the script shows `$0.00` may include published USD rates.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
-- **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
-- **Demonstrate scaling parameters**: At least one query pattern should use `InstanceCount` (for multi-unit resources) or `Quantity` (for event/request-based meters), with a comment explaining the parameter.
-- **Section order**: YAML, Title, Trap(s), Query Pattern, Key Fields, Meter Names, Cost Formula, Notes, Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
-- **Meter Names table scope**: Include meters needed for a standard cost estimate: compute, storage, and backup. Omit niche variants (IO rates, zone-redundant storage, per-operation surcharges) unless they represent a major cost component (>10% of typical monthly spend). Mention omitted meter families in a one-line note below the table.
-- **Cost Formula variables**: Use `compute_retailPrice`, `storage_retailPrice`, `backup_retailPrice` as variable names when the formula has multiple components. Show one generic formula. Add a separate line per tier only if the formula structure (not just the price) changes between tiers.
+- **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each.
+- **Demonstrate scaling parameters**: At least one query pattern should use `InstanceCount` or `Quantity`, with a comment explaining the parameter.
 - **Do NOT** include "verified" dates anywhere.
 - **Do NOT** annotate headers with "(case-sensitive)".
-- **Capacity planning notes**: When a service has scalable units (e.g., throughput units, processing units, compute units, DTUs, RU/s), include a note documenting what 1 unit provides in terms of throughput, requests, or connections so agents can map user workloads to unit counts.
-- **Tier limitations**: When a service has multiple tiers, document key per-tier limitations that affect pricing (e.g., features unavailable in lower tiers, meters that don't exist for certain tiers, maximum retention or throughput caps).
-- **Trap format**: `> **Trap**: ...` or `> **Trap ({descriptive name})**: ...`
-- **Warning format**: `> **Warning**: ...` for API-unavailable or USD-only notices. Do not use emoji prefixes like ⚠.
-- **Note format**: `> **Note**: ...` for informational blockquotes that are not traps or warnings.
-- **Agent instruction format**: `> **Agent instruction**: ...` (optional, for AI-specific handling guidance)
-- **Placement**: Include capacity planning notes, tier limitations, and private endpoint support in the Notes section.
 
 **Pre-submission checklist** (all must be true):
 1. First declarative query pattern (most common/default config) appears within lines 1–45
 2. At least one query uses `InstanceCount` or `Quantity`
 3. Capacity planning note included if the service has scalable units
 4. Tier limitations documented if multiple tiers exist
-5. Private endpoint support documented in Notes (if the service supports PE)
+5. Private endpoint support set in YAML (`privateEndpoint: true`) when supported; Notes only for tier restrictions/caveats or multiple sub-resources
 
 All paths above are given from the repo root.
 ````
 
 ## After the AI Generates the File
 
-### 1. Validate locally
+### 1. Update routing files
+
+After the AI generates the service reference file:
+
+1. **Add to routing map** — add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section, using the format: `- Service Display Name: alias1, alias2`
+2. **Remove from catalog** — if the service was listed in `docs/service-catalog.md`, delete its entry. The catalog tracks only pending (unimplemented) services.
+
+### 2. Validate locally
 
 Run the validation script against the generated file:
 
 ```powershell
 tests/Validate-ServiceReference.ps1 `
     -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md `
-    -CheckAliasUniqueness
+    -CheckAliasUniqueness `
+    -CheckRoutingFileSync
 ```
 
 Fix any reported failures - the same checks run in CI.
 
-### 2. Submit your PR
+### 3. Submit your PR
 
 Push your branch and open a pull request. CI runs the validation automatically.
+
+## Fixing an Existing Service Reference
+
+When a service reference file has incorrect pricing data or missing information (issues labeled `pricing-inaccuracy`):
+
+1. **Locate the file** — find the existing reference in `skills/azure-cost-calculator/references/services/{category}/`.
+2. **Verify current API data** — run the exploration script to check current pricing:
+   ```powershell
+   skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{apiServiceName if present, otherwise serviceName from file YAML}'
+   ```
+3. **Compare and update** — compare API results against the file's query patterns, meter names, and key fields. Update any values that have changed.
+4. **Validate** — run the validation script:
+   ```powershell
+   tests/Validate-ServiceReference.ps1 `
+       -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md `
+       -CheckAliasUniqueness `
+       -CheckRoutingFileSync
+   ```
+5. **Submit your PR** — push your branch and open a pull request. No routing map changes are needed for fixes to existing files.
 
 ## Reviewing the Output
 

@@ -20,7 +20,7 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - Each service file must stay under 100 lines.
 - Run the validation script before submitting:
   ```
-  pwsh tests/Validate-ServiceReference.ps1
+  pwsh tests/Validate-ServiceReference.ps1 -Path <file> -CheckAliasUniqueness -CheckRoutingFileSync
   ```
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
 

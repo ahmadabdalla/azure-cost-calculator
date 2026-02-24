@@ -40,7 +40,7 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map cont
 
 ### Label allow-list
 
-`new-service` · `pricing-inaccuracy` · `service-update` · `needs-info` · `duplicate` · `good first issue` · `question` · `invalid`
+`new-service` · `pricing-inaccuracy` · `service-update` · `needs-info` · `duplicate` · `good first issue` · `question` · `invalid` · `enhancement`
 
 ---
 
@@ -95,12 +95,13 @@ gh run view <run-id> --log-failed
 
 ### Common failure modes
 
-| Symptom                         | Likely cause                                                            | Fix                                                      |
-| ------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------- |
-| Workflow never triggers         | Edited `.md` but forgot to compile, or changes not on default branch    | Run `gh aw compile`, merge to main                       |
-| `401 Unauthorized` in agent job | `COPILOT_GITHUB_TOKEN` expired or revoked                               | Rotate the PAT (see above)                               |
-| Agent applies wrong labels      | Classification prompt needs tuning                                      | Edit the Decision Matrix in `issue-triage.md`, recompile |
-| Agent leaves no comment         | Issue matched "spam / invalid" path, or `add-comment` limit already hit | Check the agent job logs for reasoning                   |
+| Symptom                                          | Likely cause                                                            | Fix                                                                                                                                                                           |
+| ------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workflow never triggers                          | Edited `.md` but forgot to compile, or changes not on default branch    | Run `gh aw compile`, merge to main                                                                                                                                            |
+| `401 Unauthorized` in agent job                  | `COPILOT_GITHUB_TOKEN` expired or revoked                               | Rotate the PAT (see above)                                                                                                                                                    |
+| Agent applies wrong labels                       | Classification prompt needs tuning                                      | Edit the Decision Matrix in `issue-triage.md`, recompile                                                                                                                      |
+| Agent leaves no comment                          | Issue matched "spam / invalid" path, or `add-comment` limit already hit | Check the agent job logs for reasoning                                                                                                                                        |
+| Confused `pricing-inaccuracy` / `service-update` | Both relate to existing references but have different scopes            | `pricing-inaccuracy` = wrong pricing data (service-reference template, "Fix existing service"); `service-update` = structural/non-pricing improvements (improvement template) |
 
 ### Job architecture
 

@@ -192,21 +192,23 @@ Based on exemplar analysis:
 
 ### Required Sections (in exact order)
 
+These sections are mandatory. Key Fields and Meter Names are order-enforced (must maintain relative position when present) but not required.
+
 1. **YAML front matter** - delimited by `---`, fields in schema-defined order
-2. **Title (H1)** - `# {Official Azure Service Name}` - must match `serviceName`
+2. **Title (H1)** - `# {Official Azure Service Name}` - must match the routing map display name (which equals `serviceName` unless `apiServiceName` is present)
 3. **Trap(s)** - based on service characteristics, these traps are needed:
    {list each trap with rationale, e.g.:}
    - Trap (meter-filter): {reason this trap applies}
    - Trap (sku-format): {reason}
 4. **Query Pattern** - declarative `Key: Value` format, no code fences, `ServiceName` filter in every query block
-5. **Key Fields** - table with columns: Parameter / How to determine / Example values
-6. **Cost Formula** - using variable names (`retailPrice`, `compute_retailPrice`, etc.), 730 hours/month for hourly, 30 days/month for daily
-7. **Notes** - must include:
+5. **Cost Formula** - using variable names (`retailPrice`, `compute_retailPrice`, etc.), 730 hours/month for hourly, 30 days/month for daily
+6. **Notes** - must include:
    {list each required note with rationale}
 
 ### Optional Sections (include if applicable)
 
 {For each, state whether it applies to this service and why:}
+- **Key Fields** - table with columns: Parameter / How to determine / Example values: {include/exclude - include when the service has multiple parameter combinations that need documentation}
 - **Meter Names** - table with columns: Meter / unitOfMeasure / Notes: {include/exclude - include if service has API meters with notable meter name patterns}
 - **Reserved Instance Pricing**: {include/exclude - rationale}
 - **Manual Calculation Example**: {include/exclude - rationale}

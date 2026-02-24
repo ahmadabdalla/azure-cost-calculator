@@ -88,80 +88,49 @@ primaryCost:
         YAML front matter → Title (H1) → Trap(s) → Query Pattern →
         Key Fields → Meter Names → Cost Formula → Notes →
         Optional sections
-      Required sections (Query Pattern, Key Fields, Meter Names, Cost Formula,
-      Notes) must maintain their relative order even if some are absent.
+      Required sections (Query Pattern, Cost Formula, Notes) must always be
+      present. Order-enforced sections (Query Pattern, Key Fields, Meter Names,
+      Cost Formula, Notes) must maintain their relative order when present.
       All optional sections must appear after Notes.
 
   1. TITLE: Use the official Azure service name as shown in the portal.
 
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
-     - serviceName: The exact case-sensitive value from the Retail Prices API
-     - category: The category folder this file lives in (compute, databases, etc.)
-     - aliases: Common names, abbreviations, and synonyms users might search for
-       Always use inline [...] format for aliases — never multi-line YAML sequences.
-     - billingNeeds (optional): Other Azure services billed under a different
-       serviceName when deploying this service. Values are service display names
-       (e.g., Virtual Machines, Managed Disks). Omit if the service is self-contained.
-     - billingConsiderations (optional): Pricing factors the agent should ask the
-       user about before calculating. Use only these values:
-       Reserved Instances, Spot Pricing, Azure Hybrid Benefit, M365 / Windows per-user licensing.
-       Omit entirely if none apply — absence means standard PAYG pricing only.
-     - apiServiceName (optional): Only when API serviceName differs from display
-       serviceName (e.g., VMware Solution uses "Specialized Compute"). Omit if identical.
-     - primaryCost (required): One-line billing summary, max 120 chars. This replaces
-       the old body **Primary cost**: line — it now lives in YAML front matter.
-       Examples: "Compute hours × 730 × instanceCount",
-       "Per-execution + GB-seconds with free grant deduction",
-       "Per-endpoint hours + data processed per-GB".
-     - hasMeters (optional, default: true): Set false for API-unavailable services
-       (e.g., Management Groups, Entra ID). Omit when true.
-     - pricingRegion (optional, default: regional): How region affects API queries.
-       Enum: regional | global | empty-region | api-unavailable. Omit when regional.
-     - hasKnownRates (optional, default: false): Set true when the file contains
-       a Known Rates table with manual pricing. Omit when false.
-     - hasFreeGrant (optional, default: false): Set true when the service has a
-       free tier or included units requiring grant deduction. Omit when false.
-     - privateEndpoint (optional, default: false): Set true when the service
-       supports private endpoints. Tier restrictions stay in Notes. Omit when false.
-     Optional fields whose value matches the default SHOULD be omitted — only
-     exceptions (non-default values) appear in the YAML block.
+     - serviceName: Display/logical service name matching the routing map entry. For most services this equals the API serviceName; for split-product services, use `apiServiceName` for the API value.
+     - category: Category folder (compute, databases, etc.)
+     - aliases: Inline [...] format — common names, abbreviations, synonyms
+     - billingNeeds (optional): Routing map display names of other services this depends on (e.g., Virtual Machines). Omit if self-contained.
+     - billingConsiderations (optional): Reserved Instances, Spot Pricing, Azure Hybrid Benefit,
+       M365 / Windows per-user licensing. Omit if standard PAYG only.
+     - apiServiceName (optional): Only when API serviceName differs from display name. Omit if identical.
+     - primaryCost (required): One-line billing summary, max 120 chars.
+     - hasMeters (optional, default: true): Set false for API-unavailable services. Omit when true.
+     - pricingRegion (optional, default: regional): regional | global | empty-region | api-unavailable. Omit when regional.
+     - hasKnownRates (optional, default: false): Set true when file has Known Rates table. Omit when false.
+     - hasFreeGrant (optional, default: false): Set true for free tier / included units. Omit when false.
+     - privateEndpoint (optional, default: false): Set true for PE support. Omit when false.
+     Elision rule: omit any field whose value matches its default.
 
-  2. TRAPS (optional but highly encouraged): Document any pricing API
-     gotchas discovered during verification. Each trap should include:
-       - What goes wrong (e.g., inflated totals, wrong meters returned)
-       - How to avoid it (specific filter values)
-       - Agent instruction if the AI needs special handling
-     Use a descriptive name in parentheses for traps that need identification,
-     e.g., **Trap (RI MonthlyCost)**: ...
+  2. TRAPS (optional but highly encouraged): Document pricing API gotchas.
+     Include: what goes wrong, how to avoid it, agent instruction if needed.
+     Use descriptive names: **Trap (RI MonthlyCost)**: ...
 
-  3. QUERY PATTERN: Provide declarative Key: Value parameter blocks (no code fences).
-     If the service requires direct API calls (e.g., Global-only pricing),
-     provide API URL and Fields in declarative format instead and explain why.
+  3. QUERY PATTERN: Declarative Key: Value blocks (no code fences).
+     For Global-only pricing, provide direct API calls in declarative format.
 
-  3b. SCALING: At least one query pattern must demonstrate scaling with
-      InstanceCount: N (for multi-unit resources) or Quantity: N (for
-      usage-based meters), with a brief comment explaining the parameter.
+  3b. SCALING: At least one query must demonstrate InstanceCount: N or Quantity: N.
 
-  4. KEY FIELDS: Document the exact API field values (case-sensitive).
-     Organize as a table with Parameter, How to determine, Example values.
+  4. KEY FIELDS: Table with Parameter, How to determine, Example values.
 
-  5. METER NAMES: Document exact meter names as a table. All meter/SKU/
-     product names are CASE-SENSITIVE — this is assumed throughout and does
-     not need to be stated per-section.
+  5. METER NAMES: Exact meter names as a table. Case-sensitivity is assumed.
 
-  6. COST FORMULA: Provide the mathematical formula(s) for monthly cost.
+  6. COST FORMULA: Mathematical formula(s) for monthly cost.
      Include free tier/grant deductions where applicable.
 
-  7. NOTES: Additional context — free tiers, SKU guidance, common
-     mistakes, links to pricing pages, private endpoint support, etc.
-     PRIVATE ENDPOINT SUPPORT: Every service reference must document whether
-     the service supports private endpoints. Use this pattern in Notes:
-       - Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
-     If PE requires a specific tier, add it in parentheses before the dash:
-       - Supports private endpoints (Premium required) — see `networking/private-link.md` ...
-     If the service has multiple PE sub-resources, list them as never-assume:
-       - Supports private endpoints — see ... PE sub-resources (never-assume): `blob`, `file`, ...
-     If the service does NOT support PE, omit the line (no negative statement needed).
+  7. NOTES: Free tiers, SKU guidance, common mistakes, pricing links, etc.
+     PRIVATE ENDPOINT SUPPORT: Set `privateEndpoint: true` in YAML when supported.
+     Only add a Notes bullet for tier restrictions/caveats or multiple PE sub-resources.
+     If no PE support, omit both the YAML field and the note.
 
   8. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
@@ -173,16 +142,11 @@ primaryCost:
      - Sub-product queries (for services with multiple billing components)
 
   STYLE RULES:
-  - Do NOT include "verified" dates anywhere (section headers, traps, notes,
-    tables). All content is assumed current as of the last commit.
-  - Do NOT annotate section headers with "(case-sensitive)" or similar —
-    case-sensitivity of API values is a universal rule stated in shared.md.
-  - Keep section headers clean: ## Meter Names, ## Product Names, etc.
-  - Trap format: > **Trap**: ... or > **Trap ({descriptive name})**: ...
-  - Agent instruction format: > **Agent instruction**: ...
-  - Warning format: > **Warning**: ... (for API-unavailable or USD-only notices)
-  - Note format: > **Note**: ... (for informational blockquotes)
-  - Do not use emoji prefixes (⚠) in blockquotes
+  - No "verified" dates anywhere. Content is current as of last commit.
+  - No "(case-sensitive)" annotations on headers — universal rule in shared.md.
+  - Clean headers: ## Meter Names, ## Product Names, etc.
+  - Blockquote formats: > **Trap**: / > **Trap ({name})**: / > **Agent instruction**: /
+    > **Warning**: / > **Note**: — no emoji prefixes
 
   DELETE THIS COMMENT BLOCK BEFORE PUBLISHING.
 -->
@@ -207,26 +171,14 @@ MeterName: {meterName}
 <!--
   QUERY PATTERN GUIDANCE:
   - Use declarative Key: Value pairs — no code fences, no script names
-  - Always include ServiceName at minimum
-  - Repeat ServiceName: in every query block — do not omit it with an
-    "All patterns below use..." preamble. Batch mode parses blocks individually.
-  - Add ProductName, SkuName, MeterName as needed to get precise results
-  - Show the recommended (most filtered) query first
-  - Add variants for different tiers, OS types, or SKUs
-  - If the script doesn't work for this service (e.g., Global-only pricing),
-    provide direct API calls in declarative format:
-
+  - Always include ServiceName at minimum; repeat it in every query block
+  - Add ProductName, SkuName, MeterName as needed for precise results
+  - Show the most filtered query first; add variants for tiers, OS, SKUs
+  - For Global-only pricing, use direct API calls in declarative format:
     API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq '{serviceName}' and ...
     Fields: meterName, unitPrice, unitOfMeasure
-
-  - Use PriceType: Reservation for reserved instance queries
-  - Use Quantity: N for meters priced per-unit (e.g., per 100 RU/s)
-  - Use InstanceCount: N for multiple identical resources
-
-  Available declarative keys (translated to runtime flags automatically):
-    ServiceName, ProductName, SkuName, MeterName, PriceType,
-    Quantity, InstanceCount, Region, ArmSkuName, Currency,
-    HoursPerMonth, OutputFormat
+  - Use PriceType: Reservation for RI queries
+  - Use Quantity: N for per-unit meters, InstanceCount: N for multiple resources
 -->
 
 ## Key Fields
@@ -263,24 +215,19 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 
 <!--
   COST FORMULA GUIDANCE:
-  - Use 730 hours/month for hourly-billed services
-  - Show free tier/grant deductions with max(0, ...) where applicable
-  - For tiered pricing, show the tier calculation
-  - For multi-component services, show each component then the total
-  - For sub-cent pricing where the script shows $0.00, provide the
-    known published rates and a manual calculation example
+  - Use 730 hours/month for hourly, 30 days/month for daily billing
+  - Show free tier deductions with max(0, ...) where applicable
+  - For multi-component services, show each component then total
+  - For sub-cent pricing ($0.00 in script), provide known rates + manual calc
 
   Common patterns:
     Hourly:        Monthly = retailPrice × 730 × instanceCount
     Per-GB:        Monthly = retailPrice × sizeInGB
     Per-operation:  Monthly = (operations / unitSize) × retailPrice
-    Tiered:        Monthly = Σ(retailPrice_tier × units_in_tier)
     Composite:     Monthly = Compute + Storage + Operations
     Free grant:    Billable = max(0, total - freeGrant)
 
-  Variable naming convention:
-    Single component:   retailPrice
-    Multi-component:    compute_retailPrice, storage_retailPrice, backup_retailPrice
+  Variables: retailPrice (single), compute_retailPrice / storage_retailPrice (multi)
 -->
 
 ## Notes
@@ -295,71 +242,54 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 - {Private endpoint support — state whether the service supports PE and reference `networking/private-link.md` for PE and DNS zone pricing. Include tier requirements if PE is only available on certain tiers. If the service has multiple PE sub-resources, list them as never-assume parameters.}
 
 <!--
-  OPTIONAL SECTIONS — add any of the below as needed for the service.
-  Delete sections that don't apply.
+  OPTIONAL SECTIONS — add any of the below as needed. Delete sections that don't apply.
 -->
 
 <!-- === RESERVED INSTANCE PRICING === -->
 <!--
 ## Reserved Instance Pricing
-
 ServiceName: {serviceName}
 MeterName: {meterName}
 PriceType: Reservation
-
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wildly wrong for
-> Reservation items — it multiplies the total term price by 730 hours.
-> Always manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
-> Both terms are returned in a single query — select the desired term from results.
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it multiplies
+> the total term price by 730 hours. Always calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
 -->
-
 <!-- === MANUAL CALCULATION EXAMPLE === -->
 <!--
 ## Manual Calculation Example
-
-For {describe scenario, e.g., "2M executions/month at 512 MB memory, 1s average duration"}:
-
+For {scenario, e.g., "2M executions/month at 512 MB, 1s duration"}:
 ```
-{Step-by-step calculation with actual numbers}
+{Step-by-step calculation}
 Total = ${result} USD/month
 ```
 -->
-
 <!-- === KNOWN RATES (for sub-cent pricing) === -->
 <!--
 ## Known Rates
-
 | Meter | Unit | Published Rate (USD) | Free Grant |
 | ----- | ---- | -------------------- | ---------- |
 | `{meter}` | {unit} | ${rate} | {grant or N/A} |
-
 > These rates are from the [Azure pricing page]({url}). The API returns them
 > but at precision below what the script rounds to — the script shows `$0.00`.
-> For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
 -->
-
 <!-- === COMMON SKUS TABLE === -->
 <!--
 ## Common SKUs
-
 | SKU | vCPUs | RAM (GB) | Tier/Notes |
 | --- | ----- | -------- | ---------- |
 | `{sku}` | {n} | {n} | {tier or use case} |
 -->
-
 <!-- === PRODUCT NAMES TABLE === -->
 <!--
 ## Product Names
-
 | Configuration | productName |
 | ------------- | ----------- |
 | {config description} | `{exact productName}` |
 -->
-
 <!-- === TIER / SKU SELECTION GUIDE === -->
 <!--
 ## SKU Selection Guide
-
 | Workload Type | SKU | Pricing Model | Notes |
 | ------------- | --- | ------------- | ----- |
 | {workload description} | `{sku}` | {model} | {notes} |
