@@ -4,11 +4,11 @@
 function Test-BillingNeedsReference {
     <#
     .SYNOPSIS
-        Checks that every billingNeeds entry references a valid serviceName.
+        Checks that every billingNeeds entry references a valid routing map service name.
     .DESCRIPTION
-        Scans all markdown files under the given root path, builds a set
-        of known serviceName values, then verifies every billingNeeds
-        entry in every file matches an actual serviceName in the repo.
+        Reads the service-routing.md file to build a set of known routing
+        map service names (s: values), then verifies every billingNeeds
+        entry in every service file matches an actual routing map name.
         Returns one or more check results.
     .PARAMETER RootPath
         Root directory of the services folder to scan for billingNeeds references.
@@ -27,16 +27,22 @@ function Test-BillingNeedsReference {
     $checks = [System.Collections.Generic.List[object]]::new()
     $RootPath = (Resolve-Path -Path $RootPath).Path
     $files = Get-ChildItem -Path $RootPath -Filter '*.md' -Recurse
-    # First pass: collect all known serviceName values (case-insensitive)
-    $serviceNames = @{}
-    foreach ($file in $files) {
-        $fileLines = @(Get-Content -Path $file.FullName -Encoding UTF8)
-        $fm = Get-FrontMatter -Lines $fileLines
-        if (-not $fm.Found -or -not $fm.Fields.ContainsKey('serviceName')) { continue }
-        $name = $fm.Fields['serviceName'].ToString().Trim()
-        $name = $name -replace '^[''""]', '' -replace '[''""]$', ''
-        if ($name) {
-            $serviceNames[$name.ToLowerInvariant()] = $name
+    # First pass: collect all known routing map service names (case-insensitive)
+    $routingMapPath = Join-Path (Split-Path $RootPath -Parent) 'service-routing.md'
+    if (-not (Test-Path $routingMapPath)) {
+        $checks.Add((New-ValidationCheck -Name 'billing_needs_reference' -Pass $false `
+                    -PassMessage 'n/a' -FailMessage "Routing map not found at '$routingMapPath'"))
+        , $checks
+        return
+    }
+    $routingNames = @{}
+    $routingLines = @(Get-Content -Path $routingMapPath -Encoding UTF8)
+    foreach ($line in $routingLines) {
+        if ($line -match "^\s*-\s*s:\s*[`"']?([^`"']+)[`"']?\s*$") {
+            $name = $Matches[1].Trim()
+            if ($name) {
+                $routingNames[$name.ToLowerInvariant()] = $name
+            }
         }
     }
     # Second pass: validate billingNeeds references
@@ -65,16 +71,16 @@ function Test-BillingNeedsReference {
         foreach ($need in $needs) {
             $need = $need -replace '^[''""]', '' -replace '[''""]$', ''
             $key = $need.ToLowerInvariant()
-            if (-not $serviceNames.ContainsKey($key)) {
+            if (-not $routingNames.ContainsKey($key)) {
                 $checks.Add((New-ValidationCheck -Name 'billing_needs_reference' -Pass $false `
                             -PassMessage 'n/a' `
-                            -FailMessage "billingNeeds value '$need' in '$relativePath' does not match any serviceName in the repo"))
+                            -FailMessage "billingNeeds value '$need' in '$relativePath' does not match any routing map service name"))
             }
         }
     }
     if ($checks.Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'billing_needs_reference' -Pass $true `
-                    -PassMessage 'All billingNeeds entries reference valid serviceNames' `
+                    -PassMessage 'All billingNeeds entries reference valid routing map service names' `
                     -FailMessage 'n/a'))
     }
     , $checks

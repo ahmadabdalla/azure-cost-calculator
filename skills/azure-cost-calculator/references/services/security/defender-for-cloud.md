@@ -64,7 +64,7 @@ Region: Global
 | skuName    | meterName       | unitOfMeasure | Notes                       |
 | ---------- | --------------- | ------------- | --------------------------- |
 | `Standard` | `Standard Node` | `1/Hour`      | Query API for current price |
-| `Trial`    | `Trial Node`    | `1/Hour`      | Free tier ($0.00)           |
+| `Trial`    | `Trial Node`    | `1/Hour`      | Free tier (no charge)       |
 
 **Pricing**: Query API with Global region for current per-resource/month rate. Foundational CSPM is free (not estimated).
 

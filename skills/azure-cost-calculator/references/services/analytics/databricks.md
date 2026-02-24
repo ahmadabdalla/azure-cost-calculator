@@ -69,6 +69,6 @@ Total Monthly   = DBU Monthly + VM Monthly
 - **Two tiers**: Standard (data engineering) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher
 - **Photon variants**: Photon-accelerated SKUs (e.g., `Premium All-Purpose Photon`) have the same DBU rate but process data faster, reducing total DBU-hours consumed
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
-- **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return $0.00 — ignore these for cost estimation
+- **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return zero cost — ignore these for cost estimation
 - **Capacity per DBU**: 1 DBU maps to a fractional VM — actual throughput depends on node VM size, workload type, and Photon enablement; Databricks auto-scales clusters within configured min/max node bounds
 - **PE sub-resources** (never-assume): `databricks_ui_api`, `browser_authentication` — Premium required

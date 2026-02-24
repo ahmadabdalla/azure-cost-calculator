@@ -2,6 +2,7 @@
 serviceName: Application Gateway
 category: networking
 aliases: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
+billingNeeds: [IP Addresses]
 primaryCost: "Gateway hours (fixed cost) + capacity units processed"
 privateEndpoint: true
 ---

@@ -59,7 +59,7 @@ Quantity: 10
 | `Standard Message`     | `Standard` | `1M`          | Per 1M messages overage        |
 | `Premium Unit`         | `Premium`  | `1/Day`       | Per-unit daily capacity charge |
 | `Premium Message`      | `Premium`  | `1M`          | Per 1M messages overage        |
-| `Standard Unit - Free` | `Standard` | `1/Day`       | Free tier — $0.00              |
+| `Standard Unit - Free` | `Standard` | `1/Day`       | Free tier — zero cost          |
 
 ## Cost Formula
 

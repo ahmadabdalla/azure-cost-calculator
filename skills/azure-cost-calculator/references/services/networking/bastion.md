@@ -54,7 +54,7 @@ ServiceName: Azure Bastion
 SkuName: {Tier}
 MeterName: {Tier} Data Transfer Out
 
-> **Agent instruction**: Data transfer uses tiered pricing (first 5 GB free, then tiered rates). This query returns multiple rows with `TierMinUnits`; ignore any `summary.totalMonthlyCost` from tooling and manually compute `Σ(tierRate × GB_in_tier)` with the first 5 GB at $0. `ArmSkuName` is not required for data transfer queries — `SkuName` alone is sufficient for all tiers.
+> **Agent instruction**: Data transfer uses tiered pricing (first 5 GB free, then tiered rates). This query returns multiple rows with `TierMinUnits`; ignore any `summary.totalMonthlyCost` from tooling and manually compute `Σ(tierRate × GB_in_tier)` with the first 5 GB at zero cost. `ArmSkuName` is not required for data transfer queries — `SkuName` alone is sufficient for all tiers.
 
 ## Key Fields
 

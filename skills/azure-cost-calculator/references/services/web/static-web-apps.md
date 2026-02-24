@@ -71,7 +71,7 @@ Total       = App + Bandwidth + AFD Add-on
 
 ## Notes
 
-- **Free tier**: Includes 2 custom domains, 100 GB bandwidth/month, built-in auth, and serverless APIs. No meters in the API — cost is $0.
+- **Free tier**: Includes 2 custom domains, 100 GB bandwidth/month, built-in auth, and serverless APIs. No meters in the API — zero cost.
 - **Standard tier**: Query API with eastus2 for current per-app monthly fee. Adds custom auth, SLA, and more APIs.
 - **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB — the API returns two bandwidth rows per region (free tier and overage tier).
 - **Azure Front Door add-on**: Optional. Provides enterprise-grade edge with WAF, custom rules, and bot protection. Query API for current hourly rate.

@@ -2,7 +2,6 @@
 serviceName: Log Analytics
 category: monitoring
 aliases: [OMS, LA, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite]
-billingNeeds: [Azure Monitor]
 primaryCost: "Data ingestion per-GB + retention beyond free period (90 days Sentinel / 31 days standard)"
 hasFreeGrant: true
 privateEndpoint: true
@@ -30,7 +29,7 @@ MeterName: Analytics Logs Data Retention
 
 ### Commitment tier (100+ GB/day) — uses ServiceName: Azure Monitor
 
-ServiceName: Azure Monitor
+ServiceName: Azure Monitor <!-- cross-service -->
 SkuName: 100 GB Commitment Tier
 MeterName: 100 GB Commitment Tier Capacity Reservation
 

@@ -33,8 +33,8 @@ function Test-FileNaming {
     $checks = [System.Collections.Generic.List[object]]::new()
 
     $hasServiceName = $FrontMatter.Found -and
-        $FrontMatter.Fields.ContainsKey('serviceName') -and
-        -not [string]::IsNullOrWhiteSpace($FrontMatter.Fields['serviceName'])
+    $FrontMatter.Fields.ContainsKey('serviceName') -and
+    -not [string]::IsNullOrWhiteSpace($FrontMatter.Fields['serviceName'])
 
     if (-not $hasServiceName) {
         $checks.Add((New-ValidationCheck -Name 'file_naming' -Pass $true `
@@ -52,7 +52,7 @@ function Test-FileNaming {
             'Azure Front Door Service'                       = 'front-door.md'
             'Azure Managed Instance for Apache Cassandra'    = 'cassandra-managed-instance.md'
             'Azure Spring Cloud'                             = 'spring-apps.md'
-            'Advanced Container Networking Services'          = 'advanced-container-networking.md'
+            'Advanced Container Networking Services'         = 'advanced-container-networking.md'
             'Change Tracking and Inventory'                  = 'change-tracking.md'
             'Dynamics 365 for Customer Insights'             = 'dynamics-365-customer-insights.md'
             'ExpressRoute'                                   = 'express-route.md'
@@ -64,7 +64,18 @@ function Test-FileNaming {
             'not in API'                                     = 'ddos-protection.md'
         }
 
-        if ($exceptions.ContainsKey($serviceName)) {
+        # Split-file services: multiple files share a serviceName — accept the actual filename
+        $splitFileOverrides = @(
+            'private-dns.md',       # serviceName: Azure DNS (split with dns.md)
+            'private-link.md',      # serviceName: Virtual Network (split with virtual-network.md)
+            'data-lake-storage.md', # serviceName: Storage (split with storage.md, managed-disks.md)
+            'managed-disks.md'      # serviceName: Storage (split with storage.md, data-lake-storage.md)
+        )
+
+        if ($actualFile -in $splitFileOverrides) {
+            $expectedFile = $actualFile
+        }
+        elseif ($exceptions.ContainsKey($serviceName)) {
             $expectedFile = $exceptions[$serviceName]
         }
         else {
@@ -76,28 +87,34 @@ function Test-FileNaming {
             $name = $name -replace '\s+v\d+$', ''
 
             $brandedWords = @{
-                'SignalR'     = 'signalr'
-                'DevOps'      = 'devops'
-                'OpenAI'      = 'openai'
-                'BizTalk'     = 'biztalk'
-                'PlayFab'     = 'playfab'
-                'PubSub'      = 'pubsub'
-                'DevTest'     = 'devtest'
-                'NetApp'      = 'netapp'
-                'StorSimple'  = 'storsimple'
-                'HBase'       = 'hbase'
+                'SignalR'    = 'signalr'
+                'DevOps'     = 'devops'
+                'OpenAI'     = 'openai'
+                'BizTalk'    = 'biztalk'
+                'PlayFab'    = 'playfab'
+                'PubSub'     = 'pubsub'
+                'DevTest'    = 'devtest'
+                'NetApp'     = 'netapp'
+                'StorSimple' = 'storsimple'
+                'HBase'      = 'hbase'
             }
             foreach ($brand in $brandedWords.Keys) {
                 $name = $name -replace [regex]::Escape($brand), $brandedWords[$brand]
             }
+            $name = $name -replace '[^\w\s-]', ''
 
             $expectedFile = (($name -split '\s+' | ForEach-Object { $_.ToLower() }) -join '-') + '.md'
         }
 
+        # Case-sensitive comparison enforces lowercase kebab-case filenames
         $pass = $actualFile -ceq $expectedFile
+        $failMsg = "Filename '$actualFile' does not match expected '$expectedFile' (from serviceName '$serviceName')"
+        if (-not $pass) {
+            $failMsg += ". If multiple files share this serviceName, add the filename to `$splitFileOverrides in Test-FileNaming.ps1"
+        }
         $checks.Add((New-ValidationCheck -Name 'file_naming' -Pass $pass `
                     -PassMessage "Filename '$actualFile' matches expected '$expectedFile'" `
-                    -FailMessage "Filename '$actualFile' does not match expected '$expectedFile' (from serviceName '$serviceName')"))
+                    -FailMessage $failMsg))
     }
 
     , $checks

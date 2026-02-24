@@ -3,6 +3,7 @@ serviceName: Sentinel
 category: security
 apiServiceFamily: "Management and Governance"
 aliases: [SIEM, SOAR, Azure Sentinel]
+billingNeeds: [Log Analytics]
 primaryCost: "Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, add-on fees."
 ---
 
