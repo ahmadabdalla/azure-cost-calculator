@@ -30,7 +30,7 @@ Note: The display name may differ from the API `serviceName` for split-product s
 
 Optionally, consult `docs/service-catalog.md` for supplementary context (status markers, additional alias notes, pending services), though the routing map remains the primary source for pricing investigations since you only work on services being implemented.
 
-If the provided serviceName does not match the routing map, report the discrepancy immediately.
+If the orchestrator-provided display name or category appears inconsistent with the routing map, or if later API discovery reveals an unexpected API serviceName, report the discrepancy immediately.
 
 ### 1.2 - Load context
 
@@ -47,7 +47,7 @@ Read these files to understand known gotchas and conventions:
 
 Run the discovery script with the service's display name as a starting point:
 
-```
+```powershell
 pwsh skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{display name}'
 ```
 
@@ -55,8 +55,8 @@ If results are empty, the API `serviceName` may differ from the display name. Us
 
 If PowerShell is unavailable or fails, use the Bash equivalent:
 
-```
-bash skills/azure-cost-calculator/scripts/explore-azure-pricing.sh '{serviceName}'
+```bash
+bash skills/azure-cost-calculator/scripts/explore-azure-pricing.sh '{display name}'
 ```
 
 ### 2.2 - Broader keyword search

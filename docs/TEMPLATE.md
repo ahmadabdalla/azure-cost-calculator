@@ -96,10 +96,10 @@ primaryCost:
   1. TITLE: Use the official Azure service name as shown in the portal.
 
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
-     - serviceName: Exact case-sensitive value from the Retail Prices API
+     - serviceName: Display/logical service name matching the routing map entry. For most services this equals the API serviceName; for split-product services, use `apiServiceName` for the API value.
      - category: Category folder (compute, databases, etc.)
      - aliases: Inline [...] format — common names, abbreviations, synonyms
-     - billingNeeds (optional): Other serviceName values needed (e.g., Virtual Machines). Omit if self-contained.
+     - billingNeeds (optional): Routing map display names of other services this depends on (e.g., Virtual Machines). Omit if self-contained.
      - billingConsiderations (optional): Reserved Instances, Spot Pricing, Azure Hybrid Benefit,
        M365 / Windows per-user licensing. Omit if standard PAYG only.
      - apiServiceName (optional): Only when API serviceName differs from display name. Omit if identical.

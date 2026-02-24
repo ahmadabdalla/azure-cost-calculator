@@ -195,7 +195,7 @@ Based on exemplar analysis:
 These sections are mandatory. Key Fields and Meter Names are order-enforced (must maintain relative position when present) but not required.
 
 1. **YAML front matter** - delimited by `---`, fields in schema-defined order
-2. **Title (H1)** - `# {Official Azure Service Name}` - must match `serviceName`
+2. **Title (H1)** - `# {Official Azure Service Name}` - must match the routing map display name (which equals `serviceName` unless `apiServiceName` is present)
 3. **Trap(s)** - based on service characteristics, these traps are needed:
    {list each trap with rationale, e.g.:}
    - Trap (meter-filter): {reason this trap applies}

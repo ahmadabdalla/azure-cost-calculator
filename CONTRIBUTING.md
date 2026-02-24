@@ -100,7 +100,7 @@ Before documenting traps, run these mandatory checks:
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
 6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
-7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability) to determine if the service supports private endpoints. If it does, add a note in the Notes section using the pattern: `- Supports private endpoints - see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is only available on certain tiers (e.g., Premium required). If the service has multiple PE sub-resources (e.g., Storage: blob, file, queue, table), list them as never-assume parameters.
+7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability). If supported, set `privateEndpoint: true` in YAML. Only add a Notes bullet when there are tier restrictions/caveats (e.g., Premium required) or multiple PE sub-resources to list as never-assume parameters.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
@@ -140,7 +140,7 @@ The file MUST follow these critical constraints:
 2. At least one query uses `InstanceCount` or `Quantity`
 3. Capacity planning note included if the service has scalable units
 4. Tier limitations documented if multiple tiers exist
-5. Private endpoint support documented in Notes (if the service supports PE)
+5. Private endpoint support set in YAML (`privateEndpoint: true`) when supported; Notes only for tier restrictions/caveats or multiple sub-resources
 
 All paths above are given from the repo root.
 ````

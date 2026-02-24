@@ -85,7 +85,7 @@ Items with majority or unanimous agreement form your **high-confidence data set*
 
 ### 2.2 - Identify disagreements
 
-Flag any items where no majority exists (all three reports differ) or where one report contradicts the other two on a material finding:
+Flag any items where **no majority exists** — i.e., all three reports reach different conclusions:
 
 - Meters found by one investigator but not the others
 - Different billing model interpretations
