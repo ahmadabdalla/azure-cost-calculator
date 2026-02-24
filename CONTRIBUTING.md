@@ -178,7 +178,7 @@ When a service reference file has incorrect pricing data or missing information 
 1. **Locate the file** — find the existing reference in `skills/azure-cost-calculator/references/services/{category}/`.
 2. **Verify current API data** — run the exploration script to check current pricing:
    ```powershell
-   skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{serviceName from file YAML}'
+   skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{apiServiceName if present, otherwise serviceName from file YAML}'
    ```
 3. **Compare and update** — compare API results against the file's query patterns, meter names, and key fields. Update any values that have changed.
 4. **Validate** — run the validation script:

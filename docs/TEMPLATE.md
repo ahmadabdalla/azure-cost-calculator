@@ -128,10 +128,9 @@ primaryCost:
      Include free tier/grant deductions where applicable.
 
   7. NOTES: Free tiers, SKU guidance, common mistakes, pricing links, etc.
-     PRIVATE ENDPOINT SUPPORT: Document whether service supports PE:
-       - Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
-     Add tier requirements in parentheses if needed. List PE sub-resources as never-assume.
-     If no PE support, omit the line.
+     PRIVATE ENDPOINT SUPPORT: Set `privateEndpoint: true` in YAML when supported.
+     Only add a Notes bullet for tier restrictions/caveats or multiple PE sub-resources.
+     If no PE support, omit both the YAML field and the note.
 
   8. OPTIONAL SECTIONS (add as needed, after Notes):
      - Reserved Instance Pricing (with RI-specific traps)
