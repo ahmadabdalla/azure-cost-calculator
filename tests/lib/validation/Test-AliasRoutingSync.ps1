@@ -8,7 +8,7 @@ function Get-RoutingMapEntry {
     .SYNOPSIS
         Parses routing map entries from service-routing.md.
     .DESCRIPTION
-        Extracts s: (service) and a: (aliases) pairs from YAML code blocks
+        Extracts service and alias entries from colon-delimited lines
         in the routing map markdown file.
     .PARAMETER RoutingMapPath
         Path to the service-routing.md file.
@@ -25,27 +25,31 @@ function Get-RoutingMapEntry {
 
     $lines = @(Get-Content -Path $RoutingMapPath -Encoding UTF8)
     $entries = [System.Collections.Generic.List[hashtable]]::new()
-    $inYaml = $false
-    $currentService = $null
+    $inSection = $false
 
     foreach ($line in $lines) {
-        if ($line -match '^```yaml') { $inYaml = $true; continue }
-        if ($line -match '^```' -and $inYaml) { $inYaml = $false; continue }
-        if (-not $inYaml) { continue }
+        if ([string]::IsNullOrWhiteSpace($line)) { continue }
+        if ($line -match '^\s*#') {
+            if ($line -match '^##\s+.+\(services/[^)]+\)') { $inSection = $true }
+            continue
+        }
+        if (-not $inSection) { continue }
+        if ($line -notmatch '^\s*-\s+') { continue }
 
-        if ($line -match '^\s*-\s+s:\s*"([^"]+)"') {
-            $currentService = $Matches[1]
+        $entryLine = $line -replace '^\s*-\s+', ''
+        $colonIndex = $entryLine.IndexOf(':')
+        if ($colonIndex -lt 0) { continue }
+        $serviceName = $entryLine.Substring(0, $colonIndex).Trim()
+        $aliasString = $entryLine.Substring($colonIndex + 1).Trim()
+
+        if (-not $serviceName) { continue }
+
+        $aliases = @()
+        foreach ($a in ($aliasString -split ',')) {
+            $trimmed = $a.Trim()
+            if ($trimmed) { $aliases += $trimmed }
         }
-        elseif ($line -match '^\s+a:\s*\[(.+)\]' -and $null -ne $currentService) {
-            $rawAliases = $Matches[1]
-            $aliases = @()
-            foreach ($a in ($rawAliases -split ',')) {
-                $trimmed = $a.Trim().Trim('"', "'")
-                if ($trimmed) { $aliases += $trimmed }
-            }
-            $entries.Add(@{ Service = $currentService; Aliases = $aliases })
-            $currentService = $null
-        }
+        $entries.Add(@{ Service = $serviceName; Aliases = $aliases })
     }
 
     , $entries
@@ -90,7 +94,7 @@ function Test-AliasRoutingSync {
 
     if (-not (Test-Path $RoutingMapPath)) {
         $checks.Add((New-ValidationCheck -Name 'alias_routing_sync' -Pass $false `
-            -PassMessage 'n/a' -FailMessage "Routing map not found: $RoutingMapPath"))
+                    -PassMessage 'n/a' -FailMessage "Routing map not found: $RoutingMapPath"))
     }
     else {
         $routingEntries = Get-RoutingMapEntry -RoutingMapPath $RoutingMapPath
@@ -151,8 +155,8 @@ function Test-AliasRoutingSync {
                 $info = $fileAliasSet[$key]
                 $fileList = $info.Files -join ', '
                 $checks.Add((New-ValidationCheck -Name 'alias_routing_sync' -Pass $false `
-                    -PassMessage 'n/a' `
-                    -FailMessage "File alias '$($info.Alias)' (in $fileList) not found in routing map"))
+                            -PassMessage 'n/a' `
+                            -FailMessage "File alias '$($info.Alias)' (in $fileList) not found in routing map"))
             }
         }
 
@@ -170,8 +174,8 @@ function Test-AliasRoutingSync {
                 $key = $alias.ToLowerInvariant()
                 if (-not $fileAliasSet.ContainsKey($key)) {
                     $checks.Add((New-ValidationCheck -Name 'alias_routing_sync' -Pass $false `
-                        -PassMessage 'n/a' `
-                        -FailMessage "Routing alias '$alias' (entry: $($entry.Service)) not found in any file"))
+                                -PassMessage 'n/a' `
+                                -FailMessage "Routing alias '$alias' (entry: $($entry.Service)) not found in any file"))
                 }
             }
         }
@@ -179,8 +183,8 @@ function Test-AliasRoutingSync {
 
     if ($checks.Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'alias_routing_sync' -Pass $true `
-            -PassMessage 'All aliases are in sync between routing map and service files' `
-            -FailMessage 'n/a'))
+                    -PassMessage 'All aliases are in sync between routing map and service files' `
+                    -FailMessage 'n/a'))
     }
 
     , $checks
