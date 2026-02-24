@@ -27,9 +27,10 @@ Follow these steps exactly:
 
 ### Step 1 - Check eligibility
 
-1. Read the file `skills/azure-cost-calculator/references/service-routing.md`.
-2. Confirm that {SERVICE_NAME} appears in the routing map. Note the exact API `serviceName`, the category folder, and the aliases listed. Derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`.
-3. If {SERVICE_NAME} is not in the routing map, stop and tell the user to open an issue first.
+1. Read `docs/service-catalog.md` (pending services) and `skills/azure-cost-calculator/references/service-routing.md` (implemented services) to find {SERVICE_NAME}.
+2. If found in the catalog, the service needs a new reference file. Note the exact API `serviceName`, category folder, and aliases from the catalog entry.
+3. If found in the routing map, a reference file already exists. Derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix, kebab-case, `.md`.
+4. If not found in either file, stop and tell the user to open an issue first.
 
 ### Step 2 - Check for duplicates
 
@@ -95,11 +96,11 @@ Before documenting traps, run these mandatory checks:
 
 1. **Broad query test**: Run a query with only `-ServiceName` (no `-SkuName`, no `-MeterName`). If `totalMonthlyCost` looks inflated, document which extra meters are being summed and what filters are needed.
 2. **Zone-redundancy / geo-replication meters**: Query for zone-redundant or geo-replication meters (e.g., append "Zone Redundancy" to meter names). Document any surcharge meters that exist.
-3. **RI availability**: Run one query with `-PriceType Reservation`. If it returns results, add `Reserved Instances` to the `billingConsiderations` YAML field. If `skuName` differs from consumption queries (e.g., `vCore` vs `8 vCore`), document the difference. If zero results, do not add Reserved Instances — absence signals RI is unavailable.
+3. **RI availability**: Run one query with `-PriceType Reservation`. If it returns results, add `Reserved Instances` to the `billingConsiderations` YAML field. If `skuName` differs from consumption queries (e.g., `vCore` vs `8 vCore`), document the difference. If zero results, do not add Reserved Instances - absence signals RI is unavailable.
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
 6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`.
-7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability) to determine if the service supports private endpoints. If it does, add a note in the Notes section using the pattern: `- Supports private endpoints — see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is only available on certain tiers (e.g., Premium required). If the service has multiple PE sub-resources (e.g., Storage: blob, file, queue, table), list them as never-assume parameters.
+7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability) to determine if the service supports private endpoints. If it does, add a note in the Notes section using the pattern: `- Supports private endpoints - see networking/private-link.md for PE and DNS zone pricing`. Include tier requirements in parentheses if PE is only available on certain tiers (e.g., Premium required). If the service has multiple PE sub-resources (e.g., Storage: blob, file, queue, table), list them as never-assume parameters.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
 - **Inflated totals**: Unfiltered queries returning multiple meters that get summed (e.g., Standard + LTS meters for AKS).
@@ -118,19 +119,19 @@ Document each trap using the format: `> **Trap**: ...` or `> **Trap ({name})**: 
 
 ### Step 7 - Generate the service reference file
 
-Create the file at: `skills/azure-cost-calculator/references/services/{category}/{filename}` (derived from the naming convention: strip "Azure"/"Microsoft"/"MS" prefix → kebab-case → `.md`).
+Create the file at: `skills/azure-cost-calculator/references/services/{category}/{filename}` (derived from the naming convention: strip "Azure"/"Microsoft"/"MS" prefix, kebab-case, `.md`).
 
 The file MUST follow these rules:
-- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map - do not add extras beyond those listed). Use inline `[...]` array format for aliases - never multi-line YAML sequences. Optionally include `billingNeeds` (services billed under a different serviceName) and `billingConsiderations` (pricing factors to ask about — only these values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`). Omit both fields if they don't apply.
+- **YAML front matter** with `serviceName` (exact API value), `category` (folder name), and `aliases` (use exactly the aliases listed in the routing map - do not add extras beyond those listed). Use inline `[...]` array format for aliases - never multi-line YAML sequences. Optionally include `billingNeeds` (services billed under a different serviceName) and `billingConsiderations` (pricing factors to ask about - only these values: `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`). Omit both fields if they don't apply.
 - **`primaryCost`** (required): One-line billing summary in YAML front matter, max 120 chars. Examples: `"Compute hours × 730 × instanceCount"`, `"Per-execution + GB-seconds with free grant deduction"`.
-- **Optional B+ YAML fields** — omit when the value matches the default:
+- **Optional B+ YAML fields** - omit when the value matches the default:
   - `apiServiceName`: Only when API serviceName ≠ display serviceName (e.g., VMware Solution uses `Specialized Compute`).
   - `hasMeters`: Set `false` for API-unavailable services (default: `true`).
   - `pricingRegion`: Set to `global`, `empty-region`, or `api-unavailable` when not regional (default: `regional`).
   - `hasKnownRates`: Set `true` when file has a Known Rates table (default: `false`).
   - `hasFreeGrant`: Set `true` when service has free tier or included units (default: `false`).
   - `privateEndpoint`: Set `true` when service supports private endpoints (default: `false`). Tier restrictions stay in Notes.
-- **Do NOT include "reserved pricing is not available" notes** — absence of `Reserved Instances` in `billingConsiderations` signals this. Only document RI details when the service supports them.
+- **Do NOT include "reserved pricing is not available" notes** - absence of `Reserved Instances` in `billingConsiderations` signals this. Only document RI details when the service supports them.
 - **First query pattern must be the most common/default configuration and must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, and trap concise to ensure this.
 - **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
 - **ServiceName in every query block**: Always include `ServiceName:` in each individual query pattern block. Do not rely on "All patterns below use..." preambles - batch mode parses individual blocks.
@@ -139,7 +140,7 @@ The file MUST follow these rules:
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
 - **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each (e.g., Windows vs Linux, GPU vs standard).
 - **Demonstrate scaling parameters**: At least one query pattern should use `InstanceCount` (for multi-unit resources) or `Quantity` (for event/request-based meters), with a comment explaining the parameter.
-- **Section order**: YAML → Title → Trap(s) → Query Pattern → Key Fields → Meter Names → Cost Formula → Notes → Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
+- **Section order**: YAML, Title, Trap(s), Query Pattern, Key Fields, Meter Names, Cost Formula, Notes, Optional sections (RI Pricing, Manual Calculation, Known Rates, Common SKUs, etc.)
 - **Meter Names table scope**: Include meters needed for a standard cost estimate: compute, storage, and backup. Omit niche variants (IO rates, zone-redundant storage, per-operation surcharges) unless they represent a major cost component (>10% of typical monthly spend). Mention omitted meter families in a one-line note below the table.
 - **Cost Formula variables**: Use `compute_retailPrice`, `storage_retailPrice`, `backup_retailPrice` as variable names when the formula has multiple components. Show one generic formula. Add a separate line per tier only if the formula structure (not just the price) changes between tiers.
 - **Do NOT** include "verified" dates anywhere.

@@ -24,6 +24,9 @@
 .PARAMETER CheckBillingNeeds
     When specified, checks that billingNeeds values reference valid serviceNames.
 
+.PARAMETER CheckRoutingFileSync
+    When specified, checks that routing map entries and service files are in sync.
+
 .EXAMPLE
     .\Validate-ServiceReference.ps1 -Path services/compute/my-service.md
 
@@ -41,7 +44,9 @@ param(
 
     [switch]$CheckAliasRoutingSync,
 
-    [switch]$CheckBillingNeeds
+    [switch]$CheckBillingNeeds,
+
+    [switch]$CheckRoutingFileSync
 )
 
 Set-StrictMode -Version Latest
@@ -56,6 +61,7 @@ $validationDir = Join-Path -Path $PSScriptRoot -ChildPath 'lib' -AdditionalChild
 . (Join-Path $validationDir 'Test-AliasUniqueness.ps1')
 . (Join-Path $validationDir 'Test-AliasRoutingSync.ps1')
 . (Join-Path $validationDir 'Test-BillingNeedsReference.ps1')
+. (Join-Path $validationDir 'Test-RoutingFileSync.ps1')
 . (Join-Path $validationDir 'Test-FileNaming.ps1')
 . (Join-Path $validationDir 'Test-PriceHygiene.ps1')
 . (Join-Path $validationDir 'Test-QueryBlockCompleteness.ps1')
@@ -68,7 +74,7 @@ function Test-ServiceReference {
 
     if (-not $fullPath) {
         $checks.Add((New-ValidationCheck -Name 'file_exists' -Pass $false `
-            -PassMessage 'n/a' -FailMessage "File not found: $FilePath"))
+                    -PassMessage 'n/a' -FailMessage "File not found: $FilePath"))
         return , $checks
     }
 
@@ -171,6 +177,23 @@ if ($CheckBillingNeeds) {
     }
     else {
         Write-Output "[-] FAIL billing_needs :: services_root_missing - ServicesRoot path not found: $root"
+        $hasFailures = $true
+    }
+}
+
+if ($CheckRoutingFileSync) {
+    $root = if ($ServicesRoot) { $ServicesRoot } else {
+        Join-Path -Path $PSScriptRoot -ChildPath '..' -AdditionalChildPath 'skills', 'azure-cost-calculator', 'references', 'services'
+    }
+    if (Test-Path $root) {
+        $routingSyncChecks = Test-RoutingFileSync -RootPath $root
+        foreach ($check in $routingSyncChecks) {
+            Write-CheckResult -FileName 'routing_file_sync' -Check $check
+            if (-not $check.Pass) { $hasFailures = $true }
+        }
+    }
+    else {
+        Write-Output "[-] FAIL routing_file_sync :: services_root_missing - ServicesRoot path not found: $root"
         $hasFailures = $true
     }
 }
