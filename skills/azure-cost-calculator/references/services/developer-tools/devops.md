@@ -22,6 +22,7 @@ hasFreeGrant: true
 ServiceName: Azure DevOps
 ProductName: Azure Repos and Boards (Basic)
 MeterName: Basic User
+Region: Global
 Quantity: 10
 
 ### MS-Hosted parallel jobs (additional beyond free grant)
@@ -29,6 +30,7 @@ Quantity: 10
 ServiceName: Azure DevOps
 ProductName: Azure Pipelines
 MeterName: Microsoft-hosted CI/CD Concurrent Job
+Region: Global
 InstanceCount: 3
 
 ### Artifacts storage
@@ -36,6 +38,7 @@ InstanceCount: 3
 ServiceName: Azure DevOps
 ProductName: Azure Artifacts
 MeterName: Standard Data Stored
+Region: Global
 
 ## Key Fields
 
