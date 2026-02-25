@@ -80,8 +80,9 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 
 - **v2 is the current version** — v1 is legacy (`ServiceName 'Azure Data Factory' SkuName 'Cloud'`); new factories always deploy as v2
 - Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
+- **Managed Airflow** (Workflow Orchestration Manager): separate `ProductName 'Azure Data Factory v2 - Managed Airflow'` with Small and Large SKUs billed per vCore-hour
 - SSIS Integration Runtime is billed as VMs under this service — query with `ProductName 'SSIS ...'` product names
-- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K
+- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Operations` meter)
 
 ## Reserved Instance Pricing
 
@@ -89,3 +90,5 @@ ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
 PriceType: Reservation
+
+> RI is also available for `Azure Data Factory v2 Data Flow - Compute Optimized` (same `SkuName: vCore`). Memory Optimized has no RI pricing.

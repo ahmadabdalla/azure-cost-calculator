@@ -5,6 +5,7 @@ aliases: [ADX, Kusto]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Per-vCore hourly engine markup × cluster vCores + VM compute billed separately under Virtual Machines"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
