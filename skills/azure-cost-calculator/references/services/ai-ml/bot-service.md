@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Bot Service (Health Bot)
 
-> **Trap (free channels not in API)**: Traditional Bot Framework channels (DirectLine, Web Chat, Teams) have NO meters in the API — basic Bot Service is free. Only **Health Bot** meters appear under this serviceName.
+> **Trap (free channels not in API)**: Standard Bot channels (Teams, Slack) are free. Premium channels (DirectLine, Web Chat) have Global-only S1 meters — most deployments use free tier. Queries below focus on **Health Bot** — the main paid product.
 
 > **Trap (daily billing)**: Standard tier uses `1/Day` unit — the script auto-multiplies by 30 for monthly cost. Do not manually multiply again.
 

@@ -82,7 +82,7 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 - **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate — see `openai-service.md`
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day` — script auto-multiplies by 30
-- **Disconnected**: Products ending `- Disconnected` have annual billing — exclude unless requested
+- **Legacy/Disconnected**: `Form Recognizer` → Doc Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually — exclude
 
 ## Product Names
 
@@ -95,3 +95,5 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 | `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`               |
 | `Content Safety`              | `Standard`                                 |
 | `Anomaly Detector`            | `Standard`, `Free`                         |
+| `Azure Custom Vision`         | `S0`, `Free`                               |
+| `Azure Content Understanding` | Basic/Standard/Add-On Doc, Audio, Video    |

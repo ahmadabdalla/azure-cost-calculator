@@ -51,4 +51,5 @@ Monthly = (genome_retailPrice × genomeCount) + (gigabase_retailPrice × gigabas
 
 - Single product with only 2 meters — no tiers, no reserved instances, no savings plans
 - `unitOfMeasure` is `1` for both meters — Quantity parameter equals the actual count of genomes or gigabases
-- Billing model: per-genome processing fee plus incremental data volume fee
+- Billing model: genome rate covers first 10 gigabases per workflow; incremental rate applies to each additional gigabase
+- Input/output data stored in Azure Blob Storage — billed separately under Storage
