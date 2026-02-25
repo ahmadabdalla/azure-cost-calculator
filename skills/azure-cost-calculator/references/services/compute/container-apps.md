@@ -87,7 +87,7 @@ Dedicated:
 ```
 Active-s = 10M × 0.8 = 8M | vCPU-s = 8M × 0.5 = 4M | GiB-s = 8M × 1 = 8M
 Billable: vCPU-s = 4M − 180K = 3,820K · GiB-s = 8M − 360K = 7,640K · reqs = 10M − 2M = 8M
-Cost: (3,820K × vCPU_UnitPrice) + (7,640K × mem_UnitPrice) + (8 × req_UnitPrice)
+Cost: (3,820K × vCPU_UnitPrice) + (7,640K × mem_UnitPrice) + (8 × request_UnitPrice)
 ```
 
 > Query API for `Standard vCPU Active Usage`, `Standard Memory Active Usage`, and `Standard Requests` UnitPrice values.
