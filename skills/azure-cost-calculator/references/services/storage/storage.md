@@ -64,8 +64,9 @@ Quantity: 50
 | `Hot Read Operations`       | _(any Hot)_   | _(varies)_              | `10K`         | Generic, not redundancy-specific |
 | `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | Redundancy-specific              |
 | `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS        |
+| `Cool Data Retrieval`       | _(any Cool)_  | _(varies)_              | `1 GB`        | Also: Cold/Archive Data Retrieval |
 
-Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations` or `{Tier} ZRS Read Operations`, `{Tier} {Redundancy} Write Operations`
+Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations` or `{Tier} ZRS Read Operations`, `{Tier} {Redundancy} Write Operations` (RA-* reuses non-RA write meter, e.g., RA-GZRS → `Hot GZRS Write Operations`)
 
 ## Cost Formula
 
@@ -83,8 +84,8 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice)
 
 ## Notes
 
-- Read operations: generic name for LRS/GRS/RA-GRS (`Hot Read Operations`); ZRS suffix for ZRS/GZRS/RA-GZRS (`Hot ZRS Read Operations`). Cold tier uses per-redundancy names.
-- RA-GZRS write operations: use skuName `Hot GZRS`; RA-GRS: meter name is `Hot GRS Write Operations`
+- Read operations: LRS/GRS/RA-GRS use generic name (`Hot Read Operations`); ZRS/GZRS/RA-GZRS use `{Tier} ZRS Read Operations`. Cold tier uses per-redundancy names.
+- Write operations: RA-* variants reuse non-RA meters (RA-GZRS → `Hot GZRS Write Operations`, RA-GRS → `Hot GRS Write Operations`)
 - Early delete: Cool 30d, Cold 90d, Archive 180d — rate equals data stored rate, prorated
 - Archive tier: LRS/GRS/RA-GRS only (no ZRS/GZRS/RA-GZRS); Cold tier has no Reserved Instances
 - PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) for RA-GRS/RA-GZRS.

@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Managed Disks
 
-> **Trap (two-meter)**: Premium SSD returns **both** "Disk" and "Disk Mount" meters — you MUST sum both. Mount fee alone is ~5% of cost; using only mount fee = ~20× underestimate. Standard SSD returns 3 meters (+ Operations per 10K). Standard HDD returns 2 (Disk + Operations, no mount fee). Always use `summary.totalMonthlyCost` which sums correctly.
+> **Trap (two-meter)**: Premium SSD returns **both** "Disk" and "Disk Mount" meters — you MUST sum both. Mount fee alone is ~5% of cost; using only mount fee = ~20× underestimate. Standard SSD returns 3 meters (Disk + Disk Mount + Operations per 10K). Standard HDD returns 2 (Disk + Operations, no mount fee). Query each meter by `MeterName` and sum with correct scaling — do not rely on `summary.totalMonthlyCost`.
 
 > **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput — one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
 > **Trap (Ultra vCPU)**: Ultra Disk has a 4th meter `Ultra LRS Reservation per vCPU Provisioned` — per vCPU on the attached VM.
