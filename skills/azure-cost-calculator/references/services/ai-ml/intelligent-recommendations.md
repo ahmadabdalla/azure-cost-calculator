@@ -8,6 +8,8 @@ hasKnownRates: true
 
 # Intelligent Recommendations
 
+> **Warning**: Intelligent Recommendations **retires March 31, 2026**. No equivalent Microsoft service is available — plan for migration or decommissioning before shutdown.
+
 > **Trap (sub-cent pricing)**: `Serving Request Token` has sub-cent per-token pricing — the script displays zero cost. Use the Known Rates table or large `Quantity` values (e.g., 1000000) for accurate estimates.
 
 > **Trap (tracking meters)**: `Serving Request Usage` and `Modelling Usage` return zero price — these are tracking/included-quantity meters, not billable. Only `Serving Request Token` and `Modelling Token` generate cost.
