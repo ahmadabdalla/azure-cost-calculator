@@ -84,7 +84,7 @@ where chargeableDays = max(0, min(retentionPeriodDays, actualDaysOfData) - freeD
 
 ## Commitment Tier Details
 
-For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000) save 15–30% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 200 ≈ 20%, 500 ≈ 25%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
+For 100+ GB/day, commitment tiers (100, 200, 300, 400, 500, 1000, 2000, 5000, 10000, 25000, 50000) save 15–36% vs pay-as-you-go (e.g., 100 GB/day ≈ 15%, 500 ≈ 25%, 50000 ≈ 36%). Overage above the tier is billed at the same discounted effective rate, not PAYG — so slightly over-committing is safe.
 
 ## Notes
 
