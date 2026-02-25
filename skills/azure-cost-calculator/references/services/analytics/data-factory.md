@@ -89,5 +89,3 @@ ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
 PriceType: Reservation
-
-> **RI MonthlyCost trap**: Data Flow vCores only (General Purpose, Compute Optimized). Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).

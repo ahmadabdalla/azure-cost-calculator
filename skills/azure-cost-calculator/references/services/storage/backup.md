@@ -84,5 +84,3 @@ ServiceName: Backup
 ProductName: Backup Reserved Capacity
 MeterName: LRS Data Stored
 PriceType: Reservation
-
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it reports the full term price. Manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI SKUs use volume tiers (e.g., `Standard - 100 TB LRS`, `Standard - 1 PB GRS`).

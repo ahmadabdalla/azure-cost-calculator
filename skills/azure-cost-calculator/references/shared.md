@@ -75,8 +75,9 @@ Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. 
 
 ### Reserved Instance MonthlyCost
 
-RI queries return the **total prepaid cost** for the full term, not monthly. The script's `MonthlyCost` is wrong for RIs.
-Manually calculate: `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year). See [reserved-instances.md](reserved-instances.md) for full RI traps.
+RI queries return the **total prepaid cost** for the full term in `unitPrice`.
+The script automatically converts this to monthly cost: `unitPrice ÷ 12` (1-Year), `÷ 36` (3-Year), or `÷ 60` (5-Year).
+See [reserved-instances.md](reserved-instances.md) for full RI traps.
 
 ## Pricing Factor Rules
 

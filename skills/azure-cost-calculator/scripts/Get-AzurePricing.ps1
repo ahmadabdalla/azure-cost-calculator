@@ -63,6 +63,7 @@ $ErrorActionPreference = 'Stop'
 . "$PSScriptRoot/lib/Build-ODataFilter.ps1"
 . "$PSScriptRoot/lib/Invoke-RetailPricesQuery.ps1"
 . "$PSScriptRoot/lib/Get-MonthlyMultiplier.ps1"
+. "$PSScriptRoot/lib/Get-ReservationTermMonths.ps1"
 
 # ============================================================
 # Main logic
@@ -143,11 +144,27 @@ foreach ($regionName in $Region) {
         $unitPrice = [double]$item.retailPrice
 
         # Calculate monthly cost
-        if ($Quantity -gt 0) {
-            $monthlyCost = $unitPrice * $Quantity * $multiplier * $InstanceCount
+        $termMonths = Get-ReservationTermMonths -ReservationTerm $item.reservationTerm
+        if ($termMonths) {
+            # RI: retailPrice is total prepaid cost — divide by term months
+            $monthlyCost = ($unitPrice / $termMonths) * $InstanceCount
+            if ($Quantity -gt 0) {
+                $monthlyCost = $monthlyCost * $Quantity
+            }
+        }
+        elseif (-not [string]::IsNullOrEmpty($item.reservationTerm)) {
+            # Unknown reservation term — warn instead of silently using consumption math
+            Write-Warning "Unknown reservationTerm '$($item.reservationTerm)' for '$($item.productName)'. MonthlyCost may be incorrect."
+            $monthlyCost = $unitPrice * $multiplier * $InstanceCount
         }
         else {
-            $monthlyCost = $unitPrice * $multiplier * $InstanceCount
+            # Consumption: retailPrice is per-unit rate — multiply by monthly multiplier
+            if ($Quantity -gt 0) {
+                $monthlyCost = $unitPrice * $Quantity * $multiplier * $InstanceCount
+            }
+            else {
+                $monthlyCost = $unitPrice * $multiplier * $InstanceCount
+            }
         }
 
         $allResults.Add([PSCustomObject]@{

@@ -73,8 +73,6 @@ ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series
 PriceType: Reservation
 
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it reports the full term price. Manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). Select desired `reservationTerm` from results.
-
 ## Common SKUs
 
 | SKU               | vCPUs | RAM (GB) | Tier/Notes            |
