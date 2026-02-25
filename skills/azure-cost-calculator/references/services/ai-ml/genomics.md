@@ -2,6 +2,7 @@
 serviceName: Microsoft Genomics
 category: ai-ml
 aliases: [Genomics Workspace]
+billingNeeds: [Storage]
 primaryCost: "Per-genome flat rate + per-incremental-gigabase volume fee"
 ---
 
@@ -42,7 +43,8 @@ Quantity: 10
 ## Cost Formula
 
 ```
-Monthly = (genome_retailPrice × genomeCount) + (gigabase_retailPrice × gigabaseCount)
+incrementalGB = max(totalGigabases - (10 × genomeCount), 0)
+Monthly = (genome_retailPrice × genomeCount) + (gigabase_retailPrice × incrementalGB)
 ```
 
 `Quantity` maps directly to number of genomes or gigabases (`unitOfMeasure` is `1`).
