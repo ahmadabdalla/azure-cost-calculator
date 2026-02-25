@@ -21,6 +21,7 @@ hasFreeGrant: true
 ServiceName: Bandwidth
 ProductName: Rtn Preference: MGN
 MeterName: Standard Data Transfer Out
+Region: eastus
 Quantity: 500
 
 ### Inter-region data transfer (Quantity = GB transferred between regions)
@@ -28,6 +29,7 @@ Quantity: 500
 ServiceName: Bandwidth
 ProductName: Rtn Preference: MGN
 MeterName: Standard Inter-Region Data Transfer
+Region: eastus
 Quantity: 200
 
 ### Inter-AZ transfer — substitute {direction} with In or Out
@@ -69,7 +71,7 @@ Quantity: 500
 ```
 Egress monthly       = sum of (tier_retailPrice × GB_in_tier) for each tier
 Inter-region monthly = interRegion_retailPrice × transferGB
-Inter-AZ monthly     = interAZ_retailPrice × transferGB × 2  (bidirectional)
+Inter-AZ monthly     = (azIn_retailPrice × inboundGB) + (azOut_retailPrice × outboundGB)
 Total monthly        = Egress + Inter-region + Inter-AZ
 ```
 
@@ -77,7 +79,7 @@ Total monthly        = Egress + Inter-region + Inter-AZ
 
 - **Free grant**: First 100 GB/month of internet egress is free (both MGN and Internet routing)
 - **Tiered egress**: Rates decrease with volume — query returns multiple rows with `tierMinimumUnits`; apply each tier's rate only to GB within that tier's range
-- **Inter-AZ**: Per-GB rate each direction; charges both in and out (multiply by 2 for round-trip)
+- **Inter-AZ**: Per-GB rate each direction; charges both in and out separately — query each meter independently
 - **Inter-region**: Flat per-GB rate; varies by region pair — always query with the source region
 - **Routing preference**: MGN (default) routes via Microsoft backbone; Internet routing uses ISP network at lower cost
 - **Shared billing**: Many Azure services (VMs, App Service, Storage) generate bandwidth charges — those egress costs appear under Bandwidth, not under the originating service
