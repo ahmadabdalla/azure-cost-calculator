@@ -2,7 +2,7 @@
 serviceName: Machine Learning Studio
 category: ai-ml
 aliases: [ML Studio (classic), Classic ML]
-primaryCost: "Plan tier daily rate × 30 × planCount + overage per 1K; Classic hourly × 730 × instanceCount"
+primaryCost: "Daily rate × 30 × planCount + overage per 1K; Classic hourly × 730 × instanceCount; workspace + experiment"
 hasFreeGrant: true
 ---
 
@@ -12,7 +12,7 @@ hasFreeGrant: true
 
 > **Trap (daily billing)**: Plan meters (S1, S2, S3) use `1/Day` units. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
 
-> **Trap (no eastus meters)**: This service has **no meters in `eastus`**. Use a region where meters exist (e.g., `southcentralus`, `westeurope`, `eastus2`) or query `Global` for S2/Classic pricing.
+> **Trap (no eastus meters)**: This service has **no meters in `eastus`**. Use `Region: Global` (primary for all commercial meters) or a specific region: `southcentralus`, `westeurope`, `eastus2`.
 
 ## Query Pattern
 
@@ -39,15 +39,22 @@ Quantity: 500
 ServiceName: Machine Learning Studio
 ProductName: Machine Learning Studio Production Web API Classic
 SkuName: Classic
+MeterName: Classic
 Region: Global
 InstanceCount: 2
 
-### Standard workspace — experiment compute
+### Standard workspace — fee and experiment compute
 
 ServiceName: Machine Learning Studio
 ProductName: Machine Learning Studio
 SkuName: Standard
 MeterName: Standard Workspace fee
+Region: Global
+
+ServiceName: Machine Learning Studio
+ProductName: Machine Learning Studio
+SkuName: Standard
+MeterName: Standard Experiment Compute
 Region: Global
 
 ## Key Fields
@@ -81,12 +88,12 @@ Region: Global
 Plan Monthly      = plan_retailPrice × 30 × planCount
 Overage Monthly   = overage_retailPrice × (overageTransactions / 1000)
 Classic Monthly   = classic_retailPrice × 730 × instanceCount
-Workspace Monthly = workspace_fee_retailPrice × 1 + experiment_retailPrice × 730 × experimentHours
+Workspace Monthly = (workspace_fee_retailPrice × 1) + (experiment_retailPrice × 730 × experimentHours)
 ```
 
 ## Notes
 
 - **Deprecated**: Machine Learning Studio (classic) is being retired — migrate to Azure Machine Learning (`machine-learning.md`)
 - Each plan tier includes free compute hours and transactions (meters return zero price); overage is billed per 1K transactions above the included quantity
-- All meters use `Global` as the primary commercial region — use `Region: Global` for queries. Regional copies exist in: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
+- Meters are available in `Global` and in select regions: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
 - Standard workspace product has `Standard Experiment Compute` (hourly) and `Standard Workspace fee` (monthly) meters separate from the Production Web API plans
