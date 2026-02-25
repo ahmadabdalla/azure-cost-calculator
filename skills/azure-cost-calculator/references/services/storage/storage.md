@@ -11,11 +11,11 @@ privateEndpoint: true
 
 > **Trap**: `productName = 'Blob Storage'` only covers **LRS/GRS/RA-GRS**. For ZRS/GZRS/RA-GZRS use `productName = 'General Block Blob v2'` — wrong productName returns zero results.
 
-> **Trap (RA-GZRS)**: RA-GZRS storage is **~25% more expensive** than GZRS but they **share** write/read operation meters (skuName `Hot GZRS`). Using GZRS skuName for RA-GZRS storage will significantly under-price.
+> **Trap (RA-GZRS)**: Hot/Cool RA-GZRS has **no Write Operations meter** — query with GZRS skuName instead (e.g., `Hot GZRS` + `Hot GZRS Write Operations`). RA-GRS similarly uses GRS write meter names. Data stored meters exist for all RA- variants at higher prices (~25% over non-RA).
 
 > **Trap (Default Redundancy)**: Default to **Hot LRS** unless user explicitly requests otherwise. Always include `skuName` in filters — GRS is ~2× LRS, RA-GZRS ~3×. Wrong redundancy row inflates cost 200–300%.
 
-> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. The API returns separate rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Using a single rate for all GB over-charges large volumes.
+> **Trap (Tiered Calculation)**: Do NOT multiply the tier-1 rate by the full volume. Hot tier returns 3 rows with `tierMinimumUnits` 0, 51200, 512000 — each rate applies only to GB within that band. Cool, Cold, and Archive use flat rates.
 
 ## Query Pattern
 
@@ -35,12 +35,20 @@ SkuName: Hot ZRS
 ProductName: General Block Blob v2
 MeterName: Hot ZRS Data Stored
 
+### Write operations (per-10K, use Quantity for scaling)
+
+ServiceName: Storage
+SkuName: Hot LRS
+ProductName: Blob Storage
+MeterName: Hot LRS Write Operations
+Quantity: 50
+
 ## Key Fields
 
 | Parameter     | How to determine         | Example values                               |
 | ------------- | ------------------------ | -------------------------------------------- |
 | `serviceName` | Always `Storage`         | `Storage`                                    |
-| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Hot RA-GZRS`         |
+| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Hot RA-GZRS`        |
 | `productName` | See Product Names table  | `Blob Storage`, `General Block Blob v2`      |
 | `meterName`   | See Meter Names table    | `Hot LRS Data Stored`, `Hot Read Operations` |
 
@@ -55,30 +63,33 @@ MeterName: Hot ZRS Data Stored
 | `Hot RA-GZRS Data Stored`   | `Hot RA-GZRS` | `General Block Blob v2` | `1 GB/Month`  | ~25% more than GZRS              |
 | `Hot Read Operations`       | _(any Hot)_   | _(varies)_              | `10K`         | Generic, not redundancy-specific |
 | `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | Redundancy-specific              |
-| `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS         |
+| `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS        |
+| `Cool Data Retrieval`       | _(any Cool)_  | _(varies)_              | `1 GB`        | Also: Cold/Archive Data Retrieval |
 
-Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations`, `{Tier} {Redundancy} Write Operations`
+Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations` or `{Tier} ZRS Read Operations`, `{Tier} {Redundancy} Write Operations` (RA-* reuses non-RA write meter name, e.g., RA-GZRS → `Hot GZRS Write Operations`, RA-GRS → `Hot GRS Write Operations`)
 
 ## Cost Formula
 
 ```
-Tiered pricing — API returns multiple rows per meter with different tierMinimumUnits.
-Tiers: 0–50 TB (0–51,200 GB) / 50–500 TB / 500+ TB (descending rate per GB).
-Each tier's rate applies ONLY to GB within that band, not the entire volume.
+Hot tier: tiered — rows with tierMinimumUnits 0, 51200, 512000 GB.
+Each rate applies ONLY to GB within that band. Cool/Cold/Archive: flat rate.
 
 Example: 60 TB (61,440 GB) Hot LRS →
   Tier 1: 51,200 GB × tier1_retailPrice
   Tier 2: 10,240 GB × tier2_retailPrice  (61,440 − 51,200)
-  Total storage = sum of both tiers
 
-Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps/10K × writePrice)
+Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice)
+       + (writeOps/10K × writePrice) + (retrievedGB × retrieval_retailPrice)
 ```
 
 ## Notes
 
-- Read operations meter is generic (no redundancy suffix); write operations include redundancy
-- RA-GZRS write operations use skuName `Hot GZRS`, not `Hot RA-GZRS`
-- PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) apply only with RA-GRS/RA-GZRS.
+- Read operations: LRS/GRS/RA-GRS use generic name (`Hot Read Operations`); ZRS/GZRS/RA-GZRS use `{Tier} ZRS Read Operations`. Cold tier uses per-redundancy names.
+- Write operations: RA-* variants reuse non-RA meters (RA-GZRS → `Hot GZRS Write Operations`, RA-GRS → `Hot GRS Write Operations`)
+- Early delete: Cool 30d, Cold 90d, Archive 180d — rate equals data stored rate, prorated
+- Archive tier: LRS/GRS/RA-GRS only (no ZRS/GZRS/RA-GZRS); Cold tier has no Reserved Instances
+- PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) for RA-GRS/RA-GZRS.
+- Azure Files, Table, and Queue use distinct `productName` values under `serviceName: Storage` — query each sub-product separately
 
 ## Product Names
 
@@ -86,3 +97,4 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice) + (writeOps
 | ------------------ | ----------------------- |
 | LRS, GRS, RA-GRS   | `Blob Storage`          |
 | ZRS, GZRS, RA-GZRS | `General Block Blob v2` |
+| Premium LRS/ZRS    | `Premium Block Blob`    |

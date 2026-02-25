@@ -9,7 +9,10 @@ privateEndpoint: true
 
 # Managed Disks
 
-> **Warning (Premium/Standard SSD two-meter trap)**: The API returns **both** "Disk" **and** "Disk Mount" meters. **You MUST sum both** — the mount fee alone is ~5% of cost. Using only mount fee = **~20× too cheap**. Always use `summary.totalMonthlyCost` which sums correctly. Premium SSD returns 2 meters, Standard SSD returns 3 (+ Operations), Standard HDD returns 2 (Disk + Operations, no mount fee).
+> **Trap (two-meter)**: Premium SSD returns **both** "Disk" and "Disk Mount" meters — you MUST sum both. Mount fee alone is ~5% of cost; using only mount fee = ~20× underestimate. Standard SSD returns 3 meters (Disk + Disk Mount + Operations per 10K). Standard HDD returns 2 (Disk + Operations, no mount fee). Query each meter by `MeterName` and sum with correct scaling — do not rely on `summary.totalMonthlyCost`.
+
+> **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput — one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
+> **Trap (Ultra vCPU)**: Ultra Disk has a 4th meter `Ultra LRS Reservation per vCPU Provisioned` — per vCPU on the attached VM.
 
 ## Query Pattern
 
@@ -26,7 +29,7 @@ ServiceName: Storage
 SkuName: E30 LRS
 ProductName: Standard SSD Managed Disks
 
-### Ultra Disk — provisioned (query returns capacity, IOPS, and throughput meters)
+### Ultra Disk — provisioned (query returns capacity, IOPS, throughput, and vCPU meters)
 
 ServiceName: Storage
 SkuName: Ultra LRS
@@ -38,33 +41,26 @@ ServiceName: Storage
 SkuName: Premium LRS
 ProductName: Azure Premium SSD v2
 
-> **ZRS**: For Premium/Standard SSD, replace `LRS` with `ZRS` in SkuName (~50% more). HDD is LRS only.
-> **Standard HDD**: Use `ProductName: Standard HDD Managed Disks`, `SkuName: S{Size} LRS`.
-
-## Expected API Response (Premium SSD)
-
-P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P30 LRS Disk Mount` (~5%). **Mount fee alone = ~20× underestimate**.
-
-## Meters per Disk Type
-
-| Disk Type      |                           Disk                           | Disk Mount | Disk Operations |
-| -------------- | :------------------------------------------------------: | :--------: | :-------------: |
-| Premium SSD    |                           YES                            |    YES     |       NO        |
-| Standard SSD   |                           YES                            |    YES     |  YES (per 10K)  |
-| Standard HDD   |                           YES                            |     NO     |  YES (per 10K)  |
-| Ultra Disk     | Provisioned Capacity, IOPS, Throughput, vCPU Reservation |     —      |        —        |
-| Premium SSD v2 |          Provisioned Capacity, IOPS, Throughput          |     —      |        —        |
-
-> **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput — one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
-> **Trap (Ultra vCPU)**: Ultra Disk has 4th meter `Ultra LRS Reservation per vCPU Provisioned` — per vCPU on attached VM.
+> **Note**: For ZRS, replace `LRS` with `ZRS` in SkuName (Premium/Standard SSD only). Standard HDD uses `ProductName: Standard HDD Managed Disks`, `SkuName: S{Size} LRS`.
 
 ## Key Fields
 
-| Parameter     | Example values                                                                                   |
-| ------------- | ------------------------------------------------------------------------------------------------ |
-| `productName` | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
-| `skuName`     | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                           |
-| `meterName`   | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                  |
+| Parameter     | How to determine            | Example values                                                                                                                  |
+| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Storage`            | `Storage`                                                                                                                       |
+| `productName` | Disk type                   | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Standard HDD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
+| `skuName`     | {Prefix}{Size} {Redundancy} | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                                                        |
+| `meterName`   | Meter type per disk         | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                                                |
+
+## Meter Names
+
+| Disk Type      |                          Meters                          | Mount | Operations    |
+| -------------- | :------------------------------------------------------: | :---: | :-----------: |
+| Premium SSD    |                    Disk + Disk Mount                     |  YES  |      NO       |
+| Standard SSD   | Disk + Disk Mount + Disk Operations (E4+; E1–E3 no Ops) |  YES  | YES (per 10K) |
+| Standard HDD   |                  Disk + Disk Operations                  |  NO   | YES (per 10K) |
+| Ultra Disk     |  Provisioned Capacity, IOPS, Throughput, vCPU Reservation |  —   |       —       |
+| Premium SSD v2 |        Provisioned Capacity, IOPS, Throughput            |   —   |       —       |
 
 ## Cost Formula
 
@@ -76,20 +72,24 @@ P30 LRS returns **2 rows** — both required: `P30 LRS Disk` (~95% of cost) + `P
 
 ## Notes
 
-- Deallocating a VM does **NOT** stop disk billing — disks billed per-disk, per-month.
-- Premium SSD P1–P20 include free burst (on-demand burst P20+ separate meter); snapshots billed separately
+- Deallocating a VM does **NOT** stop disk billing — disks are billed per-disk, per-month (or per-hour for Ultra/v2)
+- Premium SSD P1–P20: free credit-based bursting; P30+: on-demand burst (separate enablement + transaction meters); snapshots billed separately
 - Private endpoints limited to disk import/export operations
+- Standard SSD ZRS mount fee is ~12× the LRS mount fee; Premium SSD ZRS mount fee matches LRS
 
 ## Reserved Instance Pricing
 
-Available for **Premium SSD only** (1-year). Query with `-PriceType Reservation`.
+Available for **Premium SSD only** (P30–P80 LRS, 1-year term). RI covers Disk meter only — mount fee remains at PAYG rate.
+
+ServiceName: Storage
+ProductName: Premium SSD Managed Disks
+PriceType: Reservation
 
 ## Common SKUs
 
 | SKU   | Size (GiB) | Max IOPS | Max MBps | Typical Use          |
 | ----- | ---------- | -------- | -------- | -------------------- |
 | `P4`  | 32         | 120      | 25       | Small OS disks       |
-| `P6`  | 64         | 240      | 50       | Light workloads      |
 | `P10` | 128        | 500      | 100      | Dev/test             |
 | `P20` | 512        | 2,300    | 150      | Medium workloads     |
 | `P30` | 1,024      | 5,000    | 200      | Production databases |
