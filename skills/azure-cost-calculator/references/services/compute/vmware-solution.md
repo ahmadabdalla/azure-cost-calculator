@@ -45,6 +45,7 @@ InstanceCount: 3
 
 | Meter               | Regions |
 | ------------------- | ------- |
+| AV36 VCF BYOL Node  | 1       |
 | AV36P VCF BYOL Node | 27      |
 | AV48 VCF BYOL Node  | 16      |
 | AV52 VCF BYOL Node  | 5       |
@@ -64,7 +65,7 @@ Minimum 3 hosts per cluster.
 - vSphere, vSAN, and NSX-T included in per-host price
 - Broadcom VCF subscription required separately — not in API
 - Trial nodes exist for all SKUs at zero cost — exclude from estimates
-- AV64: broadest availability (41 regions); AV52: most limited (5 regions)
+- AV36: single region (italynorth); AV64: broadest availability (41 regions); AV52: most limited (5 regions)
 - 5-year RI available for AV48 and AV64 only
 - Max 16 hosts/cluster, 12 clusters/private cloud (up to 192 hosts)
 - SQL Server on AVS billed separately under serviceName `Virtual Machines Licenses`
