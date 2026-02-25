@@ -64,3 +64,4 @@ HCI vCPU:         Monthly = retailPrice × 730 × vCPUCount
 ## Notes
 
 - Multi-session Windows 11/10 Enterprise is unique to AVD and allows multiple users per VM, reducing per-user compute cost
+- Session host VMs are charged at Linux compute rates for Windows 10/11 single-session and multi-session OS
