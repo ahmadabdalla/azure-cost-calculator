@@ -3,13 +3,13 @@ serviceName: Azure Kubernetes Service
 category: compute
 aliases: [AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic]
 billingNeeds: [Virtual Machines, Load Balancer]
-billingConsiderations: [Reserved Instances]
+billingConsiderations: [Reserved Instances, Spot Pricing]
 primaryCost: "Management fee + VM node costs; Automatic adds per-vCPU surcharge"
 hasFreeGrant: true
 privateEndpoint: true
 ---
 
-# Azure Kubernetes Service (AKS)
+# Azure Kubernetes Service
 
 > **Trap (Standard SKU inflation)**: `-SkuName 'Standard'` returns **two** meters (`Uptime SLA` + `Long Term Support`), inflating totals ~7×. Filter with `-MeterName 'Standard Uptime SLA'` unless user needs LTS.
 
@@ -86,7 +86,7 @@ InstanceCount: 3
 - **Do NOT include** `Standard Long Term Support` unless explicitly requested — optional LTS add-on
 - Automatic clusters always use Standard pricing tier — control plane fee always applies, no free tier
 - Automatic per-vCPU fees are a surcharge **in addition to** VM node costs — VMs still billed via `billingNeeds`
-- `billingConsiderations: [Reserved Instances]` applies to underlying VMs only, not AKS meters
+- `billingConsiderations: [Reserved Instances, Spot Pricing]` applies to underlying VMs only, not AKS meters
 - Automatic control plane rate is flat across all regions; per-vCPU rates vary ~2.4× by region
 - Standard Load Balancer auto-provisioned for outbound traffic — billed via `billingNeeds`
 - Private endpoints require Standard pricing tier (not available on Free tier)

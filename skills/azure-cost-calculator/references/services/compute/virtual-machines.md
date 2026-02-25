@@ -3,7 +3,7 @@ serviceName: Virtual Machines
 category: compute
 aliases: [VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host]
 billingNeeds: [Managed Disks]
-billingConsiderations: [Azure Hybrid Benefit, Reserved Instances, Spot Pricing]
+billingConsiderations: [Reserved Instances, Spot Pricing, Azure Hybrid Benefit]
 primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
 ---
 
@@ -25,7 +25,7 @@ ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series Windows
 
-> **Tip (productName pattern)**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact values.
+> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact values.
 
 ## Key Fields
 
@@ -52,6 +52,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
 - **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter — you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
+- **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) and also risk eviction
 
 ## Azure Hybrid Benefit (AHUB)
 
