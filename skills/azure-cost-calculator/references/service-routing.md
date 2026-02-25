@@ -49,6 +49,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Bastion: Bastion Host, Jump Host, Jump Box
 - Azure DDOS Protection: DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection
 - ExpressRoute: ER, Dedicated Circuit
+- ExpressRoute Gateway: ER Gateway, ExpressRoute VNet Gateway, ErGw
 - Virtual Network: VNet, Peering
 - VPN Gateway: VPN, Site-to-Site, Point-to-Site, S2S, P2S
 - Load Balancer: ALB, LB, Standard LB, Basic LB
