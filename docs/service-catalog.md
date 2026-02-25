@@ -118,7 +118,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Data Catalog: Data Catalog (legacy)
 - Azure Purview: Purview Data Map, Data Estate Scanning
 - Azure Data Share: Data Sharing
-- Microsoft Fabric: Fabric Capacity, OneLake, Lakehouse
 - Microsoft Planetary Computer Pro: Planetary Computer, Geospatial Analytics
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
 - Web PubSub: WebSocket Service
