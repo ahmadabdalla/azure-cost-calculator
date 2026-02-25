@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Trap**: The script's `MonthlyCost` shows zero because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
+> **Trap**: `MonthlyCost` rounds to 2 decimals with a default `Quantity` of 1, so sub-cent unit prices display as zero. Pass an explicit `Quantity` (executions/GB-s) or read the unrounded `UnitPrice` from JSON output, and always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -45,10 +45,15 @@ Quantity: 1000000
 
 ## Meter Names
 
-| Meter                       | Unit        | Free Grant      |
-| --------------------------- | ----------- | --------------- |
-| `Standard Total Executions` | per 10 exec | 1M executions   |
-| `Standard Execution Time`   | per 1 GB-s  | 400K GB-seconds |
+| Plan | Meter | Unit | Free Grant |
+| ---- | ----- | ---- | ---------- |
+| Consumption | `Standard Total Executions` | per 10 exec | 1M exec |
+| Consumption | `Standard Execution Time` | per 1 GB-s | 400K GB-s |
+| Premium | `Premium vCPU Duration` | 1 Hour | — |
+| Premium | `Premium Memory Duration` | 1 GiB Hour | — |
+| Flex Always Ready | `Always Ready Baseline` / `Execution Time` / `Total Executions` | per GB-s / per 10 exec | — |
+| Flex On Demand | `On Demand Execution Time` | per 1 GB-s | 100K GB-s |
+| Flex On Demand | `On Demand Total Executions` | per 10 exec | 250K exec |
 
 ## Cost Formula
 
@@ -75,7 +80,7 @@ Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see a
 - Premium: billed per-second with a minimum of one instance
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
 - **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
-- The script's `MonthlyCost` shows zero for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
+- `MonthlyCost` rounds sub-cent prices to zero — pass an explicit `Quantity` or read `UnitPrice` from JSON output
 - Private endpoints require Flex Consumption, Premium, or Dedicated plan
 
 ## Premium Plan Sizes (Elastic Premium)
