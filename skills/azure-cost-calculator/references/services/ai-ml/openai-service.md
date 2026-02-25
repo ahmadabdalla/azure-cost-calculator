@@ -56,7 +56,7 @@ Meter names follow a predictable pattern. Use these to construct queries from di
 | Component  | Values                                                                                           | Notes                             |
 | ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------- |
 | Direction  | `Inpt`/`Inp`/`inp`/`Input`/`in` = input, `outpt`/`Outp`/`out`/`Output` = output                  | Casing varies by model family     |
-| Deployment | `glbl`/`Gl`/`global` = Global (cheapest), `DZone`/`Dz`/`Data Zone` = Data Zone (+10%), `regnl`/`rgnl` = Regional (+10%) | |
+| Deployment | `glbl`/`Gl`/`global` = Global (cheapest), `DZone`/`Dz`/`DZ`/`Data Zone` = Data Zone (+10%), `regnl`/`rgnl` = Regional (+10%) | |
 | Cached     | `cchd`/`cd` prefix on input meters                                                               | 50-90% discount vs standard input |
 | Batch      | `Batch` in skuName                                                                               | ~50% discount, async processing   |
 | Codex      | `codex` in skuName                                                                               | Code-focused variants             |
