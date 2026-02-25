@@ -100,6 +100,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Databricks: DBX, Spark on Azure
 - Stream Analytics: ASA, Real-time Analytics
 - SignalR: Azure SignalR Service, Real-time Messaging
+- Azure Data Explorer: ADX, Kusto
 
 ## AI + ML (services/ai-ml/)
 
