@@ -60,6 +60,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
 - NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
 - IP Addresses: Public IP, PIP, Public IP Address
+- Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
 
 ## Storage (services/storage/)
 
