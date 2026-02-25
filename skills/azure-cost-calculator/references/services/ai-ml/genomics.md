@@ -26,18 +26,18 @@ Quantity: 10
 
 ## Key Fields
 
-| Parameter     | How to determine                    | Example values                                        |
-| ------------- | ----------------------------------- | ----------------------------------------------------- |
-| `serviceName` | Always `Microsoft Genomics`         | `Microsoft Genomics`                                  |
-| `productName` | Always `Microsoft Genomics`         | `Microsoft Genomics`                                  |
-| `skuName`     | Always `Alignment and Variant Calling` | `Alignment and Variant Calling`                    |
+| Parameter     | How to determine                                    | Example values                                                                               |
+| ------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Microsoft Genomics`                         | `Microsoft Genomics`                                                                         |
+| `productName` | Always `Microsoft Genomics`                         | `Microsoft Genomics`                                                                         |
+| `skuName`     | Always `Alignment and Variant Calling`              | `Alignment and Variant Calling`                                                              |
 | `meterName`   | Processing model — per genome or per incremental GB | `Alignment and Variant Calling Genome`, `Alignment and Variant Calling Incremental Gigabase` |
 
 ## Meter Names
 
-| Meter                                              | unitOfMeasure | Notes                          |
-| -------------------------------------------------- | ------------- | ------------------------------ |
-| `Alignment and Variant Calling Genome`              | `1`           | Flat rate per genome processed |
+| Meter                                                | unitOfMeasure | Notes                           |
+| ---------------------------------------------------- | ------------- | ------------------------------- |
+| `Alignment and Variant Calling Genome`               | `1`           | Flat rate per genome processed  |
 | `Alignment and Variant Calling Incremental Gigabase` | `1`           | Per additional gigabase of data |
 
 ## Cost Formula

@@ -86,14 +86,14 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 
 ## Product Names
 
-| productName                   | Common skuNames                            |
-| ----------------------------- | ------------------------------------------ |
-| `Azure Language`              | `Standard`, `S0`–`S4`                      |
-| `Azure Vision - Face`         | `Standard`                                 |
-| `Azure Document Intelligence` | `S0`, `Free`                               |
-| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs |
-| `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`               |
-| `Content Safety`              | `Standard`                                 |
-| `Anomaly Detector`            | `Standard`, `Free`                         |
-| `Azure Custom Vision`         | `S0`, `Free`                               |
+| productName                   | Common skuNames                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Azure Language`              | `Standard`, `S0`–`S4`                                                                                                                       |
+| `Azure Vision - Face`         | `Standard`                                                                                                                                  |
+| `Azure Document Intelligence` | `S0`, `Free`                                                                                                                                |
+| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs                                                                                                  |
+| `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`                                                                                                                |
+| `Content Safety`              | `Standard`                                                                                                                                  |
+| `Anomaly Detector`            | `Standard`, `Free`                                                                                                                          |
+| `Azure Custom Vision`         | `S0`, `Free`                                                                                                                                |
 | `Azure Content Understanding` | `Basic Doc`, `Basic Audio`, `Basic Video`, `Standard Doc`, `Standard Audio`, `Standard Video`, `Add-On Doc`, `Add-On Audio`, `Add-On Video` |
