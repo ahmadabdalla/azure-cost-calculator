@@ -95,4 +95,4 @@ ProductName: Azure Synapse Analytics Dedicated SQL Pool
 SkuName: DW100c
 PriceType: Reservation
 
-> **Trap (RI DW100c only)**: The API only returns RI pricing for `DW100c` (Dedicated SQL Pool only). For larger SKUs, multiply: `unitPrice × (targetDWU ÷ 100)`, then `÷ 12` (1Y) or `÷ 36` (3Y). The script's `MonthlyCost` is wrong for RI items.
+> **Note (RI DW100c only)**: The API only returns RI pricing for `DW100c` (Dedicated SQL Pool only). For larger SKUs, multiply: `unitPrice × (targetDWU ÷ 100)`.

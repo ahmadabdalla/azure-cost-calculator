@@ -11,9 +11,7 @@ hasFreeGrant: true
 
 # Azure DevOps
 
-> **Trap (non-hourly billing)**: All Azure DevOps meters use `1/Month` or `1 GB/Month` units — not hourly rates. The scripts' `MonthlyCost` multiplies `retailPrice × 730`, producing **wrong** values. Use `retailPrice` directly as the monthly cost. All meters are Global-only (`armRegionName: Global`).
->
-> **Agent instruction**: Use `retailPrice` from query results as the monthly cost (do NOT multiply by 730). For Artifacts, the API returns tiered pricing — use the first tier for estimates under 10 GB.
+> **Note**: All Azure DevOps meters are Global-only (`armRegionName: Global`). For Artifacts, the API returns tiered pricing — use the first tier for estimates under 10 GB.
 
 > **Trap**: Do not confuse `Azure DevOps` (this service — DevOps platform) with `Azure DevOps Server` (on-premises, licensed separately) or `Azure Synapse Pipelines` (data integration — separate service with consumption meters in the API).
 

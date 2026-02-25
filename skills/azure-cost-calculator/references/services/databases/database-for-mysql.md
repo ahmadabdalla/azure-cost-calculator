@@ -13,8 +13,6 @@ privateEndpoint: true
 
 > **Trap (dual vCore meters)**: Newer series (v5/v6) return two identical per-vCore meters — `SkuName: 'vCore'` and `SkuName: '1 vCore'`. Use `SkuName: vCore` with `InstanceCount` for vCore count.
 
-> **Trap (RI MonthlyCost)**: The script's MonthlyCost multiplies the full term price by 730 — always manually calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
-
 ## Query Pattern
 
 ### Compute — General Purpose (Ddsv5, 4 vCores)

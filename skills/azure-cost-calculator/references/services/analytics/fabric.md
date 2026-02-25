@@ -91,6 +91,6 @@ ServiceName: Microsoft Fabric
 ProductName: Fabric Capacity Reservation
 PriceType: Reservation
 
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it multiplies the total term price by 730 hours. Always calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). Multiply by CU count for the chosen F-SKU.
+> **Note (RI per-CU)**: RI `unitPrice` is per single CU — multiply by the CU count for the chosen F-SKU.
 
 > **Trap (RI 1Y ≈ 3Y)**: Both 1-Year and 3-Year terms yield nearly identical monthly rates per CU (~41% discount vs PAYG). Autoscale for Spark and Capacity Overage are not RI-eligible.

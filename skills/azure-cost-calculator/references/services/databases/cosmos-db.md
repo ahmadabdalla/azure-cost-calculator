@@ -38,12 +38,12 @@ SkuName: RUs
 
 ## Key Fields
 
-| Parameter     | How to determine               | Example values                                                              |
-| ------------- | ------------------------------ | --------------------------------------------------------------------------- |
-| `serviceName` | Always `Azure Cosmos DB`       | `Azure Cosmos DB`                                                           |
-| `productName` | Pricing model variant          | `Azure Cosmos DB`, `Azure Cosmos DB autoscale`, `Azure Cosmos DB serverless` |
-| `skuName`     | Throughput type                | `RUs`, `mRUs`, `AP1`                                                        |
-| `meterName`   | Resource being metered         | `100 RU/s`, `Data Stored`, `1M RUs`                                         |
+| Parameter     | How to determine         | Example values                                                               |
+| ------------- | ------------------------ | ---------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure Cosmos DB` | `Azure Cosmos DB`                                                            |
+| `productName` | Pricing model variant    | `Azure Cosmos DB`, `Azure Cosmos DB autoscale`, `Azure Cosmos DB serverless` |
+| `skuName`     | Throughput type          | `RUs`, `mRUs`, `AP1`                                                         |
+| `meterName`   | Resource being metered   | `100 RU/s`, `Data Stored`, `1M RUs`                                          |
 
 ## Meter Names
 
@@ -82,4 +82,3 @@ PriceType: Reservation
 Region: Global
 
 > **Trap (RI region)**: Cosmos DB RI uses `Region: Global` — regional queries return zero results.
-> **Trap (RI MonthlyCost)**: The script's MonthlyCost is wrong for RI. Use `unitPrice ÷ 12` (1-Year) or `÷ 36` (3-Year).
