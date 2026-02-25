@@ -15,6 +15,8 @@ privateEndpoint: true
 
 > **Trap (sub-cent embeddings)**: Embedding prices are sub-cent. The script shows minimal cost — use `Quantity` with a large value to see meaningful costs.
 
+> **Trap (mixed units)**: `unitOfMeasure` varies across products — `1K` or `1M` for tokens, `1/Hour` for PTU, `100` for DALL-E images, `1` for Sora video seconds. Always check `unitOfMeasure` per meter.
+
 > **Agent instruction**: Model names change frequently. Always discover current models before querying. Run the discovery query below first, then construct pricing queries using the naming conventions documented in this file.
 
 ## Query Pattern
@@ -34,7 +36,7 @@ Quantity: {tokenCount in units matching unitOfMeasure}
 ### Embeddings — substitute discovered embedding skuName
 
 ServiceName: Foundry Models
-ProductName: Azure OpenAI Embedding
+ProductName: Azure OpenAI
 SkuName: {embedding model} {deployment}
 Quantity: {tokenCount in units matching unitOfMeasure}
 
@@ -43,8 +45,8 @@ Quantity: {tokenCount in units matching unitOfMeasure}
 | Parameter     | How to determine                              | Stable pattern                                                      |
 | ------------- | --------------------------------------------- | ------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Models`                       | `Foundry Models`                                                    |
-| `productName` | Model family — use exact value from discovery | `Azure OpenAI GPT5`, `Azure OpenAI Embedding`, `Azure OpenAI Media` |
-| `skuName`     | `{model} {Inpt/outpt/inp/out} {deployment}`   | Deployment: `Glbl`, `DZone`/`Dz`/`DZ`, `regnl`                      |
+| `productName` | Model family — use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media` |
+| `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl` |
 | `meterName`   | skuName + ` 1M Tokens` or ` Tokens`           | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
 
 ## SKU Naming Conventions
@@ -53,8 +55,8 @@ Meter names follow a predictable pattern. Use these to construct queries from di
 
 | Component  | Values                                                                                           | Notes                             |
 | ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------- |
-| Direction  | `Inpt`/`inp`/`in` = input, `outpt`/`out` = output                                                | Casing varies by model family     |
-| Deployment | `Glbl`/`Gl` = Global (cheapest), `DZone`/`Dz`/`DZ` = Data Zone (+10%), `regnl` = Regional (+10%) |                                   |
+| Direction  | `Inpt`/`Inp`/`inp`/`Input`/`in` = input, `outpt`/`Outp`/`out`/`Output` = output                  | Casing varies by model family     |
+| Deployment | `glbl`/`Gl`/`global` = Global (cheapest), `DZone`/`Dz`/`DZ`/`Data Zone` = Data Zone (+10%), `regnl`/`rgnl` = Regional (+10%) | |
 | Cached     | `cchd`/`cd` prefix on input meters                                                               | 50-90% discount vs standard input |
 | Batch      | `Batch` in skuName                                                                               | ~50% discount, async processing   |
 | Codex      | `codex` in skuName                                                                               | Code-focused variants             |
@@ -71,6 +73,7 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 
 - **Deployment types**: Global is cheapest, Data Zone and Regional add ~10%. Prefer Global unless data residency requires otherwise
 - **Batch pricing**: ~50% discount for async workloads — meters include `Batch` in skuName
-- **Provisioned throughput (PTU)**: Hourly per-unit billing under `Azure AI Foundry Provisioned Throughput Reservation` productName. Query separately — PTU is Global-only pricing
-- **Embeddings regional availability**: Embedding models may not be available in all regions — if a query returns zero results, try `westus` or `westeurope`
-- **Media models**: Audio and image generation meters are under `Azure OpenAI Media` productName — query separately
+- **Provisioned throughput (PTU)**: Consumption meters under `Azure OpenAI` (`Provisioned Managed Global/Data Zone/Regional`); reservations under `Azure AI Foundry Provisioned Throughput Reservation` with 1 Month and 1 Year terms
+- **Reasoning models**: o4-mini, codex-mini, o3-deep-research are under `Azure OpenAI Reasoning` productName — query separately
+- **Media models**: Audio, TTS, Sora 2 video (per-second), and GPT-Image under `Azure OpenAI Media` — query separately
+- **Fine-tuning**: Three billing dimensions — training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K)
