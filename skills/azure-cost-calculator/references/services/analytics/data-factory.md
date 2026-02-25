@@ -4,6 +4,7 @@ category: analytics
 aliases: [ADF, ADF v2, ETL, Data Pipeline, Azure Data Factory]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Pipeline activity runs (per month) + data movement hours + inactive pipeline fees"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -73,6 +74,7 @@ v2 Pipeline: Monthly = (activityRuns / 1000) × orchestration_retailPrice
                + pipelineActivityHours × pipeline_retailPrice
                + dataMovementHours × movement_retailPrice
                + inactivePipelines × inactive_retailPrice
+               + max(0, readWriteOps - 1,000,000) / 50000 × readWrite_retailPrice
 v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 ```
 
@@ -82,7 +84,7 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - **Managed Airflow** (Workflow Orchestration Manager): separate `ProductName 'Azure Data Factory v2 - Managed Airflow'` with Small and Large SKUs billed per vCore-hour
 - SSIS Integration Runtime is billed as VMs under this service — query with `ProductName 'SSIS ...'` product names
-- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Operations` meter)
+- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Cloud Read Write Operations` meter)
 
 ## Reserved Instance Pricing
 
