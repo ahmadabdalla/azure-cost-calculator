@@ -42,10 +42,10 @@ SkuName: ASIP
 
 ## Key Fields
 
-| Parameter     | How to determine       | Example values                                   |
-| ------------- | ---------------------- | ------------------------------------------------ |
-| `productName` | Plan tier + OS variant | See Product Names table                          |
-| `skuName`     | Plan tier + size       | `B1`, `S1`, `P1 v3`, `P1v4`, `I1 v2`, `ASIP`   |
+| Parameter     | How to determine       | Example values                               |
+| ------------- | ---------------------- | -------------------------------------------- |
+| `productName` | Plan tier + OS variant | See Product Names table                      |
+| `skuName`     | Plan tier + size       | `B1`, `S1`, `P1 v3`, `P1v4`, `I1 v2`, `ASIP` |
 
 ## Cost Formula
 
@@ -79,14 +79,14 @@ Isolated v2 = (ASIP_retailPrice × 730) + (instance_retailPrice × 730 × instan
 
 ## Common SKUs
 
-| SKU      | vCPUs | RAM (GB) | Tier        |
-| -------- | ----- | -------- | ----------- |
-| `B1`     | 1     | 1.75     | Basic       |
-| `S1`     | 1     | 1.75     | Standard    |
-| `P1 v2`  | 1     | 3.5      | Premium v2  |
-| `P1 v3`  | 2     | 8        | Premium v3  |
-| `P1v4`   | 2     | 8        | Premium v4  |
-| `I1 v2`  | 2     | 8        | Isolated v2 |
+| SKU     | vCPUs | RAM (GB) | Tier        |
+| ------- | ----- | -------- | ----------- |
+| `B1`    | 1     | 1.75     | Basic       |
+| `S1`    | 1     | 1.75     | Standard    |
+| `P1 v2` | 1     | 3.5      | Premium v2  |
+| `P1 v3` | 2     | 8        | Premium v3  |
+| `P1v4`  | 2     | 8        | Premium v4  |
+| `I1 v2` | 2     | 8        | Isolated v2 |
 
 ## Reserved Instance Pricing
 
