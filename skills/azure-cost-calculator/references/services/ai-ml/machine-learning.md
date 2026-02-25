@@ -73,5 +73,5 @@ Training Compute         = billed under Virtual Machines (see compute/virtual-ma
 ## Notes
 
 - Managed online endpoints (`Managed Model Hosting Service`) are the primary billable meters under this service
-- Enterprise Inferencing products (`Azure Machine Learning Enterprise *`) return zero cost — these are legacy meters
+- Enterprise Inferencing products (`Azure Machine Learning Enterprise *`) and training surcharges (`Standard Training GPU/vCPU Surcharge`) return zero cost — these are legacy meters
 - Storage for ML workspaces is billed under Azure Storage (Blob/File) separately

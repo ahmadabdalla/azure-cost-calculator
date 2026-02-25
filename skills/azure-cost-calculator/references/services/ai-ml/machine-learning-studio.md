@@ -39,45 +39,54 @@ Quantity: 500
 ServiceName: Machine Learning Studio
 ProductName: Machine Learning Studio Production Web API Classic
 SkuName: Classic
-Region: eastus2
+Region: Global
 InstanceCount: 2
+
+### Standard workspace — experiment compute
+
+ServiceName: Machine Learning Studio
+ProductName: Machine Learning Studio
+SkuName: Standard
+MeterName: Standard Workspace fee
+Region: Global
 
 ## Key Fields
 
 | Parameter     | How to determine                          | Example values                                                                    |
 | ------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
 | `serviceName` | Always `Machine Learning Studio`          | `Machine Learning Studio`                                                         |
-| `productName` | Standard vs Classic deployment            | `Machine Learning Studio Production Web API`, `...Production Web API Classic`     |
+| `productName` | Workspace, Standard API, or Classic       | `Machine Learning Studio`, `...Production Web API`, `...Production Web API Classic` |
 | `skuName`     | Plan tier or Classic                      | `S1`, `S2`, `S3`, `Classic`                                                       |
-| `meterName`   | Plan, overage, or included quantity meter | `S1 Plan`, `S1 Overage Transactions`, `Included Quantity API Compute`, `Classic`  |
+| `meterName`   | Plan, overage, or included quantity meter | `S1 Plan`, `S1 Overage Transactions`, `Standard Workspace fee`, `Classic`         |
 
 ## Meter Names
 
-| Meter                              | skuName   | unitOfMeasure | Notes                              |
-| ---------------------------------- | --------- | ------------- | ---------------------------------- |
-| `S1 Plan`                          | `S1`      | `1/Day`       | Daily plan fee                     |
-| `S1 Overage Transactions`          | `S1`      | `1K`          | Per 1K transactions above included |
-| `Included Quantity API Compute`    | `S1`      | `1 Hour`      | Included compute hours — free      |
-| `Included Quantity API Transactions` | `S1`      | `1K`          | Included transactions — free       |
-| `S2 Plan`                          | `S2`      | `1/Day`       | Daily plan fee                     |
-| `S2 Overage Transactions`          | `S2`      | `1K`          | Per 1K transactions above included |
-| `S3 Plan`                          | `S3`      | `1/Day`       | Daily plan fee                     |
-| `S3 Overage Transactions`          | `S3`      | `1K`          | Per 1K transactions above included |
-| `Classic`                          | `Classic` | `1 Hour`      | Hourly compute — Classic tier      |
+| Meter                              | skuName    | unitOfMeasure | Notes                              |
+| ---------------------------------- | ---------- | ------------- | ---------------------------------- |
+| `S1 Plan`                          | `S1`       | `1/Day`       | Daily plan fee                     |
+| `S1 Overage Transactions`          | `S1`       | `1K`          | Per 1K transactions above included |
+| `S1 Overage Compute`               | `S1`       | `1 Hour`      | Per hour above included compute    |
+| `Included Quantity API Compute`    | `S1`       | `1 Hour`      | Included compute hours — free      |
+| `Included Quantity API Transactions` | `S1`     | `1K`          | Included transactions — free       |
+| `Classic`                          | `Classic`  | `1 Hour`      | Hourly compute — Classic tier      |
+| `Classic Transactions`             | `Classic`  | `1K`          | Per 1K transactions — Classic tier |
+| `Standard Experiment Compute`      | `Standard` | `1 Hour`      | Workspace experiment compute       |
+| `Standard Workspace fee`           | `Standard` | `1/Month`     | Monthly workspace subscription     |
 
-> S2 and S3 tiers have equivalent included quantity meters (`Included Quantity API Compute`, `Included Quantity API Transactions`) — shown above for S1 only.
+> S2 and S3 tiers have equivalent Plan, Overage Transactions, Overage Compute, and Included Quantity meters — shown above for S1 only.
 
 ## Cost Formula
 
 ```
-Plan Monthly     = plan_retailPrice × 30 × planCount
-Overage Monthly  = overage_retailPrice × (overageTransactions / 1000)
-Classic Monthly  = classic_retailPrice × 730 × instanceCount
+Plan Monthly      = plan_retailPrice × 30 × planCount
+Overage Monthly   = overage_retailPrice × (overageTransactions / 1000)
+Classic Monthly   = classic_retailPrice × 730 × instanceCount
+Workspace Monthly = workspace_fee_retailPrice × 1 + experiment_retailPrice × 730 × experimentHours
 ```
 
 ## Notes
 
 - **Deprecated**: Machine Learning Studio (classic) is being retired — migrate to Azure Machine Learning (`machine-learning.md`)
 - Each plan tier includes free compute hours and transactions (meters return zero price); overage is billed per 1K transactions above the included quantity
-- S2 Plan and Classic pricing are available in the `Global` region — use `Region: Global` if no regional results are found
-- Limited regional availability — key regions: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
+- All meters use `Global` as the primary commercial region — use `Region: Global` for queries. Regional copies exist in: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
+- Standard workspace product has `Standard Experiment Compute` (hourly) and `Standard Workspace fee` (monthly) meters separate from the Production Web API plans
