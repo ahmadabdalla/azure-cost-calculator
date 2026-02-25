@@ -5,6 +5,7 @@ aliases: [HPC Batch, Batch Compute]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances, Spot Pricing]
 primaryCost: "No Batch fee — pay for VM compute, storage, and networking resources"
+hasMeters: false
 privateEndpoint: true
 ---
 
@@ -25,17 +26,17 @@ InstanceCount: 4
 
 ## Key Fields
 
-| Parameter     | How to determine                               | Example values                                                   |
-| ------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
-| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)  | `Virtual Machines`                                               |
+| Parameter     | How to determine                               | Example values                                                    |
+| ------------- | ---------------------------------------------- | ----------------------------------------------------------------- |
+| `serviceName` | Always `Virtual Machines` (not `Azure Batch`)  | `Virtual Machines`                                                |
 | `armSkuName`  | VM size chosen for the Batch pool              | `Standard_D4s_v5`, `Standard_HB120rs_v3`                         |
-| `productName` | Series + OS (Linux omits suffix, Windows adds) | `Virtual Machines Dsv5 Series`, `… Series Windows`               |
+| `productName` | Series + OS (Linux omits suffix, Windows adds) | `Virtual Machines Dsv5 Series`, `… Series Windows`                |
 | `skuName`     | Size + pricing tier suffix                     | `D4s v5`, `Standard_D4s_v5 Spot`, `Standard_D4s_v5 Low Priority` |
 
 ## Meter Names
 
-| Meter                      | unitOfMeasure | Notes                                                                                                                                         |
-| -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Meter                       | unitOfMeasure | Notes                                                                                                                                         |
+| --------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority — use `skuName` to select pricing tier |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
