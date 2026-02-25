@@ -52,7 +52,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 - Azure Firewall Manager: Firewall Policy
 - Virtual WAN: vWAN, WAN Hub
-- Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
 - Network Watcher: NSG Flow Logs, Connection Monitor
 - Azure Orbital: Ground Station, Satellite
 - Private Mobile Network: Private 5G Core, Mobile Network, MEC
