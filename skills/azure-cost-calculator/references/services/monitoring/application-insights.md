@@ -13,7 +13,7 @@ privateEndpoint: true
 
 > **Trap**: Workspace-based Application Insights has no separate cost — all telemetry is billed through Log Analytics. Classic (non-workspace-based) is deprecated.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free per Log Analytics billing account (PAYG only). This credit does **not** apply when Sentinel simplified pricing is active on the workspace (default for workspaces created after July 2023), because ingestion shifts to Sentinel meters. Only deduct when Sentinel is NOT enabled or uses classic pricing: `billable_GB = total_GB - 5`.
-> **Trap (retention calculation)**: The first **90 days** of retention are free for Application Insights data (App\* tables). For extended retention, the chargeable window is `retentionDays - 90`. At steady-state ingestion of X GB/day, the retained data volume is `X × (retentionDays - 90)`.
+> **Trap (retention calculation)**: The first **90 days** of retention are free for Application Insights data (App\* tables). For extended retention, the chargeable window is `max(0, retentionDays - 90)`. At steady-state ingestion of X GB/day, the retained data volume is `X × max(0, retentionDays - 90)`.
 
 ## Query Pattern
 
@@ -42,7 +42,7 @@ MeterName: Analytics Logs Data Retention
 | Meter                           | skuName          | unitOfMeasure | Notes                                          |
 | ------------------------------- | ---------------- | ------------- | ---------------------------------------------- |
 | `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion           |
-| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 31 days |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 90 days |
 
 ## Cost Formula
 
@@ -61,10 +61,10 @@ The first 90 days of retention are **free** for Application Insights data (App\*
 
 ```
 Retained GB = dailyIngestionGB × chargeableDays
-where chargeableDays = retentionPeriodDays - 90  (at steady-state)
+where chargeableDays = max(0, retentionPeriodDays - 90)  (at steady-state)
 ```
 
-> **Note**: For newly created workspaces that haven't accumulated a full retention period of data, use `min(retentionPeriodDays - 90, actualDaysOfData - 90)`. At steady state, `actualDaysOfData` always exceeds the retention period, so the formula simplifies to `retentionPeriodDays - 90`.
+> **Note**: For newly created workspaces that haven't accumulated a full retention period of data, use `max(0, min(retentionPeriodDays, actualDaysOfData) - 90)`. At steady state, `actualDaysOfData` always exceeds the retention period, so the formula simplifies to `max(0, retentionPeriodDays - 90)`.
 
 For example, with 180-day retention and 5 GB/day steady ingestion:
 

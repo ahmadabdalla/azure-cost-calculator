@@ -2,7 +2,7 @@
 serviceName: Azure Monitor
 category: monitoring
 aliases: [Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive]
-primaryCost: "Custom metrics per time series + log-tier ingestion/archive/export per-GB"
+primaryCost: "Custom metrics per 10M samples + log-tier ingestion/archive/export per-GB"
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -51,7 +51,7 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 | ------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | `serviceName` | Fixed value                                | `Azure Monitor`                                                                            |
 | `skuName`     | Depends on meter category                  | `Basic Logs`, `Auxiliary Logs`, `Data Archive`, `Search Queries`, `100 GB Commitment Tier` |
-| `meterName`   | Matches the billing meter for each feature | `Monitored Time Series`, `Basic Logs Data Ingestion`, `Data Archive`                       |
+| `meterName`   | Matches the billing meter for each feature | `Metrics ingestion Metric samples`, `Basic Logs Data Ingestion`, `Data Archive`             |
 
 ## Meter Names
 
