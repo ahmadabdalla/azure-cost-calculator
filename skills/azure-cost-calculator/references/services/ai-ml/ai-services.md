@@ -96,4 +96,4 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 | `Content Safety`              | `Standard`                                 |
 | `Anomaly Detector`            | `Standard`, `Free`                         |
 | `Azure Custom Vision`         | `S0`, `Free`                               |
-| `Azure Content Understanding` | Basic/Standard/Add-On Doc, Audio, Video    |
+| `Azure Content Understanding` | `Basic Doc`, `Basic Audio`, `Basic Video`, `Standard Doc`, `Standard Audio`, `Standard Video`, `Add-On Doc`, `Add-On Audio`, `Add-On Video` |
