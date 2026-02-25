@@ -46,7 +46,7 @@ Other design goals:
 > **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Opus 4.6** and **Gemini Pro 3**. Results with other models may vary.
 
 <p align="center">
-  <img src="docs/images/how-it-works.svg" alt="How the Azure Cost Calculator skill works — from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
+  <img src="docs/images/design.png" alt="How the Azure Cost Calculator skill works — from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
 </p>
 
 References load on demand, keeping token usage low even for 10+ service estimates.
