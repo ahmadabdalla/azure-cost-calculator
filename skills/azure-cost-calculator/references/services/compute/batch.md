@@ -5,6 +5,7 @@ aliases: [HPC Batch, Batch Compute]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances, Spot Pricing]
 primaryCost: "No Batch fee — pay for VM compute, storage, and networking resources"
+hasMeters: false
 privateEndpoint: true
 ---
 
