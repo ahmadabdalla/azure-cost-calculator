@@ -155,7 +155,12 @@ foreach ($regionName in $Region) {
         elseif (-not [string]::IsNullOrEmpty($item.reservationTerm)) {
             # Unknown reservation term — warn instead of silently using consumption math
             Write-Warning "Unknown reservationTerm '$($item.reservationTerm)' for '$($item.productName)'. MonthlyCost may be incorrect."
-            $monthlyCost = $unitPrice * $multiplier * $InstanceCount
+            if ($Quantity -gt 0) {
+                $monthlyCost = $unitPrice * $Quantity * $multiplier * $InstanceCount
+            }
+            else {
+                $monthlyCost = $unitPrice * $multiplier * $InstanceCount
+            }
         }
         else {
             # Consumption: retailPrice is per-unit rate — multiply by monthly multiplier
