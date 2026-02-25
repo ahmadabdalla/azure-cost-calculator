@@ -34,21 +34,21 @@ SkuName: Hybrid
 
 ## Meter Names
 
-| Plan | Meter | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| Standard | `Standard vCPU Active Usage` | 1 Second | Free grant: 180K vCPU-s/mo |
-| Standard | `Standard vCPU Idle Usage` | 1 Second | ~1/8 of active rate |
-| Standard | `Standard Memory Active Usage` | 1 GiB Second | Free grant: 360K GiB-s/mo |
-| Standard | `Standard Memory Idle Usage` | 1 GiB Second | Same rate as active |
-| Standard | `Standard Requests` | 1M | Free grant: 2M requests/mo |
-| Standard | `Standard NC T4 v3 GPU Usage` | 1 Second | Additive to vCPU/memory |
-| Standard | `Standard NC A100 v4 GPU Usage` | 1 Second | Additive to vCPU/memory |
-| Dedicated | `Dedicated vCPU Usage` | 1 Hour | Per vCPU per hour |
-| Dedicated | `Dedicated Memory Usage` | 1 Hour | Per GiB per hour |
-| Dedicated | `Dedicated Plan Management` | 1 Hour | Per environment; additive for PE/maintenance |
-| Dedicated | `Dedicated GPU Usage` | 1 Hour | GPU workloads only |
-| Hybrid | `Hybrid vCPU Usage` | 1 Hour | Arc-enabled; memory included |
-| Dynamic Sessions | `Dynamic Sessions` | 1 Hour | Per session hour (Consumption only) |
+| Plan             | Meter                            | unitOfMeasure | Notes                                        |
+| ---------------- | -------------------------------- | ------------- | -------------------------------------------- |
+| Standard         | `Standard vCPU Active Usage`     | 1 Second      | Free grant: 180K vCPU-s/mo                   |
+| Standard         | `Standard vCPU Idle Usage`       | 1 Second      | ~1/8 of active rate                          |
+| Standard         | `Standard Memory Active Usage`   | 1 GiB Second  | Free grant: 360K GiB-s/mo                    |
+| Standard         | `Standard Memory Idle Usage`     | 1 GiB Second  | Same rate as active                          |
+| Standard         | `Standard Requests`              | 1M            | Free grant: 2M requests/mo                   |
+| Standard         | `Standard NC T4 v3 GPU Usage`    | 1 Second      | Additive to vCPU/memory                      |
+| Standard         | `Standard NC A100 v4 GPU Usage`  | 1 Second      | Additive to vCPU/memory                      |
+| Dedicated        | `Dedicated vCPU Usage`           | 1 Hour        | Per vCPU per hour                            |
+| Dedicated        | `Dedicated Memory Usage`         | 1 Hour        | Per GiB per hour                             |
+| Dedicated        | `Dedicated Plan Management`      | 1 Hour        | Per environment; additive for PE/maintenance |
+| Dedicated        | `Dedicated GPU Usage`            | 1 Hour        | GPU workloads only                           |
+| Hybrid           | `Hybrid vCPU Usage`              | 1 Hour        | Arc-enabled; memory included                 |
+| Dynamic Sessions | `Dynamic Sessions`               | 1 Hour        | Per session hour (Consumption only)          |
 
 ## Cost Formula
 
@@ -73,12 +73,12 @@ Dedicated:
 
 ## SKU Selection Guide
 
-| Workload Type | SKU | Pricing Model | Notes |
-| --- | --- | --- | --- |
-| Scale-to-zero, event-driven | `Standard` | Per-second | Free grant: 180K vCPU-s + 360K GiB-s/mo |
-| Always-on, min replicas > 0 | `Dedicated` | Per-hour | Background workers, ML pipelines |
-| Hybrid (on-prem connected) | `Hybrid` | Per-hour | Arc-enabled environments |
-| Code interpreter sessions | `Dynamic Sessions` | Per-hour | Consumption plan only |
+| Workload Type                | SKU               | Pricing Model | Notes                                     |
+| ---------------------------- | ----------------- | ------------- | ----------------------------------------- |
+| Scale-to-zero, event-driven  | `Standard`        | Per-second    | Free grant: 180K vCPU-s + 360K GiB-s/mo  |
+| Always-on, min replicas > 0  | `Dedicated`       | Per-hour      | Background workers, ML pipelines          |
+| Hybrid (on-prem connected)   | `Hybrid`          | Per-hour      | Arc-enabled environments                  |
+| Code interpreter sessions    | `Dynamic Sessions`| Per-hour      | Consumption plan only                     |
 
 ## Manual Calculation Example
 
