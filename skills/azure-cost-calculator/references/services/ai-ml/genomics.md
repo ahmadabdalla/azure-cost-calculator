@@ -2,6 +2,7 @@
 serviceName: Microsoft Genomics
 category: ai-ml
 aliases: [Genomics Workspace]
+billingNeeds: [Storage]
 primaryCost: "Per-genome flat rate + per-incremental-gigabase volume fee"
 ---
 
