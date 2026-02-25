@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Warning**: The script's `MonthlyCost` shows zero because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
+> **Trap**: The script's `MonthlyCost` shows zero because quantity is unknown — use `UnitPrice` directly. Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -43,14 +43,12 @@ Quantity: 1000000
 
 > **Agent instruction**: Functions on a Dedicated plan (B1/S1/P1v3) have **NO** `Functions` meters — billing flows entirely through `Azure App Service`. Use app-service.md query patterns.
 
-## Consumption Plan Meters
+## Meter Names
 
 | Meter                       | Unit        | Free Grant      |
 | --------------------------- | ----------- | --------------- |
 | `Standard Total Executions` | per 10 exec | 1M executions   |
 | `Standard Execution Time`   | per 1 GB-s  | 400K GB-seconds |
-
-> The script's `MonthlyCost` shows zero — use `UnitPrice` directly.
 
 ## Cost Formula
 
@@ -71,6 +69,15 @@ Flex Consumption:
 Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see app-service.md)
 ```
 
+## Notes
+
+- Consumption: generous free grant — many small workloads cost zero
+- Premium: billed per-second with a minimum of one instance
+- Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
+- **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
+- The script's `MonthlyCost` shows zero for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
+- Private endpoints require Flex Consumption, Premium, or Dedicated plan
+
 ## Premium Plan Sizes (Elastic Premium)
 
 The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` meters — NO EP1/EP2/EP3-specific meter. Multiply by plan specs below.
@@ -82,12 +89,3 @@ The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` me
 | EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
 
 > **Agent instruction**: When the user says "Functions Premium EP2", query `Premium Functions` for the generic per-vCPU and per-GiB hourly rates, then multiply by the EP2 specs (2 vCPU, 7 GiB) from the table above.
-
-## Notes
-
-- Consumption: generous free grant — many small workloads cost zero
-- Premium: billed per-second with a minimum of one instance
-- Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
-- **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
-- The script's `MonthlyCost` shows zero for Consumption/Flex because quantity is unknown — use `UnitPrice` directly
-- Private endpoints require Flex Consumption, Premium, or Dedicated plan
