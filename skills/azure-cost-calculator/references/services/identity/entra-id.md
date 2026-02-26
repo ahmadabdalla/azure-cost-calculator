@@ -22,6 +22,7 @@ hasKnownRates: true
 ### No pricing meters exist — included for validation only
 
 ServiceName: Microsoft Entra ID
+Quantity: 50  # number of licensed users
 
 ### Expected: 0 results — this service has no retail meters
 
