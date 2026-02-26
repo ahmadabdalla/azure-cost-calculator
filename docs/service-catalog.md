@@ -138,7 +138,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Microsoft Playwright Testing: Playwright, Browser Testing, E2E Testing
 - Azure App Testing: Mobile App Testing
 - Azure Fluid Relay: Fluid Framework, Real-time Collaboration
-- Azure Grafana Service: Managed Grafana, Azure Managed Grafana, Grafana Dashboard
 - Visual Studio Codespaces: Codespaces (legacy), Cloud Dev Environments
 - Azure DevTest Labs: Lab VMs, Dev Environments
 - Microsoft Dev Box: Cloud Dev Workstation, Developer VM
