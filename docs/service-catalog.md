@@ -122,7 +122,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## IoT (services/iot/)
 
 - Azure Maps: Location Services, Geospatial
-- Digital Twins: ADT, IoT Modeling
 - Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
 - Azure Device Registry: IoT Device Registry, Asset Registry
