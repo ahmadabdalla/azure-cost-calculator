@@ -91,6 +91,7 @@ Total monthly          = Gateway + Scale units + Data transfer
 - **Always-on cost**: Basic tier minimum is gateway hourly × 730/month with zero connections
 - **Scale unit math**: Base gateway includes 2 instances. Additional scale units = (totalInstances − 2), billed via "Additional Gateway" meter
 - **Capacity per scale unit**: Each scale unit supports ~20 concurrent SSH connections or ~40 concurrent RDP connections
+- **Developer tier**: Free — no API meters exist. Do NOT query; report zero cost
 - **Basic tier**: Fixed at 2 instances, no scaling — supports RDP/SSH only, no file transfer or IP-based connections
 - **Standard tier**: 2–50 instances, adds native client support, file transfer, IP-based connections, shareable links
 - **Premium tier**: 2–200 instances, adds session recording and private-only access
