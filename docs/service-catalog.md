@@ -51,7 +51,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Networking (services/networking/)
 
 - Azure Firewall Manager: Firewall Policy
-- Network Watcher: NSG Flow Logs, Connection Monitor
 - Azure Orbital: Ground Station, Satellite
 - Private Mobile Network: Private 5G Core, Mobile Network, MEC
 - Azure Route Server: BGP Routing
@@ -120,15 +119,10 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## IoT (services/iot/)
 
-- Azure Maps: Location Services, Geospatial
 - Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
 - Azure Device Registry: IoT Device Registry, Asset Registry
 - Azure IoT Operations: IoT Ops, Edge IoT, Azure IoT OPC UA
-- Azure Maps: Location Services, Geospatial
-- Digital Twins: ADT, IoT Modeling
-- IoT Central: IoT SaaS, IoT Application
-- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - Windows 10 IoT Core Services: IoT Core, Windows IoT, IoT Core Services, Windows CE
 
 ## Developer Tools (services/developer-tools/)
