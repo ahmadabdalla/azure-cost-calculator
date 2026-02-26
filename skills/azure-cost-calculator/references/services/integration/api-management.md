@@ -34,6 +34,12 @@ ServiceName: API Management
 SkuName: {Tier}
 MeterName: {Tier} Self-hosted Gateway
 
+### Premium classic secondary unit (note: standalone SkuName)
+
+ServiceName: API Management
+SkuName: Secondary
+MeterName: Secondary Unit
+
 ## Key Fields
 
 | Parameter     | How to determine                          | Example values                                             |
