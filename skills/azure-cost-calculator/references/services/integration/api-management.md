@@ -2,7 +2,8 @@
 serviceName: API Management
 category: integration
 aliases: [APIM, API Gateway]
-primaryCost: "Unit hours based on tier"
+primaryCost: "Unit hours based on tier; Consumption is per-call"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -14,13 +15,14 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### All tiers — substitute {Tier} from Meter Names table
+### All tiers — substitute {Tier} from Meter Names table (InstanceCount for multi-unit)
 
 ServiceName: API Management
 SkuName: {Tier}
 MeterName: {Tier} Unit
+InstanceCount: 2
 
-### v2 secondary units (Standard v2 / Premium v2)
+### v2 secondary units (Basic v2 / Standard v2 / Premium v2)
 
 ServiceName: API Management
 SkuName: {Tier}
@@ -55,14 +57,15 @@ MeterName: {Tier} Self-hosted Gateway
 | Gateway     | `Gateway`     | `Gateway Unit`      | `1 Hour`      | Self-hosted gateway (classic) |
 | Isolated    | `Isolated`    | `Isolated Unit`     | `1 Hour`      | Network-isolated              |
 
-> **Additional meters**: v2 tiers have `{Tier} Secondary Unit` and `{Tier} Self-hosted Gateway` (1 Hour each). Premium classic has `Secondary Unit`.
+> **Additional meters**: v2 tiers have `{Tier} Secondary Unit` (1 Hour each). Standard v2 and Premium v2 also have `{Tier} Self-hosted Gateway`. Premium classic has `Secondary Unit`.
 > **Workspace Packs**: Available for Developer, Standard, Premium, Standard v2, Premium v2, Isolated — query with `{Tier} Workspace Pack` meter (1/Hour).
 
 ## Cost Formula
 
 ```
 ### Hourly tiers: Monthly = retailPrice × 730 × unitCount
-### Consumption:  Monthly = retailPrice × (apiCalls / 10,000)  [first 1M calls/month free]
+### Consumption:  Monthly = retailPrice × max(0, apiCalls − 1,000,000) / 10,000
+### v2 Calls:     Monthly += retailPrice × max(0, calls − freeThreshold) / 10,000
 ### Add-ons:      Monthly += componentPrice × 730 × count  (secondary units, gateways, workspace packs)
 ```
 
@@ -70,7 +73,8 @@ MeterName: {Tier} Self-hosted Gateway
 
 - All tiers support unlimited APIs except Consumption (max 50).
 - `productName` is always `API Management` for all tiers.
-- Private endpoints not available on Consumption or Basic v2 tiers
+- **Private Endpoints**: Not available on Consumption or Basic v2 tiers
+- Free call grants: Consumption 1M/mo, Basic v2 10M/mo, Standard v2 50M/mo, Premium v2 unlimited
 
 ## Common SKUs
 
