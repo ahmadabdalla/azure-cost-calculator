@@ -3,8 +3,8 @@ serviceName: Network Watcher
 category: networking
 aliases: [NSG Flow Logs, Connection Monitor]
 billingNeeds: [Storage, Log Analytics]
-hasFreeGrant: true
 primaryCost: "Per-GB flow log collection + per-GB traffic analytics + per-test connection monitor + per-check diagnostics"
+hasFreeGrant: true
 ---
 
 # Network Watcher
@@ -64,19 +64,22 @@ Quantity: 5000
 ## Cost Formula
 
 ```
-FlowLogs         = max(0, logGB - 5) × flowlog_retailPrice
+NSGFlowLogs      = max(0, nsgLogGB - 5) × flowlog_retailPrice
+VNetFlowLogs     = max(0, vnetLogGB - 5) × flowlog_retailPrice
 TrafficAnalytics = processedGB × analytics_retailPrice
 ConnMonitor      = tiered pricing on test count (10 free, then progressive tiers)
 Diagnostics      = max(0, checks - 1000) × diag_retailPrice
-Monthly          = FlowLogs + TrafficAnalytics + ConnMonitor + Diagnostics
+NPMConnMon       = connections × npm_retailPrice                          # legacy NPM only
+NPMPerfMon       = tiered pricing on metric count (10 free, then tiers)   # legacy NPM only
+Monthly          = NSGFlowLogs + VNetFlowLogs + TrafficAnalytics + ConnMonitor + Diagnostics [+ NPM]
 ```
 
 ## Notes
 
 - **Free grants**: NSG/VNet flow logs: 5 GB/month each; Diagnostic tools: 1,000 checks/month; Connection Monitor: 10 tests/month; NPM Perf Monitor: 10 metrics/month
-- **Auto-enabled**: Network Watcher is automatically enabled in every Azure subscription — billing begins when features (flow logs, connection monitors) are configured
+- **Auto-enabled**: Network Watcher is automatically enabled per-region when a virtual network is created — billing begins when features (flow logs, connection monitors) are configured
 - **Storage billed separately**: Flow log data is stored in Azure Storage accounts — storage charges are not included in Network Watcher meters
 - **Log Analytics billed separately**: Traffic Analytics and Network Analytics results are stored in Log Analytics — data ingestion charges apply separately
 - **Packet Capture**: Counts as a diagnostic check under `Standard Diagnostic Tool API`; captured data stored in Storage at additional cost
-- **Two flow log types**: NSG flow logs (older) and VNet flow logs (newer) have identical pricing — VNet flow logs support more regions
+- **Two flow log types**: NSG flow logs (older, retiring Sep 2027) and VNet flow logs (newer) have identical pricing — migrate to VNet flow logs for new deployments
 - **Traffic Analytics intervals**: 10-minute processing costs more per-GB than 60-minute — choose interval based on latency requirements
