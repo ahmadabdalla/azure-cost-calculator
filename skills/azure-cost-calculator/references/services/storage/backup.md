@@ -56,7 +56,7 @@ MeterName: SQL Server in Azure VM Protected Instances
 | `GRS Data Stored`                            | `Standard`               | `1 GB/Month`  | Geo-redundant vault storage |
 | `Archive LRS Data Stored`                    | `Archive`                | `1 GB/Month`  | Archive tier LRS            |
 
-Other workload types: `PostgreSQL`, `Azure Kubernetes`, `Azure Blob`, `ADLS Gen2 Vaulted`, `SAP ASE on Azure VM`. ZRS and RA-GRS storage meters also available.
+Other workload types: `PostgreSQL`, `Azure Kubernetes`, `Azure Blob`, `ADLS Gen2 Vaulted`, `SAP ASE on Azure VM`, `Cross region for ADLS and Blobs`. ZRS and RA-GRS storage meters also available. Blob/ADLS Gen2 Vaulted also include per-10K write operation meters by redundancy.
 
 ## Cost Formula
 
