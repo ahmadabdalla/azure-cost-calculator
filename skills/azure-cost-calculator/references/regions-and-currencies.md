@@ -25,11 +25,9 @@ Reference for region names, currency handling, and services not available in the
 
 These services have **no pricing data** in the Azure Retail Prices API and must be estimated manually:
 
-| Service                              | Manual Estimate               | Reference                                                                                           |
-| ------------------------------------ | ----------------------------- | --------------------------------------------------------------------------------------------------- |
-| DDoS Protection (Network Protection) | ~$2,944 USD/month flat fee    | [Azure DDoS Protection pricing](https://azure.microsoft.com/en-au/pricing/details/ddos-protection/) |
-| DDoS Protection (IP Protection)      | ~$199 USD/month per public IP | [Azure DDoS Protection pricing](https://azure.microsoft.com/en-au/pricing/details/ddos-protection/) |
-| Defender CSPM                        | $5.11 USD/month per resource  | [Azure Defender pricing](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/)     |
+| Service                              | Manual Estimate               | Reference                                                                                       |
+| ------------------------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| Defender CSPM                        | $5.11 USD/month per resource  | [Azure Defender pricing](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/) |
 
 When encountering these services, note the limitation to the user and provide the manual fallback values above (in USD). If the user's requested currency is NOT USD, you **MUST** derive a conversion factor using the method below and convert all USD-only prices to the target currency. Do NOT leave prices in USD when the user requested a different currency. Do NOT direct them to the Azure pricing calculator — perform the conversion yourself.
 
@@ -39,7 +37,6 @@ Three service categories return pricing in **USD only** — either because they 
 
 | Service              | Reason                                        | Reference                                                        |
 | -------------------- | --------------------------------------------- | ---------------------------------------------------------------- |
-| DDoS Protection      | Not in API at all                             | [ddos-protection.md](services/networking/ddos-protection.md)     |
 | Private Link         | Global region, USD only; use `Region: Global` | [private-link.md](services/networking/private-link.md)           |
 | Private DNS          | Global region, USD only                       | [private-dns.md](services/networking/private-dns.md)             |
 | Defender CSPM        | Not in API at all                             | [defender-for-cloud.md](services/security/defender-for-cloud.md) |

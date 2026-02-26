@@ -3,6 +3,7 @@ serviceName: ExpressRoute
 category: networking
 aliases: [ER, Dedicated Circuit]
 primaryCost: "Circuit fee (flat monthly by bandwidth/plan) + metered data egress"
+pricingRegion: empty-region
 ---
 
 # ExpressRoute
@@ -55,4 +56,4 @@ Total monthly    = Circuit + Egress
 - **Gateway billed separately**: An ExpressRoute gateway (VNet attachment) is a separate resource — see `networking/expressroute-gateway.md` for gateway pricing
 - **Metered vs Unlimited**: Metered circuits have a lower base fee but charge per-GB for outbound data; Unlimited circuits include all data transfer
 - **Standard vs Premium**: Premium adds global routing across all geopolitical regions; Standard is limited to one geopolitical region
-- **Local circuits**: Available at select peering locations co-located with Azure regions — flat monthly with unlimited data at reduced cost
+- **Local circuits**: Available at select peering locations only (1/2/5/10 Gbps, Unlimited Data only) — flat monthly at reduced cost
