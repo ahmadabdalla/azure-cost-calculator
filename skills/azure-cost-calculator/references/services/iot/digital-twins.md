@@ -65,7 +65,6 @@ Total               = Messages + Operations + Query Units
 - Query units vary by query complexity — check the `query-charge` response header to estimate consumption
 - Available in 14 regions only; regional price variance up to ~50% (check region availability before estimating)
 - Companion services (IoT Hub, Event Grid, Event Hubs, Functions) are billed separately — Digital Twins meters cover only the twin graph platform
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates
 
