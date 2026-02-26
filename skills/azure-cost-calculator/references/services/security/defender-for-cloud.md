@@ -3,11 +3,12 @@ serviceName: Microsoft Defender for Cloud
 category: security
 aliases: [Azure Security Center, CSPM, CWP, MDC]
 primaryCost: "Per-resource hourly or monthly rate × resource count (per sub-product)."
+hasFreeGrant: true
 ---
 
 # Microsoft Defender for Cloud
 
-**Multiple sub-products** — query each separately by its own productName/skuName/meterName.
+> **Note**: Multiple sub-products — query each separately by its own productName/skuName/meterName.
 
 > **Trap (separate queries)**: Each sub-product needs its **own query** — unfiltered `serviceName` query mixes all products, `summary.totalMonthlyCost` is meaningless.
 > **Trap (hourly ≠ scaling)**: Hourly meters are per-protected-resource, not time-based. Monthly cost = rate × 730 × resourceCount.
@@ -22,6 +23,7 @@ ServiceName: Microsoft Defender for Cloud
 ProductName: {productName}
 SkuName: {skuName}
 MeterName: {meterName}
+InstanceCount: {resourceCount}  # number of protected resources
 
 ## Meter Names
 
@@ -45,9 +47,11 @@ MeterName: {meterName}
 ## Notes
 
 - **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types (SecurityEvent, SecurityAlert, SecurityBaseline, etc.) — pooled across all protected servers. When estimating Sentinel or Log Analytics ingestion, deduct this: `defenderFreeGB = serverCount × 0.5 × 30`. Only applies to data collected via Defender's auto-provisioned agents, not custom log sources.
-- Containers has free trial tiers (Free vCore, Free Images at £0.00) — always use `Standard` SKU meters for estimation.
+- **Servers P2 MDATP Benefit**: Customers with existing Microsoft Defender for Endpoint licenses get a reduced P2 rate — query with `MeterName: Standard P2 Node - MDATP Benefit`.
+- Containers has free trial tiers (Free vCore, Free Images at zero cost) — always use `Standard` SKU meters for estimation.
 - Containers vCore pricing = total vCores across all protected AKS nodes (e.g., 6× E4s_v5 @ 4 vCPU = 24 vCores).
-- App Service, DNS, and Resource Manager plans also exist — use the explore script with SearchTerm Defender to discover.
+- **Storage** also has a `Malware Scanning` add-on meter (per-GB scanned) in addition to the node and transaction meters.
+- App Service, DNS, Resource Manager, Cosmos DB, MySQL, PostgreSQL, MariaDB, AI Services, APIs, and EASM plans also exist — use the explore script with SearchTerm Defender to discover.
 
 ## Defender CSPM (Cloud Security Posture Management)
 

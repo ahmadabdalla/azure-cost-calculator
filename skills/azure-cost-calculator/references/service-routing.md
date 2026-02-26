@@ -78,6 +78,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - Key Vault: AKV, KV, Managed HSM
 - Microsoft Defender for Cloud: Azure Security Center, CSPM, CWP, MDC
+- Microsoft Purview: Data Governance, Data Catalog, Azure Purview, Purview Data Map, Data Estate Scanning
 - Sentinel: SIEM, SOAR, Azure Sentinel
 
 ## Monitoring (services/monitoring/)
@@ -128,15 +129,19 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Event Hubs: Kafka on Azure, Event Streaming
 - Event Grid: Event Routing, Event-driven
 - Notification Hubs: Push Notifications, ANH
+- Azure Maps: Location Services, Geospatial
 
 ## Developer Tools (services/developer-tools/)
 
 - App Configuration: Feature Flags, Configuration Store
 - Azure DevOps: ADO, VSTS, Repos, Pipelines, Boards, Artifacts
+- Azure Managed Grafana: Managed Grafana, Azure Grafana Service, Grafana Dashboard
 
 ## Identity (services/identity/)
 
 - Microsoft Entra ID: Azure AD, Azure Active Directory, AAD, Directory
+- Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
+- Azure Active Directory B2C: AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID
 
 ## Web (services/web/)
 
