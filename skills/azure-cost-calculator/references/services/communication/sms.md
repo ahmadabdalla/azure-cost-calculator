@@ -9,7 +9,7 @@ primaryCost: "Per-consumption-unit SMS + per-month short code leasing"
 
 > **Trap (consumption units)**: SMS meters use abstract consumption unit pricing, not per-message rates. Actual per-message cost depends on destination country and is set by the carrier. Use `Quantity` with expected monthly consumption units.
 
-> **Trap (multi-product)**: SMS spans 14 productNames covering Toll Free SMS (inbound/outbound), Short Codes (leasing/provisioning/messaging), and surcharges. Query each product type separately.
+> **Trap (multi-product)**: SMS spans 36 productNames across regional and Global regions — covering Toll Free SMS, Short Codes, Local SMS (10DLC), Mobile SMS, Alphanumeric Sender ID, and surcharges. Many products are Global-only. Query each product type separately.
 
 ## Query Pattern
 
@@ -68,3 +68,5 @@ Total Monthly      = Toll Free + Short Code (sum active components)
 - **Country-dependent pricing**: SMS rates vary by destination country; `skuName` encodes country (e.g., `US`, `CA`, `UK`, `ROW`)
 - Short code provisioning fees are one-time charges — separate from monthly lease
 - Surcharge products (`Toll Free SMS-OB-Surcharge`, etc.) add carrier-level fees on top of base consumption units
+- **Global-only products**: Alphanumeric Sender ID, Local SMS (10DLC), Mobile SMS, and non-`-I` Short Codes variants are only available in the Global region — use `Region: Global` to query
+- **Vanity short codes**: `Short Codes - Leasing - Vanity Number - I` at higher monthly lease than standard

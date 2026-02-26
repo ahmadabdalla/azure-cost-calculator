@@ -7,7 +7,7 @@ primaryCost: "Per-number monthly lease — rates vary by country and number type
 
 # Azure Communication Services — Phone Numbers
 
-> **Trap (121 meters)**: Unfiltered queries return 121+ meters across all countries. Always filter by `ProductName` (geographic vs toll free) and `SkuName` (country code) to get specific rates.
+> **Trap (154+ meters)**: Unfiltered queries return 121 regional meters plus 33 Global-only meters (Mobile, Number Lookup, 10DLC registration). Always filter by `ProductName` (geographic vs toll-free vs mobile) and `SkuName` (country code) to get specific rates.
 
 ## Query Pattern
 
@@ -38,7 +38,7 @@ MeterName: UK Leased Number
 | Parameter     | How to determine                    | Example values                               |
 | ------------- | ----------------------------------- | -------------------------------------------- |
 | `serviceName` | Always `Phone Numbers`              | `Phone Numbers`                              |
-| `productName` | Number type                         | `Geographic Numbers - I`, `Toll Free Numbers - I` |
+| `productName` | Number type                         | `Geographic Numbers - I`, `Toll Free Numbers - I`, `Mobile` |
 | `skuName`     | Country code (2-letter)             | `US`, `UK`, `CA`, `DE`, `AU`, `FR`          |
 | `meterName`   | Country + Leased Number             | `US Leased Number`, `UK Leased Number`       |
 
@@ -63,6 +63,9 @@ Monthly = retailPrice × numberOfPhoneNumbers
 
 - **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Messaging`, `Network Traversal`, `Routing`
 - **Country-dependent pricing**: Rates vary significantly by country and number type — query the API with the target country's `SkuName` for exact pricing
-- **121 meters in eastus**: Each country × number type combination has its own meter — always filter by country
+- **154+ meters total**: 121 regional meters (Geographic/Toll Free) plus 33 Global-only meters (Mobile, Number Lookup, 10DLC) — always filter by country and product type
 - Products with a `-I` suffix (e.g., `Geographic Numbers - I`) and without that suffix are alternative product-name variants with identical prices; use whichever variant exists for the target country, but note that `AU` and `JP` only appear in the non-I variants
 - Toll-free numbers are generally more expensive than geographic numbers
+- **Mobile numbers** (`ProductName: Mobile`): Available in 10 countries (AU, BE, DK, FI, IE, LV, NL, PL, SE, UK) — Global region only
+- **Number Lookup** (`ProductName: Number Lookup`): Line Type query at sub-cent rates — Global region only
+- **10DLC registration** (US only): Brand Registration, Brand Vetting (one-time), and Campaign Registration (monthly) fees — Global region only; required for US geographic numbers used for SMS

@@ -52,8 +52,11 @@ SkuName: ROW
 | `Standard Outbound`                      | `Direct Routing`         | `1 Minute`    | Per-minute outbound           |
 | `Standard Inbound`                       | `Direct Routing`         | `1 Minute`    | Per-minute inbound            |
 | `Standard Refer Unit`                    | `Direct Routing`         | `1`           | Call transfer/refer           |
+| `Standard Transfer Unit`                 | `Direct Routing`         | `1`           | Call transfer (free)          |
 | `A2AGroupCalling User Minute`            | `Voice and Video Calling`| `1`           | Video/group per-participant   |
-| `A2AGroupCalling User InterOp Azure Minute` | `Voice and Video Calling` | `1`       | Teams interop per-participant |
+| `A2AGroupCalling User InterOp Azure Minute` | `Voice and Video Calling` | `1`       | Azure interop per-participant |
+| `A2AGroupCalling User InterOp M365 Minute` | `Voice and Video Calling` | `1`        | Teams interop per-participant |
+| `A2AGroupCalling User CCaaS Minute`      | `Voice and Video Calling`| `1`           | Contact Center per-participant|
 | `ROW Consumption Unit - Outbound`        | `Local Calls - Outbound` | `1`           | Abstract consumption unit     |
 
 ## Cost Formula
@@ -69,7 +72,7 @@ Total Monthly          = Direct Routing + Group Calling (sum active components)
 - **Part of ACS family**: Related services use separate API serviceNames — `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - **VoIP leg only**: Direct Routing rates cover the VoIP/SBC leg; PSTN legs have separate, higher country-dependent rates
 - **Country-dependent pricing**: Local/Toll Free call rates vary by destination country via `skuName` (e.g., `US`, `ROW`)
-- **Additional billable features**: Call Recording (per-minute), Advanced Messaging/WhatsApp (per-message), and Closed Captions (per-minute) exist under Voice serviceName
+- **Additional billable features**: Call Recording, Audio Streaming, and Closed Captions exist under Voice serviceName — all Global region only (`Region: Global` required)
 
 ## Known Rates
 
@@ -78,3 +81,4 @@ Total Monthly          = Direct Routing + Group Calling (sum active components)
 | `Standard Outbound`           | Per minute | $0.004               |
 | `Standard Inbound`            | Per minute | $0.004               |
 | `A2AGroupCalling User Minute` | Per unit   | $0.004               |
+| `A2AGroupCalling User CCaaS Minute` | Per unit | $0.004              |
