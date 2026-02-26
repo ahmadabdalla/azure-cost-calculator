@@ -23,15 +23,15 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Compute (services/compute/)
 
-- Cloud Services: Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles
-- Service Fabric: Service Fabric Mesh, SF, SF Mesh, Microservices, Microservices Cluster, Reliable Services
-- Azure Red Hat OpenShift: ARO, OpenShift
-- Specialized Compute: SAP HANA Large Instances, Azure Boost
-- HPC Cache: High Performance Compute Cache
-- Durable Task Scheduler: Durable Tasks, Workflow Scheduler
-- Azure VM Image Builder: Image Builder, AIB, VM Image, Custom Image
-- Virtual Machines Licenses: VM Licenses, BYOL, Windows Server License, SQL Server License
 - Azure Local: Azure Stack Local, Hybrid Compute
+- Azure Red Hat OpenShift: ARO, OpenShift
+- Azure VM Image Builder: Image Builder, AIB, VM Image, Custom Image
+- Cloud Services: Cloud Services (classic), PaaS VMs, Worker Roles, Web Roles
+- Durable Task Scheduler: Durable Tasks, Workflow Scheduler
+- HPC Cache: High Performance Compute Cache
+- Service Fabric: Service Fabric Mesh, SF, SF Mesh, Microservices, Microservices Cluster, Reliable Services
+- Specialized Compute: SAP HANA Large Instances, Azure Boost
+- Virtual Machines Licenses: VM Licenses, BYOL, Windows Server License, SQL Server License
 
 ## Containers (services/containers/)
 
@@ -40,72 +40,72 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Databases (services/databases/)
 
-- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
-- Azure Database for MariaDB: MariaDB, Azure MariaDB
-- Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
-- SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
-- SQL Server Stretch Database: Stretch DB, SQL Stretch
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
-- Azure SQL Edge: Edge Database, IoT SQL
-- SQL DB Edge: Edge SQL (legacy name for Azure SQL Edge)
 - Azure Cosmos DB for PostgreSQL: Cosmos DB PostgreSQL, Citus, PostgreSQL Hyperscale, Cosmos DB for Postgres
+- Azure Database for MariaDB: MariaDB, Azure MariaDB
 - Azure HorizonDB: Horizon DB, Distributed PostgreSQL
+- Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
+- Azure SQL Edge: Edge Database, IoT SQL
+- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
+- SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
+- SQL DB Edge: Edge SQL (legacy name for Azure SQL Edge)
+- SQL Server Stretch Database: Stretch DB, SQL Stretch
 
 ## Networking (services/networking/)
 
+- Advanced Container Networking Services: Advanced CNI, Container Networking, Cilium, Azure CNI Overlay
 - Azure Firewall Manager: Firewall Policy
 - Azure Orbital: Ground Station, Satellite
-- Private Mobile Network: Private 5G Core, Mobile Network, MEC
-- Azure Route Server: BGP Routing
-- Advanced Container Networking Services: Advanced CNI, Container Networking, Cilium, Azure CNI Overlay
-- Microsoft Azure Peering Service: ISP Peering, Internet Peering
 - Azure Programmable Connectivity: APC, Network APIs
+- Azure Route Server: BGP Routing
+- Microsoft Azure Peering Service: ISP Peering, Internet Peering
+- Private Mobile Network: Private 5G Core, Mobile Network, MEC
 
 ## Storage (services/storage/)
 
+- Azure Container Storage: Container-native Storage, Kubernetes Storage
+- Azure Elastic SAN: SAN, Block Storage
+- Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
+- Azure Managed Lustre: Lustre, HPC Storage
 - Data Box Gateway: Data Box Virtual Appliance, Hybrid Data Transfer Gateway
 - Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
-- Azure Elastic SAN: SAN, Block Storage
-- Azure Managed Lustre: Lustre, HPC Storage
 - StorSimple: Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array
-- Azure Container Storage: Container-native Storage, Kubernetes Storage
-- Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
 
 ## Security (services/security/)
 
-- Azure confidential ledger: CCF, Blockchain Ledger
 - Azure Cloud HSM: Dedicated HSM, Hardware Security Module
-- Microsoft Azure Payment HSM: Payment Processing HSM
-- Azure IoT Security: Defender for IoT, OT Security
-- Microsoft Security Copilot: Copilot for Security
-- Microsoft Graph Services: Microsoft Graph, Graph API metered usage
-- Microsoft Defender Experts: XDR Experts, Managed Detection and Response
-- Multi-Factor Authentication: MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication
-- Trusted Signing: Code Signing, Azure Code Signing
+- Azure confidential ledger: CCF, Blockchain Ledger
 - Azure Defender EASM: External Attack Surface Management, EASM, Attack Surface
+- Azure IoT Security: Defender for IoT, OT Security
+- Microsoft Azure Payment HSM: Payment Processing HSM
+- Microsoft Defender Experts: XDR Experts, Managed Detection and Response
 - Microsoft Entra: Entra Suite, Microsoft Entra (exact API name), Entra ID metered
 - Microsoft Entra Verified ID: Verified ID, Verifiable Credentials, Decentralized Identity, DID
+- Microsoft Graph Services: Microsoft Graph, Graph API metered usage
+- Microsoft Security Copilot: Copilot for Security
+- Multi-Factor Authentication: MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication
+- Trusted Signing: Code Signing, Azure Code Signing
 
 ## Monitoring (services/monitoring/)
 
-- Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
 - Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
+- Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
 
 ## Management (services/management/)
 
-- Azure Chaos Studio: Chaos Engineering, Fault Injection
-- Scheduler: Azure Scheduler (legacy), Job Scheduler
+- Azure Advisor: Best Practices
 - Azure Arc: Hybrid Management, Arc-enabled Servers, Arc-enabled K8s
+- Azure Blueprints: Governance Templates (deprecated)
+- Azure Chaos Studio: Chaos Engineering, Fault Injection
+- Azure Cost Management: Billing, Budgets, Cost Analysis
 - Azure Lighthouse: Delegated Resource Management, MSP Management
 - Azure Policy: Compliance, Governance
-- Azure Advisor: Best Practices
-- Azure Cost Management: Billing, Budgets, Cost Analysis
-- Azure Blueprints: Governance Templates (deprecated)
 - Azure Resource Mover: Move Resources, Subscription Mover
 - Azure Update Manager: Patch Management, OS Updates
 - Azure Virtual Enclaves: Isolated Environments, Secure Enclaves
 - Change Tracking and Inventory: Change Tracking, Inventory Tracking, Configuration Tracking
 - Dynamics 365 for Customer Insights: Customer Insights, D365 CI, Dynamics 365 Analytics
+- Scheduler: Azure Scheduler (legacy), Job Scheduler
 
 ## Integration (services/integration/)
 
@@ -114,50 +114,50 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Analytics (services/analytics/)
 
-- Power BI: Power BI Service
-- Data Catalog: Data Catalog (legacy)
 - Azure Data Share: Data Sharing
-- Microsoft Planetary Computer Pro: Planetary Computer, Geospatial Analytics
-- Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
-- Web PubSub: WebSocket Service
-- Microsoft Graph data connect: Microsoft 365 Data, M365 Data Export
 - Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
+- Data Catalog: Data Catalog (legacy)
+- Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
+- Microsoft Graph data connect: Microsoft 365 Data, M365 Data Export
+- Microsoft Planetary Computer Pro: Planetary Computer, Geospatial Analytics
+- Power BI: Power BI Service
+- Web PubSub: WebSocket Service
 
 ## AI + ML (services/ai-ml/)
 
-- Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
+- Azure AI Content Understanding: Content Extraction, Multi-modal AI, Document Understanding
 - Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
+- Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
+- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
 - Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
-- Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
 - Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
-- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
-- Azure AI Content Understanding: Content Extraction, Multi-modal AI, Document Understanding
+- Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
 
 ## IoT (services/iot/)
 
-- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
 - Azure Device Registry: IoT Device Registry, Asset Registry
 - Azure IoT Operations: IoT Ops, Edge IoT, Azure IoT OPC UA
+- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - Windows 10 IoT Core Services: IoT Core, Windows IoT, IoT Core Services, Windows CE
 
 ## Developer Tools (services/developer-tools/)
 
-- Azure Lab Services: Classroom Labs, DevTest Labs
-- Microsoft Playwright Testing: Playwright, Browser Testing, E2E Testing
 - Azure App Testing: Mobile App Testing
-- Azure Fluid Relay: Fluid Framework, Real-time Collaboration
-- Visual Studio Codespaces: Codespaces (legacy), Cloud Dev Environments
-- Azure DevTest Labs: Lab VMs, Dev Environments
-- Microsoft Dev Box: Cloud Dev Workstation, Developer VM
 - Azure Deployment Environments: ADE, IaC Templates
+- Azure DevTest Labs: Lab VMs, Dev Environments
+- Azure Fluid Relay: Fluid Framework, Real-time Collaboration
+- Azure Lab Services: Classroom Labs, DevTest Labs
 - Azure Load Testing: JMeter, Performance Testing
 - GitHub: GitHub Enterprise, GitHub Actions, GitHub Copilot
 - GitHub AE: GitHub Enterprise (Azure-hosted, legacy)
+- Microsoft Dev Box: Cloud Dev Workstation, Developer VM
+- Microsoft Playwright Testing: Playwright, Browser Testing, E2E Testing
 - Test Base: Test Base for Microsoft 365, Compatibility Testing
+- Visual Studio Codespaces: Codespaces (legacy), Cloud Dev Environments
 - Visual Studio Subscription: VS Subscription, MSDN, Visual Studio Enterprise/Professional
 
 ## Identity (services/identity/)
@@ -172,32 +172,32 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Communication (services/communication/)
 
 - AI Ops: Telecom AI Ops, Azure Operator Insights
-- Packet Core: Azure Private 5G Core, Mobile Packet Core
 - Azure Operator Nexus: Telecom Nexus, Carrier Network
-- Voice Core: Telecom Voice, Core Voice Infrastructure
+- Packet Core: Azure Private 5G Core, Mobile Packet Core
 - Routing: ACS Routing, Communication Routing, Call Routing
+- Voice Core: Telecom Voice, Core Voice Infrastructure
 
 ## Specialist (services/specialist/)
 
-- Azure Blockchain: Blockchain Service, Blockchain Workbench (deprecated)
-- Azure Remote Rendering: 3D Rendering, Mixed Reality
-- Quantum Computing: Azure Quantum, Q#
 - Azure API for FHIR: FHIR API, Healthcare API, Health Data Services
-- Energy Data Manager: OSDU, Oil & Gas Data
-- Microsoft Dragon Copilot: Healthcare Copilot, Clinical Documentation
-- Microsoft Copilot Studio: Power Virtual Agents, Chatbot Builder
-- Syntex: SharePoint Syntex, Document Processing
+- Azure Blockchain: Blockchain Service, Blockchain Workbench (deprecated)
+- Azure Health Bot: Healthcare Bot, Health Virtual Assistant, Medical Bot
+- Azure Orbital Edge: Edge Satellite, Space Edge Computing
+- Azure Remote Rendering: 3D Rendering, Mixed Reality
 - Azure Spatial Anchors: AR Anchors, Mixed Reality Anchors
 - Azure Stack Edge: Edge Computing, Edge Appliance
 - Azure Stack HCI: HCI, Hyper-Converged Infrastructure
 - Azure Stack Hub: Azure Stack (original)
-- Azure Orbital Edge: Edge Satellite, Space Edge Computing
-- Firmware Analysis: Defender for IoT Firmware, IoT Firmware
 - Dataverse: Common Data Service, CDS, Power Platform Data
+- Energy Data Manager: OSDU, Oil & Gas Data
+- Firmware Analysis: Defender for IoT Firmware, IoT Firmware
+- Microsoft Copilot Studio: Power Virtual Agents, Chatbot Builder
+- Microsoft Dragon Copilot: Healthcare Copilot, Clinical Documentation
+- MS Bing Services: Bing Search, Bing API, Bing Search API
+- PlayFab: Game Backend, Game Services
 - Power Apps: PowerApps, Low-code Apps, Canvas Apps, Model-driven
 - Power Automate: Flow, Microsoft Flow, Workflow Automation
 - Power Pages: Portal, Power Apps Portals, Low-code Websites
-- PlayFab: Game Backend, Game Services
-- MS Bing Services: Bing Search, Bing API, Bing Search API
+- Quantum Computing: Azure Quantum, Q#
 - SAP Embrace: SAP on Azure, SAP Integration
-- Azure Health Bot: Healthcare Bot, Health Virtual Assistant, Medical Bot
+- Syntex: SharePoint Syntex, Document Processing

@@ -193,11 +193,11 @@ Before running validation, update both routing files:
 
 ### 5.1 - Remove from catalog
 
-If the service has an entry in `docs/service-catalog.md`, delete the entry. The catalog is for pending services only.
+If the service has an entry in `docs/service-catalog.md`, delete the entry. The catalog is for pending services only. Both the routing map and the catalog maintain entries in alphabetical order (A–Z by display name) within each category section.
 
 ### 5.2 - Add to routing map
 
-Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section using the format: `- {display name}: {alias1}, {alias2}`. Use the display name and aliases from your consensus — note the display name may differ from the API `serviceName` for split-product services.
+Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section using the format: `- {display name}: {alias1}, {alias2}`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section. Use the display name and aliases from your consensus — note the display name may differ from the API `serviceName` for split-product services.
 
 ---
 
