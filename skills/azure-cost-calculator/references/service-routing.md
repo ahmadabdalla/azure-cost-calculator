@@ -104,6 +104,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Microsoft Fabric: Fabric Capacity, OneLake, Lakehouse
 - SignalR: Azure SignalR Service, Real-time Messaging
 - Azure Data Explorer: ADX, Kusto
+- HDInsight: Hadoop, Spark, HBase, Kafka, HDI
 
 ## AI + ML (services/ai-ml/)
 
