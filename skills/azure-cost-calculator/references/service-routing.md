@@ -128,6 +128,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Developer Tools (services/developer-tools/)
 
+- App Configuration: Feature Flags, Configuration Store
 - Azure DevOps: ADO, VSTS, Repos, Pipelines, Boards, Artifacts
 
 ## Identity (services/identity/)
