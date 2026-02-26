@@ -37,8 +37,6 @@ PriceType: Consumption
 
 **Example meterName values:** `C0 Cache`, `C1 Cache`, `C2 Cache`, `C3 Cache`, `C4 Cache`, `C5 Cache`, `C6 Cache`
 
-> Use `{Size} Cache` (NOT `{Size} Cache Instance`) to get the **total cluster cost** matching the Azure Portal.
-
 ### Premium {Size} (e.g., P1) — Full cluster with HA (2 nodes)
 
 ServiceName: Redis Cache
@@ -48,18 +46,15 @@ PriceType: Consumption
 
 **Example meterName values:** `P1 Cache`, `P2 Cache`, `P3 Cache`, `P4 Cache`, `P5 Cache`
 
-> Use `{Size} Cache` (NOT `{Size} Cache Instance`) to get the **total cluster cost** matching the Azure Portal.
-
-### Premium {Size} — Per-node pricing (for scaling calculations)
+### Premium {Size} — Per-node pricing (for sharded cluster calculations)
 
 ServiceName: Redis Cache
 ProductName: Azure Redis Cache Premium
 MeterName: {Size} Cache Instance
 PriceType: Consumption
+InstanceCount: 3 # number of shards in cluster
 
 **Example meterName values:** `P1 Cache Instance`, `P2 Cache Instance`, `P3 Cache Instance`, `P4 Cache Instance`, `P5 Cache Instance`
-
-> Use this only when calculating costs for **sharded clusters** where you need per-node cost × shard count.
 
 ## Cost Formula
 
@@ -71,10 +66,11 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 - Basic tier has no SLA or replication (dev/test only); use `ProductName` to disambiguate tiers
 - Standard tier includes replication (2 nodes); Enterprise tiers use Redis Stack modules (RediSearch, RedisJSON, etc.)
+- Azure Managed Redis (Balanced, Memory Optimized, Compute Optimized, Flash Optimized) is the successor product — uses `Azure Managed Redis - {tier}` productName with `{Size} Cache Instance` meters only
 
 ## Reserved Instance Pricing
 
-RIs available for **Premium only** (P1-P5). Returns both 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
+RIs available for **Premium** (P1-P5), **Enterprise** (select SKUs), **Enterprise Flash**, and **Azure Managed Redis** tiers. Returns 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
 
 ### RI for Premium — substitute {Size} with P1-P5
 
@@ -95,3 +91,7 @@ PriceType: Reservation
 | Premium          | `Azure Redis Cache Premium`          | `P1`–`P5`                                               | Clustering, persistence, VNet       |
 | Enterprise       | `Azure Redis Cache Enterprise`       | `E1`, `E5`, `E10`, `E20`, `E50`, `E100`, `E200`, `E400` | Redis Stack, active geo-replication |
 | Enterprise Flash | `Azure Redis Cache Enterprise Flash` | `F300`, `F700`, `F1500`                                 | Flash-optimized, large datasets     |
+| Managed Balanced | `Azure Managed Redis - Balanced`       | `B0`–`B1000`                                            | Successor product, 4:1 memory:vCPU  |
+| Managed Memory   | `Azure Managed Redis - Memory Optimized` | `M10`–`M2000`                                        | 8:1 memory:vCPU ratio               |
+| Managed Compute  | `Azure Managed Redis - Compute Optimized` | `X1`–`X700`                                         | 2:1 memory:vCPU, max throughput     |
+| Managed Flash    | `Azure Managed Redis - Flash Optimized` | `A250`–`A4500`                                        | NVMe-backed, very large datasets    |

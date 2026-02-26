@@ -3,14 +3,14 @@ serviceName: Azure Database Migration Service
 category: databases
 aliases: [DMS, Database Migration, DB Migration Service]
 primaryCost: "Instance hourly rate × 730 (Premium tier only — Basic/General Purpose are free)"
-hasKnownRates: true
+hasFreeGrant: true
 ---
 
 # Azure Database Migration Service
 
 > **Trap**: Meter names (`4 vCore`, `8 vCore`, `16 vCore`) repeat across General Purpose Compute and Premium Compute products. Always filter by `productName` to select the correct tier.
 
-> **Note**: Basic and General Purpose tiers are free for offline migrations. Only Premium tier incurs charges for online (continuous-sync) migrations — with a 180-day free period per instance.
+> **Note**: Basic and General Purpose tiers are free for offline migrations. Only Premium tier incurs charges for online (continuous-sync) migrations — with a 183-day free period per instance.
 
 ## Query Pattern
 
@@ -67,7 +67,7 @@ Total = Premium (if online migration required)
 ## Notes
 
 - Basic and General Purpose tiers (offline): free — supports SQL Server, MySQL, PostgreSQL, MongoDB migrations
-- Premium tier (online/continuous-sync): paid per-vCore/hour after 180-day free period
+- Premium tier (online/continuous-sync): paid per-vCore/hour after 183-day free period
 - Premium is ~2× General Purpose pricing for the same vCore count
 - Basic tier: 1–2 vCores; General Purpose / Premium: 4, 8, or 16 vCores
 - Capacity: 4 vCores supports ~2 parallel table migrations; scale up for larger databases
