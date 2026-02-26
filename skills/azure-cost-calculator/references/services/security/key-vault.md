@@ -18,6 +18,7 @@ ServiceName: Key Vault
 SkuName: Standard
 ProductName: Key Vault
 MeterName: Operations
+Quantity: 100  # 100 × 10K = 1M operations/month
 
 > For cryptographic operations, use `MeterName: Advanced Key Operations` instead.
 
@@ -35,10 +36,10 @@ MeterName: Operations
 | Meter                                    | SKU              | unitOfMeasure | Notes                            |
 | ---------------------------------------- | ---------------- | ------------- | -------------------------------- |
 | `Operations`                             | Standard/Premium | 10K           | Secret/key read/write            |
-| `Advanced Key Operations`                | Standard         | 10K           | RSA/EC cryptographic ops         |
-| `Certificate Renewal Request`            | Standard         | 1             | Per certificate renewal          |
-| `Secret Renewal`                         | Standard         | 1             | Per secret auto-renewal          |
-| `Automated Key Rotation`                 | Standard         | 1 Rotation    | Per key auto-rotation            |
+| `Advanced Key Operations`                | Standard/Premium | 10K           | RSA/EC cryptographic ops         |
+| `Certificate Renewal Request`            | Standard/Premium | 1             | Per certificate renewal          |
+| `Secret Renewal`                         | Standard/Premium | 1             | Per secret auto-renewal          |
+| `Automated Key Rotation`                 | Standard/Premium | 1 Rotation    | Per key auto-rotation            |
 | `Premium HSM-protected RSA 2048-bit key` | Premium          | 1/Month       | Per HSM key, per month           |
 | `Premium HSM-protected Advanced Key`     | Premium          | 1/Month       | Per key, tiered — see trap below |
 
@@ -57,6 +58,7 @@ Monthly = (operations/10000 × ops_price) + (advancedOps/10000 × advOps_price)
 
 ## Notes
 
-- Standard vs Premium: Premium adds HSM-backed keys with separate per-key pricing.
+- Standard vs Premium: Premium adds HSM-backed keys with separate per-key pricing. All Standard meters also exist under Premium at identical prices.
 - Software-protected keys included in operations cost; HSM-protected keys are separate (Premium only).
-- Operations include vault reads, writes, and list operations.
+- Operations include vault reads, writes, list operations, and cryptographic calls. Estimate operation count from expected app request rates (each secret read = 1 operation).
+- **Managed HSM** (`Key Vault HSM Pool` in API, `Standard B1` SKU) is a dedicated single-tenant HSM pool billed at hourly rate — query with `ProductName: Key Vault HSM Pool`.
