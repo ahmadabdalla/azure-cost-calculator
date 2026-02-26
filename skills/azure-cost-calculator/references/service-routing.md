@@ -133,6 +133,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - App Configuration: Feature Flags, Configuration Store
 - Azure DevOps: ADO, VSTS, Repos, Pipelines, Boards, Artifacts
+- Azure Managed Grafana: Managed Grafana, Azure Grafana Service, Grafana Dashboard
 
 ## Identity (services/identity/)
 
