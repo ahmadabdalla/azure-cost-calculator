@@ -69,6 +69,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Data Lake Storage: Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake
 - Backup: Azure Backup, Recovery Services Vault, MARS Agent, VM Backup
 - Data Box: Data Box Disk, Data Box Heavy, Import/Export
+- Azure NetApp Files: NetApp, ANF, Azure NetApp
 - Managed Disks: Managed Disks, Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage
 
 ## Security (services/security/)

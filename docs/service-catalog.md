@@ -62,7 +62,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Storage (services/storage/)
 
-- Azure NetApp Files: NetApp, ANF, Azure NetApp
 - Azure Elastic SAN: SAN, Block Storage
 - Azure Managed Lustre: Lustre, HPC Storage
 - StorSimple: Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array
