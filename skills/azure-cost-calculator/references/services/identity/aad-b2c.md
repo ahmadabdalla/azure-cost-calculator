@@ -75,7 +75,7 @@ Total:         Monthly = MAU_or_Auth_cost + MFA_cost
 - **P1 vs P2**: The API has a single `Standard` SKU — P1 and P2 differ in features (P2 adds Identity Protection, PIM), not per-MAU pricing
 - **MFA is per-attempt**: Each SMS/Voice MFA challenge incurs a charge whether sign-in succeeds or fails
 - **End-of-sale**: As of May 2025, not available for new customers — new implementations should use Microsoft Entra External ID
-- Related services billed separately: `Microsoft Entra ID` (identity/entra-id.md), `Azure Active Directory for External Identities` (B2B)
+- Related services billed separately: `identity/entra-id.md` (Microsoft Entra ID), `Azure Active Directory for External Identities` (B2B)
 
 ## Known Rates
 
