@@ -3,6 +3,7 @@ serviceName: Logic Apps
 category: integration
 aliases: [Workflows, Logic App Standard/Consumption]
 primaryCost: "Per-action (Consumption) or vCPU + memory hours (Standard)"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -57,6 +58,8 @@ MeterName: {Tier} Unit
 | `Standard vCPU Duration`                   | `Standard`    | `1 Hour`      | Per vCPU                  |
 | `Standard Memory Duration`                 | `Standard`    | `1 GiB Hour`  | Per GiB                   |
 | `Hybrid vCPU Duration`                     | `Hybrid`      | `1 Hour`      | On-premises vCPU          |
+| `Consumption Agent Loop Input Token`       | `Consumption` | `1M`          | AI agent input tokens     |
+| `Consumption Agent Loop Output Token`      | `Consumption` | `1M`          | AI agent output tokens    |
 
 > Integration Account meters (`Basic Unit`, `Standard Unit`, `Premium Unit`) are flat monthly — query with ProductName `Logic Apps Integration Account`.
 
@@ -75,6 +78,7 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 - Consumption: per-action, first 4,000 built-in actions/month free, auto-scales to zero
 - Standard: runs on App Service Plan (WS1–WS3) or container; billed per-second
 - Integration Account is a separate B2B/EDI add-on; ISE is deprecated — use Standard with VNet instead
+- **Private Endpoints**: Require Standard tier with VNet integration
 
 ## Standard Plan Sizes (WS)
 

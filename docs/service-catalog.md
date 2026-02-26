@@ -67,7 +67,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Security (services/security/)
 
-- Microsoft Purview: Data Governance, Data Catalog
 - Azure confidential ledger: CCF, Blockchain Ledger
 - Azure Cloud HSM: Dedicated HSM, Hardware Security Module
 - Microsoft Azure Payment HSM: Payment Processing HSM
@@ -110,7 +109,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Analysis Services: AAS, Tabular Model
 - Power BI: Power BI Service
 - Data Catalog: Data Catalog (legacy)
-- Azure Purview: Purview Data Map, Data Estate Scanning
 - Azure Data Share: Data Sharing
 - Microsoft Planetary Computer Pro: Planetary Computer, Geospatial Analytics
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
@@ -123,12 +121,15 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## IoT (services/iot/)
 
-- IoT Central: IoT SaaS, IoT Application
 - Azure Maps: Location Services, Geospatial
 - Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
 - Azure Device Registry: IoT Device Registry, Asset Registry
 - Azure IoT Operations: IoT Ops, Edge IoT, Azure IoT OPC UA
+- Azure Maps: Location Services, Geospatial
+- Digital Twins: ADT, IoT Modeling
+- IoT Central: IoT SaaS, IoT Application
+- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - Windows 10 IoT Core Services: IoT Core, Windows IoT, IoT Core Services, Windows CE
 
 ## Developer Tools (services/developer-tools/)
@@ -137,7 +138,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Microsoft Playwright Testing: Playwright, Browser Testing, E2E Testing
 - Azure App Testing: Mobile App Testing
 - Azure Fluid Relay: Fluid Framework, Real-time Collaboration
-- Azure Grafana Service: Managed Grafana, Azure Managed Grafana, Grafana Dashboard
 - Visual Studio Codespaces: Codespaces (legacy), Cloud Dev Environments
 - Azure DevTest Labs: Lab VMs, Dev Environments
 - Microsoft Dev Box: Cloud Dev Workstation, Developer VM
@@ -150,9 +150,7 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Identity (services/identity/)
 
-- Azure Active Directory B2C: AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID
 - Azure Active Directory for External Identities: AAD External, B2B, Guest Users, Entra External ID
-- Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
 - Windows 365 Agents: Cloud PC Agents
 
 ## Web (services/web/)
