@@ -148,6 +148,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## Web (services/web/)
 
 - Azure Cognitive Search: Azure AI Search, Search Service, Full-text Search
+- Azure Spring Cloud: Azure Spring Apps, Java Microservices
 - Azure Static Web Apps: SWA, JAMstack
 
 ## Communication (services/communication/)

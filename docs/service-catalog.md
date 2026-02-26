@@ -154,7 +154,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Web (services/web/)
 
-- Azure Spring Cloud: Azure Spring Apps, Java Microservices
 - Community Training: Learning
 
 ## Communication (services/communication/)
