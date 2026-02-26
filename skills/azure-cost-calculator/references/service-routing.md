@@ -18,13 +18,13 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Compute (services/compute/)
 
-- Virtual Machines: VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host
 - Azure App Service: Web Apps, App Service Plan, ASP
-- Functions: Serverless Functions, Function App
+- Azure Batch: HPC Batch, Batch Compute
 - Azure Container Apps: ACA, Container Apps
 - Azure Kubernetes Service: AKS, Kubernetes, K8s, AKS Automatic, Kubernetes Automatic
-- Azure Batch: HPC Batch, Batch Compute
 - Azure VMware Solution: AVS, VMware on Azure
+- Functions: Serverless Functions, Function App
+- Virtual Machines: VMs, Azure VMs, IaaS VMs, VM Scale Sets, VMSS, Dedicated Host
 - Windows Virtual Desktop: Azure Virtual Desktop, AVD, WVD
 
 ## Containers (services/containers/)
@@ -34,45 +34,45 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Databases (services/databases/)
 
+- Azure Cosmos DB: CosmosDB, DocumentDB, Multi-model DB
+- Azure Database for MySQL: MySQL, Azure MySQL, MySQL Flexible Server
+- Azure Database for PostgreSQL: PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server
+- Azure Database Migration Service: DMS, Database Migration, DB Migration Service
+- Redis Cache: Azure Cache for Redis, Redis, Azure Redis, Managed Redis
 - SQL Database: Azure SQL, SQL DB
 - SQL Managed Instance: SQL MI, Azure SQL MI, Managed Instance
-- Azure Cosmos DB: CosmosDB, DocumentDB, Multi-model DB
-- Azure Database for PostgreSQL: PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server
-- Azure Database for MySQL: MySQL, Azure MySQL, MySQL Flexible Server
-- Redis Cache: Azure Cache for Redis, Redis, Azure Redis, Managed Redis
-- Azure Database Migration Service: DMS, Database Migration, DB Migration Service
 
 ## Networking (services/networking/)
 
 - Application Gateway: App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy
-- Azure Firewall: AzFW, Azure Firewall Premium/Standard/Basic
 - Azure Bastion: Bastion Host, Jump Host, Jump Box
 - Azure DDOS Protection: DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection
+- Azure DNS: DNS Zones, Public DNS Zones
+- Azure Firewall: AzFW, Azure Firewall Premium/Standard/Basic
+- Azure Front Door Service: AFD, Front Door, Front Door Premium/Standard, Front Door WAF
+- Azure Private Link: Private Endpoint, PE
+- Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
+- Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
 - ExpressRoute: ER, Dedicated Circuit
 - ExpressRoute Gateway: ER Gateway, ExpressRoute VNet Gateway, ErGw
-- Virtual Network: VNet, Peering
-- VPN Gateway: VPN, Site-to-Site, Point-to-Site, S2S, P2S
+- IP Addresses: Public IP, PIP, Public IP Address
 - Load Balancer: ALB, LB, Standard LB, Basic LB
-- Azure Front Door Service: AFD, Front Door, Front Door Premium/Standard, Front Door WAF
-- Azure DNS: DNS Zones, Public DNS Zones
+- NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
+- Network Watcher: NSG Flow Logs, Connection Monitor
 - Private DNS: Private DNS, Private DNS Zones
 - Traffic Manager: DNS Load Balancer
-- Azure Private Link: Private Endpoint, PE
-- Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
-- NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
-- IP Addresses: Public IP, PIP, Public IP Address
-- Network Watcher: NSG Flow Logs, Connection Monitor
-- Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
+- Virtual Network: VNet, Peering
 - Virtual WAN: vWAN, WAN Hub
+- VPN Gateway: VPN, Site-to-Site, Point-to-Site, S2S, P2S
 
 ## Storage (services/storage/)
 
-- Storage: Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage
-- Data Lake Storage: Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake
+- Azure NetApp Files: NetApp, ANF, Azure NetApp
 - Backup: Azure Backup, Recovery Services Vault, MARS Agent, VM Backup
 - Data Box: Data Box Disk, Data Box Heavy, Import/Export
-- Azure NetApp Files: NetApp, ANF, Azure NetApp
+- Data Lake Storage: Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake
 - Managed Disks: Managed Disks, Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage
+- Storage: Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage
 
 ## Security (services/security/)
 
@@ -83,55 +83,55 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Monitoring (services/monitoring/)
 
-- Azure Monitor: Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive
 - Application Insights: App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights
+- Azure Monitor: Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive
 - Log Analytics: OMS, LA, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite
 
 ## Management (services/management/)
 
-- Azure Site Recovery: ASR, Disaster Recovery, DR
-- Azure Migrate: Server Assessment, Migration Tools
-- Management Groups: Management Group, Azure Management Groups, Subscription Organization
 - Automation: Runbooks, DSC, Update Management
+- Azure Migrate: Server Assessment, Migration Tools
+- Azure Site Recovery: ASR, Disaster Recovery, DR
+- Management Groups: Management Group, Azure Management Groups, Subscription Organization
 
 ## Integration (services/integration/)
 
-- Service Bus: ASB, Queues, Topics
-- Logic Apps: Workflows, Logic App Standard/Consumption
 - API Management: APIM, API Gateway
+- Logic Apps: Workflows, Logic App Standard/Consumption
+- Service Bus: ASB, Queues, Topics
 
 ## Analytics (services/analytics/)
 
-- Azure Synapse Analytics: Synapse, Synapse Workspace, Synapse SQL, Synapse Spark
+- Azure Analysis Services: AAS, Tabular Model
+- Azure Data Explorer: ADX, Kusto
 - Azure Data Factory v2: ADF, ADF v2, ETL, Data Pipeline, Azure Data Factory
 - Azure Databricks: DBX, Spark on Azure
-- Stream Analytics: ASA, Real-time Analytics
+- Azure Synapse Analytics: Synapse, Synapse Workspace, Synapse SQL, Synapse Spark
+- HDInsight: Hadoop, Spark, HBase, Kafka, HDI
 - Microsoft Fabric: Fabric Capacity, OneLake, Lakehouse
 - Power BI Embedded: PBI Embedded, Embedded Analytics
 - SignalR: Azure SignalR Service, Real-time Messaging
-- Azure Data Explorer: ADX, Kusto
-- HDInsight: Hadoop, Spark, HBase, Kafka, HDI
-- Azure Analysis Services: AAS, Tabular Model
+- Stream Analytics: ASA, Real-time Analytics
 
 ## AI + ML (services/ai-ml/)
 
-- Azure Machine Learning: Azure ML, AML, ML Workspace
-- Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision
 - Azure Bot Service: Bot Framework, Chatbot
-- Intelligent Recommendations: Recommendations, Personalization
-- Microsoft Genomics: Genomics Workspace
+- Azure Machine Learning: Azure ML, AML, ML Workspace
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
+- Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision
+- Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML
+- Microsoft Genomics: Genomics Workspace
 
 ## IoT (services/iot/)
 
-- IoT Hub: Device Messaging
-- IoT Central: IoT SaaS, IoT Application
-- Event Hubs: Kafka on Azure, Event Streaming
-- Event Grid: Event Routing, Event-driven
-- Notification Hubs: Push Notifications, ANH
-- Digital Twins: ADT, IoT Modeling
 - Azure Maps: Location Services, Geospatial
+- Digital Twins: ADT, IoT Modeling
+- Event Grid: Event Routing, Event-driven
+- Event Hubs: Kafka on Azure, Event Streaming
+- IoT Central: IoT SaaS, IoT Application
+- IoT Hub: Device Messaging
+- Notification Hubs: Push Notifications, ANH
 
 ## Developer Tools (services/developer-tools/)
 
@@ -141,9 +141,9 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Identity (services/identity/)
 
-- Microsoft Entra ID: Azure AD, Azure Active Directory, AAD, Directory
-- Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
 - Azure Active Directory B2C: AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID
+- Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
+- Microsoft Entra ID: Azure AD, Azure Active Directory, AAD, Directory
 
 ## Web (services/web/)
 
@@ -153,9 +153,9 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Communication (services/communication/)
 
-- Phone Numbers: ACS Phone Numbers, PSTN, Telephony
-- Voice: ACS Voice, Voice Calling, VOIP
 - Email: ACS Email, Email Communication
 - Messaging: ACS Chat, Chat Messaging
-- SMS: ACS SMS, Text Messaging
 - Network Traversal: ACS TURN, TURN Relay
+- Phone Numbers: ACS Phone Numbers, PSTN, Telephony
+- SMS: ACS SMS, Text Messaging
+- Voice: ACS Voice, Voice Calling, VOIP

@@ -151,8 +151,8 @@ All paths above are given from the repo root.
 
 After the AI generates the service reference file:
 
-1. **Add to routing map** — add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section, using the format: `- Service Display Name: alias1, alias2`
-2. **Remove from catalog** — if the service was listed in `docs/service-catalog.md`, delete its entry. The catalog tracks only pending (unimplemented) services.
+1. **Add to routing map** — add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section, using the format: `- Service Display Name: alias1, alias2`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section.
+2. **Remove from catalog** — if the service was listed in `docs/service-catalog.md`, delete its entry. The catalog tracks only pending (unimplemented) services. Both the routing map and the catalog maintain entries in alphabetical order within each category.
 
 ### 2. Validate locally
 
@@ -212,3 +212,4 @@ If the AI-generated file fails validation or looks wrong, check these common iss
 4. **Flat within categories** - no sub-folders; 100+ files per category is fine
 5. **Aliases are first-class** - the `aliases` YAML field is the primary search index
 6. **Free/no-meter services need files too** - prevents agents from wasting queries on free services
+7. **Alphabetical ordering** - entries within each category section in the routing map and service catalog are sorted alphabetically (A–Z) by display name. New entries must be inserted in the correct position to maintain this order

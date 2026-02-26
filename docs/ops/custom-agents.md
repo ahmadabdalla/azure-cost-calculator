@@ -130,7 +130,7 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | File                                  | Relationship                                                                                                                |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `AGENTS.md` / `CLAUDE.md`             | Repo-level context for all agents; the custom agents complement these with service-reference-specific workflow enforcement. |
-| `CONTRIBUTING.md`                     | Contains "The Prompt" workflow; the compliance reviewer reads this to produce its contract.                                 |
+| `CONTRIBUTING.md`                     | Contains "The Prompt" workflow; the compliance reviewer reads this to produce its contract. Defines alphabetical ordering rule for routing and catalog entries. |
 | `docs/TEMPLATE.md`                    | Template structure; referenced by the compliance reviewer, not duplicated.                                                  |
 | `tests/Validate-ServiceReference.ps1` | Validation script the orchestrator runs as its final step.                                                                  |
 | `skills/.../scripts/`                 | Explore/Get-AzurePricing scripts the pricing investigator runs for API discovery.                                           |
