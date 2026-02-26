@@ -56,7 +56,7 @@ Region: eastus2
 
 | Meter | skuName | unitOfMeasure | Notes |
 | --- | --- | --- | --- |
-| `Developer` | `Developer` | `1 Hour` | 20 QPUs; dev/test only, no SLA |
+| `Developer` | `Developer` | `1 Hour` | 10 QPUs; dev/test only, no SLA |
 | `B1` | `B1` | `1 Hour` | 40 QPUs; Basic tier |
 | `B2` | `B2` | `1 Hour` | 80 QPUs; Basic tier |
 | `S0` | `S0` | `1 Hour` | 40 QPUs; Standard tier |
@@ -78,7 +78,7 @@ Where `instanceCount` = 1 for single server, or (1 + replicaCount) for Standard 
 
 ## Notes
 
-- **Capacity planning**: QPU counts scale per tier — Developer 20, B1/S0 40, B2 80, S1 100, S2 200, S4 400, S8 v2 640, S9 v2 1280; memory scales proportionally
+- **Capacity planning**: QPU counts scale per tier — Developer 10, B1/S0 40, B2 80, S1 100, S2 200, S4 400, S8 v2 640, S9 v2 1280; memory scales proportionally
 - **Tier limitations**: Developer has no SLA and no scale-out. Basic has no scale-out or DirectQuery. Standard supports up to 7 read-only scale-out replicas.
 - **Pausing**: Billing stops entirely when a server is paused — no charges apply while paused
 - **No separate storage billing**: Model data resides in-memory; storage is included in the compute price. Backups use the customer's own Azure Storage account (billed separately under Storage).
