@@ -26,7 +26,7 @@ MeterName: {Tier} Registry Unit
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: Data Stored
-Quantity: 50 ← excess GB beyond included tier quota
+Quantity: 50 # excess GB beyond included tier quota
 
 > **Note**: For geo-replication storage (Premium only), use `MeterName 'Premium GB Registry Replication Data Stored'`.
 
