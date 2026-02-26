@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (inflated totals)**: Omitting `SkuName` returns all vCore sizes summed. Always filter by `ProductName`, `SkuName`, and `MeterName` — the service has 39 products spanning vCore, DTU, Serverless, Elastic Pool, storage, and backup.
 
-> **Trap (DTU billing)**: DTU tiers (Basic/Standard/Premium) use `unitOfMeasure: 1/Day` — monthly = daily rate × 30. The script's `MonthlyCost` assumes hourly billing and is incorrect for DTU meters.
+> **Trap (DTU billing)**: DTU tiers (Basic/Standard/Premium) use `unitOfMeasure: 1/Day`. The script auto-multiplies by 30 for these meters, so `MonthlyCost` is already the monthly cost.
 
 ## Query Pattern
 
