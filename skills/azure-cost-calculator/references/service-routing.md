@@ -63,6 +63,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - IP Addresses: Public IP, PIP, Public IP Address
 - Network Watcher: NSG Flow Logs, Connection Monitor
 - Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
+- Virtual WAN: vWAN, WAN Hub
 
 ## Storage (services/storage/)
 
@@ -128,6 +129,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Developer Tools (services/developer-tools/)
 
+- App Configuration: Feature Flags, Configuration Store
 - Azure DevOps: ADO, VSTS, Repos, Pipelines, Boards, Artifacts
 
 ## Identity (services/identity/)
