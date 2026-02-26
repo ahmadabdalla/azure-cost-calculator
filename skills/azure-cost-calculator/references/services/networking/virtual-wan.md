@@ -39,12 +39,14 @@ InstanceCount: 2
 ServiceName: Virtual WAN
 SkuName: VPN S2S Connection Unit
 MeterName: VPN S2S Connection Unit
+Quantity: 10
 
 ### ExpressRoute gateway — scale units 1–5 (2 Gbps each)
 
 ServiceName: Virtual WAN
 SkuName: ExpressRoute Scale Unit
 MeterName: ExpressRoute Scale Unit
+InstanceCount: 3
 
 > **Note**: ER units 6–10 use `SkuName: ExpressRoute Additional Scale Unit` at a lower rate. VPN P2S queries follow the S2S pattern — substitute `VPN P2S Scale Unit` / `VPN P2S Connection Unit`.
 
@@ -81,12 +83,12 @@ MeterName: ExpressRoute Scale Unit
 ## Cost Formula
 
 ```
-Hub monthly        = hub_retailPrice × 730
-Data monthly       = data_retailPrice × estimatedGB
+Hub monthly        = hub_retailPrice × 730 + data_retailPrice × estimatedGB
 S2S VPN monthly    = s2s_scale_retailPrice × 730 × scaleUnits + s2s_conn_retailPrice × 730 × connections
 P2S VPN monthly    = p2s_scale_retailPrice × 730 × scaleUnits + p2s_conn_retailPrice × 730 × connections
 ER monthly         = er_scale_retailPrice × 730 × min(units, 5) + er_addl_retailPrice × 730 × max(0, units - 5) + er_conn_retailPrice × 730 × connections
-Total monthly      = Hub + Data + S2S VPN + P2S VPN + ER (sum only deployed components)
+Optional monthly   = (hub2hub / nva / routing / appgw) retailPrice × 730 × units + fw_nva_data_retailPrice × GB
+Total monthly      = Hub + S2S VPN + P2S VPN + ER + Optional (sum only deployed components)
 ```
 
 ## Notes
@@ -95,5 +97,4 @@ Total monthly      = Hub + Data + S2S VPN + P2S VPN + ER (sum only deployed comp
 - **Capacity**: 1 VPN scale unit = 500 Mbps; 1 ER scale unit = 2 Gbps; base hub includes 2 routing units (3 Gbps, 2,000 VMs)
 - **Routing Infrastructure Unit**: auto-scales at 1 unit per additional 1,000 VMs beyond the included 2,000
 - **Secured Virtual Hub**: Azure Firewall in hub is billed under `Azure Firewall`, not Virtual WAN — see `networking/firewall.md`
-- **Data transfer**: outbound egress billed separately under the Bandwidth service
-- **NVA marketplace**: `NVA Infrastructure Unit` covers Azure infra only; NVA software licensing is additional
+- **Data transfer**: outbound egress billed under Bandwidth; NVA marketplace licensing is additional to infra units
