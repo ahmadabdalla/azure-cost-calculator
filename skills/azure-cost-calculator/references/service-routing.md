@@ -78,6 +78,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - Key Vault: AKV, KV, Managed HSM
 - Microsoft Defender for Cloud: Azure Security Center, CSPM, CWP, MDC
+- Microsoft Purview: Data Governance, Data Catalog, Azure Purview, Purview Data Map, Data Estate Scanning
 - Sentinel: SIEM, SOAR, Azure Sentinel
 
 ## Monitoring (services/monitoring/)
