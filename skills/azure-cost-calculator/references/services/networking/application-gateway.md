@@ -22,11 +22,12 @@ ServiceName: Application Gateway
 ProductName: Application Gateway {Variant}
 MeterName: {MeterPrefix} Fixed Cost
 
-### {Variant} — capacity units
+### {Variant} — capacity units (Quantity = estimated average CU consumption)
 
 ServiceName: Application Gateway
 ProductName: Application Gateway {Variant}
 MeterName: {MeterPrefix} Capacity Units
+Quantity: 10
 
 ## Cost Formula
 
