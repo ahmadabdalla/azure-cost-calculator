@@ -7,7 +7,7 @@ primaryCost: "Per-number monthly lease — rates vary by country and number type
 
 # Azure Communication Services — Phone Numbers
 
-> **Trap (154+ meters)**: Unfiltered queries return 121+ regional meters plus 33 Global-only meters (Mobile, Number Lookup, 10DLC registration). Always filter by `ProductName` (geographic vs toll-free vs mobile) and `SkuName` (country code) to get specific rates.
+> **Trap (154+ meters)**: Unfiltered queries return 121 regional meters plus 33 Global-only meters (Mobile, Number Lookup, 10DLC registration). Always filter by `ProductName` (geographic vs toll-free vs mobile) and `SkuName` (country code) to get specific rates.
 
 ## Query Pattern
 
