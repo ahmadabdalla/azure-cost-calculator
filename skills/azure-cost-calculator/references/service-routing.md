@@ -105,6 +105,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Power BI Embedded: PBI Embedded, Embedded Analytics
 - SignalR: Azure SignalR Service, Real-time Messaging
 - Azure Data Explorer: ADX, Kusto
+- HDInsight: Hadoop, Spark, HBase, Kafka, HDI
 
 ## AI + ML (services/ai-ml/)
 
