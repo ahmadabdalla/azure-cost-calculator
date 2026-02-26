@@ -21,6 +21,7 @@ ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard
 MeterName: Standard vCPU Duration
+Quantity: 4 ← number of vCPUs
 
 ServiceName: Container Instances
 ProductName: Container Instances
