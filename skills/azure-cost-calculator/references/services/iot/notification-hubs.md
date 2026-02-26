@@ -4,13 +4,14 @@ category: iot
 aliases: [Push Notifications, ANH]
 primaryCost: "Per-namespace monthly flat rate by tier (Free/Basic/Standard) + per-million push overages beyond quota"
 hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Notification Hubs
 
 > **Trap (tiered pricing inflation)**: Querying Basic or Standard tiers without `MeterName` returns **multiple tiered pricing rows** for the overage meters. The script sums all tier rows, inflating `totalMonthlyCost` above the actual base price. For base cost estimation, filter to the base unit meter only (`Basic Unit` or `Standard Unit`). Overage tiers apply only when usage exceeds the included 10M pushes/month.
 
-> **Trap (namespace billing)**: Each namespace is billed independently — use `InstanceCount: N` to model multi-namespace deployments. The included push quota (10M for Basic/Standard) applies **per namespace**, not across all namespaces.
+> **Trap (namespace billing)**: Base charges are per namespace — use `InstanceCount: N` to model multi-namespace deployments. The included push quota (10M for Basic/Standard) is aggregated **per subscription per tier**, not per namespace.
 
 ## Query Pattern
 
@@ -82,18 +83,18 @@ MeterName: Availability Zones Unit
 ## Cost Formula
 
 ```
-Free monthly    = 0 (hard limit: 1M pushes/month)
-Basic monthly   = basic_retailPrice + max(0, (pushes - 10M) / 1M) × basicOverage_retailPrice
-Standard monthly = standard_retailPrice + overage_cost
+Free monthly     = 0 (hard limit: 1M pushes/month)
+Basic monthly    = basic_retailPrice × instanceCount + max(0, (pushes - 10M) / 1M) × basicOverage_retailPrice
+Standard monthly = standard_retailPrice × instanceCount + overage_cost
   where overage_cost = max(0, min(pushes - 10M, 90M) / 1M) × standardOverageTier1_retailPrice
                      + max(0, (pushes - 100M) / 1M) × standardOverageTier2_retailPrice
-Add-ons per-namespace = privateLink_retailPrice + availabilityZones_retailPrice
-Total           = (Namespace cost + add-ons per namespace) × instanceCount
+Add-ons          = (privateLink_retailPrice + availabilityZones_retailPrice) × instanceCount
+Total            = base + overage + add-ons  (pushes = subscription-level aggregate per tier)
 ```
 
 ## Notes
 
-- **Tiers**: Free (1M pushes/month hard limit, max 1 namespace), Basic (monthly base + 10M included, then overage), Standard (monthly base + 10M included, then tiered overages: tier 1 for 10-100M, tier 2 for 100M+)
-- Included push quotas apply **per namespace** — a 3-namespace deployment gets 3× the quota
+- **Tiers**: Free (1M pushes/month hard limit), Basic (monthly base + 10M included, then overage), Standard (monthly base + 10M included, then tiered overages: tier 1 for 10-100M, tier 2 for 100M+)
+- Included push quotas (10M for Basic/Standard) are aggregated **per subscription per tier**, not per namespace
 - Capacity: 1 Standard namespace = 10M pushes/month included, supports up to 10M devices
 - Private Link and Availability Zones are per-namespace add-ons; 1P Direct Send is usage-based (no base subscription)
