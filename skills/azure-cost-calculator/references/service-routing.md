@@ -102,6 +102,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Databricks: DBX, Spark on Azure
 - Stream Analytics: ASA, Real-time Analytics
 - Microsoft Fabric: Fabric Capacity, OneLake, Lakehouse
+- Power BI Embedded: PBI Embedded, Embedded Analytics
 - SignalR: Azure SignalR Service, Real-time Messaging
 - Azure Data Explorer: ADX, Kusto
 
