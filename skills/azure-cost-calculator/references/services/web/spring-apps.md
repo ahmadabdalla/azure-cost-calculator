@@ -63,7 +63,7 @@ Quantity: {vCPUHours}
 | `Standard Consumption Memory Active Usage` | `Standard Consumption` | `1 GiB Hour` | Serverless active memory |
 | `Standard Consumption Requests` | `Standard Consumption` | `1M` | Per million requests |
 
-Overage memory meters for Standard/Enterprise use same rates. Standard Consumption also has idle vCPU/memory, Eureka, and Config Server meters.
+Overage memory meters for Standard/Enterprise use same rates. Standard Consumption has additional meters (idle vCPU/memory, Eureka, Config Server) not listed above.
 
 ## Cost Formula
 
@@ -84,7 +84,7 @@ Standard Consumption:
 
 ## Notes
 
-- **Free grant**: 50 vCPU-hours + 100 memory GB-hours per month shared across Basic/Standard/Enterprise. Standard Consumption adds 2M free requests (shared with Azure Container Apps environment).
+- **Free grant**: 50 vCPU-hours + 100 memory GB-hours per month shared across Basic/Standard/Enterprise. Standard Consumption adds 2M free requests (grant is shared across all apps in the same Container Apps environment).
 - **Tier base resources**: Basic includes 2 vCPU + 4 GB per instance. Standard and Enterprise include 6 vCPU + 12 GB. Resources beyond included amounts incur overage charges.
 - **Enterprise two-part billing**: Infrastructure (Microsoft) + VMware Tanzu licensing (VMware). Tanzu IP is charged per total vCPU of running user apps.
 - **Standard Consumption**: Serverless model — billed for active/idle vCPU and memory usage plus per-request. Optional managed components (Config Server, Eureka) at hourly rates.
