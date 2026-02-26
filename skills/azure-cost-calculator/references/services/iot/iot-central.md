@@ -81,10 +81,10 @@ Total monthly      = deviceCost + overageCost
 ## Notes
 
 - **Free grant**: 2 active devices per application are free (with included message allocation); subtract 2 before multiplying by per-device rate
-- **Message allocations** (per device/month): ST0 = 400, ST1 = 5,000, ST2 = 30,000; allocation is shared across all devices in the app
+- **Message allocations** (per device/month): ST0 = 400, ST1 = 5,000, ST2 = 30,000; total pool = per-device allocation × device count, pooled across the app
 - **Tiers**: ST0 has lowest per-device cost but highest overage rate; ST2 has highest per-device cost but largest message allocation
 - **Device billing**: Hourly prorated — each hour, the peak active device count is billed; devices must be removed when no longer needed
 - **Message sizing**: Standard message = 4 KB; a 4.5 KB message counts as 2 messages
 - **Trial**: 7-day expiry, max 5 devices, genuinely free (not sub-cent rounding)
-- **Capacity planning**: 1 device = 1 billing unit; scale by device count — message allocation scales linearly with device count
+- **Capacity planning**: 1 device = 1 billing unit; adding devices increases both cost and the shared message pool linearly
 - IoT Central is a fully managed SaaS — no separate IoT Hub or storage billing; data export destinations (Event Hubs, Storage, etc.) are billed separately
