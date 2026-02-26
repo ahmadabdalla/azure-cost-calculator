@@ -5,7 +5,6 @@ aliases: [NetApp, ANF, Azure NetApp]
 billingConsiderations: [Reserved Instances]
 primaryCost: "Provisioned capacity pool per-GiB/hour × 730 by performance tier + backup per-GiB/month"
 hasKnownRates: true
-privateEndpoint: true
 ---
 
 # Azure NetApp Files
@@ -77,7 +76,7 @@ Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throug
 - Standard/Premium/Ultra differ in throughput/IOPS limits; tier is a never-assume parameter
 - Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19% surcharge)
 - CRR meters are region-pair-specific with Days/Hours/Minutes replication frequency tiers
-- **PE sub-resources** (never-assume): `account`
+- Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link — no PE support
 
 ## Known Rates
 
@@ -92,7 +91,7 @@ Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throug
 
 ## Reserved Instance Pricing
 
-Available for Standard/Premium/Ultra at 100 TiB or 1 PiB commitment levels (1-Year and 3-Year terms).
+Available for Standard/Premium/Ultra at 100 TiB or 1 PiB commitment levels (1-Year and 3-Year terms). Single encryption only — not available for Double Encrypted tiers.
 
 ServiceName: Azure NetApp Files
 ProductName: Azure NetApp Files Reserved Capacity
