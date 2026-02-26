@@ -15,6 +15,8 @@ privateEndpoint: true
 
 > **Trap (sub-cent pricing)**: Basic Runtime and Watcher meters are sub-cent and display as zero cost in script output. Use the Known Rates table and calculate manually. Free grants are aggregated per subscription, not per Automation account.
 
+> **Note**: Automation-based Update Management retired 2024-08-31; replaced by Azure Update Manager. The `Basic Node` meter remains in the API at zero cost but no new deployments are possible.
+
 ## Query Pattern
 
 ### Process Automation — runbook job minutes (Basic)
@@ -77,6 +79,7 @@ Monthly = Runbooks + Watchers + DSC Nodes
 - Free grants are NOT available to subscribers with flat-discount or fixed-monthly-credit rate plans
 - Update Management meter is always zero cost — actual cost is Log Analytics data ingestion (see `monitoring/log-analytics.md`)
 - Capacity planning: 1 runbook minute = 60 seconds of job execution; typical short jobs consume 1–5 minutes each
+- Free SKU (`Free Runtime`, `Watcher`) mirrors Basic with identical or zero rates — use Basic SKU for cost estimation
 - **PE sub-resources** (never-assume): `DSCAndHybridWorker`, `Webhook` — see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates
