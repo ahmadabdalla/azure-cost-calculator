@@ -3,6 +3,7 @@ serviceName: Container Registry
 category: containers
 aliases: [ACR, Docker Registry]
 primaryCost: "Registry unit (daily) + excess storage (per-GB/month)"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -25,6 +26,7 @@ MeterName: {Tier} Registry Unit
 ServiceName: Container Registry
 ProductName: Container Registry
 MeterName: Data Stored
+Quantity: 50 # excess GB beyond included tier quota
 
 > **Note**: For geo-replication storage (Premium only), use `MeterName 'Premium GB Registry Replication Data Stored'`.
 
@@ -37,6 +39,9 @@ MeterName: Data Stored
 | `Premium Registry Unit`                       | `1/Day`       | Premium tier registry          |
 | `Data Stored`                                 | `1 GB/Month`  | Excess storage beyond included |
 | `Premium GB Registry Replication Data Stored` | `1 GB/Month`  | Per-replica geo-replication    |
+| `Premium Registry Replication Unit`           | `1/Day`       | Per additional replica region  |
+| `Premium Connected registry`                  | `1/Day`       | Per connected registry (edge)  |
+| `Task vCPU Duration`                          | `1 Second`    | ACR Tasks build compute        |
 
 ## Included Storage by Tier
 
@@ -55,5 +60,6 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 ## Notes
 
 - Premium tier is required for geo-replication, content trust, and private endpoints
-- Build tasks (ACR Tasks) have separate compute-based pricing not covered here
+- ACR Tasks compute: first 6,000 vCPU-seconds/month free, then `retailPrice` per vCPU-second (tiered meter — ignore script's `totalMonthlyCost`)
+- Geo-replication (Premium only): each replica region adds a `Premium Registry Replication Unit` daily charge + `Premium GB Registry Replication Data Stored` per GB
 - Private endpoints require Premium tier
