@@ -125,6 +125,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## IoT (services/iot/)
 
 - IoT Hub: Device Messaging
+- IoT Central: IoT SaaS, IoT Application
 - Event Hubs: Kafka on Azure, Event Streaming
 - Event Grid: Event Routing, Event-driven
 - Notification Hubs: Push Notifications, ANH
