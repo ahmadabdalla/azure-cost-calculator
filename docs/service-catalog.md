@@ -148,7 +148,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Identity (services/identity/)
 
-- Azure Active Directory B2C: AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID
 - Azure Active Directory for External Identities: AAD External, B2B, Guest Users, Entra External ID
 - Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
 - Windows 365 Agents: Cloud PC Agents
