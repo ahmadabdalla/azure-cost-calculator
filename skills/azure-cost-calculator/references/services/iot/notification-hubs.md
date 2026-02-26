@@ -96,5 +96,5 @@ Total            = base + overage + add-ons  (pushes = subscription-level aggreg
 
 - **Tiers**: Free (1M pushes/month hard limit), Basic (monthly base + 10M included, then overage), Standard (monthly base + 10M included, then tiered overages: tier 1 for 10-100M, tier 2 for 100M+)
 - Included push quotas (10M for Basic/Standard) are aggregated **per subscription per tier**, not per namespace
-- Capacity: 1 Standard namespace = 10M pushes/month included, supports up to 10M devices
+- Capacity: Standard namespace supports up to 10M active devices; 10M pushes/month included per subscription
 - Private Link and Availability Zones are per-namespace add-ons; 1P Direct Send is usage-based (no base subscription)
