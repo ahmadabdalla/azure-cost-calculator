@@ -67,7 +67,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Security (services/security/)
 
-- Microsoft Purview: Data Governance, Data Catalog
 - Azure confidential ledger: CCF, Blockchain Ledger
 - Azure Cloud HSM: Dedicated HSM, Hardware Security Module
 - Microsoft Azure Payment HSM: Payment Processing HSM
@@ -110,7 +109,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Analysis Services: AAS, Tabular Model
 - Power BI: Power BI Service
 - Data Catalog: Data Catalog (legacy)
-- Azure Purview: Purview Data Map, Data Estate Scanning
 - Azure Data Share: Data Sharing
 - Microsoft Planetary Computer Pro: Planetary Computer, Geospatial Analytics
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
