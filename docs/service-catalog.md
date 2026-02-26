@@ -136,7 +136,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Developer Tools (services/developer-tools/)
 
-- App Configuration: Feature Flags, Configuration Store
 - Azure Lab Services: Classroom Labs, DevTest Labs
 - Microsoft Playwright Testing: Playwright, Browser Testing, E2E Testing
 - Azure App Testing: Mobile App Testing
