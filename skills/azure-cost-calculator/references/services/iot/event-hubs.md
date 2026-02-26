@@ -14,8 +14,6 @@ privateEndpoint: true
 
 ## Query Pattern
 
-All patterns below use `ServiceName: Event Hubs`.
-
 ### Standard tier — throughput unit (base cost)
 
 ServiceName: Event Hubs
