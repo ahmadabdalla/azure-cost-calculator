@@ -112,7 +112,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - HDInsight: Hadoop, Spark, HBase, Kafka, HDI
 - Azure Analysis Services: AAS, Tabular Model
 - Power BI: Power BI Service
-- Power BI Embedded: PBI Embedded, Embedded Analytics
 - Data Catalog: Data Catalog (legacy)
 - Azure Purview: Purview Data Map, Data Estate Scanning
 - Azure Data Share: Data Sharing
