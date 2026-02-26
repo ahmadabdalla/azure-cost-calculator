@@ -40,6 +40,7 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Databases (services/databases/)
 
+- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
 - Azure Database for MariaDB: MariaDB, Azure MariaDB
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
 - SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
@@ -60,6 +61,8 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Storage (services/storage/)
 
+- Data Box Gateway: Data Box Virtual Appliance, Hybrid Data Transfer Gateway
+- Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
 - Azure Elastic SAN: SAN, Block Storage
 - Azure Managed Lustre: Lustre, HPC Storage
 - StorSimple: Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array
@@ -116,6 +119,13 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## AI + ML (services/ai-ml/)
 
 - Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
+- Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
+- Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
+- Azure Translator: Translator Text, Text Translation, Document Translation
+- Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
+- Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
+- Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
+- Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 
 ## IoT (services/iot/)
 
