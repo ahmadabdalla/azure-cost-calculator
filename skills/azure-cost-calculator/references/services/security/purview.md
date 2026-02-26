@@ -91,7 +91,7 @@ Classic:    Monthly = cu_retailPrice × 730 × cuCount + vcore_retailPrice × 73
 
 ## Notes
 
-- **Free grants**: eDiscovery Graph API first 50 GB export free; OCR first 2,500 transactions free; PowerBI and SQL Server scanning free for a limited time
+- **Free grants**: eDiscovery Graph API first 50 GB export free; OCR first 2,500 transactions free; Power BI and SQL Server scanning free for a limited time
 - **Uniform pricing**: `Microsoft Purview` meters are identical across all commercial regions; classic `Azure Purview` meters have government-region premium
 - **Processing units**: DGPU (Data Governance) has 3 tiers — Basic, Standard, Advanced. DSPU (Data Security) covers Insider Risk Management. These are distinct billing concepts.
 - **Classic vs current**: `Azure Purview` = original Data Map and Scanning; `Microsoft Purview` = current products. Customers may use either or both.
