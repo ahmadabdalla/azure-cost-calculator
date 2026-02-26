@@ -4,6 +4,7 @@ category: databases
 aliases: [SQL MI, Azure SQL MI, Managed Instance]
 billingConsiderations: [Azure Hybrid Benefit, Reserved Instances]
 primaryCost: "vCore hourly rate × 730 + storage per-GB/month"
+privateEndpoint: true
 ---
 
 # Azure SQL Managed Instance
