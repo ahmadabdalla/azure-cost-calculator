@@ -4,7 +4,8 @@ category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
 billingConsiderations: [Azure Hybrid Benefit]
-primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure or System Center)."
+primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure, System Center, or on-prem)."
+privateEndpoint: true
 ---
 
 # Azure Site Recovery
@@ -35,8 +36,8 @@ InstanceCount: 5
 | ------------- | ---------------------------- | ---------------------------------------------------------- |
 | `serviceName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
 | `productName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
-| `skuName`     | Replication target           | `Azure`, `System Center`                                   |
-| `meterName`   | Matches the SKU target       | `VM Replicated to Azure`, `VM Replicated to System Center` |
+| `skuName`     | Replication target           | `Azure`, `System Center`, `On-premise`                     |
+| `meterName`   | Matches the SKU target       | `VM Replicated to Azure`, `VM Replicated to System Center`, `VM Replicated between On-premise sites` |
 
 ## Meter Names
 
@@ -44,6 +45,7 @@ InstanceCount: 5
 | -------------------------------- | --------------- | ------------- | ---------------------------------- |
 | `VM Replicated to Azure`         | `Azure`         | `1/Month`     | Azure-to-Azure or on-prem-to-Azure |
 | `VM Replicated to System Center` | `System Center` | `1/Month`     | On-prem to System Center VMM       |
+| `VM Replicated between On-premise sites` | `On-premise` | `1/Month` | On-prem to on-prem; limited regions |
 
 ## Cost Formula
 
@@ -62,3 +64,4 @@ System Center target:  retailPrice (System Center SKU) × VM count
 - The ASR license fee is per-instance; VM size and disk count do not affect the rate
 - `Azure` SKU covers both Azure-to-Azure and on-premises-to-Azure scenarios
 - `System Center` SKU is for on-premises-to-on-premises replication via VMM
+- Some regions use `On-premise` SKU instead of `System Center` (same price) — if `System Center` returns empty, query with `SkuName: On-premise`

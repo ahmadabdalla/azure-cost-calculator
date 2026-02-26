@@ -54,6 +54,7 @@ Migration project costs come from dependent services:
 - Database Migration Service Standard tier (offline) is **always free**; Premium tier (online) has vCore billing after 180 days
 - Storage consumed during replication and network egress are billed under their respective services regardless of free periods
 - Third-party ISV tools (Carbonite, Cloudamize, etc.) have separate vendor licensing outside Azure billing
+- Log Analytics data ingestion for Azure Migrate discovery is no longer complimentary; standard Azure Monitor rates apply for agent-based dependency analysis
 
 ## Known Rates
 

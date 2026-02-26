@@ -3,6 +3,7 @@ serviceName: IoT Hub
 category: iot
 aliases: [Device Messaging]
 primaryCost: "Per-unit monthly flat rate by tier (Free, B1–B3, S1–S3) × unit count"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -14,16 +15,16 @@ privateEndpoint: true
 
 ## Query Pattern
 
-All patterns below use `ServiceName: IoT Hub` and `ProductName: IoT Hub` unless noted otherwise.
-
 ### Standard S1 tier — per unit/month (use InstanceCount: N for multi-unit)
 
 ServiceName: IoT Hub
+ProductName: IoT Hub
 MeterName: S1 Unit
 
 ### Basic B1 tier
 
 ServiceName: IoT Hub
+ProductName: IoT Hub
 MeterName: B1 Unit
 
 ### IoT Hub Device Provisioning Service — 100K operations (Quantity in 1K units)
