@@ -2,6 +2,7 @@
 serviceName: Microsoft Entra Domain Services
 category: identity
 aliases: [AAD DS, Azure AD DS, Managed AD]
+billingNeeds: [Load Balancer, IP Addresses]
 primaryCost: "Hourly per-SKU rate (Standard/Enterprise/Premium) × 730 by forest type"
 ---
 
