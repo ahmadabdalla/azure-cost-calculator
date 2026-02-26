@@ -87,7 +87,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Management (services/management/)
 
-- Automation: Runbooks, DSC, Update Management
 - Azure Chaos Studio: Chaos Engineering, Fault Injection
 - Scheduler: Azure Scheduler (legacy), Job Scheduler
 - Azure Arc: Hybrid Management, Arc-enabled Servers, Arc-enabled K8s
