@@ -4,7 +4,6 @@ category: security
 aliases: [SIEM, SOAR, Azure Sentinel]
 billingNeeds: [Log Analytics]
 primaryCost: "Per-GB ingestion (PAYG or commitment tier per day × 30) + optional Basic Logs, data lake storage, add-on fees."
-hasFreeGrant: true
 ---
 
 # Microsoft Sentinel
@@ -92,3 +91,4 @@ Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice ×
 - Sentinel PAYG and Commitment Tier rates are **unified** — they replace (not add to) standalone Azure Monitor/Log Analytics ingestion charges; do not sum both
 - Post-July 2023 workspaces use **simplified pricing** (single unified meter); legacy workspaces use **classic** meters with `Classic` prefix (e.g., `Classic Pay-as-you-go Analysis`) — do not mix
 - For standalone Log Analytics meters (`Analytics Logs Data Analyzed`, retention) see `monitoring/log-analytics.md`; for Basic Logs, archive, and export meters see `monitoring/monitor.md`
+- No native free tier — Sentinel has a 31-day free **trial** (10 GB/day) and cross-product grants: Defender for Servers P2 (500 MB/node/day, see `defender-for-cloud.md`), M365 E5 (5 MB/user/day); these require separate licenses and are not Sentinel-included units
