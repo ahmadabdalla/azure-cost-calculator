@@ -136,6 +136,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## Identity (services/identity/)
 
 - Microsoft Entra ID: Azure AD, Azure Active Directory, AAD, Directory
+- Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
 
 ## Web (services/web/)
 
