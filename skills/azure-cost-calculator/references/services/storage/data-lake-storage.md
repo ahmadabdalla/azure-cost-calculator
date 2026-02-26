@@ -69,10 +69,9 @@ MeterName: Cold LRS Data Stored
 | `Hot GRS Write Operations`       | `Hot GRS`       | `10K`         | GRS/RA-GRS shared                             |
 | `Hot Read Operations`            | _(any Hot)_     | `10K`         | Generic, not redundancy-specific              |
 | `Hot Iterative Write Operations` | `Hot LRS`       | `100`         | Directory listing; unit is per-100            |
-| `Cool Data Retrieval`            | _(any Cool)_    | `1 GB`        | Per-GB retrieval charge                       |
+| `Cool Data Retrieval`            | _(any Cool)_    | `1 GB`        | Per-GB retrieval; Cold tier same pattern      |
 | `Cool LRS Early Delete`          | `Cool LRS`      | `1 GB`        | Deleted before 30-day minimum                 |
 | `Cold LRS Data Stored`           | `Cold LRS`      | `1 GB/Month`  | Between Cool and Archive pricing              |
-| `Cold Data Retrieval`            | _(any Cold)_    | `1 GB`        | Per-GB retrieval charge                       |
 | `Cold LRS Early Delete`          | `Cold LRS`      | `1 GB`        | Deleted before 90-day minimum                 |
 | `Archive LRS Data Stored`        | `Archive LRS`   | `1 GB/Month`  | Cheapest storage; no ZRS/GZRS                 |
 | `Archive Data Retrieval`         | _(any Archive)_ | `1 GB`        | Standard rehydration                          |
@@ -97,3 +96,4 @@ Monthly = Σ(storage_retailPrice × GB_in_tier)
 - Archive tier: LRS, GRS, RA-GRS only (no ZRS/GZRS); Early Delete charges: Cool 30d, Cold 90d, Archive 180d
 - Iterative operations (directory listing) use per-100 unit for writes, per-10K for reads; Hot tier only
 - Flat Namespace product has identical storage pricing but no Index meter and lower transaction costs
+- **Private Endpoints**: sub-resources `dfs` and `blob` (never-assume)

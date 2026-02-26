@@ -73,7 +73,7 @@ Multi-device = Per order × deviceCount
 
 ## Notes
 
-- Included days before overage: Data Box Disk = 3, Data Box 100 TB = 10, Heavy = 20
+- Included days before overage: Disk = 3, Data Box 100 TB = 10, V2 120 TB = 10, Heavy = 20, V2 525 TB = 20
 - Data Box Disk capacity: 8 TB usable per disk, up to 5 disks per order (40 TB max)
 - Data Box V2 (120 TB / 525 TB) is the newer generation with higher overage rates
 - Export orders use the same device fees; Azure Bandwidth egress charges are billed separately
