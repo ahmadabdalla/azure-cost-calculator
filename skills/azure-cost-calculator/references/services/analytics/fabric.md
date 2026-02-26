@@ -83,6 +83,7 @@ Total Monthly    = Capacity + Storage + Overage
 - **OneLake storage billed separately**: Storage is not included in the CU-hour capacity rate; query the `OneLake` product for storage costs
 - **Pause/resume**: Pausing a capacity stops CU billing; OneLake storage charges continue
 - **Free mirroring storage**: Each F-SKU includes free mirroring equal to the SKU number in TB (e.g., F64 = 64 TB); excess at the `Storage Mirroring` rate
+- **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist for these features at higher per-GB rates than standard OneLake; query `ProductName: OneLake` with the specific `SkuName` (e.g., `Cosmos DB Storage`, `SQL Storage`)
 - **Networking**: Data transfer billing is not yet active — Microsoft will provide 90 days notice before charges begin
 
 ## Reserved Instance Pricing
