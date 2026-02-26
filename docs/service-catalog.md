@@ -106,7 +106,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Analytics (services/analytics/)
 
-- Azure Analysis Services: AAS, Tabular Model
 - Power BI: Power BI Service
 - Data Catalog: Data Catalog (legacy)
 - Azure Data Share: Data Sharing
