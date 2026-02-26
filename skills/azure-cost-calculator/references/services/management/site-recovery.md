@@ -4,7 +4,7 @@ category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
 billingConsiderations: [Azure Hybrid Benefit]
-primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure or System Center)."
+primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure, System Center, or on-premises sites)."
 privateEndpoint: true
 ---
 
@@ -37,7 +37,7 @@ InstanceCount: 5
 | `serviceName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
 | `productName` | Always `Azure Site Recovery` | `Azure Site Recovery`                                      |
 | `skuName`     | Replication target           | `Azure`, `System Center`, `On-premise`                     |
-| `meterName`   | Matches the SKU target       | `VM Replicated to Azure`, `...to System Center`, `...between On-premise sites` |
+| `meterName`   | Matches the SKU target       | `VM Replicated to Azure`, `VM Replicated to System Center`, `VM Replicated between On-premise sites` |
 
 ## Meter Names
 
