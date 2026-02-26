@@ -127,6 +127,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Event Hubs: Kafka on Azure, Event Streaming
 - Event Grid: Event Routing, Event-driven
 - Notification Hubs: Push Notifications, ANH
+- Azure Maps: Location Services, Geospatial
 
 ## Developer Tools (services/developer-tools/)
 

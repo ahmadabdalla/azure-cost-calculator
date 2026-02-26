@@ -124,7 +124,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## IoT (services/iot/)
 
 - IoT Central: IoT SaaS, IoT Application
-- Azure Maps: Location Services, Geospatial
 - Digital Twins: ADT, IoT Modeling
 - Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
