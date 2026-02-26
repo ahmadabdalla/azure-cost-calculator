@@ -3,6 +3,7 @@ serviceName: Service Bus
 category: integration
 aliases: [ASB, Queues, Topics]
 primaryCost: "Namespace hours (Standard/Premium) + operations (Basic/Standard)"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
@@ -15,8 +16,6 @@ privateEndpoint: true
 > **Trap (Basic tier)**: Basic tier has NO hourly namespace charge — it is operations-only pricing (per 1M operations).
 
 ## Query Pattern
-
-All patterns below use `ServiceName: Service Bus`.
 
 ### Basic tier — operations only (per 1M)
 
@@ -45,13 +44,13 @@ InstanceCount: 2
 
 ## Meter Names
 
-| Meter                           | SKU      | Purpose                                      |
-| ------------------------------- | -------- | -------------------------------------------- |
-| `Basic Messaging Operations`    | Basic    | Per 1M operations                            |
-| `Standard Base Unit`            | Standard | Namespace hourly charge                      |
-| `Standard Messaging Operations` | Standard | Per 1M operations (first 13M included)       |
-| `Standard Relay Hours`          | Standard | Hybrid Connections (hourly)                  |
-| `Premium Messaging Unit`        | Premium  | Messaging Unit (hourly, operations included) |
+| Meter                              | SKU                  | unitOfMeasure | Purpose                                      |
+| ---------------------------------- | -------------------- | ------------- | -------------------------------------------- |
+| `Basic Messaging Operations`       | `Basic`              | `1M`          | Per 1M operations                            |
+| `Standard Base Unit`               | `Standard`           | `1/Hour`      | Namespace hourly charge                      |
+| `Standard Messaging Operations`    | `Standard`           | `1M`          | Per 1M operations (first 13M included)       |
+| `Hybrid Connections Listener Unit` | `Hybrid Connections` | `1 Hour`      | Per listener hourly charge                   |
+| `Premium Messaging Unit`           | `Premium`            | `1/Hour`      | Messaging Unit (hourly, operations included) |
 
 ## Cost Formula
 
@@ -66,5 +65,5 @@ Premium:  Monthly = MU_hourly × 730 × muCount (operations included)
 - Basic tier: queues and topics only, no sessions, no duplicate detection, max 256 KB message
 - Standard tier: first 13M operations/month included with Base Unit
 - Premium tier: messaging units provide dedicated resources; 1 MU ≈ sustained throughput for most workloads
-- Premium tier required for private endpoints, geo-DR, and partitioned entities
-- Service Bus is under `serviceFamily eq 'Integration'` in the API
+- **Private Endpoints**: Require Premium tier — not available on Basic or Standard
+- `serviceFamily eq 'Integration'` in the API; also includes Hybrid Connections and WCF Relay meters

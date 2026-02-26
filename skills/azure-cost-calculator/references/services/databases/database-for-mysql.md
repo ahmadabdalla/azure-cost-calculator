@@ -76,7 +76,7 @@ Total = Compute + Storage
 
 - Burstable: dev/test workloads, does NOT support RI, max 20 vCores
 - GP: production workloads, supports RI, per-vCore pricing with InstanceCount
-- MO Edsv5: high-memory workloads, per-size SKU pricing (Standard_E2d_v5 through Standard_E96d_v5)
+- MO Edsv5: per-size SKU pricing (Standard_E2d_v5 through Standard_E96d_v5, no RI); v6 MO series (Edsv6, Eadsv6) use per-vCore pricing with InstanceCount
 - High Availability doubles compute cost (deploys a standby replica)
 - Backup: first backup equal to provisioned storage is free; excess charged per-GB/month
 - Single Server is deprecated — all new deployments use Flexible Server
@@ -87,10 +87,12 @@ Total = Compute + Storage
 | ------------- | --------------------------------------------------------------------------------- |
 | GP, Ddsv5     | `Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute`   |
 | GP, Dadsv5    | `Azure Database for MySQL Flexible Server General Purpose Dadsv5 Series Compute`  |
-| GP, Dv3       | `Azure Database for MySQL Flexible Server General Purpose Dv3 Series Compute`     |
+| GP, Ddsv6     | `Azure Database for MySQL Flexible Server General Purpose Ddsv6 Series Compute`   |
+| GP, Dadsv6    | `Azure Database for MySQL Flexible Server General Purpose Dadsv6 Series Compute`  |
 | MO, Edsv5     | `Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute`  |
 | MO, Eadsv5    | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
-| BC, Ev3       | `Azure Database for MySQL Flexible Server Business Critical Ev3 Series Compute`   |
+| MO, Edsv6     | `Azure Database for MySQL Flexible Server Memory Optimized Edsv6 Series Compute`  |
+| MO, Eadsv6    | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv6 Series Compute` |
 | Burstable, BS | `Azure Database for MySQL Flexible Server Burstable BS Series Compute`            |
 | Storage       | `Azure Database for MySQL Flexible Server Storage`                                |
 | Backup        | `Azure Database for MySQL Flexible Server Backup Storage`                         |
