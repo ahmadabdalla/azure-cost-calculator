@@ -72,7 +72,10 @@ Total              = Throughput + Storage
 - The storage query returns multiple skuName variants (`RUs`, `mRUs`, `RUm`, `Free Tier`) — filter to `RUs` for standard provisioned
 - **Multi-region write (multi-master) costs ~2× single-region**: The `100 Multi-master RU/s` meter (skuName `mRUs`) is approximately double the price of the standard `100 RU/s` meter (skuName `RUs`). Always inform users about this multiplier when they request multi-region writes. For cost comparison, query both meters and show the per-region price difference.
 - **Autoscale provisioned throughput**: The API has a **separate product** (`Azure Cosmos DB autoscale`) with its own meter (`AP1 100 RUs`, skuName `AP1`). The autoscale rate is exactly 1.5× the standard provisioned rate and this premium is **already included** in the API price. Do NOT query the standard `100 RU/s` meter and manually multiply by 1.5 — instead query the autoscale product directly. With autoscale, billing is based on the maximum RU/s set; calculate as `autoscale_price × (maxRUs / 100) × 730`.
-- PE sub-resource matches the account API type (never-assume): `Sql`, `MongoDB`, `Cassandra`, `Gremlin`, or `Table`. Conditional: `SqlDedicated` (dedicated gateway), `Analytical` (Synapse Link)
+- **MongoDB vCore**: Cosmos DB for MongoDB vCore uses productName `Azure DocumentDB` with vCore-based billing (coordinator + worker nodes, per-vCore hourly). Do not use RU/s queries for vCore clusters.
+- **Backup costs**: Continuous backup (productName `Azure Cosmos DB - PITR`) and periodic snapshots (productName `Azure Cosmos DB Snapshot`) are billed separately per-GB. 7-day continuous backup is included free; 30-day and on-demand are charged.
+- **Add-on products**: Dedicated Gateway, Garnet Cache, Materialized Views, Analytics Storage, and Graph API compute have separate productNames under the same serviceName — query each individually.
+- **PE sub-resources** (never-assume): `Sql`, `MongoDB`, `Cassandra`, `Gremlin`, `Table`. Conditional: `SqlDedicated` (dedicated gateway), `Analytical` (Synapse Link)
 
 ## Reserved Instance Pricing
 

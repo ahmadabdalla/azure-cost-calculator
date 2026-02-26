@@ -9,8 +9,6 @@ privateEndpoint: true
 
 # Azure Database for PostgreSQL Flexible Server
 
-**Multiple meters**: vCore compute (hourly) + storage (per-GB/month)
-
 > **Trap**: `productName` has inconsistent hyphen usage across series. Some use `General Purpose - Ddsv5` (with hyphen) while others use `General Purpose Dadsv5` (no hyphen). Always use the exact string from discovery — do not construct productName by pattern.
 
 ## Query Pattern
@@ -22,49 +20,60 @@ ProductName: Azure Database for PostgreSQL Flexible Server General Purpose - Dds
 SkuName: 4 vCore
 MeterName: vCore
 
-### Storage cost
+### Storage cost (100 GB)
 
 ServiceName: Azure Database for PostgreSQL
 ProductName: Az DB for PostgreSQL Flexible Server Storage
 SkuName: Storage
 MeterName: Storage Data Stored
+Quantity: 100 # storage size in GB
 
 ## Key Fields
 
-| Parameter     | How to determine             | Example values                                      |
-| ------------- | ---------------------------- | --------------------------------------------------- |
-| `productName` | Tier + series (exact match)  | See Product Names table below                       |
+| Parameter     | How to determine             | Example values                                       |
+| ------------- | ---------------------------- | ---------------------------------------------------- |
+| `productName` | Tier + series (exact match)  | See Product Names table below                        |
 | `skuName`     | vCore count string           | `'2 vCore'`, `'4 vCore'`, `'8 vCore'`, `'16 vCore'` |
-| `meterName`   | Always `'vCore'` for compute | `'vCore'`, `'Storage Data Stored'`                  |
-| `armSkuName`  | VM-like size                 | `Standard_D4ds_v5`, `Standard_D8ds_v5`              |
+| `meterName`   | Always `'vCore'` for compute | `'vCore'`, `'Storage Data Stored'`                   |
 
-## Product Names (common, case-sensitive)
+## Meter Names
 
-| Config                         | productName                                                                             |
-| ------------------------------ | --------------------------------------------------------------------------------------- |
-| General Purpose, Ddsv5 series  | `Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv5 Series Compute`  |
-| General Purpose, Ddsv4 series  | `Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv4 Series Compute`  |
-| General Purpose, Dadsv5 series | `Azure Database for PostgreSQL Flexible Server General Purpose Dadsv5 Series Compute`   |
-| General Purpose, Dsv3 series   | `Azure Database for PostgreSQL Flexible Server General Purpose - Dsv3 Series Compute`   |
-| Burstable, Bsv2 series         | `Azure Database for PostgreSQL Flexible Server Burstable - Bsv2 Series Compute`         |
-| Memory Optimized, Edsv5 series | `Azure Database for PostgreSQL Flexible Server Memory Optimized - Edsv5 Series Compute` |
-| Storage                        | `Az DB for PostgreSQL Flexible Server Storage`                                          |
-
-> **Note**: The storage productName uses the abbreviation `Az DB for PostgreSQL` — not the full `Azure Database for PostgreSQL`.
+| Meter                            | skuName             | unitOfMeasure | Notes                                  |
+| -------------------------------- | ------------------- | ------------- | -------------------------------------- |
+| `vCore`                          | `N vCore`           | `1 Hour`      | Per-vCore rate; N determines vCore count |
+| `Storage Data Stored`            | `Storage`           | `1 GB/Month`  | Standard LRS data storage              |
+| `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month` | Backup beyond free grant               |
 
 ## Cost Formula
 
 ```
 Monthly Compute = unitPrice × 730
-Monthly Storage = storagePrice × sizeGB
+Monthly Storage = storage_retailPrice × sizeGB
 Total = Compute + Storage
 ```
 
-Query storage rate from the API — it varies by region and currency.
-
 ## Notes
 
-- `skuName` determines the vCore count — no quantity multiplier needed for compute
-- Use the explore script with SearchTerm PostgreSQL Flexible to discover available series
-- High Availability doubles the compute cost (deploys a standby replica)
-- Backup storage: first backup equal to DB size is free; excess is charged per-GB/month
+- Burstable: dev/test workloads, does NOT support RI. Uses fixed SKU names (B1MS, B4ms, etc.)
+- GP: production workloads, supports RI. Uses `SkuName: N vCore` to select size
+- MO: high-memory workloads, supports RI. Same per-vCore pattern as GP
+- High Availability doubles compute cost (deploys a standby replica)
+- Backup storage: first backup equal to DB size is free; excess charged per-GB/month
+- Single Server is deprecated — all new deployments use Flexible Server
+- Cosmos DB for PostgreSQL meters share this serviceName — filter by productName to isolate Flexible Server
+
+## Product Names
+
+| Config         | productName                                                                            |
+| -------------- | -------------------------------------------------------------------------------------- |
+| GP, Ddsv5      | `Azure Database for PostgreSQL Flexible Server General Purpose - Ddsv5 Series Compute` |
+| GP, Dadsv5     | `Azure Database for PostgreSQL Flexible Server General Purpose Dadsv5 Series Compute`  |
+| GP, Ddsv6      | `Azure Database for PostgreSQL Flexible Server General Purpose Ddsv6 Series Compute`   |
+| GP, Dadsv6     | `Azure Database for PostgreSQL Flexible Server General Purpose Dadsv6 Series Compute`  |
+| MO, Edsv5      | `Azure Database for PostgreSQL Flexible Server Memory Optimized Edsv5 Series Compute`  |
+| MO, Eadsv5     | `Azure Database for PostgreSQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
+| MO, Edsv6      | `Azure Database for PostgreSQL Flexible Server Memory Optimized Edsv6 Series Compute`  |
+| Burstable, BS  | `Azure Database for PostgreSQL Flexible Server Burstable BS Series Compute`            |
+| Storage        | `Az DB for PostgreSQL Flexible Server Storage`                                         |
+
+> **Note**: The storage productName uses the abbreviation `Az DB for PostgreSQL` — not the full `Azure Database for PostgreSQL`.
