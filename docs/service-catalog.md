@@ -51,7 +51,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Networking (services/networking/)
 
 - Azure Firewall Manager: Firewall Policy
-- Virtual WAN: vWAN, WAN Hub
 - Network Watcher: NSG Flow Logs, Connection Monitor
 - Azure Orbital: Ground Station, Satellite
 - Private Mobile Network: Private 5G Core, Mobile Network, MEC
