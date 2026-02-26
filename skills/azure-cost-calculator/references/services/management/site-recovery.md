@@ -4,7 +4,7 @@ category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
 billingConsiderations: [Azure Hybrid Benefit]
-primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure, System Center, or on-premises sites)."
+primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure, System Center, or on-prem)."
 privateEndpoint: true
 ---
 
