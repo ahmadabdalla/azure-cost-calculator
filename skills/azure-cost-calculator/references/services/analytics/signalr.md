@@ -3,12 +3,13 @@ serviceName: SignalR
 category: analytics
 aliases: [Azure SignalR Service, Real-time Messaging]
 primaryCost: "Per-unit daily rate (by tier) + messages per 1M/month"
+hasFreeGrant: true
 privateEndpoint: true
 ---
 
-# Azure SignalR Service
+# SignalR
 
-> **Trap (daily billing)**: Unit meters use `1/Day` billing. `Get-MonthlyMultiplier` returns `30` for these meters, so the script's `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
+> **Trap (daily billing)**: Unit meters use `1/Day` billing. The script auto-multiplies by 30 for daily meters, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30×.
 
 > **Trap (free tier rows)**: The `Standard Unit - Free` meter returns a zero price. This is a free-tier grant (1 unit with 20 concurrent connections and 20K messages/day). Its price does not inflate `totalMonthlyCost`, but including it adds noise — filter by `MeterName` to exclude free-tier rows when estimating paid usage.
 
