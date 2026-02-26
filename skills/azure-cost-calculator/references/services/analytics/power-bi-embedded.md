@@ -72,4 +72,3 @@ Monthly = retailPrice × 730 × nodeCount
 - **No reserved instances**: RI is not available; consider Microsoft Fabric F-SKUs (which support RI) for long-term commitments
 - **Workspace Collection (legacy)**: `Power BI Workspace Collection` uses per-session tiered pricing and is deprecated — use A-SKU nodes for new deployments
 - **Power BI Premium distinction**: EM/P-SKUs under serviceName `Power BI` are M365-licensed (API returns zero price) — do not mix with A-SKU queries
-- Private endpoints are supported at the Power BI tenant level — see `networking/private-link.md` for PE pricing
