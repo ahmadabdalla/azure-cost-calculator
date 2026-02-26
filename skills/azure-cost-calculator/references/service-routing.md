@@ -61,6 +61,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
 - NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
 - IP Addresses: Public IP, PIP, Public IP Address
+- Network Watcher: NSG Flow Logs, Connection Monitor
 - Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
 - Virtual WAN: vWAN, WAN Hub
 
