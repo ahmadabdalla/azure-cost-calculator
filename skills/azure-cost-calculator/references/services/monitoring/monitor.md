@@ -2,7 +2,7 @@
 serviceName: Azure Monitor
 category: monitoring
 aliases: [Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive]
-primaryCost: "Custom metrics per time series + log-tier ingestion/archive/export per-GB"
+primaryCost: "Custom metrics per 10M samples + log-tier ingestion/archive/export per-GB"
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -19,10 +19,11 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Custom metrics
+### Custom metrics ingestion (preview — billing not yet enabled)
 
 ServiceName: Azure Monitor
-MeterName: Monitored Time Series
+SkuName: Metrics ingestion
+MeterName: Metrics ingestion Metric samples
 
 ### Basic Logs ingestion
 
@@ -50,13 +51,13 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 | ------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | `serviceName` | Fixed value                                | `Azure Monitor`                                                                            |
 | `skuName`     | Depends on meter category                  | `Basic Logs`, `Auxiliary Logs`, `Data Archive`, `Search Queries`, `100 GB Commitment Tier` |
-| `meterName`   | Matches the billing meter for each feature | `Monitored Time Series`, `Basic Logs Data Ingestion`, `Data Archive`                       |
+| `meterName`   | Matches the billing meter for each feature | `Metrics ingestion Metric samples`, `Basic Logs Data Ingestion`, `Data Archive`             |
 
 ## Meter Names
 
 | Meter                                         | skuName                     | unitOfMeasure | Notes                                                            |
 | --------------------------------------------- | --------------------------- | ------------- | ---------------------------------------------------------------- |
-| `Monitored Time Series`                       | —                           | `10`          | Custom metrics — per 10 time series                              |
+| `Metrics ingestion Metric samples`            | `Metrics ingestion`         | `10M`         | Custom metrics — per 10M samples (preview, not yet billed)       |
 | `Basic Logs Data Ingestion`                   | `Basic Logs`                | `1 GB`        | ~78% cheaper than Analytics; search-only, 30-day fixed retention |
 | `Auxiliary Logs Data Ingestion`               | `Auxiliary Logs`            | `1 GB`        | Cheapest tier; custom tables only (via Logs Ingestion API)       |
 | `Data Archive`                                | `Data Archive`              | `1 GB/Month`  | Long-term retention / archive (up to 12 years)                   |
@@ -72,7 +73,7 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 ## Cost Formula
 
 ```
-Custom Metrics  = max(0, customTimeSeries - 10) / 10 × retailPrice
+Custom Metrics  = metricSamples / 10M × retailPrice (preview — not yet billed)
 Basic Ingestion = basicGB × retailPrice
 Archive Storage = archiveGB × retailPrice (per GB/month)
 Search/Restore  = scannedGB × retailPrice (per query/job)
@@ -82,7 +83,7 @@ Commitment Tier = retailPrice × 30 (unit is 1/Day)
 ## Notes
 
 - **Platform metrics are free**: All standard resource metrics have no cost
-- First 10 custom metric time series per subscription are free
+- **Custom metrics**: Ingestion priced at retailPrice per 10M samples (preview — billing not yet enabled)
 - **Basic Logs**: ~78% cheaper than Analytics; supports search queries only (no alerts/dashboards); fixed 30-day retention
 - **Auxiliary Logs**: Cheapest ingestion tier; custom tables only via Logs Ingestion API
 - **Sentinel-enabled workspaces**: Basic Logs ingestion uses **Sentinel meters** (`ServiceName: Sentinel`, `SkuName: Basic Logs`); Auxiliary Logs remain under Azure Monitor in simplified pricing
