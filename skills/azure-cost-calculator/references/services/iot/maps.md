@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (tiered free grants)**: Most Gen2 meters return **two rows** per meterName — a free tier (`tierMinimumUnits=0`, zero price) and a paid tier. The `totalMonthlyCost` sums both rows and does not subtract free grants. Use only the paid-tier `retailPrice` and manually deduct the free grant: `max(0, transactions - freeGrant) / 1000 × retailPrice`.
 
-> **Trap (unfiltered query)**: Querying with only `ServiceName Azure Maps` returns 69+ meters across five SKUs (Location Insights, Maps, Azure Maps Creator, Standard, Standard S1). Always filter with `SkuName` and `MeterName` to isolate specific API categories.
+> **Trap (unfiltered query)**: Querying with only `ServiceName: Azure Maps` returns 69+ meters across five SKUs (Location Insights, Maps, Azure Maps Creator, Standard, Standard S1). Always filter with `SkuName` and `MeterName` to isolate specific API categories.
 
 ## Query Pattern
 
