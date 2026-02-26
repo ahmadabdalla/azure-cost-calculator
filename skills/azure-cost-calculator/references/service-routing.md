@@ -62,6 +62,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
 - IP Addresses: Public IP, PIP, Public IP Address
 - Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
+- Virtual WAN: vWAN, WAN Hub
 
 ## Storage (services/storage/)
 
