@@ -40,6 +40,7 @@ MeterName: Standard Overage Operations
 | Parameter | How to determine | Example values |
 | --- | --- | --- |
 | `serviceName` | Always `App Configuration` | `App Configuration` |
+| `productName` | Always `App Configuration` | `App Configuration` |
 | `skuName` | Tier selection (never-assume) | `Free`, `Developer`, `Standard`, `Premium` |
 | `meterName` | Billing component | `Standard Instance`, `Standard Overage Operations` |
 
@@ -54,12 +55,15 @@ MeterName: Standard Overage Operations
 | `{Tier} Snapshots Overage` | Dev/Std/Prem | `1 MB/Day` | Sub-cent; see Known Rates |
 | `{Tier} Experimentation Events` | all tiers | `1K` | Currently zero-priced |
 
+> `{Tier}` expands to `Free`, `Developer`, `Standard`, or `Premium` — use exact tier prefix in queries (e.g., `Standard Instance`, `Premium Replica Instance`).
+
 ## Cost Formula
 
 ```
 Monthly = instance_retailPrice × 30 × instanceCount
         + replica_retailPrice × 30 × replicaCount
         + max(0, dailyRequests − includedRequests) / unitSize × overage_retailPrice × 30
+        + max(0, replicaDailyReqs − includedReplicaReqs) / unitSize × replica_overage_retailPrice × 30
         + max(0, snapshotMB − includedMB) × snapshot_retailPrice × 30
 ```
 
@@ -68,8 +72,8 @@ Monthly = instance_retailPrice × 30 × instanceCount
 - **Free tier**: 1,000 requests/day (hard cap — HTTP 429), 10 MB storage, 10 MB snapshots; no overage billing, no replicas, no PE support
 - **Included daily requests**: Developer 3K; Standard 200K per store + 200K per replica; Premium 800K per store + 800K per replica (1 replica included)
 - **Premium includes 1 replica** in the base daily charge — `Premium Replica Instance` is for additional replicas only
-- **Daily billing**: All instance meters use `1/Day` — monthly = `retailPrice × 30`; do NOT use 730 hours
-- **Private endpoints**: Supported on Developer (1), Standard (10), Premium (40) — not available on Free tier; see `networking/private-link.md` for PE and DNS zone pricing
+- **Daily billing**: All instance meters use `1/Day`. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` or multiply again; do NOT use 730 hours
+- **Private Endpoints**: Supported on Developer (1), Standard (10), Premium (40) — not available on the Free tier; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates
 
