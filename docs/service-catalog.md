@@ -48,6 +48,8 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
 - Azure SQL Edge: Edge Database, IoT SQL
 - SQL DB Edge: Edge SQL (legacy name for Azure SQL Edge)
+- Azure Cosmos DB for PostgreSQL: Cosmos DB PostgreSQL, Citus, PostgreSQL Hyperscale, Cosmos DB for Postgres
+- Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 
 ## Networking (services/networking/)
 
@@ -66,6 +68,8 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Elastic SAN: SAN, Block Storage
 - Azure Managed Lustre: Lustre, HPC Storage
 - StorSimple: Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array
+- Azure Container Storage: Container-native Storage, Kubernetes Storage
+- Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
 
 ## Security (services/security/)
 
@@ -78,12 +82,14 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Microsoft Defender Experts: XDR Experts, Managed Detection and Response
 - Multi-Factor Authentication: MFA, Multi-Factor Auth, Azure MFA, Two-Factor Authentication
 - Trusted Signing: Code Signing, Azure Code Signing
+- Azure Defender EASM: External Attack Surface Management, EASM, Attack Surface
 - Microsoft Entra: Entra Suite, Microsoft Entra (exact API name), Entra ID metered
 - Microsoft Entra Verified ID: Verified ID, Verifiable Credentials, Decentralized Identity, DID
 
 ## Monitoring (services/monitoring/)
 
 - Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
+- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 
 ## Management (services/management/)
 
@@ -115,6 +121,7 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
 - Web PubSub: WebSocket Service
 - Microsoft Graph data connect: Microsoft 365 Data, M365 Data Export
+- Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
 
 ## AI + ML (services/ai-ml/)
 
@@ -126,6 +133,8 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
 - Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
+- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
+- Azure AI Content Understanding: Content Extraction, Multi-modal AI, Document Understanding
 
 ## IoT (services/iot/)
 
@@ -191,3 +200,4 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - PlayFab: Game Backend, Game Services
 - MS Bing Services: Bing Search, Bing API, Bing Search API
 - SAP Embrace: SAP on Azure, SAP Integration
+- Azure Health Bot: Healthcare Bot, Health Virtual Assistant, Medical Bot
