@@ -123,13 +123,13 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## IoT (services/iot/)
 
-- IoT Central: IoT SaaS, IoT Application
-- Azure Maps: Location Services, Geospatial
-- Digital Twins: ADT, IoT Modeling
-- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - AKS Edge Essentials: AKS Edge, K8s Edge, Kubernetes Edge Essentials
 - Azure Device Registry: IoT Device Registry, Asset Registry
 - Azure IoT Operations: IoT Ops, Edge IoT, Azure IoT OPC UA
+- Azure Maps: Location Services, Geospatial
+- Digital Twins: ADT, IoT Modeling
+- IoT Central: IoT SaaS, IoT Application
+- Time Series Insights: TSI, Time Series, IoT Analytics (deprecated/migrating)
 - Windows 10 IoT Core Services: IoT Core, Windows IoT, IoT Core Services, Windows CE
 
 ## Developer Tools (services/developer-tools/)
