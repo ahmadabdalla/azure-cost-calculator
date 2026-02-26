@@ -3,7 +3,7 @@ serviceName: Microsoft Entra Domain Services
 category: identity
 aliases: [AAD DS, Azure AD DS, Managed AD]
 billingNeeds: [Load Balancer, IP Addresses]
-primaryCost: "Hourly per-SKU rate (Standard/Enterprise/Premium) × 730 by forest type"
+primaryCost: "Hourly per-SKU rate × 730 × instanceCount (meterName = forest type)"
 ---
 
 # Microsoft Entra Domain Services
@@ -21,7 +21,7 @@ ProductName: Microsoft Entra Domain Services
 SkuName: Standard
 MeterName: Standard User Forest
 
-### Enterprise — User or Resource Forest (InstanceCount = replica sets)
+### Enterprise — User Forest (InstanceCount = replica sets)
 
 ServiceName: Microsoft Entra Domain Services
 ProductName: Microsoft Entra Domain Services
@@ -29,7 +29,14 @@ SkuName: Enterprise
 MeterName: Enterprise User Forest
 InstanceCount: 2
 
-### Premium — User or Resource Forest
+### Enterprise — Resource Forest (swap MeterName for on-prem trust deployments)
+
+ServiceName: Microsoft Entra Domain Services
+ProductName: Microsoft Entra Domain Services
+SkuName: Enterprise
+MeterName: Enterprise Resource Forest
+
+### Premium — User or Resource Forest (swap MeterName as above)
 
 ServiceName: Microsoft Entra Domain Services
 ProductName: Microsoft Entra Domain Services
