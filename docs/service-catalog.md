@@ -51,6 +51,7 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Networking (services/networking/)
 
 - Azure Firewall Manager: Firewall Policy
+- Network Watcher: NSG Flow Logs, Connection Monitor
 - Azure Orbital: Ground Station, Satellite
 - Private Mobile Network: Private 5G Core, Mobile Network, MEC
 - Azure Route Server: BGP Routing
@@ -85,7 +86,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Management (services/management/)
 
-- Automation: Runbooks, DSC, Update Management
 - Azure Chaos Studio: Chaos Engineering, Fault Injection
 - Scheduler: Azure Scheduler (legacy), Job Scheduler
 - Azure Arc: Hybrid Management, Arc-enabled Servers, Arc-enabled K8s

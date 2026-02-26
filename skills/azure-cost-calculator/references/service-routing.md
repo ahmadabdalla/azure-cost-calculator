@@ -91,6 +91,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Site Recovery: ASR, Disaster Recovery, DR
 - Azure Migrate: Server Assessment, Migration Tools
 - Management Groups: Management Group, Azure Management Groups, Subscription Organization
+- Automation: Runbooks, DSC, Update Management
 
 ## Integration (services/integration/)
 
