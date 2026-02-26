@@ -110,6 +110,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - SignalR: Azure SignalR Service, Real-time Messaging
 - Azure Data Explorer: ADX, Kusto
 - HDInsight: Hadoop, Spark, HBase, Kafka, HDI
+- Azure Analysis Services: AAS, Tabular Model
 
 ## AI + ML (services/ai-ml/)
 
