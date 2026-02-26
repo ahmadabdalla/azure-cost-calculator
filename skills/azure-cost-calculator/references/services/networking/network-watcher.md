@@ -55,11 +55,11 @@ Quantity: 5000
 | `Standard Network Logs Collected`                            | `1 GB`        | NSG flow logs — 5 GB/month free                  |
 | `Standard VNet Flow Logs Collected`                          | `1 GB`        | VNet flow logs — 5 GB/month free                 |
 | `Standard Traffic Analytics Processing`                      | `1 GB`        | 60-min processing interval                       |
-| `Standard Traffic Analytics Processing at 10-Minute Interval`| `1 GB`        | 10-min interval (premium rate)                   |
+| `Standard Traffic Analytics Processing at 10-Minute Interval` | `1 GB`        | 10-min interval (premium rate)                   |
 | `Standard Connection Monitor Test`                           | `1`           | Per test — 10 tests/month free; 5 price tiers    |
 | `Standard Connection Monitoring`                             | `1`           | Legacy NPM — per connection/month, flat rate     |
 | `Standard Diagnostic Tool API`                               | `1`           | Per check — 1,000 checks/month free; sub-cent    |
-| `Standard Perf Monitor Connection Metric`                    | `1`           | Legacy NPM — 10 metrics/month free; 5 price tiers|
+| `Standard Perf Monitor Connection Metric`                    | `1`           | Legacy NPM — 10 metrics/month free; 5 price tiers |
 
 ## Cost Formula
 
