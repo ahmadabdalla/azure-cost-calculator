@@ -10,6 +10,8 @@ hasKnownRates: true
 
 > **Trap (sub-cent pricing)**: Chat meters are priced at sub-cent levels — the script may display zero cost. Use `Quantity` with expected monthly volume for accurate estimates.
 
+> **Trap (multi-product)**: The `Messaging` serviceName spans `Chat` (regional), `Advanced Messaging` (Global), and `Channel Fee` (Global). Always include `ProductName: Chat` to isolate standard chat meters.
+
 ## Query Pattern
 
 ### Chat — sent message (per-message, Quantity = monthly messages)
@@ -53,8 +55,8 @@ Monthly = chat_retailPrice × messages + interop_retailPrice × interopMessages
 ## Notes
 
 - **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Phone Numbers`, `Network Traversal`, `Routing`
-- Only 2 meters — standard chat and Teams interop chat
-- Single product and SKU: all queries use `productName: Chat`, `skuName: Basic`
+- Chat has 2 meters — standard chat and Teams interop chat; use `productName: Chat`, `skuName: Basic`
+- **Advanced Messaging (Global-only)**: WhatsApp user messages and connect fees also exist under this serviceName — use `ProductName: Advanced Messaging` or `Channel Fee` with `Region: Global`
 
 ## Known Rates
 
