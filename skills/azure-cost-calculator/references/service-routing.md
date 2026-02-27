@@ -119,6 +119,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
 - Azure Machine Learning: Azure ML, AML, ML Workspace
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
+- Azure Translator: Translator Text, Text Translation, Document Translation
 - Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision
 - Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML
