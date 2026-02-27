@@ -1,6 +1,8 @@
 # Custom Copilot Coding Agents — Operations Guide
 
-Multi-agent system that gives the Copilot coding agent a research-first, consensus-driven workflow for service reference authoring.
+Multi-agent system that gives the Copilot coding agent research-first, consensus-driven workflows for service reference authoring and review.
+
+## Service Reference Authoring Agent
 
 | Item              | Detail                                                                       |
 | ----------------- | ---------------------------------------------------------------------------- |
@@ -101,11 +103,12 @@ service-reference (orchestrator)
 
 ### Agent files
 
-| File                                     | Role                                          | Tools                                   |
-| ---------------------------------------- | --------------------------------------------- | --------------------------------------- |
-| `.github/agents/service-reference.md`    | Orchestrator — dispatches, aggregates, writes | read, search, edit, execute, agent, web |
-| `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×3, + tiebreaker) | read, search, execute, web              |
-| `.github/agents/compliance-reviewer.md`  | Rules analysis sub-agent                      | read, search                            |
+| File                                     | Role                                                                                   | Tools                                   |
+| ---------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
+| `.github/agents/service-reference.md`    | Orchestrator — dispatches, aggregates, writes                                          | read, search, edit, execute, agent, web |
+| `.github/agents/pr-reviewer.md`          | PR review orchestrator — verifies, reviews                                             | read, search, edit, execute, agent, web |
+| `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
+| `.github/agents/compliance-reviewer.md`  | Rules analysis sub-agent                                                               | read, search                            |
 
 1. Edit the agent file directly.
 2. **YAML frontmatter** controls metadata (`name`, `description`, `tools`).
@@ -119,21 +122,21 @@ service-reference (orchestrator)
 
 Sub-agents use restricted toolsets (principle of least privilege):
 
-- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for majority-based consensus, plus an optional tiebreaker round with a different coding model for unresolved disputes.
+- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional tiebreaker round with a different coding model for unresolved disputes.
 - `compliance-reviewer` has only `read` and `search` — no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
-- Only the orchestrator has `edit` and `agent` tools
+- Only the orchestrators (`service-reference` and `pr-reviewer`) have `edit` and `agent` tools
 
 ---
 
 ## Relationship to other files
 
-| File                                  | Relationship                                                                                                                |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md` / `CLAUDE.md`             | Repo-level context for all agents; the custom agents complement these with service-reference-specific workflow enforcement. |
+| File                                  | Relationship                                                                                                                                                    |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md` / `CLAUDE.md`             | Repo-level context for all agents; the custom agents complement these with service-reference-specific workflow enforcement.                                     |
 | `CONTRIBUTING.md`                     | Contains "The Prompt" workflow; the compliance reviewer reads this to produce its contract. Defines alphabetical ordering rule for routing and catalog entries. |
-| `docs/TEMPLATE.md`                    | Template structure; referenced by the compliance reviewer, not duplicated.                                                  |
-| `tests/Validate-ServiceReference.ps1` | Validation script the orchestrator runs as its final step.                                                                  |
-| `skills/.../scripts/`                 | Explore/Get-AzurePricing scripts the pricing investigator runs for API discovery.                                           |
+| `docs/TEMPLATE.md`                    | Template structure; referenced by the compliance reviewer, not duplicated.                                                                                      |
+| `tests/Validate-ServiceReference.ps1` | Validation script the orchestrator runs as its final step.                                                                                                      |
+| `skills/.../scripts/`                 | Explore/Get-AzurePricing scripts the pricing investigator runs for API discovery.                                                                               |
 
 ---
 
@@ -147,6 +150,84 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | Validation failures            | Generated file doesn't match template or has bad data               | Orchestrator should auto-fix; if not, check validation script output          |
 | Script execution failures      | Missing PowerShell 7+ or no network access                          | Ensure agent environment has `pwsh` and can reach the Azure Retail Prices API |
 | Consensus conflicts unresolved | Sub-agents disagree and orchestrator doesn't arbitrate              | Review orchestrator's Phase 2 conflict resolution logic                       |
+
+---
+
+## PR Reviewer Agent
+
+| Item             | Detail                                                                                     |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| Orchestrator     | `.github/agents/pr-reviewer.md`                                                            |
+| Sub-agent (data) | `.github/agents/pricing-investigator.md` (invoked ×2, + optional tiebreaker)               |
+| Trigger          | Copilot coding agent assigned to review a PR with service reference changes                |
+| Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`, GitHub skill |
+
+### What it does
+
+When the Copilot coding agent is assigned to review a PR using the `pr-reviewer` custom agent, it runs a review-focused consensus workflow:
+
+1. **Orchestrator** (`pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
+2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
+3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation — may discover different discrepancies.
+4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
+5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), posts it as a PR comment mentioning the author, and cleans up the worktree.
+
+### Why dual investigation?
+
+- **Independent verification**: two investigators may explore different search terms and find different discrepancies — disagreement reveals areas needing closer scrutiny.
+- **Consensus over false positives**: only report findings that a majority agrees on, reducing noise in PR reviews.
+- **Tiebreaker for disputes**: unresolved disagreements trigger a third investigation with a different coding model, ensuring no contested finding ships without arbitration.
+
+### Architecture
+
+```
+pr-reviewer (orchestrator)
+  ├── GitHub skill: gather PR metadata, diff, comments
+  ├── git worktree: check out PR branch
+  │
+  ├── invokes: pricing-investigator (instance A)
+  │     Tools: read, search, execute, web
+  │     Input: service name + file content + PR comments
+  │     Output: Pricing Investigation Report A + file discrepancies
+  │
+  ├── invokes: pricing-investigator (instance B)  ← identical prompt
+  │     Tools: read, search, execute, web
+  │     Output: Pricing Investigation Report B + file discrepancies
+  │
+  ├── orchestrator: compares A vs B → agreement/disagreements
+  │     If disagreements exist:
+  │     └── invokes: pricing-investigator (tiebreaker, different coding model)
+  │           Scoped to disputed items only
+  │           Output: Tiebreaker Report
+  │
+  ├── orchestrator: runs validation script on changed files
+  │
+  ├── orchestrator: compiles review, categorizes by severity
+  │     (blocking / warning / info)
+  │
+  ├── GitHub skill: posts review mentioning @author
+  │     If blocking → request changes
+  │     If clean    → approve
+  │
+  └── git worktree remove: cleanup
+```
+
+### Trigger & assignment
+
+The `pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. A maintainer assigns the agent by selecting the `pr-reviewer` custom agent on the PR. It can also be triggered for PRs opened by the `service-reference` agent itself, providing an automated quality gate.
+
+### Troubleshooting
+
+| Symptom                          | Likely cause                                        | Fix                                                                        |
+| -------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
+| Agent not appearing              | File not merged to default branch                   | Merge to main; verify `.github/agents/pr-reviewer.md` exists               |
+| No service reference files found | PR doesn't change files under `services/`           | Expected — agent posts a skip message and stops                            |
+| Worktree creation fails          | Branch not fetched or conflicting worktree exists   | Ensure PR branch is available; remove stale worktrees                      |
+| Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`         | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
+| gh CLI commands fail             | Agent environment missing `gh` or not authenticated | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
+| Tiebreaker not triggered         | No disagreements between investigators              | Expected — tiebreaker only runs when investigators disagree                |
+| Review comment not posted        | GitHub skill PR comment failed                      | Check authentication and PR permissions                                    |
+| Worktree not cleaned up          | Error in earlier phase interrupted cleanup          | Manually run `git worktree remove ../pr-review-{N} --force`                |
 
 ---
 
