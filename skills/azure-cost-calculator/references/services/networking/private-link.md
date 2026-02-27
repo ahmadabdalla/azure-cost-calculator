@@ -1,12 +1,13 @@
 ---
-serviceName: Virtual Network
+serviceName: Azure Private Link
 category: networking
 aliases: [Private Endpoint, PE]
+apiServiceName: Virtual Network
 primaryCost: "Per-endpoint hourly rate × 730 × endpointCount + data processed per-GB (tiered)"
 pricingRegion: global
 ---
 
-# Private Link / Private Endpoints
+# Azure Private Link
 
 > **Warning**: Use `Region: Global` explicitly; empty string returns zero results.
 
@@ -18,14 +19,14 @@ pricingRegion: global
 
 ### Endpoint hourly cost
 
-ServiceName: Virtual Network
+ServiceName: Virtual Network <!-- cross-service -->
 ProductName: Virtual Network Private Link
 MeterName: Standard Private Endpoint
 Region: Global
 
 ### Multi-endpoint deployment (InstanceCount = number of private endpoints)
 
-ServiceName: Virtual Network
+ServiceName: Virtual Network <!-- cross-service -->
 ProductName: Virtual Network Private Link
 MeterName: Standard Private Endpoint
 Region: Global
@@ -33,7 +34,7 @@ InstanceCount: 5
 
 ### Data processed — substitute {direction} with Ingress or Egress
 
-ServiceName: Virtual Network
+ServiceName: Virtual Network <!-- cross-service -->
 ProductName: Virtual Network Private Link
 MeterName: Standard Data Processed - {direction}
 Region: Global
