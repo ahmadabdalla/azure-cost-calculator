@@ -35,6 +35,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## Databases (services/databases/)
 
 - Azure Cosmos DB: CosmosDB, DocumentDB, Multi-model DB
+- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
 - Azure Database for MySQL: MySQL, Azure MySQL, MySQL Flexible Server
 - Azure Database for PostgreSQL: PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server
 - Azure Database Migration Service: DMS, Database Migration, DB Migration Service

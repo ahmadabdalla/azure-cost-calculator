@@ -46,7 +46,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
 - Azure SQL Edge: Edge Database, IoT SQL
-- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
 - SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
 - SQL DB Edge: Edge SQL (legacy name for Azure SQL Edge)
 - SQL Server Stretch Database: Stretch DB, SQL Stretch
