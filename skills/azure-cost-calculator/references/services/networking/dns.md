@@ -43,7 +43,7 @@ Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `serviceName` | Always `Azure DNS`                                      | `Azure DNS`                                       |
 | `productName` | Single product                                          | `Azure DNS`                                       |
 | `skuName`     | `Public` for public DNS zones                           | `Public`, `Private`                               |
-| `Region`      | Delivery zone (Zone 1–4 / US Gov), **not** ARM regions  | `Zone 1`, `Zone 2`, `Zone 4`, `US Gov Zone 1`    |
+| `Region`      | Delivery zone (Zone 1–4 / US Gov), **not** ARM regions  | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `US Gov Zone 1` |
 | `meterName`   | Zone hosting or query volume                            | `Public Zone`, `Public Queries`                   |
 
 ## Meter Names

@@ -7,7 +7,7 @@ primaryCost: "Plan hourly rate × 730 + overage IPs + data processing per-GB (ti
 
 # Azure DDOS Protection
 
-> **Trap (tiered data)**: Network Protection data processing uses tiered pricing (0–100 TB, 100–500 TB, 500 TB+). The script's `totalMonthlyCost` sums all tiers — query each tier's rate and calculate manually based on actual volume.
+> **Trap (tiered data)**: Network Protection data processing returns 4 tiered rows (0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+; last two share the same rate). The script's `totalMonthlyCost` sums all tiers — query each tier's rate and calculate manually based on actual volume.
 
 > **Trap (case-sensitive)**: The API serviceName is `Azure DDOS Protection` (all-caps "DDOS"). Searching with "DDoS" returns zero results.
 
@@ -48,7 +48,7 @@ Quantity: 1000
 | --- | --- | --- | --- |
 | `Network Protection Plan` | `Network Protection` | `1 Hour` | Base plan, includes 100 public IPs |
 | `Network Protection Resource` | `Network Protection` | `1 Hour` | Per additional IP beyond 100 included |
-| `Network Protection Data Processed` | `Network Protection` | `1 GB` | Tiered: 0–100 TB, 100–500 TB, 500 TB+ |
+| `Network Protection Data Processed` | `Network Protection` | `1 GB` | 4 tiers: 0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+ |
 | `IP Protection Resource` | `Azure DDoS Protection IP Protection` | `1 Hour` | Per-IP plan, one charge per protected IP |
 
 ## Cost Formula
@@ -56,12 +56,12 @@ Quantity: 1000
 ```
 Network Protection:
   Plan        = plan_retailPrice × 730
-  Overage IPs = resource_retailPrice × 730 × max(0, protectedIPs − 100)
+  Overage IPs = resource_retailPrice × 730 × max(0, publicIpCount − 100)
   Data        = Σ(tier_retailPrice × GB_in_tier)
   Total       = Plan + Overage IPs + Data
 
 IP Protection:
-  Total       = ip_retailPrice × 730 × publicIPCount
+  Total       = ip_retailPrice × 730 × publicIpCount
 ```
 
 ## Notes
