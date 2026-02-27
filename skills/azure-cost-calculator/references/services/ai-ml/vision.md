@@ -64,8 +64,11 @@ MeterName: Video Retrieval and Description - Ingestion Vision
 | `Image Analysis Group 1 Transactions` | `Azure Vision` | `1K` | Tiered: Tag, Face detect, Thumbnail |
 | `Image Analysis Group 2 Transactions` | `Azure Vision` | `1K` | Tiered: Describe |
 | `Standard Transactions` | `Azure Vision - Face` | `1K` | Tiered: Face detection/identify |
-| `Face Storage` | `Azure Vision - Face` | `1K` | Sub-cent per 1K faces stored |
-| `Spatial Analysis Video Stream Edge` | `Azure Vision` | `1 Hour` | Sub-cent per camera-hour |
+| `Face Storage` | `Azure Vision - Face` | `1K` | Per 1K faces stored |
+| `Standard Faces` | `Azure Vision - Face` | `1M` | Face IDs stored for training |
+| `Liveness Transactions` | `Azure Vision - Face` | `1K` | Face liveness detection |
+| `Liveness and Verification Transactions` | `Azure Vision - Face` | `1K` | Liveness + face verification |
+| `Spatial Analysis Video Stream Edge` | `Azure Vision` | `1 Hour` | ~1¢ per camera-hour |
 | `Video Retrieval and Description - Ingestion Vision` | `Azure Vision` | `1 Hour` | Video ingestion |
 | `Vectorize Image Transactions` | `Azure Vision` | `1K` | Image embeddings |
 | `Custom Image Classification Training` | `Azure Vision` | `1 Hour` | Custom model training |
@@ -87,6 +90,6 @@ Annual meters (1/Year):    Monthly = retailPrice ÷ 12
 - **Free tiers**: Image Analysis 5K txns/mo, Face 30K txns/mo, Spatial Analysis 1 camera/mo, Custom Training free hours
 - **Commitment tiers**: Azure (500K–16M txns/mo) and Connected container variants offer volume discounts with overage — not RI
 - **Disconnected containers**: `Azure Vision - Disconnected` bills annually; divide by 12 for monthly cost
-- **P-series**: Vision P1–P3 bill daily (`1/Day`); P4–P6 have overage-only meters. Face P1–P3 have daily fee + tiered overage + storage
+- **P-series**: Vision P1/P3 daily-only (`1/Day`); P2 has daily + overage; P4–P6 overage-only. Face P1–P3 have daily fee + tiered overage + storage
 - **Scope**: See `ai-services.md` for the full Foundry Tools umbrella (Language, Speech, Translator, etc.)
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; 1 Spatial Analysis unit = 1 camera-hour
