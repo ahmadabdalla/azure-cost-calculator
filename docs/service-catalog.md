@@ -65,7 +65,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 - Azure Container Storage: Container-native Storage, Kubernetes Storage
 - Azure Elastic SAN: SAN, Block Storage
-- Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
 - Azure Managed Lustre: Lustre, HPC Storage
 - Data Box Gateway: Data Box Virtual Appliance, Hybrid Data Transfer Gateway
 - Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
