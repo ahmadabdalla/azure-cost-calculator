@@ -64,7 +64,7 @@ Monthly = ip_retailPrice × 730 × ipCount
 
 ## Notes
 
-- Basic Public IPs are being retired — use Standard SKU for new deployments
+- Basic Public IPs were retired September 30, 2025 — use Standard SKU for new deployments
 - Standard IPs are static-only and zone-redundant by default
 - Basic Dynamic IPs are free when attached to a running VM — charged only when idle or unattached
 - IPv6 Public IPs are [free](https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses) (no API meters)
