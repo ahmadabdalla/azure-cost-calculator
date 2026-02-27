@@ -1,7 +1,7 @@
 ---
 serviceName: Foundry Tools
 category: ai-ml
-aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision]
+aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Language, Decision]
 primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
 hasFreeGrant: true
 privateEndpoint: true
@@ -14,8 +14,6 @@ privateEndpoint: true
 > **Trap (inflated totals)**: Unfiltered queries return 300+ meters across 37 product families. Always filter by `ProductName`.
 
 > **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
-
-> **Trap (no Standard Speech)**: Azure Speech has no `Standard` SKU — only Free, commitment, and specialized SKUs.
 
 ## Query Pattern
 
@@ -91,7 +89,7 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 | `Azure Language`              | `Standard`, `S0`–`S4`                                                                                                                       |
 | `Azure Vision - Face`         | `Standard`                                                                                                                                  |
 | `Azure Document Intelligence` | `S0`, `Free`                                                                                                                                |
-| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs                                                                                                  |
+| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs — see `speech.md`                                                                                |
 | `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`                                                                                                                |
 | `Content Safety`              | `Standard`                                                                                                                                  |
 | `Anomaly Detector`            | `Standard`, `Free`                                                                                                                          |
