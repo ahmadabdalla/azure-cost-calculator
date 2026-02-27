@@ -178,7 +178,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 - Azure API for FHIR: FHIR API, Healthcare API, Health Data Services
 - Azure Blockchain: Blockchain Service, Blockchain Workbench (deprecated)
-- Azure Health Bot: Healthcare Bot, Health Virtual Assistant, Medical Bot
 - Azure Orbital Edge: Edge Satellite, Space Edge Computing
 - Azure Remote Rendering: 3D Rendering, Mixed Reality
 - Azure Spatial Anchors: AR Anchors, Mixed Reality Anchors
