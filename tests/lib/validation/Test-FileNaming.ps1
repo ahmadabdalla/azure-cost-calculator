@@ -69,8 +69,8 @@ function Test-FileNaming {
             'private-dns.md',        # serviceName: Azure DNS (split with dns.md)
             'private-link.md',       # serviceName: Virtual Network (split with virtual-network.md)
             'container-storage.md',  # serviceName: Storage (split with storage.md, managed-disks.md, data-lake-storage.md)
-            'data-lake-storage.md',  # serviceName: Storage (split with storage.md, managed-disks.md)
-            'managed-disks.md'       # serviceName: Storage (split with storage.md, data-lake-storage.md)
+            'data-lake-storage.md',  # serviceName: Storage (split with storage.md, managed-disks.md, container-storage.md)
+            'managed-disks.md'       # serviceName: Storage (split with storage.md, data-lake-storage.md, container-storage.md)
         )
 
         if ($actualFile -in $splitFileOverrides) {
