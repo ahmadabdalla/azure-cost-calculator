@@ -116,6 +116,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## AI + ML (services/ai-ml/)
 
 - Azure Bot Service: Bot Framework, Chatbot
+- Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
 - Azure Machine Learning: Azure ML, AML, ML Workspace
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
 - Azure Translator: Translator Text, Text Translation, Document Translation
