@@ -81,7 +81,7 @@ Free grant:  Billable = max(0, pages − 500) then apply PAYG formula
 
 - **Free tier**: F0 SKU includes 500 pages/month; S0 Training: first 10 hours free for neural models, template training always free
 - **Model types** (never-assume): Read (OCR), Pre-built (Invoice/Receipt/ID/W-2/Layout), Custom (extraction/generative), Add-on — ask user which model
-- **Commitment tiers**: Pre-Built/Custom 20K–1M pages/month, Read 500K–16M pages/month; Connected Container tiers are ~15–20% cheaper
+- **Commitment tiers**: Pre-built/Custom 20K–1M pages/month, Read 500K–16M pages/month; Connected Container tiers are ~15–20% cheaper
 - **Disconnected containers**: Separate product (`Azure Document Intelligence - Disconnected`), annual billing (`1/Year`), no overage — divide `retailPrice` by 12 for monthly equivalent
 - **Legacy**: `Form Recognizer` productName has higher Custom pricing — always use `Azure Document Intelligence` for current rates
 - **Scope**: For broader Foundry Tools coverage (Language, Vision, Speech, Translator), see `ai-ml/ai-services.md`
