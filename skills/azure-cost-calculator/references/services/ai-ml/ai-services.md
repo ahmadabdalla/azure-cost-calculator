@@ -1,7 +1,11 @@
 ---
 serviceName: Foundry Tools
 category: ai-ml
+<<<<<<< copilot/add-azure-speech-service
 aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Language, Decision]
+=======
+aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Speech, Language, Decision]
+>>>>>>> main
 primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
 hasFreeGrant: true
 privateEndpoint: true
