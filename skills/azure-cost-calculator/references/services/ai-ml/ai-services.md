@@ -1,7 +1,7 @@
 ---
 serviceName: Foundry Tools
 category: ai-ml
-aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Vision, Speech, Language, Decision]
+aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Speech, Language, Decision]
 primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
 hasFreeGrant: true
 privateEndpoint: true

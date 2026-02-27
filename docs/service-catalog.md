@@ -129,7 +129,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Video Indexer: Video AI, Media Indexer, Video Analysis
-- Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
 - Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
