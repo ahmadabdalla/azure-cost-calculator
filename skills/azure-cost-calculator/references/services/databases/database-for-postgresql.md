@@ -60,7 +60,7 @@ Total = Compute + Storage
 - High Availability doubles compute cost (deploys a standby replica)
 - Backup storage: first backup equal to DB size is free; excess charged per-GB/month
 - Single Server is deprecated — all new deployments use Flexible Server
-- Cosmos DB for PostgreSQL meters share this serviceName — filter by productName to isolate Flexible Server
+- Cosmos DB for PostgreSQL and HorizonDB meters share this serviceName — filter by productName to isolate Flexible Server
 
 ## Product Names
 
