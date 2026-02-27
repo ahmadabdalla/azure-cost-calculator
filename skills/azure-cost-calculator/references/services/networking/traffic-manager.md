@@ -6,7 +6,7 @@ primaryCost: "Per million DNS queries (tiered) + per health check endpoint per m
 pricingRegion: global
 ---
 
-# Azure Traffic Manager
+# Traffic Manager
 
 > **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
