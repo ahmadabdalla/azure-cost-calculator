@@ -117,11 +117,13 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - Azure Bot Service: Bot Framework, Chatbot
 - Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
+- Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Azure Machine Learning: Azure ML, AML, ML Workspace
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
+- Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
 - Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
-- Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Speech, Language, Decision
+- Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision
 - Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML
 - Microsoft Genomics: Genomics Workspace
