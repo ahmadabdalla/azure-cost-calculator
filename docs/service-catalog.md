@@ -41,7 +41,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Databases (services/databases/)
 
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
-- Azure Cosmos DB for PostgreSQL: Cosmos DB PostgreSQL, Citus, PostgreSQL Hyperscale, Cosmos DB for Postgres
 - Azure Database for MariaDB: MariaDB, Azure MariaDB
 - Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
