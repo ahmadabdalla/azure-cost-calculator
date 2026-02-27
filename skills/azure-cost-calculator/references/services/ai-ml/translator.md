@@ -14,7 +14,9 @@ privateEndpoint: true
 
 > **Trap (multiple products)**: Three `productName` values — `Translator Text` (regional), `Azure Translator` (Global-only), `Azure Translator - Disconnected` (annual). Always filter by `ProductName`.
 
-> **Trap (mixed units)**: `unitOfMeasure` varies: `1M` (characters), `1/Day` (volume tiers C2–C4/D3), `1/Month` (commitment/hosting), `1/Year` (disconnected). Script auto-multiplies daily by 30; annual meters show raw price as MonthlyCost.
+> **Trap (mixed units)**: `unitOfMeasure` varies: `1M` (characters), `1/Day` (S2–S4, C2–C4, D3), `1/Month` (commitment/hosting), `1/Year` (disconnected). Script auto-multiplies daily by 30; annual meters show raw price as MonthlyCost.
+
+> **Trap (Global meter naming)**: `Azure Translator` (Global-only product) uses different meter/SKU names than `Translator Text` (regional): e.g., `S1 Standard Characters` vs `S1 Characters`, `S1 Document` SKU vs `S1`. Always verify meter names per product.
 
 ## Query Pattern
 
@@ -32,6 +34,7 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Document Characters
+Quantity: 10 # millions of document characters
 
 ### S1 custom model translation
 
@@ -39,6 +42,7 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Custom Translation Characters
+Quantity: 10 # millions of characters
 
 ### Commitment tier (Azure 250M chars/month)
 
@@ -81,7 +85,8 @@ Free grant:          Billable = max(0, chars − 2M free) then price per 1M
 ## Notes
 
 - **Free tier**: 2M characters/month (standard + custom training combined) on Free SKU; custom model hosting still costs per model per region
-- **Deprecated tiers**: S2–S4 are deprecated — use S1 pay-per-use + Commitment Tiers (Azure 250M/1000M/4000M) for volume discounts
+- **Retiring tiers**: S2–S4 retiring Oct 2026 — use S1 pay-per-use + Commitment Tiers for new deployments
+- **Commitment tiers**: Azure (250M/1000M/4000M) and Connected (250M/1000M/4000M) variants; Connected tiers run in customer containers at slightly lower rates
 - **Container tiers**: C2–C4 (connected) and D3 (disconnected) use daily billing with included character allowances + overage rates
 - **Disconnected containers**: `Azure Translator - Disconnected` bills annually (4000M and 10000M tiers) — divide by 12 for monthly equivalent
 - **Umbrella service**: Translator is part of Foundry Tools (AI Services) — see `ai-services.md` for umbrella query patterns and other sub-services
