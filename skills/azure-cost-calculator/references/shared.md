@@ -54,7 +54,7 @@ Service reference files are organized by category. To find a service file:
 
 Some services have **no data** in the Retail Prices API at all. Scripts return zero results.
 **Do NOT** query via the pricing/explore scripts — use the manual fallback table in the service file.
-Affected: DDoS Protection, Defender CSPM.
+Affected: Defender CSPM.
 Full list: [regions-and-currencies.md & Known API-Unavailable Services](regions-and-currencies.md#known-api-unavailable-services).
 
 ### Global/Empty-Region Services
