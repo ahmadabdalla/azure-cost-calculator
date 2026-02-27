@@ -36,7 +36,7 @@ ServiceName: Azure Firewall
 ProductName: Azure Firewall
 SkuName: {Tier}
 MeterName: {Tier} Capacity Unit
-Quantity: 2 <!-- number of additional scale units -->
+Quantity: 2 # number of additional scale units
 
 ## Meter Names
 
