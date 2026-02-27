@@ -1,64 +1,72 @@
 ---
-serviceName: Azure DNS
+serviceName: Private DNS
 category: networking
 aliases: [Private DNS, Private DNS Zones]
-primaryCost: "Zone hosting (per-zone/month) + DNS queries"
-pricingRegion: global
+apiServiceName: Azure DNS
+primaryCost: "Per-zone/month (tiered: first 25 zones, then lower rate) + per million DNS queries"
+pricingRegion: empty-region
 ---
 
 # Private DNS Zones
 
-> **Warning**: Scripts require a Region filter and return nothing — call the API directly using query below.
-> **Trap**: Zone pricing is **tiered** — the API returns two rows per region (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 25+ zones, apply tier-1 `retailPrice` to the first 25 and tier-2 `retailPrice` to the remainder. Do NOT sum all tiers as a flat total.
+> **Trap (mixed SKUs)**: The API `serviceName` "Azure DNS" returns Public, Private, Private Resolver, and DNS Security Policy meters. Filter with `skuName eq 'Private'` to isolate Private DNS pricing.
+>
+> **Trap (tiered pricing)**: Zone pricing returns two API rows (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 26+ zones, apply tier-1 to the first 25 and tier-2 to the remainder. Do NOT sum all tiers.
+
+> **Warning**: **Empty-region pricing** — scripts require a Region filter and return nothing for Private DNS. Use `Region: Zone 1` as a workaround, or query the API directly with `armRegionName eq ''`. Prices are USD-only.
 
 ## Query Pattern
 
-### Private Zone hosting cost
+### Private Zone hosting (Quantity = number of zones)
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Zone'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and skuName eq 'Private' and meterName eq 'Private Zone' and armRegionName eq ''
+Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ### Private DNS queries
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and productName eq 'Azure DNS' and meterName eq 'Private Queries'
-Fields: meterName, unitPrice, unitOfMeasure, currencyCode, armRegionName
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and skuName eq 'Private' and meterName eq 'Private Queries' and armRegionName eq ''
+Fields: meterName, unitPrice, unitOfMeasure
+
+### Script workaround (Zone 1)
+
+ServiceName: Azure DNS  <!-- cross-service -->
+SkuName: Private
+MeterName: Private Zone
+Region: Zone 1
+Quantity: 10
 
 ## Key Fields
 
-| Parameter       | Value                      |
-| --------------- | -------------------------- |
-| `serviceName`   | `Azure DNS`                |
-| `productName`   | `Azure DNS`                |
-| `armRegionName` | `''` (empty) or `'Global'` |
+| Parameter       | How to determine                                    | Example values                    |
+| --------------- | --------------------------------------------------- | --------------------------------- |
+| `serviceName`   | Always `Azure DNS` (shared with public DNS)         | `Azure DNS`                       |
+| `productName`   | Single product                                      | `Azure DNS`                       |
+| `skuName`       | `Private` for Private DNS zones                     | `Private`, `Public`               |
+| `armRegionName` | Empty string or delivery zone — **not** ARM regions | `''`, `Zone 1`, `Zone 2`         |
+| `meterName`     | Zone hosting or query volume                        | `Private Zone`, `Private Queries` |
 
 ## Meter Names
 
 | Meter             | unitOfMeasure | Tier     | Notes                           |
 | ----------------- | ------------- | -------- | ------------------------------- |
-| `Private Zone`    | `1/Month`     | First 25 | Per zone per month              |
-| `Private Zone`    | `1/Month`     | 26+      | Lower rate for additional zones |
+| `Private Zone`    | `1`           | First 25 | Per zone per month              |
+| `Private Zone`    | `1`           | 26+      | Lower rate for additional zones |
 | `Private Queries` | `1M`          | —        | Per million DNS queries         |
-
-> **Note**: Zone pricing is **tiered** — first 25 zones at tier-1 `retailPrice`, additional zones at tier-2 `retailPrice` (based on `tierMinimumUnits`).
 
 ## Cost Formula
 
 ```
-Monthly = zonePrice × zoneCount + queryPrice × (queriesInMillions)
+Zones   = zonePrice × zoneCount
+Queries = queryPrice × queriesInMillions
+Monthly = Zones + Queries
 ```
 
 For 25+ zones:
 
 ```
-Monthly = (tier1_retailPrice × 25) + (tier2_retailPrice × (zoneCount - 25)) + queryPrice × queriesInMillions
-```
-
-## Example (10 zones, 5M queries/month)
-
-```
-Zones:   tier1_retailPrice × 10
-Queries: queryPrice × 5
-Total:   Zones + Queries (USD)
+Zones   = (tier1_retailPrice × 25) + (tier2_retailPrice × (zoneCount − 25))
+Queries = queryPrice × queriesInMillions
+Monthly = Zones + Queries
 ```
 
 ## Notes

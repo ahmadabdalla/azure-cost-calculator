@@ -2,63 +2,69 @@
 serviceName: Load Balancer
 category: networking
 aliases: [ALB, LB, Standard LB, Basic LB]
-primaryCost: "Per-hour base fee + per-GB data processed + overage rules (Standard); VNet peering per-GB"
+billingNeeds: [IP Addresses]
+primaryCost: "Per-hour base fee + per-GB data processed + rule overage beyond 5 (Standard)"
+hasFreeGrant: true
 pricingRegion: global
 ---
 
-# Virtual Network / Load Balancer
+# Load Balancer
 
-## Virtual Network
+> **Warning**: Load Balancer pricing is **Global-only** — querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`. Prices are USD-only.
 
-VNets themselves are free. Costs come from:
-
-- **Peering**: per-GB data transfer (intra-region is lower-cost, inter-region is higher-cost)
-- **Public IPs**: per-hour for static IPs
-- **NAT Gateway**: per-hour + per-GB processed
-
-## Load Balancer
-
-> **Trap**: Load Balancer is billed **per-resource**. If a user requests N Load Balancers, calculate the full cost for one LB, then **multiply the total by N**. Do NOT query once and assume it covers multiple LBs.
+> **Trap**: Unfiltered queries sum base fee, data processing, overage, and free-tier meters — `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 
 ## Query Pattern
 
-### Standard SKU (substitute {meterName} from Meter Names table)
+### Standard base hourly cost (first 5 LB/outbound rules included)
 
 ServiceName: Load Balancer
 SkuName: Standard
-MeterName: {meterName}
+MeterName: Standard Included LB Rules and Outbound Rules
 Region: Global
+
+### Standard data processed (Quantity = estimated monthly GB)
+
+ServiceName: Load Balancer
+SkuName: Standard
+MeterName: Standard Data Processed
+Region: Global
+Quantity: 500
+
+### Multiple load balancers (InstanceCount = number of LB resources)
+
+ServiceName: Load Balancer
+SkuName: Standard
+MeterName: Standard Included LB Rules and Outbound Rules
+Region: Global
+InstanceCount: 3
 
 ## Meter Names
 
-| Meter                                           | unitOfMeasure | Notes                            |
-| ----------------------------------------------- | ------------- | -------------------------------- |
-| `Standard Data Processed`                       | `1 GB`        | Per-GB processed                 |
-| `Standard Included LB Rules and Outbound Rules` | `1 Hour`      | First 5 rules included           |
-| `Standard Overage LB Rules and Outbound Rules`  | `1/Hour`      | Per additional rule beyond 5     |
-| `Standard Data Processed - Free`                | `1 GB`        | Free tier (Basic SKU equivalent) |
+| Meter | skuName | unitOfMeasure | Notes |
+| ----- | ------- | ------------- | ----- |
+| `Standard Included LB Rules and Outbound Rules` | `Standard` | `1 Hour` | Base hourly fee — first 5 rules included |
+| `Standard Overage LB Rules and Outbound Rules` | `Standard` | `1/Hour` | Per additional rule beyond 5 |
+| `Standard Data Processed` | `Standard` | `1 GB` | Per-GB processed (sub-cent) |
+| `Gateway` | `Gateway` | `1 Hour` | Gateway LB base fee (NVA chaining) |
+| `Gateway Chain` | `Gateway` | `1 Hour` | Per chained LB per hour |
+| `Gateway Data Processed` | `Gateway` | `1 GB` | Gateway per-GB (sub-cent) |
+| `Global Included LB Rules and Outbound Rules` | `Global` | `1 Hour` | Cross-region base fee |
+| `Global Data Processed` | `Global` | `1 GB` | Cross-region data — genuinely free |
 
 ## Cost Formula
 
 ```
-Base      = basePrice × 730
-Overage   = max(0, totalRules - 5) × overagePrice × 730
-Data      = processedGB × dataPrice
-Monthly   = Base + Overage + Data
-```
-
-## Example (8 rules, 200 GB)
-
-Query each meter via the script, then calculate:
-
-```
-Base:    basePrice × 730
-Overage: 3 × overagePrice × 730
-Data:    200 × dataPrice
-Total:   Base + Overage + Data (USD)
+Base      = base_retailPrice × 730
+Overage   = max(0, totalRules − 5) × overage_retailPrice × 730
+Data      = data_retailPrice × processedGB
+Monthly   = (Base + Overage + Data) × instanceCount
 ```
 
 ## Notes
 
-- Basic SKU is free but lacks SLA and zone redundancy
-- Standard SKU requires Standard public IPs
+- **Basic SKU is free** but was retired September 30, 2025 — represented in API as `- Free` suffix meters under `skuName: Standard`
+- **Standard Public IPs required**: Standard LB requires Standard SKU Public IP addresses — billed separately under IP Addresses
+- **Three SKUs**: Standard (regional), Global (cross-region, data processing is free), Gateway (NVA chaining with base + chain + data meters)
+- **Per-resource billing**: Each LB resource is billed independently — multiply total by resource count
+- **Rule overage**: First 5 LB rules and outbound rules included in base hourly fee; each additional rule incurs overage charge
