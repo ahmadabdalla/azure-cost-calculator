@@ -79,9 +79,11 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Data Lake Storage: Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake
 - Managed Disks: Managed Disks, Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage
 - Storage: Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage
+- Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
 
 ## Security (services/security/)
 
+- Azure Defender EASM: External Attack Surface Management, EASM, Attack Surface
 - Key Vault: AKV, KV, Managed HSM
 - Microsoft Defender for Cloud: Azure Security Center, CSPM, CWP, MDC
 - Microsoft Purview: Data Governance, Data Catalog, Azure Purview, Purview Data Map, Data Estate Scanning
@@ -91,6 +93,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - Application Insights: App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights
 - Azure Monitor: Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive
+- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 - Log Analytics: OMS, LA, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite
 
 ## Management (services/management/)
@@ -112,6 +115,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Data Explorer: ADX, Kusto
 - Azure Data Factory v2: ADF, ADF v2, ETL, Data Pipeline, Azure Data Factory
 - Azure Databricks: DBX, Spark on Azure
+- Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
 - Azure Synapse Analytics: Synapse, Synapse Workspace, Synapse SQL, Synapse Spark
 - HDInsight: Hadoop, Spark, HBase, Kafka, HDI
 - Microsoft Fabric: Fabric Capacity, OneLake, Lakehouse
@@ -121,6 +125,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## AI + ML (services/ai-ml/)
 
+- Azure AI Content Understanding: Content Extraction, Multi-modal AI, Document Understanding
 - Azure Bot Service: Bot Framework, Chatbot
 - Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
@@ -128,7 +133,10 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
+- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
 - Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
+- Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
+- Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision
 - Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML

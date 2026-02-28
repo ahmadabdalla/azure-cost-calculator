@@ -53,7 +53,7 @@ References load on demand, keeping token usage low even for 10+ service estimate
 
 ## Supported Services
 
-210+ Azure services are mapped across 18 categories (Compute, Databases, Networking, Storage, Security, Monitoring, Integration, AI + ML, and more). 50+ services have full reference files with documented query patterns. For services without a reference file, the skill includes an exploration script that searches the live API to find the right filters automatically.
+210+ Azure services are mapped across 18 categories (Compute, Databases, Networking, Storage, Security, Monitoring, Integration, AI + ML, and more). 110+ services have full reference files with documented query patterns. For services without a reference file, the skill includes an exploration script that searches the live API to find the right filters automatically.
 
 ### With vs. Without a Service Reference File
 
