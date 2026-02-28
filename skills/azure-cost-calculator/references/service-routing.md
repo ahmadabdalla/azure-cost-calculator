@@ -90,6 +90,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 - Application Insights: App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights
 - Azure Monitor: Metrics, Alerts, Diagnostics, Platform Metrics, Basic Logs, Auxiliary Logs, Data Archive
+- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 - Log Analytics: OMS, LA, Workspace, Logs, Log Analytics Workspace, Azure Monitor Logs, Operations Management Suite
 
 ## Management (services/management/)
