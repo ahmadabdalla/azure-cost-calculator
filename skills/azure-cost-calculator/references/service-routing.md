@@ -128,7 +128,9 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure OpenAI Service: OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
+- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
 - Azure Vision: Computer Vision, Face API, Spatial Analysis, Image Analysis
+- Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision
 - Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML
