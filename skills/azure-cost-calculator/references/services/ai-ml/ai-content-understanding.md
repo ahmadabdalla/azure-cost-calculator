@@ -32,7 +32,7 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Content Understanding
 SkuName: Audio Content Extraction
 MeterName: Audio Content Extraction
-Quantity: 50 # hours of audio processed
+Quantity: 50 # total hours of audio processed per month
 
 ### Video content extraction
 
@@ -89,9 +89,10 @@ Composite:              Monthly = ContentExtraction + Contextualization + FieldE
 
 - **No free tier**: Unlike sibling AI services, Content Understanding has no free tier or monthly grant
 - **Azure OpenAI dependency**: Field extraction incurs separate Azure OpenAI model charges — see `openai-service.md` for model pricing
-- **Extraction tiers** (never-assume): Documents offer Minimal/Basic/Standard tiers with different page rates; ask user which tier
+- **Extraction tiers** (never-assume): Documents offer Minimal/Basic/Standard tiers; contextualization and field extraction also have **Pro** variants — ask user which tier
 - **Regional availability**: GA content extraction in 15–16 regions; Field Extraction/Classification/Face only in westus, swedencentral, australiaeast
-- **Two-phase billing**: Content extraction + field extraction are separate meters — users doing extraction only pay content extraction
+- **Two-phase billing**: Content extraction + field extraction are separate meters for all modalities (doc/audio/video) — field extraction rates are significantly higher
 - **Capacity planning**: `Quantity: 1` = 1K pages/tokens/images when `unitOfMeasure` is `1K`; `1 Hour` meters bill per hour of media processed
 - **Supports private endpoints** via AI Services multi-service resource — see `networking/private-link.md` for PE pricing
+- **10 additional meters** in 3-region tier: Classification In/Out, Pro Contextualization, Pro Field Extract In/Out, Audio/Video Field Extraction, Add-On Formula/Face Grouping, Face Transaction — query `ProductName: Azure Content Understanding` in westus
 - **Scope**: For broader Foundry Tools coverage, see `ai-services.md`
