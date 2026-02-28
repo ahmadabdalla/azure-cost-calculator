@@ -109,7 +109,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Analytics (services/analytics/)
 
 - Azure Data Share: Data Sharing
-- Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
 - Data Catalog: Data Catalog (legacy)
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
 - Microsoft Graph data connect: Microsoft 365 Data, M365 Data Export
