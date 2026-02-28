@@ -43,7 +43,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
 - Azure Cosmos DB for PostgreSQL: Cosmos DB PostgreSQL, Citus, PostgreSQL Hyperscale, Cosmos DB for Postgres
 - Azure Database for MariaDB: MariaDB, Azure MariaDB
-- Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
 - Azure SQL Edge: Edge Database, IoT SQL
 - Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
