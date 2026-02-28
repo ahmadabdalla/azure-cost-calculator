@@ -10,7 +10,7 @@ primaryCost: "Per-minute audio/video analysis — separate meters per preset tie
 
 > **Trap (serviceName)**: API `serviceName` is `Foundry Tools`, NOT `Azure Video Indexer`. Always use `ServiceName: Foundry Tools` with `ProductName: Azure Video Indexer` to isolate Video Indexer meters.
 
-> **Trap (unitOfMeasure)**: All meters use `unitOfMeasure: "1"` meaning 1 content minute — NOT hours. The script's default `× 730` multiplier does not apply. Always specify `Quantity` as minutes processed.
+> **Trap (unitOfMeasure)**: All meters use `unitOfMeasure: "1"`, which the pricing scripts treat as unitless (monthly multiplier `1`, not `730`). Always set `Quantity` to the number of content-minutes processed.
 
 > **Trap (legacy meters)**: The API returns 3 legacy meters (without "Indexing" in the name) alongside 7 current meters. Always filter by `SkuName` or `MeterName` to avoid mixing legacy and current presets.
 
@@ -84,6 +84,7 @@ With modification: Total = audio + video + (modification_retailPrice × modified
 - **No commitment tiers**: Unlike other Foundry Tools sub-services, Video Indexer has no volume commitments or RI
 - **Audio + Video billed separately**: Indexing a video with both audio and video analysis incurs two charges — query each preset and sum
 - **Legacy meters**: 3 legacy presets (Basic Audio Analysis, Standard Audio Analysis, Standard Video Analysis) remain in the API but are absent from the pricing page — use current "Indexing" equivalents for new estimates
+- **Regional availability**: Basic Video Indexing Analysis is unavailable in 6 regions (brazilsoutheast, jioindiawest, koreasouth, and 3 US Gov regions)
 - **Arc-enabled**: Same pricing as cloud; only Basic Audio and Basic Video Indexing presets are supported on Arc
 - **Capacity planning**: `Quantity: 1` = 1 minute of content processed; typical media library: estimate total content-minutes across all files
 - **Scope**: Part of Foundry Tools (AI Services) — see `ai-services.md` for umbrella patterns and other sub-services
