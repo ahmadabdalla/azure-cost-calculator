@@ -167,3 +167,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Phone Numbers: ACS Phone Numbers, PSTN, Telephony
 - SMS: ACS SMS, Text Messaging
 - Voice: ACS Voice, Voice Calling, VOIP
+
+## Specialist (services/specialist/)
+
+- Azure Health Bot: Healthcare Bot, Health Virtual Assistant, Medical Bot
