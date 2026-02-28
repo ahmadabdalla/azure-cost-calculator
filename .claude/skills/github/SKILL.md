@@ -63,22 +63,20 @@ gh issue create
 # Create with flags
 gh issue create --title "Bug: Login fails" --body "Steps to reproduce..."
 
-# Create with multi-line body (PREFERRED: write to temp file)
-cat > /tmp/issue-body.md << 'BODY'
-## Description
-Add dark mode support
-
-## Acceptance Criteria
-- [ ] Toggle in settings
-- [ ] Persists across sessions
-BODY
+# Create with multi-line body (PREFERRED: use file creation tool + --body-file)
+# 1. Use the file creation tool (NOT a terminal heredoc) to write the body to a temp file
+# 2. Run gh issue create with --body-file pointing to that file
+# 3. Clean up the temp file afterward
 gh issue create --title "Feature request" --body-file /tmp/issue-body.md
+rm -f /tmp/issue-body.md
 
-# Alternative: HEREDOC inline (fragile in agent/automated contexts — prefer --body-file)
-# gh issue create --title "Feature request" --body "$(cat <<'EOF'
-# ...
-# EOF
-# )"
+# WARNING: Do NOT use terminal heredocs (cat << 'EOF') to write the body file.
+# Heredocs are fragile in agent/automated contexts — special characters, backticks,
+# and markdown formatting corrupt the output. Always use the file creation tool instead.
+
+# RETRY SAFETY: Before retrying a failed gh issue create, verify it didn't
+# actually succeed in the background:
+# gh issue list --search "exact title" --state open --json number,title
 
 # View issue
 gh issue view 123
