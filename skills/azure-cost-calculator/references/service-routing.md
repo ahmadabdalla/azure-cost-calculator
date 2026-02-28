@@ -81,6 +81,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Security (services/security/)
 
+- Azure Defender EASM: External Attack Surface Management, EASM, Attack Surface
 - Key Vault: AKV, KV, Managed HSM
 - Microsoft Defender for Cloud: Azure Security Center, CSPM, CWP, MDC
 - Microsoft Purview: Data Governance, Data Catalog, Azure Purview, Purview Data Map, Data Estate Scanning
