@@ -83,7 +83,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Monitoring (services/monitoring/)
 
-- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 - Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
 
 ## Management (services/management/)
