@@ -56,4 +56,4 @@ Total = orchestration + underlying disk cost (see managed-disks.md)
 - v1.x.x backing storage: Azure Disks, Ephemeral (NVMe/temp SSD), Elastic SAN
 - v2.0.0+ backing storage: Local NVMe, Elastic SAN only (Azure Disks not supported)
 - Orchestration meter covers management only — all data storage, IOPS, and throughput costs are billed through the underlying storage service
-- No private endpoint support — network isolation handled through AKS cluster networking
+- Network isolation is handled through AKS cluster networking
