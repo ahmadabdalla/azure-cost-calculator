@@ -82,7 +82,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Monitoring (services/monitoring/)
 
-- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 - Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
 
 ## Management (services/management/)
@@ -109,7 +108,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Analytics (services/analytics/)
 
 - Azure Data Share: Data Sharing
-- Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
 - Data Catalog: Data Catalog (legacy)
 - Data Lake Store: ADLS Gen1, Azure Data Lake (legacy)
 - Microsoft Graph data connect: Microsoft 365 Data, M365 Data Export
@@ -123,7 +121,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
-- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
 - Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
 
