@@ -63,7 +63,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Elastic SAN: SAN, Block Storage
 - Azure Managed Lustre: Lustre, HPC Storage
 - Data Box Gateway: Data Box Virtual Appliance, Hybrid Data Transfer Gateway
-- Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
 - StorSimple: Hybrid Cloud Storage, StorSimple Array, StorSimple Virtual Array
 
 ## Security (services/security/)
