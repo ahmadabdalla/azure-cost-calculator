@@ -40,6 +40,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Database for PostgreSQL: PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server
 - Azure Database Migration Service: DMS, Database Migration, DB Migration Service
 - Azure HorizonDB: Horizon DB, Distributed PostgreSQL
+- Cosmos DB Garnet Cache: Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache
 - Redis Cache: Azure Cache for Redis, Redis, Azure Redis, Managed Redis
 - SQL Database: Azure SQL, SQL DB
 - SQL Managed Instance: SQL MI, Azure SQL MI, Managed Instance
