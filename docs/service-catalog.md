@@ -83,7 +83,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Monitoring (services/monitoring/)
 
-- Azure SCOM Managed Instance: SCOM MI, Operations Manager, System Center Operations Manager
 - Insight and Analytics: OMS (legacy), Insight and Analytics (legacy)
 
 ## Management (services/management/)
@@ -123,9 +122,7 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
 - Azure Speech: Speech to Text, STT, TTS, Text to Speech, Neural TTS, Speech Services
 - Azure Translator: Translator Text, Text Translation, Document Translation
-- Azure Video Indexer: Video AI, Media Indexer, Video Analysis
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
-- Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Models: Azure AI Foundry Models, Model Catalog, AI Foundry
 
 ## IoT (services/iot/)
