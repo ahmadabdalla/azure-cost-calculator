@@ -124,6 +124,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## AI + ML (services/ai-ml/)
 
+- Azure AI Content Understanding: Content Extraction, Multi-modal AI, Document Understanding
 - Azure Bot Service: Bot Framework, Chatbot
 - Azure Document Intelligence: Form Recognizer, Document AI, OCR, Invoice Processing
 - Azure Language: Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU
