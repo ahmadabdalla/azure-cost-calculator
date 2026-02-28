@@ -43,7 +43,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
 - Azure Cosmos DB for PostgreSQL: Cosmos DB PostgreSQL, Citus, PostgreSQL Hyperscale, Cosmos DB for Postgres
 - Azure Database for MariaDB: MariaDB, Azure MariaDB
-- Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
 - Azure SQL Edge: Edge Database, IoT SQL
 - SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
@@ -62,7 +61,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 ## Storage (services/storage/)
 
-- Azure Container Storage: Container-native Storage, Kubernetes Storage
 - Azure Elastic SAN: SAN, Block Storage
 - Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
 - Azure Managed Lustre: Lustre, HPC Storage
