@@ -2,7 +2,7 @@
 serviceName: Azure SCOM Managed Instance
 category: monitoring
 aliases: [SCOM MI, Operations Manager, System Center Operations Manager]
-billingNeeds: [SQL Managed Instance, Virtual Machines]
+billingNeeds: [SQL Managed Instance, Virtual Machines, Load Balancer, Virtual Network, Key Vault]
 apiServiceName: Azure Monitor
 primaryCost: "Per-endpoint/month management fee; Azure-benefit endpoints free"
 pricingRegion: global
@@ -24,7 +24,7 @@ ProductName: Azure Monitor SCOM Managed Instance
 SkuName: Basic
 MeterName: Basic Endpoint
 Region: Global
-InstanceCount: 10 # monitored endpoints
+InstanceCount: 10 # billable non-Azure endpoints
 
 ### Free Azure-benefit endpoint (zero cost)
 
