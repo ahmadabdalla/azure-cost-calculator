@@ -70,7 +70,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 
 - Azure Cloud HSM: Dedicated HSM, Hardware Security Module
 - Azure confidential ledger: CCF, Blockchain Ledger
-- Azure Defender EASM: External Attack Surface Management, EASM, Attack Surface
 - Azure IoT Security: Defender for IoT, OT Security
 - Microsoft Azure Payment HSM: Payment Processing HSM
 - Microsoft Defender Experts: XDR Experts, Managed Detection and Response
