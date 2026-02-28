@@ -55,9 +55,9 @@ Quantity: 512 # storage size in GiB per node
 | ---------------------------- | ----------------- | ------------------------ | ------------- | ---------------------------- |
 | `vCore`                      | `vCore`           | `Compute- Coordinator Node` | `1 Hour`   | Per-vCore rate; multiply by count |
 | `vCore`                      | `vCore`           | `Compute- Worker Node`   | `1 Hour`      | Per-vCore rate; multiply by count |
-| `vCore`                      | `1 vCore` / `2 vCore` | `Compute- Burstable` | `1 Hour`   | Fixed SKU; single-node only  |
+| `vCore`                      | `1 vCore` – `8m vCore` | `Compute- Burstable` | `1 Hour`  | Fixed SKU; single-node only  |
 | `General Purpose Data Stored`| `General Purpose` | `General Purpose Storage`| `1 GiB/Month` | GP SSD storage per node      |
-| `Backup LRS Data Stored`     | `Backup LRS`      | `Backup Storage`         | `1 GiB/Month` | Currently free               |
+| `Backup LRS/GRS Data Stored` | `Backup LRS/GRS`  | `Backup Storage`         | `1 GiB/Month` | Currently free               |
 
 ## Cost Formula
 
@@ -71,7 +71,7 @@ Total               = Coordinator Compute + Worker Compute + Storage
 ## Notes
 
 - Free tier: single-node cluster at no cost (`skuName: Free`). Only deduct when user confirms free-tier usage
-- Burstable: dev/test single-node only (1–2 vCores), does NOT support RI
+- Burstable: dev/test single-node only (1–2 vCores, plus memory-optimized 2m–8m vCores), does NOT support RI
 - Multi-node: 1 coordinator (query routing) + N workers (sharding/scale-out, min 2). Scale horizontally by adding workers
 - Worker vCores: 4, 8, 16, 32, 64, 96, 104; Coordinator vCores: 4, 8, 16, 32, 64, 96
 - Backup storage is currently free (up to 100% of provisioned storage)
@@ -87,6 +87,7 @@ MeterName: vCore
 PriceType: Reservation
 
 > **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for RI — it multiplies by 730. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI is per-vCore; multiply by total vCore count (double if HA enabled).
+> For Worker node RI, use the same filters but set `ProductName` to `Azure Cosmos DB for PostgreSQL Compute- Worker Node`.
 
 ## Product Names
 
