@@ -11,7 +11,7 @@ primaryCost: "Standard daily service fee × 30 days/month; Azure Storage billed 
 
 > **Trap (shared serviceName)**: API `serviceName` is `Data Box`, shared with Data Box physical devices (Data Box, Data Box V2, Data Box Disk, Data Box Heavy). Always filter by `ProductName: Data Box Gateway` to isolate.
 
-> **Trap (daily billing)**: The meter uses `unitOfMeasure: 1 Day`. The script's `MonthlyCost` shows only the daily rate — calculate manually: `retailPrice × 30`.
+> **Trap (daily billing)**: The meter uses `unitOfMeasure: 1 Day` (not `1/Day`), so the script does not auto-multiply to monthly — `MonthlyCost` shows only the daily rate. Pass `Quantity: 30` to get the correct monthly total.
 
 ## Query Pattern
 
