@@ -15,13 +15,13 @@ primaryCost: "Standard daily service fee × 30 days/month; Azure Storage billed 
 
 ## Query Pattern
 
-### Standard daily service fee — 2 gateways
+### Standard daily service fee — monthly total
 
 ServiceName: Data Box <!-- cross-service -->
 ProductName: Data Box Gateway
 SkuName: Standard
 MeterName: Standard Service Fee
-Quantity: 30 # days per month
+Quantity: 30 # 30 days/month for monthly cost
 
 ## Key Fields
 
