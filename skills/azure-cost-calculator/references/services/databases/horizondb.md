@@ -61,3 +61,4 @@ Total = Storage + Backup
 - Shares `serviceName` with PostgreSQL Flexible Server — see `databases/database-for-postgresql.md`
 - Storage size is a never-assume parameter: always ask the user for provisioned size in GB
 - Backup storage billing details (free grant, retention policy) are not yet documented
+- OrionDB Compute meters exist under the same API serviceName but are a separate product — not included here
