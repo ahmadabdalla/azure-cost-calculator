@@ -78,6 +78,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Data Lake Storage: Data Lake Gen2, ADLS, ADLS Gen2, Azure Data Lake
 - Managed Disks: Managed Disks, Azure Disks, Premium SSD, Standard SSD, Ultra Disk, Disk Storage
 - Storage: Blob Storage, Azure Files, Table Storage, Queue Storage, Azure Storage
+- Storage Actions: Storage Data Processing, Storage Task Automation, Serverless Storage Processing
 
 ## Security (services/security/)
 
