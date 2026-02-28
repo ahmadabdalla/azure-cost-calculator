@@ -63,16 +63,22 @@ gh issue create
 # Create with flags
 gh issue create --title "Bug: Login fails" --body "Steps to reproduce..."
 
-# Create with HEREDOC for multi-line body
-gh issue create --title "Feature request" --body "$(cat <<'EOF'
+# Create with multi-line body (PREFERRED: write to temp file)
+cat > /tmp/issue-body.md << 'BODY'
 ## Description
 Add dark mode support
 
 ## Acceptance Criteria
 - [ ] Toggle in settings
 - [ ] Persists across sessions
-EOF
-)"
+BODY
+gh issue create --title "Feature request" --body-file /tmp/issue-body.md
+
+# Alternative: HEREDOC inline (fragile in agent/automated contexts — prefer --body-file)
+# gh issue create --title "Feature request" --body "$(cat <<'EOF'
+# ...
+# EOF
+# )"
 
 # View issue
 gh issue view 123
@@ -129,8 +135,8 @@ gh pr create
 # Create with title and body
 gh pr create --title "Add feature X" --body "Description here"
 
-# Create with HEREDOC (RECOMMENDED for multi-line bodies)
-gh pr create --title "Add user authentication" --body "$(cat <<'EOF'
+# Create with multi-line body (PREFERRED: write to temp file)
+cat > /tmp/pr-body.md << 'BODY'
 ## Summary
 - Implement JWT-based authentication
 - Add login/logout endpoints
@@ -140,8 +146,8 @@ gh pr create --title "Add user authentication" --body "$(cat <<'EOF'
 - [ ] Manual testing completed
 
 Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
+BODY
+gh pr create --title "Add user authentication" --body-file /tmp/pr-body.md
 
 # Create draft PR
 gh pr create --draft --title "WIP: New feature"
@@ -300,3 +306,5 @@ gh api repos/owner/repo/issues --paginate
 - Use `--json` flag for machine-readable output: `gh pr list --json number,title`
 - Set default repo: `gh repo set-default owner/repo`
 - Environment variable `GH_TOKEN` can provide auth token
+- **Prefer `--body-file`** over heredocs/`--body` for multi-line content — heredocs are fragile in agent and automated contexts (shell quoting, terminal rendering)
+- **Verify before retrying create commands** — if a `gh issue create` or `gh pr create` produces ambiguous output, check with `gh issue list --search` or `gh pr list` before running it again to avoid duplicates
