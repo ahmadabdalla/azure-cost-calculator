@@ -70,6 +70,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 
 ## Storage (services/storage/)
 
+- Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
 - Azure Container Storage: Container-native Storage, Kubernetes Storage
 - Azure NetApp Files: NetApp, ANF, Azure NetApp
 - Backup: Azure Backup, Recovery Services Vault, MARS Agent, VM Backup
