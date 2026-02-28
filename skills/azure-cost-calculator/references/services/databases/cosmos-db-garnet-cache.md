@@ -30,12 +30,12 @@ Quantity: 128 # disk size in GB
 
 ## Key Fields
 
-| Parameter     | How to determine                      | Example values                                                                    |
-| ------------- | ------------------------------------- | --------------------------------------------------------------------------------- |
-| `serviceName` | Always `Azure Cosmos DB`              | `Azure Cosmos DB`                                                                 |
-| `productName` | Always `Azure Cosmos DB Garnet Cache` | `Azure Cosmos DB Garnet Cache`                                                    |
-| `skuName`     | Tier + generation                     | `General Purpose`, `General Purpose v6`, `Compute Optimized`, `Storage Optimized` |
-| `meterName`   | Matches skuName + ` vCore`            | `General Purpose vCore`, `Compute Optimized v6 vCore`, `Premium SSD Managed Disk` |
+| Parameter     | How to determine                                      | Example values                                                                    |
+| ------------- | ----------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure Cosmos DB`                              | `Azure Cosmos DB`                                                                 |
+| `productName` | Always `Azure Cosmos DB Garnet Cache`                 | `Azure Cosmos DB Garnet Cache`                                                    |
+| `skuName`     | Tier + generation                                     | `General Purpose`, `General Purpose v6`, `Compute Optimized`, `Storage Optimized` |
+| `meterName`   | Compute: skuName + ` vCore`; disk: matches `skuName` | `General Purpose vCore`, `Compute Optimized v6 vCore`, `Premium SSD Managed Disk` |
 
 ## Meter Names
 
