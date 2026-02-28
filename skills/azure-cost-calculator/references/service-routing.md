@@ -38,6 +38,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Database for MySQL: MySQL, Azure MySQL, MySQL Flexible Server
 - Azure Database for PostgreSQL: PostgreSQL, Postgres, Azure Postgres, PostgreSQL Flexible Server
 - Azure Database Migration Service: DMS, Database Migration, DB Migration Service
+- Azure HorizonDB: Horizon DB, Distributed PostgreSQL
 - Redis Cache: Azure Cache for Redis, Redis, Azure Redis, Managed Redis
 - SQL Database: Azure SQL, SQL DB
 - SQL Managed Instance: SQL MI, Azure SQL MI, Managed Instance
@@ -68,6 +69,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 ## Storage (services/storage/)
 
 - Azure File Sync: Hybrid File Sync, File Server Sync, Cloud Tiering
+- Azure Container Storage: Container-native Storage, Kubernetes Storage
 - Azure NetApp Files: NetApp, ANF, Azure NetApp
 - Backup: Azure Backup, Recovery Services Vault, MARS Agent, VM Backup
 - Data Box: Data Box Disk, Data Box Heavy, Import/Export

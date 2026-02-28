@@ -71,7 +71,8 @@ function Test-FileNaming {
             'data-lake-storage.md', # serviceName: Storage (split with storage.md, managed-disks.md)
             'managed-disks.md',     # serviceName: Storage (split with storage.md, data-lake-storage.md)
             'file-sync.md'          # serviceName: Storage (split with storage.md, managed-disks.md, data-lake-storage.md)
-        )
+            'container-storage.md',  # serviceName: Storage (split with storage.md, managed-disks.md, data-lake-storage.md)
+            )
 
         if ($actualFile -in $splitFileOverrides) {
             $expectedFile = $actualFile
