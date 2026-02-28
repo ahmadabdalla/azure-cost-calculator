@@ -9,7 +9,7 @@ primaryCost: "Per task execution + per million objects targeted + per million op
 
 > **Trap**: `serviceName: Storage` is shared across Blob, Files, Queue, Table, Managed Disks, Data Lake, File Sync, and Container Storage. Always filter by `ProductName: Storage Actions` to isolate meters.
 
-> **Trap (script MonthlyCost)**: The script multiplies `unitPrice × 730` which is meaningless for per-execution and per-million meters. Query each meter separately and calculate manually with actual usage quantities.
+> **Trap (multi-meter)**: Storage Actions has three independent billing dimensions. Query each meter separately with explicit `MeterName` and set `Quantity` to actual monthly usage. Do not rely on `totalMonthlyCost` from an unfiltered query — it sums all meters which is meaningless for independent dimensions.
 
 ## Query Pattern
 
@@ -21,19 +21,21 @@ SkuName: Azure Storage Tasks
 MeterName: Azure Storage Tasks Task Execution
 Quantity: 100 # task executions per month
 
-### Objects targeted — per 1M objects scanned
+### Objects targeted — 5M objects scanned
 
 ServiceName: Storage
 ProductName: Storage Actions
 SkuName: Azure Storage Tasks
 MeterName: Azure Storage Tasks Objects Targeted
+Quantity: 5 # millions of objects targeted per month
 
-### Operations invoked — per 1M operations performed
+### Operations invoked — 2M operations performed
 
 ServiceName: Storage
 ProductName: Storage Actions
 SkuName: Azure Storage Tasks
 MeterName: Azure Storage Tasks Operations Invoked
+Quantity: 2 # millions of operations invoked per month
 
 ## Key Fields
 
