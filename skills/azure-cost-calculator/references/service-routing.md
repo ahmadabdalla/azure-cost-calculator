@@ -110,6 +110,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Analysis Services: AAS, Tabular Model
 - Azure Data Explorer: ADX, Kusto
 - Azure Data Factory v2: ADF, ADF v2, ETL, Data Pipeline, Azure Data Factory
+- Azure Managed Airflow: ADF Airflow, Apache Airflow, Data Factory Airflow
 - Azure Databricks: DBX, Spark on Azure
 - Azure Synapse Analytics: Synapse, Synapse Workspace, Synapse SQL, Synapse Spark
 - HDInsight: Hadoop, Spark, HBase, Kafka, HDI
