@@ -4,13 +4,22 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 
 ## Install
 
+**Plugin install** (recommended — versioned releases):
+
+```bash
+# GitHub Copilot CLI or Claude Code (run inside a session)
+/plugin install ahmadabdalla/azure-cost-calculator-skill
+```
+
+**npx** (works with any agent):
+
 ```bash
 npx skills add ahmadabdalla/azure-cost-calculator-skill
 ```
 
 > **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator-skill`.
 
-The CLI auto-detects your agent (Claude Code, Cursor, GitHub Copilot, Codex, etc.) and installs the skill to the correct directory.
+Plugin install pulls from versioned releases with changelog tracking and update control. The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
 
 ## Usage
 
