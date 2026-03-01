@@ -227,6 +227,28 @@ Describe 'Explore-AzurePricing' {
         }
     }
 
+    Context 'No results from API' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @()
+                    NextPageLink = $null
+                }
+            }
+
+            $script:AllOutput = & $script:ScriptPath -ServiceName 'NonExistent' -OutputFormat Json 3>&1
+            $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+        }
+
+        It 'Should produce warnings about no data' {
+            $script:Warnings.Count | Should -BeGreaterThan 0
+        }
+
+        It 'Should warn about no results found' {
+            ($script:Warnings.Message -join "`n") | Should -Match 'No.*results|No.*data|No.*found'
+        }
+    }
+
     Context 'Error handling on API failure' {
         BeforeAll {
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('Connection refused') }

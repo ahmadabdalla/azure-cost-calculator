@@ -159,4 +159,22 @@ Describe 'Invoke-RetailPricesQuery' {
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
         }
     }
+
+    Context 'when Invoke-RestMethod throws an HTTP error' {
+        It 'should propagate the HTTP error' {
+            Mock Invoke-RestMethod { throw [System.Net.WebException]::new('The remote server returned an error: (500) Internal Server Error.') }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw '*500*'
+        }
+    }
+
+    Context 'when API returns a null response object' {
+        It 'should return an empty collection without error' {
+            Mock Invoke-RestMethod { return $null }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            @($result).Count | Should -Be 0
+        }
+    }
 }
