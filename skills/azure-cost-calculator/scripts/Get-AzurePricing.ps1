@@ -139,7 +139,7 @@ foreach ($regionName in $Region) {
     foreach ($group in $grouped) {
         $primary = $group.Group | Where-Object { $_.isPrimaryMeterRegion -eq $true }
         if ($primary) {
-            $deduped.Add($primary)
+            $deduped.Add(($primary | Select-Object -First 1))
         }
         else {
             $deduped.Add(($group.Group | Select-Object -First 1))
