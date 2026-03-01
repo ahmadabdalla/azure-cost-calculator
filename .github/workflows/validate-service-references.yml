@@ -17,6 +17,9 @@ jobs:
   validate:
     name: Validate service reference files
     runs-on: ubuntu-latest
+    env:
+      SERVICES_ROOT: skills/azure-cost-calculator/references/services
+      VALIDATION_SCRIPT: tests/Validate-ServiceReference.ps1
     steps:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -26,14 +29,16 @@ jobs:
       - name: Detect change scope
         id: changed
         shell: bash
+        env:
+          DIFF_BASE: ${{ github.event.pull_request.base.sha }}
+          DIFF_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          DIFF_BASE="${{ github.event.pull_request.base.sha }}"
-          DIFF_HEAD="${{ github.event.pull_request.head.sha }}"
+          set -euo pipefail
 
           # Service reference files that were added, changed, modified, or renamed
           SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMR \
             "$DIFF_BASE" "$DIFF_HEAD" \
-            -- 'skills/azure-cost-calculator/references/services/' \
+            -- "$SERVICES_ROOT/" \
             | grep '\.md$' || true)
 
           # Infrastructure files: validation scripts, template, routing, catalog
@@ -63,8 +68,10 @@ jobs:
       - name: Validate changed service files
         if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed != 'true'
         shell: pwsh
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
         run: |
-          $files = "${{ steps.changed.outputs.all_changed_files }}" -split "`n" |
+          $files = $env:CHANGED_FILES -split "`n" |
             Where-Object { $_ -and (Test-Path $_) }
 
           if ($files.Count -eq 0) {
@@ -76,17 +83,14 @@ jobs:
           $files | ForEach-Object { Write-Output "  - $_" }
           Write-Output ""
 
-          $scriptPath = "tests/Validate-ServiceReference.ps1"
-          $servicesRoot = "skills/azure-cost-calculator/references/services"
-
-          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
+            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
 
       - name: Validate all service files (infrastructure change)
         if: steps.changed.outputs.infra_changed == 'true'
         shell: pwsh
         run: |
-          $servicesRoot = "skills/azure-cost-calculator/references/services"
-          $files = Get-ChildItem -Path $servicesRoot -Filter '*.md' -Recurse |
+          $files = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
             Select-Object -ExpandProperty FullName
 
           if ($files.Count -eq 0) {
@@ -97,16 +101,14 @@ jobs:
           Write-Output "Infrastructure files changed — validating all $($files.Count) service reference file(s)."
           Write-Output ""
 
-          $scriptPath = "tests/Validate-ServiceReference.ps1"
-
-          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
+            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
 
       - name: Validate routing file sync
         shell: pwsh
         run: |
-          $scriptPath = "tests/Validate-ServiceReference.ps1"
-          $servicesRoot = "skills/azure-cost-calculator/references/services"
-          $dummyFile = Get-ChildItem -Path $servicesRoot -Filter '*.md' -Recurse | Select-Object -First 1 -ExpandProperty FullName
+          $dummyFile = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
+            Select-Object -First 1 -ExpandProperty FullName
           if ($dummyFile) {
-              & $scriptPath -Path $dummyFile -ServicesRoot $servicesRoot -CheckRoutingFileSync
+            & $env:VALIDATION_SCRIPT -Path $dummyFile -ServicesRoot $env:SERVICES_ROOT -CheckRoutingFileSync
           }
