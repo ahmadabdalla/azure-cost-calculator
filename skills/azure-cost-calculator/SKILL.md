@@ -2,7 +2,7 @@
 name: azure-cost-calculator
 description: Helps estimate and calculate Azure resource costs. Use this skill when users ask about Azure pricing, cost estimation, resource sizing costs, comparing pricing tiers, budgeting for Azure deployments, or understanding Azure billing. Triggers include questions like "how much will this cost in Azure", "estimate Azure costs", "compare Azure pricing", "budget for Azure resources".
 license: MIT
-compatibility: Requires curl + jq (macOS/Linux) or PowerShell 7+ (pwsh) (Windows/macOS/Linux), and internet access to prices.azure.com. No Azure subscription needed.
+compatibility: Requires curl + jq (macOS/Linux) or PowerShell (pwsh 7+ or Windows PowerShell 5.1), and internet access to prices.azure.com. No Azure subscription needed.
 metadata:
   author: ahmadabdalla
   version: "1.0.0"
@@ -17,10 +17,11 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 
 Choose the script runtime based on what is available:
 
-| Runtime              | Condition                 | Pricing script                 | Explore script                     |
-| -------------------- | ------------------------- | ------------------------------ | ---------------------------------- |
-| **Bash** (preferred) | `curl` and `jq` available | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
-| **PowerShell**       | `pwsh` available          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| Runtime                    | Condition                                 | Pricing script                 | Explore script                     |
+| -------------------------- | ----------------------------------------- | ------------------------------ | ---------------------------------- |
+| **Bash** (preferred)       | `curl` and `jq` available                 | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
+| **PowerShell 7+**          | `pwsh` available                          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only) | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
 
 Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`).
 
@@ -96,7 +97,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user. At the request level, clarify vague inputs (Step 2). At the parameter level, apply the Disambiguation Protocol (Step 5).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
-6. **PowerShell: use `pwsh -File`, not `pwsh -Command`** — on Linux/macOS, bash strips OData quotes from inline commands
+6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands
 7. **Use consistent output categories** — group line items by category directory names from `references/services/` (compute, databases, networking, etc.)
 8. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
 
