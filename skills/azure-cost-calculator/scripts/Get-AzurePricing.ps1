@@ -106,10 +106,18 @@ foreach ($regionName in $Region) {
         Write-Warning "Error: $($_.Exception.Message)"
         continue
     }
-    catch [Microsoft.PowerShell.Commands.HttpResponseException] {
-        Write-Warning "API returned HTTP error for region '$regionName'. Filter: $filterString"
-        Write-Warning "Status: $($_.Exception.Response.StatusCode) -- $($_.Exception.Message)"
-        continue
+    catch {
+        $ex = $_.Exception
+        $isHttpError = ($null -ne $ex.PSObject.Properties['Response']) -or
+                       ($null -ne $ex.PSObject.Properties['StatusCode'])
+
+        if ($isHttpError) {
+            Write-Warning "API returned error for region '$regionName'. Filter: $filterString"
+            Write-Warning "Error: $($ex.Message)"
+            continue
+        }
+
+        throw
     }
 
     if ($items.Count -eq 0) {
