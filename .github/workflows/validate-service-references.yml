@@ -3,6 +3,12 @@ name: Validate Service References
 on:
   pull_request:
     branches: [dev, main]
+    paths:
+      - 'skills/azure-cost-calculator/references/services/**'
+      - 'skills/azure-cost-calculator/references/service-routing.md'
+      - 'docs/service-catalog.md'
+      - 'docs/TEMPLATE.md'
+      - 'tests/**'
 
 permissions:
   contents: read
@@ -17,27 +23,45 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed service files
+      - name: Detect change scope
         id: changed
         shell: bash
         run: |
-          CHANGED=$(git diff --name-only --diff-filter=ACMR \
-            "${{ github.event.pull_request.base.sha }}" \
-            "${{ github.event.pull_request.head.sha }}" \
+          DIFF_BASE="${{ github.event.pull_request.base.sha }}"
+          DIFF_HEAD="${{ github.event.pull_request.head.sha }}"
+
+          # Service reference files that were added, changed, modified, or renamed
+          SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            "$DIFF_BASE" "$DIFF_HEAD" \
             -- 'skills/azure-cost-calculator/references/services/' \
             | grep '\.md$' || true)
 
-          if [ -z "$CHANGED" ]; then
-            echo "any_changed=false" >> "$GITHUB_OUTPUT"
+          # Infrastructure files: validation scripts, template, routing, catalog
+          INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            "$DIFF_BASE" "$DIFF_HEAD" \
+            -- 'tests/' \
+               'docs/TEMPLATE.md' \
+               'skills/azure-cost-calculator/references/service-routing.md' \
+               'docs/service-catalog.md' \
+            || true)
+
+          if [ -n "$INFRA_CHANGED" ]; then
+            echo "infra_changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "any_changed=true" >> "$GITHUB_OUTPUT"
-            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$CHANGED" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo "infra_changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run validation
-        if: steps.changed.outputs.any_changed == 'true'
+          if [ -n "$SERVICE_CHANGED" ]; then
+            echo "service_changed=true" >> "$GITHUB_OUTPUT"
+            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$SERVICE_CHANGED" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "service_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate changed service files
+        if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed != 'true'
         shell: pwsh
         run: |
           $files = "${{ steps.changed.outputs.all_changed_files }}" -split "`n" |
@@ -48,12 +72,32 @@ jobs:
             exit 0
           }
 
-          Write-Output "Validating $($files.Count) file(s):"
+          Write-Output "Validating $($files.Count) changed file(s):"
           $files | ForEach-Object { Write-Output "  - $_" }
           Write-Output ""
 
           $scriptPath = "tests/Validate-ServiceReference.ps1"
           $servicesRoot = "skills/azure-cost-calculator/references/services"
+
+          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+
+      - name: Validate all service files (infrastructure change)
+        if: steps.changed.outputs.infra_changed == 'true'
+        shell: pwsh
+        run: |
+          $servicesRoot = "skills/azure-cost-calculator/references/services"
+          $files = Get-ChildItem -Path $servicesRoot -Filter '*.md' -Recurse |
+            Select-Object -ExpandProperty FullName
+
+          if ($files.Count -eq 0) {
+            Write-Output "No service reference files found."
+            exit 0
+          }
+
+          Write-Output "Infrastructure files changed — validating all $($files.Count) service reference file(s)."
+          Write-Output ""
+
+          $scriptPath = "tests/Validate-ServiceReference.ps1"
 
           & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
 
