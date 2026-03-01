@@ -36,7 +36,7 @@ $ErrorActionPreference = 'Stop'
 $pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -ge '5.7.1' } | Select-Object -First 1
 if (-not $pester) {
     Write-Warning 'Pester 5.7.1 or later is required but not installed.'
-    Write-Warning 'Install it with: Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser'
+    Write-Warning 'Install it with: Install-Module -Name Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser'
     exit 1
 }
 Import-Module Pester -MinimumVersion 5.7.1

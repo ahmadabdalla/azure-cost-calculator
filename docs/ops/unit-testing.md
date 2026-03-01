@@ -34,13 +34,13 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 
 ### Local development
 
-| Tool              | Install                                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------ |
-| PowerShell 5.1+   | Windows PowerShell 5.1 (built-in) or [pwsh 7+](https://aka.ms/install-powershell)         |
-| Pester 5.7.1+     | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser`                   |
-| PSScriptAnalyzer  | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`        |
-| bats-core         | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats`   |
-| jq                | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                             |
+| Tool             | Install                                                                                  |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| PowerShell 5.1+  | Windows PowerShell 5.1 (built-in) or [pwsh 7+](https://aka.ms/install-powershell)        |
+| Pester 5.7.1+    | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser`                  |
+| PSScriptAnalyzer | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`      |
+| bats-core        | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats` |
+| jq               | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                           |
 
 > **Note:** The test runner requires Pester 5.7.1 or later. If a compatible version is not installed, the runner will print a warning and exit. It does **not** auto-install Pester.
 
@@ -148,15 +148,15 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 ## Troubleshooting
 
-| Symptom                         | Likely cause                         | Fix                                                                          |
-| ------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------- |
-| `Pester 5.7.1 or later is required` | Module not installed or too old | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser`     |
-| `bats: command not found`       | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats`              |
-| `jq: command not found`         | jq missing for bash tests            | `brew install jq` / `apt install jq`                                         |
-| Pester test hangs               | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`                          |
-| bats test fails with curl error | Mock not on PATH                     | Ensure `setup_mock_path` called in `setup()`                                 |
-| Tests pass locally, fail in CI  | Path differences                     | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths                |
-| PS 5.1 scripts won't load       | Execution policy restriction         | Run with `-ExecutionPolicy Bypass` flag                                      |
+| Symptom                             | Likely cause                         | Fix                                                                      |
+| ----------------------------------- | ------------------------------------ | ------------------------------------------------------------------------ |
+| `Pester 5.7.1 or later is required` | Module not installed or too old      | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser`  |
+| `bats: command not found`           | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats`          |
+| `jq: command not found`             | jq missing for bash tests            | `brew install jq` / `apt install jq`                                     |
+| Pester test hangs                   | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`                      |
+| bats test fails with curl error     | Mock not on PATH                     | Ensure `setup_mock_path` called in `setup()`                             |
+| Tests pass locally, fail in CI      | Path differences                     | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths            |
+| PS 5.1 scripts won't load           | Execution policy restriction         | Run with `-ExecutionPolicy Bypass` flag                                  |
 
 ---
 
@@ -164,13 +164,13 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 Tests run on both **PowerShell 7+ (pwsh)** and **Windows PowerShell 5.1**. When writing tests, be aware of these runtime differences:
 
-| Behaviour | PS 7+ | PS 5.1 | Mitigation |
-| --------- | ----- | ------ | ---------- |
-| `ConvertFrom-Json` on arrays | Unwraps to individual objects | Returns a single nested array object | Use a `ConvertFrom-JsonArray` helper that pipes through `ForEach-Object { $_ }` |
-| Function returning `@()` single-element | Preserves array | Unwraps to scalar | Wrap call site with `@()` to force array |
-| `[System.Uri]::EscapeDataString("'")` | Encodes to `%27` (.NET 8) | Keeps `'` as-is (.NET 4.x) | Assert with `-match` accepting both forms |
-| Typed `catch` blocks | Supports `[HttpRequestException]` etc. | Only supports `[System.Net.WebException]` | Use generic `catch` with duck-typing on `$_.Exception` properties |
-| Execution policy | Unrestricted by default | May block unsigned scripts | Pass `-ExecutionPolicy Bypass` flag |
+| Behaviour                               | PS 7+                                  | PS 5.1                                    | Mitigation                                                                      |
+| --------------------------------------- | -------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------- |
+| `ConvertFrom-Json` on arrays            | Unwraps to individual objects          | Returns a single nested array object      | Use a `ConvertFrom-JsonArray` helper that pipes through `ForEach-Object { $_ }` |
+| Function returning `@()` single-element | Preserves array                        | Unwraps to scalar                         | Wrap call site with `@()` to force array                                        |
+| `[System.Uri]::EscapeDataString("'")`   | Encodes to `%27` (.NET 8)              | Keeps `'` as-is (.NET 4.x)                | Assert with `-match` accepting both forms                                       |
+| Typed `catch` blocks                    | Supports `[HttpRequestException]` etc. | Only supports `[System.Net.WebException]` | Use generic `catch` with duck-typing on `$_.Exception` properties               |
+| Execution policy                        | Unrestricted by default                | May block unsigned scripts                | Pass `-ExecutionPolicy Bypass` flag                                             |
 
 ### The `ConvertFrom-JsonArray` helper
 
