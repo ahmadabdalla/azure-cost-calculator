@@ -59,3 +59,16 @@ teardown() { teardown_mock_path; }
     [[ "$output" == *"ProductName"* ]]
     [[ "$output" == *"SamplePrice"* ]]
 }
+
+@test "API failure exits non-zero with error message" {
+    create_mock "curl" "" 1
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Test"
+    [ "$status" -ne 0 ]
+    echo "$output" | grep -qi "error"
+}
+
+@test "invalid --output-format exits non-zero" {
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Test" --output-format "CSV"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"must be"* ]]
+}

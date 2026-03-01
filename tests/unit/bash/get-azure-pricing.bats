@@ -91,3 +91,16 @@ teardown() { teardown_mock_path; }
     [[ "$output" == *"Azure Pricing Estimate"* ]]
     [[ "$output" == *"TOTAL ESTIMATED MONTHLY"* ]]
 }
+
+@test "API failure exits non-zero with error message" {
+    create_mock "curl" "" 1
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
+    [ "$status" -ne 0 ]
+    echo "$output" | grep -qi "error"
+}
+
+@test "malformed JSON response exits non-zero" {
+    create_curl_mock 'not-valid-json' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
+    [ "$status" -ne 0 ]
+}
