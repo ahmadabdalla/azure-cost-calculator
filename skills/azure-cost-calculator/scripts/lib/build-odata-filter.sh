@@ -16,7 +16,9 @@ build_odata_filter() {
             field="${rest%%=*}"
             value="${rest#*=}"
             value="${value//$sq/$sq$sq}"
-            parts+=("contains($field, '$value')")
+            local lower_value
+            lower_value="$(printf '%s' "$value" | tr '[:upper:]' '[:lower:]')"
+            parts+=("contains(tolower($field), '$lower_value')")
         else
             field="${arg%%=*}"
             value="${arg#*=}"

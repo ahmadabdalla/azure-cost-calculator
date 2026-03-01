@@ -16,7 +16,7 @@ function Build-ODataFilter {
             if ($key -eq 'contains') {
                 foreach ($containsFilter in $value) {
                     $escaped = $containsFilter.Value -replace "'", "''"
-                    $parts += "contains($($containsFilter.Field), '$escaped')"
+                    $parts += "contains(tolower($($containsFilter.Field)), '$($escaped.ToLower())')"
                 }
             }
             else {
