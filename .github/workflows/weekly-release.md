@@ -113,7 +113,7 @@ Apply SemVer rules based on the changelog categories you identified:
 
 ### 5a. Import changed files from `dev`
 
-For each file that changed between `main` and `dev` (from Step 2), import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches):
+For each file that changed between `main` and `dev` (from Step 2), import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches). Handle each `git diff --name-status` entry according to its status:
 
 ```bash
 # For each added (A) or modified (M) file:
@@ -121,6 +121,13 @@ git checkout origin/dev -- path/to/file
 
 # For each deleted (D) file:
 git rm path/to/file
+
+# For each renamed (R…) file (e.g., R100 old/path new/path):
+git checkout origin/dev -- new/path
+git rm old/path
+
+# For each copied (C…) file (e.g., C100 old/path new/path):
+git checkout origin/dev -- new/path
 ```
 
 **Skip** files in the ignore list from Step 2 (`.github/**`, `docs/**`, `tests/**`, etc.). Also skip `CHANGELOG.md` — you will update it in the next sub-step.
@@ -179,7 +186,7 @@ git commit -m "chore: bump version to X.Y.Z"
 
 ## Step 6 — Collect issue references
 
-GitHub only auto-closes issues when a PR merges into the **default branch** (`main`). Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues. To ensure issues are closed at release time, collect their references now.
+In this workflow, GitHub auto-closes issues when the release PR is merged into `main`. Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues at that time. To ensure issues are closed at release time, collect their references now.
 
 Find the last release tag on `main` (`git describe --tags --abbrev=0 origin/main`). Use `gh pr list --base dev --state merged` to list PRs merged into `dev` since that tag. From each PR's body and title, extract issue numbers referenced by closing keywords (`Closes`, `Fixes`, `Resolves` and their variants, e.g. `Fixes #400`). Deduplicate the list.
 
