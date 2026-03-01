@@ -24,7 +24,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
+            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
         }
 
         It 'Should return results' {
@@ -52,7 +52,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -SearchTerm 'redis' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
+            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
         }
 
         It 'Should return results for search term' {
@@ -125,7 +125,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
+            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
         }
 
         It 'Should return only distinct combinations' {
@@ -174,7 +174,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -Top 3 -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
+            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
         }
 
         It 'Should cap output to Top value' {
@@ -205,7 +205,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
+            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
         }
 
         It 'Should include ServiceName in each result' {
@@ -263,6 +263,37 @@ Describe 'Explore-AzurePricing' {
 
         It 'Should warn about API failure' {
             ($script:Warnings.Message -join "`n") | Should -Match 'API request failed'
+        }
+    }
+
+    Context 'Error handling on HTTP error with Response property' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                $ex = [System.Exception]::new('The remote server returned an error: (429) Too Many Requests')
+                $ex | Add-Member -NotePropertyName 'Response' -NotePropertyValue ([PSCustomObject]@{ StatusCode = 429 })
+                throw $ex
+            }
+
+            $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+        }
+
+        It 'Should not throw a terminating error' {
+            $script:Warnings | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Should warn about API error' {
+            ($script:Warnings.Message -join "`n") | Should -Match 'API.*error'
+        }
+    }
+
+    Context 'Error handling rethrows non-HTTP exceptions' {
+        BeforeAll {
+            Mock Invoke-RestMethod { throw [System.InvalidOperationException]::new('Unexpected failure') }
+        }
+
+        It 'Should rethrow the exception' {
+            { & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null } | Should -Throw '*Unexpected failure*'
         }
     }
 }

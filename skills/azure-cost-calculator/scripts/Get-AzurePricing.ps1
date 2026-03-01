@@ -109,7 +109,7 @@ foreach ($regionName in $Region) {
     catch {
         $ex = $_.Exception
         $isHttpError = ($null -ne $ex.PSObject.Properties['Response']) -or
-                       ($null -ne $ex.PSObject.Properties['StatusCode'])
+        ($null -ne $ex.PSObject.Properties['StatusCode'])
 
         if ($isHttpError) {
             Write-Warning "API returned error for region '$regionName'. Filter: $filterString"
@@ -139,7 +139,7 @@ foreach ($regionName in $Region) {
     foreach ($group in $grouped) {
         $primary = $group.Group | Where-Object { $_.isPrimaryMeterRegion -eq $true }
         if ($primary) {
-            $deduped.Add($primary)
+            $deduped.Add(($primary | Select-Object -First 1))
         }
         else {
             $deduped.Add(($group.Group | Select-Object -First 1))

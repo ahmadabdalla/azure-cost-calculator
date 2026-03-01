@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+#Requires -Version 5.1
 <#
 .SYNOPSIS
     Runs Pester 5 unit tests for the skill's PowerShell scripts.

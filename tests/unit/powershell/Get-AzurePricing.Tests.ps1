@@ -383,4 +383,35 @@ Describe 'Get-AzurePricing' {
             ($script:Warnings.Message -join "`n") | Should -Match 'API request failed'
         }
     }
+
+    Context 'Error handling on HTTP error with Response property' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                $ex = [System.Exception]::new('The remote server returned an error: (429) Too Many Requests')
+                $ex | Add-Member -NotePropertyName 'Response' -NotePropertyValue ([PSCustomObject]@{ StatusCode = 429 })
+                throw $ex
+            }
+
+            $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+        }
+
+        It 'Should not throw a terminating error' {
+            $script:Warnings | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Should warn about API error' {
+            ($script:Warnings.Message -join "`n") | Should -Match 'API.*error'
+        }
+    }
+
+    Context 'Error handling rethrows non-HTTP exceptions' {
+        BeforeAll {
+            Mock Invoke-RestMethod { throw [System.InvalidOperationException]::new('Unexpected failure') }
+        }
+
+        It 'Should rethrow the exception' {
+            { & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null } | Should -Throw '*Unexpected failure*'
+        }
+    }
 }
