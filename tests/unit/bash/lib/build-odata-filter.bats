@@ -26,19 +26,19 @@ setup() {
 @test "single contains filter" {
     run build_odata_filter "contains:productName=Redis"
     [ "$status" -eq 0 ]
-    [ "$output" = "contains(productName, 'Redis')" ]
+    [ "$output" = "contains(tolower(productName), 'redis')" ]
 }
 
 @test "multiple contains filters joined with and" {
     run build_odata_filter "contains:productName=Redis" "contains:skuName=Standard"
     [ "$status" -eq 0 ]
-    [ "$output" = "contains(productName, 'Redis') and contains(skuName, 'Standard')" ]
+    [ "$output" = "contains(tolower(productName), 'redis') and contains(tolower(skuName), 'standard')" ]
 }
 
 @test "mixed equality and contains filters" {
     run build_odata_filter "serviceName=Cache" "contains:productName=Redis" "armRegionName=eastus"
     [ "$status" -eq 0 ]
-    [ "$output" = "serviceName eq 'Cache' and contains(productName, 'Redis') and armRegionName eq 'eastus'" ]
+    [ "$output" = "serviceName eq 'Cache' and contains(tolower(productName), 'redis') and armRegionName eq 'eastus'" ]
 }
 
 @test "empty value in equality filter is skipped" {
@@ -62,7 +62,7 @@ setup() {
 @test "single quote in contains value is escaped" {
     run build_odata_filter "contains:productName=Azure's Redis"
     [ "$status" -eq 0 ]
-    [ "$output" = "contains(productName, 'Azure''s Redis')" ]
+    [ "$output" = "contains(tolower(productName), 'azure''s redis')" ]
 }
 
 @test "multiple single quotes are all escaped" {
@@ -80,7 +80,7 @@ setup() {
 @test "contains value with equals sign preserves everything after first equals" {
     run build_odata_filter "contains:field=val=ue"
     [ "$status" -eq 0 ]
-    [ "$output" = "contains(field, 'val=ue')" ]
+    [ "$output" = "contains(tolower(field), 'val=ue')" ]
 }
 
 @test "three equality filters joined correctly" {
@@ -92,5 +92,5 @@ setup() {
 @test "contains filter with empty value still produces output" {
     run build_odata_filter "contains:field="
     [ "$status" -eq 0 ]
-    [ "$output" = "contains(field, '')" ]
+    [ "$output" = "contains(tolower(field), '')" ]
 }
