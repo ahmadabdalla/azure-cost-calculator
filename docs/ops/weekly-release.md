@@ -31,7 +31,7 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml` creates
 >
 > GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
 >
-> Because the weekly release PR targets `main`, any `Closes #X` keywords in **its** body _will_ trigger auto-close. If you want issues resolved during the week to be closed at release time, add the closing keywords to the release PR description before merging. The workflow agent does not do this automatically today — the maintainer should add them manually during review, or a future enhancement could collect issue references from merged `dev` PRs.
+> The weekly release agent handles this by collecting issue references from merged `dev` PRs (Step 6) and including `Closes #X` keywords in the release PR body. Since the release PR targets `main`, the issues are auto-closed when the release merges.
 
 ### Change categorization
 
