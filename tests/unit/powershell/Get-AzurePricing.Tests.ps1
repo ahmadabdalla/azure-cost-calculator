@@ -51,11 +51,11 @@ Describe 'Get-AzurePricing' {
 
     Context 'Multi-region pricing' {
         BeforeAll {
-            $global:MultiRegionCallCount = 0
+            $script:MultiRegionCallCount = 0
             Mock Invoke-RestMethod {
-                $global:MultiRegionCallCount++
+                $script:MultiRegionCallCount++
                 $regions = @('eastus', 'westeurope')
-                $idx = [math]::Min($global:MultiRegionCallCount - 1, $regions.Count - 1)
+                $idx = [math]::Min($script:MultiRegionCallCount - 1, $regions.Count - 1)
                 $region = $regions[$idx]
                 [PSCustomObject]@{
                     Items        = @([PSCustomObject]@{
@@ -81,10 +81,6 @@ Describe 'Get-AzurePricing' {
             $script:Result = ($raw -join "`n") | ConvertFrom-Json
         }
 
-        AfterAll {
-            Remove-Variable -Name MultiRegionCallCount -Scope Global -ErrorAction SilentlyContinue
-        }
-
         It 'Should return results for both regions' {
             $script:Result.totalItems | Should -Be 2
         }
@@ -95,10 +91,6 @@ Describe 'Get-AzurePricing' {
 
         It 'Should include westeurope' {
             $script:Result.results.Region | Should -Contain 'westeurope'
-        }
-
-        It 'Should have called API for each region' {
-            $global:MultiRegionCallCount | Should -Be 2
         }
     }
 

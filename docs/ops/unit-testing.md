@@ -34,16 +34,17 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 
 ### Local development
 
-| Tool          | Install                                                                                   |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| PowerShell 7+ | [Install pwsh](https://aka.ms/install-powershell)                                         |
-| Pester 5+     | `Install-Module Pester -Force -Scope CurrentUser` (auto-installed by runner)              |
-| bats-core     | `brew install bats-core` (macOS) · `sudo apt-get install bats` (Ubuntu) · `npm i -g bats` |
-| jq            | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                            |
+| Tool              | Install                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| PowerShell 7+     | [Install pwsh](https://aka.ms/install-powershell)                                          |
+| Pester 5.7.1      | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser` (auto by runner)  |
+| PSScriptAnalyzer  | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`        |
+| bats-core         | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats`   |
+| jq                | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                             |
 
 ### CI
 
-The GitHub Actions workflow installs Pester and bats-core automatically — no manual setup needed.
+The GitHub Actions workflow installs Pester 5.7.1, PSScriptAnalyzer 1.24.0, and bats-core automatically — no manual setup needed.
 
 ---
 

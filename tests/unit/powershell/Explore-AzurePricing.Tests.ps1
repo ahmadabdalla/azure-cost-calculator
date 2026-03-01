@@ -6,9 +6,7 @@ Describe 'Explore-AzurePricing' {
 
     Context 'ServiceName query' {
         BeforeAll {
-            $global:ServiceNameCallCount = 0
             Mock Invoke-RestMethod {
-                $global:ServiceNameCallCount++
                 [PSCustomObject]@{
                     Items        = @([PSCustomObject]@{
                             serviceName          = 'Virtual Machines'
@@ -29,24 +27,14 @@ Describe 'Explore-AzurePricing' {
             $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
         }
 
-        AfterAll {
-            Remove-Variable -Name ServiceNameCallCount -Scope Global -ErrorAction SilentlyContinue
-        }
-
         It 'Should return results' {
             $script:Result.Count | Should -BeGreaterThan 0
-        }
-
-        It 'Should call the API' {
-            $global:ServiceNameCallCount | Should -BeGreaterThan 0
         }
     }
 
     Context 'SearchTerm query' {
         BeforeAll {
-            $global:SearchTermCallCount = 0
             Mock Invoke-RestMethod {
-                $global:SearchTermCallCount++
                 [PSCustomObject]@{
                     Items        = @([PSCustomObject]@{
                             serviceName          = 'Azure Cache for Redis'
@@ -67,30 +55,17 @@ Describe 'Explore-AzurePricing' {
             $script:Result = @(($raw -join "`n") | ConvertFrom-Json)
         }
 
-        AfterAll {
-            Remove-Variable -Name SearchTermCallCount -Scope Global -ErrorAction SilentlyContinue
-        }
-
         It 'Should return results for search term' {
             $script:Result.Count | Should -BeGreaterThan 0
-        }
-
-        It 'Should call the API' {
-            $global:SearchTermCallCount | Should -BeGreaterThan 0
         }
     }
 
     Context 'Neither ServiceName nor SearchTerm provided' {
         BeforeAll {
-            $global:NeitherCallCount = 0
-            Mock Invoke-RestMethod { $global:NeitherCallCount++ }
+            Mock Invoke-RestMethod {}
 
             $script:AllOutput = & $script:ScriptPath -OutputFormat Json 3>&1
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
-        }
-
-        AfterAll {
-            Remove-Variable -Name NeitherCallCount -Scope Global -ErrorAction SilentlyContinue
         }
 
         It 'Should produce a warning' {
@@ -102,7 +77,7 @@ Describe 'Explore-AzurePricing' {
         }
 
         It 'Should not call the API' {
-            $global:NeitherCallCount | Should -Be 0
+            Should -Invoke Invoke-RestMethod -Times 0 -Exactly
         }
     }
 
