@@ -14,7 +14,8 @@
 #    - Service file changes  → validate only the changed files
 #    - Infrastructure changes → validate ALL service files
 #      (because a test/template change could affect every file)
-# 4. A routing-sync check always runs as a safety net.
+# 4. A routing-sync fallback runs only when neither 3a
+#    nor 3b executed (e.g. a file was only deleted).
 # ---------------------------------------------------------
 
 name: Validate Service References
@@ -74,9 +75,9 @@ jobs:
           # Stop on errors; treat unset variables as errors.
           set -euo pipefail
 
-          # List .md files added/changed/modified/renamed under services/
+          # List .md files added/changed/modified/renamed/deleted under services/
           # "|| true" prevents an error when nothing matches.
-          SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMR \
+          SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
             "$DIFF_BASE" "$DIFF_HEAD" \
             -- "$SERVICES_ROOT/" \
             | grep '\.md$' || true)
