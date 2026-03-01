@@ -18,10 +18,6 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 
 - When creating pull requests, always target the `dev` branch (`--base dev` on `gh pr create`).
 
-## Git conventions
-
-- When creating pull requests, always target the `dev` branch (`--base dev` on `gh pr create`).
-
 ## For contributors
 
 - Service reference files live in `skills/azure-cost-calculator/references/services/`.
