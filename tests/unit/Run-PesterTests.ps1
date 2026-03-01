@@ -32,10 +32,10 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# Ensure Pester 5+ is available
-$pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Major -ge 5 } | Select-Object -First 1
+# Ensure Pester 5.7.1 is available
+$pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -eq '5.7.1' } | Select-Object -First 1
 if (-not $pester) {
-    Write-Information 'Pester 5 not found. Installing from PSGallery...'
+    Write-Information 'Pester 5.7.1 not found. Installing from PSGallery...'
     Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser
 }
 Import-Module Pester -RequiredVersion 5.7.1
