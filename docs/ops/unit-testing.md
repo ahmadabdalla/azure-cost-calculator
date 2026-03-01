@@ -38,7 +38,7 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 | ---------------- | ---------------------------------------------------------------------------------------- |
 | PowerShell 5.1+  | Windows PowerShell 5.1 (built-in) or [pwsh 7+](https://aka.ms/install-powershell)        |
 | Pester 5.7.1+    | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser`                  |
-| PSScriptAnalyzer | `Install-Module PSScriptAnalyzer -MinimumVersion 1.24.0 -Force -Scope CurrentUser`       |
+| PSScriptAnalyzer | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`      |
 | bats-core        | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats` |
 | jq               | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                           |
 
@@ -170,7 +170,7 @@ Tests run on both **PowerShell 7+ (pwsh)** and **Windows PowerShell 5.1**. When 
 | Function returning `@()` single-element | Preserves array                        | Unwraps to scalar                         | Wrap call site with `@()` to force array                                        |
 | `[System.Uri]::EscapeDataString("'")`   | Encodes to `%27` (.NET 8)              | Keeps `'` as-is (.NET 4.x)                | Assert with `-match` accepting both forms                                       |
 | Typed `catch` blocks                    | Typed `catch` works; common HTTP exceptions (e.g. `[HttpRequestException]`) are available | Typed `catch` works, but some HTTP exception types may not exist | First `catch [System.Net.WebException]`, then generic `catch` with duck-typing on `$_.Exception.Response` / `.StatusCode` |
-| Execution policy                        | Unrestricted by default                | May block unsigned scripts                | Pass `-ExecutionPolicy Bypass` flag                                             |
+| Execution policy                        | Honours Windows execution policy (often RemoteSigned); unrestricted on macOS/Linux | May block unsigned scripts                | Pass `-ExecutionPolicy Bypass` flag                                             |
 
 ### The `ConvertFrom-JsonArray` helper
 
