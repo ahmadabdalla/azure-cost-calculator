@@ -15,7 +15,7 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 
 ## Git conventions
 
-- When creating pull requests, do not pass an explicit `--base` flag to `gh pr create` — let it default to the repository's default branch.
+- When creating pull requests, always target the `dev` branch (`--base dev` on `gh pr create`).
 
 ## For contributors
 
