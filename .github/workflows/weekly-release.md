@@ -32,8 +32,9 @@ You are a release manager for the **azure-cost-calculator-skill** repository. Yo
 These constraints are absolute and override all other instructions:
 
 - **Never** push directly to `main` — only create a pull request.
-- **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local branch creation and commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
-- **Never** modify files outside the release scope (`plugin.json`, `CHANGELOG.md`, `skills/azure-cost-calculator/SKILL.md`).
+- **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
+- **Never** switch away from the initially checked-out branch (`main`). Do not run `git checkout -b ... origin/dev` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
+- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5d).
 - **Never** fabricate changes — only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -108,9 +109,37 @@ Apply SemVer rules based on the changelog categories you identified:
 
 ## Step 5 — Prepare release files
 
-Create a new branch from `dev` and make the following updates:
+> **Critical — patch mechanism constraint**: Stay on the initially checked-out branch (`main`). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The safe-outputs job then applies this patch with `git am` on a fresh `main` checkout. If you switch branches, the patch will be empty or fail.
 
-### 5a. Update `CHANGELOG.md`
+### 5a. Import changed files from `dev`
+
+For each file that changed between `main` and `dev` (from Step 2), import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches). Handle each `git diff --name-status` entry according to its status:
+
+```bash
+# For each added (A) or modified (M) file:
+git checkout origin/dev -- path/to/file
+
+# For each deleted (D) file:
+git rm path/to/file
+
+# For each renamed (R…) file (e.g., R100 old/path new/path):
+git checkout origin/dev -- new/path
+git rm old/path
+
+# For each copied (C…) file (e.g., C100 old/path new/path):
+git checkout origin/dev -- new/path
+```
+
+**Skip** files in the ignore list from Step 2 (`.github/**`, `docs/**`, `tests/**`, etc.). Also skip `CHANGELOG.md` — you will update it in the next sub-step.
+
+Stage and commit the imported changes:
+
+```bash
+git add -A
+git commit -m "release: merge dev changes for vX.Y.Z"
+```
+
+### 5b. Update `CHANGELOG.md`
 
 Insert a new version section **above** the previous version entry. Use today's date in YYYY-MM-DD format. Format:
 
@@ -140,53 +169,32 @@ Insert a new version section **above** the previous version entry. Use today's d
 
 Omit empty categories. Order: Breaking, Added, Changed, Fixed, Removed.
 
-### 5b. Update `plugin.json`
+### 5c. Update `plugin.json`
 
 Update the `"version"` field to the new version.
 
-### 5c. Update `SKILL.md`
+### 5d. Update `SKILL.md`
 
 Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
 
+### 5e. Commit the release edits
+
+```bash
+git add -A
+git commit -m "chore: bump version to X.Y.Z"
+```
+
 ## Step 6 — Collect issue references
 
-GitHub only auto-closes issues when a PR merges into the **default branch** (`main`). Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues. To ensure issues are closed at release time, collect their references now.
+In this workflow, GitHub auto-closes issues when the release PR is merged into `main`. Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues at that time. To ensure issues are closed at release time, collect their references now.
 
-List PRs merged into `dev` since the last release tag:
+Find the last release tag on `main` (`git describe --tags --abbrev=0 origin/main`). Use `gh pr list --base dev --state merged` to list PRs merged into `dev` since that tag. From each PR's body and title, extract issue numbers referenced by closing keywords (`Closes`, `Fixes`, `Resolves` and their variants, e.g. `Fixes #400`). Deduplicate the list.
 
-```bash
-# Find the latest release tag on main
-LAST_TAG=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "")
-
-if [ -n "$LAST_TAG" ]; then
-  # Get merge commits since the last tag
-  gh pr list --base dev --state merged --search "merged:>=$(git log -1 --format=%cI $LAST_TAG)" --json number,body,title --limit 100
-else
-  # No prior release — get all merged PRs into dev
-  gh pr list --base dev --state merged --json number,body,title --limit 100
-fi
-```
-
-From each PR body (and title), extract issue references that use closing keywords (`closes`, `fixes`, `resolves` and their variants) followed by an issue number. Match **both** formats:
-
-- Short: `Fixes #400`
-- Full repo path: `Fixes ahmadabdalla/azure-cost-calculator-skill#400`
-
-Example extraction:
-
-```bash
-gh pr list ... --json number,body,title --limit 100 \
-  | jq -r '.[].body' \
-  | grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?)\s+(#[0-9]+|[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+#[0-9]+)' \
-  | grep -oE '#[0-9]+' \
-  | sort -u
-```
-
-Deduplicate the issue numbers. If no issue references are found, skip this step — no closing footer is needed.
+If no issue references are found, skip this step — no closing footer is needed.
 
 ## Step 7 — Create the pull request
 
-Commit your changes locally, then call the `create_pull_request` tool with:
+Call the `create_pull_request` tool with:
 
 - **Title**: `vX.Y.Z` (the `release: ` prefix is added automatically)
 - **Body**: Include:
