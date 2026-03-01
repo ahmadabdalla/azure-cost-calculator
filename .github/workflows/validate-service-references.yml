@@ -111,7 +111,7 @@ jobs:
       # --- Step 3a: Validate only the changed service files ---
       # Runs when service files changed BUT infrastructure did NOT.
       - name: Validate changed service files
-        if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed != 'true'
+        if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
         env:
           CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
@@ -162,7 +162,7 @@ jobs:
       # Note: the script requires at least one file passed to -Path,
       # so we pick the first .md we can find.
       - name: Validate routing file sync
-        if: steps.changed.outputs.service_changed != 'true' && steps.changed.outputs.infra_changed != 'true'
+        if: steps.changed.outputs.service_changed == 'false' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
         run: |
           $anyFile = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
