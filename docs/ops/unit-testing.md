@@ -38,7 +38,7 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 | ---------------- | ---------------------------------------------------------------------------------------- |
 | PowerShell 5.1+  | Windows PowerShell 5.1 (built-in) or [pwsh 7+](https://aka.ms/install-powershell)        |
 | Pester 5.7.1+    | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser`                  |
-| PSScriptAnalyzer | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`      |
+| PSScriptAnalyzer | `Install-Module PSScriptAnalyzer -MinimumVersion 1.24.0 -Force -Scope CurrentUser`       |
 | bats-core        | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats` |
 | jq               | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                           |
 
