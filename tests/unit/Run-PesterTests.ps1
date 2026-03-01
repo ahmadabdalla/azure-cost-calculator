@@ -32,13 +32,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# Ensure Pester 5.7.1 is available
-$pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -eq '5.7.1' } | Select-Object -First 1
+# Ensure Pester 5.7.1+ is available
+$pester = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version -ge '5.7.1' } | Select-Object -First 1
 if (-not $pester) {
-    Write-Information 'Pester 5.7.1 not found. Installing from PSGallery...'
-    Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser
+    Write-Warning 'Pester 5.7.1 or later is required but not installed.'
+    Write-Warning 'Install it with: Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser'
+    exit 1
 }
-Import-Module Pester -RequiredVersion 5.7.1
+Import-Module Pester -MinimumVersion 5.7.1
 
 # Discover test path
 $testRoot = Join-Path $PSScriptRoot 'powershell'
