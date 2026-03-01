@@ -27,6 +27,12 @@ Every Monday (or on manual trigger), the workflow:
 
 The maintainer reviews and merges the PR. On merge, `create-release.yml` creates a git tag and GitHub Release automatically.
 
+> **Note — Issue auto-closing and the `dev` branch**
+>
+> GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
+>
+> The weekly release agent handles this by collecting issue references from merged `dev` PRs (Step 6) and including `Closes #X` keywords in the release PR body. Since the release PR targets `main`, the issues are auto-closed when the release merges.
+
 ### Change categorization
 
 | File path | Category |
