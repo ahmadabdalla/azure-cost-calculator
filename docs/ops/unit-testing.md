@@ -150,7 +150,7 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 | Symptom                             | Likely cause                         | Fix                                                                      |
 | ----------------------------------- | ------------------------------------ | ------------------------------------------------------------------------ |
-| `Pester 5.7.1 or later is required` | Module not installed or too old      | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser`  |
+| `Pester 5.7.1 or later is required but not installed.` | Module not installed or too old | `Install-Module Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser` |
 | `bats: command not found`           | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats`          |
 | `jq: command not found`             | jq missing for bash tests            | `brew install jq` / `apt install jq`                                     |
 | Pester test hangs                   | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`                      |
@@ -169,12 +169,12 @@ Tests run on both **PowerShell 7+ (pwsh)** and **Windows PowerShell 5.1**. When 
 | `ConvertFrom-Json` on arrays            | Unwraps to individual objects          | Returns a single nested array object      | Use a `ConvertFrom-JsonArray` helper that pipes through `ForEach-Object { $_ }` |
 | Function returning `@()` single-element | Preserves array                        | Unwraps to scalar                         | Wrap call site with `@()` to force array                                        |
 | `[System.Uri]::EscapeDataString("'")`   | Encodes to `%27` (.NET 8)              | Keeps `'` as-is (.NET 4.x)                | Assert with `-match` accepting both forms                                       |
-| Typed `catch` blocks                    | Supports `[HttpRequestException]` etc. | Only supports `[System.Net.WebException]` | Use generic `catch` with duck-typing on `$_.Exception` properties               |
+| Typed `catch` blocks                    | Typed `catch` works; common HTTP exceptions (e.g. `[HttpRequestException]`) are available | Typed `catch` works, but some HTTP exception types may not exist | First `catch [System.Net.WebException]`, then generic `catch` with duck-typing on `$_.Exception.Response` / `.StatusCode` |
 | Execution policy                        | Unrestricted by default                | May block unsigned scripts                | Pass `-ExecutionPolicy Bypass` flag                                             |
 
 ### The `ConvertFrom-JsonArray` helper
 
-Several test files define a helper in their `Describe` `BeforeAll` block to normalize JSON array parsing:
+The `Explore-AzurePricing` Pester tests define a helper in their `Describe` `BeforeAll` block to normalize JSON array parsing (reuse this pattern in other tests as needed):
 
 ```powershell
 function ConvertFrom-JsonArray {
