@@ -130,7 +130,7 @@ git rm old/path
 git checkout origin/dev -- new/path
 ```
 
-**Skip** files in the ignore list from Step 2 (`.github/**`, `docs/**`, `tests/**`, etc.). Also skip `CHANGELOG.md` — you will update it in the next sub-step.
+**Skip** only `.github/**` and `docs/**` from the import — these are CI/ops infrastructure that is not part of the skill release. Import everything else, including `tests/**`. Also skip `CHANGELOG.md` — you will update it in the next sub-step.
 
 Stage and commit the imported changes:
 
