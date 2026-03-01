@@ -71,7 +71,7 @@ Describe 'Build-ODataFilter' {
                 )
             }
             $result = Build-ODataFilter -Filters $filters
-            $result | Should -Be "contains(meterName, 'Spot')"
+            $result | Should -Be "contains(tolower(meterName), 'spot')"
         }
 
         It 'should produce multiple contains expressions joined with and' {
@@ -82,7 +82,7 @@ Describe 'Build-ODataFilter' {
                 )
             }
             $result = Build-ODataFilter -Filters $filters
-            $result | Should -Be "contains(meterName, 'Spot') and contains(skuName, 'Standard')"
+            $result | Should -Be "contains(tolower(meterName), 'spot') and contains(tolower(skuName), 'standard')"
         }
 
         It 'should combine contains with equality filters' {
@@ -94,7 +94,7 @@ Describe 'Build-ODataFilter' {
                 armRegionName = 'eastus'
             }
             $result = Build-ODataFilter -Filters $filters
-            $result | Should -Be "serviceName eq 'Virtual Machines' and contains(meterName, 'Spot') and armRegionName eq 'eastus'"
+            $result | Should -Be "serviceName eq 'Virtual Machines' and contains(tolower(meterName), 'spot') and armRegionName eq 'eastus'"
         }
     }
 
@@ -118,7 +118,7 @@ Describe 'Build-ODataFilter' {
                 )
             }
             $result = Build-ODataFilter -Filters $filters
-            $result | Should -Be "contains(meterName, 'it''s')"
+            $result | Should -Be "contains(tolower(meterName), 'it''s')"
         }
 
         It 'should escape apostrophes in equality values for OData' {
