@@ -147,7 +147,7 @@ Describe 'Invoke-RetailPricesQuery' {
 
             Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
                 $Uri -like '*prices.azure.com/api/retail/prices*' -and
-                $Uri -like '*%27Virtual*Machines%27*'
+                ($Uri -like '*%27Virtual*Machines%27*' -or $Uri -like "*'Virtual*Machines'*")
             }
         }
     }
