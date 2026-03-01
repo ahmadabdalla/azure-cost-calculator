@@ -1,5 +1,5 @@
 ---
-name: pr-reviewer
+name: service-ref-pr-reviewer
 description: "Reviews pull requests that create, update, enhance, or fix service reference files. Dispatches parallel pricing investigation sub-agents to independently verify pricing data accuracy, consolidates findings via consensus, and posts a structured review comment on the PR."
 tools: ["read", "search", "edit", "execute", "agent", "web"]
 ---
