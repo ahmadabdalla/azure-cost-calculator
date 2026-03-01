@@ -36,11 +36,13 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 
 | Tool              | Install                                                                                    |
 | ----------------- | ------------------------------------------------------------------------------------------ |
-| PowerShell 7+     | [Install pwsh](https://aka.ms/install-powershell)                                          |
-| Pester 5.7.1      | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser` (auto by runner)  |
+| PowerShell 5.1+   | Windows PowerShell 5.1 (built-in) or [pwsh 7+](https://aka.ms/install-powershell)         |
+| Pester 5.7.1+     | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser`                   |
 | PSScriptAnalyzer  | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`        |
 | bats-core         | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats`   |
 | jq                | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                             |
+
+> **Note:** The test runner requires Pester 5.7.1 or later. If a compatible version is not installed, the runner will print a warning and exit. It does **not** auto-install Pester.
 
 ### CI
 
@@ -53,7 +55,11 @@ The GitHub Actions workflow installs Pester 5.7.1, PSScriptAnalyzer 1.24.0, and 
 ### All PowerShell tests
 
 ```bash
+# PowerShell 7+ (macOS / Linux / Windows)
 pwsh tests/unit/Run-PesterTests.ps1
+
+# Windows PowerShell 5.1
+powershell.exe -ExecutionPolicy Bypass -File tests/unit/Run-PesterTests.ps1
 ```
 
 Options:
@@ -112,7 +118,7 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
    ```
 3. Use `Describe` / `Context` / `It` blocks following AAA pattern.
 4. Mock `Invoke-RestMethod` for any test that would hit the API.
-5. Run: `pwsh tests/unit/Run-PesterTests.ps1`
+5. Run: `pwsh tests/unit/Run-PesterTests.ps1` (or `powershell.exe -ExecutionPolicy Bypass -File tests/unit/Run-PesterTests.ps1` on Windows PS 5.1)
 
 ### Bash (bats-core)
 
@@ -142,14 +148,46 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 ## Troubleshooting
 
-| Symptom                         | Likely cause                         | Fix                                                             |
-| ------------------------------- | ------------------------------------ | --------------------------------------------------------------- |
-| `Pester 5 not found`            | Module not installed                 | Runner auto-installs; or run `Install-Module Pester -Force`     |
-| `bats: command not found`       | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats` |
-| `jq: command not found`         | jq missing for bash tests            | `brew install jq` / `apt install jq`                            |
-| Pester test hangs               | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`             |
-| bats test fails with curl error | Mock not on PATH                     | Ensure `setup_mock_path` called in `setup()`                    |
-| Tests pass locally, fail in CI  | Path differences                     | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths   |
+| Symptom                         | Likely cause                         | Fix                                                                          |
+| ------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------- |
+| `Pester 5.7.1 or later is required` | Module not installed or too old | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser`     |
+| `bats: command not found`       | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats`              |
+| `jq: command not found`         | jq missing for bash tests            | `brew install jq` / `apt install jq`                                         |
+| Pester test hangs               | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`                          |
+| bats test fails with curl error | Mock not on PATH                     | Ensure `setup_mock_path` called in `setup()`                                 |
+| Tests pass locally, fail in CI  | Path differences                     | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths                |
+| PS 5.1 scripts won't load       | Execution policy restriction         | Run with `-ExecutionPolicy Bypass` flag                                      |
+
+---
+
+## PS 5.1 compatibility notes
+
+Tests run on both **PowerShell 7+ (pwsh)** and **Windows PowerShell 5.1**. When writing tests, be aware of these runtime differences:
+
+| Behaviour | PS 7+ | PS 5.1 | Mitigation |
+| --------- | ----- | ------ | ---------- |
+| `ConvertFrom-Json` on arrays | Unwraps to individual objects | Returns a single nested array object | Use a `ConvertFrom-JsonArray` helper that pipes through `ForEach-Object { $_ }` |
+| Function returning `@()` single-element | Preserves array | Unwraps to scalar | Wrap call site with `@()` to force array |
+| `[System.Uri]::EscapeDataString("'")` | Encodes to `%27` (.NET 8) | Keeps `'` as-is (.NET 4.x) | Assert with `-match` accepting both forms |
+| Typed `catch` blocks | Supports `[HttpRequestException]` etc. | Only supports `[System.Net.WebException]` | Use generic `catch` with duck-typing on `$_.Exception` properties |
+| Execution policy | Unrestricted by default | May block unsigned scripts | Pass `-ExecutionPolicy Bypass` flag |
+
+### The `ConvertFrom-JsonArray` helper
+
+Several test files define a helper in their `Describe` `BeforeAll` block to normalize JSON array parsing:
+
+```powershell
+function ConvertFrom-JsonArray {
+    param([string]$Json)
+    $Json | ConvertFrom-Json | ForEach-Object { $_ }
+}
+```
+
+Use it wherever a mock returns a JSON array, and wrap the call site with `@()` to guarantee array type:
+
+```powershell
+$items = @(ConvertFrom-JsonArray $jsonString)
+```
 
 ---
 
@@ -157,4 +195,6 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 - [Pester 5 documentation](https://pester.dev/docs/quick-start) — PowerShell testing framework
 - [bats-core documentation](https://bats-core.readthedocs.io/) — Bash testing framework
-- [Issue #405](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/405) — original requirement
+- [Issue #405](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/405) — original unit testing requirement
+- [Issue #411](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/411) — PS 5.1 compatibility regressions
+- [PR #414](https://github.com/ahmadabdalla/azure-cost-calculator-skill/pull/414) — PS 5.1 fixes
