@@ -179,15 +179,17 @@ The `Explore-AzurePricing` Pester tests define a helper in their `Describe` `Bef
 ```powershell
 function ConvertFrom-JsonArray {
     param([string]$Json)
-    $Json | ConvertFrom-Json | ForEach-Object { $_ }
+    @($Json | ConvertFrom-Json | ForEach-Object { $_ })
 }
 ```
 
-Use it wherever a mock returns a JSON array, and wrap the call site with `@()` to guarantee array type:
+Use it wherever a mock returns a JSON array:
 
 ```powershell
-$items = @(ConvertFrom-JsonArray $jsonString)
+$items = ConvertFrom-JsonArray $jsonString
 ```
+
+> **Note:** The actual test file uses `script:` scope (`function script:ConvertFrom-JsonArray`) because it is defined inside a Pester `BeforeAll` block. Adapt the scope to your context.
 
 ---
 
