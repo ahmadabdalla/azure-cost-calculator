@@ -2,6 +2,14 @@ Describe 'Explore-AzurePricing' {
 
     BeforeAll {
         $script:ScriptPath = Join-Path $PSScriptRoot '../../../skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1'
+
+        # PS 5.1 ConvertFrom-Json returns a JSON array as a single nested object
+        # instead of unwrapping it. Piping through ForEach-Object forces consistent
+        # array unwrap on both PS 5.1 and PS 7+.
+        function script:ConvertFrom-JsonArray {
+            param([string]$Json)
+            @($Json | ConvertFrom-Json | ForEach-Object { $_ })
+        }
     }
 
     Context 'ServiceName query' {
@@ -24,7 +32,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
         }
 
         It 'Should return results' {
@@ -52,7 +60,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -SearchTerm 'redis' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
         }
 
         It 'Should return results for search term' {
@@ -125,7 +133,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
         }
 
         It 'Should return only distinct combinations' {
@@ -174,7 +182,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -Top 3 -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
         }
 
         It 'Should cap output to Top value' {
@@ -205,7 +213,7 @@ Describe 'Explore-AzurePricing' {
             }
 
             $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
-            $script:Result = @(($raw -join "`n") | ConvertFrom-Json | ForEach-Object { $_ })
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
         }
 
         It 'Should include ServiceName in each result' {
