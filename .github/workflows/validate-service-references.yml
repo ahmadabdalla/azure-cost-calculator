@@ -3,10 +3,6 @@ name: Validate Service References
 on:
   pull_request:
     branches: [dev, main]
-    paths:
-      - "skills/azure-cost-calculator/references/services/**/*.md"
-      - "skills/azure-cost-calculator/references/service-routing.md"
-      - "docs/service-catalog.md"
 
 permissions:
   contents: read
