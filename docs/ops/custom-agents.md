@@ -106,7 +106,7 @@ service-reference (orchestrator)
 | File                                     | Role                                                                                   | Tools                                   |
 | ---------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
 | `.github/agents/service-reference.md`    | Orchestrator — dispatches, aggregates, writes                                          | read, search, edit, execute, agent, web |
-| `.github/agents/pr-reviewer.md`          | PR review orchestrator — verifies, reviews                                             | read, search, edit, execute, agent, web |
+| `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator — verifies, reviews                                             | read, search, edit, execute, agent, web |
 | `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
 | `.github/agents/compliance-reviewer.md`  | Rules analysis sub-agent                                                               | read, search                            |
 
@@ -124,7 +124,7 @@ Sub-agents use restricted toolsets (principle of least privilege):
 
 - `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional tiebreaker round with a different coding model for unresolved disputes.
 - `compliance-reviewer` has only `read` and `search` — no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
-- Only the orchestrators (`service-reference` and `pr-reviewer`) have `edit` and `agent` tools
+- Only the orchestrators (`service-reference` and `service-ref-pr-reviewer`) have `edit` and `agent` tools
 
 ---
 
@@ -153,20 +153,20 @@ Sub-agents use restricted toolsets (principle of least privilege):
 
 ---
 
-## PR Reviewer Agent
+## Service Reference PR Reviewer Agent
 
 | Item             | Detail                                                                                     |
 | ---------------- | ------------------------------------------------------------------------------------------ |
-| Orchestrator     | `.github/agents/pr-reviewer.md`                                                            |
+| Orchestrator     | `.github/agents/service-ref-pr-reviewer.md`                                                |
 | Sub-agent (data) | `.github/agents/pricing-investigator.md` (invoked ×2, + optional tiebreaker)               |
 | Trigger          | Copilot coding agent assigned to review a PR with service reference changes                |
 | Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`, GitHub skill |
 
 ### What it does
 
-When the Copilot coding agent is assigned to review a PR using the `pr-reviewer` custom agent, it runs a review-focused consensus workflow:
+When the Copilot coding agent is assigned to review a PR using the `service-ref-pr-reviewer` custom agent, it runs a review-focused consensus workflow:
 
-1. **Orchestrator** (`pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
+1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation — may discover different discrepancies.
 4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
@@ -181,7 +181,7 @@ When the Copilot coding agent is assigned to review a PR using the `pr-reviewer`
 ### Architecture
 
 ```
-pr-reviewer (orchestrator)
+service-ref-pr-reviewer (orchestrator)
   ├── GitHub skill: gather PR metadata, diff, comments
   ├── git worktree: check out PR branch
   │
@@ -214,14 +214,14 @@ pr-reviewer (orchestrator)
 
 ### Trigger & assignment
 
-The `pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. A maintainer assigns the agent by selecting the `pr-reviewer` custom agent on the PR. It can also be triggered for PRs opened by the `service-reference` agent itself, providing an automated quality gate.
+The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. A maintainer assigns the agent by selecting the `service-ref-pr-reviewer` custom agent on the PR. It can also be triggered for PRs opened by the `service-reference` agent itself, providing an automated quality gate.
 
 ### Troubleshooting
 
 | Symptom                          | Likely cause                                        | Fix                                                                        |
 | -------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
-| Agent not appearing              | File not merged to default branch                   | Merge to main; verify `.github/agents/pr-reviewer.md` exists               |
-| No service reference files found | PR doesn't change files under `services/`           | Expected — agent posts a skip message and stops                            |
+| Agent not appearing              | File not merged to default branch                   | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
+| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected — agent posts a skip message and stops                            |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists   | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`         | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
 | gh CLI commands fail             | Agent environment missing `gh` or not authenticated | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
