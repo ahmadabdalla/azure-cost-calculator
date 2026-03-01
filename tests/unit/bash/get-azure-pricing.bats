@@ -103,4 +103,5 @@ teardown() { teardown_mock_path; }
     create_curl_mock 'not-valid-json' 200
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
     [ "$status" -ne 0 ]
+    echo "$output" | grep -Eqi "error|json|parse|invalid"
 }
