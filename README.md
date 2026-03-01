@@ -64,19 +64,6 @@ References load on demand, keeping token usage low even for 10+ service estimate
 
 210+ Azure services are mapped across 18 categories (Compute, Databases, Networking, Storage, Security, Monitoring, Integration, AI + ML, and more). 110+ services have full reference files with documented query patterns. For services without a reference file, the skill includes an exploration script that searches the live API to find the right filters automatically.
 
-### With vs. Without a Service Reference File
-
-The skill works for **any** Azure service, with or without a reference file. Reference files improve the result:
-
-|                      | With reference file                                               | Without (discovery mode)                                                            |
-| -------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **API query**        | Pre-verified filters                                              | Agent discovers filters from the live API                                           |
-| **Known gotchas**    | Documented - the agent avoids common pricing quirks automatically | Agent still works, but may not catch edge cases like $0.00 rounding or RI math      |
-| **Multi-part costs** | Each component (compute, storage, IP, etc.) has its own query     | Agent queries the main component; secondary costs may need a follow-up              |
-| **Cost formula**     | Correct multipliers, free-tier deductions, tiered pricing         | Uses the API's unit of measure - usually right, occasionally off for unusual meters |
-| **Speed**            | Fast - fewer tokens                                               | Slower - requires a discovery step first                                            |
-| **Accuracy**         | High - patterns tested against the live API                       | Depends on model quality - may vary without pre-verified patterns                   |
-
 ### Found a Gap? Open an Issue
 
 If you query a service and the skill falls back to discovery mode, that's a signal we're missing a reference file. **Please [open an issue](../../issues/new)** with the service name rather than accepting the best-effort result. Even if the estimate looked correct this time, the next user (or the next API change) may not get the same result. Issues help us prioritise which reference files to add next.
@@ -106,6 +93,15 @@ Each service reference file you add improves accuracy for everyone. See [CONTRIB
 <summary><strong>Why contribute service references?</strong></summary>
 
 Without a reference file the agent still works, but it has to discover API filter values on the fly, using more tokens and risking inconsistent results. A reference file provides pre-verified query patterns, documented traps, and correct cost formulas, so every user gets consistent results.
+
+|                      | With reference file                                               | Without (discovery mode)                                                            |
+| -------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **API query**        | Pre-verified filters                                              | Agent discovers filters from the live API                                           |
+| **Known gotchas**    | Documented - the agent avoids common pricing quirks automatically | Agent still works, but may not catch edge cases like $0.00 rounding or RI math      |
+| **Multi-part costs** | Each component (compute, storage, IP, etc.) has its own query     | Agent queries the main component; secondary costs may need a follow-up              |
+| **Cost formula**     | Correct multipliers, free-tier deductions, tiered pricing         | Uses the API's unit of measure - usually right, occasionally off for unusual meters |
+| **Speed**            | Fast - fewer tokens                                               | Slower - requires a discovery step first                                            |
+| **Accuracy**         | High - patterns tested against the live API                       | Depends on model quality - may vary without pre-verified patterns                   |
 
 </details>
 
