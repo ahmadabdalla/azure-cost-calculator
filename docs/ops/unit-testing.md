@@ -2,14 +2,14 @@
 
 Unit tests for the core skill scripts (PowerShell + Bash) using **Pester 5** and **bats-core**.
 
-| Item            | Detail                                                                          |
-| --------------- | ------------------------------------------------------------------------------- |
-| Original issue  | [#405](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/405)  |
-| Workflow source | `.github/workflows/unit-tests.yml`                                              |
-| Test root       | `tests/unit/`                                                                   |
-| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                |
-| Bash runner     | `tests/unit/run-bats-tests.sh`                                                  |
-| Trigger         | PRs and pushes touching `skills/**/scripts/**` or `tests/unit/**`               |
+| Item            | Detail                                                                               |
+| --------------- | ------------------------------------------------------------------------------------ |
+| Original issue  | [#405](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/405)       |
+| Workflow source | `.github/workflows/unit-tests.yml`                                                   |
+| Test root       | `tests/unit/`                                                                        |
+| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                     |
+| Bash runner     | `tests/unit/run-bats-tests.sh`                                                       |
+| Trigger         | PRs and pushes touching `skills/azure-cost-calculator/scripts/**` or `tests/unit/**` |
 
 ---
 
@@ -17,12 +17,12 @@ Unit tests for the core skill scripts (PowerShell + Bash) using **Pester 5** and
 
 The unit testing framework validates the 12 core scripts that ship to users via the skill plugin:
 
-| Layer   | PowerShell                | Bash                      |
-| ------- | ------------------------- | ------------------------- |
-| Main    | Get-AzurePricing.ps1      | get-azure-pricing.sh      |
-|         | Explore-AzurePricing.ps1  | explore-azure-pricing.sh  |
-| Library | Build-ODataFilter.ps1     | build-odata-filter.sh     |
-|         | Get-MonthlyMultiplier.ps1 | get-monthly-multiplier.sh |
+| Layer   | PowerShell                    | Bash                           |
+| ------- | ----------------------------- | ------------------------------ |
+| Main    | Get-AzurePricing.ps1          | get-azure-pricing.sh           |
+|         | Explore-AzurePricing.ps1      | explore-azure-pricing.sh       |
+| Library | Build-ODataFilter.ps1         | build-odata-filter.sh          |
+|         | Get-MonthlyMultiplier.ps1     | get-monthly-multiplier.sh      |
 |         | Get-ReservationTermMonths.ps1 | get-reservation-term-months.sh |
 |         | Invoke-RetailPricesQuery.ps1  | invoke-retail-prices-query.sh  |
 
@@ -34,16 +34,17 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are m
 
 ### Local development
 
-| Tool       | Install                                       |
-| ---------- | --------------------------------------------- |
-| PowerShell 7+ | [Install pwsh](https://aka.ms/install-powershell) |
-| Pester 5+  | `Install-Module Pester -Force -Scope CurrentUser` (auto-installed by runner) |
-| bats-core  | `brew install bats-core` (macOS) · `sudo apt-get install bats` (Ubuntu) · `npm i -g bats` |
-| jq         | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu) |
+| Tool              | Install                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| PowerShell 7+     | [Install pwsh](https://aka.ms/install-powershell)                                          |
+| Pester 5.7.1      | `Install-Module Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser` (auto by runner)  |
+| PSScriptAnalyzer  | `Install-Module PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser`        |
+| bats-core         | `brew install bats-core` (macOS) · `npm i -g bats` (Ubuntu/CI) · `sudo apt install bats`   |
+| jq                | `brew install jq` (macOS) · `sudo apt-get install jq` (Ubuntu)                             |
 
 ### CI
 
-The GitHub Actions workflow installs Pester and bats-core automatically — no manual setup needed.
+The GitHub Actions workflow installs Pester 5.7.1, PSScriptAnalyzer 1.24.0, and bats-core automatically — no manual setup needed.
 
 ---
 
@@ -56,6 +57,7 @@ pwsh tests/unit/Run-PesterTests.ps1
 ```
 
 Options:
+
 - `-OutputFormat Detailed` (default) / `Normal` / `Minimal`
 - `-CIOutputPath results/pester.xml` — write NUnit XML report
 
@@ -66,6 +68,7 @@ bash tests/unit/run-bats-tests.sh
 ```
 
 Options:
+
 - `--tap` — TAP output for CI
 - Pass a specific `.bats` file to run only that test
 
@@ -127,26 +130,26 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 
 ### Shared Bash helpers (`test_helper.bash`)
 
-| Helper                  | Purpose                                              |
-| ----------------------- | ---------------------------------------------------- |
-| `SCRIPTS_DIR` / `LIB_DIR` | Absolute paths to source scripts                  |
-| `setup_mock_path`       | Creates temp dir, prepends to `$PATH`                |
-| `teardown_mock_path`    | Cleans up temp mock dir                              |
-| `create_mock cmd output [exit_code]` | Creates a mock executable          |
+| Helper                               | Purpose                                   |
+| ------------------------------------ | ----------------------------------------- |
+| `SCRIPTS_DIR` / `LIB_DIR`            | Absolute paths to source scripts          |
+| `setup_mock_path`                    | Creates temp dir, prepends to `$PATH`     |
+| `teardown_mock_path`                 | Cleans up temp mock dir                   |
+| `create_mock cmd output [exit_code]` | Creates a mock executable                 |
 | `create_curl_mock body [http_code]`  | curl mock mimicking `-w '\n%{http_code}'` |
 
 ---
 
 ## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-| ------- | ------------ | --- |
-| `Pester 5 not found` | Module not installed | Runner auto-installs; or run `Install-Module Pester -Force` |
-| `bats: command not found` | bats-core not installed | `brew install bats-core` / `apt install bats` / `npm i -g bats` |
-| `jq: command not found` | jq missing for bash tests | `brew install jq` / `apt install jq` |
-| Pester test hangs | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll` |
-| bats test fails with curl error | Mock not on PATH | Ensure `setup_mock_path` called in `setup()` |
-| Tests pass locally, fail in CI | Path differences | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths |
+| Symptom                         | Likely cause                         | Fix                                                             |
+| ------------------------------- | ------------------------------------ | --------------------------------------------------------------- |
+| `Pester 5 not found`            | Module not installed                 | Runner auto-installs; or run `Install-Module Pester -Force`     |
+| `bats: command not found`       | bats-core not installed              | `brew install bats-core` / `apt install bats` / `npm i -g bats` |
+| `jq: command not found`         | jq missing for bash tests            | `brew install jq` / `apt install jq`                            |
+| Pester test hangs               | Mock missing for `Invoke-RestMethod` | Add `Mock Invoke-RestMethod { ... }` in `BeforeAll`             |
+| bats test fails with curl error | Mock not on PATH                     | Ensure `setup_mock_path` called in `setup()`                    |
+| Tests pass locally, fail in CI  | Path differences                     | Use `$PSScriptRoot` / `$BATS_TEST_DIRNAME` for relative paths   |
 
 ---
 

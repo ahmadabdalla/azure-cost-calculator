@@ -15,11 +15,13 @@ function Build-ODataFilter {
         if ($value) {
             if ($key -eq 'contains') {
                 foreach ($containsFilter in $value) {
-                    $parts += "contains($($containsFilter.Field), '$($containsFilter.Value)')"
+                    $escaped = $containsFilter.Value -replace "'", "''"
+                    $parts += "contains($($containsFilter.Field), '$escaped')"
                 }
             }
             else {
-                $parts += "$key eq '$value'"
+                $escaped = $value -replace "'", "''"
+                $parts += "$key eq '$escaped'"
             }
         }
     }

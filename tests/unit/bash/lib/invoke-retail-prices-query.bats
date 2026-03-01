@@ -27,10 +27,19 @@ teardown() {
 }
 
 @test "default currency is USD" {
-    create_curl_mock '{"Items":[],"NextPageLink":null}' 200
+    # Create a curl mock that records its arguments and returns valid response
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"
+printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
     run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 0 ]
     [ "$output" = "[]" ]
+    # Verify default currency code was used in the request
+    [[ "$(cat "$MOCK_DIR/curl_args")" == *"currencyCode=USD"* ]]
 }
 
 @test "custom currency code is accepted" {
