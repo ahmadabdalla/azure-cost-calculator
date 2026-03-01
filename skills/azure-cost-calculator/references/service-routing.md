@@ -65,6 +65,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Private DNS: Private DNS, Private DNS Zones
 - Traffic Manager: DNS Load Balancer
 - Virtual Network: VNet, Peering
+- Virtual Network Manager: AVNM, VNet Manager, Network Manager
 - Virtual WAN: vWAN, WAN Hub
 - VPN Gateway: VPN, Site-to-Site, Point-to-Site, S2S, P2S
 
