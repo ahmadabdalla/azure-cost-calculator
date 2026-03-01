@@ -24,7 +24,6 @@ done
 source "$SCRIPT_DIR/lib/build-odata-filter.sh"
 source "$SCRIPT_DIR/lib/invoke-retail-prices-query.sh"
 source "$SCRIPT_DIR/lib/get-monthly-multiplier.sh"
-source "$SCRIPT_DIR/lib/get-reservation-term-months.sh"
 
 validate_number() {
     local name="$1" value="$2"
