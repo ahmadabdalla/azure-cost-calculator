@@ -13,6 +13,10 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - `skills/azure-cost-calculator/scripts/` -- PowerShell helpers (Get-AzurePricing, Explore-AzurePricing)
 - `tests/` -- Validation scripts (Validate-ServiceReference)
 
+## Git conventions
+
+- When creating pull requests, do not pass an explicit `--base` flag to `gh pr create` — let it default to the repository's default branch.
+
 ## For contributors
 
 - Service reference files live in `skills/azure-cost-calculator/references/services/`.
