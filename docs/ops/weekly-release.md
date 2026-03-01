@@ -2,15 +2,15 @@
 
 Automated weekly releases using [GitHub Agentic Workflows (gh-aw)](https://github.github.io/gh-aw/introduction/overview/) with the **Copilot** engine.
 
-| Item              | Detail                                                                         |
-| ----------------- | ------------------------------------------------------------------------------ |
-| Original issue    | [#390](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/390) |
-| Workflow source   | `.github/workflows/weekly-release.md`                                          |
-| Compiled lock     | `.github/workflows/weekly-release.lock.yml`                                    |
-| Action pins       | `.github/aw/actions-lock.json`                                                 |
-| Engine            | `copilot` (GitHub Copilot)                                                     |
-| Trigger           | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                             |
-| Companion         | `.github/workflows/create-release.yml` (tag + GitHub Release on merge)         |
+| Item            | Detail                                                                         |
+| --------------- | ------------------------------------------------------------------------------ |
+| Original issue  | [#390](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/390) |
+| Workflow source | `.github/workflows/weekly-release.md`                                          |
+| Compiled lock   | `.github/workflows/weekly-release.lock.yml`                                    |
+| Action pins     | `.github/aw/actions-lock.json`                                                 |
+| Engine          | `copilot` (GitHub Copilot)                                                     |
+| Trigger         | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                             |
+| Companion       | `.github/workflows/create-release.yml` (tag + GitHub Release on merge)         |
 
 ---
 
@@ -27,27 +27,33 @@ Every Monday (or on manual trigger), the workflow:
 
 The maintainer reviews and merges the PR. On merge, `create-release.yml` creates a git tag and GitHub Release automatically.
 
+> **Note — Issue auto-closing and the `dev` branch**
+>
+> GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
+>
+> Because the weekly release PR targets `main`, any `Closes #X` keywords in **its** body _will_ trigger auto-close. If you want issues resolved during the week to be closed at release time, add the closing keywords to the release PR description before merging. The workflow agent does not do this automatically today — the maintainer should add them manually during review, or a future enhancement could collect issue references from merged `dev` PRs.
+
 ### Change categorization
 
-| File path | Category |
-| --------- | -------- |
-| `skills/**/references/services/**` (new) | `Added` — new service reference |
-| `skills/**/references/services/**` (modified) | `Fixed` or `Changed` |
-| `skills/**/SKILL.md` | `Changed` or `Breaking` |
-| `skills/**/scripts/**` | `Fixed` or `Added` |
-| `.github/**`, `docs/**`, `tests/**` | Ignored (not in changelog) |
+| File path                                     | Category                        |
+| --------------------------------------------- | ------------------------------- |
+| `skills/**/references/services/**` (new)      | `Added` — new service reference |
+| `skills/**/references/services/**` (modified) | `Fixed` or `Changed`            |
+| `skills/**/SKILL.md`                          | `Changed` or `Breaking`         |
+| `skills/**/scripts/**`                        | `Fixed` or `Added`              |
+| `.github/**`, `docs/**`, `tests/**`           | Ignored (not in changelog)      |
 
 ---
 
 ## Prerequisites
 
-| Requirement                            | Notes                                                                                                                                  |
-| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Same token used by issue-triage workflow.       |
-| **`release` label**                    | Must exist in the repo — applied to release PRs by the workflow.                                                                       |
-| **Actions permissions**                | "Read and write permissions" + "Allow GitHub Actions to create and approve pull requests" in Settings → Actions → General.             |
-| **Branch protection**                  | `main` must allow PRs (the release workflow creates PRs targeting `main`).                                                             |
-| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                                 |
+| Requirement                            | Notes                                                                                                                            |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Same token used by issue-triage workflow. |
+| **`release` label**                    | Must exist in the repo — applied to release PRs by the workflow.                                                                 |
+| **Actions permissions**                | "Read and write permissions" + "Allow GitHub Actions to create and approve pull requests" in Settings → Actions → General.       |
+| **Branch protection**                  | `main` must allow PRs (the release workflow creates PRs targeting `main`).                                                       |
+| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                           |
 
 ---
 
@@ -93,14 +99,14 @@ gh run view <run-id> --log-failed
 
 ### Common failure modes
 
-| Symptom                                   | Likely cause                                                          | Fix                                                            |
-| ----------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Workflow never triggers                    | Edited `.md` but forgot to compile, or changes not on `dev`           | Run `gh aw compile`, merge to `dev`                            |
-| `401 Unauthorized` in agent job           | `COPILOT_GITHUB_TOKEN` expired or revoked                             | Rotate the PAT (see issue-triage ops doc)                      |
-| Agent creates PR with wrong version       | Changelog parsing or version detection logic needs tuning             | Edit categorization rules in `weekly-release.md`, recompile    |
-| No PR created when changes exist          | Agent classified all changes as ignorable (CI/docs only)              | Check agent logs — may need to adjust ignore rules              |
-| Release PR fails validation               | Service reference changes in the release have validation errors       | Fix on `dev`, wait for next release or trigger manual dispatch |
-| Tag already exists                        | Version in `plugin.json` wasn't bumped correctly                      | Check `create-release.yml` logs — it guards against duplicate tags |
+| Symptom                             | Likely cause                                                    | Fix                                                                |
+| ----------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Workflow never triggers             | Edited `.md` but forgot to compile, or changes not on `dev`     | Run `gh aw compile`, merge to `dev`                                |
+| `401 Unauthorized` in agent job     | `COPILOT_GITHUB_TOKEN` expired or revoked                       | Rotate the PAT (see issue-triage ops doc)                          |
+| Agent creates PR with wrong version | Changelog parsing or version detection logic needs tuning       | Edit categorization rules in `weekly-release.md`, recompile        |
+| No PR created when changes exist    | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                 |
+| Release PR fails validation         | Service reference changes in the release have validation errors | Fix on `dev`, wait for next release or trigger manual dispatch     |
+| Tag already exists                  | Version in `plugin.json` wasn't bumped correctly                | Check `create-release.yml` logs — it guards against duplicate tags |
 
 ### Job architecture
 

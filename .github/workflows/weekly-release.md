@@ -147,7 +147,43 @@ Update the `"version"` field to the new version.
 
 Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
 
-## Step 6 — Create the pull request
+## Step 6 — Collect issue references
+
+GitHub only auto-closes issues when a PR merges into the **default branch** (`main`). Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues. To ensure issues are closed at release time, collect their references now.
+
+List PRs merged into `dev` since the last release tag:
+
+```bash
+# Find the latest release tag on main
+LAST_TAG=$(git describe --tags --abbrev=0 origin/main 2>/dev/null || echo "")
+
+if [ -n "$LAST_TAG" ]; then
+  # Get merge commits since the last tag
+  gh pr list --base dev --state merged --search "merged:>=$(git log -1 --format=%cI $LAST_TAG)" --json number,body,title --limit 100
+else
+  # No prior release — get all merged PRs into dev
+  gh pr list --base dev --state merged --json number,body,title --limit 100
+fi
+```
+
+From each PR body (and title), extract issue references that use closing keywords (`closes`, `fixes`, `resolves` and their variants) followed by an issue number. Match **both** formats:
+
+- Short: `Fixes #400`
+- Full repo path: `Fixes ahmadabdalla/azure-cost-calculator-skill#400`
+
+Example extraction:
+
+```bash
+gh pr list ... --json number,body,title --limit 100 \
+  | jq -r '.[].body' \
+  | grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?)\s+(#[0-9]+|[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+#[0-9]+)' \
+  | grep -oE '#[0-9]+' \
+  | sort -u
+```
+
+Deduplicate the issue numbers. If no issue references are found, skip this step — no closing footer is needed.
+
+## Step 7 — Create the pull request
 
 Create a PR with:
 
@@ -158,3 +194,9 @@ Create a PR with:
   - The version bump rationale (e.g., "Minor bump: 2 new services added")
   - Total number of services added/modified if applicable
   - The full changelog entry for this version
+  - A **Closes issues** footer listing each collected issue reference with the `Closes` keyword, e.g.:
+    ```
+    ---
+    Closes #123, closes #456, closes #789
+    ```
+    This ensures GitHub auto-closes the issues when the release PR is merged to `main`.
