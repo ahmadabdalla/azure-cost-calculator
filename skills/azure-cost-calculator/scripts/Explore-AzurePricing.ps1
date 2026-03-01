@@ -81,10 +81,18 @@ catch [System.Net.WebException] {
     Write-Warning "Error: $($_.Exception.Message)"
     return
 }
-catch [Microsoft.PowerShell.Commands.HttpResponseException] {
-    Write-Warning "API returned HTTP error. Filter: $filterString"
-    Write-Warning "Status: $($_.Exception.Response.StatusCode) -- $($_.Exception.Message)"
-    return
+catch {
+    $ex = $_.Exception
+    $isHttpError = ($null -ne $ex.PSObject.Properties['Response']) -or
+                   ($null -ne $ex.PSObject.Properties['StatusCode'])
+
+    if ($isHttpError) {
+        Write-Warning "API returned error. Filter: $filterString"
+        Write-Warning "Error: $($ex.Message)"
+        return
+    }
+
+    throw
 }
 
 if (-not $items -or $items.Count -eq 0) {

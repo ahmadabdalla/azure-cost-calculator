@@ -17,7 +17,7 @@ safe-outputs:
     base-branch: main
     title-prefix: "release: "
     labels: [release]
-    draft: true
+    draft: false
 concurrency:
   group: weekly-release
   cancel-in-progress: true
