@@ -221,7 +221,7 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | Symptom                          | Likely cause                                        | Fix                                                                        |
 | -------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
 | Agent not appearing              | File not merged to default branch                   | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
-| No service reference files found | PR doesn't change files under `services/`           | Expected — agent posts a skip message and stops                            |
+| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected — agent posts a skip message and stops                            |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists   | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`         | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
 | gh CLI commands fail             | Agent environment missing `gh` or not authenticated | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
