@@ -7,10 +7,8 @@ Describe 'Explore-AzurePricing' {
     Context 'ServiceName query' {
         BeforeAll {
             $global:ServiceNameCallCount = 0
-            $global:ServiceNameUris = @()
             Mock Invoke-RestMethod {
                 $global:ServiceNameCallCount++
-                $global:ServiceNameUris += $args
                 [PSCustomObject]@{
                     Items        = @([PSCustomObject]@{
                             serviceName          = 'Virtual Machines'
@@ -32,7 +30,7 @@ Describe 'Explore-AzurePricing' {
         }
 
         AfterAll {
-            Remove-Variable -Name ServiceNameCallCount, ServiceNameUris -Scope Global -ErrorAction SilentlyContinue
+            Remove-Variable -Name ServiceNameCallCount -Scope Global -ErrorAction SilentlyContinue
         }
 
         It 'Should return results' {

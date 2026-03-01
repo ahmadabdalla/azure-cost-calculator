@@ -48,7 +48,7 @@ done
 if (( ${#test_files[@]} == 0 )); then
     while IFS= read -r -d '' f; do
         test_files+=("$f")
-    done < <(find "$BASH_TEST_DIR" -name '*.bats' -print0 | sort -z)
+    done < <(find "$BASH_TEST_DIR" -name '*.bats' -print0)
 fi
 
 if (( ${#test_files[@]} == 0 )); then

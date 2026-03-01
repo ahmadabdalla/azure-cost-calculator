@@ -60,7 +60,7 @@ jobs:
       - name: Install bats-core
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq bats
+          sudo apt-get install -y -qq bats jq
           bats --version
 
       - name: Run bats tests

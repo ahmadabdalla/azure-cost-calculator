@@ -36,7 +36,8 @@ Describe 'Invoke-RetailPricesQuery' {
                         Items        = @([PSCustomObject]@{ id = 1 })
                         NextPageLink = 'https://prices.azure.com/api/retail/prices?page=2'
                     }
-                } else {
+                }
+                else {
                     [PSCustomObject]@{
                         Items        = @([PSCustomObject]@{ id = 2 })
                         NextPageLink = $null
@@ -53,8 +54,8 @@ Describe 'Invoke-RetailPricesQuery' {
         }
     }
 
-    Context 'when MaxItems cap is reached' {
-        It 'should stop fetching once item count meets MaxItems' {
+    Context 'when accumulated items exceed MaxItems threshold' {
+        It 'should stop pagination but keep all items from fetched pages' {
             Mock Invoke-RestMethod {
                 [PSCustomObject]@{
                     Items        = @(
@@ -146,7 +147,7 @@ Describe 'Invoke-RetailPricesQuery' {
 
             Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
                 $Uri -like '*prices.azure.com/api/retail/prices*' -and
-                $Uri -notlike "*serviceName eq 'Virtual Machines'*"
+                $Uri -like '*%27Virtual*Machines%27*'
             }
         }
     }

@@ -15,7 +15,7 @@ Describe 'Build-ODataFilter' {
     Context 'when given multiple equality filters' {
         It 'should join clauses with and' {
             $filters = [ordered]@{
-                serviceName = 'Virtual Machines'
+                serviceName   = 'Virtual Machines'
                 armRegionName = 'eastus'
             }
             $result = Build-ODataFilter -Filters $filters
@@ -87,8 +87,8 @@ Describe 'Build-ODataFilter' {
 
         It 'should combine contains with equality filters' {
             $filters = [ordered]@{
-                serviceName = 'Virtual Machines'
-                contains    = @(
+                serviceName   = 'Virtual Machines'
+                contains      = @(
                     @{ Field = 'meterName'; Value = 'Spot' }
                 )
                 armRegionName = 'eastus'
@@ -111,14 +111,20 @@ Describe 'Build-ODataFilter' {
             $result | Should -Be "productName eq 'Azure App Service Basic Plan'"
         }
 
-        It 'should embed apostrophes in contains values' {
+        It 'should escape apostrophes in contains values for OData' {
             $filters = [ordered]@{
                 contains = @(
                     @{ Field = 'meterName'; Value = "it's" }
                 )
             }
             $result = Build-ODataFilter -Filters $filters
-            $result | Should -Be "contains(meterName, 'it's')"
+            $result | Should -Be "contains(meterName, 'it''s')"
+        }
+
+        It 'should escape apostrophes in equality values for OData' {
+            $filters = [ordered]@{ serviceName = "App Service's Plan" }
+            $result = Build-ODataFilter -Filters $filters
+            $result | Should -Be "serviceName eq 'App Service''s Plan'"
         }
     }
 
