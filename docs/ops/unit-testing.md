@@ -4,7 +4,6 @@ Unit tests for the core skill scripts (PowerShell + Bash) using **Pester 5** and
 
 | Item            | Detail                                                                               |
 | --------------- | ------------------------------------------------------------------------------------ |
-| Original issue  | [#405](https://github.com/ahmadabdalla/azure-cost-calculator/issues/405)       |
 | Workflow source | `.github/workflows/unit-tests.yml`                                                   |
 | Test root       | `tests/unit/`                                                                        |
 | PS runner       | `tests/unit/Run-PesterTests.ps1`                                                     |
@@ -197,6 +196,3 @@ $items = ConvertFrom-JsonArray $jsonString
 
 - [Pester 5 documentation](https://pester.dev/docs/quick-start) — PowerShell testing framework
 - [bats-core documentation](https://bats-core.readthedocs.io/) — Bash testing framework
-- [Issue #405](https://github.com/ahmadabdalla/azure-cost-calculator/issues/405) — original unit testing requirement
-- [Issue #411](https://github.com/ahmadabdalla/azure-cost-calculator/issues/411) — PS 5.1 compatibility regressions
-- [PR #414](https://github.com/ahmadabdalla/azure-cost-calculator/pull/414) — PS 5.1 fixes

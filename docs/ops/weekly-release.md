@@ -2,15 +2,14 @@
 
 Automated weekly releases using [GitHub Agentic Workflows (gh-aw)](https://github.github.io/gh-aw/introduction/overview/) with the **Copilot** engine.
 
-| Item            | Detail                                                                         |
-| --------------- | ------------------------------------------------------------------------------ |
-| Original issue  | [#390](https://github.com/ahmadabdalla/azure-cost-calculator/issues/390) |
-| Workflow source | `.github/workflows/weekly-release.md`                                          |
-| Compiled lock   | `.github/workflows/weekly-release.lock.yml`                                    |
-| Action pins     | `.github/aw/actions-lock.json`                                                 |
-| Engine          | `copilot` (GitHub Copilot)                                                     |
-| Trigger         | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                             |
-| Companion       | `.github/workflows/create-release.yml` (tag + GitHub Release on merge)         |
+| Item            | Detail                                                                 |
+| --------------- | ---------------------------------------------------------------------- |
+| Workflow source | `.github/workflows/weekly-release.md`                                  |
+| Compiled lock   | `.github/workflows/weekly-release.lock.yml`                            |
+| Action pins     | `.github/aw/actions-lock.json`                                         |
+| Engine          | `copilot` (GitHub Copilot)                                             |
+| Trigger         | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                     |
+| Companion       | `.github/workflows/create-release.yml` (tag + GitHub Release on merge) |
 
 ---
 
