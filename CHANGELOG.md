@@ -4,6 +4,12 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-03-02
+
+### Changed
+
+- Infrastructure and documentation updates: Unit testing workflow, validation workflow improvements, operations guide updates, agent documentation refinements, and CodeRabbit configuration
+
 ## [1.1.0] - 2026-03-01
 
 ### Added

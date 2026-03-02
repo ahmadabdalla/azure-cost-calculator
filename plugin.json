@@ -1,6 +1,6 @@
 {
   "name": "azure-cost-calculator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Real-time Azure cost estimation using the Azure Retail Prices API",
   "author": {
     "name": "ahmadabdalla"
