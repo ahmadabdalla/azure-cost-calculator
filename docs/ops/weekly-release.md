@@ -25,7 +25,10 @@ Every Monday (or on manual trigger), the workflow:
 5. **Updates** `plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
 6. **Creates a draft PR** targeting `main` with title `release: vX.Y.Z`.
 
-The maintainer reviews and merges the PR. On merge, `create-release.yml` creates a git tag and GitHub Release automatically.
+The maintainer reviews and merges the PR. On merge, `create-release.yml`:
+
+1. **Creates** a git tag and GitHub Release automatically.
+2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. If there are merge conflicts (or `dev` moved during the release), a PR is created for manual resolution instead.
 
 > **Note — Issue auto-closing and the `dev` branch**
 >
@@ -52,7 +55,7 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml` creates
 | **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Same token used by issue-triage workflow. |
 | **`release` label**                    | Must exist in the repo — applied to release PRs by the workflow.                                                                 |
 | **Actions permissions**                | "Read and write permissions" + "Allow GitHub Actions to create and approve pull requests" in Settings → Actions → General.       |
-| **Branch protection**                  | `main` must allow PRs (the release workflow creates PRs targeting `main`).                                                       |
+| **Branch protection**                  | `main` must allow PRs (release PR). `dev` must allow PRs (back-merge fallback).                                                  |
 | **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                           |
 
 ---
@@ -107,6 +110,8 @@ gh run view <run-id> --log-failed
 | No PR created when changes exist    | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                 |
 | Release PR fails validation         | Service reference changes in the release have validation errors | Fix on `dev`, wait for next release or trigger manual dispatch     |
 | Tag already exists                  | Version in `plugin.json` wasn't bumped correctly                | Check `create-release.yml` logs — it guards against duplicate tags |
+| Back-merge fails with conflict      | `dev` diverged from `main` during release                       | A PR is auto-created for manual resolution — merge it              |
+| Back-merge PR creation fails        | Duplicate PR already open from a previous run                   | The step is idempotent — it detects and skips existing PRs         |
 
 ### Job architecture
 
@@ -122,7 +127,14 @@ pre_activation → activation → agent → detection → safe_outputs → concl
 - **safe_outputs**: Creates the PR targeting `main` (only job with write access).
 - **conclusion**: Reports final status.
 
-The companion `create-release.yml` runs separately, triggered by the merged PR.
+The companion `create-release.yml` runs separately, triggered by the merged PR:
+
+```
+release → back-merge
+```
+
+- **release**: Creates a git tag and GitHub Release from the merged PR.
+- **back-merge**: Merges `main` back into `dev` (fast-forward push if clean, PR if conflicts or race condition).
 
 ---
 
