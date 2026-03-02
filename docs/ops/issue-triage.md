@@ -2,15 +2,13 @@
 
 Automated triage of newly opened issues using [GitHub Agentic Workflows (gh-aw)](https://github.com/github/gh-aw) with the **Copilot** engine.
 
-| Item              | Detail                                                                         |
-| ----------------- | ------------------------------------------------------------------------------ |
-| Original issue    | [#122](https://github.com/ahmadabdalla/azure-cost-calculator/issues/122) |
-| Implementation PR | [#125](https://github.com/ahmadabdalla/azure-cost-calculator/pull/125)   |
-| Workflow source   | `.github/workflows/issue-triage.md`                                            |
-| Compiled lock     | `.github/workflows/issue-triage.lock.yml`                                      |
-| Action pins       | `.github/aw/actions-lock.json`                                                 |
-| Engine            | `copilot` (GitHub Copilot)                                                     |
-| Trigger           | `on: issues [opened]` (default branch only)                                    |
+| Item            | Detail                                      |
+| --------------- | ------------------------------------------- |
+| Workflow source | `.github/workflows/issue-triage.md`         |
+| Compiled lock   | `.github/workflows/issue-triage.lock.yml`   |
+| Action pins     | `.github/aw/actions-lock.json`              |
+| Engine          | `copilot` (GitHub Copilot)                  |
+| Trigger         | `on: issues [opened]` (default branch only) |
 
 ---
 
@@ -132,7 +130,7 @@ Commit the updated lock files after upgrading.
 
 ## References
 
-- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) - GitHub Agentic Workflows engine
-- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/) - the trigger pattern this workflow uses
-- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md) - service eligibility map queried by the agent (implemented services)
-- [service-catalog.md](../../docs/service-catalog.md) - full service catalog including pending services
+- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) — GitHub Agentic Workflows engine
+- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/) — the trigger pattern this workflow uses
+- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md) — service eligibility map queried by the agent (implemented services)
+- [service-catalog.md](../../docs/service-catalog.md) — full service catalog including pending services
