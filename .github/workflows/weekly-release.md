@@ -63,7 +63,7 @@ And for each changed file in the skill directory, read the actual diff to unders
 git diff origin/main..origin/dev -- <file_path>
 ```
 
-**Exclude these paths from the changelog** (they are still imported in Step 5a):
+**Ignore these paths entirely** (do not include in changelog):
 
 - `.github/**` (CI/infra)
 - `docs/**` (not shipped with skill)
@@ -113,7 +113,7 @@ Apply SemVer rules based on the changelog categories you identified:
 
 ### 5a. Import changed files from `dev`
 
-For each file that changed between `main` and `dev`, import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches). Re-run `git diff origin/main..origin/dev --name-status` if needed to get the complete list. Handle each entry according to its status:
+For each file that changed between `main` and `dev` (from Step 2), import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches). Handle each `git diff --name-status` entry according to its status:
 
 ```bash
 # For each added (A) or modified (M) file:
@@ -130,7 +130,7 @@ git rm old/path
 git checkout origin/dev -- new/path
 ```
 
-Import **all** changed files — no exceptions. This ensures `dev` and `main` are fully aligned after the release PR merges. The ignore list in Step 2 only controls what appears in the **changelog**, not what gets imported.
+**Skip** files in the ignore list from Step 2 (`.github/**`, `docs/**`, `tests/**`, etc.). Also skip `CHANGELOG.md` — you will update it in the next sub-step.
 
 Stage and commit the imported changes:
 
