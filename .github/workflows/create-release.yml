@@ -94,6 +94,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          existing_pr="$(gh pr list --base dev --head main --state open --json number --jq '.[0].number')"
+          if [ -n "$existing_pr" ] && [ "$existing_pr" != "null" ]; then
+            echo "::notice::Back-merge PR already exists: #$existing_pr"
+            exit 0
+          fi
           gh pr create \
             --base dev \
             --head main \
