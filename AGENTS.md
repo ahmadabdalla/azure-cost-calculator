@@ -11,7 +11,8 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - `skills/azure-cost-calculator/SKILL.md` -- entry point; defines the agent workflow
 - `skills/azure-cost-calculator/references/` -- service reference files and shared context
 - `skills/azure-cost-calculator/scripts/` -- PowerShell helpers (Get-AzurePricing, Explore-AzurePricing)
-- `tests/` -- Validation scripts (Validate-ServiceReference)
+- `tests/` -- Validation scripts (Validate-ServiceReference) and unit tests
+- `tests/unit/` -- Unit tests for core scripts (Pester 5 + bats-core)
 
 ## Git conventions
 
@@ -25,6 +26,11 @@ The installable skill lives at `skills/azure-cost-calculator/`.
 - Run the validation script before submitting:
   ```
   pwsh tests/Validate-ServiceReference.ps1 -Path <file> -CheckAliasUniqueness -CheckRoutingFileSync
+  ```
+- Run unit tests when changing core scripts:
+  ```
+  pwsh tests/unit/Run-PesterTests.ps1
+  bash tests/unit/run-bats-tests.sh
   ```
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
 
