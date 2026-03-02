@@ -4,7 +4,7 @@ Automated weekly releases using [GitHub Agentic Workflows (gh-aw)](https://githu
 
 | Item            | Detail                                                                         |
 | --------------- | ------------------------------------------------------------------------------ |
-| Original issue  | [#390](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/390) |
+| Original issue  | [#390](https://github.com/ahmadabdalla/azure-cost-calculator/issues/390) |
 | Workflow source | `.github/workflows/weekly-release.md`                                          |
 | Compiled lock   | `.github/workflows/weekly-release.lock.yml`                                    |
 | Action pins     | `.github/aw/actions-lock.json`                                                 |

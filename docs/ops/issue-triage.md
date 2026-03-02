@@ -4,8 +4,8 @@ Automated triage of newly opened issues using [GitHub Agentic Workflows (gh-aw)]
 
 | Item              | Detail                                                                         |
 | ----------------- | ------------------------------------------------------------------------------ |
-| Original issue    | [#122](https://github.com/ahmadabdalla/azure-cost-calculator-skill/issues/122) |
-| Implementation PR | [#125](https://github.com/ahmadabdalla/azure-cost-calculator-skill/pull/125)   |
+| Original issue    | [#122](https://github.com/ahmadabdalla/azure-cost-calculator/issues/122) |
+| Implementation PR | [#125](https://github.com/ahmadabdalla/azure-cost-calculator/pull/125)   |
 | Workflow source   | `.github/workflows/issue-triage.md`                                            |
 | Compiled lock     | `.github/workflows/issue-triage.lock.yml`                                      |
 | Action pins       | `.github/aw/actions-lock.json`                                                 |
