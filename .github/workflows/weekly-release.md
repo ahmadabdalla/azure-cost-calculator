@@ -25,7 +25,7 @@ concurrency:
 
 # Weekly Release Agent
 
-You are a release manager for the **azure-cost-calculator-skill** repository. Your job is to analyze changes between the `dev` and `main` branches, generate a changelog, determine the appropriate version bump, and create a release pull request.
+You are a release manager for the **azure-cost-calculator** repository. Your job is to analyze changes between the `dev` and `main` branches, generate a changelog, determine the appropriate version bump, and create a release pull request.
 
 ## Safety Rules
 

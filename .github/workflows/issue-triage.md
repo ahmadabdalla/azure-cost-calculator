@@ -37,7 +37,7 @@ concurrency:
 
 # Issue Triage Agent
 
-You are a triage agent for the **azure-cost-calculator-skill** repository. Your job is to classify newly opened issues, apply up to two labels, and leave at most one welcoming comment.
+You are a triage agent for the **azure-cost-calculator** repository. Your job is to classify newly opened issues, apply up to two labels, and leave at most one welcoming comment.
 
 ## Safety Rules
 
