@@ -1,9 +1,40 @@
+# ---------------------------------------------------------
+# Validate Service References
+# ---------------------------------------------------------
+# Runs the validation script against service reference files
+# whenever a pull request touches relevant paths.
+#
+# HOW IT WORKS
+# 1. GitHub triggers this workflow when a PR changes any of
+#    the files listed under "paths" below.
+# 2. A bash step figures out WHAT changed — was it a service
+#    reference file, or an infrastructure file (tests, template,
+#    routing, catalog)?
+# 3. Based on that:
+#    - Service file changes  → validate only the changed files
+#    - Infrastructure changes → validate ALL service files
+#      (because a test/template change could affect every file)
+# 4. A routing-sync fallback runs only when neither 3a
+#    nor 3b executed (e.g. a file was only deleted).
+# ---------------------------------------------------------
+
 name: Validate Service References
 
+# --- When does this workflow run? ---
+# Only on pull requests targeting dev or main, AND only when
+# at least one of the listed paths has changed.
 on:
   pull_request:
     branches: [dev, main]
+    paths:
+      - "skills/azure-cost-calculator/references/services/**"
+      - "skills/azure-cost-calculator/references/service-routing.md"
+      - "docs/service-catalog.md"
+      - "docs/TEMPLATE.md"
+      - "tests/**"
 
+# --- Security: least-privilege ---
+# This workflow only needs to read files, nothing else.
 permissions:
   contents: read
 
@@ -11,36 +42,83 @@ jobs:
   validate:
     name: Validate service reference files
     runs-on: ubuntu-latest
+
+    # --- Shared variables ---
+    # Change these in ONE place if paths ever move.
+    env:
+      SERVICES_ROOT: skills/azure-cost-calculator/references/services
+      VALIDATION_SCRIPT: tests/Validate-ServiceReference.ps1
+
     steps:
+      # --- Step 1: Get the code ---
+      # fetch-depth: 0 downloads full git history so we can
+      # compare what changed between the PR and target branch.
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
-      - name: Get changed service files
+      # --- Step 2: Figure out what changed ---
+      # Compares the PR branch to the target branch and sorts
+      # changes into two buckets:
+      #   service_changed  → a service reference .md was touched
+      #   infra_changed    → tests, template, routing, or catalog was touched
+      - name: Detect change scope
         id: changed
         shell: bash
+        # Pass GitHub values through env: instead of inline ${{ }}
+        # to avoid script-injection risks (GitHub security best practice).
+        env:
+          DIFF_BASE: ${{ github.event.pull_request.base.sha }}
+          DIFF_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
-          CHANGED=$(git diff --name-only --diff-filter=ACMR \
-            "${{ github.event.pull_request.base.sha }}" \
-            "${{ github.event.pull_request.head.sha }}" \
-            -- 'skills/azure-cost-calculator/references/services/' \
+          # Stop on errors; treat unset variables as errors.
+          set -euo pipefail
+
+          # List .md files added/changed/modified/renamed/deleted under services/
+          # "|| true" prevents an error when nothing matches.
+          SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
+            "$DIFF_BASE" "$DIFF_HEAD" \
+            -- "$SERVICES_ROOT/" \
             | grep '\.md$' || true)
 
-          if [ -z "$CHANGED" ]; then
-            echo "any_changed=false" >> "$GITHUB_OUTPUT"
+          # List any changed infrastructure files
+          INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \
+            "$DIFF_BASE" "$DIFF_HEAD" \
+            -- 'tests/' \
+               'docs/TEMPLATE.md' \
+               'skills/azure-cost-calculator/references/service-routing.md' \
+               'docs/service-catalog.md' \
+            || true)
+
+          # Write results so the next steps can read them.
+          # "-n" means "not empty".
+          if [ -n "$INFRA_CHANGED" ]; then
+            echo "infra_changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "any_changed=true" >> "$GITHUB_OUTPUT"
-            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$CHANGED" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo "infra_changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run validation
-        if: steps.changed.outputs.any_changed == 'true'
+          if [ -n "$SERVICE_CHANGED" ]; then
+            echo "service_changed=true" >> "$GITHUB_OUTPUT"
+            # Pass the file list as a multi-line output.
+            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$SERVICE_CHANGED" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            echo "service_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # --- Step 3a: Validate only the changed service files ---
+      # Runs when service files changed BUT infrastructure did NOT.
+      - name: Validate changed service files
+        if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
+        env:
+          CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
         run: |
-          $files = "${{ steps.changed.outputs.all_changed_files }}" -split "`n" |
+          # Split the multi-line string into an array, keep only files that exist
+          $files = $env:CHANGED_FILES -split "`n" |
             Where-Object { $_ -and (Test-Path $_) }
 
           if ($files.Count -eq 0) {
@@ -48,21 +126,49 @@ jobs:
             exit 0
           }
 
-          Write-Output "Validating $($files.Count) file(s):"
+          Write-Output "Validating $($files.Count) changed file(s):"
           $files | ForEach-Object { Write-Output "  - $_" }
           Write-Output ""
 
-          $scriptPath = "tests/Validate-ServiceReference.ps1"
-          $servicesRoot = "skills/azure-cost-calculator/references/services"
+          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
+            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
 
-          & $scriptPath -Path $files -ServicesRoot $servicesRoot -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
-
-      - name: Validate routing file sync
+      # --- Step 3b: Validate ALL service files ---
+      # Runs when infrastructure files changed (tests, template, etc.)
+      # because a change there could break validation for any file.
+      - name: Validate all service files (infrastructure change)
+        if: steps.changed.outputs.infra_changed == 'true'
         shell: pwsh
         run: |
-          $scriptPath = "tests/Validate-ServiceReference.ps1"
-          $servicesRoot = "skills/azure-cost-calculator/references/services"
-          $dummyFile = Get-ChildItem -Path $servicesRoot -Filter '*.md' -Recurse | Select-Object -First 1 -ExpandProperty FullName
-          if ($dummyFile) {
-              & $scriptPath -Path $dummyFile -ServicesRoot $servicesRoot -CheckRoutingFileSync
+          # Collect every .md file under the services folder
+          $files = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
+            Select-Object -ExpandProperty FullName
+
+          if ($files.Count -eq 0) {
+            Write-Output "No service reference files found."
+            exit 0
+          }
+
+          Write-Output "Infrastructure files changed — validating all $($files.Count) service reference file(s)."
+          Write-Output ""
+
+          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
+            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+
+      # --- Step 4: Routing sync (fallback) ---
+      # Steps 3a and 3b already include -CheckRoutingFileSync,
+      # so this only runs when NEITHER of them executed — e.g.
+      # a service file was deleted (not caught by ACMR filter)
+      # but the paths: trigger still fired.
+      # Note: the script requires at least one file passed to -Path,
+      # so we pick the first .md we can find.
+      - name: Validate routing file sync
+        if: steps.changed.outputs.service_changed == 'false' && steps.changed.outputs.infra_changed == 'false'
+        shell: pwsh
+        run: |
+          $anyFile = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
+            Select-Object -First 1 -ExpandProperty FullName
+
+          if ($anyFile) {
+            & $env:VALIDATION_SCRIPT -Path $anyFile -ServicesRoot $env:SERVICES_ROOT -CheckRoutingFileSync
           }
