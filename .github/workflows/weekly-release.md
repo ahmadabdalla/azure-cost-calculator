@@ -71,6 +71,10 @@ git diff origin/main..origin/dev -- <file_path>
 - `tests/**` (validation infra)
 - `scratchpad/**`
 
+> **IMPORTANT**: If ALL changed files fall into excluded paths, the release still proceeds.
+> The changelog `[Unreleased]` section should note "Infrastructure and documentation updates" (or similar).
+> A release is only skipped if Step 1 found **zero commits** ahead. Excluded paths affect the changelog, not the release decision.
+
 ## Step 3 — Categorize changes
 
 For each relevant changed file, assign a changelog category:
@@ -105,7 +109,7 @@ Apply SemVer rules based on the changelog categories you identified:
 
 - If **any** change is `Breaking` → **major** bump (X.0.0)
 - Else if **any** change is `Added` → **minor** bump (x.Y.0)
-- Else → **patch** bump (x.y.Z)
+- Else → **patch** bump (x.y.Z) (including when all changes are in excluded paths)
 
 ## Step 5 — Prepare release files
 
