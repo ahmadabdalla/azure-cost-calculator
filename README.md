@@ -15,10 +15,10 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 **npx** (works with any agent):
 
 ```bash
-npx skills add ahmadabdalla/azure-cost-calculator
+npx skills add ahmadabdalla/azure-cost-calculator-skill
 ```
 
-> **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator`.
+> **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator-skill`.
 
 Plugin install pulls from versioned releases with changelog tracking and update control. The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
 
