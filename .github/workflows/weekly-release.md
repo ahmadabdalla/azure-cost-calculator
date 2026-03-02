@@ -130,7 +130,7 @@ git rm old/path
 git checkout origin/dev -- new/path
 ```
 
-**Skip** only `.github/**` and `docs/**` from the import — these are CI/ops infrastructure that is not part of the skill release. Import everything else, including `tests/**`. Also skip `CHANGELOG.md` — you will update it in the next sub-step.
+Import **all** changed files — no exceptions. This ensures `dev` and `main` are fully aligned after the release PR merges. The ignore list in Step 2 only controls what appears in the **changelog**, not what gets imported.
 
 Stage and commit the imported changes:
 
