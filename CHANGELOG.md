@@ -44,5 +44,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 ### Added
 
 - Initial versioned release of the Azure Cost Calculator skill
-- Plugin manifest (`plugin.json`) for Copilot CLI and Claude Code plugin distribution
+- Plugin manifest (`.claude-plugin/plugin.json`) for Copilot CLI and Claude Code plugin distribution
 - Weekly automated release workflow using GitHub Agentic Workflows
