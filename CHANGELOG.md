@@ -4,6 +4,16 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [2.0.0] - 2026-03-03
+
+### Breaking
+
+- Plugin manifest relocated from `plugin.json` to `.claude-plugin/plugin.json` with expanded metadata (keywords, category, homepage, repository, agents, commands paths). Tools and parsers expecting `plugin.json` at repository root will need to update their paths.
+
+### Changed
+
+- SKILL.md frontmatter: Moved `argument-hint` field to top-level for improved Claude Code visibility
+
 ## [1.1.1] - 2026-03-02
 
 ### Changed
