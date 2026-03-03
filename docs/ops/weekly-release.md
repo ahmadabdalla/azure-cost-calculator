@@ -21,7 +21,7 @@ Every Monday (or on manual trigger), the workflow:
 2. **Skips** the release if no commits are ahead (no-op).
 3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking).
 4. **Determines** the SemVer bump from changelog categories (Breaking → major, Added → minor, else → patch).
-5. **Updates** `plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
+5. **Updates** `.claude-plugin/plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
 6. **Creates a draft PR** targeting `main` with title `release: vX.Y.Z`.
 
 The maintainer reviews and merges the PR. On merge, `create-release.yml`:
@@ -108,7 +108,7 @@ gh run view <run-id> --log-failed
 | Agent creates PR with wrong version | Changelog parsing or version detection logic needs tuning       | Edit categorization rules in `weekly-release.md`, recompile        |
 | No PR created when changes exist    | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                 |
 | Release PR fails validation         | Service reference changes in the release have validation errors | Fix on `dev`, wait for next release or trigger manual dispatch     |
-| Tag already exists                  | Version in `plugin.json` wasn't bumped correctly                | Check `create-release.yml` logs — it guards against duplicate tags |
+| Tag already exists                  | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs — it guards against duplicate tags |
 | Back-merge fails with conflict      | `dev` diverged from `main` during release                       | A PR is auto-created for manual resolution — merge it              |
 | Back-merge PR creation fails        | Duplicate PR already open from a previous run                   | The step is idempotent — it detects and skips existing PRs         |
 
