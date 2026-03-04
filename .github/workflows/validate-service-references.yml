@@ -5,38 +5,39 @@
 # whenever a pull request touches relevant paths.
 #
 # HOW IT WORKS
-# 1. GitHub triggers this workflow when a PR changes any of
-#    the files listed under "paths" below.
-# 2. A bash step figures out WHAT changed — was it a service
+# 1. GitHub triggers this workflow on EVERY pull request to
+#    dev/main (no paths: filter — required for branch
+#    protection status checks to always report).
+# 2. dorny/paths-filter checks whether the PR touches any
+#    relevant paths. If not, the job exits early with a
+#    green "skip" status.
+# 3. A bash step figures out WHAT changed — was it a service
 #    reference file, or an infrastructure file (tests, template,
 #    routing, catalog)?
-# 3. Based on that:
+# 4. Based on that:
 #    - Service file changes  → validate only the changed files
 #    - Infrastructure changes → validate ALL service files
 #      (because a test/template change could affect every file)
-# 4. A routing-sync fallback runs only when neither 3a
-#    nor 3b executed (e.g. a file was only deleted).
+# 5. A routing-sync fallback runs only when neither 4a
+#    nor 4b executed (e.g. a file was only deleted).
 # ---------------------------------------------------------
 
 name: Validate Service References
 
 # --- When does this workflow run? ---
-# Only on pull requests targeting dev or main, AND only when
-# at least one of the listed paths has changed.
+# On ALL pull requests targeting dev or main.
+# We intentionally omit the paths: filter so the workflow always
+# runs and reports a status to satisfy required-check branch
+# protection rules. Path filtering is handled inside the job
+# using dorny/paths-filter instead.
 on:
   pull_request:
     branches: [dev, main]
-    paths:
-      - "skills/azure-cost-calculator/references/services/**"
-      - "skills/azure-cost-calculator/references/service-routing.md"
-      - "docs/service-catalog.md"
-      - "docs/TEMPLATE.md"
-      - "tests/**"
 
 # --- Security: least-privilege ---
-# This workflow only needs to read files, nothing else.
 permissions:
   contents: read
+  pull-requests: read  # needed by dorny/paths-filter to list PR files
 
 jobs:
   validate:
@@ -58,12 +59,34 @@ jobs:
         with:
           fetch-depth: 0
 
+      # --- Step 1b: Check if any relevant paths changed ---
+      # Replaces the top-level paths: filter so the workflow
+      # always runs (required for branch protection) but skips
+      # expensive validation when nothing relevant changed.
+      - name: Check for relevant path changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'skills/azure-cost-calculator/references/services/**'
+              - 'skills/azure-cost-calculator/references/service-routing.md'
+              - 'docs/service-catalog.md'
+              - 'docs/TEMPLATE.md'
+              - 'tests/**'
+
+      # --- Early exit when nothing relevant changed ---
+      - name: Skip — no relevant changes
+        if: steps.filter.outputs.relevant == 'false'
+        run: echo "No service-reference or infrastructure changes detected. Skipping validation."
+
       # --- Step 2: Figure out what changed ---
       # Compares the PR branch to the target branch and sorts
       # changes into two buckets:
       #   service_changed  → a service reference .md was touched
       #   infra_changed    → tests, template, routing, or catalog was touched
       - name: Detect change scope
+        if: steps.filter.outputs.relevant == 'true'
         id: changed
         shell: bash
         # Pass GitHub values through env: instead of inline ${{ }}
@@ -112,7 +135,7 @@ jobs:
       # --- Step 3a: Validate only the changed service files ---
       # Runs when service files changed BUT infrastructure did NOT.
       - name: Validate changed service files
-        if: steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed == 'false'
+        if: steps.filter.outputs.relevant == 'true' && steps.changed.outputs.service_changed == 'true' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
         env:
           CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
@@ -137,7 +160,7 @@ jobs:
       # Runs when infrastructure files changed (tests, template, etc.)
       # because a change there could break validation for any file.
       - name: Validate all service files (infrastructure change)
-        if: steps.changed.outputs.infra_changed == 'true'
+        if: steps.filter.outputs.relevant == 'true' && steps.changed.outputs.infra_changed == 'true'
         shell: pwsh
         run: |
           # Collect every .md file under the services folder
@@ -163,7 +186,7 @@ jobs:
       # Note: the script requires at least one file passed to -Path,
       # so we pick the first .md we can find.
       - name: Validate routing file sync
-        if: steps.changed.outputs.service_changed == 'false' && steps.changed.outputs.infra_changed == 'false'
+        if: steps.filter.outputs.relevant == 'true' && steps.changed.outputs.service_changed == 'false' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
         run: |
           $anyFile = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
