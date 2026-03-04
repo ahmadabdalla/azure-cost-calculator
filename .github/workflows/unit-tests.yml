@@ -17,6 +17,9 @@ on:
     branches: [dev, main]
   push:
     branches: [dev]
+    paths:
+      - "skills/azure-cost-calculator/scripts/**"
+      - "tests/unit/**"
 
 permissions:
   contents: read
