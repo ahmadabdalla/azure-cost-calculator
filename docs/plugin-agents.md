@@ -228,4 +228,3 @@ The CI agents in `.github/agents/` use the GitHub Copilot coding agent platform,
 
 - [CI/ops custom agents](ops/custom-agents.md) — repository governance agents in `.github/agents/`
 - [Plugin manifest](../skills/azure-cost-calculator/SKILL.md) — skill entry point
-- Issue [#441](https://github.com/ahmadabdalla/azure-cost-calculator/issues/441) — SKILL.md frontmatter alignment
