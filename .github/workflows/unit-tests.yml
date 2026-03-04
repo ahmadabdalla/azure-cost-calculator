@@ -72,7 +72,7 @@ jobs:
 
       - name: Upload test results
         if: always() && steps.filter.outputs.relevant == 'true'
-        uses: actions/upload-artifact@b4b15d86c2c1894d66886f367fdc21a6624da7ed # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pester-results
           path: results/pester.xml
