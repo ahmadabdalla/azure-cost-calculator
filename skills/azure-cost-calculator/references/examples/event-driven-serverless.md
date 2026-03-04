@@ -9,10 +9,10 @@ A boutique Australian financial services firm processes ~80,000 equity and fixed
 
 ## Processing Layer
 
-- 1× Azure Functions, Consumption plan, 18M executions/month at 256 MB memory, 400 ms average duration (trade matching — correlates execution reports with expected fills)
-- 1× Azure Functions, Consumption plan, 12M executions/month at 512 MB memory, 1200 ms average duration (AML screening — enriches trade events against AUSTRAC PEP/sanctions lists)
-- 1× Azure Functions, Consumption plan, 8M executions/month at 256 MB memory, 300 ms average duration (settlement confirmation — generates T+2 SWIFT MT548/MT544 messages)
-- 1× Azure Functions, Consumption plan, 6M executions/month at 128 MB memory, 200 ms average duration (notification dispatch — pushes status updates to counterparties and internal dashboards)
+- 1× Azure Functions, Flex Consumption plan, 18M executions/month at 256 MB memory, 400 ms average duration (trade matching — correlates execution reports with expected fills)
+- 1× Azure Functions, Flex Consumption plan, 12M executions/month at 512 MB memory, 1200 ms average duration (AML screening — enriches trade events against AUSTRAC PEP/sanctions lists)
+- 1× Azure Functions, Flex Consumption plan, 8M executions/month at 256 MB memory, 300 ms average duration (settlement confirmation — generates T+2 SWIFT MT548/MT544 messages)
+- 1× Azure Functions, Flex Consumption plan, 6M executions/month at 128 MB memory, 200 ms average duration (notification dispatch — pushes status updates to counterparties and internal dashboards)
 
 ## Data Layer
 
