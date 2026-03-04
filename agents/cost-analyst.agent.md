@@ -32,12 +32,16 @@ For ambiguous or incomplete inputs, defer to SKILL.md's Clarify step. Batch all 
 
 ## Service Grouping
 
-After identifying services, group them by category using the Category Index in `skills/azure-cost-calculator/references/shared.md`. This grouping serves two purposes:
+After identifying services, assign each to a category using `skills/azure-cost-calculator/references/service-routing.md` — the authoritative mapping of services to categories. This grouping serves two purposes:
 
 1. **Output organization** — line items are presented by category
 2. **Dispatch units** — each category group can be dispatched as a batch
 
-For services that are ambiguous or hard to categorize, consult `skills/azure-cost-calculator/references/service-routing.md` for the authoritative mapping.
+**Rules:**
+
+- **Use exact category names** from the Category Index in `skills/azure-cost-calculator/references/shared.md` (e.g., "IoT", "Databases", "Compute"). Do not paraphrase, combine, or invent labels.
+- **Sub-features stay with their parent service** — billing components of a service (e.g., Cosmos DB PITR backup, SQL Database storage) belong to the same category as the parent service, not a separate "Backup" or "Storage" category.
+- **Multi-category services** — if a service spans categories (e.g., Event Grid in IoT, Service Bus in Integration), use the category assigned by service-routing.md.
 
 ## Orchestration
 
@@ -139,6 +143,6 @@ If script execution or file access is denied after the upfront request:
 3. **Accept natural language** — users should never need to know API field names, OData syntax, or script flags
 4. **Disclose all assumptions before costs** — present the assumptions block first, then cost tables
 5. **Use Json output format** — always pass Json (not Summary) as the output format to pricing scripts
-6. **Group by category** — organize line items by the service category from shared.md's Category Index
+6. **Group by category** — use exact category names from shared.md's Category Index; assign services via service-routing.md
 7. **Scope to user-specified resources** — only estimate resources the user explicitly mentioned (plus `billingNeeds` dependencies)
 8. **On iteration, re-run only affected queries** — do not restart the full workflow for partial changes
