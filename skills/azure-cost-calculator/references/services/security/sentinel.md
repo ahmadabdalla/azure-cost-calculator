@@ -82,6 +82,8 @@ Basic Logs: Monthly = basic_retailPrice × queryGB
 Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice × ingestedGB + query_retailPrice × queriedGB
 ```
 
+> **Example — shared workspace with App Insights (simplified PAYG, no Defender):** `total_IsBillable_GB` = security logs (35 GB) + App Insights telemetry (25 GB) = 60 GB; `billableGB` = 60 − 0 = 60 → Sentinel cost = 60 × payg_retailPrice; App Insights ingestion = absorbed into Sentinel total; LA ingestion = covered. No LA 5 GB free grant under simplified pricing.
+
 ## Notes
 
 - Commitment tiers use `1/Day` billing — script auto-multiplies by 30; overage beyond the tier is billed at the **effective per-GB commitment tier rate** (tier_retailPrice ÷ tierGB), not PAYG — no separate overage meter exists in the API
