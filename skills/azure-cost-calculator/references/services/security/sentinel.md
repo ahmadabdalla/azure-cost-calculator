@@ -14,7 +14,7 @@ primaryCost: "Per-GB ingestion (PAYG or commitment tier per day × 30) + optiona
 
 > **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
-> **Trap (DO NOT double-count Log Analytics)**: Sentinel PAYG and Commitment Tier prices **already include** Log Analytics workspace ingestion — DO NOT add a separate Log Analytics ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
+> **Trap (DO NOT double-count workspace ingestion)**: Sentinel PAYG and Commitment Tier prices **already include** all workspace ingestion (including Application Insights telemetry, custom logs, and any other `_IsBillable=true` data) — DO NOT add a separate Log Analytics or App Insights ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA or App Insights ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
 
 ## Query Pattern
 
@@ -81,6 +81,8 @@ Commitment: Monthly = tier_retailPrice × 30 + (tier_retailPrice ÷ tierGB) × m
 Basic Logs: Monthly = basic_retailPrice × queryGB
 Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice × ingestedGB + query_retailPrice × queriedGB
 ```
+
+> **Example — shared workspace with App Insights (simplified PAYG, no Defender):** `total_IsBillable_GB` = security logs (35 GB) + App Insights telemetry (25 GB) = 60 GB; `billableGB` = 60 − 0 = 60 → Sentinel cost = 60 × payg_retailPrice; App Insights ingestion = absorbed into Sentinel total; LA ingestion = covered. No LA 5 GB free grant under simplified pricing.
 
 ## Notes
 
