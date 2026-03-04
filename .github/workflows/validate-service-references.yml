@@ -2,7 +2,8 @@
 # Validate Service References
 # ---------------------------------------------------------
 # Runs the validation script against service reference files
-# whenever a pull request touches relevant paths.
+# on every pull request, skipping validation when no relevant
+# paths changed.
 #
 # HOW IT WORKS
 # 1. GitHub triggers this workflow on EVERY pull request to
@@ -181,8 +182,9 @@ jobs:
       # --- Step 4: Routing sync (fallback) ---
       # Steps 3a and 3b already include -CheckRoutingFileSync,
       # so this only runs when NEITHER of them executed — e.g.
-      # a service file was deleted (not caught by ACMR filter)
-      # but the paths: trigger still fired.
+      # a service file was deleted but no other service files
+      # were added/modified, yet paths-filter still detected a
+      # relevant change.
       # Note: the script requires at least one file passed to -Path,
       # so we pick the first .md we can find.
       - name: Validate routing file sync
