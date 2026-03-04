@@ -296,6 +296,12 @@ gh api graphql -f query='{ viewer { login } }'
 
 # Paginate results
 gh api repos/owner/repo/issues --paginate
+
+# View PR review comments
+gh api repos/owner/repo/pulls/123/comments
+
+# Reply to a PR review comment
+gh api repos/owner/repo/pulls/123/comments/{comment_id}/replies -f body="Reply text"
 ```
 
 ## Tips
