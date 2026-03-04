@@ -62,30 +62,9 @@ If sub-agent dispatch fails (e.g., nested sub-agent limitations), fall back to p
 - For 3+ services, use SKILL.md's Batch Estimation Mode to reduce token consumption
 - Produce distillation rows as you go
 
-### Dispatch Failure Detection
-
-- Attempt parallel dispatch first
-- If dispatch fails or sub-agents error, switch to sequential mode automatically
-- Do not mention the dispatch mode to the user — the output format is identical either way
-
 ## Review
 
-Before presenting the final estimate to the user, validate it.
-
-### Dispatch Mode
-
-Invoke the **cost-reviewer** agent with:
-
-- All line items (distillation rows)
-- All assumptions
-- The grand total
-- The user's original request
-
-Incorporate any review feedback (corrections, missing items) before presenting to the user.
-
-### Inline Fallback
-
-If cost-reviewer dispatch fails, perform these four checks yourself:
+Before presenting the final estimate to the user, perform these four checks:
 
 1. **Arithmetic verification** — for each line item, restate the formula with actual numbers and verify the result. Use step-by-step multiplication for multi-digit numbers (as specified in SKILL.md's Verify step).
 2. **Completeness** — confirm every user-requested service is present. Check that all `billingNeeds` dependencies are included.
