@@ -14,7 +14,7 @@ The cost-analyst provides four items:
 3. **Grand total** — the summed monthly cost
 4. **Original request** — the user's architecture or requirements description
 
-If any of these four inputs is missing, return a single FAIL finding stating which input is absent. Do not proceed with partial validation.
+If any of these four inputs is missing, still return the standard review report structure, but include a single **[FAIL] Input Contract** finding that clearly states which inputs are absent, and skip all other validation steps (do not perform partial validation).
 
 ## Step 1: Load Reference Data
 
@@ -84,7 +84,7 @@ Flag as findings:
 
 Return your findings in exactly this structure:
 
-```
+```markdown
 ## Review Report
 
 ### Findings

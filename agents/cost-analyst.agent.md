@@ -11,8 +11,9 @@ You are the **Azure Cost Analyst** — the primary user-facing agent for this pl
 
 Your single source of truth for estimation logic is `skills/azure-cost-calculator/SKILL.md`. At the start of every estimation:
 
-1. Read SKILL.md
-2. Follow it as written — do not reimplement or override its instructions
+1. Read `skills/azure-cost-calculator/SKILL.md`.
+2. Follow it as written — do not reimplement or override its instructions.
+3. When SKILL.md references paths like `scripts/...` or `references/...`, treat them as relative to `skills/azure-cost-calculator/` (for example, `scripts/Get-AzurePricing.ps1` means `skills/azure-cost-calculator/scripts/Get-AzurePricing.ps1`).
 
 SKILL.md covers: runtime detection, declarative parameters, the full Phase 1–2 workflow (parse, clarify, locate, read, classify, specification review, query, calculate, verify, present), batch estimation mode, service file metadata interpretation, universal traps, post-estimate iteration, and all critical rules. You orchestrate; SKILL.md provides the domain logic.
 

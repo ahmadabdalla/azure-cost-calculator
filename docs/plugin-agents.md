@@ -11,7 +11,7 @@ This repository has two separate agent systems serving different audiences:
 | Audience   | Plugin consumers                               | Repository maintainers               |
 | Platform   | Copilot CLI + Claude Code                      | GitHub Copilot coding agent          |
 | Purpose    | Azure cost estimation                          | Service reference authoring & review |
-| Loaded via | `plugin.json` → `"agents": "./agents/"`        | GitHub default branch                |
+| Loaded via | `.claude-plugin/plugin.json` → `"agents": "./agents/"` | GitHub default branch                |
 | Invocation | Local terminal                                 | Hosted on GitHub infrastructure      |
 | Context    | Plugin files only (skill, scripts, references) | Full repo access, issue/PR context   |
 
@@ -124,7 +124,7 @@ There is no single `tools` list that satisfies both platforms. Unknown tool name
 The VS Code agent parser is strict about formatting:
 
 - **No YAML folded scalars** (`>` or `|`) — causes "Unexpected indentation" errors. Use single-line quoted strings instead.
-- **Supported VS Code attributes**: `agents`, `argument-hint`, `description`, `disable-model-invocation`, `handoffs`, `model`, `name`, `target`, `tools`, `user-invokable`. Unknown fields produce warnings in the editor but are harmless at runtime.
+- **Supported VS Code attributes**: `agents`, `argument-hint`, `description`, `disable-model-invocation`, `handoffs`, `model`, `name`, `target`, `tools`, `user-invocable`. Unknown fields produce warnings in the editor but are harmless at runtime.
 
 ---
 
@@ -134,7 +134,7 @@ Plugin agents have the lowest priority in both platforms. Project-level agents a
 
 ### Copilot CLI
 
-```
+```text
 1. ~/.copilot/agents/           (user)
 2. <project>/.github/agents/    (project)        ← CI agents live here
 3. <parents>/.github/agents/    (inherited)
@@ -147,7 +147,7 @@ Plugin agents have the lowest priority in both platforms. Project-level agents a
 
 ### Claude Code
 
-```
+```text
 1. --agents CLI flag            (session, highest)
 2. .claude/agents/              (project)
 3. ~/.claude/agents/            (user)
@@ -227,4 +227,5 @@ The CI agents in `.github/agents/` use the GitHub Copilot coding agent platform,
 ## Related
 
 - [CI/ops custom agents](ops/custom-agents.md) — repository governance agents in `.github/agents/`
-- [Plugin manifest](../skills/azure-cost-calculator/SKILL.md) — skill entry point
+- [Skill entry point](../skills/azure-cost-calculator/SKILL.md) — SKILL.md defining the agent workflow
+- [Plugin manifest](../.claude-plugin/plugin.json) — plugin configuration and agent wiring
