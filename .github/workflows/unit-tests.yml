@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Check for relevant path changes
         id: filter
@@ -72,7 +72,7 @@ jobs:
 
       - name: Upload test results
         if: always() && steps.filter.outputs.relevant == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15d86c2c1894d66886f367fdc21a6624da7ed # v4
         with:
           name: pester-results
           path: results/pester.xml
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Check for relevant path changes
         id: filter
