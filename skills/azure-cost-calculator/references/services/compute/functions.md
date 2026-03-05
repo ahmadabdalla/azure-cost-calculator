@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Trap**: `MonthlyCost` rounds to 2 decimals with a default `Quantity` of 1, so sub-cent unit prices display as zero. Pass an explicit `Quantity` (executions/GB-s) or read the unrounded `UnitPrice` from JSON output, and always explain the free grant deduction.
+> **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Always query in the user's target currency first — if the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can be ~2× the direct FX conversion, e.g. AUD 0.0001 vs ~0.00005 from manual conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Always explain the free grant deduction.
 
 ## Query Pattern
 
