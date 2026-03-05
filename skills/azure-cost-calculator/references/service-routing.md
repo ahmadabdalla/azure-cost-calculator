@@ -11,7 +11,7 @@ Example: "Azure Data Factory" → data-factory.md | "SignalR" → signalr.md | "
 ## Routing Notes
 
 - Some services share a `serviceName`; use `productName` filters to isolate.
-- API `serviceFamily` may differ from category here. Always use this file's category.
+- API `serviceFamily` may differ from category here. Always use this file's category name exactly as written in the section headers below.
 - Services with no retail meter still need reference files.
 
 Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may differ from API `serviceName` (see `apiServiceName` field).
