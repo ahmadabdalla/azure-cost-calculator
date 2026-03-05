@@ -4,6 +4,15 @@ Write prompts that produce deterministic cost estimates. A/B testing showed vagu
 
 ## Architect's Quick Start
 
+### Platform Invocation
+
+| Platform        | How to invoke                                                 | Notes                                                                         |
+| --------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| **Claude Code** | `/estimate-cost <description or @file>`                       | Slash command — runs in forked context                                        |
+| **Copilot CLI** | `@cost-analyst estimate the costs for <description or @file>` | Address the agent directly — CLI does not support slash commands from plugins |
+
+Both methods invoke the same **cost-analyst** agent and produce identical results. The difference is only the invocation syntax.
+
 **Step 1: Identify your architecture pattern**
 
 | Pattern              | Key Cost Drivers                                                   |

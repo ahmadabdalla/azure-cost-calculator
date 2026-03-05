@@ -12,3 +12,5 @@ Estimate the Azure costs for the following architecture:
 $ARGUMENTS
 
 Use the **cost-analyst** agent to perform this estimation. The agent follows the `skills/azure-cost-calculator/SKILL.md` workflow to produce a deterministic, API-backed cost estimate. Do not guess prices — all costs must come from live Azure Retail Prices API queries.
+
+**Output delivery:** Present the complete estimate directly in the conversation response. Do not write the estimate to a file unless the user explicitly asks for file output.
