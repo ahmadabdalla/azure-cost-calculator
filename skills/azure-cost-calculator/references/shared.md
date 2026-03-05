@@ -73,7 +73,7 @@ Method: [regions-and-currencies.md & Deriving a USD→local currency conversion 
 
 ### Sub-Cent Pricing ($0.00 Display)
 
-Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Use the **Known Rates table** in each service file and calculate manually. Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
+Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Always query in the user's target currency first — if the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can differ significantly from direct FX conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](regions-and-currencies.md). Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
 
 ### Reserved Instance MonthlyCost
 
