@@ -98,7 +98,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
 6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveat:** use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
-7. **Use consistent output categories** — group line items by category directory names from `references/services/` (compute, databases, networking, etc.)
+7. **Use exact category names** — group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
 8. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
 
 ## Service File Metadata

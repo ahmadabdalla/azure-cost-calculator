@@ -27,6 +27,8 @@ Service reference files are organized by category. To find a service file:
 
 18 categories. Each maps to one or more API `serviceFamily` values.
 
+> **Mandatory:** Use these exact category names in all output. Do not paraphrase, abbreviate, or rename them.
+
 | Category        | Path                        | API serviceFamily                                                                                   |
 | --------------- | --------------------------- | --------------------------------------------------------------------------------------------------- |
 | Compute         | `services/compute/`         | Compute, Windows Virtual Desktop                                                                    |
