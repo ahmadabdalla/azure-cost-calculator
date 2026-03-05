@@ -47,30 +47,30 @@ Three service categories return pricing in **USD only** — either because they 
 
 When ANY service in the estimate returns USD-only prices and the user requested a non-USD currency, you **MUST** perform this conversion. Do NOT skip it. Do NOT leave individual services in USD while others are in the target currency.
 
-> **IMPORTANT**: Reuse a regional service already in the estimate (e.g., the user's VM SKU) to derive the conversion factor. Query it once in USD and once in the target currency, then divide. This avoids extra API calls for a separate reference SKU. Use the same SKU consistently within a single estimate.
+> **MANDATORY**: You MUST use this exact anchor SKU — do NOT substitute any other service, even one already in the estimate. Azure sets local-currency prices independently per service, so different anchors yield different factors and non-deterministic results.
+
+**Fixed anchor — use these exact parameters (no substitutions):**
 
 ```
-# Step 1: Query a regional service already in the estimate (USD)
+# Step 1: Query anchor in USD
 
 ServiceName: Virtual Machines
-ArmSkuName: Standard_D2s_v5
-Region: australiaeast
+ArmSkuName: Standard_B2s
+ProductName: Virtual Machines BS Series
+Region: <user's region>
 Currency: USD
 
-→ e.g., $0.1200/hr
-
-# Step 2: Query the SAME service in the target currency
+# Step 2: Query anchor in target currency (same parameters, different currency)
 
 ServiceName: Virtual Machines
-ArmSkuName: Standard_D2s_v5
-Region: australiaeast
-Currency: AUD
-
-→ e.g., $0.1715/hr
+ArmSkuName: Standard_B2s
+ProductName: Virtual Machines BS Series
+Region: <user's region>
+Currency: <target currency>
 
 # Step 3: Derive factor
 
-AUD/USD = 0.1715 / 0.1200 ≈ 1.4292
+factor = target_price / usd_price
 ```
 
 Apply this factor to all USD-only prices. Always note the conversion caveat to the user — the derived factor is approximate and may differ from the actual exchange rate.
