@@ -40,9 +40,9 @@ After identifying services, assign each to a category using `skills/azure-cost-c
 
 **Rules:**
 
-- **Use exact category names** from the Category Index in `skills/azure-cost-calculator/references/shared.md` (e.g., "IoT", "Databases", "Compute"). Do not paraphrase, combine, or invent labels.
+- **Use exact category names from service-routing.md** — the section headers in that file are the canonical category names. Use them verbatim. Do not paraphrase, abbreviate, combine, or invent category labels.
 - **Sub-features stay with their parent service** — billing components of a service (e.g., Cosmos DB PITR backup, SQL Database storage) belong to the same category as the parent service, not a separate "Backup" or "Storage" category.
-- **Multi-category services** — if a service spans categories (e.g., Event Grid in IoT, Service Bus in Integration), use the category assigned by service-routing.md.
+- **Multi-category services** — if a service spans categories, use the category assigned by service-routing.md.
 
 ## Orchestration
 
@@ -62,30 +62,9 @@ If sub-agent dispatch fails (e.g., nested sub-agent limitations), fall back to p
 - For 3+ services, use SKILL.md's Batch Estimation Mode to reduce token consumption
 - Produce distillation rows as you go
 
-### Dispatch Failure Detection
-
-- Attempt parallel dispatch first
-- If dispatch fails or sub-agents error, switch to sequential mode automatically
-- Do not mention the dispatch mode to the user — the output format is identical either way
-
 ## Review
 
-Before presenting the final estimate to the user, validate it.
-
-### Dispatch Mode
-
-Invoke the **cost-reviewer** agent with:
-
-- All line items (distillation rows)
-- All assumptions
-- The grand total
-- The user's original request
-
-Incorporate any review feedback (corrections, missing items) before presenting to the user.
-
-### Inline Fallback
-
-If cost-reviewer dispatch fails, perform these four checks yourself:
+Before presenting the final estimate to the user, perform these four checks:
 
 1. **Arithmetic verification** — for each line item, restate the formula with actual numbers and verify the result. Use step-by-step multiplication for multi-digit numbers (as specified in SKILL.md's Verify step).
 2. **Completeness** — confirm every user-requested service is present. Check that all `billingNeeds` dependencies are included.
@@ -144,6 +123,7 @@ If script execution or file access is denied after the upfront request:
 3. **Accept natural language** — users should never need to know API field names, OData syntax, or script flags
 4. **Disclose all assumptions before costs** — present the assumptions block first, then cost tables
 5. **Use Json output format** — always pass Json (not Summary) as the output format to pricing scripts
-6. **Group by category** — use exact category names from shared.md's Category Index; assign services via service-routing.md
+6. **Group by category** — use exact category names from service-routing.md. Do not paraphrase or invent labels
 7. **Scope to user-specified resources** — only estimate resources the user explicitly mentioned (plus `billingNeeds` dependencies)
 8. **On iteration, re-run only affected queries** — do not restart the full workflow for partial changes
+9. **Present results inline** — always present the complete estimate directly in the conversation response. Never write the estimate to a file unless the user explicitly requests file output. Some platforms have display limits for file-based output that make estimates invisible to the user

@@ -6,14 +6,14 @@ Standalone agent files shipped with the plugin for end-user cost estimation work
 
 This repository has two separate agent systems serving different audiences:
 
-| Aspect     | Plugin agents (`agents/`)                      | CI agents (`.github/agents/`)        |
-| ---------- | ---------------------------------------------- | ------------------------------------ |
-| Audience   | Plugin consumers                               | Repository maintainers               |
-| Platform   | Copilot CLI + Claude Code                      | GitHub Copilot coding agent          |
-| Purpose    | Azure cost estimation                          | Service reference authoring & review |
+| Aspect     | Plugin agents (`agents/`)                              | CI agents (`.github/agents/`)        |
+| ---------- | ------------------------------------------------------ | ------------------------------------ |
+| Audience   | Plugin consumers                                       | Repository maintainers               |
+| Platform   | Copilot CLI + Claude Code                              | GitHub Copilot coding agent          |
+| Purpose    | Azure cost estimation                                  | Service reference authoring & review |
 | Loaded via | `.claude-plugin/plugin.json` → `"agents": "./agents/"` | GitHub default branch                |
-| Invocation | Local terminal                                 | Hosted on GitHub infrastructure      |
-| Context    | Plugin files only (skill, scripts, references) | Full repo access, issue/PR context   |
+| Invocation | Local terminal                                         | Hosted on GitHub infrastructure      |
+| Context    | Plugin files only (skill, scripts, references)         | Full repo access, issue/PR context   |
 
 Plugin agents are **not** copies of the CI agents — they are purpose-built for consumers who install the plugin and need cost estimation help.
 
@@ -189,6 +189,19 @@ Plugin agents inherit the **consumer's** permission settings, not this repositor
 1. **Document required permissions** in the plugin README so consumers can pre-configure their allowlist for their chosen runtime (`pwsh` or `bash`).
 2. **Graceful degradation** in the system prompt — if script execution is denied, instruct the agent to explain what permissions are needed rather than failing silently.
 3. **Runtime detection** — the agent system prompt should detect available runtimes (`pwsh` vs `bash`) and use whichever is present, falling back with a clear error if neither is available.
+
+### Command support
+
+Plugin commands (the `commands/` directory, referenced in `plugin.json` as `"commands": "./commands/"`) are not supported on all platforms:
+
+| Platform        | Slash commands (`/estimate-cost`) | Agent addressing (`@cost-analyst`) |
+| --------------- | --------------------------------- | ---------------------------------- |
+| **Claude Code** | Supported                         | Supported                          |
+| **Copilot CLI** | **Not supported**                 | Supported                          |
+
+Copilot CLI does not load or execute prompt files from a plugin's `commands/` directory. CLI users should invoke the agent directly: `@cost-analyst estimate the costs for <description or @file>`.
+
+This is a platform limitation, not a plugin configuration issue. No changes to `plugin.json` or command files will resolve it.
 
 ---
 
