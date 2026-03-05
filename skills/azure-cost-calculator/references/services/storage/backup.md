@@ -77,6 +77,7 @@ Example: 10 VMs with 500 GB LRS storage
 - Reserved capacity available via `productName = 'Backup Reserved Capacity'` for 100 TB or 1 PB commitments (1-Year / 3-Year)
 - Protected instance fees vary significantly by workload: VM/Files are lower-cost per protected instance, SQL is mid-range, and SAP HANA/ASE are among the highest-cost options
 - First 31 days of Azure VM backup storage (up to 50 GB per VM) are free (not reflected in API)
+- **Cosmos DB vault backup vs native PITR**: Azure Backup vault protects Cosmos DB using standard vault storage meters (e.g., `LRS Data Stored` under `skuName: Standard`). There is no Cosmos DB-specific workload SKU. Do NOT confuse with Cosmos DB native PITR (`serviceName: Azure Cosmos DB`, `productName: Azure Cosmos DB - PITR`) which is ~9× more expensive per-GB — see `databases/cosmos-db.md`
 
 ## Reserved Instance Pricing
 
