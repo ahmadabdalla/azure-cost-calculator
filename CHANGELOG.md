@@ -4,6 +4,29 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-03-06
+
+### Added
+
+- **New plugin agent**: `cost-analyst` — primary user-facing agent for architecture cost assessments
+- **New command**: `estimate-cost` — CLI command that invokes the cost-analyst agent for quick estimations
+
+### Changed
+
+- **Category naming enforcement**: SKILL.md now mandates using exact Category Index names from shared.md in all output (e.g., "Compute", "Databases") — no paraphrasing allowed
+- **Sub-cent pricing logic**: Updated Functions and shared.md to query in target currency first; Azure publishes rounded non-USD rates that differ from manual FX conversion (e.g., AUD 0.0001 vs ~0.00005)
+- **Currency conversion**: Replaced flexible anchor SKU with mandatory fixed anchor (VM Standard_B2s from BS Series) to eliminate non-deterministic conversion factors
+- **Service routing**: Added service-routing.md to file search workflow as authoritative category/filename map when glob returns ambiguous results
+- **Plugin manifest**: Moved plugin.json to `.claude-plugin/plugin.json` and added agents, commands, keywords, category, homepage, and repository fields
+
+### Fixed
+
+- **Functions free grant**: Clarified that Consumption plan's 1M executions + 400K GB-s are per-subscription (not per-app) and added GiB conversion formula
+- **Cosmos DB PITR pricing**: Added trap note distinguishing native PITR (~9× rate, billed under Databases) from Azure Backup vault storage (Storage category)
+- **Sentinel + App Insights billing**: Clarified that Sentinel simplified pricing absorbs all workspace data including App Insights telemetry — no separate ingestion charges
+- **Example architecture**: Corrected impossible Consumption plan + VNet integration combination in event-driven-serverless.md
+- **argument-hint visibility**: Moved `argument-hint` to top-level frontmatter in SKILL.md for Claude Code compatibility
+
 ## [1.1.1] - 2026-03-02
 
 ### Changed
