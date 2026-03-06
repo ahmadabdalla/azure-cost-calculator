@@ -48,23 +48,35 @@ jobs:
       - name: Validate marketplace versions match plugin version
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          PLUGIN_NAME=$(jq -er '.name' .claude-plugin/plugin.json)
+          if ! PLUGIN_NAME=$(jq -er '.name' .claude-plugin/plugin.json); then
+            echo "::error::Failed to read '.name' from .claude-plugin/plugin.json (invalid JSON, missing file, or null value)"
+            exit 1
+          fi
 
-          MARKETPLACE_METADATA_VERSION=$(jq -er '.metadata.version' .claude-plugin/marketplace.json)
+          if ! MARKETPLACE_METADATA_VERSION=$(jq -er '.metadata.version' .claude-plugin/marketplace.json); then
+            echo "::error::Failed to read '.metadata.version' from .claude-plugin/marketplace.json (invalid JSON, missing file, or null value)"
+            exit 1
+          fi
           if [ "$MARKETPLACE_METADATA_VERSION" != "$VERSION" ]; then
             echo "::error::.claude-plugin/marketplace.json metadata.version ($MARKETPLACE_METADATA_VERSION) must match plugin version ($VERSION)"
             exit 1
           fi
 
-          PLUGIN_MATCH_COUNT=$(jq -er --arg name "$PLUGIN_NAME" '[.plugins[] | select(.name == $name)] | length' .claude-plugin/marketplace.json)
+          if ! PLUGIN_MATCH_COUNT=$(jq -er --arg name "$PLUGIN_NAME" '[.plugins[] | select(.name == $name)] | length' .claude-plugin/marketplace.json); then
+            echo "::error::Failed to compute plugin match count for '$PLUGIN_NAME' from .claude-plugin/marketplace.json (invalid JSON, missing file, or null value)"
+            exit 1
+          fi
           if [ "$PLUGIN_MATCH_COUNT" -ne 1 ]; then
             echo "::error::.claude-plugin/marketplace.json must contain exactly one plugin entry named '$PLUGIN_NAME' (found: $PLUGIN_MATCH_COUNT)"
             exit 1
           fi
 
-          MARKETPLACE_PLUGIN_VERSION=$(jq -er --arg name "$PLUGIN_NAME" '.plugins[] | select(.name == $name) | .version' .claude-plugin/marketplace.json)
+          if ! MARKETPLACE_PLUGIN_VERSION=$(jq -er --arg name "$PLUGIN_NAME" '.plugins[] | select(.name == $name) | .version' .claude-plugin/marketplace.json); then
+            echo "::error::Failed to read '.version' for plugin '$PLUGIN_NAME' from .claude-plugin/marketplace.json (invalid JSON, missing file, or null value)"
+            exit 1
+          fi
           if [ "$MARKETPLACE_PLUGIN_VERSION" != "$VERSION" ]; then
-            echo "::error::.claude-plugin/marketplace.json plugins[$PLUGIN_NAME].version ($MARKETPLACE_PLUGIN_VERSION) must match plugin version ($VERSION)"
+            echo "::error::.claude-plugin/marketplace.json plugin entry named '$PLUGIN_NAME' version ($MARKETPLACE_PLUGIN_VERSION) must match plugin version ($VERSION)"
             exit 1
           fi
 

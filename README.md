@@ -10,21 +10,11 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 
 **Marketplace-first install (recommended on both platforms)**
 
-**Claude Code**
-
 ```bash
 /plugin marketplace add ahmadabdalla/azure-cost-calculator
 /plugin install azure-cost-calculator@acc-plugin
 ```
 
-**GitHub Copilot CLI**
-
-```bash
-copilot plugin marketplace add ahmadabdalla/azure-cost-calculator
-copilot plugin install azure-cost-calculator@acc-plugin
-```
-
-> You can install directly from `owner/repo` in Copilot CLI, but we recommend marketplace-first on both platforms for a consistent install and update flow.
 
 **npx** (works with any agent):
 

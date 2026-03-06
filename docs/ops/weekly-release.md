@@ -32,7 +32,6 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 > **Marketplace versioning policy**
 >
 > `.claude-plugin/marketplace.json` supports optional `metadata.version` and plugin-entry `version` fields. This repository includes both and requires them to stay aligned with `.claude-plugin/plugin.json` on every release. `plugin.json` remains the source of truth; marketplace versions mirror it.
-
 > **Note — Issue auto-closing and the `dev` branch**
 >
 > GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
