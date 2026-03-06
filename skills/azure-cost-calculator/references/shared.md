@@ -26,7 +26,7 @@ Service reference files are organized by category. To find a service file:
 
 ### Category Index
 
-18 categories. Each maps to one or more API `serviceFamily` values.
+17 categories. Each maps to one or more API `serviceFamily` values.
 
 > **Mandatory:** Use these exact category names in all output. Do not paraphrase, abbreviate, or rename them. These names are mirrored in [service-routing.md](service-routing.md) section headers.
 
@@ -46,7 +46,6 @@ Service reference files are organized by category. To find a service file:
 | IoT             | `services/iot/`             | Internet of Things                                                                                  |
 | Developer Tools | `services/developer-tools/` | Developer Tools                                                                                     |
 | Identity        | `services/identity/`        | Security (identity subset), Microsoft Syntex                                                        |
-| Migration       | `services/migration/`       | Databases (migration subset), Other                                                                 |
 | Web             | `services/web/`             | Web                                                                                                 |
 | Communication   | `services/communication/`   | Azure Communication Services, Telecommunications                                                    |
 | Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Azure Stack, Azure Arc, Power Platform, Gaming, Other |

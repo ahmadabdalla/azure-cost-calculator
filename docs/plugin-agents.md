@@ -27,7 +27,7 @@ Plugin agents are **not** copies of the CI agents — they are purpose-built for
 
 The primary user-facing agent. Invoked when a user provides an architecture, deployment plan, or set of Azure resource requirements and needs a cost estimate. Uses the skill's pricing scripts (`Get-AzurePricing`, `Explore-AzurePricing`) to query the Azure Retail Prices API.
 
-The agent is a thin orchestration wrapper around `SKILL.md` — it owns intake, service grouping, sub-agent dispatch, and final presentation, but references SKILL.md steps by number rather than reimplementing them. Review checks (arithmetic verification, completeness, consistency, grand total re-sum) are performed inline via SKILL.md Step 9 (Verify).
+The agent is a thin orchestration wrapper around `SKILL.md` — it owns intake, service grouping, sub-agent dispatch, and final presentation, but references SKILL.md steps by number rather than reimplementing them. Review checks (arithmetic verification, grand total re-sum) are performed inline via SKILL.md Steps 9 and 10 (Verify and Present).
 
 > **Removed: cost-reviewer** — Previously planned as a separate quality-gate agent, but was never wired into the workflow. Its 4 checks are covered by SKILL.md Step 9 and the agent's inline Review step. Removed in #469 to eliminate dead code.
 
