@@ -15,10 +15,6 @@
     "budget",
     "calculator"
   ],
-  "category": "cloud",
   "homepage": "https://github.com/ahmadabdalla/azure-cost-calculator",
-  "repository": "https://github.com/ahmadabdalla/azure-cost-calculator",
-  "skills": "./skills/",
-  "agents": "./agents/",
-  "commands": "./commands/"
+  "repository": "https://github.com/ahmadabdalla/azure-cost-calculator"
 }
