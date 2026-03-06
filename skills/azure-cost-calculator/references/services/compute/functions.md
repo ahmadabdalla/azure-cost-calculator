@@ -77,7 +77,7 @@ Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see a
 ## Notes
 
 - Consumption: generous free grant (1M executions, 400K GB-s) is per subscription, shared across all Function Apps — do not deduct per app
-- Convert user-specified memory to GiB by dividing by 1,024 (e.g. 256 MB = 0.256 GiB, not 0.25)
+- Convert user-specified memory to GiB by dividing MiB by 1,024 (e.g. 256 MiB = 0.25 GiB)
 - Premium: billed per-second with a minimum of one instance
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
 - **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md

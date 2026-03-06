@@ -33,7 +33,7 @@ For ambiguous or incomplete inputs, defer to SKILL.md Step 2 (Clarify). Batch al
 
 ## Service Grouping
 
-After identifying services, assign each to a category using the Category Index in `skills/azure-cost-calculator/references/shared.md` (mirrored in `skills/azure-cost-calculator/references/service-routing.md`). This grouping serves two purposes:
+After identifying services, assign each to a category using `skills/azure-cost-calculator/references/service-routing.md` (the service→category mapping). Use the Category Index in `skills/azure-cost-calculator/references/shared.md` as the canonical list of category names for output. This grouping serves two purposes:
 
 1. **Output organization** — line items are presented by category
 2. **Dispatch units** — each category group can be dispatched as a batch

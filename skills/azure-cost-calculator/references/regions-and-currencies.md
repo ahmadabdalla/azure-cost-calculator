@@ -35,16 +35,16 @@ When encountering these services, note the limitation to the user and provide th
 
 These services return pricing in **USD only** — either because they are API-unavailable or because they are listed under the `Global` region:
 
-| Service       | Reason                                        | Reference                                                        |
-| ------------- | --------------------------------------------- | ---------------------------------------------------------------- |
-| Private Link  | Global region, USD only; use `Region: Global` | [private-link.md](services/networking/private-link.md)           |
-| Private DNS   | Global region, USD only                       | [private-dns.md](services/networking/private-dns.md)             |
-| Defender CSPM | Not in API at all                             | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
-| Load Balancer | Global region, USD only; use `Region: Global` | [load-balancer.md](services/networking/load-balancer.md)         |
+| Service       | Reason                                                                 | Reference                                                        |
+| ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Private Link  | Global region, USD only; use `Region: Global`                          | [private-link.md](services/networking/private-link.md)           |
+| Private DNS   | Empty-region pricing (`armRegionName == ''`); USD only; use workaround | [private-dns.md](services/networking/private-dns.md)             |
+| Defender CSPM | Not in API at all                                                      | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
+| Load Balancer | Global region, USD only; use `Region: Global`                          | [load-balancer.md](services/networking/load-balancer.md)         |
 
 ## Sub-Cent Services
 
-Consumption-based meters with per-unit prices below $0.01. Scripts may display `$0.00` — this is a rounding artifact, not the actual price. Always query in the user's target currency first — if the API returns a non-zero rate, use it directly. If it returns zero, fall back to the USD rate and convert using the method below.
+Consumption-based meters with per-unit prices below $0.01. See the Sub-Cent Pricing rule in [shared.md](shared.md#sub-cent-pricing-000-display) for the query-and-fallback procedure.
 
 | Service        | Reference                                               |
 | -------------- | ------------------------------------------------------- |
