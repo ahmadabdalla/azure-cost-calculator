@@ -17,15 +17,18 @@ For region names, currency conversion, and API-unavailable services, see [region
 Service reference files are organized by category. To find a service file:
 
 1. **File search** — search for files matching `services/**/*<keyword>*.md`
-2. **Category browse** — pick the category below and list the directory
-3. **Broad search** — list `services/**/*.md` to see all files
-4. **Discovery** — use the explore script for services not yet documented
+2. **Routing map** — if search returns 0 or ambiguous results, check [service-routing.md](service-routing.md) for the authoritative category and filename
+3. **Category browse** — pick the category below and list the directory
+4. **Broad search** — list `services/**/*.md` to see all files
+5. **Discovery** — use the explore script for services not yet documented
 
-> Each service file contains its own `serviceName`, `category`, and `aliases` metadata. The routing information lives with the service it describes — no central lookup needed.
+> Each service file contains its own `serviceName`, `category`, and `aliases` metadata. For the full routing map of services to categories and filenames, see [service-routing.md](service-routing.md).
 
 ### Category Index
 
-18 categories. Each maps to one or more API `serviceFamily` values.
+17 categories. Each maps to one or more API `serviceFamily` values.
+
+> **Mandatory:** Use these exact category names in all output. Do not paraphrase, abbreviate, or rename them. These names are mirrored in [service-routing.md](service-routing.md) section headers.
 
 | Category        | Path                        | API serviceFamily                                                                                   |
 | --------------- | --------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -43,7 +46,6 @@ Service reference files are organized by category. To find a service file:
 | IoT             | `services/iot/`             | Internet of Things                                                                                  |
 | Developer Tools | `services/developer-tools/` | Developer Tools                                                                                     |
 | Identity        | `services/identity/`        | Security (identity subset), Microsoft Syntex                                                        |
-| Migration       | `services/migration/`       | Databases (migration subset), Other                                                                 |
 | Web             | `services/web/`             | Web                                                                                                 |
 | Communication   | `services/communication/`   | Azure Communication Services, Telecommunications                                                    |
 | Specialist      | `services/specialist/`      | Blockchain, Mixed Reality, Quantum Computing, Azure Stack, Azure Arc, Power Platform, Gaming, Other |
@@ -71,7 +73,7 @@ Method: [regions-and-currencies.md & Deriving a USD→local currency conversion 
 
 ### Sub-Cent Pricing ($0.00 Display)
 
-Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Use the **Known Rates table** in each service file and calculate manually. Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
+Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Always query in the user's target currency first — if the Retail Prices API returns a non-zero `unitPrice`/`retailPrice` value, use that API value directly (Azure publishes rounded non-USD rates that can differ significantly from direct FX conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](regions-and-currencies.md). Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
 
 ### Reserved Instance MonthlyCost
 
