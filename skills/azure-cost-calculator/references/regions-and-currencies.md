@@ -25,52 +25,60 @@ Reference for region names, currency handling, and services not available in the
 
 These services have **no pricing data** in the Azure Retail Prices API and must be estimated manually:
 
-| Service                              | Manual Estimate               | Reference                                                                                       |
-| ------------------------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| Defender CSPM                        | $5.11 USD/month per resource  | [Azure Defender pricing](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/) |
+| Service       | Manual Estimate              | Reference                                                                                       |
+| ------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
+| Defender CSPM | $5.11 USD/month per resource | [Azure Defender pricing](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/) |
 
 When encountering these services, note the limitation to the user and provide the manual fallback values above (in USD). If the user's requested currency is NOT USD, you **MUST** derive a conversion factor using the method below and convert all USD-only prices to the target currency. Do NOT leave prices in USD when the user requested a different currency. Do NOT direct them to the Azure pricing calculator — perform the conversion yourself.
 
-## USD-Only Services & Currency Conversion
+## USD-Only Services
 
-Three service categories return pricing in **USD only** — either because they are API-unavailable or because they are listed under the `Global` region:
+These services return pricing in **USD only** — either because they are API-unavailable or because they are listed under the `Global` region:
 
-| Service              | Reason                                        | Reference                                                        |
-| -------------------- | --------------------------------------------- | ---------------------------------------------------------------- |
-| Private Link         | Global region, USD only; use `Region: Global` | [private-link.md](services/networking/private-link.md)           |
-| Private DNS          | Global region, USD only                       | [private-dns.md](services/networking/private-dns.md)             |
-| Defender CSPM        | Not in API at all                             | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
-| Functions (sub-cent) | API returns `$0.00` in all currencies         | [functions.md](services/compute/functions.md)                    |
-| Load Balancer        | Global region, USD only; use `Region: Global` | [load-balancer.md](services/networking/load-balancer.md)         |
+| Service       | Reason                                                                 | Reference                                                        |
+| ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Private Link  | Global region, USD only; use `Region: Global`                          | [private-link.md](services/networking/private-link.md)           |
+| Private DNS   | Empty-region pricing (`armRegionName == ''`); USD only; use workaround | [private-dns.md](services/networking/private-dns.md)             |
+| Defender CSPM | Not in API at all                                                      | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
+| Load Balancer | Global region, USD only; use `Region: Global`                          | [load-balancer.md](services/networking/load-balancer.md)         |
 
-### Deriving a USD→local currency conversion factor (MANDATORY for non-USD requests)
+## Sub-Cent Services
+
+Consumption-based meters with per-unit prices below $0.01. See the Sub-Cent Pricing rule in [shared.md](shared.md#sub-cent-pricing-000-display) for the query-and-fallback procedure.
+
+| Service        | Reference                                               |
+| -------------- | ------------------------------------------------------- |
+| Functions      | [functions.md](services/compute/functions.md)           |
+| Container Apps | [container-apps.md](services/compute/container-apps.md) |
+
+## Deriving a USD→local currency conversion factor
 
 When ANY service in the estimate returns USD-only prices and the user requested a non-USD currency, you **MUST** perform this conversion. Do NOT skip it. Do NOT leave individual services in USD while others are in the target currency.
 
-> **IMPORTANT**: Reuse a regional service already in the estimate (e.g., the user's VM SKU) to derive the conversion factor. Query it once in USD and once in the target currency, then divide. This avoids extra API calls for a separate reference SKU. Use the same SKU consistently within a single estimate.
+> **MANDATORY**: You MUST use this exact anchor SKU — do NOT substitute any other service, even one already in the estimate. Azure sets local-currency prices independently per service, so different anchors yield different factors and non-deterministic results.
+
+**Fixed anchor — use these exact parameters (no substitutions):**
 
 ```
-# Step 1: Query a regional service already in the estimate (USD)
+# Step 1: Query anchor in USD
 
 ServiceName: Virtual Machines
-ArmSkuName: Standard_D2s_v5
-Region: australiaeast
+ArmSkuName: Standard_B2s
+ProductName: Virtual Machines BS Series
+Region: <user's region>
 Currency: USD
 
-→ e.g., $0.1200/hr
-
-# Step 2: Query the SAME service in the target currency
+# Step 2: Query anchor in target currency (same parameters, different currency)
 
 ServiceName: Virtual Machines
-ArmSkuName: Standard_D2s_v5
-Region: australiaeast
-Currency: AUD
-
-→ e.g., $0.1715/hr
+ArmSkuName: Standard_B2s
+ProductName: Virtual Machines BS Series
+Region: <user's region>
+Currency: <target currency>
 
 # Step 3: Derive factor
 
-AUD/USD = 0.1715 / 0.1200 ≈ 1.4292
+factor = target_price / usd_price
 ```
 
 Apply this factor to all USD-only prices. Always note the conversion caveat to the user — the derived factor is approximate and may differ from the actual exchange rate.

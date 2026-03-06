@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Trap**: `MonthlyCost` rounds to 2 decimals with a default `Quantity` of 1, so sub-cent unit prices display as zero. Pass an explicit `Quantity` (executions/GB-s) or read the unrounded `UnitPrice` from JSON output, and always explain the free grant deduction.
+> **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Always query in the user's target currency first — if the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can be ~2× the direct FX conversion, e.g. AUD 0.0001 vs ~0.00005 from manual conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Always explain the free grant deduction.
 
 ## Query Pattern
 
@@ -45,15 +45,15 @@ Quantity: 1000000
 
 ## Meter Names
 
-| Plan | Meter | Unit | Free Grant |
-| ---- | ----- | ---- | ---------- |
-| Consumption | `Standard Total Executions` | per 10 exec | 1M exec |
-| Consumption | `Standard Execution Time` | per 1 GB-s | 400K GB-s |
-| Premium | `Premium vCPU Duration` | 1 Hour | — |
-| Premium | `Premium Memory Duration` | 1 GiB Hour | — |
-| Flex Always Ready | `Always Ready Baseline` / `Execution Time` / `Total Executions` | per GB-s / per 10 exec | — |
-| Flex On Demand | `On Demand Execution Time` | per 1 GB-s | 100K GB-s |
-| Flex On Demand | `On Demand Total Executions` | per 10 exec | 250K exec |
+| Plan              | Meter                                                           | Unit                   | Free Grant |
+| ----------------- | --------------------------------------------------------------- | ---------------------- | ---------- |
+| Consumption       | `Standard Total Executions`                                     | per 10 exec            | 1M exec    |
+| Consumption       | `Standard Execution Time`                                       | per 1 GB-s             | 400K GB-s  |
+| Premium           | `Premium vCPU Duration`                                         | 1 Hour                 | —          |
+| Premium           | `Premium Memory Duration`                                       | 1 GiB Hour             | —          |
+| Flex Always Ready | `Always Ready Baseline` / `Execution Time` / `Total Executions` | per GB-s / per 10 exec | —          |
+| Flex On Demand    | `On Demand Execution Time`                                      | per 1 GB-s             | 100K GB-s  |
+| Flex On Demand    | `On Demand Total Executions`                                    | per 10 exec            | 250K exec  |
 
 ## Cost Formula
 
@@ -76,7 +76,8 @@ Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see a
 
 ## Notes
 
-- Consumption: generous free grant — many small workloads cost zero
+- Consumption: generous free grant (1M executions, 400K GB-s) is per subscription, shared across all Function Apps — do not deduct per app
+- Convert user-specified memory to GiB by dividing MiB by 1,024 (e.g. 256 MiB = 0.25 GiB)
 - Premium: billed per-second with a minimum of one instance
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
 - **Dedicated (App Service Plan)**: no `Functions` meters exist — cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md

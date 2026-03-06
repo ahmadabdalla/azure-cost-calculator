@@ -2,6 +2,8 @@
 
 Multi-agent system that gives the Copilot coding agent research-first, consensus-driven workflows for service reference authoring and review.
 
+> **Two agent systems in this repo**: This document covers the **CI/ops agents** in `.github/agents/` — these run on the GitHub Copilot coding agent platform for repository governance (issue triage, service reference authoring, PR review). For the **plugin agents** shipped to end-users in `agents/`, see [Plugin Agents](../plugin-agents.md).
+
 ## Service Reference Authoring Agent
 
 | Item              | Detail                                                                       |
@@ -103,12 +105,12 @@ service-reference (orchestrator)
 
 ### Agent files
 
-| File                                     | Role                                                                                   | Tools                                   |
-| ---------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
-| `.github/agents/service-reference.md`    | Orchestrator — dispatches, aggregates, writes                                          | read, search, edit, execute, agent, web |
+| File                                        | Role                                                                                   | Tools                                   |
+| ------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
+| `.github/agents/service-reference.md`       | Orchestrator — dispatches, aggregates, writes                                          | read, search, edit, execute, agent, web |
 | `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator — verifies, reviews                                             | read, search, edit, execute, agent, web |
-| `.github/agents/pricing-investigator.md` | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
-| `.github/agents/compliance-reviewer.md`  | Rules analysis sub-agent                                                               | read, search                            |
+| `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
+| `.github/agents/compliance-reviewer.md`     | Rules analysis sub-agent                                                               | read, search                            |
 
 1. Edit the agent file directly.
 2. **YAML frontmatter** controls metadata (`name`, `description`, `tools`).
@@ -218,21 +220,31 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 
 ### Troubleshooting
 
-| Symptom                          | Likely cause                                        | Fix                                                                        |
-| -------------------------------- | --------------------------------------------------- | -------------------------------------------------------------------------- |
-| Agent not appearing              | File not merged to default branch                   | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
+| Symptom                          | Likely cause                                                                      | Fix                                                                        |
+| -------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Agent not appearing              | File not merged to default branch                                                 | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
 | No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected — agent posts a skip message and stops                            |
-| Worktree creation fails          | Branch not fetched or conflicting worktree exists   | Ensure PR branch is available; remove stale worktrees                      |
-| Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`         | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
-| gh CLI commands fail             | Agent environment missing `gh` or not authenticated | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
-| Tiebreaker not triggered         | No disagreements between investigators              | Expected — tiebreaker only runs when investigators disagree                |
-| Review comment not posted        | GitHub skill PR comment failed                      | Check authentication and PR permissions                                    |
-| Worktree not cleaned up          | Error in earlier phase interrupted cleanup          | Manually run `git worktree remove ../pr-review-{N} --force`                |
+| Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
+| Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
+| gh CLI commands fail             | Agent environment missing `gh` or not authenticated                               | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
+| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected — tiebreaker only runs when investigators disagree                |
+| Review comment not posted        | GitHub skill PR comment failed                                                    | Check authentication and PR permissions                                    |
+| Worktree not cleaned up          | Error in earlier phase interrupted cleanup                                        | Manually run `git worktree remove ../pr-review-{N} --force`                |
 
 ---
 
-## References
+## Platform documentation
+
+### GitHub Copilot coding agent
 
 - [Custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents) — how to create custom agent profiles
 - [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration) — frontmatter and prompt format
 - [Testing custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/test-custom-agents) — how to test agent changes
+
+---
+
+## Related
+
+- [Plugin Agents](../plugin-agents.md) — consumer-facing agents shipped with the plugin (`agents/`)
+- [`AGENTS.md`](../../AGENTS.md) — repo-level context for all agents
+- [`CONTRIBUTING.md`](../../CONTRIBUTING.md) — contributor workflow referenced by agents at runtime

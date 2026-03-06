@@ -4,6 +4,10 @@
 # Runs PowerShell (Pester 5) and Bash (bats-core) unit tests
 # for the core skill scripts whenever a PR touches script
 # source or test files.
+#
+# The workflow always triggers (no paths: filter) so that
+# required status checks are always reported. Path filtering
+# is handled inside each job using dorny/paths-filter.
 # ---------------------------------------------------------
 
 name: Unit Tests
@@ -11,9 +15,6 @@ name: Unit Tests
 on:
   pull_request:
     branches: [dev, main]
-    paths:
-      - "skills/azure-cost-calculator/scripts/**"
-      - "tests/unit/**"
   push:
     branches: [dev]
     paths:
@@ -22,6 +23,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read  # needed by dorny/paths-filter to list PR files
 
 jobs:
   powershell-tests:
@@ -29,9 +31,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Check for relevant path changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'skills/azure-cost-calculator/scripts/**'
+              - 'tests/unit/**'
+
+      - name: Skip — no relevant changes
+        if: steps.filter.outputs.relevant == 'false'
+        run: echo "No script or test changes detected. Skipping PowerShell tests."
 
       - name: Install Pester and PSScriptAnalyzer
+        if: steps.filter.outputs.relevant == 'true'
         shell: pwsh
         run: |
           Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser
@@ -41,6 +57,7 @@ jobs:
           Get-Module Pester, PSScriptAnalyzer | Select-Object Name, Version
 
       - name: Run PSScriptAnalyzer
+        if: steps.filter.outputs.relevant == 'true'
         shell: pwsh
         run: |
           $results = Invoke-ScriptAnalyzer -Path skills/azure-cost-calculator/scripts -Recurse -ReportSummary
@@ -51,13 +68,14 @@ jobs:
           }
 
       - name: Run Pester tests
+        if: steps.filter.outputs.relevant == 'true'
         shell: pwsh
         run: |
           pwsh tests/unit/Run-PesterTests.ps1 -OutputFormat Detailed -CIOutputPath results/pester.xml
 
       - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
+        if: always() && steps.filter.outputs.relevant == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: pester-results
           path: results/pester.xml
@@ -67,13 +85,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Check for relevant path changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'skills/azure-cost-calculator/scripts/**'
+              - 'tests/unit/**'
+
+      - name: Skip — no relevant changes
+        if: steps.filter.outputs.relevant == 'false'
+        run: echo "No script or test changes detected. Skipping Bash tests."
 
       - name: Install bats-core and jq
+        if: steps.filter.outputs.relevant == 'true'
         run: |
           sudo npm install -g bats
           sudo apt-get update -qq && sudo apt-get install -y -qq jq
           bats --version
 
       - name: Run bats tests
+        if: steps.filter.outputs.relevant == 'true'
         run: bash tests/unit/run-bats-tests.sh

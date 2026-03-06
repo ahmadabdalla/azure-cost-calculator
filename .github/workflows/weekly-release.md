@@ -34,7 +34,7 @@ These constraints are absolute and override all other instructions:
 - **Never** push directly to `main` — only create a pull request.
 - **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
 - **Never** switch away from the initially checked-out branch (`main`). Do not run `git checkout -b ... origin/dev` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
-- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5d).
+- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5d).
 - **Never** fabricate changes — only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -90,7 +90,7 @@ For each relevant changed file, assign a changelog category:
 | `skills/**/SKILL.md`                      | Modified     | `Changed` or `Breaking` | Read diff carefully — if workflow phases restructured or critical rules changed, it's `Breaking` |
 | `skills/**/USAGE.md`                      | Modified     | `Changed`               | Describe the change                                                                              |
 | `skills/**/scripts/**`                    | Modified     | `Fixed` or `Added`      | Bug fix = `Fixed`, new capability = `Added`                                                      |
-| `plugin.json`                             | Modified     | (skip)                  | Version file — don't changelog itself                                                            |
+| `.claude-plugin/plugin.json`              | Modified     | (skip)                  | Version file — don't changelog itself                                                            |
 | `CHANGELOG.md`                            | Modified     | (skip)                  | Changelog — don't changelog itself                                                               |
 
 ### The "Breaking" litmus test
@@ -99,10 +99,10 @@ For each relevant changed file, assign a changelog category:
 
 ## Step 4 — Determine version bump
 
-Read the current version from `plugin.json`:
+Read the current version from `.claude-plugin/plugin.json`:
 
 ```bash
-cat plugin.json | jq -r .version
+cat .claude-plugin/plugin.json | jq -r .version
 ```
 
 Apply SemVer rules based on the changelog categories you identified:
@@ -173,7 +173,7 @@ Insert a new version section **above** the previous version entry. Use today's d
 
 Omit empty categories. Order: Breaking, Added, Changed, Fixed, Removed.
 
-### 5c. Update `plugin.json`
+### 5c. Update `.claude-plugin/plugin.json`
 
 Update the `"version"` field to the new version.
 
