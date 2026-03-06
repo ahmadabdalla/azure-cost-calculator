@@ -11,7 +11,7 @@ This repository has two separate agent systems serving different audiences:
 | Audience   | Plugin consumers                                       | Repository maintainers               |
 | Platform   | Copilot CLI + Claude Code                              | GitHub Copilot coding agent          |
 | Purpose    | Azure cost estimation                                  | Service reference authoring & review |
-| Loaded via | `.claude-plugin/plugin.json` → `"agents": "./agents/"` | GitHub default branch                |
+| Loaded via | Auto-discovered from `agents/` directory               | GitHub default branch                |
 | Invocation | Local terminal                                         | Hosted on GitHub infrastructure      |
 | Context    | Plugin files only (skill, scripts, references)         | Full repo access, issue/PR context   |
 
@@ -178,7 +178,7 @@ Plugin agents inherit the **consumer's** permission settings, not this repositor
 
 ### Command support
 
-Plugin commands (the `commands/` directory, referenced in `plugin.json` as `"commands": "./commands/"`) are not supported on all platforms:
+Plugin commands (auto-discovered from the `commands/` directory) are not supported on all platforms:
 
 | Platform        | Slash commands (`/estimate-cost`) | Agent addressing (`@cost-analyst`) |
 | --------------- | --------------------------------- | ---------------------------------- |
