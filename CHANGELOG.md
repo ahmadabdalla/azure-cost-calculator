@@ -4,6 +4,13 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-03-06
+
+### Changed
+
+- **Infrastructure**: Added marketplace.json for unified plugin install flow and enhanced create-release workflow to validate version sync across plugin.json and marketplace.json metadata
+- **Documentation**: Updated README with marketplace-first install instructions and weekly-release workflow to include marketplace.json in version update steps
+
 ## [1.2.0] - 2026-03-06
 
 ### Added
