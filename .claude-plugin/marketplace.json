@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "Marketplace for the Azure Cost Calculator plugin",
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "plugins": [
     {
       "name": "azure-cost-calculator",
       "source": "./",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "description": "Real-time Azure cost estimation using the Azure Retail Prices API"
     }
   ]
