@@ -19,30 +19,17 @@ Plugin agents are **not** copies of the CI agents — they are purpose-built for
 
 ## Agent inventory
 
-| File                            | Name          | Role                                                               |
-| ------------------------------- | ------------- | ------------------------------------------------------------------ |
-| `agents/cost-analyst.agent.md`  | cost-analyst  | Performs Azure cost assessments for architectures and requirements |
-| `agents/cost-reviewer.agent.md` | cost-reviewer | Validates cost assessments for accuracy and completeness           |
+| File                           | Name         | Role                                                               |
+| ------------------------------ | ------------ | ------------------------------------------------------------------ |
+| `agents/cost-analyst.agent.md` | cost-analyst | Performs Azure cost assessments for architectures and requirements |
 
 ### cost-analyst
 
 The primary user-facing agent. Invoked when a user provides an architecture, deployment plan, or set of Azure resource requirements and needs a cost estimate. Uses the skill's pricing scripts (`Get-AzurePricing`, `Explore-AzurePricing`) to query the Azure Retail Prices API.
 
-### cost-reviewer
+The agent is a thin orchestration wrapper around `SKILL.md` — it owns intake, service grouping, sub-agent dispatch, and final presentation, but references SKILL.md steps by number rather than reimplementing them. Review checks (arithmetic verification, completeness, consistency, grand total re-sum) are performed inline via SKILL.md Step 9 (Verify).
 
-A quality gate agent invoked by cost-analyst to validate an assessment before presenting it to the user. Checks arithmetic accuracy, completeness, and correct use of pricing data.
-
-### Subagent spawning constraint
-
-The cost-analyst → cost-reviewer dispatch relies on the `Agent` tool (Claude Code) or `task` tool (Copilot CLI). This works when cost-analyst is the **main agent** (e.g., `claude --agent cost-analyst`), but **not** when cost-analyst is itself running as a subagent — subagents cannot spawn other subagents in Claude Code.
-
-| Invocation path                                     | cost-reviewer dispatch | Why                                       |
-| --------------------------------------------------- | ---------------------- | ----------------------------------------- |
-| `claude --agent cost-analyst`                       | Works                  | cost-analyst is the main thread           |
-| User prompt auto-delegates to cost-analyst          | Works                  | cost-analyst is a top-level subagent      |
-| Another agent dispatches cost-analyst as a subagent | **Fails silently**     | Nested subagent spawning is not supported |
-
-**Design implication**: The system prompt for cost-analyst should handle the case where cost-reviewer dispatch fails — either by inlining review checks or by noting that review was skipped.
+> **Removed: cost-reviewer** — Previously planned as a separate quality-gate agent, but was never wired into the workflow. Its 4 checks are covered by SKILL.md Step 9 and the agent's inline Review step. Removed in #469 to eliminate dead code.
 
 ---
 
@@ -116,8 +103,7 @@ There is no single `tools` list that satisfies both platforms. Unknown tool name
 
 **Intended tool scoping** (for future implementation):
 
-- `cost-analyst`: shell execution (pricing scripts), file reading, file searching, agent dispatch (to cost-reviewer)
-- `cost-reviewer`: file reading, file searching only (no shell, no edit — principle of least privilege)
+- `cost-analyst`: shell execution (pricing scripts), file reading, file searching, agent dispatch (for parallel category-group estimation)
 
 ### VS Code parser constraints
 
