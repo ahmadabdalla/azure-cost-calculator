@@ -4,6 +4,13 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.2] - 2026-03-06
+
+### Fixed
+
+- **Plugin manifest**: Removed invalid fields (category, skills, agents, commands paths) from plugin.json that were blocking Claude Code plugin installation
+- **Documentation**: Updated plugin-agents.md to reflect auto-discovery of agents and commands directories
+
 ## [1.2.1] - 2026-03-06
 
 ### Changed
