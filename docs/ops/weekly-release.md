@@ -21,13 +21,17 @@ Every Monday (or on manual trigger), the workflow:
 2. **Skips** the release if no commits are ahead (no-op).
 3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking).
 4. **Determines** the SemVer bump from changelog categories (Breaking → major, Added → minor, else → patch).
-5. **Updates** `.claude-plugin/plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
+5. **Updates** `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
 6. **Creates a draft PR** targeting `main` with title `release: vX.Y.Z`.
 
 The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 
 1. **Creates** a git tag and GitHub Release automatically.
 2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. If there are merge conflicts (or `dev` moved during the release), a PR is created for manual resolution instead.
+
+> **Marketplace versioning policy**
+>
+> `.claude-plugin/marketplace.json` supports optional `metadata.version` and plugin-entry `version` fields. This repository includes both and requires them to stay aligned with `.claude-plugin/plugin.json` on every release. `plugin.json` remains the source of truth; marketplace versions mirror it.
 
 > **Note — Issue auto-closing and the `dev` branch**
 >
@@ -109,6 +113,7 @@ gh run view <run-id> --log-failed
 | No PR created when changes exist    | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                 |
 | Release PR fails validation         | Service reference changes in the release have validation errors | Fix on `dev`, wait for next release or trigger manual dispatch     |
 | Tag already exists                  | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs — it guards against duplicate tags |
+| Release job fails before tag step   | Marketplace versions drift from `.claude-plugin/plugin.json`    | Ensure `.claude-plugin/marketplace.json` `metadata.version` and matching plugin-entry `version` equal `.claude-plugin/plugin.json` |
 | Back-merge fails with conflict      | `dev` diverged from `main` during release                       | A PR is auto-created for manual resolution — merge it              |
 | Back-merge PR creation fails        | Duplicate PR already open from a previous run                   | The step is idempotent — it detects and skips existing PRs         |
 

@@ -45,6 +45,29 @@ jobs:
             exit 1
           fi
 
+      - name: Validate marketplace versions match plugin version
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PLUGIN_NAME=$(jq -er '.name' .claude-plugin/plugin.json)
+
+          MARKETPLACE_METADATA_VERSION=$(jq -er '.metadata.version' .claude-plugin/marketplace.json)
+          if [ "$MARKETPLACE_METADATA_VERSION" != "$VERSION" ]; then
+            echo "::error::.claude-plugin/marketplace.json metadata.version ($MARKETPLACE_METADATA_VERSION) must match plugin version ($VERSION)"
+            exit 1
+          fi
+
+          PLUGIN_MATCH_COUNT=$(jq -er --arg name "$PLUGIN_NAME" '[.plugins[] | select(.name == $name)] | length' .claude-plugin/marketplace.json)
+          if [ "$PLUGIN_MATCH_COUNT" -ne 1 ]; then
+            echo "::error::.claude-plugin/marketplace.json must contain exactly one plugin entry named '$PLUGIN_NAME' (found: $PLUGIN_MATCH_COUNT)"
+            exit 1
+          fi
+
+          MARKETPLACE_PLUGIN_VERSION=$(jq -er --arg name "$PLUGIN_NAME" '.plugins[] | select(.name == $name) | .version' .claude-plugin/marketplace.json)
+          if [ "$MARKETPLACE_PLUGIN_VERSION" != "$VERSION" ]; then
+            echo "::error::.claude-plugin/marketplace.json plugins[$PLUGIN_NAME].version ($MARKETPLACE_PLUGIN_VERSION) must match plugin version ($VERSION)"
+            exit 1
+          fi
+
       - name: Extract changelog for this version
         id: changelog
         run: |

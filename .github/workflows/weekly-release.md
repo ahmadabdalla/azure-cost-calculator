@@ -34,7 +34,7 @@ These constraints are absolute and override all other instructions:
 - **Never** push directly to `main` — only create a pull request.
 - **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
 - **Never** switch away from the initially checked-out branch (`main`). Do not run `git checkout -b ... origin/dev` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
-- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5d).
+- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5e).
 - **Never** fabricate changes — only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -91,6 +91,7 @@ For each relevant changed file, assign a changelog category:
 | `skills/**/USAGE.md`                      | Modified     | `Changed`               | Describe the change                                                                              |
 | `skills/**/scripts/**`                    | Modified     | `Fixed` or `Added`      | Bug fix = `Fixed`, new capability = `Added`                                                      |
 | `.claude-plugin/plugin.json`              | Modified     | (skip)                  | Version file — don't changelog itself                                                            |
+| `.claude-plugin/marketplace.json`         | Modified     | (skip)                  | Marketplace manifest metadata — don't changelog itself                                           |
 | `CHANGELOG.md`                            | Modified     | (skip)                  | Changelog — don't changelog itself                                                               |
 
 ### The "Breaking" litmus test
@@ -104,6 +105,8 @@ Read the current version from `.claude-plugin/plugin.json`:
 ```bash
 cat .claude-plugin/plugin.json | jq -r .version
 ```
+
+`plugin.json` is the version source of truth for this repository. `.claude-plugin/marketplace.json` version fields must always be kept identical to `plugin.json`.
 
 Apply SemVer rules based on the changelog categories you identified:
 
@@ -181,7 +184,14 @@ Update the `"version"` field to the new version.
 
 Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
 
-### 5e. Commit the release edits
+### 5e. Update `.claude-plugin/marketplace.json`
+
+Update these fields to `X.Y.Z`:
+
+- `metadata.version`
+- Plugin entry `version` for `plugins[]` item where `name` matches `.claude-plugin/plugin.json` `name`
+
+### 5f. Commit the release edits
 
 ```bash
 git add -A
