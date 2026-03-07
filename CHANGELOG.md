@@ -4,6 +4,14 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.3] - 2026-03-07
+
+### Fixed
+
+- **Azure Functions**: Added caveat for Flex Consumption non-USD rate inflation when total GB-s exceeds 1M/month — API-published rates may overstate cost by ~4× vs USD-derived rate
+- **Cosmos DB**: Added disambiguation heuristics to clarify PITR (native continuous backup) vs Azure Backup vault backup
+- **Application Insights**: Clarified that when Microsoft Sentinel simplified pricing is enabled on a shared workspace, App Insights ingestion is absorbed into Sentinel meters (no separate charge)
+
 ## [1.2.2] - 2026-03-06
 
 ### Fixed
