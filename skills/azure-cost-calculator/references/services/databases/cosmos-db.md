@@ -13,7 +13,7 @@ privateEndpoint: true
 > **Trap**: The storage meter is `'Data Stored'` (not `'1 GB Data Stored'`). You also need `-ProductName 'Azure Cosmos DB'` and `-SkuName 'RUs'` to filter to the transactional storage meter and avoid free-tier/multi-master variants.
 
 > **Trap (PITR vs Backup vault)**: Cosmos DB native PITR (`productName: Azure Cosmos DB - PITR`) is billed under `serviceName: Azure Cosmos DB` (Databases) at ~9× the per-GB rate of Azure Backup vault storage (`serviceName: Backup`, Storage). If users say "Azure Backup for Cosmos DB", clarify whether they mean native continuous backup (PITR) or vault-based backup — see `storage/backup.md`.
-> **Disambiguation heuristic (if clarification not possible)**: "continuous backup tier", "PITR", "point-in-time restore", "30-day backup" → native Cosmos DB PITR. "Azure Backup vault", "Recovery Services Vault", "backup vault storage" → vault-based backup. If genuinely ambiguous, stop and ask.
+> **Disambiguation heuristic**: "continuous backup tier", "PITR", "point-in-time restore", "30-day backup" → native Cosmos DB PITR. "Azure Backup vault", "Recovery Services Vault", "backup vault storage" → vault-based backup. If genuinely ambiguous, stop and ask.
 
 ## Query Pattern
 
