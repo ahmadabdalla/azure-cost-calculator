@@ -2,18 +2,18 @@
 
 User guide for installing, updating, and removing plugins in **GitHub Copilot CLI** and **Claude Code**.
 
-All commands on this page are **session commands** — run them inside an interactive `copilot` or `claude` session, prefixed with `/`.
+Unless otherwise noted, commands on this page are **session commands** — run them inside an interactive `copilot` or `claude` session, prefixed with `/`.
 
-> **Looking for standalone skills?** See [Standalone Skill Management](standalone-skill-management.md) for installing skills without a plugin.
+> **Looking for standalone skills?** Skills can also be installed without a plugin — see the project README for details.
 
 ---
 
 ## Key concepts
 
-| Concept         | Description                                                                                    |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| **Plugin**      | A package that bundles one or more skills, agents, hooks, MCP servers, or LSP servers.         |
-| **Marketplace** | A catalog of plugins you can browse and install — like an app store.                           |
+| Concept         | Description                                                                                                                                                                                       |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Plugin**      | A package that bundles one or more skills, agents, hooks, MCP servers, or LSP servers.                                                                                                            |
+| **Marketplace** | A catalog of plugins you can browse and install — like an app store.                                                                                                                              |
 | **Scope**       | Where a plugin or skill is available. Both platforms support **personal** (all projects) and **project** (shared via repo) scopes. Claude Code adds a **local** scope (project-only, gitignored). |
 
 ---
@@ -25,24 +25,24 @@ All commands on this page are **session commands** — run them inside an intera
 
 #### Plugin commands
 
-| Action              | Command                            |
-| ------------------- | ---------------------------------- |
-| List installed      | `/plugin list`                     |
+| Action                | Command                            |
+| --------------------- | ---------------------------------- |
+| List installed        | `/plugin list`                     |
 | Install (marketplace) | `/plugin install NAME@MARKETPLACE` |
-| Install (GitHub)    | `/plugin install OWNER/REPO`       |
-| Update one          | `/plugin update NAME`              |
-| Update all          | `/plugin update --all`             |
-| Uninstall           | `/plugin uninstall NAME`           |
+| Install (GitHub)      | `/plugin install OWNER/REPO`       |
+| Update one            | `/plugin update NAME`              |
+| Update all            | `/plugin update --all`             |
+| Uninstall             | `/plugin uninstall NAME`           |
 
 > Copilot CLI uses just the plugin **name** (from `plugin.json`) — no marketplace suffix needed for most commands.
 
 #### Marketplace commands
 
-| Action    | Command                                |
-| --------- | -------------------------------------- |
-| Add       | `/plugin marketplace add OWNER/REPO`   |
-| List      | `/plugin marketplace list`             |
-| Remove    | `/plugin marketplace remove NAME`      |
+| Action | Command                              |
+| ------ | ------------------------------------ |
+| Add    | `/plugin marketplace add OWNER/REPO` |
+| List   | `/plugin marketplace list`           |
+| Remove | `/plugin marketplace remove MARKETPLACE` |
 
 > When **adding** a marketplace you use `OWNER/REPO`. When **removing** you use the marketplace **name** (as shown in the list).
 
@@ -106,11 +106,11 @@ Verify it's gone:
 
 ### Where plugins are stored
 
-| Item              | Path                                                        |
-| ----------------- | ----------------------------------------------------------- |
+| Item                 | Path                                                     |
+| -------------------- | -------------------------------------------------------- |
 | Marketplace installs | `~/.copilot/state/installed-plugins/MARKETPLACE/PLUGIN/` |
-| Direct installs   | `~/.copilot/state/installed-plugins/PLUGIN/`               |
-| Marketplace cache | `~/.copilot/state/marketplace-cache/`                      |
+| Direct installs      | `~/.copilot/state/installed-plugins/PLUGIN/`             |
+| Marketplace cache    | `~/.copilot/state/marketplace-cache/`                    |
 
 ### Further reading
 
@@ -125,35 +125,35 @@ Verify it's gone:
 <details>
 <summary><h2>Claude Code</h2></summary>
 
-### Command reference
+### Claude Code command reference
 
-#### Plugin commands
+#### Claude Code plugin commands
 
-| Action              | Command                                    |
-| ------------------- | ------------------------------------------ |
-| List installed      | `/plugin list`                             |
-| Install             | `/plugin install NAME@MARKETPLACE`         |
-| Update one          | `/plugin update NAME@MARKETPLACE`          |
+| Action                   | Command                                  |
+| ------------------------ | ---------------------------------------- |
+| List installed           | `/plugin list`                           |
+| Install                  | `/plugin install NAME@MARKETPLACE`       |
+| Update one               | `/plugin update NAME@MARKETPLACE`        |
 | Update all (marketplace) | `/plugin marketplace update MARKETPLACE` |
-| Uninstall           | `/plugin uninstall NAME@MARKETPLACE`       |
-| Reload              | `/reload-plugins`                          |
+| Uninstall                | `/plugin uninstall NAME@MARKETPLACE`     |
+| Reload                   | `/reload-plugins`                        |
 
 > Claude Code uses the `name@marketplace` format for plugin commands. Direct install from GitHub (without a marketplace) is **not supported**.
 
 **Shortcuts:** `/plugin market` works in place of `/plugin marketplace`. `rm` works in place of `remove`.
 
-#### Marketplace commands
+#### Claude Code marketplace commands
 
-| Action    | Command                                       |
-| --------- | --------------------------------------------- |
-| Add       | `/plugin marketplace add OWNER/REPO`          |
-| List      | `/plugin marketplace list`                    |
-| Update    | `/plugin marketplace update MARKETPLACE`      |
-| Remove    | `/plugin marketplace remove MARKETPLACE`      |
+| Action | Command                                  |
+| ------ | ---------------------------------------- |
+| Add    | `/plugin marketplace add OWNER/REPO`     |
+| List   | `/plugin marketplace list`               |
+| Update | `/plugin marketplace update MARKETPLACE` |
+| Remove | `/plugin marketplace remove MARKETPLACE` |
 
 > Use `add` / `remove` for **marketplaces**. Use `install` / `uninstall` for **plugins**. The verbs are not interchangeable — `uninstall` silently fails on marketplaces.
 
-### Install a plugin
+### Install a plugin (Claude Code)
 
 **Step 1 — Add the marketplace** (one-time):
 
@@ -180,7 +180,7 @@ Verify it's gone:
 /plugin list         # should show azure-cost-calculator
 ```
 
-### Update a plugin
+### Update a plugin (Claude Code)
 
 Update a single plugin:
 
@@ -194,7 +194,7 @@ Update all plugins from a marketplace:
 /plugin marketplace update acc-plugin
 ```
 
-### Uninstall a plugin
+### Uninstall a plugin (Claude Code)
 
 The uninstall command requires the **exact name including the `@marketplace` suffix**.
 
@@ -209,7 +209,7 @@ Verify it's gone:
 /plugin list         # plugin should be absent
 ```
 
-### Remove a marketplace
+### Remove a marketplace (Claude Code)
 
 ```bash
 /plugin marketplace remove acc-plugin
@@ -217,13 +217,13 @@ Verify it's gone:
 
 > **Important:** `uninstall` does **not** work for marketplaces — it silently fails. Always use `remove`.
 
-### Where plugins are stored
+### Where Claude Code plugins are stored
 
-| Item         | Path                         |
-| ------------ | ---------------------------- |
-| Plugin cache | `~/.claude/plugins/cache/`   |
+| Item         | Path                       |
+| ------------ | -------------------------- |
+| Plugin cache | `~/.claude/plugins/cache/` |
 
-### Further reading
+### Claude Code further reading
 
 - [Plugins reference](https://code.claude.com/docs/en/plugins-reference)
 - [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
