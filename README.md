@@ -26,6 +26,8 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 
 Plugin install pulls from versioned releases with changelog tracking and update control. The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
 
+For the full install/uninstall/update guide, troubleshooting, and standalone skill setup, see [Plugin and Skill Management](docs/plugin-skill-management.md).
+
 ## Usage
 
 Ask about Azure costs in natural language. The skill activates automatically.
