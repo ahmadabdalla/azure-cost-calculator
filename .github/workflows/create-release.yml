@@ -119,34 +119,102 @@ jobs:
       - name: Merge main into dev
         id: merge
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin main dev
-          git reset --hard origin/dev
-          if git merge origin/main --no-edit; then
-            git push origin dev || {
-              echo "::warning::Push rejected (dev moved). Creating PR instead."
-              echo "result=conflict" >> "$GITHUB_OUTPUT"
-              exit 0
-            }
-            echo "result=success" >> "$GITHUB_OUTPUT"
-          else
-            git merge --abort
-            echo "result=conflict" >> "$GITHUB_OUTPUT"
-          fi
+          merge_and_push() {
+            local strategy="$1"
+            git reset --hard origin/dev
+            if [ "$strategy" = "theirs" ]; then
+              if ! git merge origin/main --no-edit -X theirs; then
+                git merge --abort || true
+                return 10
+              fi
+            else
+              if ! git merge origin/main --no-edit; then
+                git merge --abort || true
+                return 10
+              fi
+            fi
+            if ! git push origin HEAD:dev; then
+              return 20
+            fi
+            return 0
+          }
+
+          result="conflict"
+          fallback_reason="unresolved_conflict"
+          for attempt in 1 2 3; do
+            if ! git fetch origin main dev; then
+              echo "::warning::git fetch failed on attempt ${attempt}; retrying..."
+              fallback_reason="fetch_failure"
+              continue
+            fi
+
+            rc=0
+            merge_and_push "normal" || rc=$?
+            if [ "$rc" -eq 0 ]; then
+              echo "::notice::Back-merge completed using default merge strategy."
+              result="success"
+              fallback_reason="none"
+              break
+            fi
+
+            if [ "$rc" -eq 10 ]; then
+              echo "::warning::Default merge conflicted on attempt ${attempt}; retrying with '-X theirs' to keep main authoritative for conflicting hunks."
+              rc=0
+              merge_and_push "theirs" || rc=$?
+              if [ "$rc" -eq 0 ]; then
+                echo "::notice::Back-merge completed using '-X theirs' conflict resolution."
+                result="success"
+                fallback_reason="none"
+                break
+              fi
+            fi
+
+            if [ "$rc" -eq 20 ]; then
+              echo "::warning::Push rejected on attempt ${attempt} (dev moved). Retrying with latest origin/dev."
+              fallback_reason="push_race"
+              continue
+            fi
+
+            fallback_reason="unresolved_conflict"
+            echo "::warning::Back-merge still has unresolved conflicts after automated strategies (rc=${rc})."
+            break
+          done
+
+          echo "result=${result}" >> "$GITHUB_OUTPUT"
+          echo "fallback_reason=${fallback_reason}" >> "$GITHUB_OUTPUT"
 
       - name: Create PR on merge conflict
         if: steps.merge.outputs.result == 'conflict'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          existing_pr="$(gh pr list --base dev --head main --state open --json number --jq '.[0].number')"
+          existing_pr="$(gh pr list --base dev --state open --search "chore: merge main back to dev after release in:title" --json number --jq '.[0].number')"
           if [ -n "$existing_pr" ] && [ "$existing_pr" != "null" ]; then
-            echo "::notice::Back-merge PR already exists: #$existing_pr"
-            exit 0
+            branch_name="$(gh pr view "$existing_pr" --json headRefName --jq '.headRefName')"
+            echo "::notice::Refreshing existing back-merge PR #$existing_pr on ${branch_name}"
+          else
+            branch_name="backmerge-main-to-dev-${{ github.run_id }}"
           fi
-          gh pr create \
-            --base dev \
-            --head main \
-            --title "chore: merge main back to dev after release" \
-            --body "Automated back-merge after release. Merge conflicts need manual resolution."
+          fallback_reason="${{ steps.merge.outputs.fallback_reason }}"
+          if [ "$fallback_reason" = "push_race" ]; then
+            pr_body="Automated back-merge after release. Back-merge push to \`dev\` failed after retries because \`dev\` changed concurrently. No merge conflict is expected; merge this PR to complete synchronization."
+          elif [ "$fallback_reason" = "fetch_failure" ]; then
+            pr_body="Automated back-merge after release. The workflow could not fetch the latest branches reliably after retries, so this PR is opened to complete synchronization manually."
+          else
+            pr_body="Automated back-merge after release. Merge conflicts remained after automated strategies. This PR uses a dedicated back-merge branch so conflict resolutions are not committed to \`main\`."
+          fi
+          git fetch origin main
+          git checkout -B "$branch_name" origin/main
+          git push origin "$branch_name" --force
+          if [ -n "$existing_pr" ] && [ "$existing_pr" != "null" ]; then
+            gh pr edit "$existing_pr" --body "$pr_body"
+          else
+            gh pr create \
+              --base dev \
+              --head "$branch_name" \
+              --title "chore: merge main back to dev after release" \
+              --body "$pr_body"
+          fi

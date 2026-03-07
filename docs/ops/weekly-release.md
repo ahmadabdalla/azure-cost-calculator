@@ -27,7 +27,7 @@ Every Monday (or on manual trigger), the workflow:
 The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 
 1. **Creates** a git tag and GitHub Release automatically.
-2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. If there are merge conflicts (or `dev` moved during the release), a PR is created for manual resolution instead.
+2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. The workflow retries race conditions when `dev` moves and, on conflict, retries with `-X theirs` (favoring `main` for conflicting hunks). If conflict remains, it opens a PR from a dedicated back-merge branch (never from `main`) for manual resolution.
 
 > **Marketplace versioning policy**
 >
@@ -104,17 +104,18 @@ gh run view <run-id> --log-failed
 
 ### Common failure modes
 
-| Symptom                             | Likely cause                                                    | Fix                                                                |
-| ----------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Workflow never triggers             | Edited `.md` but forgot to compile, or changes not on `dev`     | Run `gh aw compile`, merge to `dev`                                |
-| `401 Unauthorized` in agent job     | `COPILOT_GITHUB_TOKEN` expired or revoked                       | Rotate the PAT (see issue-triage ops doc)                          |
-| Agent creates PR with wrong version | Changelog parsing or version detection logic needs tuning       | Edit categorization rules in `weekly-release.md`, recompile        |
-| No PR created when changes exist    | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                 |
-| Release PR fails validation         | Service reference changes in the release have validation errors | Fix on `dev`, wait for next release or trigger manual dispatch     |
-| Tag already exists                  | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs — it guards against duplicate tags |
-| Release job fails before tag step   | Marketplace versions drift from `.claude-plugin/plugin.json`    | Ensure `.claude-plugin/marketplace.json` `metadata.version` and matching plugin-entry `version` equal `.claude-plugin/plugin.json` |
-| Back-merge fails with conflict      | `dev` diverged from `main` during release                       | A PR is auto-created for manual resolution — merge it              |
-| Back-merge PR creation fails        | Duplicate PR already open from a previous run                   | The step is idempotent — it detects and skips existing PRs         |
+| Symptom                                  | Likely cause                                                                  | Fix                                                                                                                                                               |
+| ---------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Workflow never triggers                  | Edited `.md` but forgot to compile, or changes not on `dev`                   | Run `gh aw compile`, merge to `dev`                                                                                                                               |
+| `401 Unauthorized` in agent job          | `COPILOT_GITHUB_TOKEN` expired or revoked                                     | Rotate the PAT (see issue-triage ops doc)                                                                                                                         |
+| Agent creates PR with wrong version      | Changelog parsing or version detection logic needs tuning                     | Edit categorization rules in `weekly-release.md`, recompile                                                                                                       |
+| No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)                      | Check agent logs — may need to adjust ignore rules                                                                                                                |
+| Release PR fails validation              | Service reference changes in the release have validation errors               | Fix on `dev`, wait for next release or trigger manual dispatch                                                                                                    |
+| Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly               | Check `create-release.yml` logs — it guards against duplicate tags                                                                                                |
+| Release job fails before tag step        | Marketplace versions drift from `.claude-plugin/plugin.json`                  | Ensure `.claude-plugin/marketplace.json` `metadata.version` and matching plugin-entry `version` equal `.claude-plugin/plugin.json`                                |
+| Back-merge fails with conflict           | `dev` diverged from `main` and auto-resolution was insufficient               | Resolve the generated back-merge PR (head: `backmerge-main-to-dev-*`) so fixes are not committed to `main`                                                        |
+| Back-merge PR already open               | Previous fallback PR is still open from an earlier run                        | The workflow refreshes the existing PR branch to the latest `main`; review and merge that updated PR                                                              |
+| Manual back-merge PR despite no conflict | Repeated fetch failures or API/permission/rate-limit issues during back-merge | Inspect back-merge logs for fetch/permission errors, retry the workflow, verify runner network and token/rate limits, or merge `backmerge-main-to-dev-*` manually |
 
 ### Job architecture
 
@@ -137,7 +138,7 @@ release → back-merge
 ```
 
 - **release**: Creates a git tag and GitHub Release from the merged PR.
-- **back-merge**: Merges `main` back into `dev` (fast-forward push if clean, PR if conflicts or race condition).
+- **back-merge**: Merges `main` back into `dev`, retries push races, retries conflicts with `-X theirs`, and only then opens a dedicated back-merge PR.
 
 ---
 
