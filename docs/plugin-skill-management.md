@@ -50,8 +50,6 @@ All commands on this page are **session commands** — run them inside an intera
 
 ### Install a plugin
 
-#### Option A — Marketplace install (recommended)
-
 **Step 1 — Add the marketplace** (one-time):
 
 ```bash
@@ -70,16 +68,6 @@ All commands on this page are **session commands** — run them inside an intera
 /skills list     # should show azure-cost-calculator
 /agent           # should show cost-analyst
 ```
-
-#### Option B — Direct install from GitHub
-
-Copilot CLI can install a plugin directly from a GitHub repo without a marketplace:
-
-```bash
-/plugin install ahmadabdalla/azure-cost-calculator
-```
-
-This looks for `plugin.json` in `.github/plugin/` or `.claude-plugin/` at the repo root.
 
 ### Update a plugin
 
@@ -199,8 +187,6 @@ Verify it's gone:
 > Use `add` / `remove` for **marketplaces**. Use `install` / `uninstall` for **plugins**. The verbs are not interchangeable — `uninstall` silently fails on marketplaces.
 
 ### Install a plugin
-
-#### Option A — Marketplace install via commands (recommended)
 
 **Step 1 — Add the marketplace** (one-time):
 
