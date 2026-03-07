@@ -143,9 +143,11 @@ jobs:
           }
 
           result="conflict"
+          fallback_reason="unresolved_conflict"
           for attempt in 1 2 3; do
             if ! git fetch origin main dev; then
               echo "::warning::git fetch failed on attempt ${attempt}; retrying..."
+              fallback_reason="fetch_failure"
               continue
             fi
 
@@ -154,6 +156,7 @@ jobs:
             if [ "$rc" -eq 0 ]; then
               echo "::notice::Back-merge completed using default merge strategy."
               result="success"
+              fallback_reason="none"
               break
             fi
 
@@ -164,20 +167,24 @@ jobs:
               if [ "$rc" -eq 0 ]; then
                 echo "::notice::Back-merge completed using '-X theirs' conflict resolution."
                 result="success"
+                fallback_reason="none"
                 break
               fi
             fi
 
             if [ "$rc" -eq 20 ]; then
               echo "::warning::Push rejected on attempt ${attempt} (dev moved). Retrying with latest origin/dev."
+              fallback_reason="push_race"
               continue
             fi
 
+            fallback_reason="unresolved_conflict"
             echo "::warning::Back-merge still has unresolved conflicts after automated strategies (rc=${rc})."
             break
           done
 
           echo "result=${result}" >> "$GITHUB_OUTPUT"
+          echo "fallback_reason=${fallback_reason}" >> "$GITHUB_OUTPUT"
 
       - name: Create PR on merge conflict
         if: steps.merge.outputs.result == 'conflict'
@@ -189,6 +196,14 @@ jobs:
             echo "::notice::Back-merge PR already exists: #$existing_pr"
             exit 0
           fi
+          fallback_reason="${{ steps.merge.outputs.fallback_reason }}"
+          if [ "$fallback_reason" = "push_race" ]; then
+            pr_body="Automated back-merge after release. Back-merge push to \`dev\` failed after retries because \`dev\` changed concurrently. No merge conflict is expected; merge this PR to complete synchronization."
+          elif [ "$fallback_reason" = "fetch_failure" ]; then
+            pr_body="Automated back-merge after release. The workflow could not fetch the latest branches reliably after retries, so this PR is opened to complete synchronization manually."
+          else
+            pr_body="Automated back-merge after release. Merge conflicts remained after automated strategies. This PR uses a dedicated back-merge branch so conflict resolutions are not committed to \`main\`."
+          fi
           branch_name="backmerge-main-to-dev-${{ github.run_id }}"
           git fetch origin main
           git checkout -B "$branch_name" origin/main
@@ -197,4 +212,4 @@ jobs:
             --base dev \
             --head "$branch_name" \
             --title "chore: merge main back to dev after release" \
-            --body "Automated back-merge after release. This PR uses a dedicated back-merge branch so conflict resolutions are not committed to \`main\`."
+            --body "$pr_body"
