@@ -193,8 +193,10 @@ jobs:
         run: |
           existing_pr="$(gh pr list --base dev --state open --search "chore: merge main back to dev after release in:title" --json number --jq '.[0].number')"
           if [ -n "$existing_pr" ] && [ "$existing_pr" != "null" ]; then
-            echo "::notice::Back-merge PR already exists: #$existing_pr"
-            exit 0
+            branch_name="$(gh pr view "$existing_pr" --json headRefName --jq '.headRefName')"
+            echo "::notice::Refreshing existing back-merge PR #$existing_pr on ${branch_name}"
+          else
+            branch_name="backmerge-main-to-dev-${{ github.run_id }}"
           fi
           fallback_reason="${{ steps.merge.outputs.fallback_reason }}"
           if [ "$fallback_reason" = "push_race" ]; then
@@ -204,12 +206,15 @@ jobs:
           else
             pr_body="Automated back-merge after release. Merge conflicts remained after automated strategies. This PR uses a dedicated back-merge branch so conflict resolutions are not committed to \`main\`."
           fi
-          branch_name="backmerge-main-to-dev-${{ github.run_id }}"
           git fetch origin main
           git checkout -B "$branch_name" origin/main
           git push origin "$branch_name" --force
-          gh pr create \
-            --base dev \
-            --head "$branch_name" \
-            --title "chore: merge main back to dev after release" \
-            --body "$pr_body"
+          if [ -n "$existing_pr" ] && [ "$existing_pr" != "null" ]; then
+            gh pr edit "$existing_pr" --body "$pr_body"
+          else
+            gh pr create \
+              --base dev \
+              --head "$branch_name" \
+              --title "chore: merge main back to dev after release" \
+              --body "$pr_body"
+          fi
