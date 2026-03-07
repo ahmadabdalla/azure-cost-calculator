@@ -11,7 +11,7 @@ privateEndpoint: true
 
 # Application Insights
 
-> **Trap**: Workspace-based Application Insights has no separate cost — all telemetry is billed through Log Analytics. Classic (non-workspace-based) is deprecated.
+> **Trap**: Workspace-based Application Insights has no separate ingestion cost — all telemetry is billed through the Log Analytics workspace. If Microsoft Sentinel is enabled on the workspace (simplified pricing), App Insights ingestion is **absorbed into Sentinel meters** — do NOT add a separate App Insights or Log Analytics ingestion charge; include App Insights GB in Sentinel's `total_IsBillable_GB` instead (see `security/sentinel.md`). Classic (non-workspace-based) is deprecated.
 > **Trap (ingestion free tier)**: The first **5 GB/month** of ingestion is free per Log Analytics billing account (PAYG only). This credit does **not** apply when Sentinel simplified pricing is active on the workspace (default for workspaces created after July 2023), because ingestion shifts to Sentinel meters. Only deduct when Sentinel is NOT enabled or uses classic pricing: `billable_GB = total_GB - 5`.
 > **Trap (retention calculation)**: The first **90 days** of retention are free for Application Insights data (App\* tables). For extended retention, the chargeable window is `max(0, retentionDays - 90)`. At steady-state ingestion of X GB/day, the retained data volume is `X × max(0, retentionDays - 90)`.
 
