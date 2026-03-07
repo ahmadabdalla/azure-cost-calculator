@@ -11,6 +11,8 @@ privateEndpoint: true
 # Azure Functions
 
 > **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Always query in the user's target currency first — if the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can be ~2× the direct FX conversion, e.g. AUD 0.0001 vs ~0.00005 from manual conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Always explain the free grant deduction.
+>
+> **Caveat (Flex Consumption AUD inflation)**: For Flex Consumption On Demand Execution Time, the published AUD rate (`0.0001/GB-s`) is the API's minimum non-zero value — at high volumes (millions of GB-s) this can overstate cost by ~4× vs the USD-derived rate. If the estimate uses **more than 1M GB-s/month** in a non-USD currency, also derive the rate from USD using [regions-and-currencies.md](../../regions-and-currencies.md) and report both values with a caveat that the API-published rate may be rounded up.
 
 ## Query Pattern
 
