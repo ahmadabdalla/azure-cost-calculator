@@ -44,7 +44,6 @@ All commands on this page are **session commands** — run them inside an intera
 | --------- | -------------------------------------- |
 | Add       | `/plugin marketplace add OWNER/REPO`   |
 | List      | `/plugin marketplace list`             |
-| Browse    | `/plugin marketplace browse NAME`      |
 | Remove    | `/plugin marketplace remove NAME`      |
 
 > When **adding** a marketplace you use `OWNER/REPO`. When **removing** you use the marketplace **name** (as shown in the list).
@@ -175,7 +174,7 @@ Verify it's gone:
 
 | Action              | Command                                    |
 | ------------------- | ------------------------------------------ |
-| List / manage       | `/plugin` → **Installed** tab              |
+| List installed      | `/plugin list`                             |
 | Install             | `/plugin install NAME@MARKETPLACE`         |
 | Update one          | `/plugin update NAME@MARKETPLACE`          |
 | Update all (marketplace) | `/plugin marketplace update MARKETPLACE` |
@@ -225,19 +224,8 @@ Verify it's gone:
 
 ```bash
 /reload-plugins
-/plugin              # → Installed tab — should show azure-cost-calculator
+/plugin list         # should show azure-cost-calculator
 ```
-
-> **Scope:** When installing via the interactive UI, you can choose **User** (all projects, default), **Project** (shared via repo), or **Local** (gitignored). Command-line installs default to `user` scope.
-
-#### Option B — Interactive UI
-
-1. Run `/plugin`
-2. Go to the **Discover** tab
-3. Select a plugin and press **Enter**
-4. Choose scope: **User**, **Project**, or **Local**
-
-The plugin manager has four tabs: **Discover** (browse/install), **Installed** (manage), **Marketplaces** (add/remove sources), and **Errors** (loading issues).
 
 ### Update a plugin
 
@@ -253,8 +241,6 @@ Update all plugins from a marketplace:
 /plugin marketplace update acc-plugin
 ```
 
-Or use the interactive UI: `/plugin` → **Installed** tab → select plugin → **Update**.
-
 ### Disable / Enable
 
 ```bash
@@ -269,14 +255,14 @@ A disabled plugin stays on disk but its skills, agents, hooks, and MCP servers a
 The uninstall command requires the **exact name including the `@marketplace` suffix**.
 
 ```bash
-/plugin              # → Installed tab — note the exact name
+/plugin list         # find the exact name including @marketplace suffix
 /plugin uninstall azure-cost-calculator@acc-plugin
 ```
 
 Verify it's gone:
 
 ```bash
-/plugin              # → Installed tab — plugin should be absent
+/plugin list         # plugin should be absent
 ```
 
 ### Remove a marketplace
@@ -301,7 +287,7 @@ Verify it's gone:
 
 1. **Run `/reload-plugins`** to hot-reload without restarting.
 2. **Restart the session** if reload doesn't help.
-3. **Check the plugin is enabled** in the **Installed** tab.
+3. **Check the plugin is enabled:** `/plugin list` — look for a "disabled" indicator.
 4. **Name conflicts.** Project-level skills override plugin skills with the same name.
 5. **Clear the cache** if reinstalling doesn't help:
    ```bash
