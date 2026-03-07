@@ -32,8 +32,6 @@ All commands on this page are **session commands** — run them inside an intera
 | Install (GitHub)    | `/plugin install OWNER/REPO`       |
 | Update one          | `/plugin update NAME`              |
 | Update all          | `/plugin update --all`             |
-| Disable             | `/plugin disable NAME`             |
-| Enable              | `/plugin enable NAME`              |
 | Uninstall           | `/plugin uninstall NAME`           |
 
 > Copilot CLI uses just the plugin **name** (from `plugin.json`) — no marketplace suffix needed for most commands.
@@ -80,17 +78,6 @@ Or update all installed plugins:
 ```bash
 /plugin update --all
 ```
-
-### Disable / Enable
-
-Temporarily disable a plugin without removing it:
-
-```bash
-/plugin disable azure-cost-calculator
-/plugin enable azure-cost-calculator    # re-enable later
-```
-
-A disabled plugin stays on disk but its skills, agents, hooks, and MCP servers are not loaded.
 
 ### Uninstall a plugin
 
@@ -166,8 +153,6 @@ Verify it's gone:
 | Install             | `/plugin install NAME@MARKETPLACE`         |
 | Update one          | `/plugin update NAME@MARKETPLACE`          |
 | Update all (marketplace) | `/plugin marketplace update MARKETPLACE` |
-| Disable             | `/plugin disable NAME@MARKETPLACE`         |
-| Enable              | `/plugin enable NAME@MARKETPLACE`          |
 | Uninstall           | `/plugin uninstall NAME@MARKETPLACE`       |
 | Reload              | `/reload-plugins`                          |
 
@@ -226,15 +211,6 @@ Update all plugins from a marketplace:
 ```bash
 /plugin marketplace update acc-plugin
 ```
-
-### Disable / Enable
-
-```bash
-/plugin disable azure-cost-calculator@acc-plugin
-/plugin enable azure-cost-calculator@acc-plugin    # re-enable later
-```
-
-A disabled plugin stays on disk but its skills, agents, hooks, and MCP servers are not loaded.
 
 ### Uninstall a plugin
 
