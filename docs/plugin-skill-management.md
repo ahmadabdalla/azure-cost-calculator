@@ -112,24 +112,6 @@ Verify it's gone:
 | Direct installs   | `~/.copilot/state/installed-plugins/PLUGIN/`               |
 | Marketplace cache | `~/.copilot/state/marketplace-cache/`                      |
 
-### Troubleshooting
-
-**`/plugin` not recognised** — Upgrade: `brew upgrade copilot-cli` or re-run the install script.
-
-**Plugin installed but skill/agent not appearing:**
-
-1. **Restart the session.** Skills and agents are loaded at session start.
-2. **Check the plugin is enabled:** `/plugin list` — look for a "disabled" indicator.
-3. **Name conflicts.** Project-level skills override plugin skills with the same name. Use `/skills info` to see which is active.
-4. **Re-install to refresh cache:** `/plugin install azure-cost-calculator@acc-plugin`
-
-**Uninstall fails with "plugin not found":**
-
-| What you typed | Why it failed | Correct command |
-| -------------- | ------------- | --------------- |
-| `/plugin uninstall ahmadabdalla/azure-cost-calculator` | Used repo path, not plugin name | `/plugin uninstall azure-cost-calculator` |
-| `/plugin uninstall Azure-Cost-Calculator` | Name is case-sensitive | `/plugin uninstall azure-cost-calculator` |
-
 ### Further reading
 
 - [Plugin reference](https://docs.github.com/en/copilot/reference/cli-plugin-reference)
@@ -240,35 +222,6 @@ Verify it's gone:
 | Item         | Path                         |
 | ------------ | ---------------------------- |
 | Plugin cache | `~/.claude/plugins/cache/`   |
-
-### Troubleshooting
-
-**`/plugin` not recognised** — Update to v1.0.33+: `brew upgrade claude-code` or `npm update -g @anthropic-ai/claude-code`.
-
-**Plugin installed but skill/agent not appearing:**
-
-1. **Run `/reload-plugins`** to hot-reload without restarting.
-2. **Restart the session** if reload doesn't help.
-3. **Check the plugin is enabled:** `/plugin list` — look for a "disabled" indicator.
-4. **Name conflicts.** Project-level skills override plugin skills with the same name.
-5. **Clear the cache** if reinstalling doesn't help:
-   ```bash
-   rm -rf ~/.claude/plugins/cache
-   ```
-   Then restart Claude Code and reinstall the plugin.
-
-**Uninstall fails with "plugin not found":**
-
-| What you typed | Why it failed | Correct command |
-| -------------- | ------------- | --------------- |
-| `/plugin uninstall azure-cost-calculator` | Missing `@marketplace` suffix | `/plugin uninstall azure-cost-calculator@acc-plugin` |
-| `/plugin uninstall Azure-Cost-Calculator@acc-plugin` | Name is case-sensitive | `/plugin uninstall azure-cost-calculator@acc-plugin` |
-
-**Marketplace not loading:**
-
-- Verify the repo is accessible: `gh repo view ahmadabdalla/azure-cost-calculator`
-- Check that `.claude-plugin/marketplace.json` exists in the repo
-- Try `/plugin marketplace remove acc-plugin` then re-add it
 
 ### Further reading
 
