@@ -32,22 +32,22 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 Ask about Azure costs in natural language — the skill activates automatically. No configuration needed.
 
 <details open>
-<summary><strong>🟢 Quick Price Checks</strong> — just ask</summary>
+<summary><strong>Quick Price Checks</strong> — just ask</summary>
 
 <br>
 
 The simplest way to use the skill. Ask any Azure pricing question as you normally would:
 
 ```
-How much does a D4s v5 VM cost per month in East US?
-What's the cheapest option for a managed PostgreSQL database?
-Estimate a Standard_B2s VM with a P30 managed disk in Australia East in AUD
+How much does an Azure D4s v5 VM cost per month in East US?
+What's the cheapest Azure managed PostgreSQL option and how much does it cost?
+Estimate the Azure cost of a Standard_B2s VM with a P30 managed disk in Australia East in AUD
 ```
 
 Not sure where to start?
 
 ```
-I'm planning an Azure deployment — what should I think about for cost estimation?
+I'm planning an Azure deployment — what should I think about for Azure cost estimation?
 ```
 
 The agent walks you through the key parameters that affect pricing accuracy.
@@ -55,30 +55,29 @@ The agent walks you through the key parameters that affect pricing accuracy.
 </details>
 
 <details>
-<summary><strong>🔵 Comparing & Combining Services</strong> — get specific</summary>
+<summary><strong>Comparing & Combining Services</strong> — get specific</summary>
 
 <br>
 
 Compare tiers, combine multiple services, or estimate in any currency and region:
 
 ```
-Compare App Service Basic vs Standard vs Premium for a production web app
-What's the cost of a General Purpose SQL Database with 4 vCores in West Europe in EUR?
+Compare Azure App Service Basic vs Standard vs Premium costs for a production web app
+What's the Azure cost of a General Purpose SQL Database with 4 vCores in West Europe in EUR?
 How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
-Estimate 3 D4s_v5 VMs with P30 disks and a Standard load balancer in UK South in GBP
+Estimate the Azure cost of 3 D4s_v5 VMs with P30 disks and a Standard load balancer in UK South in GBP
 ```
 
-You can also use the **slash command** or **agent** for direct estimates:
+You can also use the **slash command** for direct estimates:
 
-| Platform        | Example                                                                       |
-| --------------- | ----------------------------------------------------------------------------- |
-| **Claude Code** | `/estimate-cost 2x Standard_B2s Linux VMs with P30 disks in East US`          |
-| **Copilot CLI** | `@cost-analyst estimate 2x Standard_B2s Linux VMs with P30 disks in East US`  |
+```
+/estimate-cost 2x Standard_B2s Linux VMs with P30 managed disks in Australia East in AUD
+```
 
 </details>
 
 <details>
-<summary><strong>🟣 Full Architecture Analysis</strong> — estimate complete deployments</summary>
+<summary><strong>Full Architecture Analysis</strong> — estimate complete deployments</summary>
 
 <br>
 
@@ -87,7 +86,7 @@ For larger architectures, describe your setup inline or point to a file.
 **Inline — natural language:**
 
 ```
-I'd like a cost analysis on this Azure architecture:
+I'd like an Azure cost analysis on this architecture:
 
   Web Tier:  2× D2s_v5 Linux VMs with P30 disks
   App Tier:  2× D4s_v5 Linux VMs with P30 disks
@@ -98,19 +97,18 @@ I'd like a cost analysis on this Azure architecture:
 
 **File reference — point to a markdown file with your architecture:**
 
-| Platform        | Example                             |
-| --------------- | ----------------------------------- |
-| **Claude Code** | `/estimate-cost @arch.md`           |
-| **Copilot CLI** | `@cost-analyst estimate @arch.md`   |
+```
+/estimate-cost @arch.md
+```
 
 **Ready-to-use examples** — these architecture files are included with the skill and demonstrate well-specified prompts that produce consistent results:
 
-| Example | Services |
-| ------- | -------- |
-| [3-Tier Web App](skills/azure-cost-calculator/references/examples/3-tier-web-app.md) | VMs, Managed Disks, SQL MI |
-| [Event-Driven Serverless](skills/azure-cost-calculator/references/examples/event-driven-serverless.md) | Functions, Event Grid, Service Bus, Cosmos DB, Sentinel |
-| [Data Analytics Platform](skills/azure-cost-calculator/references/examples/data-analytics-platform.md) | Databricks, Synapse, Event Hubs, Data Lake, VMs |
-| [Security & Observability](skills/azure-cost-calculator/references/examples/security-observability-platform.md) | Sentinel, Firewall, DDoS, Front Door WAF, Key Vault |
+| Example                                                                                                         | Services                                                |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [3-Tier Web App](skills/azure-cost-calculator/references/examples/3-tier-web-app.md)                            | VMs, Managed Disks, SQL MI                              |
+| [Event-Driven Serverless](skills/azure-cost-calculator/references/examples/event-driven-serverless.md)          | Functions, Event Grid, Service Bus, Cosmos DB, Sentinel |
+| [Data Analytics Platform](skills/azure-cost-calculator/references/examples/data-analytics-platform.md)          | Databricks, Synapse, Event Hubs, Data Lake, VMs         |
+| [Security & Observability](skills/azure-cost-calculator/references/examples/security-observability-platform.md) | Sentinel, Firewall, DDoS, Front Door WAF, Key Vault     |
 
 Copy any example, modify it for your environment, and pass it to the agent. For tips on writing prompts that minimise cost variance, see the [Usage Guide](skills/azure-cost-calculator/USAGE.md).
 
@@ -139,15 +137,13 @@ References load on demand, keeping token usage low even for 10+ service estimate
 
 ## Supported Services
 
-210+ Azure services are mapped across 18 categories (Compute, Databases, Networking, Storage, Security, Monitoring, Integration, AI + ML, and more). 110+ services have full reference files with documented query patterns. For services without a reference file, the skill includes an exploration script that searches the live API to find the right filters automatically.
+210+ Azure services mapped across 18 categories. 110+ have full reference files with pre-verified query patterns. Services without a reference file still work — the skill discovers the right API filters automatically.
 
-### Found a Gap? Open an Issue
-
-If you query a service and the skill falls back to discovery mode, that's a signal we're missing a reference file. **Please [open an issue](../../issues/new)** with the service name rather than accepting the best-effort result. Even if the estimate looked correct this time, the next user (or the next API change) may not get the same result. Issues help us prioritise which reference files to add next.
+Missing a service? **[Open an issue](../../issues/new)** so we can add a reference file for it.
 
 ## Prerequisites
 
-- **Bash** with `curl` and `jq` (macOS/Linux, preferred), **or** **PowerShell 7+** (`pwsh`) — [install on Windows/macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell). Windows ships with PowerShell 5.1 (`powershell.exe`) which is **not** the same as `pwsh`; you must install PowerShell 7 separately.
+- **Bash** with `curl` and `jq`, **or** **PowerShell** (5.1+ or 7+)
 - Internet access to `https://prices.azure.com`
 - No Azure subscription or authentication required
 
