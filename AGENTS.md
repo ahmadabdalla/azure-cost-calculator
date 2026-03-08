@@ -1,6 +1,6 @@
 # Azure Cost Calculator Skill
 
-AI agent skill for real-time Azure cost estimation using the Azure Retail Prices API.
+AI agent plugin for real-time Azure cost estimation using the Azure Retail Prices API.
 
 ## Repository layout
 
