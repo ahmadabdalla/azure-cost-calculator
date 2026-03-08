@@ -95,43 +95,7 @@ jobs:
         env:
           DIFF_BASE: ${{ github.event.pull_request.base.sha }}
           DIFF_HEAD: ${{ github.event.pull_request.head.sha }}
-        run: |
-          # Stop on errors; treat unset variables as errors.
-          set -euo pipefail
-
-          # List .md files added/changed/modified/renamed/deleted under services/
-          # "|| true" prevents an error when nothing matches.
-          SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
-            "$DIFF_BASE" "$DIFF_HEAD" \
-            -- "$SERVICES_ROOT/" \
-            | grep '\.md$' || true)
-
-          # List any changed infrastructure files
-          INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \
-            "$DIFF_BASE" "$DIFF_HEAD" \
-            -- 'tests/' \
-               'docs/TEMPLATE.md' \
-               'skills/azure-cost-calculator/references/service-routing.md' \
-               'docs/service-catalog.md' \
-            || true)
-
-          # Write results so the next steps can read them.
-          # "-n" means "not empty".
-          if [ -n "$INFRA_CHANGED" ]; then
-            echo "infra_changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "infra_changed=false" >> "$GITHUB_OUTPUT"
-          fi
-
-          if [ -n "$SERVICE_CHANGED" ]; then
-            echo "service_changed=true" >> "$GITHUB_OUTPUT"
-            # Pass the file list as a multi-line output.
-            echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$SERVICE_CHANGED" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
-          else
-            echo "service_changed=false" >> "$GITHUB_OUTPUT"
-          fi
+        run: .github/scripts/validate/detect-change-scope.sh
 
       # --- Step 3a: Validate only the changed service files ---
       # Runs when service files changed BUT infrastructure did NOT.
@@ -141,21 +105,11 @@ jobs:
         env:
           CHANGED_FILES: ${{ steps.changed.outputs.all_changed_files }}
         run: |
-          # Split the multi-line string into an array, keep only files that exist
-          $files = $env:CHANGED_FILES -split "`n" |
-            Where-Object { $_ -and (Test-Path $_) }
-
-          if ($files.Count -eq 0) {
-            Write-Output "No service reference files to validate."
-            exit 0
-          }
-
-          Write-Output "Validating $($files.Count) changed file(s):"
-          $files | ForEach-Object { Write-Output "  - $_" }
-          Write-Output ""
-
-          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
-            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+          .github/scripts/validate/Invoke-Validation.ps1 `
+            -Mode ChangedOnly `
+            -ChangedFiles $env:CHANGED_FILES `
+            -ServicesRoot $env:SERVICES_ROOT `
+            -ValidationScript $env:VALIDATION_SCRIPT
 
       # --- Step 3b: Validate ALL service files ---
       # Runs when infrastructure files changed (tests, template, etc.)
@@ -164,20 +118,10 @@ jobs:
         if: steps.filter.outputs.relevant == 'true' && steps.changed.outputs.infra_changed == 'true'
         shell: pwsh
         run: |
-          # Collect every .md file under the services folder
-          $files = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
-            Select-Object -ExpandProperty FullName
-
-          if ($files.Count -eq 0) {
-            Write-Output "No service reference files found."
-            exit 0
-          }
-
-          Write-Output "Infrastructure files changed — validating all $($files.Count) service reference file(s)."
-          Write-Output ""
-
-          & $env:VALIDATION_SCRIPT -Path $files -ServicesRoot $env:SERVICES_ROOT `
-            -CheckAliasUniqueness -CheckAliasRoutingSync -CheckBillingNeeds -CheckRoutingFileSync
+          .github/scripts/validate/Invoke-Validation.ps1 `
+            -Mode Full `
+            -ServicesRoot $env:SERVICES_ROOT `
+            -ValidationScript $env:VALIDATION_SCRIPT
 
       # --- Step 4: Routing sync (fallback) ---
       # Steps 3a and 3b already include -CheckRoutingFileSync,
@@ -191,9 +135,7 @@ jobs:
         if: steps.filter.outputs.relevant == 'true' && steps.changed.outputs.service_changed == 'false' && steps.changed.outputs.infra_changed == 'false'
         shell: pwsh
         run: |
-          $anyFile = Get-ChildItem -Path $env:SERVICES_ROOT -Filter '*.md' -Recurse |
-            Select-Object -First 1 -ExpandProperty FullName
-
-          if ($anyFile) {
-            & $env:VALIDATION_SCRIPT -Path $anyFile -ServicesRoot $env:SERVICES_ROOT -CheckRoutingFileSync
-          }
+          .github/scripts/validate/Invoke-Validation.ps1 `
+            -Mode RoutingSyncOnly `
+            -ServicesRoot $env:SERVICES_ROOT `
+            -ValidationScript $env:VALIDATION_SCRIPT
