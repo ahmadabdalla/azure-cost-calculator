@@ -29,21 +29,92 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 
 ## Usage
 
-Ask about Azure costs in natural language. The skill activates automatically.
+Ask about Azure costs in natural language — the skill activates automatically. No configuration needed.
+
+<details open>
+<summary><strong>🟢 Quick Price Checks</strong> — just ask</summary>
+
+<br>
+
+The simplest way to use the skill. Ask any Azure pricing question as you normally would:
 
 ```
 How much does a D4s v5 VM cost per month in East US?
-Compare App Service pricing tiers for a production web app
+What's the cheapest option for a managed PostgreSQL database?
 Estimate a Standard_B2s VM with a P30 managed disk in Australia East in AUD
-What's the cost of a General Purpose SQL Database with 4 vCores in West Europe in EUR?
-How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 ```
 
-**Planning a larger architecture?** Start with:
+Not sure where to start?
 
-> _I'd like to perform a cost analysis on an Azure architecture. What do I need to consider to get consistent results?_
+```
+I'm planning an Azure deployment — what should I think about for cost estimation?
+```
 
-The agent will walk you through the key parameters that affect pricing accuracy. For the full guide on writing prompts that produce deterministic estimates, see the [Usage Guide](skills/azure-cost-calculator/USAGE.md).
+The agent walks you through the key parameters that affect pricing accuracy.
+
+</details>
+
+<details>
+<summary><strong>🔵 Comparing & Combining Services</strong> — get specific</summary>
+
+<br>
+
+Compare tiers, combine multiple services, or estimate in any currency and region:
+
+```
+Compare App Service Basic vs Standard vs Premium for a production web app
+What's the cost of a General Purpose SQL Database with 4 vCores in West Europe in EUR?
+How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
+Estimate 3 D4s_v5 VMs with P30 disks and a Standard load balancer in UK South in GBP
+```
+
+You can also use the **slash command** or **agent** for direct estimates:
+
+| Platform        | Example                                                                       |
+| --------------- | ----------------------------------------------------------------------------- |
+| **Claude Code** | `/estimate-cost 2x Standard_B2s Linux VMs with P30 disks in East US`          |
+| **Copilot CLI** | `@cost-analyst estimate 2x Standard_B2s Linux VMs with P30 disks in East US`  |
+
+</details>
+
+<details>
+<summary><strong>🟣 Full Architecture Analysis</strong> — estimate complete deployments</summary>
+
+<br>
+
+For larger architectures, describe your setup inline or point to a file.
+
+**Inline — natural language:**
+
+```
+I'd like a cost analysis on this Azure architecture:
+
+  Web Tier:  2× D2s_v5 Linux VMs with P30 disks
+  App Tier:  2× D4s_v5 Linux VMs with P30 disks
+  Data Tier: 1× SQL Managed Instance, General Purpose, 8 vCores, 256 GB
+
+  Region: East US | Currency: USD | Commitment: Pay-As-You-Go
+```
+
+**File reference — point to a markdown file with your architecture:**
+
+| Platform        | Example                             |
+| --------------- | ----------------------------------- |
+| **Claude Code** | `/estimate-cost @arch.md`           |
+| **Copilot CLI** | `@cost-analyst estimate @arch.md`   |
+
+**Ready-to-use examples** — these architecture files are included with the skill and demonstrate well-specified prompts that produce consistent results:
+
+| Example | Services |
+| ------- | -------- |
+| [3-Tier Web App](skills/azure-cost-calculator/references/examples/3-tier-web-app.md) | VMs, Managed Disks, SQL MI |
+| [Event-Driven Serverless](skills/azure-cost-calculator/references/examples/event-driven-serverless.md) | Functions, Event Grid, Service Bus, Cosmos DB, Sentinel |
+| [Data Analytics Platform](skills/azure-cost-calculator/references/examples/data-analytics-platform.md) | Databricks, Synapse, Event Hubs, Data Lake, VMs |
+| [Security & Observability](skills/azure-cost-calculator/references/examples/security-observability-platform.md) | Sentinel, Firewall, DDoS, Front Door WAF, Key Vault |
+
+Copy any example, modify it for your environment, and pass it to the agent. For tips on writing prompts that minimise cost variance, see the [Usage Guide](skills/azure-cost-calculator/USAGE.md).
+
+</details>
 
 ## How It Works
 
