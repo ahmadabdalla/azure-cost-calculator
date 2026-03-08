@@ -5,11 +5,11 @@
 # build if any Error or Warning diagnostics are found.
 #
 # Parameters:
-#   -TargetPath  (string, required) — path to analyze
+#   -TargetPath  (string, required) -- path to analyze
 #
 # Exit codes:
-#   0 — no errors or warnings
-#   1 — one or more Error/Warning diagnostics found
+#   0 -- no errors or warnings
+#   1 -- one or more Error/Warning diagnostics found
 # ---------------------------------------------------------
 
 param(

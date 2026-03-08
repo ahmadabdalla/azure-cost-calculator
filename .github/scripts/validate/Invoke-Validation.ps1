@@ -81,7 +81,7 @@ switch ($Mode) {
             exit 0
         }
 
-        Write-Output "Infrastructure files changed — validating all $($files.Count) service reference file(s)."
+        Write-Output "Infrastructure files changed -- validating all $($files.Count) service reference file(s)."
         Write-Output ""
 
         & $ValidationScript -Path $files -ServicesRoot $ServicesRoot `
@@ -97,7 +97,7 @@ switch ($Mode) {
             Write-Output "Running routing-sync check using: $anyFile"
             & $ValidationScript -Path $anyFile -ServicesRoot $ServicesRoot -CheckRoutingFileSync
         } else {
-            Write-Output "No service reference files found — skipping routing sync check."
+            Write-Output "No service reference files found -- skipping routing sync check."
         }
     }
 }
