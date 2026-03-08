@@ -32,7 +32,7 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 Ask about Azure costs in natural language — the skill activates automatically. No configuration needed.
 
 <details open>
-<summary><strong>Quick Price Checks</strong> — just ask</summary>
+<summary><strong>▪️ Quick Price Checks</strong> — just ask</summary>
 
 <br>
 
@@ -54,7 +54,7 @@ The agent walks you through the key parameters that affect pricing accuracy.
 </details>
 
 <details>
-<summary><strong>Comparing & Combining Services</strong> — get specific</summary>
+<summary><strong>▪️▪️ Comparing & Combining Services</strong> — get specific</summary>
 
 <br>
 
@@ -76,7 +76,7 @@ You can also use the **slash command** for direct estimates (available when inst
 </details>
 
 <details>
-<summary><strong>Full Architecture Analysis</strong> — estimate complete deployments</summary>
+<summary><strong>▪️▪️▪️ Full Architecture Analysis</strong> — estimate complete deployments</summary>
 
 <br>
 
