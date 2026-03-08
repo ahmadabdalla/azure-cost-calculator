@@ -11,10 +11,9 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 **Marketplace-first install (recommended on both platforms)**
 
 ```bash
-/plugin marketplace add ahmadabdalla/azure-cost-calculator
-/plugin install azure-cost-calculator@acc-plugin
+/plugin marketplace add ahmadabdalla/plugins
+/plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
-
 
 **npx** (works with any agent):
 

@@ -21,7 +21,7 @@ Every Monday (or on manual trigger), the workflow:
 2. **Skips** the release if no commits are ahead (no-op).
 3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking).
 4. **Determines** the SemVer bump from changelog categories (Breaking → major, Added → minor, else → patch).
-5. **Updates** `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
+5. **Updates** `.claude-plugin/plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
 6. **Creates a draft PR** targeting `main` with title `release: vX.Y.Z`.
 
 The maintainer reviews and merges the PR. On merge, `create-release.yml`:
@@ -29,9 +29,6 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 1. **Creates** a git tag and GitHub Release automatically.
 2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. The workflow retries race conditions when `dev` moves and, on conflict, retries with `-X theirs` (favoring `main` for conflicting hunks). If conflict remains, it opens a PR from a dedicated back-merge branch (never from `main`) for manual resolution.
 
-> **Marketplace versioning policy**
->
-> `.claude-plugin/marketplace.json` supports optional `metadata.version` and plugin-entry `version` fields. This repository includes both and requires them to stay aligned with `.claude-plugin/plugin.json` on every release. `plugin.json` remains the source of truth; marketplace versions mirror it.
 > **Note — Issue auto-closing and the `dev` branch**
 >
 > GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
@@ -112,7 +109,7 @@ gh run view <run-id> --log-failed
 | No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)                      | Check agent logs — may need to adjust ignore rules                                                                                                                |
 | Release PR fails validation              | Service reference changes in the release have validation errors               | Fix on `dev`, wait for next release or trigger manual dispatch                                                                                                    |
 | Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly               | Check `create-release.yml` logs — it guards against duplicate tags                                                                                                |
-| Release job fails before tag step        | Marketplace versions drift from `.claude-plugin/plugin.json`                  | Ensure `.claude-plugin/marketplace.json` `metadata.version` and matching plugin-entry `version` equal `.claude-plugin/plugin.json`                                |
+| Release job fails before tag step        | Version in `.claude-plugin/plugin.json` wasn't bumped correctly               | Check `create-release.yml` logs — it guards against duplicate tags                                                                                                |
 | Back-merge fails with conflict           | `dev` diverged from `main` and auto-resolution was insufficient               | Resolve the generated back-merge PR (head: `backmerge-main-to-dev-*`) so fixes are not committed to `main`                                                        |
 | Back-merge PR already open               | Previous fallback PR is still open from an earlier run                        | The workflow refreshes the existing PR branch to the latest `main`; review and merge that updated PR                                                              |
 | Manual back-merge PR despite no conflict | Repeated fetch failures or API/permission/rate-limit issues during back-merge | Inspect back-merge logs for fetch/permission errors, retry the workflow, verify runner network and token/rate limits, or merge `backmerge-main-to-dev-*` manually |

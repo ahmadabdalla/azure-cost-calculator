@@ -3,9 +3,6 @@
 User guide for installing, updating, and removing plugins in **GitHub Copilot CLI** and **Claude Code**.
 
 Unless otherwise noted, commands on this page are **session commands** — run them inside an interactive `copilot` or `claude` session, prefixed with `/`.
-
-> **Looking for standalone skills?** Skills can also be installed without a plugin — see the project README for details.
-
 ---
 
 ## Key concepts
@@ -38,10 +35,10 @@ Unless otherwise noted, commands on this page are **session commands** — run t
 
 #### Marketplace commands
 
-| Action | Command                              |
-| ------ | ------------------------------------ |
-| Add    | `/plugin marketplace add OWNER/REPO` |
-| List   | `/plugin marketplace list`           |
+| Action | Command                                  |
+| ------ | ---------------------------------------- |
+| Add    | `/plugin marketplace add OWNER/REPO`     |
+| List   | `/plugin marketplace list`               |
 | Remove | `/plugin marketplace remove MARKETPLACE` |
 
 > When **adding** a marketplace you use `OWNER/REPO`. When **removing** you use the marketplace **name** (as shown in the list).
@@ -51,13 +48,13 @@ Unless otherwise noted, commands on this page are **session commands** — run t
 **Step 1 — Add the marketplace** (one-time):
 
 ```bash
-/plugin marketplace add ahmadabdalla/azure-cost-calculator
+/plugin marketplace add ahmadabdalla/plugins
 ```
 
 **Step 2 — Install the plugin:**
 
 ```bash
-/plugin install azure-cost-calculator@acc-plugin
+/plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
 **Step 3 — Restart the session** to load the new plugin, then verify:
@@ -99,7 +96,7 @@ Verify it's gone:
 ### Remove a marketplace
 
 ```bash
-/plugin marketplace remove acc-plugin
+/plugin marketplace remove ahmadabdalla-plugins
 ```
 
 > If plugins from that marketplace are still installed, the command fails. Add `--force` to remove the marketplace and uninstall all its plugins.
@@ -158,19 +155,19 @@ Verify it's gone:
 **Step 1 — Add the marketplace** (one-time):
 
 ```bash
-/plugin marketplace add ahmadabdalla/azure-cost-calculator
+/plugin marketplace add ahmadabdalla/plugins
 ```
 
 **Step 2 — Update the marketplace index:**
 
 ```bash
-/plugin marketplace update acc-plugin
+/plugin marketplace update ahmadabdalla-plugins
 ```
 
 **Step 3 — Install the plugin:**
 
 ```bash
-/plugin install azure-cost-calculator@acc-plugin
+/plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
 **Step 4 — Reload and verify:**
@@ -185,13 +182,13 @@ Verify it's gone:
 Update a single plugin:
 
 ```bash
-/plugin update azure-cost-calculator@acc-plugin
+/plugin update azure-cost-calculator@ahmadabdalla-plugins
 ```
 
 Update all plugins from a marketplace:
 
 ```bash
-/plugin marketplace update acc-plugin
+/plugin marketplace update ahmadabdalla-plugins
 ```
 
 ### Uninstall a plugin (Claude Code)
@@ -200,7 +197,7 @@ The uninstall command requires the **exact name including the `@marketplace` suf
 
 ```bash
 /plugin list         # find the exact name including @marketplace suffix
-/plugin uninstall azure-cost-calculator@acc-plugin
+/plugin uninstall azure-cost-calculator@ahmadabdalla-plugins
 ```
 
 Verify it's gone:
@@ -212,7 +209,7 @@ Verify it's gone:
 ### Remove a marketplace (Claude Code)
 
 ```bash
-/plugin marketplace remove acc-plugin
+/plugin marketplace remove ahmadabdalla-plugins
 ```
 
 > **Important:** `uninstall` does **not** work for marketplaces — it silently fails. Always use `remove`.
