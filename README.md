@@ -41,7 +41,6 @@ The simplest way to use the skill. Ask any Azure pricing question as you normall
 ```
 How much does an Azure D4s v5 VM cost per month in East US?
 What's the cheapest Azure managed PostgreSQL option and how much does it cost?
-Estimate the Azure cost of a Standard_B2s VM with a P30 managed disk in Australia East in AUD
 ```
 
 Not sure where to start?
