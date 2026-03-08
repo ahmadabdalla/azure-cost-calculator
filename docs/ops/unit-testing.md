@@ -2,12 +2,12 @@
 
 Unit tests for the core skill scripts and CI workflow scripts (PowerShell + Bash) using **Pester 5** and **bats-core**.
 
-| Item            | Detail                                                                                                          |
-| --------------- | --------------------------------------------------------------------------------------------------------------- |
-| Workflow source | `.github/workflows/unit-tests.yml`                                                                              |
-| Test root       | `tests/unit/`                                                                                                   |
-| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                                                |
-| Bash runner     | `tests/unit/run-bats-tests.sh`                                                                                  |
+| Item            | Detail                                                                                                      |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| Workflow source | `.github/workflows/unit-tests.yml`                                                                          |
+| Test root       | `tests/unit/`                                                                                               |
+| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                                            |
+| Bash runner     | `tests/unit/run-bats-tests.sh`                                                                              |
 | Trigger         | PRs and pushes touching `skills/azure-cost-calculator/scripts/**`, `tests/unit/**`, or `.github/scripts/**` |
 
 ---
@@ -33,18 +33,18 @@ The 12 scripts that ship to users via the skill plugin:
 
 The 10 scripts under `.github/scripts/` that power the GitHub Actions workflows:
 
-| Directory   | Script                     | Purpose                                  |
-| ----------- | -------------------------- | ---------------------------------------- |
-| `release/`  | `extract-version.sh`       | Read + validate semver from plugin.json  |
-|             | `extract-changelog.sh`     | Extract changelog section via awk        |
-|             | `create-tag-and-release.sh`| Create annotated tag + GitHub Release    |
-|             | `back-merge.sh`            | 3-attempt retry merge of main into dev   |
-|             | `create-backmerge-pr.sh`   | Fallback PR when merge fails             |
-| `validate/` | `detect-change-scope.sh`   | Classify PR changes (service vs infra)   |
-|             | `Invoke-Validation.ps1`    | 3-mode validation wrapper                |
-| `test/`     | `Install-Pester.ps1`       | Install Pester + PSScriptAnalyzer        |
-|             | `Invoke-ScriptAnalyzer.ps1`| Lint with Error/Warning fail gate        |
-|             | `install-bats.sh`          | Install bats-core + jq                   |
+| Directory   | Script                      | Purpose                                 |
+| ----------- | --------------------------- | --------------------------------------- |
+| `release/`  | `extract-version.sh`        | Read + validate semver from plugin.json |
+|             | `extract-changelog.sh`      | Extract changelog section via awk       |
+|             | `create-tag-and-release.sh` | Create annotated tag + GitHub Release   |
+|             | `back-merge.sh`             | 3-attempt retry merge of main into dev  |
+|             | `create-backmerge-pr.sh`    | Fallback PR when merge fails            |
+| `validate/` | `detect-change-scope.sh`    | Classify PR changes (service vs infra)  |
+|             | `Invoke-Validation.ps1`     | 3-mode validation wrapper               |
+| `test/`     | `Install-Pester.ps1`        | Install Pester + PSScriptAnalyzer       |
+|             | `Invoke-ScriptAnalyzer.ps1` | Lint with Error/Warning fail gate       |
+|             | `install-bats.sh`           | Install bats-core + jq                  |
 
 Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) and CI commands (`git`, `gh`) are mocked with synthetic data. Library functions are exercised with their real implementations.
 
@@ -206,15 +206,15 @@ CI script tests live under `tests/unit/bash/ci/` and `tests/unit/powershell/ci/`
 
 Extends the base `test_helper.bash` with utilities for testing CI scripts that interact with `git`, `gh`, and `$GITHUB_OUTPUT`:
 
-| Helper                                              | Purpose                                            |
-| --------------------------------------------------- | -------------------------------------------------- |
-| `CI_SCRIPTS_DIR`                                    | Absolute path to `.github/scripts/`                |
-| `setup_github_output` / `teardown_github_output`    | Create/cleanup temp `$GITHUB_OUTPUT` file          |
-| `get_output_value KEY`                              | Read a `key=value` line from `$GITHUB_OUTPUT`      |
-| `get_output_heredoc KEY`                            | Read a heredoc value from `$GITHUB_OUTPUT`         |
-| `create_git_dispatch_mock` / `set_git_response`     | Mock `git` with per-subcommand routing             |
-| `create_gh_dispatch_mock` / `set_gh_response`       | Mock `gh` with per-subcommand routing + call log   |
-| `create_sequenced_mock CMD "out\|rc" ...`           | Mock that returns different results per invocation |
+| Helper                                           | Purpose                                            |
+| ------------------------------------------------ | -------------------------------------------------- |
+| `CI_SCRIPTS_DIR`                                 | Absolute path to `.github/scripts/`                |
+| `setup_github_output` / `teardown_github_output` | Create/cleanup temp `$GITHUB_OUTPUT` file          |
+| `get_output_value KEY`                           | Read a `key=value` line from `$GITHUB_OUTPUT`      |
+| `get_output_heredoc KEY`                         | Read a heredoc value from `$GITHUB_OUTPUT`         |
+| `create_git_dispatch_mock` / `set_git_response`  | Mock `git` with per-subcommand routing             |
+| `create_gh_dispatch_mock` / `set_gh_response`    | Mock `gh` with per-subcommand routing + call log   |
+| `create_sequenced_mock CMD "out\|rc" ...`        | Mock that returns different results per invocation |
 
 ---
 
