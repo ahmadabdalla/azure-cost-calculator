@@ -95,4 +95,4 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 | `Anomaly Detector`            | `Standard`, `Free`                                                                                                                          |
 | `Azure Custom Vision`         | `S0`, `Free`                                                                                                                                |
 | `Azure Content Understanding` | `Basic Doc`, `Basic Audio`, `Basic Video`, `Standard Doc`, `Standard Audio`, `Standard Video`, `Add-On Doc`, `Add-On Audio`, `Add-On Video` |
-| `Observability`               | `Evaluations input tokens`, `Evaluations output tokens`                                                                                     |
+| `Observability`               | `Evaluations input tokens`, `Evaluations output tokens` (API skuNames — not meterNames despite resemblance)                                 |
