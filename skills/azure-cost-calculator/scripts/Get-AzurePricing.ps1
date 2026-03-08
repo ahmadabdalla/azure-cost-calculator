@@ -41,6 +41,7 @@ param(
     [string]$PriceType = 'Consumption',
 
     [Parameter()]
+    [Alias('CurrencyCode')]
     [string]$Currency = 'USD',
 
     [Parameter()]

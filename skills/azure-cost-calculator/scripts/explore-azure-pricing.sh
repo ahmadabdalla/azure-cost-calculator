@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
         --service-name)   service_name="$2"; shift 2 ;;
         --search-term)    search_term="$2"; shift 2 ;;
         --region)         region="$2"; shift 2 ;;
-        --currency)       currency="$2"; shift 2 ;;
+        --currency|--currency-code) currency="$2"; shift 2 ;;
         --top)            top="$2"; shift 2 ;;
         --output-format)  output_format="$2"; shift 2 ;;
         --verbose|-v)     verbose=true; shift ;;
@@ -76,7 +76,7 @@ USAGE
             exit 0
             ;;
         *)
-            echo "Error: Unknown argument '$1'" >&2
+            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --search-term, --region, --currency, --top, --output-format, --verbose, --help" >&2
             exit 1
             ;;
     esac

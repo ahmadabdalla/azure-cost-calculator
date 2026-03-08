@@ -99,6 +99,20 @@ teardown() { teardown_mock_path; }
     echo "$output" | grep -qi "error"
 }
 
+@test "--currency-code alias is accepted" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --currency-code "AUD"
+    [ "$status" -eq 0 ]
+    currency=$(echo "$output" | jq -r '.query.currency')
+    [ "$currency" = "AUD" ]
+}
+
+@test "unknown flag lists valid flags in error" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --bogus-flag "x"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"Valid flags"* ]]
+    [[ "$output" == *"--currency"* ]]
+}
+
 @test "malformed JSON response exits non-zero" {
     create_curl_mock 'not-valid-json' 200
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
