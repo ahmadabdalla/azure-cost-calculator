@@ -33,11 +33,18 @@ ProductName: {productName from discovery}
 SkuName: {model} {direction} {deployment}
 Quantity: {tokenCount in units matching unitOfMeasure}
 
-### Embeddings — substitute discovered embedding skuName
+### Embeddings — Global/Regional (substitute discovered embedding skuName)
 
 ServiceName: Foundry Models
-ProductName: {productName from discovery}
+ProductName: Azure OpenAI
 SkuName: {embedding model} {deployment}
+Quantity: {tokenCount in units matching unitOfMeasure}
+
+### Embeddings — Data Zone text-embedding-3 (separate product)
+
+ServiceName: Foundry Models
+ProductName: Azure OpenAI Embedding
+SkuName: {text embedding 3 model} DZ
 Quantity: {tokenCount in units matching unitOfMeasure}
 
 ## Key Fields
@@ -77,5 +84,5 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 - **Reasoning models**: o4-mini, codex-mini, o3-deep-research are under `Azure OpenAI Reasoning` productName — query separately
 - **Media models**: Audio, TTS, Sora 2 video (per-second), and GPT-Image under `Azure OpenAI Media` — query separately
 - **Fine-tuning**: Three billing dimensions — training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K)
-- **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `Cohere Models`, `Azure Kimi`, `Qwen models`, `Azure BFL Flux Models`). Each has its own `productName` — query with discovery first. **Trap**: `Qwen models` uses lowercase 'm'; `Qwen Models` returns zero results
-- **Embeddings**: Data Zone embedding models split into separate `Azure OpenAI Embedding` product — `productName` varies by deployment type; use discovered `productName`, not hardcoded `Azure OpenAI`
+- **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `Cohere Models`, `Azure Kimi`, `Qwen models` (note: lowercase `m`), `Azure BFL Flux Models`). Each has its own `productName` — query with discovery first
+- **Embeddings**: Data Zone text-embedding-3 models under separate `Azure OpenAI Embedding` product — see dual query patterns above
