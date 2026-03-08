@@ -9,7 +9,10 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 > Run inside a Copilot CLI or Claude Code session.
 
 ```bash
+# Step 1: Add the marketplace source
 /plugin marketplace add ahmadabdalla/plugins
+
+# Step 2: Install the plugin
 /plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
@@ -32,7 +35,7 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 Ask about Azure costs in natural language — the skill activates automatically. No configuration needed.
 
 <details open>
-<summary><strong>Quick Price Checks</strong> — just ask</summary>
+<summary><strong>▪️ Quick Price Checks</strong> — just ask</summary>
 
 <br>
 
@@ -41,7 +44,6 @@ The simplest way to use the skill. Ask any Azure pricing question as you normall
 ```
 How much does an Azure D4s v5 VM cost per month in East US?
 What's the cheapest Azure managed PostgreSQL option and how much does it cost?
-Estimate the Azure cost of a Standard_B2s VM with a P30 managed disk in Australia East in AUD
 ```
 
 Not sure where to start?
@@ -55,7 +57,7 @@ The agent walks you through the key parameters that affect pricing accuracy.
 </details>
 
 <details>
-<summary><strong>Comparing & Combining Services</strong> — get specific</summary>
+<summary><strong>▪️▪️ Comparing & Combining Services</strong> — get specific</summary>
 
 <br>
 
@@ -77,7 +79,7 @@ You can also use the **slash command** for direct estimates (available when inst
 </details>
 
 <details>
-<summary><strong>Full Architecture Analysis</strong> — estimate complete deployments</summary>
+<summary><strong>▪️▪️▪️ Full Architecture Analysis</strong> — estimate complete deployments</summary>
 
 <br>
 
