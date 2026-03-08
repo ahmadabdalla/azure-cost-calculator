@@ -1,22 +1,32 @@
 # Azure Cost Calculator Skill
 
-AI agent skill for real-time Azure cost estimation using the Azure Retail Prices API.
+AI agent plugin for real-time Azure cost estimation using the Azure Retail Prices API.
 
-## Skill directory
+## Repository layout
 
-The installable skill lives at `skills/azure-cost-calculator/`.
-
-## Key files
-
-- `skills/azure-cost-calculator/SKILL.md` -- entry point; defines the agent workflow
-- `skills/azure-cost-calculator/references/` -- service reference files and shared context
-- `skills/azure-cost-calculator/scripts/` -- PowerShell helpers (Get-AzurePricing, Explore-AzurePricing)
-- `tests/` -- Validation scripts (Validate-ServiceReference) and unit tests
-- `tests/unit/` -- Unit tests for core scripts (Pester 5 + bats-core)
+| Path                                       | Purpose                                                                                                                                    |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `skills/azure-cost-calculator/`            | Installable skill (entry point: `SKILL.md`)                                                                                                |
+| `skills/azure-cost-calculator/scripts/`    | Pricing scripts — PowerShell (`Get-AzurePricing.ps1`, `Explore-AzurePricing.ps1`) and Bash equivalents, plus shared libs in `scripts/lib/` |
+| `skills/azure-cost-calculator/references/` | Service reference files, shared context, and example architectures (`references/examples/`)                                                |
+| `agents/`                                  | Plugin agents (e.g. `cost-analyst.agent.md`)                                                                                               |
+| `commands/`                                | Plugin commands (e.g. `estimate-cost.md`)                                                                                                  |
+| `.claude-plugin/plugin.json`               | Plugin manifest — canonical source of version                                                                                              |
+| `tests/`                                   | Validation scripts and unit tests (Pester 5 + bats-core)                                                                                   |
+| `docs/`                                    | Templates (`TEMPLATE.md`), plugin docs, and operational guides (`docs/ops/`)                                                               |
 
 ## Git conventions
 
-- When creating pull requests, always target the `dev` branch (`--base dev` on `gh pr create`).
+- Feature and contributor pull requests target the `dev` branch (`--base dev` on `gh pr create`).
+
+## CI
+
+PRs automatically run:
+
+- **validate-service-references** — syntax, routing, alias uniqueness checks on service reference files.
+- **unit-tests** — PowerShell (Pester) and Bash (bats) tests when scripts or tests change.
+
+Releases are handled by `create-release.yml` when a PR with a `release: ` prefix merges to `main`. Version is read from `.claude-plugin/plugin.json`.
 
 ## For contributors
 

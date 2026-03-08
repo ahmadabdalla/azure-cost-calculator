@@ -1,20 +1,24 @@
 # Unit Testing — Operations Guide
 
-Unit tests for the core skill scripts (PowerShell + Bash) using **Pester 5** and **bats-core**.
+Unit tests for the core skill scripts and CI workflow scripts (PowerShell + Bash) using **Pester 5** and **bats-core**.
 
-| Item            | Detail                                                                               |
-| --------------- | ------------------------------------------------------------------------------------ |
-| Workflow source | `.github/workflows/unit-tests.yml`                                                   |
-| Test root       | `tests/unit/`                                                                        |
-| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                     |
-| Bash runner     | `tests/unit/run-bats-tests.sh`                                                       |
-| Trigger         | PRs and pushes touching `skills/azure-cost-calculator/scripts/**` or `tests/unit/**` |
+| Item            | Detail                                                                                                      |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| Workflow source | `.github/workflows/unit-tests.yml`                                                                          |
+| Test root       | `tests/unit/`                                                                                               |
+| PS runner       | `tests/unit/Run-PesterTests.ps1`                                                                            |
+| Bash runner     | `tests/unit/run-bats-tests.sh`                                                                              |
+| Trigger         | PRs and pushes touching `skills/azure-cost-calculator/scripts/**`, `tests/unit/**`, or `.github/scripts/**` |
 
 ---
 
 ## What it does
 
-The unit testing framework validates the 12 core scripts that ship to users via the skill plugin:
+The unit testing framework validates two categories of scripts:
+
+### Core skill scripts
+
+The 12 scripts that ship to users via the skill plugin:
 
 | Layer   | PowerShell                    | Bash                           |
 | ------- | ----------------------------- | ------------------------------ |
@@ -25,7 +29,24 @@ The unit testing framework validates the 12 core scripts that ship to users via 
 |         | Get-ReservationTermMonths.ps1 | get-reservation-term-months.sh |
 |         | Invoke-RetailPricesQuery.ps1  | invoke-retail-prices-query.sh  |
 
-Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) are mocked with synthetic data. Library functions are exercised with their real implementations.
+### CI workflow scripts
+
+The 10 scripts under `.github/scripts/` that power the GitHub Actions workflows:
+
+| Directory   | Script                      | Purpose                                 |
+| ----------- | --------------------------- | --------------------------------------- |
+| `release/`  | `extract-version.sh`        | Read + validate semver from plugin.json |
+|             | `extract-changelog.sh`      | Extract changelog section via awk       |
+|             | `create-tag-and-release.sh` | Create annotated tag + GitHub Release   |
+|             | `back-merge.sh`             | 3-attempt retry merge of main into dev  |
+|             | `create-backmerge-pr.sh`    | Fallback PR when merge fails            |
+| `validate/` | `detect-change-scope.sh`    | Classify PR changes (service vs infra)  |
+|             | `Invoke-Validation.ps1`     | 3-mode validation wrapper               |
+| `test/`     | `Install-Pester.ps1`        | Install Pester + PSScriptAnalyzer       |
+|             | `Invoke-ScriptAnalyzer.ps1` | Lint with Error/Warning fail gate       |
+|             | `install-bats.sh`           | Install bats-core + jq                  |
+
+Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) and CI commands (`git`, `gh`) are mocked with synthetic data. Library functions are exercised with their real implementations.
 
 ---
 
@@ -96,15 +117,17 @@ bats tests/unit/bash/lib/build-odata-filter.bats
 ```
 tests/unit/
   powershell/
-    lib/              ← library function tests
+    lib/              ← library function tests (skill scripts)
+    ci/               ← CI workflow script tests (.github/scripts/)
     *.Tests.ps1       ← main script tests
   bash/
-    lib/              ← library function tests
+    lib/              ← library function tests (skill scripts)
+    ci/               ← CI workflow script tests (.github/scripts/)
     test_helper.bash  ← shared helpers (mock utilities)
     *.bats            ← main script tests
 ```
 
-Tests **mirror the source layout**: each source file in `skills/azure-cost-calculator/scripts/` has a corresponding test file.
+Tests **mirror the source layout**: each source file in `skills/azure-cost-calculator/scripts/` has a corresponding test file, and each script in `.github/scripts/` has a corresponding test in the `ci/` subdirectory.
 
 ### PowerShell (Pester 5)
 
@@ -133,6 +156,42 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 4. For API-calling functions, use `setup_mock_path` + `create_curl_mock` to mock curl.
 5. Run: `bash tests/unit/run-bats-tests.sh`
 
+### CI workflow scripts (`.github/scripts/`)
+
+CI script tests live under `tests/unit/bash/ci/` and `tests/unit/powershell/ci/`. They follow the same framework conventions but use additional helpers for mocking `git`, `gh`, and `$GITHUB_OUTPUT`.
+
+**Bash (bats-core):**
+
+1. Create `tests/unit/bash/ci/<name>.bats`.
+2. Source the CI helper in `setup()`:
+   ```bash
+   setup() {
+       source "$BATS_TEST_DIRNAME/../test_helper.bash"
+       source "$BATS_TEST_DIRNAME/ci_test_helper.bash"
+       setup_mock_path
+       setup_github_output   # if script writes to $GITHUB_OUTPUT
+   }
+   teardown() {
+       teardown_github_output
+       teardown_mock_path
+   }
+   ```
+3. Run scripts via `run bash "$CI_SCRIPTS_DIR/release/my-script.sh" args...`.
+4. Mock `git` with `create_git_dispatch_mock` + `set_git_response`.
+5. Mock `gh` with `create_gh_dispatch_mock` + `set_gh_response`.
+6. Read outputs with `get_output_value KEY` or `get_output_heredoc KEY`.
+
+**PowerShell (Pester 5):**
+
+1. Create `tests/unit/powershell/ci/<Name>.Tests.ps1`.
+2. Reference the script in `BeforeAll`:
+   ```powershell
+   BeforeAll {
+       $script:ScriptPath = Join-Path $PSScriptRoot '../../../../.github/scripts/validate/Invoke-Validation.ps1'
+   }
+   ```
+3. For scripts that call external `.ps1` files, create a mock script in `$TestDrive` that logs its parameters to a JSON file for assertions.
+
 ### Shared Bash helpers (`test_helper.bash`)
 
 | Helper                               | Purpose                                   |
@@ -142,6 +201,20 @@ Tests **mirror the source layout**: each source file in `skills/azure-cost-calcu
 | `teardown_mock_path`                 | Cleans up temp mock dir                   |
 | `create_mock cmd output [exit_code]` | Creates a mock executable                 |
 | `create_curl_mock body [http_code]`  | curl mock mimicking `-w '\n%{http_code}'` |
+
+### CI test helpers (`ci/ci_test_helper.bash`)
+
+Extends the base `test_helper.bash` with utilities for testing CI scripts that interact with `git`, `gh`, and `$GITHUB_OUTPUT`:
+
+| Helper                                           | Purpose                                            |
+| ------------------------------------------------ | -------------------------------------------------- |
+| `CI_SCRIPTS_DIR`                                 | Absolute path to `.github/scripts/`                |
+| `setup_github_output` / `teardown_github_output` | Create/cleanup temp `$GITHUB_OUTPUT` file          |
+| `get_output_value KEY`                           | Read a `key=value` line from `$GITHUB_OUTPUT`      |
+| `get_output_heredoc KEY`                         | Read a heredoc value from `$GITHUB_OUTPUT`         |
+| `create_git_dispatch_mock` / `set_git_response`  | Mock `git` with per-subcommand routing             |
+| `create_gh_dispatch_mock` / `set_gh_response`    | Mock `gh` with per-subcommand routing + call log   |
+| `create_sequenced_mock CMD "out\|rc" ...`        | Mock that returns different results per invocation |
 
 ---
 
