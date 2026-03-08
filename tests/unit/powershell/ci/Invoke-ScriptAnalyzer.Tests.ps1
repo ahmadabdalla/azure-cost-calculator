@@ -91,6 +91,27 @@ function Get-Data {
         }
     }
 
+    Context 'scripts with ParseError diagnostics' {
+        BeforeAll {
+            if (-not $script:HasAnalyzer) { return }
+            $dir = Join-Path $TestDrive 'parse-error'
+            New-Item $dir -ItemType Directory -Force
+            # Unmatched brace triggers ParseError severity
+            'function Broken {' | Set-Content (Join-Path $dir 'broken.ps1')
+
+            $script:Output = pwsh -NoProfile -File $script:ScriptPath -TargetPath $dir 2>&1
+            $script:ExitCode = $LASTEXITCODE
+        }
+
+        It 'exits with code 1' -Skip:(-not $script:HasAnalyzer) {
+            $script:ExitCode | Should -Be 1
+        }
+
+        It 'output mentions errors or warnings' -Skip:(-not $script:HasAnalyzer) {
+            "$($script:Output)" | Should -Match 'errors or warnings'
+        }
+    }
+
     Context 'invalid target path' {
         BeforeAll {
             $script:Output = pwsh -NoProfile -File $script:ScriptPath -TargetPath 'C:\does\not\exist\ever' 2>&1

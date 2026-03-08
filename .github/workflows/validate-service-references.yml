@@ -57,6 +57,7 @@ jobs:
         docs/TEMPLATE.md
         skills/azure-cost-calculator/references/service-routing.md
         docs/service-catalog.md
+        .github/scripts/validate/
 
     steps:
       # --- Step 1: Get the code ---

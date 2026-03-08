@@ -9,7 +9,7 @@
 #
 # Exit codes:
 #   0 -- no errors or warnings
-#   1 -- one or more Error/Warning diagnostics found
+#   1 -- one or more Error/Warning/ParseError diagnostics found
 # ---------------------------------------------------------
 
 param(
@@ -27,7 +27,7 @@ if (-not (Test-Path -LiteralPath $TargetPath)) {
 $results = Invoke-ScriptAnalyzer -Path $TargetPath -Recurse -ReportSummary
 $results | Format-Table -AutoSize
 
-if ($results | Where-Object Severity -in 'Error', 'Warning') {
+if ($results | Where-Object Severity -in 'Error', 'Warning', 'ParseError') {
     Write-Error "PSScriptAnalyzer found errors or warnings."
     exit 1
 }
