@@ -68,7 +68,7 @@ How much would Azure Cosmos DB with 1000 RU/s and 100 GB storage cost?
 Estimate the Azure cost of 3 D4s_v5 VMs with P30 disks and a Standard load balancer in UK South in GBP
 ```
 
-You can also use the **slash command** for direct estimates:
+You can also use the **slash command** for direct estimates (available when installed as a plugin):
 
 ```
 /estimate-cost 2x Standard_B2s Linux VMs with P30 managed disks in Australia East in AUD
@@ -95,7 +95,7 @@ I'd like an Azure cost analysis on this architecture:
   Region: East US | Currency: USD | Commitment: Pay-As-You-Go
 ```
 
-**File reference — point to a markdown file with your architecture:**
+**File reference — point to a markdown file with your architecture (plugin install):**
 
 ```
 /estimate-cost @arch.md
