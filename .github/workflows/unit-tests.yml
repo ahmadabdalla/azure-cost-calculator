@@ -20,6 +20,7 @@ on:
     paths:
       - "skills/azure-cost-calculator/scripts/**"
       - "tests/unit/**"
+      - ".github/scripts/**"
 
 permissions:
   contents: read
@@ -41,6 +42,7 @@ jobs:
             relevant:
               - 'skills/azure-cost-calculator/scripts/**'
               - 'tests/unit/**'
+              - '.github/scripts/**'
 
       - name: Skip — no relevant changes
         if: steps.filter.outputs.relevant == 'false'
@@ -51,10 +53,15 @@ jobs:
         shell: pwsh
         run: .github/scripts/test/Install-Pester.ps1
 
-      - name: Run PSScriptAnalyzer
+      - name: Run PSScriptAnalyzer (skill scripts)
         if: steps.filter.outputs.relevant == 'true'
         shell: pwsh
         run: .github/scripts/test/Invoke-ScriptAnalyzer.ps1 -TargetPath skills/azure-cost-calculator/scripts
+
+      - name: Run PSScriptAnalyzer (CI scripts)
+        if: steps.filter.outputs.relevant == 'true'
+        shell: pwsh
+        run: .github/scripts/test/Invoke-ScriptAnalyzer.ps1 -TargetPath .github/scripts
 
       - name: Run Pester tests
         if: steps.filter.outputs.relevant == 'true'
@@ -84,6 +91,7 @@ jobs:
             relevant:
               - 'skills/azure-cost-calculator/scripts/**'
               - 'tests/unit/**'
+              - '.github/scripts/**'
 
       - name: Skip — no relevant changes
         if: steps.filter.outputs.relevant == 'false'
