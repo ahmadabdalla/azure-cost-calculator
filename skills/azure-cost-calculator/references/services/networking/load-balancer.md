@@ -3,7 +3,7 @@ serviceName: Load Balancer
 category: networking
 aliases: [ALB, LB, Standard LB, Basic LB]
 billingNeeds: [IP Addresses]
-primaryCost: "Per-hour base fee + per-GB data processed + rule overage beyond 5 (Standard)"
+primaryCost: "Per-hour base fee + per-GB data processed + rule overage beyond 5 included (Standard/Global/Gateway)"
 hasFreeGrant: true
 pricingRegion: global
 privateEndpoint: true
@@ -50,7 +50,7 @@ InstanceCount: 3
 | `Gateway` | `Gateway` | `1 Hour` | Gateway LB base fee (NVA chaining) |
 | `Gateway Chain` | `Gateway` | `1 Hour` | Per chained LB per hour |
 | `Gateway Data Processed` | `Gateway` | `1 GB` | Gateway per-GB (sub-cent) |
-| `Global Included LB Rules and Outbound Rules` | `Global` | `1 Hour` | Cross-region base fee |
+| `Global Included LB Rules and Outbound Rules` | `Global` | `1 Hour` | Cross-region base fee — first 5 rules included |
 | `Global Overage LB Rules and Outbound Rules` | `Global` | `1/Hour` | Per additional rule beyond 5 |
 | `Global Data Processed` | `Global` | `1 GB` | Cross-region data — genuinely free |
 
@@ -71,4 +71,4 @@ Monthly   = (Base + Overage + Data) × instanceCount
 - **Three SKUs**: Standard (regional), Global (cross-region, data processing is free), Gateway (NVA chaining with base + chain + data meters)
 - **Per-resource billing**: Each LB resource is billed independently — multiply total by resource count
 - **Rule overage**: First 5 LB rules and outbound rules included in base hourly fee; each additional rule incurs overage charge. Inbound NAT rules are free and do not count toward the rule total
-- **Private endpoint**: Standard Internal LB supports Private Link — PE charges billed separately under `networking/private-link.md`
+- **Private endpoint**: Only **Standard Internal** LB supports Private Link — Standard Public, Global, and Gateway do not. PE charges billed separately under `networking/private-link.md`
