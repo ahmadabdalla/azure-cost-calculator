@@ -61,10 +61,12 @@ fi
 
 if [ -n "$SERVICE_CHANGED" ]; then
   echo "service_changed=true" >> "$GITHUB_OUTPUT"
-  # Pass the file list as a multi-line output.
-  echo "all_changed_files<<EOF" >> "$GITHUB_OUTPUT"
+  # Pass the file list as a multi-line output using a random delimiter
+  # to prevent GITHUB_OUTPUT injection via crafted filenames.
+  delimiter="ghout_$(openssl rand -hex 16)"
+  echo "all_changed_files<<${delimiter}" >> "$GITHUB_OUTPUT"
   echo "$SERVICE_CHANGED" >> "$GITHUB_OUTPUT"
-  echo "EOF" >> "$GITHUB_OUTPUT"
+  echo "${delimiter}" >> "$GITHUB_OUTPUT"
 else
   echo "service_changed=false" >> "$GITHUB_OUTPUT"
 fi

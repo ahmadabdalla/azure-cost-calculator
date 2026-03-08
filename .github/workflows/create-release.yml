@@ -27,12 +27,15 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Extract changelog
-        run: .github/scripts/release/extract-changelog.sh "${{ steps.version.outputs.version }}"
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: .github/scripts/release/extract-changelog.sh "$VERSION"
 
       - name: Create tag and GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: .github/scripts/release/create-tag-and-release.sh "${{ steps.version.outputs.version }}" /tmp/release-body.md
+          VERSION: ${{ steps.version.outputs.version }}
+        run: .github/scripts/release/create-tag-and-release.sh "$VERSION" /tmp/release-body.md
 
   back-merge:
     name: Merge main back to dev

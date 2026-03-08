@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-sudo npm install -g bats
+sudo npm install -g bats@1.11.1
 sudo apt-get update -qq && sudo apt-get install -y -qq jq
 
 bats --version

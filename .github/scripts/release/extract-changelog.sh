@@ -14,6 +14,17 @@ VERSION="${1:?Usage: $0 <version> [changelog-file] [output-file]}"
 CHANGELOG="${2:-CHANGELOG.md}"
 OUTPUT_FILE="${3:-/tmp/release-body.md}"
 
-BODY=$(awk "/^## \[${VERSION}\]/{found=1; next} /^## \[/{if(found) exit} found{print}" "$CHANGELOG")
+# Pass VERSION as an awk variable to prevent regex injection.
+BODY=$(awk -v ver="$VERSION" '
+  $0 ~ "^## \\[" ver "\\]" { found=1; next }
+  /^## \[/ { if (found) exit }
+  found { print }
+' "$CHANGELOG")
+
+if [ -z "$BODY" ]; then
+  echo "::error::No changelog section found for version ${VERSION} in ${CHANGELOG}" >&2
+  exit 1
+fi
+
 echo "$BODY" > "$OUTPUT_FILE"
 echo "Changelog extracted for v${VERSION} -> $OUTPUT_FILE"
