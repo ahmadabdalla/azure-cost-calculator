@@ -9,7 +9,10 @@ Real-time Azure cost estimation using the public [Azure Retail Prices API](https
 > Run inside a Copilot CLI or Claude Code session.
 
 ```bash
+# Step 1: Add the marketplace source
 /plugin marketplace add ahmadabdalla/plugins
+
+# Step 2: Install the plugin
 /plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
