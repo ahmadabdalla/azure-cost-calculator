@@ -151,9 +151,8 @@ create_gh_dispatch_mock() {
 #!/usr/bin/env bash
 dir="$(dirname "$0")/gh_state"
 key="${1:-_}_${2:-_}"
-# Log every call with shell-escaped args so tests can verify arguments
-printf '%q ' "$@" >> "$dir/call_log"
-printf '\n' >> "$dir/call_log"
+# Log every call for assertions
+echo "$*" >> "$dir/call_log"
 out_file="$dir/${key}_output"
 exit_file="$dir/${key}_exit"
 if [[ -f "$out_file" ]]; then cat "$out_file"; fi

@@ -25,7 +25,7 @@ if ! [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-
   exit 1
 fi
 
-if git rev-parse "v${VERSION}" >/dev/null 2>&1; then
+if git rev-parse --verify --quiet "refs/tags/v${VERSION}" >/dev/null 2>&1; then
   echo "::error::Tag v${VERSION} already exists" >&2
   exit 1
 fi
