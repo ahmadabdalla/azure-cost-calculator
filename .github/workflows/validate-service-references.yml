@@ -47,9 +47,16 @@ jobs:
 
     # --- Shared variables ---
     # Change these in ONE place if paths ever move.
+    # NOTE: INFRA_PATHS is also used in the dorny/paths-filter
+    # 'relevant' list below — keep them in sync.
     env:
       SERVICES_ROOT: skills/azure-cost-calculator/references/services
       VALIDATION_SCRIPT: tests/Validate-ServiceReference.ps1
+      INFRA_PATHS: >-
+        tests/
+        docs/TEMPLATE.md
+        skills/azure-cost-calculator/references/service-routing.md
+        docs/service-catalog.md
 
     steps:
       # --- Step 1: Get the code ---

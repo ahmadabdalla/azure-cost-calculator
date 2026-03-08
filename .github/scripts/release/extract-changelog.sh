@@ -6,7 +6,7 @@
 # Outputs:  Writes the changelog section to the output file.
 # Exit codes:
 #   0 = success
-#   1 = version argument missing
+#   1 = version argument missing or no matching section found
 
 set -euo pipefail
 
@@ -14,7 +14,7 @@ VERSION="${1:?Usage: $0 <version> [changelog-file] [output-file]}"
 CHANGELOG="${2:-CHANGELOG.md}"
 OUTPUT_FILE="${3:-/tmp/release-body.md}"
 
-# Pass VERSION as an awk variable to prevent regex injection.
+# Use -v to pass version as an awk variable (avoids interpolation issues).
 BODY=$(awk -v ver="$VERSION" '
   $0 ~ "^## \\[" ver "\\]" { found=1; next }
   /^## \[/ { if (found) exit }

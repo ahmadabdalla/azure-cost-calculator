@@ -10,18 +10,20 @@
 #   DIFF_BASE       - base commit SHA (PR target branch tip)
 #   DIFF_HEAD       - head commit SHA (PR branch tip)
 #   SERVICES_ROOT   - relative path to the services directory
-#                     (e.g. skills/azure-cost-calculator/references/services)
+#   INFRA_PATHS     - space-separated list of infrastructure
+#                     paths to check (passed from the workflow
+#                     so paths are defined in one place)
 #
 # Outputs (written to $GITHUB_OUTPUT):
 #   infra_changed        - "true" or "false"
 #   service_changed      - "true" or "false"
-#   all_changed_files    - newline-separated list of changed service .md
-#                          files (only set when service_changed=true)
+#   all_changed_files    - newline-separated list of changed
+#                          service .md files (only set when
+#                          service_changed=true)
 # ---------------------------------------------------------
 
 set -euo pipefail
 
-# --- Validate required env vars ---
 if [ -z "${DIFF_BASE:-}" ]; then
   echo "::error::Required env var DIFF_BASE is not set."
   exit 1
@@ -34,25 +36,27 @@ if [ -z "${SERVICES_ROOT:-}" ]; then
   echo "::error::Required env var SERVICES_ROOT is not set."
   exit 1
 fi
+if [ -z "${INFRA_PATHS:-}" ]; then
+  echo "::error::Required env var INFRA_PATHS is not set."
+  exit 1
+fi
 
-# List .md files added/changed/modified/renamed/deleted under services/
-# "|| true" prevents an error when nothing matches.
+# Service .md files added/changed/modified/renamed/deleted.
+# "|| true" prevents failure when nothing matches.
 SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
   "$DIFF_BASE" "$DIFF_HEAD" \
   -- "$SERVICES_ROOT/" \
   | grep '\.md$' || true)
 
-# List any changed infrastructure files
+# Infrastructure files (tests, template, routing, catalog).
+# Word-splitting on INFRA_PATHS is intentional — paths are
+# owner-controlled values set in the workflow env block.
+# shellcheck disable=SC2086
 INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \
   "$DIFF_BASE" "$DIFF_HEAD" \
-  -- 'tests/' \
-     'docs/TEMPLATE.md' \
-     'skills/azure-cost-calculator/references/service-routing.md' \
-     'docs/service-catalog.md' \
+  -- $INFRA_PATHS \
   || true)
 
-# Write results so the next steps can read them.
-# "-n" means "not empty".
 if [ -n "$INFRA_CHANGED" ]; then
   echo "infra_changed=true" >> "$GITHUB_OUTPUT"
 else
@@ -61,8 +65,7 @@ fi
 
 if [ -n "$SERVICE_CHANGED" ]; then
   echo "service_changed=true" >> "$GITHUB_OUTPUT"
-  # Pass the file list as a multi-line output using a random delimiter
-  # to prevent GITHUB_OUTPUT injection via crafted filenames.
+  # Random delimiter avoids collisions with file content.
   delimiter="ghout_$(openssl rand -hex 16)"
   echo "all_changed_files<<${delimiter}" >> "$GITHUB_OUTPUT"
   echo "$SERVICE_CHANGED" >> "$GITHUB_OUTPUT"
