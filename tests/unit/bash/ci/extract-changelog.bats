@@ -127,3 +127,18 @@ EOF
     body="$(cat "$OUTPUT_FILE")"
     [[ "$body" == *"Release candidate with core features"* ]]
 }
+
+@test "version with build metadata is extracted" {
+    cat > "$CHANGELOG" <<'EOF'
+# Changelog
+
+## [1.0.0+build.123] - 2025-07-01
+
+### Added
+- Build metadata version support
+EOF
+    run bash "$CI_SCRIPTS_DIR/release/extract-changelog.sh" "1.0.0+build.123" "$CHANGELOG" "$OUTPUT_FILE"
+    [ "$status" -eq 0 ]
+    body="$(cat "$OUTPUT_FILE")"
+    [[ "$body" == *"Build metadata version support"* ]]
+}

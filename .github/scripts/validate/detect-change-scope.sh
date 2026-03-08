@@ -17,6 +17,9 @@
 # Outputs (written to $GITHUB_OUTPUT):
 #   infra_changed        - "true" or "false"
 #   service_changed      - "true" or "false"
+#   service_deleted      - "true" or "false" (deletion-only
+#                          PRs: Invoke-Validation skips deleted
+#                          paths, so routing-sync still runs)
 #   all_changed_files    - newline-separated list of changed
 #                          service .md files (only set when
 #                          service_changed=true)
@@ -41,12 +44,21 @@ if [ -z "${INFRA_PATHS:-}" ]; then
   exit 1
 fi
 
-# Service .md files added/changed/modified/renamed/deleted.
-# "|| true" prevents failure when nothing matches.
-SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
+# Service .md files added/changed/modified/renamed (NOT deleted).
+# git diff is separated from grep so real git failures propagate;
+# "|| true" only suppresses grep exit 1 (no match).
+diff_output=$(git diff --name-only --diff-filter=ACMR \
   "$DIFF_BASE" "$DIFF_HEAD" \
-  -- "$SERVICES_ROOT/" \
-  | grep '\.md$' || true)
+  -- "$SERVICES_ROOT/")
+SERVICE_CHANGED=$(echo "$diff_output" | grep '\.md$' || true)
+
+# Deleted service .md files tracked separately: Invoke-Validation.ps1
+# skips deleted paths via Test-Path, so deletion-only PRs must still
+# trigger routing-sync via the service_deleted flag.
+deleted_output=$(git diff --name-only --diff-filter=D \
+  "$DIFF_BASE" "$DIFF_HEAD" \
+  -- "$SERVICES_ROOT/")
+SERVICE_DELETED=$(echo "$deleted_output" | grep '\.md$' || true)
 
 # Infrastructure files (tests, template, routing, catalog).
 # Word-splitting on INFRA_PATHS is intentional — paths are
@@ -54,8 +66,7 @@ SERVICE_CHANGED=$(git diff --name-only --diff-filter=ACMRD \
 # shellcheck disable=SC2086
 INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \
   "$DIFF_BASE" "$DIFF_HEAD" \
-  -- $INFRA_PATHS \
-  || true)
+  -- $INFRA_PATHS)
 
 if [ -n "$INFRA_CHANGED" ]; then
   echo "infra_changed=true" >> "$GITHUB_OUTPUT"
@@ -72,4 +83,10 @@ if [ -n "$SERVICE_CHANGED" ]; then
   echo "${delimiter}" >> "$GITHUB_OUTPUT"
 else
   echo "service_changed=false" >> "$GITHUB_OUTPUT"
+fi
+
+if [ -n "$SERVICE_DELETED" ]; then
+  echo "service_deleted=true" >> "$GITHUB_OUTPUT"
+else
+  echo "service_deleted=false" >> "$GITHUB_OUTPUT"
 fi

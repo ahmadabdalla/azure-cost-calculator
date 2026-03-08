@@ -91,6 +91,21 @@ function Get-Data {
         }
     }
 
+    Context 'invalid target path' {
+        BeforeAll {
+            $script:Output = pwsh -NoProfile -File $script:ScriptPath -TargetPath 'C:\does\not\exist\ever' 2>&1
+            $script:ExitCode = $LASTEXITCODE
+        }
+
+        It 'exits with code 1' {
+            $script:ExitCode | Should -Be 1
+        }
+
+        It 'output mentions the missing path' {
+            "$($script:Output)" | Should -Match 'Target path not found'
+        }
+    }
+
     Context 'scripts with mixed Information and Warning diagnostics' {
         BeforeAll {
             if (-not $script:HasAnalyzer) { return }

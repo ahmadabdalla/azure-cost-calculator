@@ -64,10 +64,14 @@ teardown() {
 }
 
 @test "custom plugin.json path is passed through" {
-    create_mock "jq" "2.0.0" 0
+    # Use a logging mock so we can verify the custom path is actually passed to jq
+    create_sequenced_mock "jq" "2.0.0|0"
     run bash "$CI_SCRIPTS_DIR/release/extract-version.sh" "/tmp/custom-plugin.json"
     [ "$status" -eq 0 ]
     [[ "$output" == *"2.0.0"* ]]
+    # Assert jq was called with the custom path argument
+    jq_log="$(cat "$MOCK_DIR/jq_seq/call_log")"
+    [[ "$jq_log" == *"/tmp/custom-plugin.json"* ]]
 }
 
 @test "valid semver with build metadata" {

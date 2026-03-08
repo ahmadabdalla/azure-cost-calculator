@@ -56,11 +56,11 @@ switch ($Mode) {
     'ChangedOnly' {
         # Split the multi-line string into an array, keep only files that exist.
         $files = $ChangedFiles -split "`n" |
-            Where-Object { $_ -and (Test-Path $_) }
+        Where-Object { $_ -and (Test-Path $_) }
 
         if ($files.Count -eq 0) {
             Write-Output "No service reference files to validate."
-            exit 0
+            return
         }
 
         Write-Output "Validating $($files.Count) changed file(s):"
@@ -74,11 +74,11 @@ switch ($Mode) {
     'Full' {
         # Collect every .md file under the services folder.
         $files = Get-ChildItem -Path $ServicesRoot -Filter '*.md' -Recurse |
-            Select-Object -ExpandProperty FullName
+        Select-Object -ExpandProperty FullName
 
         if ($files.Count -eq 0) {
             Write-Output "No service reference files found."
-            exit 0
+            return
         }
 
         Write-Output "Infrastructure files changed -- validating all $($files.Count) service reference file(s)."
@@ -91,12 +91,13 @@ switch ($Mode) {
     'RoutingSyncOnly' {
         # Pick a single representative file to satisfy the script's -Path requirement.
         $anyFile = Get-ChildItem -Path $ServicesRoot -Filter '*.md' -Recurse |
-            Select-Object -First 1 -ExpandProperty FullName
+        Select-Object -First 1 -ExpandProperty FullName
 
         if ($anyFile) {
             Write-Output "Running routing-sync check using: $anyFile"
             & $ValidationScript -Path $anyFile -ServicesRoot $ServicesRoot -CheckRoutingFileSync
-        } else {
+        }
+        else {
             Write-Output "No service reference files found -- skipping routing sync check."
         }
     }

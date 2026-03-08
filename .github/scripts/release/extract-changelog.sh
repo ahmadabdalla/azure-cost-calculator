@@ -16,7 +16,7 @@ OUTPUT_FILE="${3:-/tmp/release-body.md}"
 
 # Use -v to pass version as an awk variable (avoids interpolation issues).
 BODY=$(awk -v ver="$VERSION" '
-  $0 ~ "^## \\[" ver "\\]" { found=1; next }
+  index($0, "## [" ver "]") == 1 { found=1; next }
   /^## \[/ { if (found) exit }
   found { print }
 ' "$CHANGELOG")
@@ -26,5 +26,5 @@ if [ -z "$BODY" ]; then
   exit 1
 fi
 
-echo "$BODY" > "$OUTPUT_FILE"
-echo "Changelog extracted for v${VERSION} -> $OUTPUT_FILE"
+printf '%s\n' "$BODY" > "$OUTPUT_FILE"
+printf 'Changelog extracted for v%s -> %s\n' "$VERSION" "$OUTPUT_FILE"

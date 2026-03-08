@@ -58,8 +58,13 @@ teardown() {
     set_git_response config "" 0
     set_git_response tag "" 0
     set_git_response push "" 1
+    # Create a gh mock that logs any calls so we can assert it was never invoked
+    create_gh_dispatch_mock
     run bash "$CI_SCRIPTS_DIR/release/create-tag-and-release.sh" "1.2.3" "$NOTES_FILE"
     [ "$status" -ne 0 ]
+    # Pin the failure to the push step: gh must not have been called
+    gh_log="$MOCK_DIR/gh_state/call_log"
+    [ ! -f "$gh_log" ] || [ ! -s "$gh_log" ]
 }
 
 @test "gh release create failure propagates as non-zero exit" {

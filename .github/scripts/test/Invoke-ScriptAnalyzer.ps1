@@ -17,6 +17,13 @@ param(
     [string] $TargetPath
 )
 
+$ErrorActionPreference = 'Stop'
+
+if (-not (Test-Path -LiteralPath $TargetPath)) {
+    Write-Error "Target path not found: $TargetPath"
+    exit 1
+}
+
 $results = Invoke-ScriptAnalyzer -Path $TargetPath -Recurse -ReportSummary
 $results | Format-Table -AutoSize
 

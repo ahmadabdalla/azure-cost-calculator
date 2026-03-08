@@ -82,6 +82,7 @@ jobs:
               - 'docs/service-catalog.md'
               - 'docs/TEMPLATE.md'
               - 'tests/**'
+              - '.github/scripts/validate/**'
 
       # --- Early exit when nothing relevant changed ---
       - name: Skip — no relevant changes
