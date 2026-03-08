@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (serviceName rebrand)**: The API `serviceName` is `Foundry Models`, NOT `Azure OpenAI Service`. Queries using `Azure OpenAI Service` return zero results. Always use `ServiceName 'Foundry Models'`.
 
-> **Trap (inflated totals)**: An unfiltered `ServiceName 'Foundry Models'` query returns hundreds of meters across all AI Foundry models (GPT, DeepSeek, Llama, Grok, etc.). Always filter by `ProductName` to isolate OpenAI models.
+> **Trap (inflated totals)**: An unfiltered `ServiceName 'Foundry Models'` query returns hundreds of meters across all AI Foundry models (GPT, DeepSeek, Llama, Grok, Mistral, Phi, Cohere, Kimi, Qwen, BFL Flux, etc.). Always filter by `ProductName` to isolate OpenAI models.
 
 > **Trap (sub-cent embeddings)**: Embedding prices are sub-cent. The script shows minimal cost — use `Quantity` with a large value to see meaningful costs.
 
@@ -33,11 +33,18 @@ ProductName: {productName from discovery}
 SkuName: {model} {direction} {deployment}
 Quantity: {tokenCount in units matching unitOfMeasure}
 
-### Embeddings — substitute discovered embedding skuName
+### Embeddings — Global/Regional (substitute discovered embedding skuName)
 
 ServiceName: Foundry Models
 ProductName: Azure OpenAI
 SkuName: {embedding model} {deployment}
+Quantity: {tokenCount in units matching unitOfMeasure}
+
+### Embeddings — Data Zone text-embedding-3 (separate product)
+
+ServiceName: Foundry Models
+ProductName: Azure OpenAI Embedding
+SkuName: {text embedding 3 model} DZ
 Quantity: {tokenCount in units matching unitOfMeasure}
 
 ## Key Fields
@@ -45,7 +52,7 @@ Quantity: {tokenCount in units matching unitOfMeasure}
 | Parameter     | How to determine                              | Stable pattern                                                      |
 | ------------- | --------------------------------------------- | ------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Models`                       | `Foundry Models`                                                    |
-| `productName` | Model family — use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media` |
+| `productName` | Model family — use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding` |
 | `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl` |
 | `meterName`   | skuName + ` 1M Tokens` or ` Tokens`           | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
 
@@ -77,3 +84,5 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 - **Reasoning models**: o4-mini, codex-mini, o3-deep-research are under `Azure OpenAI Reasoning` productName — query separately
 - **Media models**: Audio, TTS, Sora 2 video (per-second), and GPT-Image under `Azure OpenAI Media` — query separately
 - **Fine-tuning**: Three billing dimensions — training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K)
+- **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `Cohere Models`, `Azure Kimi`, `Qwen models` (note: lowercase `m`), `Azure BFL Flux Models`). Each has its own `productName` — query with discovery first
+- **Embeddings**: Data Zone text-embedding-3 models under separate `Azure OpenAI Embedding` product — see dual query patterns above
