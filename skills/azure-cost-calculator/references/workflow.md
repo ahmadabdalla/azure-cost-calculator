@@ -39,11 +39,12 @@ ServiceName: Azure App Service
 SkuName: P1 v3
 ProductName: Azure App Service Premium v3 Plan - Linux
 
-# Compare VM price across 3 regions
+# Compare VM price across 3 regions in AUD
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
 Region: eastus,australiaeast,westeurope
+Currency: AUD
 OutputFormat: Table
 
 # Cosmos DB 400 RU/s

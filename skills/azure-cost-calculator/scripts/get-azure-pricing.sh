@@ -75,7 +75,7 @@ while [[ $# -gt 0 ]]; do
         --product-name)   product_name="$2"; shift 2 ;;
         --meter-name)     meter_name="$2"; shift 2 ;;
         --price-type)     price_type="$2"; shift 2 ;;
-        --currency)       currency="$2"; shift 2 ;;
+        --currency|--currency-code) currency="$2"; shift 2 ;;
         --quantity)       quantity="$2"; shift 2 ;;
         --hours-per-month) hours_per_month="$2"; shift 2 ;;
         --instance-count) instance_count="$2"; shift 2 ;;
@@ -104,7 +104,7 @@ USAGE
             exit 0
             ;;
         *)
-            echo "Error: Unknown argument '$1'" >&2
+            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --region, --arm-sku-name, --sku-name, --product-name, --meter-name, --price-type, --currency, --quantity, --hours-per-month, --instance-count, --output-format, --verbose, --help" >&2
             exit 1
             ;;
     esac

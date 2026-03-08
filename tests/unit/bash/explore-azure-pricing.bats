@@ -67,6 +67,18 @@ teardown() { teardown_mock_path; }
     echo "$output" | grep -qi "error"
 }
 
+@test "--currency-code alias is accepted" {
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps" --currency-code "EUR"
+    [ "$status" -eq 0 ]
+}
+
+@test "unknown flag lists valid flags in error" {
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Test" --bogus-flag "x"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"Valid flags"* ]]
+    [[ "$output" == *"--currency"* ]]
+}
+
 @test "invalid --output-format exits non-zero" {
     run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Test" --output-format "CSV"
     [ "$status" -ne 0 ]

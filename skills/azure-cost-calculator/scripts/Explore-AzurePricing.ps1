@@ -33,6 +33,7 @@ param(
     [string]$Region = 'eastus',
 
     [Parameter()]
+    [Alias('CurrencyCode')]
     [string]$Currency = 'USD',
 
     [Parameter()]

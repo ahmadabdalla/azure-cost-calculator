@@ -1,20 +1,21 @@
-# Azure Cost Calculator - AI Agent Skill
+# Azure Cost Calculator - AI Agent Plugin
 
 Real-time Azure cost estimation using the public [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices). Works with any agent in the [skills.sh](https://skills.sh) ecosystem. All prices come from live API lookups. No Azure subscription required.
 
 ## Install
 
-**Plugin install** (recommended — versioned releases):
+### Install as a Plugin (recommended for Copilot CLI and Claude Code)
 
 > Run inside a Copilot CLI or Claude Code session.
 
-**Marketplace-first install (recommended on both platforms)**
-
 ```bash
-/plugin marketplace add ahmadabdalla/azure-cost-calculator
-/plugin install azure-cost-calculator@acc-plugin
+/plugin marketplace add ahmadabdalla/plugins
+/plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
+> Plugin install pulls from versioned releases with changelog tracking and update control. For the full plugin install/uninstall/update guide, see [Plugin Management](docs/plugin-management.md).
+
+### Install as a Skill (works with any agent)
 
 **npx** (works with any agent):
 
@@ -24,7 +25,7 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 
 > **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator-skill`.
 
-Plugin install pulls from versioned releases with changelog tracking and update control. The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
+> The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
 
 ## Usage
 
