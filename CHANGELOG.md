@@ -4,6 +4,20 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-03-08
+
+### Added
+
+- **AI Services**: New Observability product with evaluations input/output token meters
+
+### Changed
+
+- **Azure OpenAI Service**: Updated model catalog to include third-party families (DeepSeek, Grok, Mistral, Phi, Llama, Cohere, Kimi, Qwen, BFL Flux). Added dual embeddings query patterns for Data Zone text-embedding-3 models under separate `Azure OpenAI Embedding` product
+
+### Fixed
+
+- **Load Balancer**: Added missing Global Overage meter for rules beyond 5 included. Clarified Private Endpoint support (Standard Internal only) and bandwidth charging
+
 ## [1.2.4] - 2026-03-08
 
 ### Fixed
