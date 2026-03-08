@@ -4,6 +4,17 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.4] - 2026-03-08
+
+### Fixed
+
+- **Scripts**: Added `--currency-code` as an alias for `--currency` parameter across all pricing scripts (Get-AzurePricing, Explore-AzurePricing, both PowerShell and Bash versions) for improved usability
+- **Scripts**: Enhanced error messages in Bash scripts to list all valid flags when an unknown argument is provided
+
+### Changed
+
+- **Examples**: Updated workflow.md example to explicitly show Currency parameter usage in multi-region VM price comparison
+
 ## [1.2.3] - 2026-03-07
 
 ### Fixed
