@@ -36,7 +36,7 @@ Quantity: {tokenCount in units matching unitOfMeasure}
 ### Embeddings — substitute discovered embedding skuName
 
 ServiceName: Foundry Models
-ProductName: Azure OpenAI
+ProductName: {productName from discovery}
 SkuName: {embedding model} {deployment}
 Quantity: {tokenCount in units matching unitOfMeasure}
 
@@ -78,4 +78,4 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 - **Media models**: Audio, TTS, Sora 2 video (per-second), and GPT-Image under `Azure OpenAI Media` — query separately
 - **Fine-tuning**: Three billing dimensions — training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K)
 - **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `Cohere Models`, `Azure Kimi`, `Qwen models`, `Azure BFL Flux Models`). Each has its own `productName` — query with discovery first
-- **Embeddings**: Data Zone embedding models split into separate `Azure OpenAI Embedding` product — query separately from main `Azure OpenAI`
+- **Embeddings**: Data Zone embedding models split into separate `Azure OpenAI Embedding` product — `productName` varies by deployment type; use discovered `productName`, not hardcoded `Azure OpenAI`
