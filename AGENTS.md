@@ -17,7 +17,7 @@ AI agent skill for real-time Azure cost estimation using the Azure Retail Prices
 
 ## Git conventions
 
-- When creating pull requests, always target the `dev` branch (`--base dev` on `gh pr create`).
+- Feature and contributor pull requests target the `dev` branch (`--base dev` on `gh pr create`).
 
 ## CI
 
@@ -26,7 +26,7 @@ PRs automatically run:
 - **validate-service-references** — syntax, routing, alias uniqueness checks on service reference files.
 - **unit-tests** — PowerShell (Pester) and Bash (bats) tests when scripts or tests change.
 
-Releases are handled by `create-release.yml` when a PR with a `release:` prefix merges to `main`. Version is read from `.claude-plugin/plugin.json`.
+Releases are handled by `create-release.yml` when a PR with a `release: ` prefix merges to `main`. Version is read from `.claude-plugin/plugin.json`.
 
 ## For contributors
 
