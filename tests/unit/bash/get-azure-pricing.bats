@@ -124,14 +124,19 @@ teardown() { teardown_mock_path; }
     # Regression: all_results was accumulated across regions via --argjson, which
     # crashes on Linux when the accumulated JSON exceeds the per-argument size limit.
     # The fix pipes all_results via stdin instead. This test exercises both the
-    # accumulation loop (line 233) and the Json output block (line 271).
+    # accumulation loop and the Json output block.
+    #
+    # Each item uses 300-char string fields (productName, skuName, armSkuName,
+    # meterName) so the processed output for 100 items per region exceeds the Linux
+    # MAX_ARG_STRLEN limit (~128 KiB), ensuring the old --argjson code path would
+    # actually fail here on Linux.
     local items_json
     items_json=$(jq -cn '[range(100) | {
         serviceName: "Virtual Machines",
-        productName: ("Dv5 Series " + tostring),
-        skuName: ("D2s v5 " + tostring),
-        armSkuName: ("Standard_D2s_v5_" + tostring),
-        meterName: ("D2s v5 " + tostring),
+        productName: ("Dv5 Series " + ("x" * 300) + " " + tostring),
+        skuName: ("D2s v5 " + ("x" * 300) + " " + tostring),
+        armSkuName: ("Standard_D2s_v5_" + ("x" * 300) + "_" + tostring),
+        meterName: ("D2s v5 " + ("x" * 300) + " " + tostring),
         armRegionName: "eastus",
         retailPrice: 0.096,
         unitOfMeasure: "1 Hour",
@@ -142,8 +147,9 @@ teardown() { teardown_mock_path; }
         reservationTerm: null
     }]')
 
-    local page_file
-    page_file=$(mktemp)
+    # Use BATS_TEST_TMPDIR (auto-cleaned by bats) so the file is always removed
+    # even if an assertion fails.
+    local page_file="$BATS_TEST_TMPDIR/page_response"
     printf '{"Items":%s,"NextPageLink":null}\n%s' "$items_json" '200' > "$page_file"
 
     cat > "$MOCK_DIR/curl" <<SCRIPT
@@ -153,7 +159,6 @@ SCRIPT
     chmod +x "$MOCK_DIR/curl"
 
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus,westeurope"
-    rm -f "$page_file"
     [ "$status" -eq 0 ]
     local count
     count=$(echo "$output" | jq '.results | length')

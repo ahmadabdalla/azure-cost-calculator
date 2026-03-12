@@ -156,15 +156,24 @@ SCRIPT
 @test "large accumulated results across pages do not cause argument list errors" {
     # Regression test: previously all_items was passed via --argjson (command-line
     # argument), which crashed with "Argument list too long" for large result sets.
-    # The fix pipes all_items via stdin instead. This test verifies large multi-page
-    # accumulation works correctly.
+    # The fix pipes all_items via stdin instead.
+    #
+    # Each item includes a 750-byte padding field so the 200-item array exceeds
+    # the Linux MAX_ARG_STRLEN limit (~128 KiB), ensuring the old --argjson code
+    # path would actually fail here on Linux.
     local items_json
-    items_json=$(jq -cn '[range(200) | {"name": ("item" + tostring), "sku": "Standard_E2as_v5", "retailPrice": 0.096}]')
+    items_json=$(jq -cn '[range(200) | {
+        "name": ("item" + tostring),
+        "sku": "Standard_E2as_v5",
+        "retailPrice": 0.096,
+        "padding": ("a" * 750)
+    }]')
 
     # Write the large page response to a temp file so the mock can cat it without
     # embedding a large string as a shell argument.
-    local page_file
-    page_file=$(mktemp)
+    # Use BATS_TEST_TMPDIR (auto-cleaned by bats) so the file is always removed
+    # even if an assertion fails.
+    local page_file="$BATS_TEST_TMPDIR/page_response"
     printf '{"Items":%s,"NextPageLink":"https://prices.azure.com/NextPage"}\n%s' "$items_json" '200' > "$page_file"
 
     cat > "$MOCK_DIR/curl" <<SCRIPT
@@ -178,7 +187,6 @@ SCRIPT
     chmod +x "$MOCK_DIR/curl"
 
     run invoke_retail_prices_query "serviceName eq 'Test'" "USD" 300
-    rm -f "$page_file"
     [ "$status" -eq 0 ]
     local count
     count=$(jq 'length' <<< "$output")
