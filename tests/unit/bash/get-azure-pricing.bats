@@ -119,3 +119,43 @@ teardown() { teardown_mock_path; }
     [ "$status" -ne 0 ]
     echo "$output" | grep -Eqi "error|json|parse|invalid"
 }
+
+@test "multi-region accumulation does not cause argument list errors" {
+    # Regression: all_results was accumulated across regions via --argjson, which
+    # crashes on Linux when the accumulated JSON exceeds the per-argument size limit.
+    # The fix pipes all_results via stdin instead. This test exercises both the
+    # accumulation loop (line 233) and the Json output block (line 271).
+    local items_json
+    items_json=$(jq -cn '[range(100) | {
+        serviceName: "Virtual Machines",
+        productName: ("Dv5 Series " + tostring),
+        skuName: ("D2s v5 " + tostring),
+        armSkuName: ("Standard_D2s_v5_" + tostring),
+        meterName: ("D2s v5 " + tostring),
+        armRegionName: "eastus",
+        retailPrice: 0.096,
+        unitOfMeasure: "1 Hour",
+        currencyCode: "USD",
+        type: "Consumption",
+        isPrimaryMeterRegion: true,
+        tierMinimumUnits: 0,
+        reservationTerm: null
+    }]')
+
+    local page_file
+    page_file=$(mktemp)
+    printf '{"Items":%s,"NextPageLink":null}\n%s' "$items_json" '200' > "$page_file"
+
+    cat > "$MOCK_DIR/curl" <<SCRIPT
+#!/usr/bin/env bash
+cat "$page_file"
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus,westeurope"
+    rm -f "$page_file"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 200 ]
+}
