@@ -126,17 +126,17 @@ teardown() { teardown_mock_path; }
     # The fix pipes all_results via stdin instead. This test exercises both the
     # accumulation loop and the Json output block.
     #
-    # Each item uses 300-char string fields (productName, skuName, armSkuName,
-    # meterName) so the processed output for 100 items per region exceeds the Linux
-    # MAX_ARG_STRLEN limit (~128 KiB), ensuring the old --argjson code path would
-    # actually fail here on Linux.
+    # Each item uses 150-char string fields so the processed output per region is
+    # ~100 KiB (under MAX_ARG_STRLEN, keeping --argjson b valid). After two regions,
+    # all_results reaches ~200 KiB. The third region accumulation is where the old
+    # --argjson a "$all_results" would receive that 200 KiB value and crash on Linux.
     local items_json
     items_json=$(jq -cn '[range(100) | {
         serviceName: "Virtual Machines",
-        productName: ("Dv5 Series " + ("x" * 300) + " " + tostring),
-        skuName: ("D2s v5 " + ("x" * 300) + " " + tostring),
-        armSkuName: ("Standard_D2s_v5_" + ("x" * 300) + "_" + tostring),
-        meterName: ("D2s v5 " + ("x" * 300) + " " + tostring),
+        productName: ("Dv5 Series " + ("x" * 150) + " " + tostring),
+        skuName: ("D2s v5 " + ("x" * 150) + " " + tostring),
+        armSkuName: ("Standard_D2s_v5_" + ("x" * 150) + "_" + tostring),
+        meterName: ("D2s v5 " + ("x" * 150) + " " + tostring),
         armRegionName: "eastus",
         retailPrice: 0.096,
         unitOfMeasure: "1 Hour",
@@ -158,9 +158,9 @@ cat "$page_file"
 SCRIPT
     chmod +x "$MOCK_DIR/curl"
 
-    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus,westeurope"
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus,westeurope,uksouth"
     [ "$status" -eq 0 ]
     local count
     count=$(echo "$output" | jq '.results | length')
-    [ "$count" -eq 200 ]
+    [ "$count" -eq 300 ]
 }

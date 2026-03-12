@@ -158,30 +158,34 @@ SCRIPT
     # argument), which crashed with "Argument list too long" for large result sets.
     # The fix pipes all_items via stdin instead.
     #
-    # Each item includes a 750-byte padding field so the 200-item array exceeds
-    # the Linux MAX_ARG_STRLEN limit (~128 KiB), ensuring the old --argjson code
-    # path would actually fail here on Linux.
-    local items_json
-    items_json=$(jq -cn '[range(200) | {
+    # Each page has 100 items with a 750-byte padding field (~82 KiB per page),
+    # staying under the Linux MAX_ARG_STRLEN limit (~128 KiB) so --argjson b
+    # works for each individual page. After two pages, all_items reaches ~164 KiB.
+    # The third curl call returns an empty page, triggering the accumulation where
+    # the old --argjson a "$all_items" would receive the 164 KiB value and crash.
+    local page_items_json
+    page_items_json=$(jq -cn '[range(100) | {
         "name": ("item" + tostring),
         "sku": "Standard_E2as_v5",
         "retailPrice": 0.096,
         "padding": ("a" * 750)
     }]')
 
-    # Write the large page response to a temp file so the mock can cat it without
-    # embedding a large string as a shell argument.
-    # Use BATS_TEST_TMPDIR (auto-cleaned by bats) so the file is always removed
+    # Use BATS_TEST_TMPDIR (auto-cleaned by bats) so files are always removed
     # even if an assertion fails.
-    local page_file="$BATS_TEST_TMPDIR/page_response"
-    printf '{"Items":%s,"NextPageLink":"https://prices.azure.com/NextPage"}\n%s' "$items_json" '200' > "$page_file"
+    local page1_file="$BATS_TEST_TMPDIR/page1"
+    local page2_file="$BATS_TEST_TMPDIR/page2"
+    printf '{"Items":%s,"NextPageLink":"https://prices.azure.com/Page2"}\n%s' "$page_items_json" '200' > "$page1_file"
+    printf '{"Items":%s,"NextPageLink":"https://prices.azure.com/Page3"}\n%s' "$page_items_json" '200' > "$page2_file"
 
     cat > "$MOCK_DIR/curl" <<SCRIPT
 #!/usr/bin/env bash
-if [[ "\$*" == *"NextPage"* ]]; then
+if [[ "\$*" == *"Page3"* ]]; then
     printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+elif [[ "\$*" == *"Page2"* ]]; then
+    cat "$page2_file"
 else
-    cat "$page_file"
+    cat "$page1_file"
 fi
 SCRIPT
     chmod +x "$MOCK_DIR/curl"
