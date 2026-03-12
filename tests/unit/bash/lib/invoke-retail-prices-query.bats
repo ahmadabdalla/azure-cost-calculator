@@ -152,3 +152,35 @@ SCRIPT
     count=$(jq 'length' <<< "$output")
     [ "$count" -eq 1 ]
 }
+
+@test "large accumulated results across pages do not cause argument list errors" {
+    # Regression test: previously all_items was passed via --argjson (command-line
+    # argument), which crashed with "Argument list too long" for large result sets.
+    # The fix pipes all_items via stdin instead. This test verifies large multi-page
+    # accumulation works correctly.
+    local items_json
+    items_json=$(jq -cn '[range(200) | {"name": ("item" + tostring), "sku": "Standard_E2as_v5", "retailPrice": 0.096}]')
+
+    # Write the large page response to a temp file so the mock can cat it without
+    # embedding a large string as a shell argument.
+    local page_file
+    page_file=$(mktemp)
+    printf '{"Items":%s,"NextPageLink":"https://prices.azure.com/NextPage"}\n%s' "$items_json" '200' > "$page_file"
+
+    cat > "$MOCK_DIR/curl" <<SCRIPT
+#!/usr/bin/env bash
+if [[ "\$*" == *"NextPage"* ]]; then
+    printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+else
+    cat "$page_file"
+fi
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'" "USD" 300
+    rm -f "$page_file"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(jq 'length' <<< "$output")
+    [ "$count" -eq 200 ]
+}
