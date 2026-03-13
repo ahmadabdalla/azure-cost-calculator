@@ -1,1 +1,7 @@
 .github/workflows/*.lock.yml linguist-generated=true merge=ours
+
+# Force LF line endings for shell scripts so they work on Linux/macOS
+# even when checked out on Windows with core.autocrlf=true.
+*.sh    text eol=lf
+*.bash  text eol=lf
+*.bats  text eol=lf

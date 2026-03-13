@@ -4,6 +4,13 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.1] - 2026-03-13
+
+### Fixed
+
+- **Scripts**: Fixed "Argument list too long" crash in `invoke-retail-prices-query.sh` and `get-azure-pricing.sh` on broad queries by piping large JSON arrays via stdin instead of CLI arguments
+- **Infrastructure**: Enforced LF line endings for shell scripts (`.sh`, `.bash`, `.bats`) via `.gitattributes` to prevent CRLF-related failures on Linux/macOS when checked out on Windows
+
 ## [1.3.0] - 2026-03-08
 
 ### Added
