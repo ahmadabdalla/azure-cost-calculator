@@ -230,7 +230,7 @@ for region_name in "${regions[@]}"; do
         ]
     ' <<< "$deduped")
 
-    all_results=$(jq -c -n --argjson a "$all_results" --argjson b "$processed" '$a + $b')
+    all_results=$(printf '%s\n%s' "$all_results" "$processed" | jq -c -s '.[0] + .[1]')
 done
 
 # ============================================================
@@ -259,7 +259,7 @@ case "$output_format" in
         regions_json=$(printf '%s\n' "${regions[@]}" | jq -R . | jq -s .)
 
         # Convert empty strings to null for filter values (match PowerShell output)
-        jq -n \
+        echo "$all_results" | jq \
             --arg sn "$service_name" \
             --argjson regions "$regions_json" \
             --arg cur "$currency" \
@@ -268,7 +268,6 @@ case "$output_format" in
             --arg skn "$sku_name" \
             --arg pn "$product_name" \
             --arg mn "$meter_name" \
-            --argjson results "$all_results" \
             --argjson total "$total_count" '{
                 query: {
                     serviceName: $sn,
@@ -282,12 +281,12 @@ case "$output_format" in
                         meterName: (if $mn == "" then null else $mn end)
                     }
                 },
-                results: $results,
+                results: .,
                 totalItems: $total,
                 summary: {
-                    minMonthlyCost: ($results | map(.MonthlyCost) | min),
-                    maxMonthlyCost: ($results | map(.MonthlyCost) | max),
-                    totalMonthlyCost: ($results | map(.MonthlyCost) | add)
+                    minMonthlyCost: (map(.MonthlyCost) | min),
+                    maxMonthlyCost: (map(.MonthlyCost) | max),
+                    totalMonthlyCost: (map(.MonthlyCost) | add)
                 }
             }'
         ;;

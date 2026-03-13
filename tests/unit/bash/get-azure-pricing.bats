@@ -119,3 +119,88 @@ teardown() { teardown_mock_path; }
     [ "$status" -ne 0 ]
     echo "$output" | grep -Eqi "error|json|parse|invalid"
 }
+
+@test "large single-region processed result does not cause argument list errors" {
+    # Regression: $processed JSON for a single region was appended via --argjson b,
+    # which crashes on Linux when $processed exceeds MAX_ARG_STRLEN (~128 KiB).
+    # The fix pipes both values via stdin using printf | jq -s '.[0] + .[1]'.
+    #
+    # 200 items × 200-char field values ≈ 200+ KiB for processed — exceeds the limit
+    # so --argjson b would crash on the first region without the fix.
+    local items_json
+    items_json=$(jq -cn '[range(200) | {
+        serviceName: "Virtual Machines",
+        productName: ("Dv5 Series " + ("x" * 200) + " " + tostring),
+        skuName: ("D2s v5 " + ("x" * 200) + " " + tostring),
+        armSkuName: ("Standard_D2s_v5_" + ("x" * 200) + "_" + tostring),
+        meterName: ("D2s v5 " + ("x" * 200) + " " + tostring),
+        armRegionName: "eastus",
+        retailPrice: 0.096,
+        unitOfMeasure: "1 Hour",
+        currencyCode: "USD",
+        type: "Consumption",
+        isPrimaryMeterRegion: true,
+        tierMinimumUnits: 0,
+        reservationTerm: null
+    }]')
+
+    local page_file="$BATS_TEST_TMPDIR/large_single_region_page"
+    printf '{"Items":%s,"NextPageLink":null}\n%s' "$items_json" '200' > "$page_file"
+
+    cat > "$MOCK_DIR/curl" <<SCRIPT
+#!/usr/bin/env bash
+cat "$page_file"
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 200 ]
+}
+
+@test "multi-region accumulation does not cause argument list errors" {
+    # Regression: all_results was accumulated across regions via --argjson, which
+    # crashes on Linux when the accumulated JSON exceeds the per-argument size limit.
+    # The fix pipes all_results via stdin instead. This test exercises both the
+    # accumulation loop and the Json output block.
+    #
+    # Each item uses 150-char string fields so the processed output per region is
+    # ~100 KiB (under MAX_ARG_STRLEN, keeping --argjson b valid). After two regions,
+    # all_results reaches ~200 KiB. The third region accumulation is where the old
+    # --argjson a "$all_results" would receive that 200 KiB value and crash on Linux.
+    local items_json
+    items_json=$(jq -cn '[range(100) | {
+        serviceName: "Virtual Machines",
+        productName: ("Dv5 Series " + ("x" * 150) + " " + tostring),
+        skuName: ("D2s v5 " + ("x" * 150) + " " + tostring),
+        armSkuName: ("Standard_D2s_v5_" + ("x" * 150) + "_" + tostring),
+        meterName: ("D2s v5 " + ("x" * 150) + " " + tostring),
+        armRegionName: "eastus",
+        retailPrice: 0.096,
+        unitOfMeasure: "1 Hour",
+        currencyCode: "USD",
+        type: "Consumption",
+        isPrimaryMeterRegion: true,
+        tierMinimumUnits: 0,
+        reservationTerm: null
+    }]')
+
+    # Use BATS_TEST_TMPDIR (auto-cleaned by bats) so the file is always removed
+    # even if an assertion fails.
+    local page_file="$BATS_TEST_TMPDIR/page_response"
+    printf '{"Items":%s,"NextPageLink":null}\n%s' "$items_json" '200' > "$page_file"
+
+    cat > "$MOCK_DIR/curl" <<SCRIPT
+#!/usr/bin/env bash
+cat "$page_file"
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --region "eastus,westeurope,uksouth"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 300 ]
+}
