@@ -33,7 +33,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 | Tools | `ca-certificates`, `curl`, `jq`, `git`, `nodejs`, `npm`, `bash` |
 | bats version | `1.11.1` (matches CI — see `.github/scripts/test/install-bats.sh`) |
 | Workspace | `/workspace` (bind-mounted from `localWorkspaceFolder`) |
-| User | `root` |
+| User | `vscode` (UID/GID 1000; auto-remapped to host UID/GID on Linux by Dev Containers) |
 | VS Code extensions | `shellcheck`, `shell-format` |
 
 ## Making changes
@@ -45,11 +45,12 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 
 ## Troubleshooting
 
-- **Container fails to build**: ensure Docker is running and you have network access to pull `ubuntu:latest` and npm packages.
+- **Container fails to build**: ensure Docker is running and you have network access to pull `ubuntu:24.04` and npm packages.
 - **bats not found after rebuild**: the `npm install -g bats@1.11.1` step requires network; check Docker's DNS/proxy settings.
-- **File permission errors on Linux**: the workspace is bind-mounted; files created inside the container are owned by `root`. Run `sudo chown -R $USER .` on the host if needed.
+- **File permission errors on Linux**: the `vscode` user's UID/GID is automatically remapped to the host user's UID/GID by Dev Containers (`updateRemoteUserUID`). If you still see permission errors, ensure only one regular user exists in the image and that `remoteUser` is set to a non-root user in `devcontainer.json`.
 
 ## External references
 
 - [VS Code Dev Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers)
+- [Add a non-root user to a container](https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user)
 - [bats-core releases](https://github.com/bats-core/bats-core/releases)
