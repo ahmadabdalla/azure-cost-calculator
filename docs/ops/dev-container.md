@@ -1,0 +1,54 @@
+# Dev Container
+
+## What it does
+
+Provides a reproducible Ubuntu Linux environment for running and validating the Bash scripts and bats unit tests locally. Particularly useful for catching Linux-specific bugs (e.g. `ARG_MAX` / `MAX_ARG_STRLEN` crashes) that don't surface on macOS.
+
+## Prerequisites
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (or compatible container runtime)
+- [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+## How to use
+
+1. Open the repository in VS Code.
+2. When prompted, click **Reopen in Container** — or run the command palette action `Dev Containers: Reopen in Container`.
+3. VS Code builds the image (first run only) and opens a shell at `/workspace`.
+4. Run bats tests:
+   ```bash
+   bash tests/unit/run-bats-tests.sh
+   ```
+5. Run a script directly against the live Azure API:
+   ```bash
+   bash skills/azure-cost-calculator/scripts/get-azure-pricing.sh \
+     --service-name "Virtual Machines" --arm-sku-name "Standard_E2as_v5" \
+     --region "uaenorth" --output-format Table
+   ```
+
+## Container details
+
+| Item | Value |
+|------|-------|
+| Base image | `ubuntu:latest` |
+| Tools | `curl`, `jq`, `git`, `nodejs`, `npm`, `bash` |
+| bats version | `1.11.1` (matches CI — see `.github/scripts/test/install-bats.sh`) |
+| Workspace | `/workspace` (bind-mounted from `localWorkspaceFolder`) |
+| User | `root` |
+| VS Code extensions | `shellcheck`, `shell-format` |
+
+## Making changes
+
+- **Adding tools**: edit `.devcontainer/Dockerfile` and rebuild the container (`Dev Containers: Rebuild Container`).
+- **Pinning bats**: keep the version in `Dockerfile` in sync with `.github/scripts/test/install-bats.sh`.
+- **VS Code settings/extensions**: edit `.devcontainer/devcontainer.json`.
+
+## Troubleshooting
+
+- **Container fails to build**: ensure Docker is running and you have network access to pull `ubuntu:latest` and npm packages.
+- **bats not found after rebuild**: the `npm install -g bats@1.11.1` step requires network; check Docker's DNS/proxy settings.
+- **File permission errors on Linux**: the workspace is bind-mounted; files created inside the container are owned by `root`. Run `sudo chown -R $USER .` on the host if needed.
+
+## External references
+
+- [VS Code Dev Containers documentation](https://code.visualstudio.com/docs/devcontainers/containers)
+- [bats-core releases](https://github.com/bats-core/bats-core/releases)
