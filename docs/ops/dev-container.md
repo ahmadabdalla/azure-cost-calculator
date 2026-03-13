@@ -33,7 +33,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 | Tools | `ca-certificates`, `curl`, `jq`, `git`, `nodejs`, `npm`, `bash` |
 | bats version | `1.11.1` (matches CI — see `.github/scripts/test/install-bats.sh`) |
 | Workspace | `/workspace` (bind-mounted from `localWorkspaceFolder`) |
-| User | `vscode` (UID/GID 1000; auto-remapped to host UID/GID on Linux by Dev Containers) |
+| User | `ubuntu` (UID/GID 1000; built into `ubuntu:24.04`; auto-remapped to host UID/GID on Linux by Dev Containers) |
 | VS Code extensions | `shellcheck`, `shell-format` |
 
 ## Making changes
@@ -47,7 +47,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 
 - **Container fails to build**: ensure Docker is running and you have network access to pull `ubuntu:24.04` and npm packages.
 - **bats not found after rebuild**: the `npm install -g bats@1.11.1` step requires network; check Docker's DNS/proxy settings.
-- **File permission errors on Linux**: the `vscode` user's UID/GID is automatically remapped to the host user's UID/GID by Dev Containers (`updateRemoteUserUID`). If you still see permission errors, ensure only one regular user exists in the image and that `remoteUser` is set to a non-root user in `devcontainer.json`.
+- **File permission errors on Linux**: the `ubuntu` user's UID/GID is automatically remapped to the host user's UID/GID by Dev Containers (`updateRemoteUserUID`). If you still see permission errors, ensure only one regular user exists in the image and that `remoteUser` is set to a non-root user in `devcontainer.json`.
 
 ## External references
 
