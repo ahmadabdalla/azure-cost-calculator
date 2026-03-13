@@ -153,6 +153,37 @@ SCRIPT
     [ "$count" -eq 1 ]
 }
 
+@test "large single page does not cause argument list errors" {
+    # Regression test: $page_items was passed as --argjson b, which crashes on Linux
+    # when a single API page exceeds MAX_ARG_STRLEN (~128 KiB). The fix pipes both
+    # all_items and page_items via stdin using printf | jq -s '.[0] + .[1]'.
+    #
+    # 200 items × 750-byte padding ≈ 165 KiB for page_items — exceeds the limit,
+    # so --argjson b would crash on the very first page without the fix.
+    local page_items_json
+    page_items_json=$(jq -cn '[range(200) | {
+        "name": ("item" + tostring),
+        "sku": "Standard_E2as_v5",
+        "retailPrice": 0.096,
+        "padding": ("a" * 750)
+    }]')
+
+    local page_file="$BATS_TEST_TMPDIR/large_single_page"
+    printf '{"Items":%s,"NextPageLink":null}\n%s' "$page_items_json" '200' > "$page_file"
+
+    cat > "$MOCK_DIR/curl" <<SCRIPT
+#!/usr/bin/env bash
+cat "$page_file"
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'" "USD" 300
+    [ "$status" -eq 0 ]
+    local count
+    count=$(jq 'length' <<< "$output")
+    [ "$count" -eq 200 ]
+}
+
 @test "large accumulated results across pages do not cause argument list errors" {
     # Regression test: previously all_items was passed via --argjson (command-line
     # argument), which crashed with "Argument list too long" for large result sets.

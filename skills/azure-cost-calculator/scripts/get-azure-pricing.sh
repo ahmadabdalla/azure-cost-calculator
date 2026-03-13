@@ -230,7 +230,7 @@ for region_name in "${regions[@]}"; do
         ]
     ' <<< "$deduped")
 
-    all_results=$(echo "$all_results" | jq -c --argjson b "$processed" '. + $b')
+    all_results=$(printf '%s\n%s' "$all_results" "$processed" | jq -c -s '.[0] + .[1]')
 done
 
 # ============================================================

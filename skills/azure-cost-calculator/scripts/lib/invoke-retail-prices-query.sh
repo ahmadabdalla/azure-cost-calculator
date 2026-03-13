@@ -36,7 +36,7 @@ invoke_retail_prices_query() {
 
         local page_items
         page_items=$(jq -c '.Items // []' <<< "$response")
-        all_items=$(echo "$all_items" | jq -c --argjson b "$page_items" '. + $b')
+        all_items=$(printf '%s\n%s' "$all_items" "$page_items" | jq -c -s '.[0] + .[1]')
         count=$(jq 'length' <<< "$all_items")
 
         if (( count >= max_items )); then
