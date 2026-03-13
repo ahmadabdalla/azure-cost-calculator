@@ -29,8 +29,8 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 
 | Item | Value |
 |------|-------|
-| Base image | `ubuntu:latest` |
-| Tools | `curl`, `jq`, `git`, `nodejs`, `npm`, `bash` |
+| Base image | `ubuntu:24.04` |
+| Tools | `ca-certificates`, `curl`, `jq`, `git`, `nodejs`, `npm`, `bash` |
 | bats version | `1.11.1` (matches CI — see `.github/scripts/test/install-bats.sh`) |
 | Workspace | `/workspace` (bind-mounted from `localWorkspaceFolder`) |
 | User | `root` |
@@ -39,6 +39,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 ## Making changes
 
 - **Adding tools**: edit `.devcontainer/Dockerfile` and rebuild the container (`Dev Containers: Rebuild Container`).
+- **Upgrading the base image**: update the `FROM ubuntu:XX.XX` tag in `Dockerfile` and the "Base image" entry in this doc together.
 - **Pinning bats**: keep the version in `Dockerfile` in sync with `.github/scripts/test/install-bats.sh`.
 - **VS Code settings/extensions**: edit `.devcontainer/devcontainer.json`.
 
