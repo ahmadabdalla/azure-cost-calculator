@@ -167,7 +167,17 @@ Manually verify against key rules from `CONTRIBUTING.md`:
 - At least one query uses `InstanceCount` or `Quantity` for scaling
 - YAML front matter fields match schema (types, lengths, allowed values, elision rule)
 
-### 4.3 - Check routing/catalog consistency
+### 4.3 - AHUB billing model check (if applicable)
+
+If the PR touches any Azure Hybrid Benefit section, or if the changed service file has `Azure Hybrid Benefit` in `billingConsiderations`:
+
+1. Instruct the pricing-investigator sub-agents (Phase 2) to explicitly run section 4.8 of their protocol — querying compute and SQL License meters for every tier and checking for negative derived rates.
+2. Treat any negative derived AHUB rate as a **Blocking** issue: the billing model is wrong (the compute meter is a base rate, not license-included; correct model is additive, not subtractive).
+3. Verify the formula direction: the compute `retailPrice` alone should be the AHUB rate. If the file says "subtract the license rate from compute," flag it as Blocking.
+
+This check exists because two wrong sources cross-validating each other (e.g., a service file and `shared.md` both documenting the same incorrect formula) will pass all filter-value checks while silently producing incorrect costs.
+
+### 4.4 - Check routing/catalog consistency
 
 If the PR modifies `service-routing.md` or `service-catalog.md`:
 
