@@ -25,7 +25,7 @@ ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series Windows
 
-> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact values.
+> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops the `Standard_` prefix and underscores. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Fsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S** — do not lowercase it. Common capital-S series: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
 
 ## Key Fields
 
