@@ -4,7 +4,6 @@ category: networking
 aliases: [DNS Security, DNS Filtering, DNS Threat Intelligence]
 apiServiceName: Azure DNS
 primaryCost: "Per 1K managed domains/month + per million DNS security queries"
-pricingRegion: empty-region
 ---
 
 # DNS Security Policy
