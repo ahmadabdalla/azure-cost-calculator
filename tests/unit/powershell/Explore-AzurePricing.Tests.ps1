@@ -267,6 +267,7 @@ Describe 'Explore-AzurePricing' {
         BeforeAll {
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('Connection refused') }
 
+            $global:LASTEXITCODE = 0
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
             $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
@@ -289,6 +290,7 @@ Describe 'Explore-AzurePricing' {
                 throw $ex
             }
 
+            $global:LASTEXITCODE = 0
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
             $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
