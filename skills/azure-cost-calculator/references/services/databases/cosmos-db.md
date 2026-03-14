@@ -54,7 +54,7 @@ SkuName: RUs
 | -------------- | ----------------------- | ------- | ---------------------------- | --------------------------------------- |
 | Throughput     | `100 RU/s`              | `RUs`   | `Azure Cosmos DB`            | Use `-Quantity N` where N = RU/s ÷ 100  |
 | Multi-master   | `100 Multi-master RU/s` | `mRUs`  | `Azure Cosmos DB`            | For multi-region writes                 |
-| Storage        | `Data Stored`           | `RUs`   | `Azure Cosmos DB`            | Per GB/month for provisioned throughput |
+| Storage        | `Data Stored`           | `RUs`   | `Azure Cosmos DB`            | Per GB/month (provisioned + serverless) |
 | Serverless ops | `1M RUs`                | `RUs`   | `Azure Cosmos DB serverless` | Per million RU consumed                 |
 | Autoscale      | `AP1 100 RUs`           | `AP1`   | `Azure Cosmos DB autoscale`  | 1.5× standard rate — already baked in   |
 
@@ -77,7 +77,7 @@ Total              = Throughput + Storage
 - **Autoscale provisioned throughput**: The API has a **separate product** (`Azure Cosmos DB autoscale`) with its own meter (`AP1 100 RUs`, skuName `AP1`). The autoscale rate is exactly 1.5× the standard provisioned rate and this premium is **already included** in the API price. Do NOT query the standard `100 RU/s` meter and manually multiply by 1.5 — instead query the autoscale product directly. With autoscale, billing is based on the maximum RU/s set; calculate as `autoscale_price × (maxRUs / 100) × 730`.
 - **MongoDB vCore**: Cosmos DB for MongoDB vCore uses productName `Azure DocumentDB` with vCore-based billing (coordinator + worker nodes, per-vCore hourly). Do not use RU/s queries for vCore clusters.
 - **Backup costs (Databases, not Storage)**: Native continuous backup (`productName: Azure Cosmos DB - PITR`) and periodic snapshots (`productName: Azure Cosmos DB Snapshot`) are billed per-GB under `serviceName: Azure Cosmos DB` (Databases category). 7-day continuous is free; 30-day and on-demand are charged. Do NOT confuse with Azure Backup vault storage (`serviceName: Backup`) which has a much lower per-GB rate — see `storage/backup.md`.
-- **Add-on products**: Dedicated Gateway, Garnet Cache, Materialized Views, Analytics Storage, Graph API compute, and Compute Attached SSD Disk have separate productNames under the same serviceName — query each individually.
+- **Add-on products**: Dedicated Gateway, Garnet Cache, Materialized Views, Analytics Storage, Graph API compute, and `Cosmos DB Compute Attached SSD Disk` have separate productNames under the same serviceName — query each individually.
 - **PE sub-resources** (never-assume): `Sql`, `MongoDB`, `Cassandra`, `Gremlin`, `Table`. Conditional: `SqlDedicated` (dedicated gateway), `Analytical` (Synapse Link)
 
 ## Reserved Instance Pricing
