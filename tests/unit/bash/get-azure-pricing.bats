@@ -228,8 +228,8 @@ SCRIPT
     [ "$status" -eq 0 ]
     field_count=$(echo "$output" | jq '.results[0] | keys | length')
     [ "$field_count" -eq 9 ]
-    # Verify specific fields exist
-    echo "$output" | jq -e '.results[0] | has("MeterName", "ProductName", "SkuName", "UnitPrice", "UnitOfMeasure", "MonthlyCost", "Currency", "ReservationTerm", "TierMinUnits")'
+    # Verify specific fields exist (chained has() — multi-arg has() is a generator, not AND)
+    echo "$output" | jq -e '.results[0] | (has("MeterName") and has("ProductName") and has("SkuName") and has("UnitPrice") and has("UnitOfMeasure") and has("MonthlyCost") and has("Currency") and has("ReservationTerm") and has("TierMinUnits"))'
 }
 
 @test "compact output calculates correct MonthlyCost" {
