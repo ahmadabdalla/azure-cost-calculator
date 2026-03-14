@@ -54,7 +54,7 @@ param(
     [int]$InstanceCount = 1,
 
     [Parameter()]
-    [ValidateSet('Table', 'Json', 'Summary')]
+    [ValidateSet('Table', 'Json', 'Summary', 'Compact')]
     [string]$OutputFormat = 'Json'
 )
 
@@ -111,7 +111,7 @@ foreach ($regionName in $Region) {
     catch {
         $ex = $_.Exception
         $isHttpError = ($null -ne $ex.PSObject.Properties['Response']) -or
-                       ($null -ne $ex.PSObject.Properties['StatusCode'])
+        ($null -ne $ex.PSObject.Properties['StatusCode'])
 
         if ($isHttpError) {
             Write-Warning "API returned error for region '$regionName'. Filter: $filterString"
@@ -251,6 +251,22 @@ switch ($OutputFormat) {
             }
         }
         $output | ConvertTo-Json -Depth 5
+    }
+    'Compact' {
+        $compactResults = $allResults | ForEach-Object {
+            [PSCustomObject]@{
+                MeterName       = $_.MeterName
+                ProductName     = $_.ProductName
+                SkuName         = $_.SkuName
+                UnitPrice       = $_.UnitPrice
+                UnitOfMeasure   = $_.UnitOfMeasure
+                MonthlyCost     = $_.MonthlyCost
+                Currency        = $_.Currency
+                ReservationTerm = $_.ReservationTerm
+                TierMinUnits    = $_.TierMinUnits
+            }
+        }
+        @{ results = @($compactResults) } | ConvertTo-Json -Depth 5
     }
     'Summary' {
         $summaryLines = [System.Collections.Generic.List[string]]::new()

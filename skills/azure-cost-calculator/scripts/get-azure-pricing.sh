@@ -97,7 +97,7 @@ Flags:
   --quantity NUM          Quantity (default: 0)
   --hours-per-month NUM   Hours per month (default: 730)
   --instance-count NUM    Instance count (default: 1)
-  --output-format FMT     Table|Json|Summary (default: Json)
+  --output-format FMT     Table|Json|Summary|Compact (default: Json)
   --verbose|-v            Emit OData filter to stderr
   --help|-h               Show this help
 USAGE
@@ -117,8 +117,8 @@ validate_integer "instance_count" "$instance_count"
 
 # Validate enum arguments
 case "$output_format" in
-    Table|Json|Summary) ;;
-    *) echo "Error: --output-format must be Table, Json, or Summary, got '$output_format'" >&2; exit 1 ;;
+    Table|Json|Summary|Compact) ;;
+    *) echo "Error: --output-format must be Table, Json, Summary, or Compact, got '$output_format'" >&2; exit 1 ;;
 esac
 case "$price_type" in
     Consumption|Reservation|DevTestConsumption) ;;
@@ -295,6 +295,21 @@ case "$output_format" in
                 }
             }'
         ;;
+    Compact)
+        jq '{
+            results: [.[] | {
+                MeterName,
+                ProductName,
+                SkuName,
+                UnitPrice,
+                UnitOfMeasure,
+                MonthlyCost,
+                Currency,
+                ReservationTerm,
+                TierMinUnits
+            }]
+        }' <<< "$all_results"
+        ;;
     Summary)
         echo ""
         echo "=== Azure Pricing Estimate ==="
@@ -320,7 +335,7 @@ case "$output_format" in
         echo ""
         ;;
     *)
-        echo "Error: Invalid --output-format '$output_format'. Use Table, Json, or Summary." >&2
+        echo "Error: Invalid --output-format '$output_format'. Use Table, Json, Summary, or Compact." >&2
         exit 1
         ;;
 esac
