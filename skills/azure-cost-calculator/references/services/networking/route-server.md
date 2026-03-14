@@ -42,6 +42,8 @@ MeterName: Basic Gateway
 Region: Global
 InstanceCount: 3
 
+> **Note**: When estimating multiple Route Server instances, apply `InstanceCount` to both the gateway and scaling unit queries — each deployment bills independently.
+
 ## Key Fields
 
 | Parameter     | How to determine                                                | Example values                                 |
@@ -61,10 +63,10 @@ InstanceCount: 3
 ## Cost Formula
 
 ```
-Gateway monthly       = gateway_retailPrice × 730 × instanceCount
+Gateway monthly       = gateway_retailPrice × 730
 Additional units      = max(0, ceil((vmCount - 4000) / 1000))
 Scaling units monthly = unit_retailPrice × 730 × Additional units
-Total monthly         = Gateway + Scaling units
+Total monthly         = (Gateway + Scaling units) × instanceCount
 ```
 
 ## Notes
