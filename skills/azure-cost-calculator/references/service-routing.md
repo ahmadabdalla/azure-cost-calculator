@@ -62,6 +62,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Load Balancer: ALB, LB, Standard LB, Basic LB
 - NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
 - Network Watcher: NSG Flow Logs, Connection Monitor
+- Azure Route Server: BGP Routing
 - Private DNS: Private DNS, Private DNS Zones
 - Traffic Manager: DNS Load Balancer
 - Virtual Network: VNet, Peering
