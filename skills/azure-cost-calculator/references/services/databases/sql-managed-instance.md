@@ -37,7 +37,7 @@ Quantity: 256
 | ------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
 | `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                  |
 | `productName` | Tier + hardware series                         | See Product Names section below                                         |
-| `skuName`     | vCore count — selects the size                 | `4 vCore`, `8 vCore`, `16 vCore`, `32 vCore`, `64 vCore`, `80 vCore`    |
+| `skuName`     | vCore count — selects the size                 | `4 vCore`, `8 vCore`, `16 vCore`, `24 vCore`, `32 vCore`, `40 vCore`, `64 vCore`, `80 vCore` |
 | `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored` |
 
 ## Meter Names
