@@ -57,6 +57,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Private Link: Private Endpoint, PE
 - Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
 - Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
+- DNS Private Resolver: Private Resolver, DNS Resolver, Azure DNS Private Resolver
 - ExpressRoute: ER, Dedicated Circuit
 - ExpressRoute Gateway: ER Gateway, ExpressRoute VNet Gateway, ErGw
 - IP Addresses: Public IP, PIP, Public IP Address
