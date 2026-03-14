@@ -98,6 +98,7 @@ catch {
 
 if (-not $items -or $items.Count -eq 0) {
     Write-Warning "No results found. Filter: $filterString"
+    if ($OutputFormat -eq 'Json') { '[]' }
     return
 }
 

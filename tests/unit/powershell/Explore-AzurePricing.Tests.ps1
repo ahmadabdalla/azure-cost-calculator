@@ -246,6 +246,8 @@ Describe 'Explore-AzurePricing' {
 
             $script:AllOutput = & $script:ScriptPath -ServiceName 'NonExistent' -OutputFormat Json 3>&1
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+            $script:StdOut = @($script:AllOutput | Where-Object { $_ -isnot [System.Management.Automation.WarningRecord] })
+            $script:Result = @(script:ConvertFrom-JsonArray ($script:StdOut -join "`n"))
         }
 
         It 'Should produce warnings about no data' {
@@ -254,6 +256,10 @@ Describe 'Explore-AzurePricing' {
 
         It 'Should warn about no results found' {
             ($script:Warnings.Message -join "`n") | Should -Match 'No.*results|No.*data|No.*found'
+        }
+
+        It 'Should emit empty JSON array' {
+            $script:Result.Count | Should -Be 0
         }
     }
 
