@@ -71,6 +71,7 @@ $ErrorActionPreference = 'Stop'
 # ============================================================
 
 $allResults = [System.Collections.Generic.List[PSCustomObject]]::new()
+$hadApiSuccess = $false
 
 foreach ($regionName in $Region) {
     # Build filter
@@ -120,6 +121,8 @@ foreach ($regionName in $Region) {
 
         throw
     }
+
+    $hadApiSuccess = $true
 
     if ($items.Count -eq 0) {
         Write-Warning "No pricing data found for region '$regionName' with the specified filters."
@@ -208,6 +211,9 @@ foreach ($regionName in $Region) {
 
 if ($allResults.Count -eq 0) {
     Write-Warning 'No results to display.'
+    if (-not $hadApiSuccess) {
+        exit 1
+    }
 }
 
 $costMeasure = $allResults | Measure-Object -Property MonthlyCost -Minimum -Maximum -Sum
