@@ -71,10 +71,15 @@ teardown() { teardown_mock_path; }
     [ "$monthly" = "210.24" ]
 }
 
-@test "no results exits with code 2" {
+@test "no results exits 0 with empty JSON envelope" {
     create_curl_mock '{"Items":[],"NextPageLink":null}' 200
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Nonexistent"
-    [ "$status" -eq 2 ]
+    [ "$status" -eq 0 ]
+    json_output=$(echo "$output" | grep -v '^Warning:')
+    total=$(echo "$json_output" | jq '.totalItems')
+    [ "$total" = "0" ]
+    results=$(echo "$json_output" | jq '.results | length')
+    [ "$results" = "0" ]
 }
 
 @test "table output has TSV headers" {

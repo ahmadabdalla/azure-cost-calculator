@@ -71,6 +71,7 @@ $ErrorActionPreference = 'Stop'
 # ============================================================
 
 $allResults = [System.Collections.Generic.List[PSCustomObject]]::new()
+$hadApiSuccess = $false
 
 foreach ($regionName in $Region) {
     # Build filter
@@ -120,6 +121,8 @@ foreach ($regionName in $Region) {
 
         throw
     }
+
+    $hadApiSuccess = $true
 
     if ($items.Count -eq 0) {
         Write-Warning "No pricing data found for region '$regionName' with the specified filters."
@@ -208,8 +211,12 @@ foreach ($regionName in $Region) {
 
 if ($allResults.Count -eq 0) {
     Write-Warning 'No results to display.'
-    return
+    if (-not $hadApiSuccess) {
+        exit 1
+    }
 }
+
+$costMeasure = $allResults | Measure-Object -Property MonthlyCost -Minimum -Maximum -Sum
 
 switch ($OutputFormat) {
     'Table' {
@@ -238,9 +245,9 @@ switch ($OutputFormat) {
             results    = $allResults
             totalItems = $allResults.Count
             summary    = @{
-                minMonthlyCost   = ($allResults | Measure-Object -Property MonthlyCost -Minimum).Minimum
-                maxMonthlyCost   = ($allResults | Measure-Object -Property MonthlyCost -Maximum).Maximum
-                totalMonthlyCost = ($allResults | Measure-Object -Property MonthlyCost -Sum).Sum
+                minMonthlyCost   = $(if ($costMeasure.Count -gt 0) { $costMeasure.Minimum } else { 0 })
+                maxMonthlyCost   = $(if ($costMeasure.Count -gt 0) { $costMeasure.Maximum } else { 0 })
+                totalMonthlyCost = $(if ($costMeasure.Count -gt 0) { $costMeasure.Sum } else { 0 })
             }
         }
         $output | ConvertTo-Json -Depth 5
@@ -267,7 +274,7 @@ switch ($OutputFormat) {
             $summaryLines.Add($line)
         }
 
-        $totalMonthly = ($allResults | Measure-Object -Property MonthlyCost -Sum).Sum
+        $totalMonthly = if ($costMeasure.Count -gt 0) { $costMeasure.Sum } else { 0 }
         $summaryLines.Add('')
         $summaryLines.Add('  ---')
         $summaryLines.Add("  TOTAL ESTIMATED MONTHLY: $Currency $([string]::Format('{0:N2}', $totalMonthly))")

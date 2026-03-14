@@ -35,7 +35,10 @@ invoke_retail_prices_query() {
         fi
 
         local page_items
-        page_items=$(jq -c '.Items // []' <<< "$response")
+        page_items=$(jq -c '.Items // []' <<< "$response") || {
+            echo "Error: Invalid JSON response from API" >&2
+            return 1
+        }
         all_items=$(printf '%s\n%s' "$all_items" "$page_items" | jq -c -s '.[0] + .[1]')
         count=$(jq 'length' <<< "$all_items")
 

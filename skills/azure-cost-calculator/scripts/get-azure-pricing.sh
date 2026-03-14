@@ -137,6 +137,7 @@ IFS=',' read -ra regions <<< "$region"
 # Main logic
 # ============================================================
 all_results="[]"
+had_api_success=false
 
 for region_name in "${regions[@]}"; do
     # Build OData filter arguments
@@ -155,6 +156,8 @@ for region_name in "${regions[@]}"; do
         echo "Warning: API request failed for region '$region_name'. Filter: $filter_string" >&2
         continue
     }
+
+    had_api_success=true
 
     item_count=$(jq 'length' <<< "$items")
     if (( item_count == 0 )); then
@@ -240,7 +243,9 @@ total_count=$(jq 'length' <<< "$all_results")
 
 if (( total_count == 0 )); then
     echo "Warning: No results to display." >&2
-    exit 2
+    if [[ "$had_api_success" != true ]]; then
+        exit 1
+    fi
 fi
 
 case "$output_format" in
@@ -284,9 +289,9 @@ case "$output_format" in
                 results: .,
                 totalItems: $total,
                 summary: {
-                    minMonthlyCost: (map(.MonthlyCost) | min),
-                    maxMonthlyCost: (map(.MonthlyCost) | max),
-                    totalMonthlyCost: (map(.MonthlyCost) | add)
+                    minMonthlyCost: (map(.MonthlyCost) | min // 0),
+                    maxMonthlyCost: (map(.MonthlyCost) | max // 0),
+                    totalMonthlyCost: (map(.MonthlyCost) | add // 0)
                 }
             }'
         ;;
@@ -308,7 +313,7 @@ case "$output_format" in
               + (if (.TierMinUnits // 0) > 0 then " (tier: above \(.TierMinUnits) units)" else "" end)
         ' <<< "$all_results"
 
-        total_monthly=$(jq '[.[].MonthlyCost] | add' <<< "$all_results")
+        total_monthly=$(jq '[.[].MonthlyCost] | add // 0' <<< "$all_results")
         echo ""
         echo "  ---"
         printf "  TOTAL ESTIMATED MONTHLY: %s %.2f\n" "$currency" "$total_monthly"
