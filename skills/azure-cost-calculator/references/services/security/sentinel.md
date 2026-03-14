@@ -15,6 +15,8 @@ primaryCost: "Per-GB ingestion (PAYG or commitment tier per day × 30) + optiona
 > **Trap (inflated total)**: Unfiltered `ServiceName: Sentinel` sums all 23 SKUs including every commitment tier — `totalMonthlyCost` is wildly inflated. Always filter by the specific `SkuName` the customer uses — PAYG or one commitment tier, not both.
 
 > **Trap (DO NOT double-count workspace ingestion)**: Sentinel PAYG and Commitment Tier prices **already include** all workspace ingestion (including Application Insights telemetry, custom logs, and any other `_IsBillable=true` data) — DO NOT add a separate Log Analytics or App Insights ingestion charge. Only add Log Analytics costs for: (1) retention beyond the included free period (90 days for Sentinel-enabled workspaces), (2) data ingested into workspaces that do not have Sentinel enabled, or (3) non-Sentinel workspace features billed separately. If you add LA or App Insights ingestion on top of Sentinel ingestion, the estimate will be ~2× the real cost.
+>
+> **Trap (pricing model — default to simplified)**: Unless the spec explicitly states "classic pricing" or "legacy workspace," use **simplified pricing** (post-July 2023 default). Classic workspaces use `Classic` prefix meters — never mix simplified and classic meters. Disclose in assumptions: `Sentinel pricing model: simplified`.
 
 ## Query Pattern
 
@@ -91,6 +93,5 @@ Data Lake:  Monthly = storage_retailPrice × storedGB + ingestion_retailPrice ×
 - Basic Logs: supports simple log alerts only (no full analytics/scheduled rules), 30-day retention, for medium-touch troubleshooting data; when Sentinel is enabled, Basic Logs use **Sentinel meters** (`Basic Logs Analysis`) — do not also bill Azure Monitor `Basic Logs Data Ingestion`
 - Regional price variance is significant: commitment tiers cost ~25% more in uksouth vs eastus
 - Sentinel PAYG and Commitment Tier rates are **unified** — they replace (not add to) standalone Azure Monitor/Log Analytics ingestion charges; do not sum both
-- Post-July 2023 workspaces use **simplified pricing** (single unified meter); legacy workspaces use **classic** meters with `Classic` prefix (e.g., `Classic Pay-as-you-go Analysis`) — do not mix
 - For standalone Log Analytics meters (`Analytics Logs Data Analyzed`, retention) see `monitoring/log-analytics.md`; for Basic Logs, archive, and export meters see `monitoring/monitor.md`
 - No native free tier — Sentinel has a 31-day free **trial** (10 GB/day) and cross-product grants: Defender for Servers P2 (500 MB/node/day, see `defender-for-cloud.md`), M365 E5 (5 MB/user/day); these require separate licenses and are not Sentinel-included units
