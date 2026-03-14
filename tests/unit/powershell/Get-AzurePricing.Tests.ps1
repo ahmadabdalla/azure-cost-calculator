@@ -386,11 +386,12 @@ Describe 'Get-AzurePricing' {
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('Connection refused') }
 
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
         }
 
-        It 'Should not throw a terminating error' {
-            $script:Warnings | Should -Not -BeNullOrEmpty
+        It 'Should exit with code 1' {
+            $script:ExitCode | Should -Be 1
         }
 
         It 'Should warn about API failure' {
@@ -407,11 +408,12 @@ Describe 'Get-AzurePricing' {
             }
 
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
         }
 
-        It 'Should not throw a terminating error' {
-            $script:Warnings | Should -Not -BeNullOrEmpty
+        It 'Should exit with code 1' {
+            $script:ExitCode | Should -Be 1
         }
 
         It 'Should warn about API error' {
