@@ -33,12 +33,12 @@ Quantity: 256
 
 ## Key Fields
 
-| Parameter     | How to determine                               | Example values                                                          |
-| ------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                  |
-| `productName` | Tier + hardware series                         | See Product Names section below                                         |
+| Parameter     | How to determine                               | Example values                                                                               |
+| ------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                                       |
+| `productName` | Tier + hardware series                         | See Product Names section below                                                              |
 | `skuName`     | vCore count — selects the size                 | `4 vCore`, `8 vCore`, `16 vCore`, `24 vCore`, `32 vCore`, `40 vCore`, `64 vCore`, `80 vCore` |
-| `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored` |
+| `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored`                      |
 
 ## Meter Names
 
@@ -81,7 +81,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge — Azure bills both under PAYG, only compute under AHUB. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
+The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge — Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` when querying compute for this calculation — returns a per-vCore rate, same as RI pattern. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
 
 ## Product Names
 

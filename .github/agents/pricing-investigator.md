@@ -164,7 +164,7 @@ If the service supports Azure Hybrid Benefit (i.e., `billingConsiderations` woul
 1. Query both the compute meter and the SQL License meter (Global-only) for **every documented tier** (e.g., General Purpose and Business Critical for SQL MI; all vCore counts are the same rate so one per tier suffices).
 2. For SQL services: record `compute_retailPrice` and `sql_license_retailPrice` per vCore for each tier.
 3. Compute the potential subtraction: `compute_retailPrice − sql_license_retailPrice` for each tier.
-4. **Flag a blocking issue** if this value is negative for any tier. A negative result proves the compute meter is a **base rate** (not license-included), meaning the correct AHUB model is additive: AHUB = compute only, PAYG = compute + license. Document both rates and the correct model in your report.
+4. If this value is negative for any tier, the compute meter is a **base rate** (not license-included) — the correct AHUB model is additive: AHUB = compute only, PAYG = compute + license. Document both rates and the correct model in your report. Flag it as a **blocking issue** only if the service reference file under review documents the subtraction formula as the AHUB calculation method.
 5. For VM services: confirm that querying the Linux meter for the same SKU returns a lower price than the Windows meter. The Linux rate IS the AHUB rate — no arithmetic needed.
 
 This check prevents the subtraction-model error: assuming compute is license-included when it is actually the base infrastructure rate.

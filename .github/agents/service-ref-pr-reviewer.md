@@ -172,8 +172,8 @@ Manually verify against key rules from `CONTRIBUTING.md`:
 If the PR touches any Azure Hybrid Benefit section, or if the changed service file has `Azure Hybrid Benefit` in `billingConsiderations`:
 
 1. Instruct the pricing-investigator sub-agents (Phase 2) to explicitly run section 4.8 of their protocol — querying compute and SQL License meters for every tier and checking for negative derived rates.
-2. Treat any negative derived AHUB rate as a **Blocking** issue: the billing model is wrong (the compute meter is a base rate, not license-included; correct model is additive, not subtractive).
-3. Verify the formula direction: the compute `retailPrice` alone should be the AHUB rate. If the file says "subtract the license rate from compute," flag it as Blocking.
+2. A negative test subtraction (`compute − license < 0`) is evidence the additive model applies — it is not itself the blocking condition.
+3. Treat it as **Blocking** if the PR file documents the subtraction formula (`compute − license`) as the AHUB calculation method. The compute `retailPrice` alone is the AHUB rate; the SQL License product is needed only to calculate the full PAYG cost.
 
 This check exists because two wrong sources cross-validating each other (e.g., a service file and `shared.md` both documenting the same incorrect formula) will pass all filter-value checks while silently producing incorrect costs.
 
