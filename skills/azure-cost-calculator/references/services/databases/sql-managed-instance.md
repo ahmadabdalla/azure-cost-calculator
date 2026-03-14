@@ -13,7 +13,7 @@ privateEndpoint: true
 
 > **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier — sum both hourly rates, then × 730.
 
-> **Trap (AHUB)**: vCore prices are license-included by default. For Azure Hybrid Benefit, you MUST query the SQL License product and subtract — see the Azure Hybrid Benefit section below. NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
+> **Trap (AHUB)**: vCore compute prices are **base rates only** (infrastructure, no license). Under PAYG, Azure bills a separate SQL License meter (Global) as an add-on. For AHUB, only the compute meter applies — the compute `retailPrice` IS the AHUB price. **Do NOT subtract.** NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
 
 ## Query Pattern
 
@@ -33,12 +33,12 @@ Quantity: 256
 
 ## Key Fields
 
-| Parameter     | How to determine                               | Example values                                                          |
-| ------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                  |
-| `productName` | Tier + hardware series                         | See Product Names section below                                         |
+| Parameter     | How to determine                               | Example values                                                                               |
+| ------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                                       |
+| `productName` | Tier + hardware series                         | See Product Names section below                                                              |
 | `skuName`     | vCore count — selects the size                 | `4 vCore`, `8 vCore`, `16 vCore`, `24 vCore`, `32 vCore`, `40 vCore`, `64 vCore`, `80 vCore` |
-| `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored` |
+| `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored`                      |
 
 ## Meter Names
 
@@ -75,13 +75,13 @@ PriceType: Reservation
 
 ## Azure Hybrid Benefit
 
-### SQL License cost (Global-only, per-vCore; swap productName for BC)
+### SQL License meter (Global-only, per-vCore; needed for PAYG total; swap productName for BC)
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-For license-included per-vCore price, query compute (line 20-25) but omit SkuName—same as RI pattern. AHUB hourly per-vCore = compute `retailPrice` − `sql_license_retailPrice`. Monthly = AHUB hourly × vCoreCount × 730. NEVER apply a percentage discount.
+The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge — Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` when querying compute for this calculation — returns a per-vCore rate, same as RI pattern. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
 
 ## Product Names
 
