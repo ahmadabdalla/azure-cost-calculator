@@ -9,11 +9,11 @@ primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
 
 # Virtual Machines
 
-> **Trap**: A query with only `ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
+> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. Without `ProductName`, the cheapest row (Low Priority) may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
 
 ## Query Pattern
 
-### Recommended: Filter to Linux standard only using ProductName
+### Linux standard (ProductName is mandatory)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
