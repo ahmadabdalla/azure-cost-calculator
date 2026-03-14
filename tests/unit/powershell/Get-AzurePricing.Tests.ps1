@@ -341,6 +341,85 @@ Describe 'Get-AzurePricing' {
         }
     }
 
+    Context 'Compact output format structure' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Compact 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should have results array' {
+            @($script:Result.results).Count | Should -BeGreaterThan 0
+        }
+
+        It 'Should NOT have query property' {
+            $script:Result.PSObject.Properties.Name | Should -Not -Contain 'query'
+        }
+
+        It 'Should NOT have summary property' {
+            $script:Result.PSObject.Properties.Name | Should -Not -Contain 'summary'
+        }
+
+        It 'Should NOT have totalItems property' {
+            $script:Result.PSObject.Properties.Name | Should -Not -Contain 'totalItems'
+        }
+
+        It 'Should contain only the 9 Compact fields' {
+            $fields = $script:Result.results[0].PSObject.Properties.Name | Sort-Object
+            $expected = @('Currency', 'MeterName', 'MonthlyCost', 'ProductName', 'ReservationTerm', 'SkuName', 'TierMinUnits', 'UnitOfMeasure', 'UnitPrice') | Sort-Object
+            $fields | Should -Be $expected
+        }
+
+        It 'Should calculate correct MonthlyCost' {
+            $script:Result.results[0].MonthlyCost | Should -Be 70.08
+        }
+    }
+
+    Context 'Compact output with no results' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @()
+                    NextPageLink = $null
+                }
+            }
+
+            $script:AllOutput = & $script:ScriptPath -ServiceName 'NonExistent' -OutputFormat Compact 3>&1
+            $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+            $script:StdOut = @($script:AllOutput | Where-Object { $_ -isnot [System.Management.Automation.WarningRecord] })
+            $script:Result = ($script:StdOut -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should emit Compact JSON with empty results array' {
+            @($script:Result.results).Count | Should -Be 0
+        }
+
+        It 'Should NOT have query or summary properties' {
+            $script:Result.PSObject.Properties.Name | Should -Not -Contain 'query'
+            $script:Result.PSObject.Properties.Name | Should -Not -Contain 'summary'
+        }
+    }
+
     Context 'Summary output format' {
         BeforeAll {
             Mock Invoke-RestMethod {

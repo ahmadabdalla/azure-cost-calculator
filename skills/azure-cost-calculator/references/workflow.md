@@ -17,7 +17,7 @@ Both pricing scripts (Bash and PowerShell) query the Azure Retail Prices REST AP
 | Quantity      | Usage multiplier (e.g., 4 for 400 RU/s Cosmos)               | —             |
 | HoursPerMonth | Hours in billing month                                       | `730`         |
 | InstanceCount | Number of instances                                          | `1`           |
-| OutputFormat  | `Json` (default), `Table`, `Summary`                         | `Json`        |
+| OutputFormat  | `Json` (default), `Table`, `Summary`, `Compact`              | `Json`        |
 
 ### Runtime Translation
 
@@ -88,6 +88,7 @@ For architecture-level estimates:
 
 ## Output Formats
 
-- **Json** (default) — Structured output; use this for agent interactions. Agents capture stdout and Json ensures data is parseable.
+- **Json** (default) — Structured output with query echo, results, and summary blocks. Full 16-field result items.
+- **Compact** — Lightweight JSON with only the 9 fields needed for cost calculation: MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits. No query echo or summary block. Recommended for batch estimates of 3+ services to reduce token consumption.
 - **Table** — Tabular display for terminal viewing. Good for comparing regions side by side.
-- **Summary** — Uses `Write-Host`, which writes to the host console stream — agents capturing stdout will see **nothing**. Only use for human interactive use.
+- **Summary** — Human-readable text output for interactive use. Not structured or parseable — use `Json` or `Compact` for agent-driven cost estimation.

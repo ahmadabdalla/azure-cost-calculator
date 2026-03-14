@@ -209,3 +209,45 @@ SCRIPT
     count=$(echo "$output" | jq '.results | length')
     [ "$count" -eq 300 ]
 }
+
+@test "compact output has results but no query or summary" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact
+    [ "$status" -eq 0 ]
+    has_results=$(echo "$output" | jq 'has("results")')
+    [ "$has_results" = "true" ]
+    has_query=$(echo "$output" | jq 'has("query")')
+    [ "$has_query" = "false" ]
+    has_summary=$(echo "$output" | jq 'has("summary")')
+    [ "$has_summary" = "false" ]
+    has_total=$(echo "$output" | jq 'has("totalItems")')
+    [ "$has_total" = "false" ]
+}
+
+@test "compact output contains only 9 fields per result" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact
+    [ "$status" -eq 0 ]
+    field_count=$(echo "$output" | jq '.results[0] | keys | length')
+    [ "$field_count" -eq 9 ]
+    # Verify specific fields exist (chained has() — multi-arg has() is a generator, not AND)
+    echo "$output" | jq -e '.results[0] | (has("MeterName") and has("ProductName") and has("SkuName") and has("UnitPrice") and has("UnitOfMeasure") and has("MonthlyCost") and has("Currency") and has("ReservationTerm") and has("TierMinUnits"))'
+}
+
+@test "compact output calculates correct MonthlyCost" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact
+    [ "$status" -eq 0 ]
+    monthly=$(echo "$output" | jq '.results[0].MonthlyCost')
+    [ "$monthly" = "70.08" ]
+}
+
+@test "compact output with empty results returns empty results array" {
+    create_curl_mock '{"Items":[],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Nonexistent" --output-format Compact
+    [ "$status" -eq 0 ]
+    json_output=$(echo "$output" | grep -v '^Warning:')
+    results=$(echo "$json_output" | jq '.results | length')
+    [ "$results" = "0" ]
+    has_query=$(echo "$json_output" | jq 'has("query")')
+    [ "$has_query" = "false" ]
+    has_summary=$(echo "$json_output" | jq 'has("summary")')
+    [ "$has_summary" = "false" ]
+}
