@@ -131,14 +131,14 @@ Database migration is performed via backup and restore over ExpressRoute. Server
 ## Monitoring & Management
 
 - 1× SCOM Managed Instance — monitoring infrastructure for 100 servers
-- 1× Log Analytics workspace, Pay-as-you-go, 50 GB/day total ingestion (includes all sources below), 90-day interactive retention (59 days beyond 31-day free tier) — centralized log aggregation for all VMs, PaaS diagnostics, and security logs
+- 1× Log Analytics workspace, 50 GB/day total ingestion (includes all sources below), 90-day interactive retention (included free with Sentinel-enabled workspace) — centralized log aggregation for all VMs, PaaS diagnostics, and security logs
 - 1× Application Insights (workspace-based), 10 GB/month ingestion, 90-day retention — customer portal and external web applications (data ingested into Log Analytics workspace, included in 50 GB/day total)
 - 1× Application Insights (workspace-based), 5 GB/month ingestion, 90-day retention — corporate intranet and internal applications (data ingested into Log Analytics workspace, included in 50 GB/day total)
 
 ## Security
 
 - Microsoft Defender for Cloud, Servers Plan 2 — 70 Windows Server VMs
-- 1× Microsoft Sentinel (SIEM), Pay-as-you-go, 30 GB/day analysis — security event monitoring, threat detection across all infrastructure, compliance audit logging (Sentinel analyzes a 30 GB/day subset of the 50 GB/day ingested into Log Analytics; Sentinel analysis fee is billed in addition to Log Analytics ingestion)
+- 1× Microsoft Sentinel (SIEM), simplified pricing, Pay-as-you-go, 50 GB/day ingestion — security event monitoring, threat detection across all infrastructure, compliance audit logging (all 50 GB/day workspace ingestion is billed through Sentinel unified meters; no separate Log Analytics ingestion charge)
 - 1× Azure Key Vault, Premium tier (HSM-backed), 200,000 operations/month — TLS certificates, disk encryption keys, service principal secrets, SAP credential rotation
 
 ## Private Endpoints
