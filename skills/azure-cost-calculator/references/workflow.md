@@ -91,4 +91,4 @@ For architecture-level estimates:
 - **Json** (default) — Structured output with query echo, results, and summary blocks. Full 16-field result items.
 - **Compact** — Lightweight JSON with only the 9 fields needed for cost calculation: MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits. No query echo or summary block. Recommended for batch estimates of 3+ services to reduce token consumption.
 - **Table** — Tabular display for terminal viewing. Good for comparing regions side by side.
-- **Summary** — Uses `Write-Information` (information stream 6), not stdout — agents capturing stdout will see **nothing** unless stream 6 is redirected (`6>&1`). Only use for human interactive use.
+- **Summary** — Human-readable text output. In PowerShell, uses `Write-Information` (stream 6) — agents capturing stdout see nothing unless redirected (`6>&1`). In Bash, writes to stdout. Only use for human interactive use; not parseable by agents.
