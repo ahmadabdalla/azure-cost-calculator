@@ -32,6 +32,8 @@ MeterName: Routing Infrastructure Unit
 Region: Global
 Quantity: 2
 
+> Example: 6,000 VMs requires ceil((6000 − 4000) / 1000) = 2 additional units beyond the included 2
+
 ### Multiple Route Server instances (InstanceCount = number of deployments)
 
 ServiceName: Azure Route Server
@@ -60,7 +62,8 @@ InstanceCount: 3
 
 ```
 Gateway monthly       = gateway_retailPrice × 730 × instanceCount
-Scaling units monthly = unit_retailPrice × 730 × max(0, ceil((vmCount - 4000) / 1000))
+Additional units      = max(0, ceil((vmCount - 4000) / 1000))
+Scaling units monthly = unit_retailPrice × 730 × Additional units
 Total monthly         = Gateway + Scaling units
 ```
 
@@ -68,7 +71,7 @@ Total monthly         = Gateway + Scaling units
 
 - **Always-on cost**: Route Server bills per-hour from deployment — minimum monthly cost even with zero BGP sessions
 - **Default capacity**: Base deployment includes 2 routing infrastructure units supporting up to 4,000 VMs in the VNet and peered VNets
-- **Scaling**: Beyond 4,000 VMs, Route Server auto-scales by 1 unit per additional 1,000 VMs (max 50,000 VMs total)
+- **Scaling**: The base deployment includes 2 routing infrastructure units. Beyond 4,000 VMs in the VNet and peered VNets, Route Server automatically scales by 1 unit per additional 1,000 VMs (e.g., 5,000 VMs = 1 additional unit, 6,000 VMs = 2 additional units; max 50,000 VMs total = 46 additional units)
 - **BGP limits**: Max 8 BGP peers per Route Server, 4,000 routes per BGP peer, 500 peered VNets
 - **Public IP required**: Each Route Server requires a Standard Static Public IP — billed separately under IP Addresses
 - **Data transfer**: Route Server does not charge for routes processed or BGP sessions; NVA traffic egress is billed separately under Bandwidth
