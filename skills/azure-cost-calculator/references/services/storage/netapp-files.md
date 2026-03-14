@@ -13,7 +13,7 @@ hasKnownRates: true
 >
 > **Agent instruction**: Do NOT report zero cost. Multiply `retailPrice × GiB × 730` for monthly capacity cost.
 
-> **Trap (Unfiltered Query)**: `ServiceName`-only query returns all tiers, backup, CRR, and cool-access meters — always filter by `SkuName` + `MeterName`.
+> **Trap (Unfiltered Query)**: `ServiceName`-only query returns all tiers, backup, CRR, cool-access, Elastic ZRS, and double-encrypted meters — always filter by `SkuName` + `MeterName`.
 
 ## Query Pattern
 
@@ -57,7 +57,9 @@ MeterName: Backup Capacity
 | `Ultra Capacity` | `Ultra` | `1 GiB/Hour` | × 730 for monthly |
 | `Backup Capacity` | `Backup` | `1 GiB/Month` | No × 730 needed |
 | `Volume Restore Capacity` | `Volume Restore` | `1 GiB` | One-time per restore |
+| `Elastic Zone Redundant Storage Capacity` | `Elastic Zone Redundant Storage` | `1 GiB/Hour` | Preview; × 730 for monthly |
 | `Standard Storage with Cool Access Capacity` | `Standard Storage with Cool Access` | `1 GiB/Hour` | Cool tier at-rest |
+| `Standard Storage with Cool Access Data Transfer` | `Standard Storage with Cool Access` | `1 GiB` | Per-transfer to/from cool |
 | `Flexible Service Level Capacity` | `Flexible Service Level` | `1 GiB/Hour` | Capacity component |
 | `Flexible Service Level Throughput MiBps` | `Flexible Service Level` | `1/Hour` | Beyond 128 MiBps free |
 
@@ -71,11 +73,10 @@ Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throug
 
 ## Notes
 
-- Billing is on **provisioned capacity pool size**, not consumed — minimum 1 TiB, increments of 1 TiB
-- Snapshots consume pool capacity — no separate meter; billed at the pool's tier rate
-- Standard/Premium/Ultra differ in throughput/IOPS limits; tier is a never-assume parameter
-- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19% surcharge)
-- CRR meters are region-pair-specific with Days/Hours/Minutes replication frequency tiers
+- Billing is on **provisioned capacity pool size**, not consumed (min 1 TiB, 1 TiB increments); snapshots consume pool capacity at the pool's tier rate
+- Standard/Premium/Ultra/Flexible/Elastic ZRS differ in throughput/IOPS; tier is a never-assume parameter
+- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge)
+- CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`), region-pair-specific, Days/Hours/Minutes frequency
 - Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link — no PE support
 
 ## Known Rates
