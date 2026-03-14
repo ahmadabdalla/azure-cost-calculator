@@ -55,7 +55,7 @@ Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `Public Queries` | `1M`          | First 1B     | Per million queries            |
 | `Public Queries` | `1M`          | 1B+          | Lower rate for high volume     |
 
-> **Note**: Private DNS, Private Resolver, and DNS Security Policy meters share the same serviceName — see `private-dns.md` for Private DNS pricing.
+> **Note**: Private DNS, Private Resolver, and DNS Security Policy meters share the same serviceName — see `private-dns.md` for Private DNS pricing and `dns-security-policy.md` for DNS Security Policy pricing.
 
 ## Cost Formula
 
@@ -80,3 +80,4 @@ Monthly = Zones + Queries
 - First 1 billion queries at higher rate; queries beyond 1B at lower rate
 - Query volume is typically low — zone hosting fee dominates most deployments
 - See `private-dns.md` for Private DNS zone and Private Resolver pricing
+- See `dns-security-policy.md` for DNS Security Policy pricing

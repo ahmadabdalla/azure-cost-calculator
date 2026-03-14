@@ -51,6 +51,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Bastion: Bastion Host, Jump Host, Jump Box
 - Azure DDOS Protection: DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection
 - Azure DNS: DNS Zones, Public DNS Zones
+- DNS Security Policy: DNS Security, DNS Filtering, DNS Threat Intelligence
 - Azure Firewall: AzFW, Azure Firewall Premium/Standard/Basic
 - Azure Front Door Service: AFD, Front Door, Front Door Premium/Standard, Front Door WAF
 - Azure Private Link: Private Endpoint, PE
