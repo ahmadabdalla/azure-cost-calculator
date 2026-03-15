@@ -33,7 +33,7 @@ When encountering these services, note the limitation to the user and provide th
 
 ## USD-Only Services
 
-These services return pricing in **USD only** — either because they are API-unavailable or because they use `pricingRegion: global` in their service file. **Services without `pricingRegion: global` support native non-USD currencies** — pass the target `currencyCode` directly to the script and the API returns prices in that currency. Native local-currency prices can differ from USD × FX conversion, so always query in the target currency directly rather than converting.
+These services return pricing in **USD only** — either because they are API-unavailable or because they use `pricingRegion: global` in their service file. **Services without `pricingRegion: global` support native non-USD currencies** — pass the target `currencyCode` directly to the script and the API returns prices in that currency (see [pitfalls.md](pitfalls.md) for the correct query parameter usage). Native local-currency prices can differ from USD × FX conversion, so always query in the target currency directly rather than converting.
 
 | Service       | Reason                                                                 | Reference                                                        |
 | ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
