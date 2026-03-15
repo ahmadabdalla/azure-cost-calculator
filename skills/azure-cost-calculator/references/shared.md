@@ -2,13 +2,16 @@
 
 ## Constants
 
-| Constant        | Value                                        | Notes                                                                  |
-| --------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
-| Hours per month | 730                                          | 365.25 × 24 ÷ 12                                                       |
-| Days per month  | 30                                           | Simplified                                                             |
-| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required                                                       |
-| API Version     | `2023-01-01-preview`                         | Current preview version                                                |
-| GB per TB       | **1,000**                                    | **DECIMAL: 1 TB = 1,000 GB (NOT 1,024). Azure billing uses SI units.** |
+| Constant        | Value                                        | Notes                                                                   |
+| --------------- | -------------------------------------------- | ----------------------------------------------------------------------- |
+| Hours per month | 730                                          | 365.25 × 24 ÷ 12                                                        |
+| Days per month  | 30                                           | Simplified                                                              |
+| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required                                                        |
+| API Version     | `2023-01-01-preview`                         | Current preview version                                                 |
+| GB per TB       | **1,000**                                    | Decimal (SI): 1 TB = 1,000 GB. Use when `unitOfMeasure` says **GB**.    |
+| GiB per TiB     | **1,024**                                    | Binary (IEC): 1 TiB = 1,024 GiB. Use when `unitOfMeasure` says **GiB**. |
+
+> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units — even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting TB↔GB or TiB↔GiB.
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
