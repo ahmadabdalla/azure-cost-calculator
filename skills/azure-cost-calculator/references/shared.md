@@ -11,7 +11,7 @@
 | GB per TB       | **1,000**                                    | Decimal (SI): 1 TB = 1,000 GB. Use when `unitOfMeasure` says **GB**.    |
 | GiB per TiB     | **1,024**                                    | Binary (IEC): 1 TiB = 1,024 GiB. Use when `unitOfMeasure` says **GiB**. |
 
-> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units — even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting. Applying the wrong base produces a ~2.4% error. **TB vs TiB context:** GiB-billed services (Ultra Disks, NetApp Files, etc.) use TiB in Azure's own portal and documentation — when a user specifies "TB" for these services, treat it as TiB and convert with × 1,024. For GB-billed services, "TB" means decimal TB and converts with × 1,000. Never cross-convert (e.g., TB → GiB directly).
+> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units — even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting. **TB vs TiB context:** GiB-billed services (Ultra Disks, NetApp Files, etc.) use TiB in Azure's own portal and documentation — when a user specifies "TB" for these services, treat it as TiB and convert with × 1,024. For GB-billed services, "TB" means decimal TB and converts with × 1,000. Never cross-convert (e.g., TB → GiB directly).
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
