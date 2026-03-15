@@ -4,6 +4,32 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] - 2026-03-15
+
+### Added
+
+- New service: DNS Private Resolver (`dns-private-resolver.md`)
+- New service: DNS Security Policy (`dns-security-policy.md`)
+- New service: Azure Route Server (`route-server.md`)
+- **Examples**: Enterprise datacenter migration example with 100-VM multi-tier architecture (`enterprise-datacenter-migration.md`)
+- **Scripts**: Compact output format (`OutputFormat: Compact` or `--output-format Compact`) returns only 9 essential fields for batch queries — reduces token usage by ~70% compared to full JSON output
+
+### Changed
+
+- **shared.md**: Distinguished GB (decimal: 1 TB = 1,000 GB) from GiB (binary: 1 TiB = 1,024 GiB) with authoritative `unitOfMeasure` guidance. Added both conversion factors to Constants table
+- **pitfalls.md**: Added GB/GiB distinction trap with cross-service examples (Blob Storage vs Ultra Disks). Clarified `currencyCode` must be a top-level query parameter (not inside `$filter`)
+- **regions-and-currencies.md**: Documented USD-only service boundaries — Global-region services and Private DNS consistently return USD-only pricing
+
+### Fixed
+
+- **Virtual Machines**: Made `ProductName` filter mandatory in all VM queries to prevent Low Priority rate selection when querying by `ArmSkuName` alone. Documented capital-S casing rule for pre-v4 series (FSv2, DSv2, ESv3) vs lowercase `s` for v4+ series (Dsv5, Esv5)
+- **SQL Managed Instance**: Corrected AHUB formula — compute meter `retailPrice` IS the AHUB rate (base infrastructure only). For PAYG, add the separate SQL License meter; for AHUB, use compute only. **Do NOT subtract**. Added missing vCore sizes (24, 40)
+- **Cosmos DB**: Fixed serverless `skuName` pattern, corrected storage billing boundary for serverless, added missing add-ons (Continuous Backup, Analytical Storage, Availability Zones)
+- **Sentinel**: Added pricing model default trap — Sentinel defaults to simplified pricing when enabling Microsoft Defender for Cloud on a Log Analytics workspace without explicitly selecting classic meters
+- **Azure NetApp Files**: Added missing CRR (Cross-Region Replication) meter, corrected ZRS surcharge formula, documented CRR naming convention (`-CRR` suffix)
+- **Scripts (PowerShell)**: `Explore-AzurePricing.ps1` catch blocks now exit with code 1 on Azure Retail Prices API failures (previously exited 0). On zero results in `Json` mode, emits parseable empty JSON array `[]` before clean exit
+- **Scripts (Bash)**: On zero results in JSON mode, emit parseable empty JSON envelope (`{"results": []}`) instead of exiting with code 2
+
 ## [1.3.1] - 2026-03-13
 
 ### Fixed

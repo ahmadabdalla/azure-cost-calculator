@@ -2,13 +2,16 @@
 
 ## Constants
 
-| Constant        | Value                                        | Notes                                                                  |
-| --------------- | -------------------------------------------- | ---------------------------------------------------------------------- |
-| Hours per month | 730                                          | 365.25 × 24 ÷ 12                                                       |
-| Days per month  | 30                                           | Simplified                                                             |
-| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required                                                       |
-| API Version     | `2023-01-01-preview`                         | Current preview version                                                |
-| GB per TB       | **1,000**                                    | **DECIMAL: 1 TB = 1,000 GB (NOT 1,024). Azure billing uses SI units.** |
+| Constant        | Value                                        | Notes                                                                   |
+| --------------- | -------------------------------------------- | ----------------------------------------------------------------------- |
+| Hours per month | 730                                          | 365.25 × 24 ÷ 12                                                        |
+| Days per month  | 30                                           | Simplified                                                              |
+| API Base URL    | `https://prices.azure.com/api/retail/prices` | No auth required                                                        |
+| API Version     | `2023-01-01-preview`                         | Current preview version                                                 |
+| GB per TB       | **1,000**                                    | Decimal (SI): 1 TB = 1,000 GB. Use when `unitOfMeasure` says **GB**.    |
+| GiB per TiB     | **1,024**                                    | Binary (IEC): 1 TiB = 1,024 GiB. Use when `unitOfMeasure` says **GiB**. |
+
+> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units — even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting. **TB vs TiB context:** GiB-billed services (Ultra Disks, NetApp Files, etc.) use TiB in Azure's own portal and documentation — when a user specifies "TB" for these services, treat it as TiB and convert with × 1,024. For GB-billed services, "TB" means decimal TB and converts with × 1,000. Never cross-convert (e.g., TB → GiB directly).
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
@@ -96,14 +99,14 @@ Before querying prices, classify every sizing parameter against this table. Miss
 
 #### Modifier Query Methods
 
-| Modifier    | How to Query                                                                                               | Monthly Calculation               |
-| ----------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| AHUB (VMs)  | Query Linux meter for same SKU — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below              | Linux rate IS the AHUB rate       |
-| AHUB (SQL)  | Query `SQL License` product (Global region) — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | `(Base − license) × vCores × 730` |
-| Reserved 1Y | Add `PriceType: Reservation`                                                                               | `unitPrice ÷ 12`                  |
-| Reserved 3Y | Add `PriceType: Reservation`                                                                               | `unitPrice ÷ 36`                  |
-| Spot        | Filter `skuName` contains "Spot"                                                                           | Use returned rate directly        |
-| Dev/Test    | Add `PriceType: DevTestConsumption`                                                                        | Use returned rate directly        |
+| Modifier    | How to Query                                                                                  | Monthly Calculation                      |
+| ----------- | --------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| AHUB (VMs)  | Query Linux meter for same SKU — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate              |
+| AHUB (SQL)  | Query compute meter only — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below       | `compute_retailPrice × vCoreCount × 730` |
+| Reserved 1Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 12`                         |
+| Reserved 3Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 36`                         |
+| Spot        | Filter `skuName` contains "Spot"                                                              | Use returned rate directly               |
+| Dev/Test    | Add `PriceType: DevTestConsumption`                                                           | Use returned rate directly               |
 
 #### Assumptions Disclosure
 
@@ -123,16 +126,17 @@ Omit lines where the user explicitly specified the value. Only disclose values t
 
 AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly — **NEVER manually compute a percentage discount**.
 
-| Workload                                | How to query                                                                                                                                                                                                                   | Why                                                                                                     |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                               | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate — no math needed.                |
-| **SQL Database / SQL Managed Instance** | Query the `SQL License` product (Global-only, per-vCore): e.g., `"SQL Managed Instance General Purpose - SQL License"`. AHUB per-vCore rate = `retailPrice − sql_license_retailPrice`. Monthly = AHUB rate × vCoreCount × 730. | The API has no regional AHUB SKU. The SQL License product gives the per-vCore license cost to subtract. |
+| Workload                                | How to query                                                                                                                                                                                                               | Why                                                                                                                                                         |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                           | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate — no math needed.                                                                    |
+| **SQL Database / SQL Managed Instance** | AHUB: compute meter only — compute `retailPrice` IS the AHUB rate. PAYG: also query `SQL License` product (Global, per-vCore) — PAYG rate = compute `retailPrice` + `sql_license_retailPrice`. Monthly × vCoreCount × 730. | Compute and license are separate additive meters. AHUB drops the license to zero. **Do NOT subtract** — a negative result means the billing model is wrong. |
 
 **Rules:**
 
 1. NEVER apply a percentage discount (40%, 55%, etc.) to a non-AHUB price. The API gives the exact AHUB price.
 2. NEVER double-apply: if you queried the Linux meter or the AHUB `productName`, the price already reflects the benefit — do not reduce it further.
 3. For VMs: AHUB rate = Linux rate for the same SKU. Do NOT start from the Windows rate and subtract.
+4. For SQL: compute IS the AHUB rate — never subtract the license rate. PAYG = compute + license; AHUB = compute only.
 
 ### Zone Redundancy (ZR)
 

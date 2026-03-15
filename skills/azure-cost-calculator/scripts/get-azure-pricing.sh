@@ -97,7 +97,7 @@ Flags:
   --quantity NUM          Quantity (default: 0)
   --hours-per-month NUM   Hours per month (default: 730)
   --instance-count NUM    Instance count (default: 1)
-  --output-format FMT     Table|Json|Summary (default: Json)
+  --output-format FMT     Table|Json|Summary|Compact (default: Json)
   --verbose|-v            Emit OData filter to stderr
   --help|-h               Show this help
 USAGE
@@ -117,8 +117,8 @@ validate_integer "instance_count" "$instance_count"
 
 # Validate enum arguments
 case "$output_format" in
-    Table|Json|Summary) ;;
-    *) echo "Error: --output-format must be Table, Json, or Summary, got '$output_format'" >&2; exit 1 ;;
+    Table|Json|Summary|Compact) ;;
+    *) echo "Error: --output-format must be Table, Json, Summary, or Compact, got '$output_format'" >&2; exit 1 ;;
 esac
 case "$price_type" in
     Consumption|Reservation|DevTestConsumption) ;;
@@ -137,6 +137,7 @@ IFS=',' read -ra regions <<< "$region"
 # Main logic
 # ============================================================
 all_results="[]"
+had_api_success=false
 
 for region_name in "${regions[@]}"; do
     # Build OData filter arguments
@@ -155,6 +156,8 @@ for region_name in "${regions[@]}"; do
         echo "Warning: API request failed for region '$region_name'. Filter: $filter_string" >&2
         continue
     }
+
+    had_api_success=true
 
     item_count=$(jq 'length' <<< "$items")
     if (( item_count == 0 )); then
@@ -240,7 +243,9 @@ total_count=$(jq 'length' <<< "$all_results")
 
 if (( total_count == 0 )); then
     echo "Warning: No results to display." >&2
-    exit 2
+    if [[ "$had_api_success" != true ]]; then
+        exit 1
+    fi
 fi
 
 case "$output_format" in
@@ -284,11 +289,26 @@ case "$output_format" in
                 results: .,
                 totalItems: $total,
                 summary: {
-                    minMonthlyCost: (map(.MonthlyCost) | min),
-                    maxMonthlyCost: (map(.MonthlyCost) | max),
-                    totalMonthlyCost: (map(.MonthlyCost) | add)
+                    minMonthlyCost: (map(.MonthlyCost) | min // 0),
+                    maxMonthlyCost: (map(.MonthlyCost) | max // 0),
+                    totalMonthlyCost: (map(.MonthlyCost) | add // 0)
                 }
             }'
+        ;;
+    Compact)
+        jq '{
+            results: [.[] | {
+                MeterName,
+                ProductName,
+                SkuName,
+                UnitPrice,
+                UnitOfMeasure,
+                MonthlyCost,
+                Currency,
+                ReservationTerm,
+                TierMinUnits
+            }]
+        }' <<< "$all_results"
         ;;
     Summary)
         echo ""
@@ -308,14 +328,14 @@ case "$output_format" in
               + (if (.TierMinUnits // 0) > 0 then " (tier: above \(.TierMinUnits) units)" else "" end)
         ' <<< "$all_results"
 
-        total_monthly=$(jq '[.[].MonthlyCost] | add' <<< "$all_results")
+        total_monthly=$(jq '[.[].MonthlyCost] | add // 0' <<< "$all_results")
         echo ""
         echo "  ---"
         printf "  TOTAL ESTIMATED MONTHLY: %s %.2f\n" "$currency" "$total_monthly"
         echo ""
         ;;
     *)
-        echo "Error: Invalid --output-format '$output_format'. Use Table, Json, or Summary." >&2
+        echo "Error: Invalid --output-format '$output_format'. Use Table, Json, Summary, or Compact." >&2
         exit 1
         ;;
 esac

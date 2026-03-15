@@ -246,6 +246,8 @@ Describe 'Explore-AzurePricing' {
 
             $script:AllOutput = & $script:ScriptPath -ServiceName 'NonExistent' -OutputFormat Json 3>&1
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
+            $script:StdOut = @($script:AllOutput | Where-Object { $_ -isnot [System.Management.Automation.WarningRecord] })
+            $script:Result = @(script:ConvertFrom-JsonArray ($script:StdOut -join "`n"))
         }
 
         It 'Should produce warnings about no data' {
@@ -255,18 +257,24 @@ Describe 'Explore-AzurePricing' {
         It 'Should warn about no results found' {
             ($script:Warnings.Message -join "`n") | Should -Match 'No.*results|No.*data|No.*found'
         }
+
+        It 'Should emit empty JSON array' {
+            $script:Result.Count | Should -Be 0
+        }
     }
 
     Context 'Error handling on API failure' {
         BeforeAll {
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('Connection refused') }
 
+            $global:LASTEXITCODE = 0
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
         }
 
-        It 'Should not throw a terminating error' {
-            $script:Warnings | Should -Not -BeNullOrEmpty
+        It 'Should exit with code 1' {
+            $script:ExitCode | Should -Be 1
         }
 
         It 'Should warn about API failure' {
@@ -282,12 +290,14 @@ Describe 'Explore-AzurePricing' {
                 throw $ex
             }
 
+            $global:LASTEXITCODE = 0
             $script:AllOutput = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>&1
+            $script:ExitCode = $LASTEXITCODE
             $script:Warnings = @($script:AllOutput | Where-Object { $_ -is [System.Management.Automation.WarningRecord] })
         }
 
-        It 'Should not throw a terminating error' {
-            $script:Warnings | Should -Not -BeNullOrEmpty
+        It 'Should exit with code 1' {
+            $script:ExitCode | Should -Be 1
         }
 
         It 'Should warn about API error' {

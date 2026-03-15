@@ -80,7 +80,7 @@ try {
 catch [System.Net.WebException] {
     Write-Warning "API request failed. Filter: $filterString"
     Write-Warning "Error: $($_.Exception.Message)"
-    return
+    exit 1
 }
 catch {
     $ex = $_.Exception
@@ -90,7 +90,7 @@ catch {
     if ($isHttpError) {
         Write-Warning "API returned error. Filter: $filterString"
         Write-Warning "Error: $($ex.Message)"
-        return
+        exit 1
     }
 
     throw
@@ -98,6 +98,7 @@ catch {
 
 if (-not $items -or $items.Count -eq 0) {
     Write-Warning "No results found. Filter: $filterString"
+    if ($OutputFormat -eq 'Json') { '[]' }
     return
 }
 
