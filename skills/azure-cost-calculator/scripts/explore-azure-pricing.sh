@@ -121,7 +121,10 @@ items=$(invoke_retail_prices_query "$filter_string" "$currency" "$max_items") ||
 item_count=$(jq 'length' <<< "$items")
 if (( item_count == 0 )); then
     echo "Warning: No results found. Filter: $filter_string" >&2
-    exit 2
+    if [[ "$output_format" == "Json" ]]; then
+        echo '[]'
+    fi
+    exit 0
 fi
 
 # Deduplicate to distinct combinations and take top N

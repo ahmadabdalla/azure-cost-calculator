@@ -46,10 +46,13 @@ teardown() { teardown_mock_path; }
     [ "$count" -eq 2 ]
 }
 
-@test "no results exits with code 2" {
+@test "no results exits 0 with empty JSON array" {
     create_curl_mock '{"Items":[],"NextPageLink":null}' 200
     run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Nonexistent"
-    [ "$status" -eq 2 ]
+    [ "$status" -eq 0 ]
+    json_output=$(echo "$output" | grep -v '^Warning:')
+    count=$(echo "$json_output" | jq 'length')
+    [ "$count" = "0" ]
 }
 
 @test "table output has TSV headers" {
