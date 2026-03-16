@@ -75,7 +75,7 @@ PriceType: Reservation
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
 > **Note (RI per-vCore)**: RI `unitPrice` is per single vCore — multiply by the desired vCore count.
-> **Trap (RI + AHUB)**: RI `unitPrice` is already compute-only (license excluded). Do NOT subtract the SQL License rate from RI prices — the shared.md AHUB subtraction applies to PAYG rates only.
+> **Trap (RI + AHUB)**: RI `unitPrice` is already compute-only (license excluded). Do NOT subtract the SQL License rate from RI prices — the compute meter IS the AHUB rate.
 
 ## Product Names
 
@@ -95,4 +95,4 @@ ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - SQL License
 Region: Global
 
-> AHUB monthly = (compute_retailPrice − license_retailPrice) × vCoreCount × 730. BC license rate exceeds PAYG — use RI pricing for BC AHUB calculations instead. See shared.md AHUB section.
+> AHUB: compute meter only — compute `retailPrice` IS the AHUB rate. Omit `SkuName` to get a per-vCore rate; multiply by vCoreCount × 730. PAYG: add `sql_license_retailPrice` per vCore. **Do NOT subtract** — see shared.md AHUB section.

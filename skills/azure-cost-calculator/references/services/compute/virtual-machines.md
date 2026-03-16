@@ -9,11 +9,11 @@ primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
 
 # Virtual Machines
 
-> **Trap**: A query with only `ArmSkuName` and no other filters returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. The `summary.totalMonthlyCost` sums all 6, inflating the estimate ~5×+. Always identify the correct row by checking `productName` (no "Windows" = Linux) and `skuName` (no "Spot"/"Low Priority" suffix = standard pay-as-you-go).
+> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. Without `ProductName`, the cheapest row (Low Priority) may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
 
 ## Query Pattern
 
-### Recommended: Filter to Linux standard only using ProductName
+### Linux standard (ProductName is mandatory)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
@@ -25,7 +25,7 @@ ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series Windows
 
-> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops underscores/casing from ARM SKU: `Standard_D2s_v5` → `Dsv5`, `Standard_B2ms` → `Bms`. Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact values.
+> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops the `Standard_` prefix, size digits, and underscores. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Fsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S** — do not lowercase it. Common capital-S series: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
 
 ## Key Fields
 

@@ -157,6 +157,18 @@ Check for Windows vs Linux, GPU vs CPU, or other platform-specific meter variant
 
 Check if any meters return multiple rows with different `tierMinimumUnits` values. This indicates progressive pricing (e.g., first 100 GB at one rate, next 900 GB at a lower rate). Flag these meters and record all tier breakpoints and their corresponding unit prices. Note that the script's `totalMonthlyCost` sums all tiers, producing a meaningless number for tiered meters.
 
+### 4.8 - Azure Hybrid Benefit billing model verification
+
+If the service supports Azure Hybrid Benefit (i.e., `billingConsiderations` would include `Azure Hybrid Benefit`, or the service is SQL Database / SQL Managed Instance / Windows VMs):
+
+1. Query both the compute meter and the SQL License meter (Global-only) for **every documented tier** (e.g., General Purpose and Business Critical for SQL MI; all vCore counts are the same rate so one per tier suffices).
+2. For SQL services: record `compute_retailPrice` and `sql_license_retailPrice` per vCore for each tier.
+3. Compute the potential subtraction: `compute_retailPrice − sql_license_retailPrice` for each tier.
+4. If this value is negative for any tier, the compute meter is a **base rate** (not license-included) — the correct AHUB model is additive: AHUB = compute only, PAYG = compute + license. Document both rates and the correct model in your report. Flag it as a **blocking issue** only if the service reference file under review documents the subtraction formula as the AHUB calculation method.
+5. For VM services: confirm that querying the Linux meter for the same SKU returns a lower price than the Windows meter. The Linux rate IS the AHUB rate — no arithmetic needed.
+
+This check prevents the subtraction-model error: assuming compute is license-included when it is actually the base infrastructure rate.
+
 ---
 
 ## Phase 5: Cross-Reference
