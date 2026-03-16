@@ -6,7 +6,7 @@ argument-hint: "<azure-service-name>"
 compatibility: Requires curl + jq (macOS/Linux) or PowerShell 7+ (pwsh) or Windows PowerShell 5.1 (powershell.exe on Windows), and internet access to prices.azure.com. No Azure subscription needed.
 metadata:
   author: ahmadabdalla
-  version: "1.4.0"
+  version: "1.3.1"
 ---
 
 # Azure Cost Calculator
@@ -141,3 +141,4 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
 6. **Progressive distillation** — after each service query returns, emit a summary row before proceeding:
    `| Category | Service | Resource | Unit Price | Unit | Qty | Monthly Cost | Notes |`
    Multi-meter services get one row per line item. After all queries complete, assemble the final estimate from the accumulated rows. Do not re-read service files already distilled unless a full read trigger is needed. During Post-Estimate Iteration, replace the distillation row(s) for any re-queried service.
+7. **Compact output** — use `OutputFormat: Compact` (or `--output-format Compact` in Bash) for batch queries. Compact returns only the 9 fields needed for cost calculation (MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits) — no query echo, no summary block. Use full `Json` format when debugging unexpected results or when a service file requires fields not in the Compact set.
