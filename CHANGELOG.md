@@ -4,6 +4,35 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-03-16
+
+### Added
+
+- **New service**: DNS Private Resolver (`dns-private-resolver.md`)
+- **New service**: DNS Security Policy (`dns-security-policy.md`)
+- **New service**: Azure Route Server (`route-server.md`)
+- **Output format**: Compact mode for token-efficient batch estimates — returns only 9 essential fields (MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits)
+- **Example**: Enterprise datacenter migration architecture for A/B testing (`enterprise-datacenter-migration.md`)
+
+### Changed
+
+- **Pitfalls**: Replaced blanket GB rule with GB/GiB distinction — Azure uses decimal GB (1 TB = 1,000 GB) for some services and binary GiB (1 TiB = 1,024 GiB) for others
+- **Regions and currencies**: Clarified currencyCode usage and USD-only service boundaries — services without `pricingRegion: global` support native non-USD currencies
+- **Virtual Machines**: Documented capital-S rule for pre-v4 series productName casing (FSv2, DSv2, ESv3 keep capital S; v4+ use lowercase s)
+
+### Fixed
+
+- **Virtual Machines**: Made ProductName mandatory in VM queries to prevent Low Priority rate selection (trap updated in service reference)
+- **SQL Managed Instance**: Corrected AHUB formula — compute meter is base rate, not license-included; SQL License is additive for PAYG
+- **SQL Managed Instance**: Added missing vCore sizes (24, 40) to Key Fields table
+- **SQL Database**: Updated AHUB notes to clarify compute meter is the AHUB rate
+- **Cosmos DB**: Corrected serverless skuName to `RUs`, clarified storage billing applies to both provisioned and serverless, updated add-on list
+- **Azure NetApp Files**: Added missing meters, corrected cross-region replication surcharge, documented CRR naming
+- **Pitfalls**: Added currencyCode query parameter trap — must be top-level, not inside $filter
+- **Pitfalls**: Clarified empty results behavior in Json output mode
+- **Scripts**: PowerShell Explore-AzurePricing.ps1 catch blocks now exit 1 on API failure (consistent error handling)
+- **Scripts**: Emit empty JSON envelope on no results instead of exit 2
+
 ## [1.3.1] - 2026-03-13
 
 ### Fixed
