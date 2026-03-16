@@ -27,12 +27,7 @@ Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of
 
 ### Declarative Parameters
 
-Service reference files specify query parameters as `Key: Value` pairs. To execute a query, translate each parameter to the detected runtime's syntax:
-
-- **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
-- **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
-
-String values with spaces require quoting when passed to scripts. Numeric values (Quantity, InstanceCount) do not.
+Service reference files specify query parameters as `Key: Value` pairs. Translate to Bash `--kebab-case` or PowerShell `-PascalCase` flags; quote string values with spaces. See [workflow.md](references/workflow.md) for the full parameter table, translation examples, and output formats.
 
 ## Workflow
 
@@ -46,12 +41,7 @@ String values with spaces require quoting when passed to scripts. Numeric values
    - A multi-model or multi-feature service (e.g., Azure OpenAI, AI Services, Defender for Cloud) has no model or feature variant specified → ask which one (cost can vary 15–30×)
    - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
    - Batch all gaps into one prompt. Offer concrete choices with sensible options (e.g., "100 GB/month?", "GPT-4o or GPT-4o-mini?"). One round max — if user declines a specific parameter, use safe defaults and disclose; if no reasonable default exists, do NOT proceed — state what cannot be estimated without the missing input.
-3. **Locate** each service reference:
-   a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
-   b. **Routing map** — if search returns 0 or ambiguous results, check [references/service-routing.md](references/service-routing.md) for the authoritative category and filename
-   c. **Category browse** — if not found in routing map, read the category index in [references/shared.md](references/shared.md)
-   d. **Broad search** — list or search `references/services/**/*.md` to see all available files
-   e. **Discovery** — if no file exists, use the explore script to find the service in the API
+3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md) (file search → routing map → category browse → broad search → discovery)
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified** — user provided value (use verbatim)
