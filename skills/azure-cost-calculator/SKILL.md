@@ -27,12 +27,7 @@ Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of
 
 ### Declarative Parameters
 
-Service reference files specify query parameters as `Key: Value` pairs. To execute a query, translate each parameter to the detected runtime's syntax:
-
-- **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
-- **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
-
-String values with spaces require quoting when passed to scripts. Numeric values (Quantity, InstanceCount) do not.
+Service reference files specify query parameters as `Key: Value` pairs. Translate to Bash `--kebab-case` or PowerShell `-PascalCase` flags; quote string values with spaces. See [workflow.md](references/workflow.md) for the full parameter table, translation examples, and output formats.
 
 ## Workflow
 
@@ -41,15 +36,12 @@ String values with spaces require quoting when passed to scripts. Numeric values
 1. **Parse** — extract resource types, quantities, and sizing from user's architecture
 2. **Clarify** — if any of these are true, stop and ask before continuing:
    - A resource maps to a category but not a specific service (e.g., "a database") → list 2–4 options
-   - A resource has no count, no sizing/tier, or no workload scale (RU/s, executions, DTUs) → ask for specifics
+   - A resource has no count, no sizing/tier, or no workload scale → ask for specifics
+   - A resource has no expected monthly volume — data transferred/ingested (GB), transactions, requests, messages, tokens, or users/devices → ask for estimated volume
+   - A multi-model or multi-feature service (e.g., Azure OpenAI, AI Services, Defender for Cloud) has no model or feature variant specified → ask which one (cost can vary 15–30×)
    - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
-   - Batch all gaps into one prompt. Offer concrete choices. One round max — if user declines, carry gaps forward as never-assume items in Step 6.
-3. **Locate** each service reference:
-   a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
-   b. **Routing map** — if search returns 0 or ambiguous results, check [references/service-routing.md](references/service-routing.md) for the authoritative category and filename
-   c. **Category browse** — if not found in routing map, read the category index in [references/shared.md](references/shared.md)
-   d. **Broad search** — list or search `references/services/**/*.md` to see all available files
-   e. **Discovery** — if no file exists, use the explore script to find the service in the API
+   - Batch all gaps into one prompt. Offer concrete choices with sensible options (e.g., "100 GB/month?", "GPT-4o or GPT-4o-mini?"). One round max — if user declines a specific parameter, apply safe defaults only for **Safe-default** gaps and disclose them; if any **Never-assume** gap remains, do NOT proceed — state what cannot be estimated without the missing input.
+3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md) (file search → routing map → category browse → broad search → discovery)
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified** — user provided value (use verbatim)
@@ -94,7 +86,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 1. **Never guess prices** — always run the script against the live API
 2. **Infer currency and region from user context** — if unspecified, ask the user or default to USD and eastus
-3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user. At the request level, clarify vague inputs (Step 2). At the parameter level, apply the Disambiguation Protocol (Step 5).
+3. **Ask before assuming** — if a required parameter is ambiguous or missing, stop, **clarify** and ask the user. Never silently default a never-assume parameter. At the request level, use the Clarify checks in Step 2 (for example monthly volume, data transfer, and model/feature variant). At the parameter level, use the authoritative Disambiguation Protocol table in [shared.md](references/shared.md).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
 6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveat:** use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.

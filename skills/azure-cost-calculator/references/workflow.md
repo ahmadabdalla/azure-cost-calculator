@@ -24,7 +24,7 @@ Both pricing scripts (Bash and PowerShell) query the Azure Retail Prices REST AP
 - **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
 - **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
 
-> On Linux/macOS with PowerShell, always use `pwsh -File script.ps1 ...` — not `pwsh -Command '...'`. Bash strips OData quotes. See [pitfalls.md](pitfalls.md).
+> **PowerShell on Linux/macOS**: use `pwsh -File`, not `-Command` — shells strip OData quotes. See [pitfalls.md](pitfalls.md).
 
 ### Examples
 
@@ -91,4 +91,4 @@ For architecture-level estimates:
 - **Json** (default) — Structured output with query echo, results, and summary blocks. Full 16-field result items.
 - **Compact** — Lightweight JSON with only the 9 fields needed for cost calculation: MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits. No query echo or summary block. Recommended for batch estimates of 3+ services to reduce token consumption.
 - **Table** — Tabular display for terminal viewing. Good for comparing regions side by side.
-- **Summary** — Human-readable text output for interactive use. Not structured or parseable — use `Json` or `Compact` for agent-driven cost estimation.
+- **Summary** — Human-readable text for interactive use. Not structured or parseable — use `Json` or `Compact` for agent-driven cost estimation.
