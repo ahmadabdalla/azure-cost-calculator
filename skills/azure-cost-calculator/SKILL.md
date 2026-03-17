@@ -86,7 +86,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 1. **Never guess prices** — always run the script against the live API
 2. **Infer currency and region from user context** — if unspecified, ask the user or default to USD and eastus
-3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, monthly volume, data transfer GB, model/feature variant, users/devices), stop and ask the user. Never silently default a never-assume parameter. At the request level, clarify vague inputs (Step 2). At the parameter level, apply the Disambiguation Protocol (Step 5).
+3. **Ask before assuming** — if a required parameter is ambiguous or missing, stop, **clarify** and ask the user. Never silently default a never-assume parameter. At the request level, use the Clarify checks in Step 2 (for example monthly volume, data transfer, and model/feature variant). At the parameter level, use the authoritative Disambiguation Protocol table in [shared.md](references/shared.md).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
 6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveat:** use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
