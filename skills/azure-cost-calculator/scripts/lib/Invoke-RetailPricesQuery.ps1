@@ -15,7 +15,7 @@ function Invoke-RetailPricesQuery {
         [int]$MaxItems = 100,
 
         [Parameter()]
-        [int]$MaxRetries = 3,
+        [int]$MaxAttempts = 3,
 
         [Parameter()]
         [int]$BaseDelaySeconds = 2
@@ -30,7 +30,7 @@ function Invoke-RetailPricesQuery {
 
     do {
         $response = $null
-        for ($attempt = 1; $attempt -le $MaxRetries; $attempt++) {
+        for ($attempt = 1; $attempt -le $MaxAttempts; $attempt++) {
             try {
                 $response = Invoke-RestMethod -Uri $uri -ErrorAction Stop
                 break
@@ -41,11 +41,11 @@ function Invoke-RetailPricesQuery {
                 if ($statusCode -eq 429 -or $statusCode -ge 500) {
                     $isRetryable = $true
                 }
-                if (-not $isRetryable -or $attempt -eq $MaxRetries) {
+                if (-not $isRetryable -or $attempt -eq $MaxAttempts) {
                     throw
                 }
                 $delay = $BaseDelaySeconds * [math]::Pow(2, $attempt - 1)
-                Write-Warning "API request failed (attempt $attempt/$MaxRetries). Retrying in ${delay}s..."
+                Write-Warning "API request failed (attempt $attempt/$MaxAttempts). Retrying in ${delay}s..."
                 Start-Sleep -Seconds $delay
             }
         }

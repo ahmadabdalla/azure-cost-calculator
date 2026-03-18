@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Queries the Azure Retail Prices API with OData filter, handling pagination.
 # Returns a JSON array of pricing items on stdout.
 #
@@ -6,14 +7,14 @@
 #   invoke_retail_prices_query "$filter_string" "USD" 100
 #
 # Optional env vars:
-#   RETAIL_API_MAX_RETRIES   — max retry attempts per request (default: 3)
+#   RETAIL_API_MAX_ATTEMPTS  — max total attempts per request (default: 3)
 #   RETAIL_API_BASE_DELAY    — base delay in seconds for exponential backoff (default: 2)
 
 invoke_retail_prices_query() {
     local filter="$1"
     local currency_code="${2:-USD}"
     local max_items="${3:-100}"
-    local max_retries="${RETAIL_API_MAX_RETRIES:-3}"
+    local max_attempts="${RETAIL_API_MAX_ATTEMPTS:-3}"
     local base_delay="${RETAIL_API_BASE_DELAY:-2}"
 
     local -r base_uri="https://prices.azure.com/api/retail/prices"
@@ -32,14 +33,14 @@ invoke_retail_prices_query() {
         local response=""
         local attempt
 
-        for (( attempt = 1; attempt <= max_retries; attempt++ )); do
+        for (( attempt = 1; attempt <= max_attempts; attempt++ )); do
             raw_output=$(curl -s --connect-timeout 10 --max-time 30 -w '\n%{http_code}' "$uri") || {
-                if (( attempt == max_retries )); then
+                if (( attempt == max_attempts )); then
                     echo "Error: API request failed (curl error) for URI: $uri" >&2
                     return 1
                 fi
                 local delay=$(( base_delay * (1 << (attempt - 1)) ))
-                echo "Warning: API request failed (attempt $attempt/$max_retries). Retrying in ${delay}s..." >&2
+                echo "Warning: API request failed (attempt $attempt/$max_attempts). Retrying in ${delay}s..." >&2
                 sleep "$delay"
                 continue
             }
@@ -47,12 +48,12 @@ invoke_retail_prices_query() {
             response=$(sed '$d' <<< "$raw_output")
 
             if [[ "$http_code" -eq 429 || "$http_code" -ge 500 ]]; then
-                if (( attempt == max_retries )); then
+                if (( attempt == max_attempts )); then
                     echo "Error: API request failed with HTTP $http_code for URI: $uri" >&2
                     return 1
                 fi
                 local delay=$(( base_delay * (1 << (attempt - 1)) ))
-                echo "Warning: HTTP $http_code (attempt $attempt/$max_retries). Retrying in ${delay}s..." >&2
+                echo "Warning: HTTP $http_code (attempt $attempt/$max_attempts). Retrying in ${delay}s..." >&2
                 sleep "$delay"
                 continue
             fi

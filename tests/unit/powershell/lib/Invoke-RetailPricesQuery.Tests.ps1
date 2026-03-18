@@ -240,7 +240,7 @@ Describe 'Invoke-RetailPricesQuery' {
                 throw (New-HttpException -StatusCode 503 -Message 'Service Unavailable')
             }
 
-            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 } | Should -Throw
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 3 } | Should -Throw
             Should -Invoke Invoke-RestMethod -Times 3 -Exactly
             Should -Invoke Start-Sleep -Times 2 -Exactly
         }
@@ -282,7 +282,7 @@ Describe 'Invoke-RetailPricesQuery' {
                 throw (New-HttpException -StatusCode 429 -Message 'Rate limited')
             }
 
-            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 -BaseDelaySeconds 2 } | Should -Throw
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 3 -BaseDelaySeconds 2 } | Should -Throw
 
             $script:sleepCalls | Should -HaveCount 2
             $script:sleepCalls[0] | Should -Be 2   # 2 * 2^0

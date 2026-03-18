@@ -120,7 +120,7 @@ SCRIPT
 @test "HTTP 500 returns error after retries" {
     create_curl_mock '{"error":"server error"}' 500
     create_mock "sleep" "" 0
-    RETAIL_API_MAX_RETRIES=2 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=2 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     [[ "$output" == *"HTTP 500"* ]]
 }
@@ -135,7 +135,7 @@ SCRIPT
 @test "curl failure returns error after retries" {
     create_mock "curl" "" 1
     create_mock "sleep" "" 0
-    RETAIL_API_MAX_RETRIES=2 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=2 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     [[ "$output" == *"curl error"* ]]
 }
@@ -221,7 +221,7 @@ SCRIPT
     create_mock "sleep" "" 0
     echo "0" > "$MOCK_DIR/curl_call_count"
 
-    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 0 ]
     local count
     count=$(jq 'length' <<< "$output")
@@ -231,7 +231,7 @@ SCRIPT
 @test "HTTP 503 retries and fails after max retries" {
     create_curl_mock '{"error":"service unavailable"}' 503
     create_mock "sleep" "" 0
-    RETAIL_API_MAX_RETRIES=2 RETAIL_API_BASE_DELAY=1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=2 RETAIL_API_BASE_DELAY=1 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     [[ "$output" == *"HTTP 503"* ]]
 }
@@ -246,7 +246,7 @@ SCRIPT
     chmod +x "$MOCK_DIR/curl"
     create_mock "sleep" "" 0
 
-    RETAIL_API_MAX_RETRIES=3 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=3 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     # Should have been called only once (no retry for 404)
     local call_count
@@ -272,7 +272,7 @@ SCRIPT
     create_mock "sleep" "" 0
     echo "0" > "$MOCK_DIR/curl_call_count"
 
-    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 0 ]
     local count
     count=$(jq 'length' <<< "$output")
@@ -288,18 +288,19 @@ echo "$1" >> "$MOCK_DIR/sleep_args"
 SCRIPT
     chmod +x "$MOCK_DIR/sleep"
 
-    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=2 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=2 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
-    # Should have slept twice (attempts 1 and 2; attempt 3 throws without sleeping)
-    local sleep_calls
-    sleep_calls=$(cat "$MOCK_DIR/sleep_args")
+    # Should have slept twice (attempts 1 and 2; attempt 3 fails without sleeping)
+    local -a delays
+    mapfile -t delays < "$MOCK_DIR/sleep_args"
+    [ "${#delays[@]}" -eq 2 ]
     # First delay: 2 * 2^0 = 2, Second delay: 2 * 2^1 = 4
-    [[ "$sleep_calls" == *"2"* ]]
-    [[ "$sleep_calls" == *"4"* ]]
+    [ "${delays[0]}" -eq 2 ]
+    [ "${delays[1]}" -eq 4 ]
 }
 
-@test "default retry config uses 3 retries" {
-    # Verify the default RETAIL_API_MAX_RETRIES=3 is used
+@test "default retry config uses 3 attempts" {
+    # Verify the default RETAIL_API_MAX_ATTEMPTS=3 is used
     cat > "$MOCK_DIR/curl" <<'SCRIPT'
 #!/usr/bin/env bash
 call_file="$MOCK_DIR/curl_call_count"
