@@ -201,6 +201,38 @@ SCRIPT
     [ "$count" -eq 200 ]
 }
 
+# --- Input validation tests ---
+
+@test "MAX_ATTEMPTS=0 fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=0 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "MAX_ATTEMPTS=-1 fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=-1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "MAX_ATTEMPTS=abc fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=abc run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "BASE_DELAY=0 fails with validation error" {
+    RETAIL_API_BASE_DELAY=0 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_BASE_DELAY must be a positive integer"* ]]
+}
+
+@test "BASE_DELAY=abc fails with validation error" {
+    RETAIL_API_BASE_DELAY=abc run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_BASE_DELAY must be a positive integer"* ]]
+}
+
 # --- Retry / backoff tests ---
 
 @test "HTTP 429 retries and succeeds on later attempt" {

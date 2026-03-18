@@ -288,5 +288,40 @@ Describe 'Invoke-RetailPricesQuery' {
             $script:sleepCalls[0] | Should -Be 2   # 2 * 2^0
             $script:sleepCalls[1] | Should -Be 4   # 2 * 2^1
         }
+
+        It 'should retry on network error (exception without Response)' {
+            $script:callCount = 0
+            Mock Invoke-RestMethod {
+                $script:callCount++
+                if ($script:callCount -le 1) {
+                    throw [System.Net.Http.HttpRequestException]::new('Connection timed out')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should exhaust retries for persistent network errors' {
+            Mock Invoke-RestMethod {
+                throw [System.Net.Http.HttpRequestException]::new('Connection refused')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 2 } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should reject MaxAttempts of 0' {
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 0 } | Should -Throw '*ValidateRange*'
+        }
+
+        It 'should reject BaseDelaySeconds of 0' {
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -BaseDelaySeconds 0 } | Should -Throw '*ValidateRange*'
+        }
     }
 }

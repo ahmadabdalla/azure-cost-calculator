@@ -15,9 +15,11 @@ function Invoke-RetailPricesQuery {
         [int]$MaxItems = 100,
 
         [Parameter()]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$MaxAttempts = 3,
 
         [Parameter()]
+        [ValidateRange(1, [int]::MaxValue)]
         [int]$BaseDelaySeconds = 2
     )
 
@@ -38,7 +40,7 @@ function Invoke-RetailPricesQuery {
             catch {
                 $isRetryable = $false
                 $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
-                if ($statusCode -eq 429 -or $statusCode -ge 500) {
+                if ($statusCode -eq 429 -or $statusCode -ge 500 -or -not $_.Exception.Response) {
                     $isRetryable = $true
                 }
                 if (-not $isRetryable -or $attempt -eq $MaxAttempts) {

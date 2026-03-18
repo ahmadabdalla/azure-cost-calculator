@@ -17,6 +17,15 @@ invoke_retail_prices_query() {
     local max_attempts="${RETAIL_API_MAX_ATTEMPTS:-3}"
     local base_delay="${RETAIL_API_BASE_DELAY:-2}"
 
+    if ! [[ "$max_attempts" =~ ^[0-9]+$ ]] || (( max_attempts < 1 )); then
+        echo "Error: RETAIL_API_MAX_ATTEMPTS must be a positive integer, got: '$max_attempts'" >&2
+        return 1
+    fi
+    if ! [[ "$base_delay" =~ ^[0-9]+$ ]] || (( base_delay < 1 )); then
+        echo "Error: RETAIL_API_BASE_DELAY must be a positive integer, got: '$base_delay'" >&2
+        return 1
+    fi
+
     local -r base_uri="https://prices.azure.com/api/retail/prices"
     local encoded_filter
     encoded_filter=$(jq -rn --arg f "$filter" '$f | @uri')
