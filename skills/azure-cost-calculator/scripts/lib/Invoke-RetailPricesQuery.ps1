@@ -18,6 +18,7 @@ function Invoke-RetailPricesQuery {
     $baseUri = 'https://prices.azure.com/api/retail/prices'
     $allItems = [System.Collections.Generic.List[PSCustomObject]]::new()
     $encodedFilter = [System.Uri]::EscapeDataString($Filter)
+    if ([string]::IsNullOrWhiteSpace($CurrencyCode)) { $CurrencyCode = 'USD' }
     $encodedCurrency = [System.Uri]::EscapeDataString($CurrencyCode)
     $uri = "${baseUri}?`$filter=${encodedFilter}&currencyCode=${encodedCurrency}"
 
