@@ -41,6 +41,7 @@ region="eastus"
 currency="USD"
 top=20
 output_format="Json"
+include_meter_id=false
 verbose=false
 
 # ============================================================
@@ -48,7 +49,7 @@ verbose=false
 # ============================================================
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --verbose|-v|--help|-h) ;;
+        --verbose|-v|--help|-h|--include-meter-id) ;;
         --*) [[ $# -lt 2 ]] && { echo "Error: $1 requires a value" >&2; exit 1; } ;;
     esac
     case "$1" in
@@ -58,6 +59,7 @@ while [[ $# -gt 0 ]]; do
         --currency|--currency-code) currency="$2"; shift 2 ;;
         --top)            top="$2"; shift 2 ;;
         --output-format)  output_format="$2"; shift 2 ;;
+        --include-meter-id) include_meter_id=true; shift ;;
         --verbose|-v)     verbose=true; shift ;;
         --help|-h)
             cat <<'USAGE'
@@ -70,13 +72,14 @@ Flags:
   --currency CODE         Currency code (default: USD)
   --top N                 Number of distinct results (default: 20)
   --output-format FMT     Table|Json (default: Json)
+  --include-meter-id      Include MeterId (GUID) in Json output
   --verbose|-v            Emit OData filter to stderr
   --help|-h               Show this help
 USAGE
             exit 0
             ;;
         *)
-            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --search-term, --region, --currency, --top, --output-format, --verbose, --help" >&2
+            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --search-term, --region, --currency, --top, --output-format, --include-meter-id, --verbose, --help" >&2
             exit 1
             ;;
     esac
@@ -127,6 +130,10 @@ if (( item_count == 0 )); then
     exit 0
 fi
 
+# Build jq exclusion filter for optional output fields
+exclude_fields=""
+[[ "$include_meter_id" != true ]] && exclude_fields="del(.MeterId)"
+
 # Deduplicate to distinct combinations and take top N
 distinct=$(jq -c --argjson top "$top" '
     group_by("\(.serviceName)|\(.productName)|\(.skuName)|\(.meterName)|\(.armSkuName)|\(.unitOfMeasure)")
@@ -138,10 +145,16 @@ distinct=$(jq -c --argjson top "$top" '
         SkuName: .skuName,
         MeterName: .meterName,
         ArmSkuName: .armSkuName,
+        MeterId: .meterId,
         UnitOfMeasure: .unitOfMeasure,
         SamplePrice: .retailPrice
     })
 ' <<< "$items")
+
+# Apply optional field exclusions once before output
+if [[ -n "$exclude_fields" ]]; then
+    distinct=$(jq "[.[] | ${exclude_fields}]" <<< "$distinct")
+fi
 
 # ============================================================
 # Output

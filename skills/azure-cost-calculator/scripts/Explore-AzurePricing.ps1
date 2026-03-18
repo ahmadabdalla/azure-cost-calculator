@@ -41,10 +41,17 @@ param(
 
     [Parameter()]
     [ValidateSet('Json', 'Table')]
-    [string]$OutputFormat = 'Json'
+    [string]$OutputFormat = 'Json',
+
+    [Parameter()]
+    [switch]$IncludeMeterId
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Build exclusion list for optional output fields
+$excludeProps = @()
+if (-not $IncludeMeterId) { $excludeProps += 'MeterId' }
 
 # Load shared library functions
 . "$PSScriptRoot/lib/Build-ODataFilter.ps1"
@@ -85,7 +92,7 @@ catch [System.Net.WebException] {
 catch {
     $ex = $_.Exception
     $isHttpError = ($null -ne $ex.PSObject.Properties['Response']) -or
-                   ($null -ne $ex.PSObject.Properties['StatusCode'])
+    ($null -ne $ex.PSObject.Properties['StatusCode'])
 
     if ($isHttpError) {
         Write-Warning "API returned error. Filter: $filterString"
@@ -116,6 +123,7 @@ foreach ($group in $grouped) {
             SkuName       = $sample.skuName
             MeterName     = $sample.meterName
             ArmSkuName    = $sample.armSkuName
+            MeterId       = $sample.meterId
             UnitOfMeasure = $sample.unitOfMeasure
             SamplePrice   = $sample.retailPrice
         })
@@ -131,6 +139,6 @@ switch ($OutputFormat) {
         @{Label = 'SamplePrice'; Expression = { '{0:N4}' -f $_.SamplePrice }; Align = 'Right' } -AutoSize
     }
     'Json' {
-        $distinct | ConvertTo-Json -Depth 3
+        $distinct | Select-Object -Property * -ExcludeProperty $excludeProps | ConvertTo-Json -Depth 3 -AsArray
     }
 }
