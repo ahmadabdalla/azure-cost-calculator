@@ -51,6 +51,20 @@ SCRIPT
     [ "$count" -eq 1 ]
 }
 
+@test "currency code with special characters is URL-encoded" {
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"
+printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'" 'US&D'
+    [ "$status" -eq 0 ]
+    # Should contain the encoded ampersand, not a raw & that would split the parameter
+    [[ "$(cat "$MOCK_DIR/curl_args")" == *"currencyCode=US%26D"* ]]
+}
+
 @test "pagination follows NextPageLink" {
     # Mock curl to return two different pages based on call count
     cat > "$MOCK_DIR/curl" <<'SCRIPT'

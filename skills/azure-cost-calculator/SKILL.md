@@ -17,11 +17,11 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 
 Choose the script runtime based on what is available:
 
-| Runtime                    | Condition                                 | Pricing script                 | Explore script                     |
-| -------------------------- | ----------------------------------------- | ------------------------------ | ---------------------------------- |
-| **Bash** (preferred)       | `curl` and `jq` available                 | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
-| **PowerShell 7+**          | `pwsh` available                          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
-| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only) | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| Runtime                    | Condition                                                                                                                                                | Pricing script                 | Explore script                     |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------- |
+| **Bash** (preferred)       | `curl` and `jq` available                                                                                                                                | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
+| **PowerShell 7+**          | `pwsh` available                                                                                                                                         | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only). Add `-ExecutionPolicy RemoteSigned` before `-File` to avoid silent failures from default policy restrictions. | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
 
 Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`).
 
@@ -89,7 +89,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 3. **Ask before assuming** — if a required parameter is ambiguous or missing, stop, **clarify** and ask the user. Never silently default a never-assume parameter. At the request level, use the Clarify checks in Step 2 (for example monthly volume, data transfer, and model/feature variant). At the parameter level, use the authoritative Disambiguation Protocol table in [shared.md](references/shared.md).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
-6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveat:** use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
+6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe` — default Windows policies silently block script execution (see Runtime Detection note above). (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
 7. **Use exact category names** — group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
 8. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
 

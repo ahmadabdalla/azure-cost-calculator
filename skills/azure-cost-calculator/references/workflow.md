@@ -88,7 +88,11 @@ For architecture-level estimates:
 
 ## Output Formats
 
-- **Json** (default) — Structured output with query echo, results, and summary blocks. Full 16-field result items.
-- **Compact** — Lightweight JSON with only the 9 fields needed for cost calculation: MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits. No query echo or summary block. Recommended for batch estimates of 3+ services to reduce token consumption.
-- **Table** — Tabular display for terminal viewing. Good for comparing regions side by side.
-- **Summary** — Human-readable text for interactive use. Not structured or parseable — use `Json` or `Compact` for agent-driven cost estimation.
+The pricing and explore scripts support different format sets:
+
+| Format      | Pricing script | Explore script | Notes                                                                                                                                          |
+| ----------- | :------------: | :------------: | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Json**    |      Yes       |      Yes       | Default for both. Pricing: query echo + results + summary. Explore: flat array of distinct combinations.                                       |
+| **Table**   |      Yes       |      Yes       | Tabular display for terminal viewing. Good for comparing regions side by side.                                                                 |
+| **Compact** |      Yes       |       No       | Lightweight JSON with only the 9 fields needed for cost calculation. No query echo or summary. Recommended for batch estimates of 3+ services. |
+| **Summary** |      Yes       |       No       | Human-readable text for interactive use. Not structured or parseable — use `Json` or `Compact` for agent-driven estimation.                    |
