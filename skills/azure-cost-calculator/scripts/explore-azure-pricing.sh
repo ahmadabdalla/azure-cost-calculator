@@ -72,7 +72,7 @@ Flags:
   --currency CODE         Currency code (default: USD)
   --top N                 Number of distinct results (default: 20)
   --output-format FMT     Table|Json (default: Json)
-  --include-meter-id      Include MeterId (GUID) in Json output
+  --include-meter-id      Include MeterId (GUID) in Json/Compact output
   --verbose|-v            Emit OData filter to stderr
   --help|-h               Show this help
 USAGE
