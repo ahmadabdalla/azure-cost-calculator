@@ -194,22 +194,21 @@ Describe 'Invoke-RetailPricesQuery' {
 
     Context 'retry with exponential backoff' {
         BeforeAll {
-            # Helper to create a WebException with a specific HTTP status code.
-            # Handles both legacy .NET Framework (m_StatusCode field) and
-            # modern .NET 6+ (_httpResponseMessage field) internals.
-            function New-RetryableWebException {
+            # Helper to create an exception with .Response.StatusCode set.
+            # Uses HttpResponseException on pwsh 7+, WebException on PS 5.1.
+            function New-HttpException {
                 param([int]$StatusCode, [string]$Message = 'Error')
+                $httpResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]$StatusCode)
+                $exType = 'Microsoft.PowerShell.Commands.HttpResponseException' -as [type]
+                if ($exType) {
+                    return $exType::new($Message, $httpResponse)
+                }
                 $mockResponse = [System.Runtime.Serialization.FormatterServices]::GetUninitializedObject([System.Net.HttpWebResponse])
                 $field = [System.Net.HttpWebResponse].GetField('m_StatusCode', [System.Reflection.BindingFlags]'NonPublic,Instance')
-                if ($field) {
-                    $field.SetValue($mockResponse, $StatusCode)
-                }
+                if ($field) { $field.SetValue($mockResponse, $StatusCode) }
                 else {
                     $field = [System.Net.HttpWebResponse].GetField('_httpResponseMessage', [System.Reflection.BindingFlags]'NonPublic,Instance')
-                    if ($field) {
-                        $httpMsg = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]$StatusCode)
-                        $field.SetValue($mockResponse, $httpMsg)
-                    }
+                    if ($field) { $field.SetValue($mockResponse, $httpResponse) }
                 }
                 return [System.Net.WebException]::new($Message, $null, [System.Net.WebExceptionStatus]::ProtocolError, $mockResponse)
             }
@@ -224,7 +223,7 @@ Describe 'Invoke-RetailPricesQuery' {
             Mock Invoke-RestMethod {
                 $script:retryCount++
                 if ($script:retryCount -le 2) {
-                    throw (New-RetryableWebException -StatusCode 429 -Message 'Too Many Requests')
+                    throw (New-HttpException -StatusCode 429 -Message 'Too Many Requests')
                 }
                 [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
             }
@@ -238,7 +237,7 @@ Describe 'Invoke-RetailPricesQuery' {
 
         It 'should exhaust retries for persistent HTTP 503 errors' {
             Mock Invoke-RestMethod {
-                throw (New-RetryableWebException -StatusCode 503 -Message 'Service Unavailable')
+                throw (New-HttpException -StatusCode 503 -Message 'Service Unavailable')
             }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 } | Should -Throw
@@ -248,7 +247,7 @@ Describe 'Invoke-RetailPricesQuery' {
 
         It 'should not retry on HTTP 400 (non-retryable status)' {
             Mock Invoke-RestMethod {
-                throw (New-RetryableWebException -StatusCode 400 -Message 'Bad Request')
+                throw (New-HttpException -StatusCode 400 -Message 'Bad Request')
             }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
@@ -280,7 +279,7 @@ Describe 'Invoke-RetailPricesQuery' {
             $script:sleepCalls = @()
             Mock Start-Sleep { $script:sleepCalls += $Seconds }
             Mock Invoke-RestMethod {
-                throw (New-RetryableWebException -StatusCode 429 -Message 'Rate limited')
+                throw (New-HttpException -StatusCode 429 -Message 'Rate limited')
             }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 -BaseDelaySeconds 2 } | Should -Throw

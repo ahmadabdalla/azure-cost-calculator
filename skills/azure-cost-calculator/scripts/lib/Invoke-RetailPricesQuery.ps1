@@ -37,14 +37,9 @@ function Invoke-RetailPricesQuery {
             }
             catch {
                 $isRetryable = $false
-                if ($_.Exception -is [System.Net.WebException]) {
-                    $webResponse = $_.Exception.Response
-                    if ($webResponse) {
-                        $statusCode = [int]$webResponse.StatusCode
-                        if ($statusCode -eq 429 -or $statusCode -ge 500) {
-                            $isRetryable = $true
-                        }
-                    }
+                $statusCode = if ($_.Exception.Response) { [int]$_.Exception.Response.StatusCode } else { 0 }
+                if ($statusCode -eq 429 -or $statusCode -ge 500) {
+                    $isRetryable = $true
                 }
                 if (-not $isRetryable -or $attempt -eq $MaxRetries) {
                     throw
