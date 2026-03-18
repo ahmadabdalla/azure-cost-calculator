@@ -82,9 +82,22 @@ For architecture-level estimates:
 
 1. List each resource needed
 2. Look up each in the service reference file and run the script per-resource
-3. Sum monthly costs
-4. Present as a table: Resource | SKU | Monthly Cost
-5. Add total with caveats about variable costs (bandwidth, operations, storage growth)
+3. Apply [cross-service grant deductions](#cross-service-grant-resolution) before finalizing per-service costs
+4. Sum monthly costs
+5. Present as a table: Resource | SKU | Monthly Cost
+6. Add total with caveats about variable costs (bandwidth, operations, storage growth)
+
+### Cross-Service Grant Resolution
+
+When a multi-resource estimate includes services with `hasFreeGrant: true` that provide volume grants consumed by other services, apply deductions **after** querying each service individually but **before** computing final per-service costs:
+
+1. **Defender for Servers P2 → Sentinel / Log Analytics**: Deduct `serverCount × 0.5 × 30` GB from Sentinel billable ingestion (simplified pricing) or Log Analytics ingestion (classic pricing)
+2. **M365 E5 → Sentinel**: Deduct `userCount × 0.005 × 30` GB from Sentinel billable ingestion — tables do not overlap with P2, so both grants apply additively
+3. Apply remaining billable GB to Sentinel PAYG or commitment tier pricing
+
+These are volume deductions applied **before** tier pricing. The full formulas are in `services/security/sentinel.md` Cost Formula section — this section ensures they are applied during multi-service orchestration.
+
+> **Rule**: When `hasFreeGrant: true` appears in a service's front matter, check whether that grant reduces costs for another service in the same estimate. The granting service file documents the grant amount; the consuming service file documents where to deduct it.
 
 ## Output Formats
 

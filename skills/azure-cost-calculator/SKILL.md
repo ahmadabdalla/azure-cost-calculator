@@ -58,7 +58,7 @@ Service reference files specify query parameters as `Key: Value` pairs. Translat
 ### Phase 2 — Estimation
 
 7. **Query** — run the pricing script for each service using parameters from service files + user input + resolved defaults
-8. **Calculate** — apply cost formulas from service files; multiply by quantities
+8. **Calculate** — apply cost formulas from service files; multiply by quantities. For multi-service estimates, apply [cross-service grant deductions](references/workflow.md#cross-service-grant-resolution) when a `hasFreeGrant: true` service provides volume grants that reduce another service's billable usage (e.g., Defender P2 free ingestion → Sentinel billable GB)
 9. **Verify arithmetic** — for each line item, restate the formula with actual numbers, compute, and confirm the result. If any intermediate calculation involves multiplication of two numbers > 10, compute it step-by-step (e.g., `14.5 × 640 → 14 × 640 → 10 × 640 = 6,400; 4 × 640 = 2,560; subtotal = 8,960; 0.5 × 640 = 320; total = 9,280`). Do not rely on mental math for multi-digit operations.
 10. **Present** — output the estimate with:
 
@@ -126,7 +126,7 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
    - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
    - `apiServiceName` → use instead of `serviceName` in queries
-   - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
+   - `hasFreeGrant: true` → apply grant deduction (including [cross-service grants](references/workflow.md#cross-service-grant-resolution)); `privateEndpoint: true` → add PE line item
 3. **Full read triggers** — no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
 4. **Parallel queries** — run independent service queries in parallel, but limit to 3–5 concurrent requests to avoid API rate limiting. If querying more than 5 services, stagger starts in batches.
 5. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
