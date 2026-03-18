@@ -82,6 +82,35 @@ teardown() { teardown_mock_path; }
     [[ "$output" == *"--currency"* ]]
 }
 
+# ============================================================
+# --include-meter-id flag tests
+# ============================================================
+
+@test "default Json output excludes MeterId" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Container Apps","productName":"Azure Container Apps","skuName":"Standard","meterName":"vCPU Duration","meterId":"00000000-0000-0000-0000-000000000002","armSkuName":"","armRegionName":"eastus","retailPrice":0.000024,"unitOfMeasure":"1 Second","currencyCode":"USD"}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps"
+    [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.[0] | has("MeterId")')
+    [ "$has_meter_id" = "false" ]
+}
+
+@test "--include-meter-id includes MeterId in Json output" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Container Apps","productName":"Azure Container Apps","skuName":"Standard","meterName":"vCPU Duration","meterId":"00000000-0000-0000-0000-000000000002","armSkuName":"","armRegionName":"eastus","retailPrice":0.000024,"unitOfMeasure":"1 Second","currencyCode":"USD"}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps" --include-meter-id
+    [ "$status" -eq 0 ]
+    meter_id=$(echo "$output" | jq -r '.[0].MeterId')
+    [ "$meter_id" = "00000000-0000-0000-0000-000000000002" ]
+}
+
+@test "null meterId from API produces null MeterId when included" {
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps" --include-meter-id
+    [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.[0] | has("MeterId")')
+    [ "$has_meter_id" = "true" ]
+    meter_id=$(echo "$output" | jq '.[0].MeterId')
+    [ "$meter_id" = "null" ]
+}
+
 @test "invalid --output-format exits non-zero" {
     run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Test" --output-format "CSV"
     [ "$status" -ne 0 ]

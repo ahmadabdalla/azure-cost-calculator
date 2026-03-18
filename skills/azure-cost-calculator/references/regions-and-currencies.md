@@ -19,27 +19,26 @@ Reference for region names, currency handling, and services not available in the
 | Central US          | `centralus`          |
 | Canada Central      | `canadacentral`      |
 
-> **Note**: Some services use non-standard regions. Private DNS pricing is listed under empty `armRegionName` or zone-based regions — querying any standard region returns **nothing** and the scripts cannot query it. Private Link and Load Balancer use `armRegionName = 'Global'` and can be queried with `Region: Global`. See [pitfalls.md](pitfalls.md) for details.
+> **Note**: Some services use non-standard regions. Private DNS pricing is listed under empty `armRegionName` or zone-based regions — querying any standard region returns **nothing** and the scripts cannot query it. Private Link, Load Balancer, and Defender CSPM use `armRegionName = 'Global'` and can be queried with `Region: Global`. See [pitfalls.md](pitfalls.md) for details.
 
 ## Known API-Unavailable Services
 
 These services have **no pricing data** in the Azure Retail Prices API and must be estimated manually:
 
-| Service       | Manual Estimate              | Reference                                                                                       |
-| ------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
-| Defender CSPM | $5.11 USD/month per resource | [Azure Defender pricing](https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/) |
+| Service            | Manual Estimate | Reference |
+| ------------------ | --------------- | --------- |
+| _(none currently)_ |                 |           |
 
-When encountering these services, note the limitation to the user and provide the manual fallback values above (in USD). If the user's requested currency is NOT USD, you **MUST** derive a conversion factor using the method below and convert all USD-only prices to the target currency. Do NOT leave prices in USD when the user requested a different currency. Do NOT direct them to the Azure pricing calculator — perform the conversion yourself.
+If a service is added to this table, note the limitation to the user and provide the manual fallback values above (in USD). If the user's requested currency is NOT USD, you **MUST** derive a conversion factor using the method below and convert all USD-only prices to the target currency. Do NOT leave prices in USD when the user requested a different currency. Do NOT direct them to the Azure pricing calculator — perform the conversion yourself.
 
 ## USD-Only Services
 
-These services return pricing in **USD only** — either because they are API-unavailable or because they are listed under the `Global` region:
+These services return pricing in **USD only** — either because they are API-unavailable or because they use `pricingRegion: global` in their service file. **Services without `pricingRegion: global` support native non-USD currencies** — pass the target `currencyCode` directly to the script and the API returns prices in that currency (see [pitfalls.md](pitfalls.md) for the correct query parameter usage). Native local-currency prices can differ from USD × FX conversion, so always query in the target currency directly rather than converting.
 
 | Service       | Reason                                                                 | Reference                                                        |
 | ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Private Link  | Global region, USD only; use `Region: Global`                          | [private-link.md](services/networking/private-link.md)           |
 | Private DNS   | Empty-region pricing (`armRegionName == ''`); USD only; use workaround | [private-dns.md](services/networking/private-dns.md)             |
-| Defender CSPM | Not in API at all                                                      | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
 | Load Balancer | Global region, USD only; use `Region: Global`                          | [load-balancer.md](services/networking/load-balancer.md)         |
 
 ## Sub-Cent Services

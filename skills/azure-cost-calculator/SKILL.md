@@ -17,22 +17,17 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 
 Choose the script runtime based on what is available:
 
-| Runtime                    | Condition                                 | Pricing script                 | Explore script                     |
-| -------------------------- | ----------------------------------------- | ------------------------------ | ---------------------------------- |
-| **Bash** (preferred)       | `curl` and `jq` available                 | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
-| **PowerShell 7+**          | `pwsh` available                          | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
-| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only) | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| Runtime                    | Condition                                                                                                                                                | Pricing script                 | Explore script                     |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------- |
+| **Bash** (preferred)       | `curl` and `jq` available                                                                                                                                | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
+| **PowerShell 7+**          | `pwsh` available                                                                                                                                         | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only). Add `-ExecutionPolicy RemoteSigned` before `-File` to avoid silent failures from default policy restrictions. | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
 
 Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`).
 
 ### Declarative Parameters
 
-Service reference files specify query parameters as `Key: Value` pairs. To execute a query, translate each parameter to the detected runtime's syntax:
-
-- **Bash**: `--kebab-case` flags (e.g., `ServiceName: Virtual Machines` → `--service-name 'Virtual Machines'`)
-- **PowerShell**: `-PascalCase` flags (e.g., `ServiceName: Virtual Machines` → `-ServiceName 'Virtual Machines'`)
-
-String values with spaces require quoting when passed to scripts. Numeric values (Quantity, InstanceCount) do not.
+Service reference files specify query parameters as `Key: Value` pairs. Translate to Bash `--kebab-case` or PowerShell `-PascalCase` flags; quote string values with spaces. See [workflow.md](references/workflow.md) for the full parameter table, translation examples, and output formats.
 
 ## Workflow
 
@@ -41,15 +36,12 @@ String values with spaces require quoting when passed to scripts. Numeric values
 1. **Parse** — extract resource types, quantities, and sizing from user's architecture
 2. **Clarify** — if any of these are true, stop and ask before continuing:
    - A resource maps to a category but not a specific service (e.g., "a database") → list 2–4 options
-   - A resource has no count, no sizing/tier, or no workload scale (RU/s, executions, DTUs) → ask for specifics
+   - A resource has no count, no sizing/tier, or no workload scale → ask for specifics
+   - A resource has no expected monthly volume — data transferred/ingested (GB), transactions, requests, messages, tokens, or users/devices → ask for estimated volume
+   - A multi-model or multi-feature service (e.g., Azure OpenAI, AI Services, Defender for Cloud) has no model or feature variant specified → ask which one (cost can vary 15–30×)
    - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
-   - Batch all gaps into one prompt. Offer concrete choices. One round max — if user declines, carry gaps forward as never-assume items in Step 6.
-3. **Locate** each service reference:
-   a. **File search** — search for files matching `references/services/**/*<keyword>*.md`
-   b. **Routing map** — if search returns 0 or ambiguous results, check [references/service-routing.md](references/service-routing.md) for the authoritative category and filename
-   c. **Category browse** — if not found in routing map, read the category index in [references/shared.md](references/shared.md)
-   d. **Broad search** — list or search `references/services/**/*.md` to see all available files
-   e. **Discovery** — if no file exists, use the explore script to find the service in the API
+   - Batch all gaps into one prompt. Offer concrete choices with sensible options (e.g., "100 GB/month?", "GPT-4o or GPT-4o-mini?"). One round max — if user declines a specific parameter, apply safe defaults only for **Safe-default** gaps and disclose them; if any **Never-assume** gap remains, do NOT proceed — state what cannot be estimated without the missing input.
+3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md) (file search → routing map → category browse → broad search → discovery)
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified** — user provided value (use verbatim)
@@ -94,12 +86,13 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 1. **Never guess prices** — always run the script against the live API
 2. **Infer currency and region from user context** — if unspecified, ask the user or default to USD and eastus
-3. **Ask before assuming** — if a required parameter is ambiguous or missing (tier, SKU, quantity, currency, node count, traffic volume), stop and ask the user. At the request level, clarify vague inputs (Step 2). At the parameter level, apply the Disambiguation Protocol (Step 5).
+3. **Ask before assuming** — if a required parameter is ambiguous or missing, stop, **clarify** and ask the user. Never silently default a never-assume parameter. At the request level, use the Clarify checks in Step 2 (for example monthly volume, data transfer, and model/feature variant). At the parameter level, use the authoritative Disambiguation Protocol table in [shared.md](references/shared.md).
 4. **Default output format is Json** — never use Summary (invisible to agents)
 5. **Lazy-load service references** — only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
-6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveat:** use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
+6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe` — default Windows policies silently block script execution (see Runtime Detection note above). (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
 7. **Use exact category names** — group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
 8. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
+9. **MeterId** — when the user requests meter IDs, add `--include-meter-id` / `-IncludeMeterId`. No extra API calls needed.
 
 ## Service File Metadata
 
@@ -136,8 +129,9 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - `apiServiceName` → use instead of `serviceName` in queries
    - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
 3. **Full read triggers** — no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
-4. **Parallel queries** — run independent service queries in parallel.
+4. **Parallel queries** — run independent service queries in parallel, but limit to 3–5 concurrent requests to avoid API rate limiting. If querying more than 5 services, stagger starts in batches.
 5. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
 6. **Progressive distillation** — after each service query returns, emit a summary row before proceeding:
    `| Category | Service | Resource | Unit Price | Unit | Qty | Monthly Cost | Notes |`
    Multi-meter services get one row per line item. After all queries complete, assemble the final estimate from the accumulated rows. Do not re-read service files already distilled unless a full read trigger is needed. During Post-Estimate Iteration, replace the distillation row(s) for any re-queried service.
+7. **Compact output** — use `OutputFormat: Compact` (or `--output-format Compact` in Bash) for batch queries. Compact returns only the 9 fields needed for cost calculation (MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits) — no query echo, no summary block. With `--include-meter-id`, Compact includes MeterId as a 10th field. Use full `Json` format when debugging unexpected results or when a service file requires fields not in the Compact set.

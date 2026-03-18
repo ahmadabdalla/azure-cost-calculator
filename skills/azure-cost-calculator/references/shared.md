@@ -57,17 +57,11 @@ Service reference files are organized by category. To find a service file:
 
 ### API-Unavailable Services
 
-Some services have **no data** in the Retail Prices API at all. Scripts return zero results.
-**Do NOT** query via the pricing/explore scripts — use the manual fallback table in the service file.
-Affected: Defender CSPM.
-Full list: [regions-and-currencies.md & Known API-Unavailable Services](regions-and-currencies.md#known-api-unavailable-services).
+Some services have **no data** in the Retail Prices API — scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and USD-to-local conversion handling for USD-only services.
 
 ### Global/Empty-Region Services
 
-Some services have pricing only under `Global`/empty `armRegionName`, not standard regions.
-For services that use `armRegionName = 'Global'` (e.g., Load Balancer, Private Link), pass `Region: Global` to the scripts — they work normally.
-For services that use empty `armRegionName` (e.g., Private DNS), scripts cannot query them — **query the Retail Prices API directly** (see each service file for the query). Prices are USD-only.
-Affected (script workaround needed): Private DNS.
+Some services use `Global` or empty `armRegionName` instead of standard regions — querying a standard region returns nothing silently. See [pitfalls.md](pitfalls.md) for handling details and [regions-and-currencies.md](regions-and-currencies.md) for the affected-services list.
 
 ### USD-Only Prices — Mandatory Conversion
 

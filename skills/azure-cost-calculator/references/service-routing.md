@@ -51,17 +51,20 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...` — display name may d
 - Azure Bastion: Bastion Host, Jump Host, Jump Box
 - Azure DDOS Protection: DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection
 - Azure DNS: DNS Zones, Public DNS Zones
+- DNS Security Policy: DNS Security, DNS Filtering, DNS Threat Intelligence
 - Azure Firewall: AzFW, Azure Firewall Premium/Standard/Basic
 - Azure Front Door Service: AFD, Front Door, Front Door Premium/Standard, Front Door WAF
 - Azure Private Link: Private Endpoint, PE
 - Bandwidth: Data Transfer, Egress, Outbound Transfer, Inter-region Transfer
 - Content Delivery Network: CDN, Azure CDN, CDN Classic, Azure CDN Classic, Content Delivery
+- DNS Private Resolver: Private Resolver, DNS Resolver, Azure DNS Private Resolver
 - ExpressRoute: ER, Dedicated Circuit
 - ExpressRoute Gateway: ER Gateway, ExpressRoute VNet Gateway, ErGw
 - IP Addresses: Public IP, PIP, Public IP Address
 - Load Balancer: ALB, LB, Standard LB, Basic LB
 - NAT Gateway: Azure NAT, SNAT, Outbound Connectivity
 - Network Watcher: NSG Flow Logs, Connection Monitor
+- Azure Route Server: BGP Routing
 - Private DNS: Private DNS, Private DNS Zones
 - Traffic Manager: DNS Load Balancer
 - Virtual Network: VNet, Peering

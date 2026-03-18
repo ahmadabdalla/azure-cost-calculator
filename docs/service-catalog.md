@@ -54,7 +54,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 - Azure Firewall Manager: Firewall Policy
 - Azure Orbital: Ground Station, Satellite
 - Azure Programmable Connectivity: APC, Network APIs
-- Azure Route Server: BGP Routing
 - Microsoft Azure Peering Service: ISP Peering, Internet Peering
 - Private Mobile Network: Private 5G Core, Mobile Network, MEC
 
