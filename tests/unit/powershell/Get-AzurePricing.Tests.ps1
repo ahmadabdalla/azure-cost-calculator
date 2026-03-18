@@ -420,6 +420,187 @@ Describe 'Get-AzurePricing' {
         }
     }
 
+    Context 'IncludeMeterId flag - default excludes MeterId from Json' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should NOT include MeterId in results by default' {
+            $script:Result.results[0].PSObject.Properties.Name | Should -Not -Contain 'MeterId'
+        }
+    }
+
+    Context 'IncludeMeterId flag - includes MeterId in Json when specified' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -IncludeMeterId -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should include MeterId in results' {
+            $script:Result.results[0].PSObject.Properties.Name | Should -Contain 'MeterId'
+        }
+
+        It 'Should have the correct MeterId value' {
+            $script:Result.results[0].MeterId | Should -Be '00000000-0000-0000-0000-000000000001'
+        }
+    }
+
+    Context 'IncludeMeterId flag - default Compact excludes MeterId (9 fields)' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Compact 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should contain only 9 Compact fields without MeterId' {
+            $fields = $script:Result.results[0].PSObject.Properties.Name | Sort-Object
+            $expected = @('Currency', 'MeterName', 'MonthlyCost', 'ProductName', 'ReservationTerm', 'SkuName', 'TierMinUnits', 'UnitOfMeasure', 'UnitPrice') | Sort-Object
+            $fields | Should -Be $expected
+        }
+    }
+
+    Context 'IncludeMeterId flag - Compact includes MeterId (10 fields) when specified' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -IncludeMeterId -OutputFormat Compact 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should contain 10 Compact fields including MeterId' {
+            $fields = $script:Result.results[0].PSObject.Properties.Name | Sort-Object
+            $expected = @('Currency', 'MeterId', 'MeterName', 'MonthlyCost', 'ProductName', 'ReservationTerm', 'SkuName', 'TierMinUnits', 'UnitOfMeasure', 'UnitPrice') | Sort-Object
+            $fields | Should -Be $expected
+        }
+
+        It 'Should have the correct MeterId value' {
+            $script:Result.results[0].MeterId | Should -Be '00000000-0000-0000-0000-000000000001'
+        }
+    }
+
+    Context 'IncludeMeterId flag - null meterId from API' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = $null
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -IncludeMeterId -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should include MeterId property even when null' {
+            $script:Result.results[0].PSObject.Properties.Name | Should -Contain 'MeterId'
+        }
+
+        It 'Should have null MeterId value' {
+            $script:Result.results[0].MeterId | Should -BeNullOrEmpty
+        }
+    }
+
     Context 'Summary output format' {
         BeforeAll {
             Mock Invoke-RestMethod {

@@ -235,6 +235,101 @@ Describe 'Explore-AzurePricing' {
         }
     }
 
+    Context 'IncludeMeterId flag - default excludes MeterId' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            isPrimaryMeterRegion = $true
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
+        }
+
+        It 'Should NOT include MeterId by default' {
+            $script:Result[0].PSObject.Properties.Name | Should -Not -Contain 'MeterId'
+        }
+    }
+
+    Context 'IncludeMeterId flag - includes MeterId when specified' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = '00000000-0000-0000-0000-000000000001'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            isPrimaryMeterRegion = $true
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -IncludeMeterId -OutputFormat Json 3>$null
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
+        }
+
+        It 'Should include MeterId in results' {
+            $script:Result[0].PSObject.Properties.Name | Should -Contain 'MeterId'
+        }
+
+        It 'Should have the correct MeterId value' {
+            $script:Result[0].MeterId | Should -Be '00000000-0000-0000-0000-000000000001'
+        }
+    }
+
+    Context 'IncludeMeterId flag - null meterId from API' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            meterId              = $null
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            isPrimaryMeterRegion = $true
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -IncludeMeterId -OutputFormat Json 3>$null
+            $script:Result = @(script:ConvertFrom-JsonArray ($raw -join "`n"))
+        }
+
+        It 'Should include MeterId property even when null' {
+            $script:Result[0].PSObject.Properties.Name | Should -Contain 'MeterId'
+        }
+
+        It 'Should have null MeterId value' {
+            $script:Result[0].MeterId | Should -BeNullOrEmpty
+        }
+    }
+
     Context 'No results from API' {
         BeforeAll {
             Mock Invoke-RestMethod {
