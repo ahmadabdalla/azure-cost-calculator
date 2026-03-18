@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+bats_require_minimum_version 1.5.0
 
 setup() {
     source "$BATS_TEST_DIRNAME/../test_helper.bash"
@@ -220,7 +221,7 @@ SCRIPT
     create_mock "sleep" "" 0
     echo "0" > "$MOCK_DIR/curl_call_count"
 
-    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 0 ]
     local count
     count=$(jq 'length' <<< "$output")
@@ -271,7 +272,7 @@ SCRIPT
     create_mock "sleep" "" 0
     echo "0" > "$MOCK_DIR/curl_call_count"
 
-    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    RETAIL_API_MAX_RETRIES=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 0 ]
     local count
     count=$(jq 'length' <<< "$output")
