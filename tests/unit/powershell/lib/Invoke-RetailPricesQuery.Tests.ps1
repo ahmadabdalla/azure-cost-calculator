@@ -135,6 +135,18 @@ Describe 'Invoke-RetailPricesQuery' {
                 $Uri -like '*currencyCode=USD*'
             }
         }
+
+        It 'should URL-encode the CurrencyCode to prevent parameter injection' {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{ Items = @(); NextPageLink = $null }
+            }
+
+            Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -CurrencyCode 'US&D'
+
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
+                $Uri -like '*currencyCode=US%26D*' -and $Uri -notlike '*currencyCode=US&D*'
+            }
+        }
     }
 
     Context 'when the filter is URL-encoded in the request' {
