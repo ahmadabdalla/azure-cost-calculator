@@ -165,18 +165,20 @@ Describe 'Invoke-RetailPricesQuery' {
     }
 
     Context 'when Invoke-RestMethod throws an error' {
-        It 'should propagate the error' {
+        It 'should propagate non-retryable errors immediately' {
             Mock Invoke-RestMethod { throw 'API failure' }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
         }
     }
 
     Context 'when Invoke-RestMethod throws an HTTP error' {
-        It 'should propagate the HTTP error' {
+        It 'should propagate WebException without Response immediately (no retry)' {
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('The remote server returned an error: (500) Internal Server Error.') }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw '*500*'
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
         }
     }
 
@@ -187,6 +189,105 @@ Describe 'Invoke-RetailPricesQuery' {
             $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
 
             @($result).Count | Should -Be 0
+        }
+    }
+
+    Context 'retry with exponential backoff' {
+        BeforeAll {
+            # Helper to create a WebException with a specific HTTP status code.
+            # Handles both legacy .NET Framework (m_StatusCode field) and
+            # modern .NET 6+ (_httpResponseMessage field) internals.
+            function New-RetryableWebException {
+                param([int]$StatusCode, [string]$Message = 'Error')
+                $mockResponse = [System.Runtime.Serialization.FormatterServices]::GetUninitializedObject([System.Net.HttpWebResponse])
+                $field = [System.Net.HttpWebResponse].GetField('m_StatusCode', [System.Reflection.BindingFlags]'NonPublic,Instance')
+                if ($field) {
+                    $field.SetValue($mockResponse, $StatusCode)
+                }
+                else {
+                    $field = [System.Net.HttpWebResponse].GetField('_httpResponseMessage', [System.Reflection.BindingFlags]'NonPublic,Instance')
+                    if ($field) {
+                        $httpMsg = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]$StatusCode)
+                        $field.SetValue($mockResponse, $httpMsg)
+                    }
+                }
+                return [System.Net.WebException]::new($Message, $null, [System.Net.WebExceptionStatus]::ProtocolError, $mockResponse)
+            }
+        }
+
+        BeforeEach {
+            Mock Start-Sleep {}
+        }
+
+        It 'should retry on HTTP 429 and succeed on later attempt' {
+            $script:retryCount = 0
+            Mock Invoke-RestMethod {
+                $script:retryCount++
+                if ($script:retryCount -le 2) {
+                    throw (New-RetryableWebException -StatusCode 429 -Message 'Too Many Requests')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
+        }
+
+        It 'should exhaust retries for persistent HTTP 503 errors' {
+            Mock Invoke-RestMethod {
+                throw (New-RetryableWebException -StatusCode 503 -Message 'Service Unavailable')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
+        }
+
+        It 'should not retry on HTTP 400 (non-retryable status)' {
+            Mock Invoke-RestMethod {
+                throw (New-RetryableWebException -StatusCode 400 -Message 'Bad Request')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should not retry generic non-web exceptions' {
+            Mock Invoke-RestMethod { throw 'Something broke' }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should succeed without retries when API responds normally' {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should use exponential delays (2s, 4s) for BaseDelaySeconds=2' {
+            $script:sleepCalls = @()
+            Mock Start-Sleep { $script:sleepCalls += $Seconds }
+            Mock Invoke-RestMethod {
+                throw (New-RetryableWebException -StatusCode 429 -Message 'Rate limited')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxRetries 3 -BaseDelaySeconds 2 } | Should -Throw
+
+            $script:sleepCalls | Should -HaveCount 2
+            $script:sleepCalls[0] | Should -Be 2   # 2 * 2^0
+            $script:sleepCalls[1] | Should -Be 4   # 2 * 2^1
         }
     }
 }
