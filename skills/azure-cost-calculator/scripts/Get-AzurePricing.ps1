@@ -237,6 +237,11 @@ switch ($OutputFormat) {
         Currency -AutoSize
     }
     'Json' {
+        # Project results outside the hashtable — inline if unwraps @() to $null in empty case
+        $projectedResults = @($allResults)
+        if ($excludeProps.Count -gt 0 -and $projectedResults.Count -gt 0) {
+            $projectedResults = @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps)
+        }
         $output = @{
             query      = @{
                 serviceName = $ServiceName
@@ -250,7 +255,7 @@ switch ($OutputFormat) {
                     meterName   = $MeterName
                 }
             }
-            results    = if ($excludeProps.Count -gt 0) { @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps) } else { $allResults }
+            results    = $projectedResults
             totalItems = $allResults.Count
             summary    = @{
                 minMonthlyCost   = $(if ($costMeasure.Count -gt 0) { $costMeasure.Minimum } else { 0 })
