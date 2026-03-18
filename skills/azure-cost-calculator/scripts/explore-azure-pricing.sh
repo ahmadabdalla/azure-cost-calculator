@@ -152,7 +152,7 @@ distinct=$(jq -c --argjson top "$top" '
 ' <<< "$items")
 
 # Apply optional field exclusions once before output
-if [[ -n "$exclude_fields" ]]; then
+if [[ -n "$exclude_fields" && "$output_format" == "Json" ]]; then
     distinct=$(jq "[.[] | ${exclude_fields}]" <<< "$distinct")
 fi
 

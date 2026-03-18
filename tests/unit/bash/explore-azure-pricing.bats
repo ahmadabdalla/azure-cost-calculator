@@ -105,6 +105,8 @@ teardown() { teardown_mock_path; }
 @test "null meterId from API produces null MeterId when included" {
     run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps" --include-meter-id
     [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.[0] | has("MeterId")')
+    [ "$has_meter_id" = "true" ]
     meter_id=$(echo "$output" | jq '.[0].MeterId')
     [ "$meter_id" = "null" ]
 }

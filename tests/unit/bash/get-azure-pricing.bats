@@ -282,6 +282,8 @@ SCRIPT
 @test "null meterId from API produces null MeterId when included" {
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --include-meter-id
     [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.results[0] | has("MeterId")')
+    [ "$has_meter_id" = "true" ]
     meter_id=$(echo "$output" | jq '.results[0].MeterId')
     [ "$meter_id" = "null" ]
 }
