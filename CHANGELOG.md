@@ -4,6 +4,26 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-03-18
+
+### Added
+
+- **Scripts**: Opt-in MeterId output via `-IncludeMeterId` (PowerShell) or `--include-meter-id` (Bash) flag — adds meter GUID to JSON and Compact output formats without extra API calls
+- **Scripts**: Retry with exponential backoff and configurable concurrency limit in Retail Prices API query helpers — MaxAttempts/MaxRetries and BaseDelaySeconds parameters handle transient failures (429, 5xx, network errors)
+- **SKILL.md**: Mandatory clarifying questions workflow — agents must stop and ask for missing monthly volume, data transfer, model/feature variant, or other **Never-assume** parameters before proceeding
+- **SKILL.md**: Compact output format guidance — use `OutputFormat: Compact` for batch queries to reduce token usage by ~70%
+
+### Changed
+
+- **SKILL.md**: Updated workflow steps with streamlined Clarify phase (Step 2), Safe-default vs Never-assume gap handling, and concurrency guidance (3–5 parallel queries max)
+- **SKILL.md**: Added PowerShell 5.1 execution policy caveat — Windows default policy silently blocks script loading; use `-ExecutionPolicy RemoteSigned` before `-File`
+- **workflow.md**: Consolidated parameter translation and output format documentation from SKILL.md for better reference
+- **Defender for Cloud**: Corrected API service name — Defender CSPM and other Defender plans are now queryable from Azure Retail Prices API
+
+### Fixed
+
+- **Scripts (PowerShell 5.1)**: Execution policy blocks now handled by dev container configuration and documented in SKILL.md — prevents silent script loading failures on Windows
+
 ## [1.4.0] - 2026-03-15
 
 ### Added
