@@ -92,6 +92,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 6. **PowerShell: use `-File`, not `-Command`** — run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe` — default Windows policies silently block script execution (see Runtime Detection note above). (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
 7. **Use exact category names** — group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
 8. **Scope to user-specified resources** — only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
+9. **MeterId** — when the user requests meter IDs, add `--include-meter-id` / `-IncludeMeterId`. No extra API calls needed.
 
 ## Service File Metadata
 
@@ -133,4 +134,4 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
 6. **Progressive distillation** — after each service query returns, emit a summary row before proceeding:
    `| Category | Service | Resource | Unit Price | Unit | Qty | Monthly Cost | Notes |`
    Multi-meter services get one row per line item. After all queries complete, assemble the final estimate from the accumulated rows. Do not re-read service files already distilled unless a full read trigger is needed. During Post-Estimate Iteration, replace the distillation row(s) for any re-queried service.
-7. **Compact output** — use `OutputFormat: Compact` (or `--output-format Compact` in Bash) for batch queries. Compact returns only the 9 fields needed for cost calculation (MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits) — no query echo, no summary block. Use full `Json` format when debugging unexpected results or when a service file requires fields not in the Compact set.
+7. **Compact output** — use `OutputFormat: Compact` (or `--output-format Compact` in Bash) for batch queries. Compact returns only the 9 fields needed for cost calculation (MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits) — no query echo, no summary block. With `--include-meter-id`, Compact includes MeterId as a 10th field. Use full `Json` format when debugging unexpected results or when a service file requires fields not in the Compact set.
