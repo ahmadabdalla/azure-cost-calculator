@@ -55,10 +55,17 @@ param(
 
     [Parameter()]
     [ValidateSet('Table', 'Json', 'Summary', 'Compact')]
-    [string]$OutputFormat = 'Json'
+    [string]$OutputFormat = 'Json',
+
+    [Parameter()]
+    [switch]$IncludeMeterId
 )
 
 $ErrorActionPreference = 'Stop'
+
+# Build exclusion list for optional output fields
+$excludeProps = @()
+if (-not $IncludeMeterId) { $excludeProps += 'MeterId' }
 
 # Load shared library functions
 . "$PSScriptRoot/lib/Build-ODataFilter.ps1"
@@ -190,6 +197,7 @@ foreach ($regionName in $Region) {
                 ProductName       = $item.productName
                 SkuName           = $item.skuName
                 ArmSkuName        = $item.armSkuName
+                MeterId           = $item.meterId
                 MeterName         = $item.meterName
                 UnitPrice         = $unitPrice
                 UnitOfMeasure     = $item.unitOfMeasure
@@ -229,6 +237,11 @@ switch ($OutputFormat) {
         Currency -AutoSize
     }
     'Json' {
+        # Project results outside the hashtable — inline if unwraps @() to $null in empty case
+        $projectedResults = @($allResults)
+        if ($excludeProps.Count -gt 0 -and $projectedResults.Count -gt 0) {
+            $projectedResults = @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps)
+        }
         $output = @{
             query      = @{
                 serviceName = $ServiceName
@@ -242,7 +255,7 @@ switch ($OutputFormat) {
                     meterName   = $MeterName
                 }
             }
-            results    = $allResults
+            results    = $projectedResults
             totalItems = $allResults.Count
             summary    = @{
                 minMonthlyCost   = $(if ($costMeasure.Count -gt 0) { $costMeasure.Minimum } else { 0 })
@@ -253,19 +266,8 @@ switch ($OutputFormat) {
         $output | ConvertTo-Json -Depth 5
     }
     'Compact' {
-        $compactResults = $allResults | ForEach-Object {
-            [PSCustomObject]@{
-                MeterName       = $_.MeterName
-                ProductName     = $_.ProductName
-                SkuName         = $_.SkuName
-                UnitPrice       = $_.UnitPrice
-                UnitOfMeasure   = $_.UnitOfMeasure
-                MonthlyCost     = $_.MonthlyCost
-                Currency        = $_.Currency
-                ReservationTerm = $_.ReservationTerm
-                TierMinUnits    = $_.TierMinUnits
-            }
-        }
+        $compactProps = @('MeterId', 'MeterName', 'ProductName', 'SkuName', 'UnitPrice', 'UnitOfMeasure', 'MonthlyCost', 'Currency', 'ReservationTerm', 'TierMinUnits')
+        $compactResults = $allResults | Select-Object -Property ($compactProps | Where-Object { $_ -notin $excludeProps })
         @{ results = @($compactResults) } | ConvertTo-Json -Depth 5
     }
     'Summary' {

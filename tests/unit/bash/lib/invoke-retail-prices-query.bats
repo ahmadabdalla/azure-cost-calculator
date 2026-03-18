@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+bats_require_minimum_version 1.5.0
 
 setup() {
     source "$BATS_TEST_DIRNAME/../test_helper.bash"
@@ -49,6 +50,20 @@ SCRIPT
     local count
     count=$(jq 'length' <<< "$output")
     [ "$count" -eq 1 ]
+}
+
+@test "currency code with special characters is URL-encoded" {
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"
+printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'" 'US&D'
+    [ "$status" -eq 0 ]
+    # Should contain the encoded ampersand, not a raw & that would split the parameter
+    [[ "$(cat "$MOCK_DIR/curl_args")" == *"currencyCode=US%26D"* ]]
 }
 
 @test "pagination follows NextPageLink" {
@@ -102,9 +117,10 @@ SCRIPT
     [[ "$output" == *"HTTP 404"* ]]
 }
 
-@test "HTTP 500 returns error" {
+@test "HTTP 500 returns error after retries" {
     create_curl_mock '{"error":"server error"}' 500
-    run invoke_retail_prices_query "serviceName eq 'Test'"
+    create_mock "sleep" "" 0
+    RETAIL_API_MAX_ATTEMPTS=2 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     [[ "$output" == *"HTTP 500"* ]]
 }
@@ -116,9 +132,10 @@ SCRIPT
     [[ "$output" == *"HTTP 199"* ]]
 }
 
-@test "curl failure returns error with exit code 1" {
+@test "curl failure returns error after retries" {
     create_mock "curl" "" 1
-    run invoke_retail_prices_query "serviceName eq 'Test'"
+    create_mock "sleep" "" 0
+    RETAIL_API_MAX_ATTEMPTS=2 run invoke_retail_prices_query "serviceName eq 'Test'"
     [ "$status" -eq 1 ]
     [[ "$output" == *"curl error"* ]]
 }
@@ -182,6 +199,157 @@ SCRIPT
     local count
     count=$(jq 'length' <<< "$output")
     [ "$count" -eq 200 ]
+}
+
+# --- Input validation tests ---
+
+@test "MAX_ATTEMPTS=0 fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=0 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "MAX_ATTEMPTS=-1 fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=-1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "MAX_ATTEMPTS=abc fails with validation error" {
+    RETAIL_API_MAX_ATTEMPTS=abc run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_MAX_ATTEMPTS must be a positive integer"* ]]
+}
+
+@test "BASE_DELAY=0 fails with validation error" {
+    RETAIL_API_BASE_DELAY=0 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_BASE_DELAY must be a positive integer"* ]]
+}
+
+@test "BASE_DELAY=abc fails with validation error" {
+    RETAIL_API_BASE_DELAY=abc run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"RETAIL_API_BASE_DELAY must be a positive integer"* ]]
+}
+
+# --- Retry / backoff tests ---
+
+@test "HTTP 429 retries and succeeds on later attempt" {
+    # First call returns 429, second call succeeds
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+call_file="$MOCK_DIR/curl_call_count"
+count=$(cat "$call_file" 2>/dev/null || echo 0)
+count=$((count + 1))
+echo "$count" > "$call_file"
+if [ "$count" -le 1 ]; then
+    printf '%s\n%s' '{"error":"rate limited"}' '429'
+else
+    printf '%s\n%s' '{"Items":[{"name":"ok"}],"NextPageLink":null}' '200'
+fi
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+    create_mock "sleep" "" 0
+    echo "0" > "$MOCK_DIR/curl_call_count"
+
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(jq 'length' <<< "$output")
+    [ "$count" -eq 1 ]
+}
+
+@test "HTTP 503 retries and fails after max retries" {
+    create_curl_mock '{"error":"service unavailable"}' 503
+    create_mock "sleep" "" 0
+    RETAIL_API_MAX_ATTEMPTS=2 RETAIL_API_BASE_DELAY=1 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"HTTP 503"* ]]
+}
+
+@test "HTTP 404 does not retry (non-retryable)" {
+    # 404 should fail immediately — no retry
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"
+printf '%s\n%s' '{"error":"not found"}' '404'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+    create_mock "sleep" "" 0
+
+    RETAIL_API_MAX_ATTEMPTS=3 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    # Should have been called only once (no retry for 404)
+    local call_count
+    call_count=$(wc -l < "$MOCK_DIR/curl_args")
+    [ "$call_count" -eq 1 ]
+}
+
+@test "curl failure retries and succeeds on later attempt" {
+    # First call fails (exit 1), second call succeeds
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+call_file="$MOCK_DIR/curl_call_count"
+count=$(cat "$call_file" 2>/dev/null || echo 0)
+count=$((count + 1))
+echo "$count" > "$call_file"
+if [ "$count" -le 1 ]; then
+    exit 1
+else
+    printf '%s\n%s' '{"Items":[{"name":"recovered"}],"NextPageLink":null}' '200'
+fi
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+    create_mock "sleep" "" 0
+    echo "0" > "$MOCK_DIR/curl_call_count"
+
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=1 run --separate-stderr invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 0 ]
+    local count
+    count=$(jq 'length' <<< "$output")
+    [ "$count" -eq 1 ]
+}
+
+@test "retry uses exponential backoff delays" {
+    # All calls return 429, verify sleep is called with increasing delays
+    create_curl_mock '{"error":"rate limited"}' 429
+    cat > "$MOCK_DIR/sleep" <<'SCRIPT'
+#!/usr/bin/env bash
+echo "$1" >> "$MOCK_DIR/sleep_args"
+SCRIPT
+    chmod +x "$MOCK_DIR/sleep"
+
+    RETAIL_API_MAX_ATTEMPTS=3 RETAIL_API_BASE_DELAY=2 run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    # Should have slept twice (attempts 1 and 2; attempt 3 fails without sleeping)
+    local -a delays
+    mapfile -t delays < "$MOCK_DIR/sleep_args"
+    [ "${#delays[@]}" -eq 2 ]
+    # First delay: 2 * 2^0 = 2, Second delay: 2 * 2^1 = 4
+    [ "${delays[0]}" -eq 2 ]
+    [ "${delays[1]}" -eq 4 ]
+}
+
+@test "default retry config uses 3 attempts" {
+    # Verify the default RETAIL_API_MAX_ATTEMPTS=3 is used
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+call_file="$MOCK_DIR/curl_call_count"
+count=$(cat "$call_file" 2>/dev/null || echo 0)
+count=$((count + 1))
+echo "$count" > "$call_file"
+printf '%s\n%s' '{"error":"rate limited"}' '429'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+    create_mock "sleep" "" 0
+    echo "0" > "$MOCK_DIR/curl_call_count"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'"
+    [ "$status" -eq 1 ]
+    local call_count
+    call_count=$(cat "$MOCK_DIR/curl_call_count")
+    [ "$call_count" -eq 3 ]
 }
 
 @test "large accumulated results across pages do not cause argument list errors" {

@@ -56,6 +56,7 @@ quantity=0
 hours_per_month=730
 instance_count=1
 output_format="Json"
+include_meter_id=false
 verbose=false
 
 # ============================================================
@@ -64,7 +65,7 @@ verbose=false
 while [[ $# -gt 0 ]]; do
     # Guard against missing value for flags that require one
     case "$1" in
-        --verbose|-v|--help|-h) ;; # no value needed
+        --verbose|-v|--help|-h|--include-meter-id) ;; # no value needed
         --*) [[ $# -lt 2 ]] && { echo "Error: $1 requires a value" >&2; exit 1; } ;;
     esac
     case "$1" in
@@ -80,6 +81,7 @@ while [[ $# -gt 0 ]]; do
         --hours-per-month) hours_per_month="$2"; shift 2 ;;
         --instance-count) instance_count="$2"; shift 2 ;;
         --output-format)  output_format="$2"; shift 2 ;;
+        --include-meter-id) include_meter_id=true; shift ;;
         --verbose|-v)     verbose=true; shift ;;
         --help|-h)
             cat <<'USAGE'
@@ -98,13 +100,14 @@ Flags:
   --hours-per-month NUM   Hours per month (default: 730)
   --instance-count NUM    Instance count (default: 1)
   --output-format FMT     Table|Json|Summary|Compact (default: Json)
+  --include-meter-id      Include MeterId (GUID) in Json/Compact output
   --verbose|-v            Emit OData filter to stderr
   --help|-h               Show this help
 USAGE
             exit 0
             ;;
         *)
-            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --region, --arm-sku-name, --sku-name, --product-name, --meter-name, --price-type, --currency, --quantity, --hours-per-month, --instance-count, --output-format, --verbose, --help" >&2
+            echo "Error: Unknown argument '$1'. Valid flags: --service-name, --region, --arm-sku-name, --sku-name, --product-name, --meter-name, --price-type, --currency, --quantity, --hours-per-month, --instance-count, --output-format, --include-meter-id, --verbose, --help" >&2
             exit 1
             ;;
     esac
@@ -129,6 +132,10 @@ if [[ -z "$service_name" ]]; then
     echo "Error: --service-name is required." >&2
     exit 1
 fi
+
+# Build jq exclusion filter for optional output fields
+exclude_fields=""
+[[ "$include_meter_id" != true ]] && exclude_fields="del(.MeterId)"
 
 # Split comma-separated regions into an array
 IFS=',' read -ra regions <<< "$region"
@@ -218,6 +225,7 @@ for region_name in "${regions[@]}"; do
                 ProductName: .productName,
                 SkuName: .skuName,
                 ArmSkuName: .armSkuName,
+                MeterId: .meterId,
                 MeterName: .meterName,
                 UnitPrice: $up,
                 UnitOfMeasure: $uom,
@@ -239,6 +247,12 @@ done
 # ============================================================
 # Output
 # ============================================================
+
+# Apply optional field exclusions (Json only; Compact handles inline, Table/Summary ignore MeterId)
+if [[ -n "$exclude_fields" && "$output_format" == "Json" ]]; then
+    all_results=$(jq "[.[] | ${exclude_fields}]" <<< "$all_results")
+fi
+
 total_count=$(jq 'length' <<< "$all_results")
 
 if (( total_count == 0 )); then
@@ -296,19 +310,7 @@ case "$output_format" in
             }'
         ;;
     Compact)
-        jq '{
-            results: [.[] | {
-                MeterName,
-                ProductName,
-                SkuName,
-                UnitPrice,
-                UnitOfMeasure,
-                MonthlyCost,
-                Currency,
-                ReservationTerm,
-                TierMinUnits
-            }]
-        }' <<< "$all_results"
+        jq "{results: [.[] | {MeterId, MeterName, ProductName, SkuName, UnitPrice, UnitOfMeasure, MonthlyCost, Currency, ReservationTerm, TierMinUnits} | ${exclude_fields:-.}]}" <<< "$all_results"
         ;;
     Summary)
         echo ""

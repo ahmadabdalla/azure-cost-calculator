@@ -239,6 +239,55 @@ SCRIPT
     [ "$monthly" = "70.08" ]
 }
 
+# ============================================================
+# --include-meter-id flag tests
+# ============================================================
+
+@test "default Json output excludes MeterId" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","meterId":"00000000-0000-0000-0000-000000000001","armRegionName":"eastus","retailPrice":0.096,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
+    [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.results[0] | has("MeterId")')
+    [ "$has_meter_id" = "false" ]
+}
+
+@test "--include-meter-id includes MeterId in Json output" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","meterId":"00000000-0000-0000-0000-000000000001","armRegionName":"eastus","retailPrice":0.096,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --include-meter-id
+    [ "$status" -eq 0 ]
+    meter_id=$(echo "$output" | jq -r '.results[0].MeterId')
+    [ "$meter_id" = "00000000-0000-0000-0000-000000000001" ]
+}
+
+@test "default Compact output excludes MeterId (9 fields)" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","meterId":"00000000-0000-0000-0000-000000000001","armRegionName":"eastus","retailPrice":0.096,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact
+    [ "$status" -eq 0 ]
+    field_count=$(echo "$output" | jq '.results[0] | keys | length')
+    [ "$field_count" -eq 9 ]
+    has_meter_id=$(echo "$output" | jq '.results[0] | has("MeterId")')
+    [ "$has_meter_id" = "false" ]
+}
+
+@test "--include-meter-id Compact output includes MeterId (10 fields)" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","meterId":"00000000-0000-0000-0000-000000000001","armRegionName":"eastus","retailPrice":0.096,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact --include-meter-id
+    [ "$status" -eq 0 ]
+    field_count=$(echo "$output" | jq '.results[0] | keys | length')
+    [ "$field_count" -eq 10 ]
+    meter_id=$(echo "$output" | jq -r '.results[0].MeterId')
+    [ "$meter_id" = "00000000-0000-0000-0000-000000000001" ]
+}
+
+@test "null meterId from API produces null MeterId when included" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --include-meter-id
+    [ "$status" -eq 0 ]
+    has_meter_id=$(echo "$output" | jq '.results[0] | has("MeterId")')
+    [ "$has_meter_id" = "true" ]
+    meter_id=$(echo "$output" | jq '.results[0].MeterId')
+    [ "$meter_id" = "null" ]
+}
+
 @test "compact output with empty results returns empty results array" {
     create_curl_mock '{"Items":[],"NextPageLink":null}' 200
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Nonexistent" --output-format Compact
