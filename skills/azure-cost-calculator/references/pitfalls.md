@@ -6,9 +6,10 @@ Cross-cutting traps that apply across **all** services. These are API-level and 
 
 ### Cross-Platform Shell Traps
 
-| Trap                                                  | Fix                                                                         |
-| ----------------------------------------------------- | --------------------------------------------------------------------------- |
-| **Bash/zsh strips OData quotes from `pwsh -Command`** | Use `pwsh -File script.ps1 ...` instead. Scripts handle quoting internally. |
+| Trap                                                  | Fix                                                                                                                                                                                                                                                                                                                                      |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Bash/zsh strips OData quotes from `pwsh -Command`** | Use `pwsh -File script.ps1 ...` instead. Scripts handle quoting internally.                                                                                                                                                                                                                                                              |
+| **PS 5.1 execution policy blocks script loading**     | Windows PowerShell 5.1 defaults to `Restricted` or `RemoteSigned` policy. Scripts fail **before any code runs** — `$ErrorActionPreference` and try/catch cannot catch this. The agent sees empty stdout (no JSON) and may misinterpret as "0 results". Use `powershell.exe -ExecutionPolicy RemoteSigned -File ...` on every invocation. |
 
 ### API Query Traps
 

@@ -13,8 +13,10 @@ invoke_retail_prices_query() {
     local -r base_uri="https://prices.azure.com/api/retail/prices"
     local encoded_filter
     encoded_filter=$(jq -rn --arg f "$filter" '$f | @uri')
+    local encoded_currency
+    encoded_currency=$(jq -rn --arg c "$currency_code" '$c | @uri')
 
-    local uri="${base_uri}?\$filter=${encoded_filter}&currencyCode=${currency_code}"
+    local uri="${base_uri}?\$filter=${encoded_filter}&currencyCode=${encoded_currency}"
     local all_items="[]"
     local count=0
 
