@@ -165,18 +165,22 @@ Describe 'Invoke-RetailPricesQuery' {
     }
 
     Context 'when Invoke-RestMethod throws an error' {
-        It 'should propagate the error' {
+        It 'should propagate non-retryable errors immediately' {
             Mock Invoke-RestMethod { throw 'API failure' }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
         }
     }
 
     Context 'when Invoke-RestMethod throws an HTTP error' {
-        It 'should propagate the HTTP error' {
+        It 'should retry WebException without Response as network error' {
+            Mock Start-Sleep {}
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('The remote server returned an error: (500) Internal Server Error.') }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw '*500*'
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
         }
     }
 
@@ -187,6 +191,166 @@ Describe 'Invoke-RetailPricesQuery' {
             $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
 
             @($result).Count | Should -Be 0
+        }
+    }
+
+    Context 'retry with exponential backoff' {
+        BeforeAll {
+            # Helper to create an exception with .Response.StatusCode set.
+            # Uses HttpResponseException on pwsh 7+, WebException on PS 5.1.
+            function New-HttpException {
+                param([int]$StatusCode, [string]$Message = 'Error')
+                $httpResponse = [System.Net.Http.HttpResponseMessage]::new([System.Net.HttpStatusCode]$StatusCode)
+                $exType = 'Microsoft.PowerShell.Commands.HttpResponseException' -as [type]
+                if ($exType) {
+                    return $exType::new($Message, $httpResponse)
+                }
+                $mockResponse = [System.Runtime.Serialization.FormatterServices]::GetUninitializedObject([System.Net.HttpWebResponse])
+                $field = [System.Net.HttpWebResponse].GetField('m_StatusCode', [System.Reflection.BindingFlags]'NonPublic,Instance')
+                if ($field) { $field.SetValue($mockResponse, $StatusCode) }
+                else {
+                    $field = [System.Net.HttpWebResponse].GetField('_httpResponseMessage', [System.Reflection.BindingFlags]'NonPublic,Instance')
+                    if ($field) { $field.SetValue($mockResponse, $httpResponse) }
+                }
+                return [System.Net.WebException]::new($Message, $null, [System.Net.WebExceptionStatus]::ProtocolError, $mockResponse)
+            }
+        }
+
+        BeforeEach {
+            Mock Start-Sleep {}
+        }
+
+        It 'should retry on HTTP 429 and succeed on later attempt' {
+            $script:retryCount = 0
+            Mock Invoke-RestMethod {
+                $script:retryCount++
+                if ($script:retryCount -le 2) {
+                    throw (New-HttpException -StatusCode 429 -Message 'Too Many Requests')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
+        }
+
+        It 'should exhaust retries for persistent HTTP 503 errors' {
+            Mock Invoke-RestMethod {
+                throw (New-HttpException -StatusCode 503 -Message 'Service Unavailable')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 3 } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
+        }
+
+        It 'should not retry on HTTP 400 (non-retryable status)' {
+            Mock Invoke-RestMethod {
+                throw (New-HttpException -StatusCode 400 -Message 'Bad Request')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should not retry generic non-web exceptions' {
+            Mock Invoke-RestMethod { throw 'Something broke' }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should succeed without retries when API responds normally' {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Start-Sleep -Times 0 -Exactly
+        }
+
+        It 'should use exponential delays (2s, 4s) for BaseDelaySeconds=2' {
+            $script:sleepCalls = @()
+            Mock Start-Sleep { $script:sleepCalls += $Seconds }
+            Mock Invoke-RestMethod {
+                throw (New-HttpException -StatusCode 429 -Message 'Rate limited')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 3 -BaseDelaySeconds 2 } | Should -Throw
+
+            $script:sleepCalls | Should -HaveCount 2
+            $script:sleepCalls[0] | Should -Be 2   # 2 * 2^0
+            $script:sleepCalls[1] | Should -Be 4   # 2 * 2^1
+        }
+
+        It 'should retry on network error (HttpRequestException without Response)' {
+            $script:callCount = 0
+            Mock Invoke-RestMethod {
+                $script:callCount++
+                if ($script:callCount -le 1) {
+                    throw [System.Net.Http.HttpRequestException]::new('Connection refused')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should retry on timeout (TaskCanceledException without Response)' {
+            $script:callCount = 0
+            Mock Invoke-RestMethod {
+                $script:callCount++
+                if ($script:callCount -le 1) {
+                    throw [System.Threading.Tasks.TaskCanceledException]::new('The operation was canceled.')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should exhaust retries for persistent timeout errors' {
+            Mock Invoke-RestMethod {
+                throw [System.Threading.Tasks.TaskCanceledException]::new('The operation was canceled.')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 2 } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should exhaust retries for persistent network errors' {
+            Mock Invoke-RestMethod {
+                throw [System.Net.Http.HttpRequestException]::new('Connection refused')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 2 } | Should -Throw
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should reject MaxAttempts of 0' {
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 0 } | Should -Throw '*Cannot validate argument*'
+        }
+
+        It 'should reject BaseDelaySeconds of 0' {
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -BaseDelaySeconds 0 } | Should -Throw '*Cannot validate argument*'
         }
     }
 }

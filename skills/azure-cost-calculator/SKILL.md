@@ -128,7 +128,7 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - `apiServiceName` → use instead of `serviceName` in queries
    - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
 3. **Full read triggers** — no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
-4. **Parallel queries** — run independent service queries in parallel.
+4. **Parallel queries** — run independent service queries in parallel, but limit to 3–5 concurrent requests to avoid API rate limiting. If querying more than 5 services, stagger starts in batches.
 5. **Skip redundant references** — read shared.md and pitfalls.md once at the start, not between services.
 6. **Progressive distillation** — after each service query returns, emit a summary row before proceeding:
    `| Category | Service | Resource | Unit Price | Unit | Qty | Monthly Cost | Notes |`
