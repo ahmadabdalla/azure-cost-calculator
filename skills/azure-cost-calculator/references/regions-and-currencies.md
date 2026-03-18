@@ -19,7 +19,7 @@ Reference for region names, currency handling, and services not available in the
 | Central US          | `centralus`          |
 | Canada Central      | `canadacentral`      |
 
-> **Note**: Some services use non-standard regions. Private DNS pricing is listed under empty `armRegionName` or zone-based regions — querying any standard region returns **nothing** and the scripts cannot query it. Private Link and Load Balancer use `armRegionName = 'Global'` and can be queried with `Region: Global`. See [pitfalls.md](pitfalls.md) for details.
+> **Note**: Some services use non-standard regions. Private DNS pricing is listed under empty `armRegionName` or zone-based regions — querying any standard region returns **nothing** and the scripts cannot query it. Private Link, Load Balancer, and Defender CSPM use `armRegionName = 'Global'` and can be queried with `Region: Global`. See [pitfalls.md](pitfalls.md) for details.
 
 ## Known API-Unavailable Services
 
@@ -39,7 +39,6 @@ These services return pricing in **USD only** — either because they are API-un
 | ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Private Link  | Global region, USD only; use `Region: Global`                          | [private-link.md](services/networking/private-link.md)           |
 | Private DNS   | Empty-region pricing (`armRegionName == ''`); USD only; use workaround | [private-dns.md](services/networking/private-dns.md)             |
-| Defender CSPM | Global region, USD only; use `Region: Global`                          | [defender-for-cloud.md](services/security/defender-for-cloud.md) |
 | Load Balancer | Global region, USD only; use `Region: Global`                          | [load-balancer.md](services/networking/load-balancer.md)         |
 
 ## Sub-Cent Services

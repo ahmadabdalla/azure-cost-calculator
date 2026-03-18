@@ -72,7 +72,7 @@ Region: Global
 
 **Pricing**: Query API with Global region for current per-resource/month rate. Foundational CSPM is free (not estimated).
 
-**Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (1 billable resource = 8 functions and/or web apps).
+**Billable resource types**: VMs (excl. deallocated & Databricks), VMSS VMs, Storage accounts (with blob containers or file shares), OSS DBs (PostgreSQL/MySQL/MariaDB), SQL PaaS & Servers on Machines, Functions & Web Apps (every 8 functions and/or web apps = 1 billable resource, round up).
 
 **NOT billable for CSPM** (do not count these): Key Vault, Cosmos DB, Container Registry, Event Hubs, Service Bus, IoT Hub, Load Balancer, Private Endpoints, DNS Zones, Virtual Networks, Application Gateway, Azure Firewall, Front Door, API Management, AKS (the service resource itself).
 
