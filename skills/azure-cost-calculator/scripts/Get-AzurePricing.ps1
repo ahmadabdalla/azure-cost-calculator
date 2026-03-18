@@ -250,7 +250,7 @@ switch ($OutputFormat) {
                     meterName   = $MeterName
                 }
             }
-            results    = @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps)
+            results    = if ($excludeProps.Count -gt 0) { @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps) } else { $allResults }
             totalItems = $allResults.Count
             summary    = @{
                 minMonthlyCost   = $(if ($costMeasure.Count -gt 0) { $costMeasure.Minimum } else { 0 })

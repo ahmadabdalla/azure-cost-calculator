@@ -139,6 +139,12 @@ switch ($OutputFormat) {
         @{Label = 'SamplePrice'; Expression = { '{0:N4}' -f $_.SamplePrice }; Align = 'Right' } -AutoSize
     }
     'Json' {
-        $distinct | Select-Object -Property * -ExcludeProperty $excludeProps | ConvertTo-Json -Depth 3 -AsArray
+        $jsonResults = if ($excludeProps.Count -gt 0) {
+            $distinct | Select-Object -Property * -ExcludeProperty $excludeProps
+        }
+        else {
+            $distinct
+        }
+        ConvertTo-Json -InputObject @($jsonResults) -Depth 3
     }
 }

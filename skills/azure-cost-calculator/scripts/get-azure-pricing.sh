@@ -248,8 +248,8 @@ done
 # Output
 # ============================================================
 
-# Apply optional field exclusions once before output
-if [[ -n "$exclude_fields" ]]; then
+# Apply optional field exclusions (Json only; Compact handles inline, Table/Summary ignore MeterId)
+if [[ -n "$exclude_fields" && "$output_format" == "Json" ]]; then
     all_results=$(jq "[.[] | ${exclude_fields}]" <<< "$all_results")
 fi
 
