@@ -174,11 +174,13 @@ Describe 'Invoke-RetailPricesQuery' {
     }
 
     Context 'when Invoke-RestMethod throws an HTTP error' {
-        It 'should propagate WebException without Response immediately (no retry)' {
+        It 'should retry WebException without Response as network error' {
+            Mock Start-Sleep {}
             Mock Invoke-RestMethod { throw [System.Net.WebException]::new('The remote server returned an error: (500) Internal Server Error.') }
 
             { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" } | Should -Throw '*500*'
-            Should -Invoke Invoke-RestMethod -Times 1 -Exactly
+            Should -Invoke Invoke-RestMethod -Times 3 -Exactly
+            Should -Invoke Start-Sleep -Times 2 -Exactly
         }
     }
 
@@ -289,12 +291,12 @@ Describe 'Invoke-RetailPricesQuery' {
             $script:sleepCalls[1] | Should -Be 4   # 2 * 2^1
         }
 
-        It 'should retry on network error (exception without Response)' {
+        It 'should retry on network error (HttpRequestException without Response)' {
             $script:callCount = 0
             Mock Invoke-RestMethod {
                 $script:callCount++
                 if ($script:callCount -le 1) {
-                    throw [System.Net.Http.HttpRequestException]::new('Connection timed out')
+                    throw [System.Net.Http.HttpRequestException]::new('Connection refused')
                 }
                 [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
             }
@@ -302,6 +304,33 @@ Describe 'Invoke-RetailPricesQuery' {
             $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
 
             $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should retry on timeout (TaskCanceledException without Response)' {
+            $script:callCount = 0
+            Mock Invoke-RestMethod {
+                $script:callCount++
+                if ($script:callCount -le 1) {
+                    throw [System.Threading.Tasks.TaskCanceledException]::new('The operation was canceled.')
+                }
+                [PSCustomObject]@{ Items = @([PSCustomObject]@{ id = 1 }); NextPageLink = $null }
+            }
+
+            $result = Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'"
+
+            $result | Should -HaveCount 1
+            Should -Invoke Invoke-RestMethod -Times 2 -Exactly
+            Should -Invoke Start-Sleep -Times 1 -Exactly
+        }
+
+        It 'should exhaust retries for persistent timeout errors' {
+            Mock Invoke-RestMethod {
+                throw [System.Threading.Tasks.TaskCanceledException]::new('The operation was canceled.')
+            }
+
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 2 } | Should -Throw
             Should -Invoke Invoke-RestMethod -Times 2 -Exactly
             Should -Invoke Start-Sleep -Times 1 -Exactly
         }
@@ -317,11 +346,11 @@ Describe 'Invoke-RetailPricesQuery' {
         }
 
         It 'should reject MaxAttempts of 0' {
-            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 0 } | Should -Throw '*ValidateRange*'
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -MaxAttempts 0 } | Should -Throw '*Cannot validate argument*'
         }
 
         It 'should reject BaseDelaySeconds of 0' {
-            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -BaseDelaySeconds 0 } | Should -Throw '*ValidateRange*'
+            { Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -BaseDelaySeconds 0 } | Should -Throw '*Cannot validate argument*'
         }
     }
 }
