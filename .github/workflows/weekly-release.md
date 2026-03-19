@@ -33,8 +33,8 @@ These constraints are absolute and override all other instructions:
 
 - **Never** push directly to any branch — only create a pull request.
 - **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
-- **Never** switch away from the initially checked-out branch (`dev`). Do not run `git checkout -b ...` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit".
-- **Never** modify files beyond what is required for the version bump — only update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md`.
+- **Never** switch away from the initially checked-out branch (the default branch). Do not run `git checkout -b ...` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
+- **Never** modify files beyond what is required for the version bump — only import and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md`.
 - **Never** fabricate changes — only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -99,13 +99,13 @@ For each relevant changed file, assign a changelog category:
 
 ## Step 4 — Determine version bump
 
-Read the current version from `.claude-plugin/plugin.json`:
+Read the current version from `dev`'s `.claude-plugin/plugin.json`:
 
 ```bash
-cat .claude-plugin/plugin.json | jq -r .version
+git show origin/dev:.claude-plugin/plugin.json | jq -r .version
 ```
 
-`plugin.json` is the version source of truth for this repository.
+`plugin.json` is the version source of truth for this repository. Always read it from `origin/dev` — the local checkout may be the default branch, which can have a stale version.
 
 Apply SemVer rules based on the changelog categories you identified:
 
@@ -115,11 +115,19 @@ Apply SemVer rules based on the changelog categories you identified:
 
 ## Step 5 — Prepare version bump files
 
-> **Critical — patch mechanism constraint**: Stay on the initially checked-out branch (`dev`). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. If you switch branches, the patch will be empty or fail.
+> **Critical — patch mechanism constraint**: Stay on the initially checked-out branch (the default branch). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The `safe-outputs` job then applies this patch on a fresh `dev` checkout. If you switch branches, the patch will be empty or fail.
 
-> **Note — no file imports needed**: You are already on `dev`, so all source files are at their latest version. Only the version bump and changelog files need to be updated.
+### 5a. Import version files from `dev`
 
-### 5a. Update `CHANGELOG.md`
+The agent is checked out on the default branch, which may differ from `dev`. Import the three files that need version bumps from `origin/dev` using the `--` file-checkout syntax (this does **not** switch branches):
+
+```bash
+git checkout origin/dev -- .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
+```
+
+This ensures you are editing the `dev` versions of these files. The resulting patch will apply cleanly when `safe-outputs` applies it on `dev`.
+
+### 5b. Update `CHANGELOG.md`
 
 Insert a new version section **above** the previous version entry. Use today's date in YYYY-MM-DD format. Format:
 
@@ -149,15 +157,15 @@ Insert a new version section **above** the previous version entry. Use today's d
 
 Omit empty categories. Order: Breaking, Added, Changed, Fixed, Removed.
 
-### 5b. Update `.claude-plugin/plugin.json`
+### 5c. Update `.claude-plugin/plugin.json`
 
 Update the `"version"` field to the new version.
 
-### 5c. Update `SKILL.md`
+### 5d. Update `SKILL.md`
 
 Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
 
-### 5d. Commit the version bump
+### 5e. Commit the version bump
 
 ```bash
 git add .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md

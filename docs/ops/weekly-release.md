@@ -25,7 +25,7 @@ Every Monday (or on manual trigger), the agent workflow:
 2. **Skips** the release if no commits are ahead (no-op).
 3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking). Paths like `.github/**`, `docs/**`, `tests/**`, and `scratchpad/**` are excluded from the changelog but still trigger a release (with a generic changelog entry).
 4. **Determines** the SemVer bump from changelog categories (Breaking → major, Added → minor, else → patch).
-5. **Updates** `.claude-plugin/plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
+5. **Imports** `.claude-plugin/plugin.json`, `SKILL.md`, and `CHANGELOG.md` from `dev` (the agent is checked out on the default branch), then **updates** them with the new version.
 6. **Creates a PR** targeting `dev` with title `version: vX.Y.Z`.
 
 The maintainer reviews and merges the version-bump PR into `dev`.
@@ -193,9 +193,9 @@ activation → agent → detection → safe_outputs → conclusion
 ```
 
 - **activation**: Sets up the workflow context.
-- **agent**: Copilot analyzes the diff and prepares version bump files (read-only + bash).
+- **agent**: Copilot analyzes the diff and prepares version bump files (read-only + bash). Checked out on the default branch (`main`); imports version files from `origin/dev` before editing.
 - **detection**: Threat-scans the agent output.
-- **safe_outputs**: Creates the version-bump PR targeting `dev` (only job with write access).
+- **safe_outputs**: Checks out `dev` (the `base-branch`), applies the agent's patch, creates the version-bump PR (only job with write access).
 - **conclusion**: Reports final status.
 
 The companion workflows run separately:

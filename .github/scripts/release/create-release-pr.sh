@@ -3,7 +3,7 @@
 #           The release PR is a true descendant of dev, so merging it with a merge commit
 #           preserves the full dev branch history on main.
 # Inputs:   PR_BODY     = body of the merged version-bump PR (env var, required)
-#           GH_TOKEN    = GitHub token with contents:write + pull-requests:write (env var, required)
+#           GH_TOKEN    = GitHub token with contents:read + pull-requests:write (env var, required)
 #           PLUGIN_JSON = path to plugin.json (env var, default: .claude-plugin/plugin.json)
 #           CHANGELOG   = path to CHANGELOG.md (env var, default: CHANGELOG.md)
 # Outputs:  Writes to $GITHUB_OUTPUT:
@@ -97,7 +97,11 @@ BODY
 fi
 
 # --- Check for existing release PR ---
-existing_pr=$(gh pr list --base main --state open --search "release: v${VERSION} in:title" --json number --jq 'first(.[] | .number) // empty' 2>/dev/null || true)
+# Use exact title matching via jq filter (--search is case-insensitive and could match prefixes).
+# Do NOT suppress errors — API failures should surface, not silently create duplicates.
+existing_pr=$(gh pr list --base main --state open \
+  --json number,title \
+  --jq --arg v "release: v${VERSION}" 'first(.[] | select(.title == $v) | .number) // empty')
 
 if [ -n "$existing_pr" ]; then
   echo "::notice::Release PR #${existing_pr} already exists for v${VERSION}; updating body" >&2
