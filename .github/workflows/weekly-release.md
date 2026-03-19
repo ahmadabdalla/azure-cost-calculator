@@ -14,8 +14,8 @@ tools:
       - repos
 safe-outputs:
   create-pull-request:
-    base-branch: main
-    title-prefix: "release: "
+    base-branch: dev
+    title-prefix: "version: "
     labels: [release]
     draft: false
 concurrency:
@@ -31,10 +31,10 @@ You are a release manager for the **azure-cost-calculator** repository. Your job
 
 These constraints are absolute and override all other instructions:
 
-- **Never** push directly to `main` — only create a pull request.
+- **Never** push directly to any branch — only create a pull request.
 - **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
-- **Never** switch away from the initially checked-out branch (`main`). Do not run `git checkout -b ... origin/dev` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
-- **Never** modify files beyond what is required for the release — only import changed files from `dev` (Step 5a) and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md` (Steps 5b–5d).
+- **Never** switch away from the initially checked-out branch (the default branch). Do not run `git checkout -b ...` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout — switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
+- **Never** modify files beyond what is required for the version bump — only import and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md`.
 - **Never** fabricate changes — only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -63,7 +63,7 @@ And for each changed file in the skill directory, read the actual diff to unders
 git diff origin/main..origin/dev -- <file_path>
 ```
 
-**Exclude these paths from the changelog** (they are still imported in Step 5a):
+**Exclude these paths from the changelog**:
 
 - `.github/**` (CI/infra)
 - `docs/**` (not shipped with skill)
@@ -99,13 +99,13 @@ For each relevant changed file, assign a changelog category:
 
 ## Step 4 — Determine version bump
 
-Read the current version from `.claude-plugin/plugin.json`:
+Read the current version from `dev`'s `.claude-plugin/plugin.json`:
 
 ```bash
-cat .claude-plugin/plugin.json | jq -r .version
+git show origin/dev:.claude-plugin/plugin.json | jq -r .version
 ```
 
-`plugin.json` is the version source of truth for this repository.
+`plugin.json` is the version source of truth for this repository. Always read it from `origin/dev` — the local checkout may be the default branch, which can have a stale version.
 
 Apply SemVer rules based on the changelog categories you identified:
 
@@ -113,37 +113,19 @@ Apply SemVer rules based on the changelog categories you identified:
 - Else if **any** change is `Added` → **minor** bump (x.Y.0)
 - Else → **patch** bump (x.y.Z) (including when all changes are in excluded paths)
 
-## Step 5 — Prepare release files
+## Step 5 — Prepare version bump files
 
-> **Critical — patch mechanism constraint**: Stay on the initially checked-out branch (`main`). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The safe-outputs job then applies this patch with `git am` on a fresh `main` checkout. If you switch branches, the patch will be empty or fail.
+> **Critical — patch mechanism constraint**: Stay on the initially checked-out branch (the default branch). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The `safe-outputs` job then applies this patch on a fresh `dev` checkout. If you switch branches, the patch will be empty or fail.
 
-### 5a. Import changed files from `dev`
+### 5a. Import version files from `dev`
 
-For each file that changed between `main` and `dev`, import the `dev` version into your working tree using the `--` file-checkout syntax (this does **not** switch branches). Re-run `git diff origin/main..origin/dev --name-status` if needed to get the complete list. Handle each entry according to its status:
-
-```bash
-# For each added (A) or modified (M) file:
-git checkout origin/dev -- path/to/file
-
-# For each deleted (D) file:
-git rm path/to/file
-
-# For each renamed (R…) file (e.g., R100 old/path new/path):
-git checkout origin/dev -- new/path
-git rm old/path
-
-# For each copied (C…) file (e.g., C100 old/path new/path):
-git checkout origin/dev -- new/path
-```
-
-Import **all** changed files — no exceptions. This ensures `dev` and `main` are fully aligned after the release PR merges. The ignore list in Step 2 only controls what appears in the **changelog**, not what gets imported.
-
-Stage and commit the imported changes:
+The agent is checked out on the default branch, which may differ from `dev`. Import the three files that need version bumps from `origin/dev` using the `--` file-checkout syntax (this does **not** switch branches):
 
 ```bash
-git add -A
-git commit -m "release: merge dev changes for vX.Y.Z"
+git checkout origin/dev -- .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
 ```
+
+This ensures you are editing the `dev` versions of these files. The resulting patch will apply cleanly when `safe-outputs` applies it on `dev`.
 
 ### 5b. Update `CHANGELOG.md`
 
@@ -183,16 +165,16 @@ Update the `"version"` field to the new version.
 
 Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
 
-### 5e. Commit the release edits
+### 5e. Commit the version bump
 
 ```bash
-git add -A
+git add .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
 git commit -m "chore: bump version to X.Y.Z"
 ```
 
 ## Step 6 — Collect issue references
 
-In this workflow, GitHub auto-closes issues when the release PR is merged into `main`. Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues at that time. To ensure issues are closed at release time, collect their references now.
+GitHub auto-closes issues (via `Closes #X` keywords) only when a PR is merged into the **default branch** (`main`). Since this version-bump PR targets `dev`, include the issue references in the PR body so that the downstream release PR (which targets `main`) can pick them up.
 
 Find the last release tag on `main` (`git describe --tags --abbrev=0 origin/main`). Use `gh pr list --base dev --state merged` to list PRs merged into `dev` since that tag. From each PR's body and title, extract issue numbers referenced by closing keywords (`Closes`, `Fixes`, `Resolves` and their variants, e.g. `Fixes #400`). Deduplicate the list.
 
@@ -202,17 +184,17 @@ If no issue references are found, skip this step — no closing footer is needed
 
 Call the `create_pull_request` tool with:
 
-- **Title**: `vX.Y.Z` (the `release: ` prefix is added automatically)
+- **Title**: `vX.Y.Z` (the `version: ` prefix is added automatically)
 - **Body**: Include:
   - A summary of all changes grouped by category
   - The version bump rationale (e.g., "Minor bump: 2 new services added")
   - Total number of services added/modified if applicable
   - The full changelog entry for this version
-  - A **Closes issues** footer listing each collected issue reference with the `Closes` keyword, e.g.:
+  - An **Issue references** section listing each collected issue reference, e.g.:
     ```
     ---
-    Closes #123, closes #456, closes #789
+    Issue references: #123, #456, #789
     ```
-    This ensures GitHub auto-closes the issues when the release PR is merged to `main`.
+    > **Important**: Do NOT use closing keywords (`Closes`, `Fixes`, `Resolves`) here — this PR targets `dev`, not `main`. Using closing keywords would not auto-close issues. The downstream `create-release-pr` workflow copies these references to the release PR (targeting `main`) with proper `Closes` keywords.
 
 > **Important**: Do not use `git push` or `gh pr create`. The `create_pull_request` tool handles pushing the branch and submitting the PR.

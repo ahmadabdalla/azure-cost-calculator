@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   release:
@@ -39,25 +38,3 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: .github/scripts/release/create-tag-and-release.sh "$VERSION" /tmp/release-body.md
 
-  back-merge:
-    name: Merge main back to dev
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout dev branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: dev
-          fetch-depth: 0
-
-      - name: Merge main into dev
-        id: merge
-        run: .github/scripts/release/back-merge.sh
-
-      - name: Create PR on merge conflict
-        if: steps.merge.outputs.result == 'conflict'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FALLBACK_REASON: ${{ steps.merge.outputs.fallback_reason }}
-          RUN_ID: ${{ github.run_id }}
-        run: .github/scripts/release/create-backmerge-pr.sh
