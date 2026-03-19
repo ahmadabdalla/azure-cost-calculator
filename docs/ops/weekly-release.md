@@ -2,38 +2,64 @@
 
 Automated weekly releases using [GitHub Agentic Workflows (gh-aw)](https://github.github.io/gh-aw/introduction/overview/) with the **Copilot** engine.
 
-| Item            | Detail                                                                 |
-| --------------- | ---------------------------------------------------------------------- |
-| Workflow source | `.github/workflows/weekly-release.md`                                  |
-| Compiled lock   | `.github/workflows/weekly-release.lock.yml`                            |
-| Action pins     | `.github/aw/actions-lock.json`                                         |
-| Engine          | `copilot` (GitHub Copilot)                                             |
-| Trigger         | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                     |
-| Companion       | `.github/workflows/create-release.yml` (tag + GitHub Release on merge) |
+| Item            | Detail                                                                           |
+| --------------- | -------------------------------------------------------------------------------- |
+| Workflow source | `.github/workflows/weekly-release.md`                                            |
+| Compiled lock   | `.github/workflows/weekly-release.lock.yml`                                      |
+| Action pins     | `.github/aw/actions-lock.json`                                                   |
+| Engine          | `copilot` (GitHub Copilot)                                                       |
+| Trigger         | `schedule: Monday 00:00 UTC` + `workflow_dispatch`                               |
+| Companions      | `create-release-pr.yml` (dev → main PR), `create-release.yml` (tag + release)    |
 
 ---
 
 ## What it does
 
-Every Monday (or on manual trigger), the workflow:
+The release process has three stages, each handled by a separate workflow:
+
+### Stage 1 — Version bump PR to `dev` (weekly-release agent)
+
+Every Monday (or on manual trigger), the agent workflow:
 
 1. **Compares** `dev` and `main` branches to detect changes.
 2. **Skips** the release if no commits are ahead (no-op).
-3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking).
+3. **Analyzes** the diff to categorize each change (Added, Changed, Fixed, Breaking). Paths like `.github/**`, `docs/**`, `tests/**`, and `scratchpad/**` are excluded from the changelog but still trigger a release (with a generic changelog entry).
 4. **Determines** the SemVer bump from changelog categories (Breaking → major, Added → minor, else → patch).
-5. **Updates** `.claude-plugin/plugin.json`, `SKILL.md` frontmatter, and `CHANGELOG.md` with the new version.
-6. **Creates a draft PR** targeting `main` with title `release: vX.Y.Z`.
+5. **Imports** `.claude-plugin/plugin.json`, `SKILL.md`, and `CHANGELOG.md` from `dev` (the agent is checked out on the default branch), then **updates** them with the new version.
+6. **Creates a PR** targeting `dev` with title `version: vX.Y.Z`.
 
-The maintainer reviews and merges the PR. On merge, `create-release.yml`:
+The maintainer reviews and merges the version-bump PR into `dev`.
 
-1. **Creates** a git tag and GitHub Release automatically.
-2. **Back-merges** `main` into `dev` so version bumps and changelog updates flow back. The workflow retries race conditions when `dev` moves and, on conflict, retries with `-X theirs` (favoring `main` for conflicting hunks). If conflict remains, it opens a PR from a dedicated back-merge branch (never from `main`) for manual resolution.
+### Stage 2 — Release PR from `dev` to `main` (create-release-pr.yml)
 
-> **Note — Issue auto-closing and the `dev` branch**
->
-> GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` will **not** auto-close linked issues, even if their description contains closing keywords — GitHub ignores them entirely for non-default branches.
->
-> The weekly release agent handles this by collecting issue references from merged `dev` PRs (Step 6) and including `Closes #X` keywords in the release PR body. Since the release PR targets `main`, the issues are auto-closed when the release merges.
+When the version-bump PR merges to `dev`, `create-release-pr.yml`:
+
+1. **Reads** the version from `.claude-plugin/plugin.json`.
+2. **Extracts** the changelog section for that version.
+3. **Collects** issue references from the version-bump PR body.
+4. **Creates a PR** from `dev` to `main` with title `release: vX.Y.Z` and `Closes` keywords.
+
+> **Important**: This PR must be merged with a **merge commit** (not squash). The merge commit preserves the full commit history from `dev` on `main`, making every individual PR traceable on the main branch.
+
+The maintainer reviews and merges the release PR into `main`.
+
+### Stage 3 — Tag and GitHub Release (create-release.yml)
+
+When the release PR merges to `main`, `create-release.yml`:
+
+1. **Creates** an annotated git tag (`vX.Y.Z`) and pushes it.
+2. **Creates** a GitHub Release with the changelog body.
+
+> **Note — no back-merge needed**: Because the version bump happens on `dev` first and `dev` is then merged into `main`, both branches share the same Git ancestry. There is nothing to back-merge.
+
+### Issue auto-closing
+
+GitHub only auto-closes issues (via `Closes #X` keywords) when a PR is merged into the **default branch** (`main`). Feature PRs merged into `dev` with `Closes #X` keywords do **not** close issues.
+
+The flow handles this by:
+1. The weekly-release agent collects issue references from merged `dev` PRs and includes them in the version-bump PR body as `Issue references: #X, #Y` (without closing keywords).
+2. `create-release-pr.yml` copies these references to the release PR (targeting `main`) with proper `Closes` keywords.
+3. Issues are auto-closed when the release PR merges to `main`.
 
 ### Change categorization
 
@@ -42,8 +68,23 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 | `skills/**/references/services/**` (new)      | `Added` — new service reference |
 | `skills/**/references/services/**` (modified) | `Fixed` or `Changed`            |
 | `skills/**/SKILL.md`                          | `Changed` or `Breaking`         |
+| `skills/**/references/service-routing.md`     | `Added` or `Changed`            |
+| `skills/**/references/shared.md`, `pitfalls.md` | `Changed`                    |
+| `skills/**/USAGE.md`                          | `Changed`                       |
 | `skills/**/scripts/**`                        | `Fixed` or `Added`              |
 | `.github/**`, `docs/**`, `tests/**`           | Ignored (not in changelog)      |
+
+### Git history model
+
+```
+dev:     A---B---C---D---E---F (version bump merged)
+                              \
+main:    ----prev-release------M (merge commit, preserves A-F ancestry)
+```
+
+- `git log main` shows every individual commit from `dev`.
+- `git log --first-parent main` shows only merge commits (one per release) for a clean "releases only" view.
+- `git merge-base main dev` correctly identifies shared history, so future merges are trivial.
 
 ---
 
@@ -51,15 +92,17 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 
 | Requirement                            | Notes                                                                                                                            |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Same token used by issue-triage workflow. |
-| **`release` label**                    | Must exist in the repo — applied to release PRs by the workflow.                                                                 |
+| **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Required by Stage 1 (agent) only. Stages 2 and 3 use the built-in `GITHUB_TOKEN`. Same token used by issue-triage workflow. |
+| **`release` label**                    | Must exist in the repo — applied to both version-bump and release PRs by the workflows.                                          |
 | **Actions permissions**                | "Read and write permissions" + "Allow GitHub Actions to create and approve pull requests" in Settings → Actions → General.       |
-| **Branch protection**                  | `main` must allow PRs (release PR). `dev` must allow PRs (back-merge fallback).                                                  |
+| **Branch protection**                  | `main` must allow PRs and **merge commits** (not squash-only). `dev` must allow PRs.                                             |
 | **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                           |
 
 ---
 
-## Making changes to the workflow
+## Making changes to the workflows
+
+### Agent workflow (weekly-release.md)
 
 > **Never manually edit** `weekly-release.lock.yml` or `actions-lock.json` — they are overwritten on every compile.
 
@@ -69,7 +112,22 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
    gh aw compile
    ```
 3. Commit **both** the `.md` and the regenerated `.lock.yml` (and `actions-lock.json` if changed).
-4. Push / open a PR. The scheduled workflow runs from the **default branch** (`dev`), so changes take effect after merge.
+4. Push / open a PR. The scheduled workflow runs from the **default branch** (`main`), so changes take effect after merge.
+
+### Companion workflows
+
+Edit `.github/workflows/create-release-pr.yml` or `.github/workflows/create-release.yml` directly — they are standard YAML workflows with no compilation step.
+
+### Helper scripts
+
+Scripts in `.github/scripts/release/`:
+
+| Script                    | Purpose                                          |
+| ------------------------- | ------------------------------------------------ |
+| `extract-version.sh`     | Reads and validates version from plugin.json     |
+| `extract-changelog.sh`   | Extracts changelog section for a given version (exits 1 if not found; used by Stage 3) |
+| `create-tag-and-release.sh` | Creates annotated git tag and GitHub Release  |
+| `create-release-pr.sh`   | Creates the release PR from dev to main (falls back to placeholder if changelog section missing) |
 
 ---
 
@@ -77,11 +135,15 @@ The maintainer reviews and merges the PR. On merge, `create-release.yml`:
 
 For critical fixes that can't wait until Monday:
 
-```bash
-gh workflow run weekly-release.lock.yml
-```
-
-Or use the GitHub UI: Actions → Weekly Release → Run workflow.
+1. **Trigger the agent** (Stage 1):
+   ```bash
+   gh workflow run weekly-release.lock.yml
+   ```
+   Or use the GitHub UI: Actions → Weekly Release → Run workflow.
+2. **Review and merge** the version-bump PR into `dev` (Stage 1 output).
+3. **Wait** for `create-release-pr.yml` to auto-create the release PR from `dev` → `main` (Stage 2).
+4. **Review and merge** the release PR into `main` with a **merge commit** (Stage 2 output).
+5. `create-release.yml` runs automatically to tag and publish the GitHub Release (Stage 3).
 
 ---
 
@@ -90,7 +152,14 @@ Or use the GitHub UI: Actions → Weekly Release → Run workflow.
 ### Viewing runs
 
 ```bash
+# Weekly release agent
 gh run list --workflow=weekly-release.lock.yml --limit 10
+
+# Release PR creation
+gh run list --workflow=create-release-pr.yml --limit 10
+
+# Tag and release
+gh run list --workflow=create-release.yml --limit 10
 ```
 
 ### Inspecting a failed run
@@ -101,41 +170,40 @@ gh run view <run-id> --log-failed
 
 ### Common failure modes
 
-| Symptom                                  | Likely cause                                                                  | Fix                                                                                                                                                               |
-| ---------------------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Workflow never triggers                  | Edited `.md` but forgot to compile, or changes not on `dev`                   | Run `gh aw compile`, merge to `dev`                                                                                                                               |
-| `401 Unauthorized` in agent job          | `COPILOT_GITHUB_TOKEN` expired or revoked                                     | Rotate the PAT (see issue-triage ops doc)                                                                                                                         |
-| Agent creates PR with wrong version      | Changelog parsing or version detection logic needs tuning                     | Edit categorization rules in `weekly-release.md`, recompile                                                                                                       |
-| No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)                      | Check agent logs — may need to adjust ignore rules                                                                                                                |
-| Release PR fails validation              | Service reference changes in the release have validation errors               | Fix on `dev`, wait for next release or trigger manual dispatch                                                                                                    |
-| Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly               | Check `create-release.yml` logs — it guards against duplicate tags                                                                                                |
-| Release job fails before tag step        | Version in `.claude-plugin/plugin.json` wasn't bumped correctly               | Check `create-release.yml` logs — it guards against duplicate tags                                                                                                |
-| Back-merge fails with conflict           | `dev` diverged from `main` and auto-resolution was insufficient               | Resolve the generated back-merge PR (head: `backmerge-main-to-dev-*`) so fixes are not committed to `main`                                                        |
-| Back-merge PR already open               | Previous fallback PR is still open from an earlier run                        | The workflow refreshes the existing PR branch to the latest `main`; review and merge that updated PR                                                              |
-| Manual back-merge PR despite no conflict | Repeated fetch failures or API/permission/rate-limit issues during back-merge | Inspect back-merge logs for fetch/permission errors, retry the workflow, verify runner network and token/rate limits, or merge `backmerge-main-to-dev-*` manually |
+| Symptom                                  | Likely cause                                                    | Fix                                                                                     |
+| ---------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Workflow never triggers                  | Edited `.md` but forgot to compile, or changes not on `main`   | Run `gh aw compile`, merge to `main`                                                    |
+| `401 Unauthorized` in agent job          | `COPILOT_GITHUB_TOKEN` expired or revoked                      | Rotate the PAT (see issue-triage ops doc)                                               |
+| Agent creates PR with wrong version      | Changelog parsing or version detection logic needs tuning       | Edit categorization rules in `weekly-release.md`, recompile                             |
+| No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                                      |
+| Release PR not created after version bump | `create-release-pr.yml` trigger didn't match PR title prefix   | Verify version-bump PR title starts with `version: `                                    |
+| Release PR fails validation              | Service reference changes have validation errors                | Fix on `dev`, wait for next release or trigger manual dispatch                          |
+| Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs — it guards against duplicate tags                      |
+| History not preserved on main            | Release PR was squash-merged instead of merge-committed         | Branch protection on `main` should enforce merge commits for release PRs                |
+| Release PR shows conflicts               | `main` has commits not in `dev` (shouldn't happen normally)     | Merge `main` into `dev` first, then re-run the release                                  |
+| Duplicate release PR created             | Two version-bump PRs merged in rapid succession                 | `create-release-pr.sh` checks for existing open PRs by title; merge or close the duplicate |
+| Manual dispatch cancels scheduled run    | `concurrency: cancel-in-progress: true` on the agent workflow   | Expected behavior; the manual run replaces the scheduled one                            |
 
 ### Job architecture
 
 The compiled lock file produces the standard gh-aw job chain:
 
 ```
-pre_activation → activation → agent → detection → safe_outputs → conclusion
+activation → agent → detection → safe_outputs → conclusion
 ```
 
 - **activation**: Sets up the workflow context.
-- **agent**: Copilot analyzes the diff and prepares release files (read-only + bash).
+- **agent**: Copilot analyzes the diff and prepares version bump files (read-only + bash). Checked out on the default branch (`main`); imports version files from `origin/dev` before editing.
 - **detection**: Threat-scans the agent output.
-- **safe_outputs**: Creates the PR targeting `main` (only job with write access).
+- **safe_outputs**: Checks out `dev` (the `base-branch`), applies the agent's patch, creates the version-bump PR (only job with write access).
 - **conclusion**: Reports final status.
 
-The companion `create-release.yml` runs separately, triggered by the merged PR:
+The companion workflows run separately:
 
 ```
-release → back-merge
+create-release-pr.yml:  version-bump PR merged to dev  →  create release PR (dev → main)
+create-release.yml:     release PR merged to main      →  tag + GitHub Release
 ```
-
-- **release**: Creates a git tag and GitHub Release from the merged PR.
-- **back-merge**: Merges `main` back into `dev`, retries push races, retries conflicts with `-X theirs`, and only then opens a dedicated back-merge PR.
 
 ---
 
