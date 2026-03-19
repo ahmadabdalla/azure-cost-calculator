@@ -4,6 +4,14 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.1] - 2026-03-19
+
+### Changed
+
+- **CI/CD**: Replaced squash-based release workflow with merge-based flow to preserve commit history
+- **CI/CD**: Refactored release scripts into testable modules under `.github/scripts/release/`
+- **Documentation**: Updated operational guides for merge-based release process
+
 ## [1.4.0] - 2026-03-15
 
 ### Added
