@@ -70,7 +70,7 @@ Flags:
   --search-term TERM      Fuzzy contains search on productName
   --region REGION         Region filter (default: eastus)
   --currency CODE         Currency code (default: USD)
-  --top N                 Number of distinct results (default: 20)
+  --top N                 Number of distinct results (minimum: 1, default: 20)
   --output-format FMT     Table|Json (default: Json)
   --include-meter-id      Include MeterId (GUID) in Json/Compact output
   --verbose|-v            Emit OData filter to stderr

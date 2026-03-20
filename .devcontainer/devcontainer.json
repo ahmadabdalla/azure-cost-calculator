@@ -8,7 +8,7 @@
         "ghcr.io/devcontainers/features/node:1": {},
         "ghcr.io/devcontainers/features/powershell:1": {}
     },
-    "postCreateCommand": "npm install -g bats@1.11.1 && pwsh -Command 'Install-Module -Name Pester -MinimumVersion 5.7.1 -Force -Scope CurrentUser; Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser'",
+    "postCreateCommand": "npm install -g bats@1.11.1 && pwsh -Command '$ErrorActionPreference = ''Stop''; Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -Scope CurrentUser -ErrorAction Stop; Install-Module -Name PSScriptAnalyzer -RequiredVersion 1.24.0 -Force -Scope CurrentUser -ErrorAction Stop'",
     "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
     "workspaceFolder": "/workspace",
     "customizations": {

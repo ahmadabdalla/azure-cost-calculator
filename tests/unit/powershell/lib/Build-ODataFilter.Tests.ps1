@@ -98,7 +98,7 @@ Describe 'Build-ODataFilter' {
         }
     }
 
-    Context 'when values contain special characters' {
+    Context 'when values may contain spaces or special characters' {
         It 'should pass through values without special characters unchanged' {
             $filters = [ordered]@{ skuName = "Dadsv5 Type1" }
             $result = Build-ODataFilter -Filters $filters
