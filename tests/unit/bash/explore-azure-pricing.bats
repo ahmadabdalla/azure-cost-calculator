@@ -46,6 +46,12 @@ teardown() { teardown_mock_path; }
     [ "$count" -eq 2 ]
 }
 
+@test "top=0 exits non-zero with error" {
+    run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Azure Container Apps" --top 0
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"must be at least 1"* ]]
+}
+
 @test "no results exits 0 with empty JSON array" {
     create_curl_mock '{"Items":[],"NextPageLink":null}' 200
     run bash "$SCRIPTS_DIR/explore-azure-pricing.sh" --service-name "Nonexistent"

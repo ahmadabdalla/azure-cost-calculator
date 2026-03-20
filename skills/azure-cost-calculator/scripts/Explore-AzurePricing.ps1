@@ -37,6 +37,7 @@ param(
     [string]$Currency = 'USD',
 
     [Parameter()]
+    [ValidateRange(1, [int]::MaxValue)]
     [int]$Top = 20,
 
     [Parameter()]

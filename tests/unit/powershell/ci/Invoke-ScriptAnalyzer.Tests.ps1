@@ -3,10 +3,14 @@
 # `exit 1` in the script under test does not terminate the Pester runner.
 # Requires PSScriptAnalyzer to be installed (tests skip gracefully if missing).
 
+# Evaluated at discovery time so -Skip expressions work correctly in Pester 5.
+$script:HasAnalyzer = $null -ne (Get-Module -ListAvailable PSScriptAnalyzer)
+
 Describe 'Invoke-ScriptAnalyzer' {
 
     BeforeAll {
         $script:ScriptPath = Join-Path $PSScriptRoot '../../../../.github/scripts/test/Invoke-ScriptAnalyzer.ps1'
+        # Re-evaluate at run time so BeforeAll guards in each Context see the value.
         $script:HasAnalyzer = $null -ne (Get-Module -ListAvailable PSScriptAnalyzer)
     }
 
