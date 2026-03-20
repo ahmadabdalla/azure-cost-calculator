@@ -74,7 +74,7 @@ Discovers available filter values for resource types not yet in the reference fi
 | SearchTerm     | Fuzzy search via OData `contains()` on productName         | —        |
 | Region         | Azure region                                               | `eastus` |
 | Currency       | Pass user's preferred currency for localised sample prices | `USD`    |
-| Top            | Max distinct results                                       | `20`     |
+| Top            | Max distinct results (minimum 1)                           | `20`     |
 | OutputFormat   | `Json` (default) or `Table`                                | `Json`   |
 | IncludeMeterId | Include MeterId (GUID) in Json output for reconciliation   | `false`  |
 

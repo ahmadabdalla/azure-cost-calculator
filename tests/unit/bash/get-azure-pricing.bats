@@ -71,6 +71,20 @@ teardown() { teardown_mock_path; }
     [ "$monthly" = "210.24" ]
 }
 
+@test "custom hours-per-month changes monthly cost" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --hours-per-month 744
+    [ "$status" -eq 0 ]
+    monthly=$(echo "$output" | jq '.results[0].MonthlyCost')
+    [ "$monthly" = "71.42" ]
+}
+
+@test "quantity and instance-count combined" {
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --quantity 10 --instance-count 3
+    [ "$status" -eq 0 ]
+    monthly=$(echo "$output" | jq '.results[0].MonthlyCost')
+    [ "$monthly" = "2102.4" ]
+}
+
 @test "no results exits 0 with empty JSON envelope" {
     create_curl_mock '{"Items":[],"NextPageLink":null}' 200
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Nonexistent"
@@ -210,6 +224,38 @@ SCRIPT
     [ "$count" -eq 300 ]
 }
 
+@test "product-name filter passes through to query" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Cache for Redis","productName":"Azure Cache for Redis","skuName":"C1 Standard","armSkuName":"Standard_C1","meterName":"Cache Units","armRegionName":"eastus","retailPrice":0.042,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Azure Cache for Redis" --product-name "Azure Cache for Redis"
+    [ "$status" -eq 0 ]
+    pn=$(echo "$output" | jq -r '.query.filters.productName')
+    [ "$pn" = "Azure Cache for Redis" ]
+}
+
+@test "sku-name filter passes through to query" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Cache for Redis","productName":"Azure Cache for Redis","skuName":"C1 Standard","armSkuName":"Standard_C1","meterName":"Cache Units","armRegionName":"eastus","retailPrice":0.042,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Azure Cache for Redis" --sku-name "C1 Standard"
+    [ "$status" -eq 0 ]
+    sn=$(echo "$output" | jq -r '.query.filters.skuName')
+    [ "$sn" = "C1 Standard" ]
+}
+
+@test "meter-name filter passes through to query" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Cache for Redis","productName":"Azure Cache for Redis","skuName":"C1 Standard","armSkuName":"Standard_C1","meterName":"Cache Units","armRegionName":"eastus","retailPrice":0.042,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Azure Cache for Redis" --meter-name "Cache Units"
+    [ "$status" -eq 0 ]
+    mn=$(echo "$output" | jq -r '.query.filters.meterName')
+    [ "$mn" = "Cache Units" ]
+}
+
+@test "arm-sku-name filter passes through to query" {
+    create_curl_mock '{"Items":[{"serviceName":"Azure Cache for Redis","productName":"Azure Cache for Redis","skuName":"C1 Standard","armSkuName":"Standard_C1","meterName":"Cache Units","armRegionName":"eastus","retailPrice":0.042,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Azure Cache for Redis" --arm-sku-name "Standard_C1"
+    [ "$status" -eq 0 ]
+    asn=$(echo "$output" | jq -r '.query.filters.armSkuName')
+    [ "$asn" = "Standard_C1" ]
+}
+
 @test "compact output has results but no query or summary" {
     run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines" --output-format Compact
     [ "$status" -eq 0 ]
@@ -286,6 +332,38 @@ SCRIPT
     [ "$has_meter_id" = "true" ]
     meter_id=$(echo "$output" | jq '.results[0].MeterId')
     [ "$meter_id" = "null" ]
+}
+
+@test "deduplication prefers isPrimaryMeterRegion" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","armRegionName":"eastus","retailPrice":0.096,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":null},{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","armRegionName":"eastus","retailPrice":0.100,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":false,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 1 ]
+    price=$(echo "$output" | jq '.results[0].UnitPrice')
+    [ "$price" = "0.096" ]
+}
+
+@test "deduplication falls back to first item when no primary exists" {
+    create_curl_mock '{"Items":[{"serviceName":"Key Vault","productName":"Key Vault Operations","skuName":"Standard","armSkuName":"","meterName":"Operations","armRegionName":"australiaeast","retailPrice":0.03,"unitOfMeasure":"10K Transactions","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":false,"tierMinimumUnits":0,"reservationTerm":null},{"serviceName":"Key Vault","productName":"Key Vault Operations","skuName":"Standard","armSkuName":"","meterName":"Operations","armRegionName":"australiaeast","retailPrice":0.05,"unitOfMeasure":"10K Transactions","currencyCode":"USD","type":"Consumption","isPrimaryMeterRegion":false,"tierMinimumUnits":0,"reservationTerm":null}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Key Vault"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 1 ]
+    price=$(echo "$output" | jq '.results[0].UnitPrice')
+    [ "$price" = "0.03" ]
+}
+
+@test "deduplication preserves distinct reservation terms" {
+    create_curl_mock '{"Items":[{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","armRegionName":"eastus","retailPrice":600,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Reservation","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":"1 Year"},{"serviceName":"Virtual Machines","productName":"Virtual Machines Dv5 Series","skuName":"D2s v5","armSkuName":"Standard_D2s_v5","meterName":"D2s v5","armRegionName":"eastus","retailPrice":1500,"unitOfMeasure":"1 Hour","currencyCode":"USD","type":"Reservation","isPrimaryMeterRegion":true,"tierMinimumUnits":0,"reservationTerm":"3 Years"}],"NextPageLink":null}' 200
+    run bash "$SCRIPTS_DIR/get-azure-pricing.sh" --service-name "Virtual Machines"
+    [ "$status" -eq 0 ]
+    count=$(echo "$output" | jq '.results | length')
+    [ "$count" -eq 2 ]
+    term1=$(echo "$output" | jq -r '.results[] | select(.ReservationTerm == "1 Year") | .MonthlyCost')
+    [ "$term1" = "50" ]
+    term3=$(echo "$output" | jq -r '.results[] | select(.ReservationTerm == "3 Years") | .MonthlyCost')
+    [ "$term3" = "41.67" ]
 }
 
 @test "compact output with empty results returns empty results array" {

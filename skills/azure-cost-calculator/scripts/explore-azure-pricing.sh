@@ -87,6 +87,10 @@ done
 
 # Validate numeric arguments
 validate_integer "top" "$top"
+if (( top < 1 )); then
+    echo "Error: --top must be at least 1, got '$top'" >&2
+    exit 1
+fi
 
 # Validate enum arguments
 case "$output_format" in

@@ -190,6 +190,13 @@ Describe 'Explore-AzurePricing' {
         }
     }
 
+    Context 'Top=0 is rejected by validation' {
+        It 'Should throw a validation error for Top=0' {
+            { & $script:ScriptPath -ServiceName 'Virtual Machines' -Top 0 -OutputFormat Json 3>$null } |
+                Should -Throw '*less than the minimum allowed range*'
+        }
+    }
+
     Context 'Json output format' {
         BeforeAll {
             Mock Invoke-RestMethod {

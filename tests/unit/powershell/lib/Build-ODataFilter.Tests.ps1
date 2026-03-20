@@ -99,7 +99,7 @@ Describe 'Build-ODataFilter' {
     }
 
     Context 'when values contain special characters' {
-        It 'should include apostrophes as-is in the value' {
+        It 'should pass through values without special characters unchanged' {
             $filters = [ordered]@{ skuName = "Dadsv5 Type1" }
             $result = Build-ODataFilter -Filters $filters
             $result | Should -Be "skuName eq 'Dadsv5 Type1'"
@@ -125,6 +125,18 @@ Describe 'Build-ODataFilter' {
             $filters = [ordered]@{ serviceName = "App Service's Plan" }
             $result = Build-ODataFilter -Filters $filters
             $result | Should -Be "serviceName eq 'App Service''s Plan'"
+        }
+    }
+
+    Context 'when contains filter has an empty value' {
+        It 'should produce contains expression with empty string' {
+            $filters = [ordered]@{
+                contains = @(
+                    @{ Field = 'meterName'; Value = '' }
+                )
+            }
+            $result = Build-ODataFilter -Filters $filters
+            $result | Should -Be "contains(tolower(meterName), '')"
         }
     }
 
