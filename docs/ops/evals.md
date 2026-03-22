@@ -15,6 +15,12 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 
 Runs structured test cases against the skill to validate behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation protocol adherence, service routing, and trigger specificity.
 
+## Prerequisites
+
+- [Waza CLI](https://github.com/microsoft/waza/releases) v0.23.0 or later
+- `COPILOT_GITHUB_TOKEN`: fine-grained PAT with "Copilot Requests" permission (for `waza run`; not needed for `waza check`)
+- `bash`, `curl` available locally or in the CI runner
+
 ## Evaluation tasks
 
 | Category         | Task file                      | Validates                                                                                |
@@ -112,7 +118,9 @@ Results are uploaded as downloadable artifacts (retained 30 days) and displayed 
 | --- | --- | --- |
 | `copilot is not authenticated` | `COPILOT_GITHUB_TOKEN` not set or missing permission | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
 | `waza check` schema errors | Missing required fields in task YAML | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL in file header |
-| Prompt grader scores 0 unexpectedly | Grader criteria too strict or inverted | Test locally with `waza run --tag <task-tag> --verbose`; review grader prompt wording |
+| `waza run` permission denied | Token lacks Copilot Requests scope | Generate new fine-grained PAT with the correct permission |
+| Prompt grader scores 0 unexpectedly | Grader criteria too strict or inverted | Run `waza run --tag <task-tag> --verbose` locally; review grader prompt wording |
+| Tasks skipped or results empty | Tag filter mismatch or output path | Verify `--tag` matches task tags; check output directory is writable |
 | No results artifact after dispatch | `waza run` failed before writing output | Check `waza run` exit code in Actions log; verify eval.yaml executor and paths |
 
 ## References
