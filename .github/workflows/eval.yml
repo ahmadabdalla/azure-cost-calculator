@@ -22,12 +22,13 @@ on:
     paths:
       - 'evals/**'
       - 'skills/**'
+      - '.github/workflows/eval.yml'
 
 permissions:
   contents: read
 
 jobs:
-  validate-eval-yaml:
+  validate-eval-schema:
     name: Validate Eval Schema
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
@@ -38,8 +39,45 @@ jobs:
       - name: Validate schemas
         run: waza check
 
+  evaluate-mock:
+    name: Evaluate (Mock Executor)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: validate-eval-schema
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install waza
+        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+      - name: Override executor to mock
+        run: sed -i 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
+      - name: Run evaluations (mock)
+        run: waza run --verbose --output results.json
+      - name: Display results summary
+        if: always()
+        run: |
+          if [ -f results.json ]; then
+            echo "## Evaluation Results (Mock)" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat results.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-results-mock
+          path: |
+            results.json
+            transcripts/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # Copilot SDK executor requires authentication (copilot login).
+  # The default GITHUB_TOKEN does not carry Copilot access.
+  # Until Copilot SDK supports headless CI auth, this job serves
+  # as the template for manual dispatch with a properly scoped token.
   run-evals:
-    name: Run Evaluations
+    name: Run Evaluations (Copilot SDK)
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'
     steps:
@@ -50,15 +88,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ARGS="--model ${{ inputs.model }} --output-dir ./results"
+          CMD="waza run --model ${{ inputs.model }} --verbose --output results.json"
           if [ -n "${{ inputs.tag }}" ]; then
-            ARGS="$ARGS --tag ${{ inputs.tag }}"
+            CMD="$CMD --tag ${{ inputs.tag }}"
           fi
-          waza run $ARGS
+          $CMD
+      - name: Display results summary
+        if: always()
+        run: |
+          if [ -f results.json ]; then
+            echo "## Evaluation Results (${{ inputs.model }})" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat results.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Upload results
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: eval-results-${{ inputs.model }}
-          path: ./results
+          path: |
+            results.json
+            transcripts/
           retention-days: 30
+          if-no-files-found: warn

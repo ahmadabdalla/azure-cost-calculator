@@ -25,9 +25,13 @@ curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | ba
 # Validate eval YAML (no agent execution)
 waza check
 
-# Run full evals (requires GITHUB_TOKEN with Copilot SDK permissions)
-export GITHUB_TOKEN="<token>"
-waza run
+# Run with mock executor (no auth required; validates eval pipeline)
+sed 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml \
+  > /tmp/eval-mock.yaml && waza run /tmp/eval-mock.yaml --verbose --output results.json
+
+# Run with Copilot SDK (requires copilot login)
+copilot login
+waza run --verbose --output results.json
 
 # Run a specific tag
 waza run --tag happy-path
@@ -38,14 +42,17 @@ waza tokens compare origin/dev HEAD --format table
 
 ## CI integration
 
-Two jobs in `.github/workflows/eval.yml`:
+Three jobs in `.github/workflows/eval.yml`:
 
-| Trigger                                      | Job                  | What runs                                                 |
-| -------------------------------------------- | -------------------- | --------------------------------------------------------- |
-| PR to `dev`/`main` (evals or skills changed) | `validate-eval-yaml` | `waza check` (schema validation only, no agent execution) |
-| Manual dispatch                              | `run-evals`          | `waza run` with model selection and optional tag filter   |
+| Trigger                                      | Job                     | Executor | What runs                                                   |
+| -------------------------------------------- | ----------------------- | -------- | ----------------------------------------------------------- |
+| PR to `dev`/`main` (evals or skills changed) | `validate-eval-schema`  | n/a      | `waza check` (schema validation, no agent execution)        |
+| PR to `dev`/`main` (after schema passes)     | `evaluate-mock`         | `mock`   | `waza run` with simulated responses (validates eval pipeline) |
+| Manual dispatch                              | `run-evals`             | `copilot-sdk` | `waza run` with real AI model and optional tag filter  |
 
-Full agent execution evals are manual-dispatch only to avoid rate-limit exposure and latency on every PR. Schema validation runs automatically.
+The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Results appear in the GitHub Actions Step Summary and as downloadable artifacts.
+
+The Copilot SDK executor (`run-evals`) requires authentication that the default `GITHUB_TOKEN` does not provide. The embedded Copilot CLI needs `copilot login` credentials, which cannot be obtained non-interactively in standard GitHub Actions runners. This job is dispatch-only and serves as a template until headless CI auth is supported by Waza.
 
 ## Grader types in use
 
@@ -70,6 +77,7 @@ Full agent execution evals are manual-dispatch only to avoid rate-limit exposure
 
 | Limitation                                                                       | Impact                                  | Mitigation                                                                               |
 | -------------------------------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Copilot SDK executor requires `copilot login` (interactive)                      | Cannot run real evals in headless CI    | Mock executor validates pipeline; copilot-sdk runs locally or when CI auth is supported   |
 | SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block   | Intentional: skill carries domain-specific reference architecture                        |
 | `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings                | Project convention; not blocking for evals                                               |
 | Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions     | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
