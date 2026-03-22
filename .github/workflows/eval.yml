@@ -52,6 +52,7 @@ jobs:
         run: |
           sed -i 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
       - name: Run evaluations (mock)
+        continue-on-error: true
         run: waza run --verbose --output results.json
       - name: Display results summary
         if: always()

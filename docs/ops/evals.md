@@ -50,7 +50,7 @@ Three jobs in `.github/workflows/eval.yml`:
 | PR to `dev`/`main` (after schema passes)     | `evaluate-mock`         | `mock`   | `waza run` with simulated responses (validates eval pipeline) |
 | Manual dispatch                              | `run-evals`             | `copilot-sdk` | `waza run` with real AI model and optional tag filter  |
 
-The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Results appear in the GitHub Actions Step Summary and as downloadable artifacts.
+The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Positive tests (happy path, disambiguation, alias routing) will fail under mock because the simulated response does not contain real AI output; this is expected. Negative tests (trigger mode: negative) pass because mock does not activate skills. The mock job uses `continue-on-error: true` so failures appear in the summary without blocking the PR.
 
 The Copilot SDK executor (`run-evals`) requires authentication that the default `GITHUB_TOKEN` does not provide. The embedded Copilot CLI needs `copilot login` credentials, which cannot be obtained non-interactively in standard GitHub Actions runners. This job is dispatch-only and serves as a template until headless CI auth is supported by Waza.
 
