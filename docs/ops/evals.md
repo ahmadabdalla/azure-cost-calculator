@@ -37,6 +37,7 @@ Runs structured test cases against the skill to validate behavior that determini
 # Install Waza (pinned version; see https://github.com/microsoft/waza/releases)
 # Binary names: waza-darwin-arm64, waza-darwin-amd64, waza-linux-amd64
 WAZA_VERSION="v0.23.0"
+mkdir -p ~/bin
 curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-darwin-arm64" -o ~/bin/waza
 chmod +x ~/bin/waza
 
