@@ -28,8 +28,11 @@ Runs structured test cases against the skill to validate behavior that determini
 ## How to run
 
 ```bash
-# Install Waza
-curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+# Install Waza (pinned version; see https://github.com/microsoft/waza/releases)
+# Binary names: waza-darwin-arm64, waza-darwin-amd64, waza-linux-amd64
+WAZA_VERSION="v0.23.0"
+curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-darwin-arm64" -o ~/bin/waza
+chmod +x ~/bin/waza
 
 # Validate eval YAML (no agent execution)
 waza check
@@ -102,6 +105,15 @@ Results are uploaded as downloadable artifacts (retained 30 days) and displayed 
 | Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions    | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
 | SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block  | Intentional: skill carries domain-specific reference architecture                        |
 | `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings               | Project convention; not blocking for evals                                               |
+
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+| --- | --- | --- |
+| `copilot is not authenticated` | `COPILOT_GITHUB_TOKEN` not set or missing permission | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
+| `waza check` schema errors | Missing required fields in task YAML | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL in file header |
+| Prompt grader scores 0 unexpectedly | Grader criteria too strict or inverted | Test locally with `waza run --tag <task-tag> --verbose`; review grader prompt wording |
+| No results artifact after dispatch | `waza run` failed before writing output | Check `waza run` exit code in Actions log; verify eval.yaml executor and paths |
 
 ## References
 

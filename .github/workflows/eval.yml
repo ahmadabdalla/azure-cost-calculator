@@ -19,10 +19,14 @@ on:
         type: string
   pull_request:
     branches: [dev, main]
-    paths:
-      - 'evals/**'
-      - 'skills/**'
-      - '.github/workflows/eval.yml'
+
+# Workflow always triggers on PR (no paths: filter) so required status checks
+# report a status. Path filtering is handled inside each job using
+# dorny/paths-filter, matching the convention in unit-tests.yml and
+# validate-service-references.yml.
+
+env:
+  WAZA_VERSION: v0.23.0
 
 permissions:
   contents: read
@@ -34,9 +38,23 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check for relevant changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'evals/**'
+              - 'skills/**'
+              - '.waza.yaml'
+              - '.github/workflows/eval.yml'
       - name: Install waza
-        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+        if: steps.filter.outputs.relevant == 'true'
+        run: |
+          sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          sudo chmod +x /usr/local/bin/waza
       - name: Validate schemas
+        if: steps.filter.outputs.relevant == 'true'
         run: waza check
 
   evaluate-mock:
@@ -46,16 +64,31 @@ jobs:
     needs: validate-eval-schema
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check for relevant changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'evals/**'
+              - 'skills/**'
+              - '.waza.yaml'
+              - '.github/workflows/eval.yml'
       - name: Install waza
-        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+        if: steps.filter.outputs.relevant == 'true'
+        run: |
+          sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          sudo chmod +x /usr/local/bin/waza
       - name: Override executor to mock
+        if: steps.filter.outputs.relevant == 'true'
         run: |
           sed -i 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
       - name: Run evaluations (mock)
+        if: steps.filter.outputs.relevant == 'true'
         continue-on-error: true
         run: waza run --verbose --output results.json
       - name: Display results summary
-        if: always()
+        if: always() && steps.filter.outputs.relevant == 'true'
         run: |
           if [ -f results.json ]; then
             echo "## Evaluation Results (Mock)" >> "$GITHUB_STEP_SUMMARY"
@@ -64,7 +97,7 @@ jobs:
             echo '```' >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Upload results
-        if: always()
+        if: always() && steps.filter.outputs.relevant == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: eval-results-mock
@@ -85,7 +118,9 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install waza
-        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+        run: |
+          sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          sudo chmod +x /usr/local/bin/waza
       - name: Validate COPILOT_GITHUB_TOKEN
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
@@ -99,17 +134,21 @@ jobs:
       - name: Run evaluations
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          EVAL_MODEL: ${{ inputs.model }}
+          EVAL_TAG: ${{ inputs.tag }}
         run: |
-          CMD="waza run --model ${{ inputs.model }} --verbose --output results.json"
-          if [ -n "${{ inputs.tag }}" ]; then
-            CMD="$CMD --tag ${{ inputs.tag }}"
+          ARGS=(--model "$EVAL_MODEL" --verbose --output results.json)
+          if [ -n "$EVAL_TAG" ]; then
+            ARGS+=(--tag "$EVAL_TAG")
           fi
-          $CMD
+          waza run "${ARGS[@]}"
       - name: Display results summary
         if: always()
+        env:
+          EVAL_MODEL: ${{ inputs.model }}
         run: |
           if [ -f results.json ]; then
-            echo "## Evaluation Results (${{ inputs.model }})" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Evaluation Results (${EVAL_MODEL})" >> "$GITHUB_STEP_SUMMARY"
             echo '```json' >> "$GITHUB_STEP_SUMMARY"
             cat results.json >> "$GITHUB_STEP_SUMMARY"
             echo '```' >> "$GITHUB_STEP_SUMMARY"

@@ -8,7 +8,7 @@ skill: azure-cost-calculator
 version: "1.0"
 
 config:
-  trials_per_task: 1
+  trials_per_task: 3
   timeout_seconds: 300
   parallel: false
   executor: copilot-sdk
