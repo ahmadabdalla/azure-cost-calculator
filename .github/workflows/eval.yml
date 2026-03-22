@@ -27,6 +27,7 @@ on:
 
 env:
   WAZA_VERSION: v0.23.0
+  WAZA_CHECKSUM: "9cf7c99292100892b3274155b39f62e54c66d6dbd43d69b1a626a9ef5d35668b"
 
 permissions:
   contents: read
@@ -52,6 +53,7 @@ jobs:
         if: steps.filter.outputs.relevant == 'true'
         run: |
           sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          echo "${WAZA_CHECKSUM}  /usr/local/bin/waza" | sha256sum -c -
           sudo chmod +x /usr/local/bin/waza
       - name: Validate schemas
         if: steps.filter.outputs.relevant == 'true'
@@ -78,6 +80,7 @@ jobs:
         if: steps.filter.outputs.relevant == 'true'
         run: |
           sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          echo "${WAZA_CHECKSUM}  /usr/local/bin/waza" | sha256sum -c -
           sudo chmod +x /usr/local/bin/waza
       - name: Override executor to mock
         if: steps.filter.outputs.relevant == 'true'
@@ -120,6 +123,7 @@ jobs:
       - name: Install waza
         run: |
           sudo curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o /usr/local/bin/waza
+          echo "${WAZA_CHECKSUM}  /usr/local/bin/waza" | sha256sum -c -
           sudo chmod +x /usr/local/bin/waza
       - name: Validate COPILOT_GITHUB_TOKEN
         env:
