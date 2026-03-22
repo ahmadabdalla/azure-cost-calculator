@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+id: disambiguation-sql-001
+name: Disambiguation Required - Azure SQL
+description: >
+  Tests that the agent identifies missing never-assume parameters and asks
+  before estimating. "Azure SQL" maps to SQL Database but the user has not
+  specified tier, DTU/vCores, or storage size.
+tags:
+  - disambiguation
+  - databases
+  - clarification
+inputs:
+  prompt: "How much does Azure SQL cost?"
+expected:
+  output_not_contains:
+    - "Monthly ="
+    - "Total:"
+graders:
+  - type: prompt
+    name: asks-before-estimating
+    config:
+      prompt: >
+        The agent MUST ask the user for clarification before providing a cost
+        estimate. Specifically, it must ask about at least one of: tier, DTU
+        count, vCore count, or storage size. These are "never-assume"
+        parameters. Score 1.0 if it asks before estimating. Score 0.5 if it
+        asks but also provides an estimate. Score 0.0 if it provides an
+        estimate without asking.
+    weight: 2.0
+  - type: text
+    name: contains-question
+    config:
+      regex_match:
+        - "\\?"
+    weight: 1.0

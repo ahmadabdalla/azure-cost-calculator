@@ -1,0 +1,64 @@
+name: Run Skill Evaluations
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model to evaluate against"
+        required: false
+        default: "claude-sonnet-4.6"
+        type: choice
+        options:
+          - claude-sonnet-4.6
+          - claude-sonnet-4.5
+          - claude-opus-4.6
+          - gpt-5.3-codex
+      tag:
+        description: "Tag filter for tasks (blank runs all)"
+        required: false
+        type: string
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - 'evals/**'
+      - 'skills/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-eval-yaml:
+    name: Validate Eval Schema
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install waza
+        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+      - name: Validate schemas
+        run: waza check
+
+  run-evals:
+    name: Run Evaluations
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install waza
+        run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
+      - name: Run evaluations
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ARGS="--model ${{ inputs.model }} --output-dir ./results"
+          if [ -n "${{ inputs.tag }}" ]; then
+            ARGS="$ARGS --tag ${{ inputs.tag }}"
+          fi
+          waza run $ARGS
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-results-${{ inputs.model }}
+          path: ./results
+          retention-days: 30

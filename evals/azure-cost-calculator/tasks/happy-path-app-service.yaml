@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+id: happy-path-app-service-001
+name: Happy Path - App Service Linux P1 v3
+description: >
+  Tests a straightforward cost estimation for a well-specified App Service
+  request. The user provides tier (P1 v3), OS (Linux), region (East US),
+  and instance count (2). No disambiguation should be needed.
+tags:
+  - happy-path
+  - single-service
+  - compute
+inputs:
+  prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+    - "Compute"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains_cs:
+        - "Azure App Service"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      prompt: >
+        The agent output MUST be a complete Azure cost estimate. Check for ALL of:
+        (1) An Assumptions block that discloses safe-default parameters used.
+        (2) Pricing data sourced from the Azure Retail Prices API (not fabricated).
+        (3) A monthly total cost calculation using the 730-hour formula.
+        (4) Mention of 2 instances as specified by the user.
+        Score 1.0 if all four criteria are met.
+        Score 0.5 if three criteria are met.
+        Score 0.0 if fewer than three are met.
+    weight: 1.5
+  - type: behavior
+    name: uses-pricing-script
+    config:
+      required_tools:
+        - "get-azure-pricing"
+    weight: 1.0
