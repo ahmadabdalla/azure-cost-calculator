@@ -2,14 +2,14 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills.
 
-| Item             | Detail                                                                       |
-| ---------------- | ---------------------------------------------------------------------------- |
-| Workflow         | `.github/workflows/eval.yml`                                                 |
-| Eval suite       | `evals/azure-cost-calculator/eval.yaml`                                      |
-| Task files       | `evals/azure-cost-calculator/tasks/*.yaml`                                   |
-| Project config   | `.waza.yaml`                                                                 |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (shared with issue-triage and weekly-release)         |
-| Results artifact | Downloaded from Actions tab after a dispatch run                             |
+| Item             | Detail                                           |
+| ---------------- | ------------------------------------------------ |
+| Workflow         | `.github/workflows/eval.yml`                     |
+| Eval suite       | `evals/azure-cost-calculator/eval.yaml`          |
+| Task files       | `evals/azure-cost-calculator/tasks/*.yaml`       |
+| Project config   | `.waza.yaml`                                     |
+| Auth secret      | `COPILOT_GITHUB_TOKEN`                           |
+| Results artifact | Downloaded from Actions tab after a dispatch run |
 
 ## What it does
 
@@ -59,11 +59,11 @@ waza tokens compare origin/dev HEAD --format table
 
 Three jobs in `.github/workflows/eval.yml`:
 
-| Trigger                                      | Job                     | Executor      | What runs                                                     |
-| -------------------------------------------- | ----------------------- | ------------- | ------------------------------------------------------------- |
-| PR to `dev`/`main` (evals or skills changed) | `validate-eval-schema`  | n/a           | `waza check` (schema validation, no agent execution)          |
-| PR to `dev`/`main` (after schema passes)     | `evaluate-mock`         | `mock`        | `waza run` with simulated responses (validates eval pipeline) |
-| Manual dispatch                              | `run-evals`             | `copilot-sdk` | `waza run` with real AI model and optional tag filter         |
+| Trigger                                      | Job                    | Executor      | What runs                                                     |
+| -------------------------------------------- | ---------------------- | ------------- | ------------------------------------------------------------- |
+| PR to `dev`/`main` (evals or skills changed) | `validate-eval-schema` | n/a           | `waza check` (schema validation, no agent execution)          |
+| PR to `dev`/`main` (after schema passes)     | `evaluate-mock`        | `mock`        | `waza run` with simulated responses (validates eval pipeline) |
+| Manual dispatch                              | `run-evals`            | `copilot-sdk` | `waza run` with real AI model and optional tag filter         |
 
 ### Mock executor (PR checks)
 
@@ -96,12 +96,12 @@ Results are uploaded as downloadable artifacts (retained 30 days) and displayed 
 
 ## Known limitations
 
-| Limitation                                                                       | Impact                                  | Mitigation                                                                               |
-| -------------------------------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Prompt grader timeout (default 60s) may be too short for judge model evaluation  | Tasks with long responses fail grading  | Increase `timeout_seconds` in eval config or task-level overrides                        |
-| Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions     | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
-| SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block   | Intentional: skill carries domain-specific reference architecture                        |
-| `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings                | Project convention; not blocking for evals                                               |
+| Limitation                                                                       | Impact                                 | Mitigation                                                                               |
+| -------------------------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Prompt grader timeout (default 60s) may be too short for judge model evaluation  | Tasks with long responses fail grading | Increase `timeout_seconds` in eval config or task-level overrides                        |
+| Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions    | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
+| SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block  | Intentional: skill carries domain-specific reference architecture                        |
+| `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings               | Project convention; not blocking for evals                                               |
 
 ## References
 
