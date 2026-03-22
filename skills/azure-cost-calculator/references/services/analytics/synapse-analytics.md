@@ -16,28 +16,28 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Dedicated SQL Pool — DW100c (smallest tier, hourly DWU charge)
+### Dedicated SQL Pool: DW100c (smallest tier, hourly DWU charge)
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Dedicated SQL Pool
 SkuName: DW100c
 
-### Serverless SQL Pool — per TB of data processed
+### Serverless SQL Pool: per TB of data processed
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Serverless SQL Pool
 
-### Apache Spark Pool — Memory Optimized vCores
+### Apache Spark Pool: Memory Optimized vCores
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Serverless Apache Spark Pool - Memory Optimized
 
-### Data Flow — Standard vCores (per hour; also Basic and Compute Optimized)
+### Data Flow: Standard vCores (per hour; also Basic and Compute Optimized)
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Data Flow - Standard
 
-### Pipelines — orchestration activity runs (per 1K; Quantity = billable 1K-unit count)
+### Pipelines: orchestration activity runs (per 1K; Quantity = billable 1K-unit count)
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Pipelines
@@ -45,7 +45,7 @@ SkuName: Azure Hosted IR
 MeterName: Azure Hosted IR Orchestration Activity Run
 Quantity: 10
 
-### Storage — backup storage (use Quantity for GB)
+### Storage: backup storage (use Quantity for GB)
 
 ServiceName: Azure Synapse Analytics
 ProductName: Azure Synapse Analytics Storage
@@ -88,7 +88,7 @@ Total Monthly     = Dedicated SQL + Serverless SQL + Spark / Data Flow + Pipelin
 
 - **Dedicated SQL Pool**: Pausing stops compute billing but storage continues; pricing scales linearly per DWU (DW100c–DW30000c); **Serverless SQL**: Pay-per-query, no provisioning
 - **Spark Pools**: Auto-pause, billed per vCore-hour; **Pipelines**: Mirror Data Factory v2 pricing; SSIS VMs filter by `ProductName` containing `SSIS`
-- **PE sub-resources** (never-assume): `Sql`, `SqlOnDemand`, `Dev` — see `networking/private-link.md` for PE pricing
+- **PE sub-resources** (never-assume): `Sql`, `SqlOnDemand`, `Dev` (see `networking/private-link.md` for PE pricing)
 
 ## Reserved Instance Pricing
 

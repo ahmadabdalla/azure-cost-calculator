@@ -7,13 +7,13 @@ primaryCost: "Per-device service fee + shipping fee + daily overage beyond inclu
 
 # Azure Data Box
 
-> **Trap**: serviceName is `Data Box` — NOT `Azure Data Box` (returns 0 results). Multiple productNames exist under this serviceName; always filter by `productName` to target a specific variant.
+> **Trap**: serviceName is `Data Box`, NOT `Azure Data Box` (returns 0 results). Multiple productNames exist under this serviceName; always filter by `productName` to target a specific variant.
 
-> **Trap (Lost/Damaged)**: Each variant includes a Lost or Damaged Device meter with very high penalty prices. Exclude these from cost estimates — they are one-time penalty charges, not recurring costs.
+> **Trap (Lost/Damaged)**: Each variant includes a Lost or Damaged Device meter with very high penalty prices. Exclude these from cost estimates; they are one-time penalty charges, not recurring costs.
 
 ## Query Pattern
 
-### Data Box Disk — 3 disks
+### Data Box Disk: 3 disks
 
 ServiceName: Data Box
 ProductName: Data Box Disk
@@ -25,7 +25,7 @@ ServiceName: Data Box
 ProductName: Data Box
 SkuName: 100 TB
 
-### Data Box V2 — select skuName 120 TB or 525 TB
+### Data Box V2: select skuName 120 TB or 525 TB
 
 ServiceName: Data Box
 ProductName: Data Box V2
@@ -43,7 +43,7 @@ ProductName: Data Box Heavy
 | `serviceName` | Always `Data Box`               | `Data Box`                                                                 |
 | `productName` | Device variant                  | `Data Box`, `Data Box V2`, `Data Box Disk`, `Data Box Heavy`               |
 | `skuName`     | Capacity tier                   | `100 TB`, `120 TB`, `525 TB`, `Standard`                                   |
-| `meterName`   | Fee component — see Meter Names | `Standard Service Fee`, `100 TB Extra Day Fee`, `Device Standard Shipping` |
+| `meterName`   | Fee component, see Meter Names | `Standard Service Fee`, `100 TB Extra Day Fee`, `Device Standard Shipping` |
 
 ## Meter Names
 
@@ -61,7 +61,7 @@ ProductName: Data Box Heavy
 | `Standard Extra Day Fee`          | `Data Box Heavy` | `1/Day`       | After included days                  |
 | `Device Standard Shipping`        | `Data Box Heavy` | `1`           | Freight round-trip                   |
 
-Data Box V2 has no shipping meter in the API — shipping may be bundled into the service fee.
+Data Box V2 has no shipping meter in the API; shipping may be bundled into the service fee.
 
 ## Cost Formula
 
@@ -77,5 +77,5 @@ Multi-device = Per order × deviceCount
 - Data Box Disk capacity: 8 TB usable per disk, up to 5 disks per order (40 TB max)
 - Data Box V2 (120 TB / 525 TB) is the newer generation with higher overage rates
 - Export orders use the same device fees; Azure Bandwidth egress charges are billed separately
-- Shipping prices vary by region — always filter by the correct armRegionName
+- Shipping prices vary by region; always filter by the correct armRegionName
 - Data Box Gateway (virtual appliance with daily compute charges) shares this serviceName but is not an offline transfer device

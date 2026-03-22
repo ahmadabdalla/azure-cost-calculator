@@ -11,36 +11,36 @@ privateEndpoint: true
 
 > **Trap (tiered pricing inflation)**: Querying Basic or Standard tiers without `MeterName` returns **multiple tiered pricing rows** for the overage meters. The script sums all tier rows, inflating `totalMonthlyCost` above the actual base price. For base cost estimation, filter to the base unit meter only (`Basic Unit` or `Standard Unit`). Overage tiers apply only when usage exceeds the included 10M pushes/month.
 
-> **Trap (namespace billing)**: Base charges are per namespace — use `InstanceCount: N` to model multi-namespace deployments. The included push quota (10M for Basic/Standard) is aggregated **per subscription per tier**, not per namespace.
+> **Trap (namespace billing)**: Base charges are per namespace; use `InstanceCount: N` to model multi-namespace deployments. The included push quota (10M for Basic/Standard) is aggregated **per subscription per tier**, not per namespace.
 
 ## Query Pattern
 
-### Standard tier — base subscription (10M pushes included)
+### Standard tier: base subscription (10M pushes included)
 
 ServiceName: Notification Hubs
 SkuName: Standard
 MeterName: Standard Unit
 
-### Basic tier — base subscription (10M pushes included)
+### Basic tier: base subscription (10M pushes included)
 
 ServiceName: Notification Hubs
 SkuName: Basic
 MeterName: Basic Unit
 
-### Free tier — base subscription (1M pushes included)
+### Free tier: base subscription (1M pushes included)
 
 ServiceName: Notification Hubs
 SkuName: Free
 MeterName: Free Unit
 
-### Multi-namespace deployment — 3 Standard namespaces
+### Multi-namespace deployment: 3 Standard namespaces
 
 ServiceName: Notification Hubs
 SkuName: Standard
 MeterName: Standard Unit
 InstanceCount: 3
 
-### Standard overage — pushes beyond 10M (Quantity in millions)
+### Standard overage: pushes beyond 10M (Quantity in millions)
 
 ServiceName: Notification Hubs
 SkuName: Standard

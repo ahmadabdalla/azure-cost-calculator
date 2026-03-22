@@ -144,7 +144,7 @@ teardown() { teardown_mock_path; }
     # which crashes on Linux when $processed exceeds MAX_ARG_STRLEN (~128 KiB).
     # The fix pipes both values via stdin using printf | jq -s '.[0] + .[1]'.
     #
-    # 200 items × 200-char field values ≈ 200+ KiB for processed — exceeds the limit
+    # 200 items × 200-char field values ≈ 200+ KiB for processed, exceeding the limit
     # so --argjson b would crash on the first region without the fix.
     local items_json
     items_json=$(jq -cn '[range(200) | {
@@ -274,7 +274,7 @@ SCRIPT
     [ "$status" -eq 0 ]
     field_count=$(echo "$output" | jq '.results[0] | keys | length')
     [ "$field_count" -eq 9 ]
-    # Verify specific fields exist (chained has() — multi-arg has() is a generator, not AND)
+    # Verify specific fields exist (chained has(); multi-arg has() is a generator, not AND)
     echo "$output" | jq -e '.results[0] | (has("MeterName") and has("ProductName") and has("SkuName") and has("UnitPrice") and has("UnitOfMeasure") and has("MonthlyCost") and has("Currency") and has("ReservationTerm") and has("TierMinUnits"))'
 }
 

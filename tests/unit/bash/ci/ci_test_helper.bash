@@ -59,7 +59,7 @@ get_output_heredoc() {
 }
 
 # ---------------------------------------------------------------------------
-# Git dispatch mock — routes by subcommand
+# Git dispatch mock: routes by subcommand
 # ---------------------------------------------------------------------------
 
 # Creates a mock git executable that dispatches based on the first
@@ -99,7 +99,7 @@ set_git_response() {
 }
 
 # ---------------------------------------------------------------------------
-# Sequenced mock — different output per invocation
+# Sequenced mock: different output per invocation
 # ---------------------------------------------------------------------------
 
 # Create a mock that returns different output on each successive call.
@@ -140,7 +140,7 @@ SCRIPT
 }
 
 # ---------------------------------------------------------------------------
-# gh CLI dispatch mock — routes by "$1_$2" key (e.g. "pr_list")
+# gh CLI dispatch mock: routes by "$1_$2" key (e.g. "pr_list")
 # ---------------------------------------------------------------------------
 
 # Creates a mock gh executable that dispatches on the first two positional

@@ -7,7 +7,7 @@ primaryCost: "vCPU per-hour + memory per-GB-hour (Linux); add Windows software s
 
 # Azure Container Instances
 
-> **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU) — always filter with `ProductName: Container Instances`, `SkuName: Standard` for standard Linux pricing.
+> **Trap (unfiltered query)**: An unfiltered query returns 16 meters across 6 SKUs (Standard, Standard Spot, Confidential, K80/P100/V100 GPU). Always filter with `ProductName: Container Instances`, `SkuName: Standard` for standard Linux pricing.
 >
 > **Trap (memory & per-second MonthlyCost)**: The script cannot calculate monthly cost for `Standard Memory Duration` (unit `1 GB Hour`) and `Standard Windows Software Duration` (unit `1 Second`) without quantity. Memory: `retailPrice × GiB × 730`. Windows: `retailPrice × vCPUs × 730 × 3600`.
 >
@@ -15,7 +15,7 @@ primaryCost: "vCPU per-hour + memory per-GB-hour (Linux); add Windows software s
 
 ## Query Pattern
 
-### Standard Linux — vCPU and memory (most common)
+### Standard Linux: vCPU and memory (most common)
 
 ServiceName: Container Instances
 ProductName: Container Instances
@@ -28,7 +28,7 @@ ProductName: Container Instances
 SkuName: Standard
 MeterName: Standard Memory Duration
 
-### Windows surcharge — add to Linux cost above
+### Windows surcharge: add to Linux cost above
 
 ServiceName: Container Instances
 ProductName: Container Instances
@@ -41,7 +41,7 @@ ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard Spot
 
-### GPU containers — substitute {gpu}: K80, P100, V100
+### GPU containers: substitute {gpu}: K80, P100, V100
 
 ServiceName: Container Instances
 ProductName: Container Instances with GPU
@@ -54,8 +54,8 @@ SkuName: {gpu}
 | `Standard vCPU Duration`                      | `Standard`                    | `1 Hour`         | Per vCPU               |
 | `Standard Memory Duration`                    | `Standard`                    | `1 GB Hour`      | Per GiB                |
 | `Standard Windows Software Duration`          | `Standard`                    | `1 Second`       | Windows only surcharge |
-| `Standard Spot vCPU Duration`                 | `Standard Spot`               | `1 Hour`         | Spot — evictable       |
-| `Standard Spot Memory Duration`               | `Standard Spot`               | `1 GB Hour`      | Spot — evictable       |
+| `Standard Spot vCPU Duration`                 | `Standard Spot`               | `1 Hour`         | Spot, evictable        |
+| `Standard Spot Memory Duration`               | `Standard Spot`               | `1 GB Hour`      | Spot, evictable        |
 | `Confidential containers ACI vCPU Duration`   | `Confidential containers ACI` | `1 Hour`         | Confidential computing |
 | `Confidential containers ACI Memory Duration` | `Confidential containers ACI` | `1 GB Hour`      | Confidential computing |
 | `K80 vGPU Duration`                           | `K80`                         | `100 Seconds`    | GPU meter              |
@@ -79,8 +79,8 @@ GPU (all prices per 100 sec):
 
 ## Notes
 
-- No free tier — billing starts when the container group is running
+- No free tier. Billing starts when the container group is running
 - Stopped container groups incur no compute charges (only storage for mounted volumes)
 - Spot containers offer up to ~70% discount but can be evicted at any time
-- GPU containers require `productName eq 'Container Instances with GPU'` — separate from standard pricing
+- GPU containers require `productName eq 'Container Instances with GPU'`; separate from standard pricing
 - For long-running workloads, consider Azure Container Apps (Dedicated plan) or AKS for better cost efficiency

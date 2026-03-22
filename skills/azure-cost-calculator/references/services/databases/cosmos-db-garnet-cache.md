@@ -8,11 +8,11 @@ primaryCost: "vCPU-hours per tier × 730 + Premium SSD disk per GB × 730"
 
 # Cosmos DB Garnet Cache
 
-> **Trap (split-product)**: The API `serviceName` is `Azure Cosmos DB` (shared with 15+ products). Always filter with `ProductName: Azure Cosmos DB Garnet Cache` to isolate Garnet Cache meters — omitting `ProductName` returns an inflated total mixing throughput, serverless, autoscale, and other Cosmos DB products.
+> **Trap (split-product)**: The API `serviceName` is `Azure Cosmos DB` (shared with 15+ products). Always filter with `ProductName: Azure Cosmos DB Garnet Cache` to isolate Garnet Cache meters. Omitting `ProductName` returns an inflated total mixing throughput, serverless, autoscale, and other Cosmos DB products.
 
 ## Query Pattern
 
-### Compute — General Purpose v6 (e.g., 4 vCPUs)
+### Compute: General Purpose v6 (e.g., 4 vCPUs)
 
 ServiceName: Azure Cosmos DB <!-- cross-service -->
 ProductName: Azure Cosmos DB Garnet Cache
@@ -60,8 +60,8 @@ Monthly  = Compute + Storage
 
 ## Notes
 
-- Redis-compatible caching layer in Azure Cosmos DB — uses the same `serviceName` as parent Cosmos DB
-- Four vCore tiers: General Purpose, Compute Optimized, Memory Optimized, Storage Optimized — tier is a never-assume parameter
+- Redis-compatible caching layer in Azure Cosmos DB; uses the same `serviceName` as parent Cosmos DB
+- Four vCore tiers: General Purpose, Compute Optimized, Memory Optimized, Storage Optimized. Tier is a never-assume parameter
 - Three tiers have v5 (no suffix) and v6 generations; Storage Optimized has v5 only
 - The disk meter (`Premium SSD Managed Disk`) has a sub-cent hourly rate; multiply by GB × 730 for meaningful monthly cost
 - Scale compute by adjusting vCPU count; each tier targets different workload profiles

@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure Database for PostgreSQL Flexible Server
 
-> **Trap**: `productName` has inconsistent hyphen usage across series. Some use `General Purpose - Ddsv5` (with hyphen) while others use `General Purpose Dadsv5` (no hyphen). Always use the exact string from discovery — do not construct productName by pattern.
+> **Trap**: `productName` has inconsistent hyphen usage across series. Some use `General Purpose - Ddsv5` (with hyphen) while others use `General Purpose Dadsv5` (no hyphen). Always use the exact string from discovery. Do not construct productName by pattern.
 
 ## Query Pattern
 
@@ -59,8 +59,8 @@ Total = Compute + Storage
 - MO: high-memory workloads, supports RI. Same per-vCore pattern as GP
 - High Availability doubles compute cost (deploys a standby replica)
 - Backup storage: first backup equal to DB size is free; excess charged per-GB/month
-- Single Server is deprecated — all new deployments use Flexible Server
-- Cosmos DB for PostgreSQL and HorizonDB meters share this serviceName — filter by productName to isolate Flexible Server
+- Single Server is deprecated; all new deployments use Flexible Server
+- Cosmos DB for PostgreSQL and HorizonDB meters share this serviceName; filter by productName to isolate Flexible Server
 
 ## Product Names
 
@@ -76,4 +76,4 @@ Total = Compute + Storage
 | Burstable, BS  | `Azure Database for PostgreSQL Flexible Server Burstable BS Series Compute`            |
 | Storage        | `Az DB for PostgreSQL Flexible Server Storage`                                         |
 
-> **Note**: The storage productName uses the abbreviation `Az DB for PostgreSQL` — not the full `Azure Database for PostgreSQL`.
+> **Note**: The storage productName uses the abbreviation `Az DB for PostgreSQL`, not the full `Azure Database for PostgreSQL`.

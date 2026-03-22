@@ -25,7 +25,7 @@ npx skills add ahmadabdalla/azure-cost-calculator-skill
 
 > **Don't have `npx`?** Install [Node.js](https://nodejs.org/) (which includes `npm` and `npx`), or run `npm install -g skills` first then use `skills add ahmadabdalla/azure-cost-calculator-skill`.
 
-> The npx method pulls the latest from the `main` branch directly — it always gets the current stable content but without version pinning or rollback.
+> The npx method pulls the latest from the `main` branch directly; it always gets the current stable content but without version pinning or rollback.
 
 ## Usage
 
@@ -61,7 +61,7 @@ Other design goals:
 > **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Opus 4.6** and **Gemini Pro 3**. Results with other models may vary.
 
 <p align="center">
-  <img src="docs/images/design.png" alt="How the Azure Cost Calculator skill works — from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
+  <img src="docs/images/design.png" alt="How the Azure Cost Calculator skill works: from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
 </p>
 
 References load on demand, keeping token usage low even for 10+ service estimates.
@@ -76,7 +76,7 @@ If you query a service and the skill falls back to discovery mode, that's a sign
 
 ## Prerequisites
 
-- **Bash** with `curl` and `jq` (macOS/Linux, preferred), **or** **PowerShell 7+** (`pwsh`) — [install on Windows/macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell). Windows ships with PowerShell 5.1 (`powershell.exe`) which is **not** the same as `pwsh`; you must install PowerShell 7 separately.
+- **Bash** with `curl` and `jq` (macOS/Linux, preferred), **or** **PowerShell 7+** (`pwsh`); [install on Windows/macOS/Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell). Windows ships with PowerShell 5.1 (`powershell.exe`) which is **not** the same as `pwsh`; you must install PowerShell 7 separately.
 - Internet access to `https://prices.azure.com`
 - No Azure subscription or authentication required
 

@@ -75,8 +75,8 @@ Total               = Coordinator Compute + Worker Compute + Storage
 - Multi-node: 1 coordinator (query routing) + N workers (sharding/scale-out, min 2). Scale horizontally by adding workers
 - Worker vCores: 4, 8, 16, 32, 64, 96, 104; Coordinator vCores: 4, 8, 16, 32, 64, 96
 - Backup storage is currently free (up to 100% of provisioned storage)
-- High Availability doubles compute cost — no separate meter; multiply compute by 2
-- Shares `serviceName` with Azure Database for PostgreSQL Flexible Server — see `database-for-postgresql.md`
+- High Availability doubles compute cost. No separate meter; multiply compute by 2
+- Shares `serviceName` with Azure Database for PostgreSQL Flexible Server (see `database-for-postgresql.md`)
 
 ## Reserved Instance Pricing
 
@@ -86,7 +86,7 @@ SkuName: vCore
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for RI — it multiplies by 730. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI is per-vCore; multiply by total vCore count (double if HA enabled).
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for RI; it multiplies by 730. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI is per-vCore; multiply by total vCore count (double if HA enabled).
 > For Worker node RI, use the same filters but set `ProductName` to `Azure Cosmos DB for PostgreSQL Compute- Worker Node`.
 
 ## Product Names

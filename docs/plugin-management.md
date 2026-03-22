@@ -2,7 +2,7 @@
 
 User guide for installing, updating, and removing plugins in **GitHub Copilot CLI** and **Claude Code**.
 
-Unless otherwise noted, commands on this page are **session commands** — run them inside an interactive `copilot` or `claude` session, prefixed with `/`.
+Unless otherwise noted, commands on this page are **session commands**; run them inside an interactive `copilot` or `claude` session, prefixed with `/`.
 ---
 
 ## Key concepts
@@ -10,7 +10,7 @@ Unless otherwise noted, commands on this page are **session commands** — run t
 | Concept         | Description                                                                                                                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Plugin**      | A package that bundles one or more skills, agents, hooks, MCP servers, or LSP servers.                                                                                                            |
-| **Marketplace** | A catalog of plugins you can browse and install — like an app store.                                                                                                                              |
+| **Marketplace** | A catalog of plugins you can browse and install, like an app store.                                                                                                                              |
 | **Scope**       | Where a plugin or skill is available. Both platforms support **personal** (all projects) and **project** (shared via repo) scopes. Claude Code adds a **local** scope (project-only, gitignored). |
 
 ---
@@ -31,7 +31,7 @@ Unless otherwise noted, commands on this page are **session commands** — run t
 | Update all            | `/plugin update --all`             |
 | Uninstall             | `/plugin uninstall NAME`           |
 
-> Copilot CLI uses just the plugin **name** (from `plugin.json`) — no marketplace suffix needed for most commands.
+> Copilot CLI uses just the plugin **name** (from `plugin.json`); no marketplace suffix needed for most commands.
 
 #### Marketplace commands
 
@@ -45,19 +45,19 @@ Unless otherwise noted, commands on this page are **session commands** — run t
 
 ### Install a plugin
 
-**Step 1 — Add the marketplace** (one-time):
+**Step 1: Add the marketplace** (one-time):
 
 ```bash
 /plugin marketplace add ahmadabdalla/plugins
 ```
 
-**Step 2 — Install the plugin:**
+**Step 2: Install the plugin:**
 
 ```bash
 /plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
-**Step 3 — Restart the session** to load the new plugin, then verify:
+**Step 3: Restart the session** to load the new plugin, then verify:
 
 ```bash
 /skills list     # should show azure-cost-calculator
@@ -148,29 +148,29 @@ Verify it's gone:
 | Update | `/plugin marketplace update MARKETPLACE` |
 | Remove | `/plugin marketplace remove MARKETPLACE` |
 
-> Use `add` / `remove` for **marketplaces**. Use `install` / `uninstall` for **plugins**. The verbs are not interchangeable — `uninstall` silently fails on marketplaces.
+> Use `add` / `remove` for **marketplaces**. Use `install` / `uninstall` for **plugins**. The verbs are not interchangeable; `uninstall` silently fails on marketplaces.
 
 ### Install a plugin (Claude Code)
 
-**Step 1 — Add the marketplace** (one-time):
+**Step 1: Add the marketplace** (one-time):
 
 ```bash
 /plugin marketplace add ahmadabdalla/plugins
 ```
 
-**Step 2 — Update the marketplace index:**
+**Step 2: Update the marketplace index:**
 
 ```bash
 /plugin marketplace update ahmadabdalla-plugins
 ```
 
-**Step 3 — Install the plugin:**
+**Step 3: Install the plugin:**
 
 ```bash
 /plugin install azure-cost-calculator@ahmadabdalla-plugins
 ```
 
-**Step 4 — Reload and verify:**
+**Step 4: Reload and verify:**
 
 ```bash
 /reload-plugins
@@ -212,7 +212,7 @@ Verify it's gone:
 /plugin marketplace remove ahmadabdalla-plugins
 ```
 
-> **Important:** `uninstall` does **not** work for marketplaces — it silently fails. Always use `remove`.
+> **Important:** `uninstall` does **not** work for marketplaces; it silently fails. Always use `remove`.
 
 ### Where Claude Code plugins are stored
 

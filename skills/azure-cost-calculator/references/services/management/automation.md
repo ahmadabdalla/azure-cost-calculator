@@ -19,7 +19,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Process Automation — runbook job minutes (Basic)
+### Process Automation: runbook job minutes (Basic)
 
 ServiceName: Automation
 ProductName: Process Automation
@@ -34,7 +34,7 @@ ProductName: Process Automation
 SkuName: Basic
 MeterName: Watcher
 
-### DSC — Non-Azure managed nodes
+### DSC: Non-Azure managed nodes
 
 ServiceName: Automation
 ProductName: Configuration Management
@@ -58,8 +58,8 @@ Quantity: 10
 | `Basic Runtime`  | `Basic`     | `Process Automation`       | `1 Minute`    | Runbook job execution time     |
 | `Watcher`        | `Basic`     | `Process Automation`       | `1 Hour`      | Watcher task runtime           |
 | `Non-Azure Node` | `Non-Azure` | `Configuration Management` | `1/Month`     | DSC-managed non-Azure nodes    |
-| `Azure Node`     | `Azure`     | `Configuration Management` | `1/Month`     | DSC-managed Azure nodes — free |
-| `Basic Node`     | `Basic`     | `Update Management`        | `1/Month`     | Update-assessed nodes — free   |
+| `Azure Node`     | `Azure`     | `Configuration Management` | `1/Month`     | DSC-managed Azure nodes, free |
+| `Basic Node`     | `Basic`     | `Update Management`        | `1/Month`     | Update-assessed nodes, free   |
 
 ## Cost Formula
 
@@ -68,7 +68,7 @@ Runbooks  = max(0, totalMinutes - 500) × runtime_retailPrice
 Watchers  = max(0, totalHours - 744) × watcher_retailPrice
 DSC Nodes = max(0, nonAzureNodes - 5) × node_retailPrice
 Azure DSC = 0 (always free)
-Updates   = 0 (always free — costs via Log Analytics data ingestion)
+Updates   = 0 (always free; costs via Log Analytics data ingestion)
 
 Monthly = Runbooks + Watchers + DSC Nodes
 ```
@@ -77,10 +77,10 @@ Monthly = Runbooks + Watchers + DSC Nodes
 
 - Free grants per subscription per month: 500 runbook minutes, 744 watcher hours, 5 non-Azure DSC nodes, unlimited Azure DSC nodes
 - Free grants are NOT available to subscribers with flat-discount or fixed-monthly-credit rate plans
-- Update Management meter is always zero cost — actual cost is Log Analytics data ingestion (see `monitoring/log-analytics.md`)
+- Update Management meter is always zero cost; actual cost is Log Analytics data ingestion (see `monitoring/log-analytics.md`)
 - Capacity planning: 1 runbook minute = 60 seconds of job execution; typical short jobs consume 1–5 minutes each
-- Free SKU (`Free Runtime`, `Watcher`) mirrors Basic with identical or zero rates — use Basic SKU for cost estimation
-- **PE sub-resources** (never-assume): `DSCAndHybridWorker`, `Webhook` — see `networking/private-link.md` for PE and DNS zone pricing
+- Free SKU (`Free Runtime`, `Watcher`) mirrors Basic with identical or zero rates; use Basic SKU for cost estimation
+- **PE sub-resources** (never-assume): `DSCAndHybridWorker`, `Webhook`; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates
 
@@ -92,5 +92,5 @@ Monthly = Runbooks + Watchers + DSC Nodes
 | `Azure Node`     | 1/Month  | $0.00                | Unlimited     |
 
 > These rates are from the [Azure Automation pricing page](https://azure.microsoft.com/pricing/details/automation/). The API returns them
-> but per-minute and per-hour rates are below what the script rounds to — the script shows `$0.00`.
+> but per-minute and per-hour rates are below what the script rounds to; the script shows `$0.00`.
 > For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).

@@ -17,7 +17,7 @@ Automated weekly releases using [GitHub Agentic Workflows (gh-aw)](https://githu
 
 The release process has three stages, each handled by a separate workflow:
 
-### Stage 1 — Version bump PR to `dev` (weekly-release agent)
+### Stage 1: Version bump PR to `dev` (weekly-release agent)
 
 Every Monday (or on manual trigger), the agent workflow:
 
@@ -30,7 +30,7 @@ Every Monday (or on manual trigger), the agent workflow:
 
 The maintainer reviews and merges the version-bump PR into `dev`.
 
-### Stage 2 — Release PR from `dev` to `main` (create-release-pr.yml)
+### Stage 2: Release PR from `dev` to `main` (create-release-pr.yml)
 
 When the version-bump PR merges to `dev`, `create-release-pr.yml`:
 
@@ -43,14 +43,14 @@ When the version-bump PR merges to `dev`, `create-release-pr.yml`:
 
 The maintainer reviews and merges the release PR into `main`.
 
-### Stage 3 — Tag and GitHub Release (create-release.yml)
+### Stage 3: Tag and GitHub Release (create-release.yml)
 
 When the release PR merges to `main`, `create-release.yml`:
 
 1. **Creates** an annotated git tag (`vX.Y.Z`) and pushes it.
 2. **Creates** a GitHub Release with the changelog body.
 
-> **Note — no back-merge needed**: Because the version bump happens on `dev` first and `dev` is then merged into `main`, both branches share the same Git ancestry. There is nothing to back-merge.
+> **Note (no back-merge needed)**: Because the version bump happens on `dev` first and `dev` is then merged into `main`, both branches share the same Git ancestry. There is nothing to back-merge.
 
 ### Issue auto-closing
 
@@ -65,7 +65,7 @@ The flow handles this by:
 
 | File path                                     | Category                        |
 | --------------------------------------------- | ------------------------------- |
-| `skills/**/references/services/**` (new)      | `Added` — new service reference |
+| `skills/**/references/services/**` (new)      | `Added`: new service reference |
 | `skills/**/references/services/**` (modified) | `Fixed` or `Changed`            |
 | `skills/**/SKILL.md`                          | `Changed` or `Breaking`         |
 | `skills/**/references/service-routing.md`     | `Added` or `Changed`            |
@@ -93,10 +93,10 @@ main:    ----prev-release------M (merge commit, preserves A-F ancestry)
 | Requirement                            | Notes                                                                                                                            |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | **`COPILOT_GITHUB_TOKEN`** repo secret | Fine-grained PAT scoped to this repo with the **Copilot Requests** account permission. Required by Stage 1 (agent) only. Stages 2 and 3 use the built-in `GITHUB_TOKEN`. Same token used by issue-triage workflow. |
-| **`release` label**                    | Must exist in the repo — applied to both version-bump and release PRs by the workflows.                                          |
+| **`release` label**                    | Must exist in the repo; applied to both version-bump and release PRs by the workflows.                                          |
 | **Actions permissions**                | "Read and write permissions" + "Allow GitHub Actions to create and approve pull requests" in Settings → Actions → General.       |
 | **Branch protection**                  | `main` must allow PRs and **merge commits** (not squash-only). `dev` must allow PRs.                                             |
-| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes — not at runtime.                           |
+| **gh-aw CLI**                          | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes; not at runtime.                           |
 
 ---
 
@@ -104,7 +104,7 @@ main:    ----prev-release------M (merge commit, preserves A-F ancestry)
 
 ### Agent workflow (weekly-release.md)
 
-> **Never manually edit** `weekly-release.lock.yml` or `actions-lock.json` — they are overwritten on every compile.
+> **Never manually edit** `weekly-release.lock.yml` or `actions-lock.json`; they are overwritten on every compile.
 
 1. Edit `.github/workflows/weekly-release.md`.
 2. Compile:
@@ -116,7 +116,7 @@ main:    ----prev-release------M (merge commit, preserves A-F ancestry)
 
 ### Companion workflows
 
-Edit `.github/workflows/create-release-pr.yml` or `.github/workflows/create-release.yml` directly — they are standard YAML workflows with no compilation step.
+Edit `.github/workflows/create-release-pr.yml` or `.github/workflows/create-release.yml` directly; they are standard YAML workflows with no compilation step.
 
 ### Helper scripts
 
@@ -175,10 +175,10 @@ gh run view <run-id> --log-failed
 | Workflow never triggers                  | Edited `.md` but forgot to compile, or changes not on `main`   | Run `gh aw compile`, merge to `main`                                                    |
 | `401 Unauthorized` in agent job          | `COPILOT_GITHUB_TOKEN` expired or revoked                      | Rotate the PAT (see issue-triage ops doc)                                               |
 | Agent creates PR with wrong version      | Changelog parsing or version detection logic needs tuning       | Edit categorization rules in `weekly-release.md`, recompile                             |
-| No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs — may need to adjust ignore rules                                      |
+| No PR created when changes exist         | Agent classified all changes as ignorable (CI/docs only)        | Check agent logs; may need to adjust ignore rules                                      |
 | Release PR not created after version bump | `create-release-pr.yml` trigger didn't match PR title prefix   | Verify version-bump PR title starts with `version: `                                    |
 | Release PR fails validation              | Service reference changes have validation errors                | Fix on `dev`, wait for next release or trigger manual dispatch                          |
-| Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs — it guards against duplicate tags                      |
+| Tag already exists                       | Version in `.claude-plugin/plugin.json` wasn't bumped correctly | Check `create-release.yml` logs; it guards against duplicate tags                      |
 | History not preserved on main            | Release PR was squash-merged instead of merge-committed         | Branch protection on `main` should enforce merge commits for release PRs                |
 | Release PR shows conflicts               | `main` has commits not in `dev` (shouldn't happen normally)     | Merge `main` into `dev` first, then re-run the release                                  |
 | Duplicate release PR created             | Two version-bump PRs merged in rapid succession                 | `create-release-pr.sh` checks for existing open PRs by title; merge or close the duplicate |
@@ -220,8 +220,8 @@ Commit the updated lock files after upgrading.
 
 ## References
 
-- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) — GitHub Agentic Workflows engine
-- [DailyOps pattern](https://github.github.io/gh-aw/patterns/daily-ops/) — the scheduling pattern this workflow uses
-- [issue-triage ops doc](issue-triage.md) — companion agentic workflow in this repo
-- [Keep a Changelog](https://keepachangelog.com/) — changelog format used
-- [Semantic Versioning](https://semver.org/) — versioning scheme
+- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/): GitHub Agentic Workflows engine
+- [DailyOps pattern](https://github.github.io/gh-aw/patterns/daily-ops/): the scheduling pattern this workflow uses
+- [issue-triage ops doc](issue-triage.md): companion agentic workflow in this repo
+- [Keep a Changelog](https://keepachangelog.com/): changelog format used
+- [Semantic Versioning](https://semver.org/): versioning scheme

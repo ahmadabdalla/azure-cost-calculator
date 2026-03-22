@@ -31,7 +31,7 @@ MeterName: Intra-Region Ingress
 Region: Global
 Quantity: 500
 
-### Inter-region VNet peering — substitute {direction} with Ingress or Egress
+### Inter-region VNet peering: substitute {direction} with Ingress or Egress
 
 ServiceName: Virtual Network
 ProductName: Global Virtual Network Peering
@@ -59,7 +59,7 @@ MeterName: Inter-Region {direction}
 | `Inter-Region Ingress` | `Inter-Region` | `Global Virtual Network Peering` | `1 GB` | Regional; rate varies by zone pair |
 | `Inter-Region Egress` | `Inter-Region` | `Global Virtual Network Peering` | `1 GB` | Regional; rate varies by zone pair |
 
-> Other products under this serviceName: Public IP Prefix, Accelerated Connections, Azure Virtual Network Manager, Virtual Network TAP. Private Endpoints — see `networking/private-link.md`.
+> Other products under this serviceName: Public IP Prefix, Accelerated Connections, Azure Virtual Network Manager, Virtual Network TAP. For Private Endpoints, see `networking/private-link.md`.
 
 ## Cost Formula
 
@@ -71,11 +71,11 @@ Monthly  = PublicIP + Peering
 
 ## Notes
 
-- VNets, subnets, route tables, and NSGs are free — no API meters for these resources
-- Basic Public IPs are being retired — use Standard SKU for new deployments
+- VNets, subnets, route tables, and NSGs are free. No API meters for these resources
+- Basic Public IPs are being retired. Use Standard SKU for new deployments
 - Standard IPs are static-only and zone-redundant by default
 - Inter-region peering rates vary by zone pairing (same continent vs cross-continent)
-- VNet flow logs are billed under `Network Watcher` — not under this serviceName
-- Private endpoints share this `serviceName` — see `networking/private-link.md` for PE pricing
-- VPN/ExpressRoute connectivity — see `networking/vpn-gateway.md` and `networking/express-route.md`
+- VNet flow logs are billed under `Network Watcher`, not under this serviceName
+- Private endpoints share this `serviceName`. See `networking/private-link.md` for PE pricing
+- VPN/ExpressRoute connectivity: see `networking/vpn-gateway.md` and `networking/express-route.md`
 - NAT Gateway is billed separately under its own service

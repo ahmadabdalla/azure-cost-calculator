@@ -9,13 +9,13 @@ privateEndpoint: true
 
 # Azure Event Grid
 
-> **Trap (unfiltered query)**: Querying with `ServiceName Event Grid` without `MeterName` returns **seven** rows — four distinct meters, three of which have both a free-tier row (zero price) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `MeterName` for precise costs.
+> **Trap (unfiltered query)**: Querying with `ServiceName Event Grid` without `MeterName` returns **seven** rows; four distinct meters, three of which have both a free-tier row (zero price) and a paid-tier row. The `summary.totalMonthlyCost` sums all rows, inflating the estimate. Always filter with `MeterName` for precise costs.
 
-> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, zero retailPrice) and a paid tier (tierMinimumUnits = 1). The script returns both rows and `totalMonthlyCost` does not subtract the free grant. Ignore `summary.totalMonthlyCost` — manually calculate billable units using the paid-tier `retailPrice`. Free grants differ: 100K for Standard Operations, 1M each for Event Operations and MQTT Operations.
+> **Trap (tiered free grant)**: Operations meters have a free tier (tierMinimumUnits = 0, zero retailPrice) and a paid tier (tierMinimumUnits = 1). The script returns both rows and `totalMonthlyCost` does not subtract the free grant. Ignore `summary.totalMonthlyCost`; manually calculate billable units using the paid-tier `retailPrice`. Free grants differ: 100K for Standard Operations, 1M each for Event Operations and MQTT Operations.
 
 ## Query Pattern
 
-### Standard operations — event delivery (per 100K), 10 units = 1M operations
+### Standard operations: event delivery (per 100K), 10 units = 1M operations
 
 ServiceName: Event Grid
 MeterName: Standard Operations
@@ -72,12 +72,12 @@ Total                  = Operations + Event Ops + MQTT Ops + Throughput (as appl
 
 ## Notes
 
-- Event Grid has three operation types: Standard Operations (custom/system topics, partner topics, domains — push delivery), Event Operations (namespace topics — push/pull delivery), and MQTT Operations (MQTT broker)
-- Free grants differ by operation type: 100K/month for Standard Operations, 1M/month each for Event Operations and MQTT Operations (manual deduction — see trap)
+- Event Grid has three operation types: Standard Operations (custom/system topics, partner topics, domains, push delivery), Event Operations (namespace topics, push/pull delivery), and MQTT Operations (MQTT broker)
+- Free grants differ by operation type: 100K/month for Standard Operations, 1M/month each for Event Operations and MQTT Operations (manual deduction; see trap)
 - Standard Operations are priced per 100K; Event Operations and MQTT Operations are priced per 1M
 - Topic type does not affect meter choice: system, custom, partner topics and domains all use `Standard Operations`; namespace topics use `Standard Event Operations`
-- Throughput Units are only needed for namespace topics (MQTT/pull delivery) — not required for push-based event subscriptions
-- All meters use a single productName `Event Grid` and skuName `Standard` — no tier selection needed
-- Operations are charged per 64 KB unit of data — a message larger than 64 KB counts as multiple operations
+- Throughput Units are only needed for namespace topics (MQTT/pull delivery). Not required for push-based event subscriptions
+- All meters use a single productName `Event Grid` and skuName `Standard`; no tier selection needed
+- Operations are charged per 64 KB unit of data; a message larger than 64 KB counts as multiple operations
 - Capacity: 1 Throughput Unit ≈ 1 MB/s ingress, 2 MB/s egress, up to 10,000 concurrent MQTT connections
-- Supports private endpoints — see `networking/private-link.md` for PE and DNS zone pricing
+- Supports private endpoints; see `networking/private-link.md` for PE and DNS zone pricing

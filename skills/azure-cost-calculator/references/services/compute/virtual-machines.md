@@ -25,7 +25,7 @@ ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series Windows
 
-> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops the `Standard_` prefix, size digits, and underscores. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Fsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S** — do not lowercase it. Common capital-S series: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
+> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops the `Standard_` prefix, size digits, and underscores. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Fsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S**. Do not lowercase it. Common capital-S series: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
 
 ## Key Fields
 
@@ -51,14 +51,14 @@ Monthly = retailPrice × 730 hours × instanceCount
 ## Notes
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
-- **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter — you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
+- **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter; you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
 - **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) and also risk eviction
 
 ## Azure Hybrid Benefit (AHUB)
 
-For AHUB VMs, query the **Linux** `productName` (no "Windows" suffix) — the Linux rate IS the AHUB rate. There is no separate "Base Compute" or AHUB-specific `productName` for VMs. Do not query Windows and manually discount. Always confirm AHUB eligibility with the user first.
+For AHUB VMs, query the **Linux** `productName` (no "Windows" suffix). The Linux rate IS the AHUB rate. There is no separate "Base Compute" or AHUB-specific `productName` for VMs. Do not query Windows and manually discount. Always confirm AHUB eligibility with the user first.
 
-### AHUB for Windows E16s v5 (example — queries Linux rate)
+### AHUB for Windows E16s v5 (example, queries Linux rate)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_E16s_v5

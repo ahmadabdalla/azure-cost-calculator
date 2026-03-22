@@ -9,13 +9,13 @@ privateEndpoint: true
 
 # IoT Hub
 
-> **Trap (unfiltered query)**: Querying with `ServiceName IoT Hub` without `ProductName IoT Hub` returns meters from **Device Update for IoT Hub** and **IoT Hub Device Provisioning** — separate services with their own pricing. Always add `ProductName IoT Hub` to isolate hub unit costs.
+> **Trap (unfiltered query)**: Querying with `ServiceName IoT Hub` without `ProductName IoT Hub` returns meters from **Device Update for IoT Hub** and **IoT Hub Device Provisioning**; separate services with their own pricing. Always add `ProductName IoT Hub` to isolate hub unit costs.
 
-> **Trap (unitOfMeasure)**: All hub unit meters use `1/Month` — the monthly multiplier is 1, so `MonthlyCost = retailPrice × InstanceCount` (× Quantity if used); no ×730 hours conversion is needed.
+> **Trap (unitOfMeasure)**: All hub unit meters use `1/Month`; the monthly multiplier is 1, so `MonthlyCost = retailPrice × InstanceCount` (× Quantity if used); no ×730 hours conversion is needed.
 
 ## Query Pattern
 
-### Standard S1 tier — per unit/month (use InstanceCount: N for multi-unit)
+### Standard S1 tier: per unit/month (use InstanceCount: N for multi-unit)
 
 ServiceName: IoT Hub
 ProductName: IoT Hub
@@ -27,7 +27,7 @@ ServiceName: IoT Hub
 ProductName: IoT Hub
 MeterName: B1 Unit
 
-### IoT Hub Device Provisioning Service — 100K operations (Quantity in 1K units)
+### IoT Hub Device Provisioning Service: 100K operations (Quantity in 1K units)
 
 ServiceName: IoT Hub
 ProductName: IoT Hub Device Provisioning
@@ -67,8 +67,8 @@ Total = Hub units + DPS (if used)
 ## Notes
 
 - Free tier: 1 unit max, 8K messages/day, no scale-up; good for dev/test only
-- Basic tiers (B1–B3): device-to-cloud messaging only — no cloud-to-device, device twins, or direct methods
+- Basic tiers (B1–B3): device-to-cloud messaging only; no cloud-to-device, device twins, or direct methods
 - Standard tiers (S1–S3): full feature set including cloud-to-device messaging, device twins, direct methods, and IoT Edge
 - Units are purchased per hub; scale by adding units (max 200 per hub for paid tiers)
 - Capacity: 1 S1 unit = 400K messages/day (4 KB each); 1 S2 = 6M msgs/day; 1 S3 = 300M msgs/day
-- Device Update for IoT Hub is a separate service — query with ProductName `Device Update for IoT Hub`
+- Device Update for IoT Hub is a separate service; query with ProductName `Device Update for IoT Hub`

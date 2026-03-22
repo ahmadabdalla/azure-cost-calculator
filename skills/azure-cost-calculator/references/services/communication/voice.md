@@ -6,11 +6,11 @@ primaryCost: "Per-minute Direct Routing + per-participant video/group calling"
 hasKnownRates: true
 ---
 
-# Azure Communication Services — Voice
+# Azure Communication Services: Voice
 
 > **Trap (consumption units)**: Local/Toll Free call meters use abstract consumption unit pricing (not per-minute). Only Direct Routing provides actual per-minute rates. Use `ProductName: Direct Routing` for transparent pricing.
 
-> **Trap (sub-cent pricing)**: Direct Routing per-minute rates are sub-cent — the script may display minimal cost. Use `Quantity` with expected monthly call minutes.
+> **Trap (sub-cent pricing)**: Direct Routing per-minute rates are sub-cent; the script may display minimal cost. Use `Quantity` with expected monthly call minutes.
 
 ## Query Pattern
 
@@ -30,7 +30,7 @@ SkuName: A2AGroupCalling
 MeterName: A2AGroupCalling User Minute
 Quantity: 50000
 
-### Local calls outbound — consumption units
+### Local calls outbound: consumption units
 
 ServiceName: Voice
 ProductName: Local Calls - Outbound
@@ -69,10 +69,10 @@ Total Monthly          = Direct Routing + Group Calling (sum active components)
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
+- **Part of ACS family**: Related services use separate API serviceNames: `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - **VoIP leg only**: Direct Routing rates cover the VoIP/SBC leg; PSTN legs have separate, higher country-dependent rates
 - **Country-dependent pricing**: Local/Toll Free call rates vary by destination country via `skuName` (e.g., `US`, `ROW`)
-- **Additional billable features**: Call Recording, Audio Streaming, and Closed Captions exist under Voice serviceName — all Global region only (`Region: Global` required)
+- **Additional billable features**: Call Recording, Audio Streaming, and Closed Captions exist under Voice serviceName; all Global region only (`Region: Global` required)
 
 ## Known Rates
 

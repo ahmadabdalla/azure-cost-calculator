@@ -3,7 +3,7 @@ serviceName: Azure Migrate
 category: management
 aliases: [Server Assessment, Migration Tools]
 billingNeeds: [Azure Site Recovery, Azure Database Migration Service]
-primaryCost: "Free hub — no direct meters. Costs flow through dependent services (Site Recovery, DMS, target infrastructure)."
+primaryCost: "Free hub, no direct meters. Costs flow through dependent services (Site Recovery, DMS, target infrastructure)."
 hasMeters: false
 pricingRegion: api-unavailable
 hasKnownRates: true
@@ -14,27 +14,27 @@ privateEndpoint: true
 
 > **Warning**: Azure Migrate has **no meters** in the Azure Retail Prices API. All queries return zero results. Estimate costs via the dependent services listed in `billingNeeds`.
 >
-> **Agent instruction**: Do NOT query the pricing scripts for Azure Migrate — they return zero results. Use the Known Rates below for migration-specific costs. For target infrastructure (VMs, storage, networking), query those services directly.
+> **Agent instruction**: Do NOT query the pricing scripts for Azure Migrate; they return zero results. Use the Known Rates below for migration-specific costs. For target infrastructure (VMs, storage, networking), query those services directly.
 
 > **Trap**: Do not confuse the free Azure Migrate hub with the paid services it orchestrates. Server replication costs are billed under `Azure Site Recovery`; database migration costs are billed under `Azure Database Migration Service`.
 
 ## Query Pattern
 
-### No pricing meters exist — included for validation only
+### No pricing meters exist: included for validation only
 
 ServiceName: Azure Migrate
 Quantity: 1
 
-### Expected: 0 results — this service has no retail meters
+### Expected: 0 results; this service has no retail meters
 
 ## Key Fields
 
 | Parameter     | How to determine         | Example values    |
 | ------------- | ------------------------ | ----------------- |
 | `serviceName` | Always `Azure Migrate`   | `Azure Migrate`   |
-| `productName` | N/A — no meters in API   | N/A               |
-| `skuName`     | N/A — no meters in API   | N/A               |
-| `meterName`   | N/A — no meters in API   | N/A               |
+| `productName` | N/A, no meters in API   | N/A               |
+| `skuName`     | N/A, no meters in API   | N/A               |
+| `meterName`   | N/A, no meters in API   | N/A               |
 
 ## Cost Formula
 
@@ -50,7 +50,7 @@ Migration project costs come from dependent services:
 ## Notes
 
 - Azure Migrate hub (discovery, assessment, business case) is **completely free**
-- Server replication uses Azure Site Recovery — first **180 days free** per instance (migration-specific benefit via Azure Migrate; standalone ASR for disaster recovery offers only 31 days free), then standard ASR rates
+- Server replication uses Azure Site Recovery; first **180 days free** per instance (migration-specific benefit via Azure Migrate; standalone ASR for disaster recovery offers only 31 days free), then standard ASR rates
 - Database Migration Service Standard tier (offline) is **always free**; Premium tier (online) has vCore billing after 180 days
 - Storage consumed during replication and network egress are billed under their respective services regardless of free periods
 - Third-party ISV tools (Carbonite, Cloudamize, etc.) have separate vendor licensing outside Azure billing

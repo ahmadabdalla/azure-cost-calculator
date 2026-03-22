@@ -10,7 +10,7 @@ function Test-QueryBlockCompleteness {
     .DESCRIPTION
         Parses query blocks within the ## Query Pattern section and ensures each
         non-API block contains an explicit ServiceName: declaration. Query blocks
-        are self-contained — agents parse them individually and should not rely
+        are self-contained. Agents parse them individually and should not rely
         on preambles.
     .PARAMETER Lines
         The full set of file lines to validate.
@@ -40,7 +40,7 @@ function Test-QueryBlockCompleteness {
 
     if ($null -eq $queryPatternSection) {
         $checks.Add((New-ValidationCheck -Name 'query_block_completeness' -Pass $true `
-                    -PassMessage 'No Query Pattern section — skipped' `
+                    -PassMessage 'No Query Pattern section (skipped)' `
                     -FailMessage 'n/a'))
     }
     else {

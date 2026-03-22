@@ -38,8 +38,8 @@ function Test-FileNaming {
 
     if (-not $hasServiceName) {
         $checks.Add((New-ValidationCheck -Name 'file_naming' -Pass $true `
-                    -PassMessage 'Skipped — no serviceName in front-matter' `
-                    -FailMessage 'Skipped — no serviceName in front-matter'))
+                    -PassMessage 'Skipped (no serviceName in front-matter)' `
+                    -FailMessage 'Skipped (no serviceName in front-matter)'))
     }
     else {
         $serviceName = $FrontMatter.Fields['serviceName'].Trim()
@@ -64,7 +64,7 @@ function Test-FileNaming {
             'not in API'                                     = 'ddos-protection.md'
         }
 
-        # Split-file services: multiple files share a serviceName — accept the actual filename
+        # Split-file services: multiple files share a serviceName. Accept the actual filename
         $splitFileOverrides = @(
             'private-dns.md',       # serviceName: Azure DNS (split with dns.md)
             'private-link.md',      # serviceName: Virtual Network (split with virtual-network.md)

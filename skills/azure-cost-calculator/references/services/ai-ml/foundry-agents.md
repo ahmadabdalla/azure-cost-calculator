@@ -11,13 +11,13 @@ primaryCost: "Hosted compute (vCPU + memory × 730 hrs/mo) + per-unit SRE agent 
 
 > **Trap (serviceName)**: API `serviceName` is `Foundry Tools`, NOT `Foundry Agents`. Always filter by `ProductName` to isolate agent meters from the 300+ Foundry Tools meters.
 
-> **Trap (multiple products)**: Two `productName` values — `Foundry Agents` (compute vCPU/memory) and `Azure Agent Unit` (SRE orchestration). Queries without `ProductName` filter will mix compute and SRE meters.
+> **Trap (multiple products)**: Two `productName` values: `Foundry Agents` (compute vCPU/memory) and `Azure Agent Unit` (SRE orchestration). Queries without `ProductName` filter will mix compute and SRE meters.
 
 > **Trap (mixed units)**: Compute meters use `1 Hour` (multiply by 730), but SRE Agent Unit uses `unitOfMeasure: 1` (per-unit, not hourly). Do NOT multiply SRE cost by 730.
 
 ## Query Pattern
 
-### Hosted agent compute — vCPU
+### Hosted agent compute: vCPU
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Foundry Agents
@@ -25,7 +25,7 @@ SkuName: Hosted HOBO
 MeterName: Hosted HOBO vCPU Usage
 InstanceCount: 4 # vCPUs allocated
 
-### Hosted agent compute — memory
+### Hosted agent compute: memory
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Foundry Agents
@@ -69,7 +69,7 @@ Total:   Monthly = vCPU + Memory + SRE
 
 ## Notes
 
-- **Billing dependency**: Agent compute only — model inference (LLM tokens) billed separately via Azure OpenAI; see `openai-service.md`
+- **Billing dependency**: Agent compute only; model inference (LLM tokens) billed separately via Azure OpenAI; see `openai-service.md`
 - **Regional availability**: Compute meters in 24 regions; SRE Agent Unit in 6 regions only (eastus, eastus2, centralus, westus3, swedencentral, australiaeast)
 - **Capacity planning**: 1 unit = 1 vCPU-hour or 1 GB-hour (compute), 1 agent unit (SRE); scale `InstanceCount`/`Quantity` to match allocation
-- **Scope**: Part of Foundry Tools umbrella — see `ai-services.md` for other sub-services (Language, Vision, Speech, Translator)
+- **Scope**: Part of Foundry Tools umbrella (see `ai-services.md` for other sub-services)

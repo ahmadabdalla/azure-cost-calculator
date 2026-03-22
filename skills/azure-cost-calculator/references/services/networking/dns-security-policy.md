@@ -12,7 +12,7 @@ primaryCost: "Per 1K managed domains/month + per million DNS security queries"
 >
 > **Trap (domain unit)**: The domains meter `unitOfMeasure` is `1` but each unit represents 1,000 domain entries per the pricing page. Use `Quantity = ceil(totalDomains / 1000)` to avoid overcharging by 1,000×.
 
-> **Warning**: **Zone-based regions** — standard ARM regions (e.g., `eastus`) return nothing. Use `Region: Zone 1` with scripts or `armRegionName eq 'Zone 1'` with the API. Prices are uniform across all zones.
+> **Warning**: **Zone-based regions**: standard ARM regions (e.g., `eastus`) return nothing. Use `Region: Zone 1` with scripts or `armRegionName eq 'Zone 1'` with the API. Prices are uniform across all zones.
 
 ## Query Pattern
 

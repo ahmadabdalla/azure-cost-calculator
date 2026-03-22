@@ -8,29 +8,29 @@ privateEndpoint: true
 
 # Azure Stream Analytics
 
-> **Trap (V2 tiered pricing)**: Standard V2 and Dedicated V2 return multiple rows with tiered pricing (TierMinUnits 0, 730, 5840). The rate varies by tier — check each row's `unitPrice` and `tierMinimumUnits` to apply the correct rate per usage band. `totalMonthlyCost` sums all tiers and is misleading. Use `SkuName 'Standard'` (legacy, single flat rate) for simple estimates, or filter V2 rows by TierMinUnits for accurate tiered calculations.
+> **Trap (V2 tiered pricing)**: Standard V2 and Dedicated V2 return multiple rows with tiered pricing (TierMinUnits 0, 730, 5840). The rate varies by tier; check each row's `unitPrice` and `tierMinimumUnits` to apply the correct rate per usage band. `totalMonthlyCost` sums all tiers and is misleading. Use `SkuName 'Standard'` (legacy, single flat rate) for simple estimates, or filter V2 rows by TierMinUnits for accurate tiered calculations.
 
 > **Trap (Edge pricing)**: `Stream Analytics on Edge` uses `1/Month` billing and a different `productName`. Do not mix cloud and Edge meters in the same query.
 
 ## Query Pattern
 
-### Standard tier — single SU (legacy, flat hourly rate)
+### Standard tier: single SU (legacy, flat hourly rate)
 
 ServiceName: Stream Analytics
 SkuName: Standard
 
-### Standard tier — 6 SU deployment (InstanceCount = number of Streaming Units)
+### Standard tier: 6 SU deployment (InstanceCount = number of Streaming Units)
 
 ServiceName: Stream Analytics
 SkuName: Standard
 InstanceCount: 6
 
-### Standard V2 tier (current, tiered pricing — returns multiple rows)
+### Standard V2 tier (current, tiered pricing, returns multiple rows)
 
 ServiceName: Stream Analytics
 SkuName: Standard V2
 
-### Edge deployment — per device/month
+### Edge deployment: per device/month
 
 ServiceName: Stream Analytics
 ProductName: Stream Analytics on Edge
@@ -70,8 +70,8 @@ Edge:              Monthly = retailPrice × deviceCount
 ## Notes
 
 - **Capacity per SU**: 1 Streaming Unit ≈ 1 MB/s input throughput; complex queries (joins, aggregates, windowed functions) require more SUs for the same data volume
-- **Standard vs V2**: Standard (legacy) has a single flat hourly rate; Standard V2 (current) uses tiered pricing with three bands (TierMinUnits 0, 730, 5840) — query the API and check each row's `unitPrice` to compare
+- **Standard vs V2**: Standard (legacy) has a single flat hourly rate; Standard V2 (current) uses tiered pricing with three bands (TierMinUnits 0, 730, 5840); query the API and check each row's `unitPrice` to compare
 - **Dedicated tiers**: Same pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
 - **Edge**: Per-device monthly flat rate; runs on IoT Edge devices for local stream processing
-- **No ArmSkuName**: All meters return empty `armSkuName` — do not filter by this field
+- **No ArmSkuName**: All meters return empty `armSkuName`; do not filter by this field
 - Private endpoints require a Stream Analytics cluster (Dedicated tiers); Standard tier cloud jobs do not support PE

@@ -79,7 +79,7 @@ function Test-PriceHygiene {
             continue
         }
         if ($line -match '<!--.*-->') {
-            # Single-line HTML comment — strip it and check remainder
+            # Single-line HTML comment: strip it and check remainder
             $effective = $line -replace '<!--.*?-->', ''
         }
         elseif ($line -match '<!--') {
@@ -100,7 +100,7 @@ function Test-PriceHygiene {
         }
         if ($isExempt) { continue }
 
-        # Skip trap blockquotes — price checks in traps handled by Test-StyleCompliance
+        # Skip trap blockquotes; price checks in traps handled by Test-StyleCompliance
         if ($effective -match '^\s*>\s*\*\*Trap') { continue }
 
         # Check for hardcoded prices

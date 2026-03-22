@@ -10,18 +10,18 @@ privateEndpoint: true
 
 > **Trap (inflated totals)**: An unfiltered `ServiceName 'HDInsight'` query returns 130+ meters across 20 products spanning all VM series. The `totalMonthlyCost` sums every node size and is meaningless. Always filter by `ProductName` for the specific VM series.
 
-> **Trap (multi-node clusters)**: Each cluster has multiple node roles — topology varies by type (e.g., Hadoop: Head ×2 + Worker ×N; Spark/Kafka/HBase: Head ×2 + Worker ×N + Zookeeper ×3). Estimate each role separately.
+> **Trap (multi-node clusters)**: Each cluster has multiple node roles; topology varies by type (e.g., Hadoop: Head ×2 + Worker ×N; Spark/Kafka/HBase: Head ×2 + Worker ×N + Zookeeper ×3). Estimate each role separately.
 
 ## Query Pattern
 
-### General-purpose node — D4a v4 (per node, hourly)
+### General-purpose node: D4a v4 (per node, hourly)
 
 ServiceName: HDInsight
 ProductName: HDInsight D Series
 SkuName: D4a v4/D4as v4
 MeterName: D4a v4/D4as v4
 
-### 4-node worker tier — D4a v4 (Quantity = worker node count)
+### 4-node worker tier: D4a v4 (Quantity = worker node count)
 
 ServiceName: HDInsight
 ProductName: HDInsight D Series
@@ -29,14 +29,14 @@ SkuName: D4a v4/D4as v4
 MeterName: D4a v4/D4as v4
 Quantity: 4
 
-### Memory-optimized node — E8a v4
+### Memory-optimized node: E8a v4
 
 ServiceName: HDInsight
 ProductName: HDInsight Eav4/Easv4 Series
 SkuName: E8a v4/E8as v4
 MeterName: E8a v4/E8as v4
 
-### Kafka managed disk — Standard S30
+### Kafka managed disk: Standard S30
 
 ServiceName: HDInsight
 ProductName: HDInsight Storage
@@ -77,10 +77,10 @@ Total Monthly   = Cluster Monthly + Managed Disks + ESP Surcharge + Azure Storag
 
 ## Notes
 
-- **All-in pricing**: Node prices include both VM compute and HDInsight management surcharge — do not add separate Virtual Machines charges
-- **Cluster types**: Hadoop, Spark, HBase, Kafka, Interactive Query, Storm — node topology varies (Hadoop: Head + Worker only; others add Zookeeper ×3)
+- **All-in pricing**: Node prices include both VM compute and HDInsight management surcharge; do not add separate Virtual Machines charges
+- **Cluster types**: Hadoop, Spark, HBase, Kafka, Interactive Query, Storm; node topology varies (Hadoop: Head + Worker only; others add Zookeeper ×3)
 - **Managed disks**: Kafka and HBase Accelerated Writes require managed disks (S30 Standard or P30 Premium) under `HDInsight Storage`; all clusters use external Azure Storage (Blob/ADLS) for data
-- **Add-on surcharges**: ESP and ML Services add per-core/hour surcharges (empty-region meters — query the API directly, not via scripts); ESP also auto-provisions an ID Broker node
-- **No stop/pause**: Clusters must be deleted to stop billing — no deallocated state
+- **Add-on surcharges**: ESP and ML Services add per-core/hour surcharges (empty-region meters; query the API directly, not via scripts); ESP also auto-provisions an ID Broker node
+- **No stop/pause**: Clusters must be deleted to stop billing; no deallocated state
 - **Capacity**: Worker node count and VM size determine cluster throughput; minimum 1 worker for Hadoop/Spark, minimum 3 workers for Kafka
 - **PE sub-resources** (never-assume): `gateway`, `headnode`

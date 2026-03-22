@@ -18,13 +18,13 @@ Use the GitHub skill to collect PR details: number, author login, head branch na
 
 ### 0.2 - Collect PR comments and review comments
 
-Use the GitHub skill to fetch all PR comments and review comments. Store all comments — they may contain context about design decisions, known issues, or reviewer requests that should inform your analysis.
+Use the GitHub skill to fetch all PR comments and review comments. Store all comments; they may contain context about design decisions, known issues, or reviewer requests that should inform your analysis.
 
 ### 0.3 - Identify changed service reference files
 
-Use the GitHub skill to get the list of changed files in the PR (names only). Filter for files matching `skills/azure-cost-calculator/references/services/**/*.md`. These are the service reference files to review. Also note changes to `skills/azure-cost-calculator/references/service-routing.md` and `docs/service-catalog.md` — the review must verify routing/catalog updates are consistent.
+Use the GitHub skill to get the list of changed files in the PR (names only). Filter for files matching `skills/azure-cost-calculator/references/services/**/*.md`. These are the service reference files to review. Also note changes to `skills/azure-cost-calculator/references/service-routing.md` and `docs/service-catalog.md`. The review must verify routing/catalog updates are consistent.
 
-If no service reference files are changed, post a comment: "No service reference files found in this PR — skipping pricing review." and stop.
+If no service reference files are changed, post a comment: "No service reference files found in this PR; skipping pricing review." and stop.
 
 ### 0.4 - Create a dedicated worktree
 
@@ -55,17 +55,17 @@ For each changed service reference file, read the full content. Note:
 
 ### 1.2 - Read the PR diff
 
-Use the GitHub skill to view the full PR diff. Understand exactly what changed — added lines, removed lines, modified sections. This is critical for update/fix PRs where only specific sections changed.
+Use the GitHub skill to view the full PR diff. Understand exactly what changed: added lines, removed lines, modified sections. This is critical for update/fix PRs where only specific sections changed.
 
 ### 1.3 - Load context
 
 Read these files to understand conventions and known issues:
 
-- `CONTRIBUTING.md` — contributor guide, "The Prompt" workflow, hard rules
-- `docs/TEMPLATE.md` — canonical file structure and formatting rules
-- `skills/azure-cost-calculator/references/pitfalls.md` — known API traps
-- `skills/azure-cost-calculator/references/shared.md` — category index, constants
-- `skills/azure-cost-calculator/references/service-routing.md` — implemented services
+- `CONTRIBUTING.md`: contributor guide, "The Prompt" workflow, hard rules
+- `docs/TEMPLATE.md`: canonical file structure and formatting rules
+- `skills/azure-cost-calculator/references/pitfalls.md`: known API traps
+- `skills/azure-cost-calculator/references/shared.md`: category index, constants
+- `skills/azure-cost-calculator/references/service-routing.md`: implemented services
 
 ### 1.4 - Summarize PR context for sub-agents
 
@@ -88,7 +88,7 @@ Use the `pricing-investigator` agent. Provide it with:
 
 - The Azure service display name (from the changed file's YAML `serviceName` or H1 title)
 - The category folder name
-- **Additional review context**: "You are being invoked as part of a PR review. After completing your standard pricing investigation, also compare your findings against the following service reference file content and flag any discrepancies — incorrect filter values, missing meters, wrong billing model, inaccurate traps, or missing edge cases."
+- **Additional review context**: "You are being invoked as part of a PR review. After completing your standard pricing investigation, also compare your findings against the following service reference file content and flag any discrepancies: incorrect filter values, missing meters, wrong billing model, inaccurate traps, or missing edge cases."
 - The full content of the changed service reference file(s)
 - Any relevant PR comments
 
@@ -111,7 +111,7 @@ This second instance runs independently in its own context. It will make its own
 
 Compare both pricing investigation reports against each other and against the PR's service reference file(s).
 
-**Identify agreements** — items where both investigators reached the same conclusion:
+**Identify agreements**: items where both investigators reached the same conclusion:
 
 - Same assessment of filter value correctness (serviceName, productName, skuName, meterName)
 - Same billing model assessment
@@ -121,7 +121,7 @@ Compare both pricing investigation reports against each other and against the PR
 
 Items with unanimous agreement form your **high-confidence findings**.
 
-**Identify disagreements** — items where the investigators reached different conclusions:
+**Identify disagreements**: items where the investigators reached different conclusions:
 
 - One found a discrepancy the other didn't
 - Different billing model interpretations
@@ -171,8 +171,8 @@ Manually verify against key rules from `CONTRIBUTING.md`:
 
 If the PR touches any Azure Hybrid Benefit section, or if the changed service file has `Azure Hybrid Benefit` in `billingConsiderations`:
 
-1. Instruct the pricing-investigator sub-agents (Phase 2) to explicitly run section 4.8 of their protocol — querying compute and SQL License meters for every tier and checking for negative derived rates.
-2. A negative test subtraction (`compute − license < 0`) is evidence the additive model applies — it is not itself the blocking condition.
+1. Instruct the pricing-investigator sub-agents (Phase 2) to explicitly run section 4.8 of their protocol, querying compute and SQL License meters for every tier and checking for negative derived rates.
+2. A negative test subtraction (`compute − license < 0`) is evidence the additive model applies; it is not itself the blocking condition.
 3. Treat it as **Blocking** if the PR file documents the subtraction formula (`compute − license`) as the AHUB calculation method. The compute `retailPrice` alone is the AHUB rate; the SQL License product is needed only to calculate the full PAYG cost.
 
 This check exists because two wrong sources cross-validating each other (e.g., a service file and `shared.md` both documenting the same incorrect formula) will pass all filter-value checks while silently producing incorrect costs.
@@ -208,7 +208,7 @@ Organize findings into this format:
 ```markdown
 ## PR Review: Service Reference Quality Check
 
-**PR:** #{PR_NUMBER} — {PR_TITLE}
+**PR:** #{PR_NUMBER} ({PR_TITLE})
 **Service(s):** {service name(s)}
 **Review method:** Dual independent pricing investigation with consensus
 
@@ -294,6 +294,6 @@ git worktree remove "$WORKTREE_DIR" --force
 1. **Never modify files in the PR branch.** You are a reviewer, not an author. Your output is a review comment only.
 2. **Ground all findings in API evidence.** Every pricing accuracy claim must be backed by an actual API query result from the investigation reports.
 3. **Respect PR comments.** If the PR author or reviewers have discussed a design decision in comments, factor that into your assessment. Don't flag something as wrong if the author already explained the rationale and it's defensible.
-4. **Be specific in fix recommendations.** Don't say "fix the meter name" — say "change `meterName` from 'X' to 'Y' (API returns 'Y')."
+4. **Be specific in fix recommendations.** Don't say "fix the meter name"; say "change `meterName` from 'X' to 'Y' (API returns 'Y')."
 5. **Err on the side of reporting.** If an investigator found something unusual, include it in the review even if it's informational. The PR author can decide whether to act on it.
 6. **Clean up always.** The worktree must be removed even if the review encounters errors. Use a trap or ensure the cleanup step runs regardless of earlier failures.

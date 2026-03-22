@@ -71,7 +71,7 @@ gh issue create --title "Feature request" --body-file /tmp/issue-body.md
 rm -f /tmp/issue-body.md
 
 # WARNING: Do NOT use terminal heredocs (cat << 'EOF') to write the body file.
-# Heredocs are fragile in agent/automated contexts — special characters, backticks,
+# Heredocs are fragile in agent/automated contexts; special characters, backticks,
 # and markdown formatting corrupt the output. Always use the file creation tool instead.
 
 # RETRY SAFETY: Before retrying a failed gh issue create, verify it didn't
@@ -310,5 +310,5 @@ gh api repos/owner/repo/pulls/123/comments/{comment_id}/replies -f body="Reply t
 - Use `--json` flag for machine-readable output: `gh pr list --json number,title`
 - Set default repo: `gh repo set-default owner/repo`
 - Environment variable `GH_TOKEN` can provide auth token
-- **Prefer `--body-file`** over heredocs/`--body` for multi-line content — heredocs are fragile in agent and automated contexts (shell quoting, terminal rendering)
-- **Verify before retrying create commands** — if a `gh issue create` or `gh pr create` produces ambiguous output, check with `gh issue list --search` or `gh pr list` before running it again to avoid duplicates
+- **Prefer `--body-file`** over heredocs/`--body` for multi-line content. Heredocs are fragile in agent and automated contexts (shell quoting, terminal rendering)
+- **Verify before retrying create commands**: if a `gh issue create` or `gh pr create` produces ambiguous output, check with `gh issue list --search` or `gh pr list` before running it again to avoid duplicates

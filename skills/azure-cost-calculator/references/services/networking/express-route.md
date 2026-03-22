@@ -8,13 +8,13 @@ pricingRegion: empty-region
 
 # ExpressRoute
 
-> **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone) — the default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE.
+> **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone). The default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE.
 
 > **Trap (skuName collision)**: Standard and Premium circuits share the same `skuName` (e.g., `1 Gbps Metered Data`). The only differentiator is `meterName`. Always filter by `meterName`, not `skuName`.
 
 ## Query Pattern
 
-### Circuit — substitute {Plan}, {DataModel}, {Bandwidth} from Meter Names table
+### Circuit: substitute {Plan}, {DataModel}, {Bandwidth} from Meter Names table
 
 ServiceName: ExpressRoute
 ProductName: ExpressRoute
@@ -53,7 +53,7 @@ Total monthly    = Circuit + Egress
 
 ## Notes
 
-- **Gateway billed separately**: An ExpressRoute gateway (VNet attachment) is a separate resource — see `networking/expressroute-gateway.md` for gateway pricing
+- **Gateway billed separately**: An ExpressRoute gateway (VNet attachment) is a separate resource. See `networking/expressroute-gateway.md` for gateway pricing
 - **Metered vs Unlimited**: Metered circuits have a lower base fee but charge per-GB for outbound data; Unlimited circuits include all data transfer
 - **Standard vs Premium**: Premium adds global routing across all geopolitical regions; Standard is limited to one geopolitical region
-- **Local circuits**: Available at select peering locations only (1/2/5/10 Gbps, Unlimited Data only) — flat monthly at reduced cost
+- **Local circuits**: Available at select peering locations only (1/2/5/10 Gbps, Unlimited Data only). Flat monthly at reduced cost

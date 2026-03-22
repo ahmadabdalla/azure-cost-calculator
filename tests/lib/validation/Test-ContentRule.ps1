@@ -94,11 +94,11 @@ function Test-ContentRule {
                 -PassMessage ('Primary cost found' + $(if ($hasPrimaryCostYaml) { ' (YAML frontmatter)' } else { ' (body line)' })) `
                 -FailMessage 'Missing primaryCost in YAML frontmatter or **Primary cost**: line in body'))
 
-    # Dual primaryCost: YAML and body should not both exist — YAML replaces the body line
+    # Dual primaryCost: YAML and body should not both exist. YAML replaces the body line
     if ($hasPrimaryCostBody -and $hasPrimaryCostYaml) {
         $checks.Add((New-ValidationCheck -Name 'no_dual_primary_cost' -Pass $false `
                     -PassMessage 'n/a' `
-                    -FailMessage 'Both YAML primaryCost and body **Primary cost**: found — remove the body line (YAML replaces it)'))
+                    -FailMessage 'Both YAML primaryCost and body **Primary cost**: found. Remove the body line (YAML replaces it)'))
     }
 
     # Query Pattern uses declarative Key: Value format, not fenced code blocks

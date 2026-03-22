@@ -53,7 +53,7 @@ Invoke the `pricing-investigator` agent a third time with **identical inputs**:
 - The same Azure service display name
 - The same category folder name
 
-Three independent investigations maximize coverage — each instance may explore different search terms, discover different meters, or interpret edge cases differently. Disagreements between reports reveal areas needing closer scrutiny.
+Three independent investigations maximize coverage; each instance may explore different search terms, discover different meters, or interpret edge cases differently. Disagreements between reports reveal areas needing closer scrutiny.
 
 ### 1.4 - Invoke `compliance-reviewer`
 
@@ -85,7 +85,7 @@ Items with majority or unanimous agreement form your **high-confidence data set*
 
 ### 2.2 - Identify disagreements
 
-Flag any items where **no majority exists** — i.e., all three reports reach different conclusions:
+Flag any items where **no majority exists**, i.e., all three reports reach different conclusions:
 
 - Meters found by one investigator but not the others
 - Different billing model interpretations
@@ -197,7 +197,7 @@ If the service has an entry in `docs/service-catalog.md`, delete the entry. The 
 
 ### 5.2 - Add to routing map
 
-Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section using the format: `- {display name}: {alias1}, {alias2}`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section. Use the display name and aliases from your consensus — note the display name may differ from the API `serviceName` for split-product services.
+Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section using the format: `- {display name}: {alias1}, {alias2}`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section. Use the display name and aliases from your consensus. Note that the display name may differ from the API `serviceName` for split-product services.
 
 ---
 

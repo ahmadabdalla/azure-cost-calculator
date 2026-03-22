@@ -2,7 +2,7 @@
 serviceName: Foundry Tools
 category: ai-ml
 aliases: [Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision]
-primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour) — varies by cognitive domain."
+primaryCost: "Per-transaction pricing (per 1K records/pages/characters or per hour), varying by cognitive domain."
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -17,14 +17,14 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Language — text analytics (tiered meter)
+### Language: text analytics (tiered meter)
 
 ServiceName: Foundry Tools
 ProductName: Azure Language
 SkuName: Standard
 MeterName: Standard Text Records
 
-### Document Intelligence — 10K pages/month
+### Document Intelligence: 10K pages/month
 
 ServiceName: Foundry Tools
 ProductName: Azure Document Intelligence
@@ -32,7 +32,7 @@ SkuName: S0
 MeterName: S0 Read Pages
 Quantity: 10
 
-### Vision Face — 50K transactions/month
+### Vision Face: 50K transactions/month
 
 ServiceName: Foundry Tools
 ProductName: Azure Vision - Face
@@ -40,7 +40,7 @@ SkuName: Standard
 MeterName: Standard Transactions
 Quantity: 50
 
-### Translator — 10M characters/month
+### Translator: 10M characters/month
 
 ServiceName: Foundry Tools
 ProductName: Translator Text
@@ -54,7 +54,7 @@ Quantity: 10
 | ------------- | ------------------------------ | ---------------------------------------------------------- |
 | `serviceName` | Always `Foundry Tools`         | `Foundry Tools`                                            |
 | `productName` | Cognitive domain (sub-service) | `Azure Language`, `Azure Vision - Face`, `Translator Text` |
-| `skuName`     | Tier — varies by sub-service   | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
+| `skuName`     | Tier, varies by sub-service    | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
 
 ## Meter Names
 
@@ -77,10 +77,10 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 
 ## Notes
 
-- **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate — see `openai-service.md`
+- **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate (see `openai-service.md`)
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
-- **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day` — script auto-multiplies by 30
-- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually — exclude
+- **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day`; script auto-multiplies by 30
+- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually. Exclude
 
 ## Product Names
 
@@ -89,7 +89,7 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 | `Azure Language`              | `Standard`, `S0`–`S4`                                                                                                                       |
 | `Azure Vision - Face`         | `Standard`                                                                                                                                  |
 | `Azure Document Intelligence` | `S0`, `Free`                                                                                                                                |
-| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs — see `speech.md`                                                                                |
+| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs (see `speech.md`)                                                                                |
 | `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`                                                                                                                |
 | `Content Safety`              | `Standard`                                                                                                                                  |
 | `Anomaly Detector`            | `Standard`, `Free`                                                                                                                          |

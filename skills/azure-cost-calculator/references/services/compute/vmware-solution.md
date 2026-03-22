@@ -9,9 +9,9 @@ primaryCost: "Per-host hourly rate × node count × 730 hours/month"
 
 # Azure VMware Solution
 
-> **Trap**: API serviceName is `Specialized Compute` — always filter by productName
+> **Trap**: API serviceName is `Specialized Compute`. Always filter by productName
 
-> **Trap (VCF BYOL)**: Current SKUs use `VCF BYOL` suffix — requires separate Broadcom VCF subscription
+> **Trap (VCF BYOL)**: Current SKUs use `VCF BYOL` suffix; requires separate Broadcom VCF subscription
 
 ## Query Pattern
 
@@ -63,8 +63,8 @@ Minimum 3 hosts per cluster.
 
 - HCX Enterprise included at no extra cost
 - vSphere, vSAN, and NSX-T included in per-host price
-- Broadcom VCF subscription required separately — not in API
-- Trial nodes exist for all SKUs at zero cost — exclude from estimates
+- Broadcom VCF subscription required separately (not in API)
+- Trial nodes exist for all SKUs at zero cost. Exclude from estimates
 - AV36: single region (italynorth); AV64: broadest availability (41 regions); AV52: most limited (5 regions)
 - 5-year RI available for AV48 and AV64 only
 - Max 16 hosts/cluster, 12 clusters/private cloud (up to 192 hosts)
