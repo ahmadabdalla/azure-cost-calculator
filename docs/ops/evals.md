@@ -2,6 +2,15 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills.
 
+| Item             | Detail                                                                       |
+| ---------------- | ---------------------------------------------------------------------------- |
+| Workflow         | `.github/workflows/eval.yml`                                                 |
+| Eval suite       | `evals/azure-cost-calculator/eval.yaml`                                      |
+| Task files       | `evals/azure-cost-calculator/tasks/*.yaml`                                   |
+| Project config   | `.waza.yaml`                                                                 |
+| Auth secret      | `COPILOT_GITHUB_TOKEN` (shared with issue-triage and weekly-release)         |
+| Results artifact | Downloaded from Actions tab after a dispatch run                             |
+
 ## What it does
 
 Runs structured test cases against the skill to validate behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation protocol adherence, service routing, and trigger specificity.
@@ -25,16 +34,22 @@ curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | ba
 # Validate eval YAML (no agent execution)
 waza check
 
-# Run with mock executor (no auth required; validates eval pipeline)
-sed 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml \
-  > /tmp/eval-mock.yaml && waza run /tmp/eval-mock.yaml --verbose --output results.json
-
-# Run with Copilot SDK (use COPILOT_GITHUB_TOKEN or copilot login)
+# Run with Copilot SDK (real AI model)
+# Option 1: env var (headless, CI-compatible)
 export COPILOT_GITHUB_TOKEN="<fine-grained-pat-with-copilot-requests>"
+waza run --verbose --output results.json
+
+# Option 2: interactive login (stores token in credential store)
+copilot login
 waza run --verbose --output results.json
 
 # Run a specific tag
 waza run --tag happy-path
+
+# Compare results across models
+waza run --model claude-sonnet-4.6 -o results-sonnet.json
+waza run --model claude-opus-4.6 -o results-opus.json
+waza compare results-sonnet.json results-opus.json
 
 # Compare token budget against a baseline
 waza tokens compare origin/dev HEAD --format table
@@ -44,15 +59,21 @@ waza tokens compare origin/dev HEAD --format table
 
 Three jobs in `.github/workflows/eval.yml`:
 
-| Trigger                                      | Job                     | Executor | What runs                                                   |
-| -------------------------------------------- | ----------------------- | -------- | ----------------------------------------------------------- |
-| PR to `dev`/`main` (evals or skills changed) | `validate-eval-schema`  | n/a      | `waza check` (schema validation, no agent execution)        |
-| PR to `dev`/`main` (after schema passes)     | `evaluate-mock`         | `mock`   | `waza run` with simulated responses (validates eval pipeline) |
-| Manual dispatch                              | `run-evals`             | `copilot-sdk` | `waza run` with real AI model and optional tag filter  |
+| Trigger                                      | Job                     | Executor      | What runs                                                     |
+| -------------------------------------------- | ----------------------- | ------------- | ------------------------------------------------------------- |
+| PR to `dev`/`main` (evals or skills changed) | `validate-eval-schema`  | n/a           | `waza check` (schema validation, no agent execution)          |
+| PR to `dev`/`main` (after schema passes)     | `evaluate-mock`         | `mock`        | `waza run` with simulated responses (validates eval pipeline) |
+| Manual dispatch                              | `run-evals`             | `copilot-sdk` | `waza run` with real AI model and optional tag filter         |
 
-The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Positive tests (happy path, disambiguation, alias routing) will fail under mock because the simulated response does not contain real AI output; this is expected. Negative tests (trigger mode: negative) pass because mock does not activate skills. The mock job uses `continue-on-error: true` so failures appear in the summary without blocking the PR.
+### Mock executor (PR checks)
 
-The Copilot SDK executor (`run-evals`) uses the `COPILOT_GITHUB_TOKEN` secret (same fine-grained PAT with "Copilot Requests" permission used by issue-triage and weekly-release workflows). The embedded Copilot CLI reads this env var for headless authentication.
+The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Positive tests (happy path, disambiguation, alias routing) fail under mock because the simulated response does not contain real AI output; this is expected. Negative tests (trigger mode: negative) pass because mock does not activate skills. The mock job uses `continue-on-error: true` so failures appear in the summary without blocking the PR.
+
+### Copilot SDK executor (dispatch)
+
+The Copilot SDK executor runs real AI model evaluations. Authentication uses the `COPILOT_GITHUB_TOKEN` secret: a fine-grained PAT with "Copilot Requests" permission (same secret used by the issue-triage and weekly-release workflows). The embedded Copilot CLI checks env vars in order of precedence: `COPILOT_GITHUB_TOKEN`, `GH_TOKEN`, `GITHUB_TOKEN`.
+
+Results are uploaded as downloadable artifacts (retained 30 days) and displayed in the GitHub Actions Step Summary.
 
 ## Grader types in use
 
@@ -77,12 +98,16 @@ The Copilot SDK executor (`run-evals`) uses the `COPILOT_GITHUB_TOKEN` secret (s
 
 | Limitation                                                                       | Impact                                  | Mitigation                                                                               |
 | -------------------------------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Prompt grader timeout (default 60s) may be too short for judge model evaluation  | Tasks with long responses fail grading  | Increase `timeout_seconds` in eval config or task-level overrides                        |
+| Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions     | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
 | SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block   | Intentional: skill carries domain-specific reference architecture                        |
 | `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings                | Project convention; not blocking for evals                                               |
-| Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions     | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
-| No workspace debugging for program graders                                       | Slow debugging for script-based graders | Emit diagnostic stdout before assertions                                                 |
 
 ## References
 
-- [Waza docs](https://microsoft.github.io/waza/)
-- [Waza getting started](https://github.com/microsoft/waza/blob/main/docs/GETTING-STARTED.md)
+- [Waza documentation](https://microsoft.github.io/waza/)
+- [Getting started guide](https://github.com/microsoft/waza/blob/main/docs/GETTING-STARTED.md)
+- [CI/CD integration guide](https://github.com/microsoft/waza/blob/main/docs/SKILLS_CI_INTEGRATION.md)
+- [Integration testing (Copilot SDK)](https://github.com/microsoft/waza/blob/main/docs/INTEGRATION-TESTING.md)
+- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/main/schemas/eval.schema.json)
+- [Task schema](https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json)
