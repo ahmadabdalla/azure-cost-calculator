@@ -49,7 +49,8 @@ jobs:
       - name: Install waza
         run: curl -fsSL https://raw.githubusercontent.com/microsoft/waza/main/install.sh | bash
       - name: Override executor to mock
-        run: sed -i 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
+        run: |
+          sed -i 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
       - name: Run evaluations (mock)
         run: waza run --verbose --output results.json
       - name: Display results summary
