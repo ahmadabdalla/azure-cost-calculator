@@ -78,7 +78,7 @@ VNetBased    = vnet_retailPrice × 730 × managedVNetCount
 SubBased     = sub_retailPrice × 730 × managedSubCount
 IPAM         = ipam_retailPrice × 730 × managedIPCount
 Verifier     = verifier_retailPrice × analysisRuns
-Monthly      = (VNetBased or SubBased) + IPAM + Verifier
+Monthly      = sum of enabled components (each is independent)
 ```
 
 ## Notes
@@ -86,6 +86,6 @@ Monthly      = (VNetBased or SubBased) + IPAM + Verifier
 - **Billing model choice is never-assume**. Subscription-based vs VNet-based are mutually exclusive; new instances default to VNet-based; subscription-based retires Feb 2028
 - **VNet peering billed separately**. Connectivity configurations (mesh/hub-spoke) create peerings charged under `Virtual Network Peering`; see `networking/virtual-network.md`
 - **Reachability Analysis is per-call**. Set `Quantity` to runs/month; the script returns `retailPrice × Quantity` correctly, but defaults to a single call when `Quantity` is omitted
-- **IPAM sub-cent pricing**. Managed IP Management is sub-cent per hour; use `retailPrice` directly for accurate cost
+- **IPAM is independently billable**. IPAM does not require connectivity or security configurations; customers using only IPAM pay Managed IP Management charges without VNet/subscription management fees. Rate is sub-cent per hour; use `retailPrice` directly
 - **Legacy product exists**. API also contains `productName: Virtual Network Manager` (no "Azure" prefix) with Zone-based pricing; use `Azure Virtual Network Manager` for current pricing
 - Capacity: 1 managed VNet = one VNet with active AVNM configuration deployed; multiple configs from the same instance on one VNet = single charge
