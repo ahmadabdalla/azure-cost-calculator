@@ -29,8 +29,8 @@ waza check
 sed 's/executor: copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml \
   > /tmp/eval-mock.yaml && waza run /tmp/eval-mock.yaml --verbose --output results.json
 
-# Run with Copilot SDK (requires copilot login)
-copilot login
+# Run with Copilot SDK (use COPILOT_GITHUB_TOKEN or copilot login)
+export COPILOT_GITHUB_TOKEN="<fine-grained-pat-with-copilot-requests>"
 waza run --verbose --output results.json
 
 # Run a specific tag
@@ -52,7 +52,7 @@ Three jobs in `.github/workflows/eval.yml`:
 
 The mock executor simulates agent responses without authentication. It validates eval YAML parsing, grader configuration, and the end-to-end pipeline. Positive tests (happy path, disambiguation, alias routing) will fail under mock because the simulated response does not contain real AI output; this is expected. Negative tests (trigger mode: negative) pass because mock does not activate skills. The mock job uses `continue-on-error: true` so failures appear in the summary without blocking the PR.
 
-The Copilot SDK executor (`run-evals`) requires authentication that the default `GITHUB_TOKEN` does not provide. The embedded Copilot CLI needs `copilot login` credentials, which cannot be obtained non-interactively in standard GitHub Actions runners. This job is dispatch-only and serves as a template until headless CI auth is supported by Waza.
+The Copilot SDK executor (`run-evals`) uses the `COPILOT_GITHUB_TOKEN` secret (same fine-grained PAT with "Copilot Requests" permission used by issue-triage and weekly-release workflows). The embedded Copilot CLI reads this env var for headless authentication.
 
 ## Grader types in use
 
@@ -77,7 +77,6 @@ The Copilot SDK executor (`run-evals`) requires authentication that the default 
 
 | Limitation                                                                       | Impact                                  | Mitigation                                                                               |
 | -------------------------------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Copilot SDK executor requires `copilot login` (interactive)                      | Cannot run real evals in headless CI    | Mock executor validates pipeline; copilot-sdk runs locally or when CI auth is supported   |
 | SKILL.md exceeds Waza's 500-token agentskills.io recommendation (3800 tokens)    | `waza check` warns but does not block   | Intentional: skill carries domain-specific reference architecture                        |
 | `argument-hint` and `compatibility` frontmatter diverge from agentskills.io spec | Spec compliance warnings                | Project convention; not blocking for evals                                               |
 | Prompt grader variance on borderline cost values                                 | Flaky results on numeric assertions     | Use `code` grader for numeric checks; reserve `prompt` grader for qualitative assessment |
