@@ -10,7 +10,7 @@ Unless otherwise noted, commands on this page are **session commands**; run them
 | Concept         | Description                                                                                                                                                                                       |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Plugin**      | A package that bundles one or more skills, agents, hooks, MCP servers, or LSP servers.                                                                                                            |
-| **Marketplace** | A catalog of plugins you can browse and install, like an app store.                                                                                                                              |
+| **Marketplace** | A catalog of plugins you can browse and install, like an app store.                                                                                                                               |
 | **Scope**       | Where a plugin or skill is available. Both platforms support **personal** (all projects) and **project** (shared via repo) scopes. Claude Code adds a **local** scope (project-only, gitignored). |
 
 ---
@@ -18,9 +18,7 @@ Unless otherwise noted, commands on this page are **session commands**; run them
 <details>
 <summary><h2>GitHub Copilot CLI</h2></summary>
 
-### Command reference
-
-#### Plugin commands
+### Plugin commands
 
 | Action                | Command                            |
 | --------------------- | ---------------------------------- |
@@ -33,7 +31,7 @@ Unless otherwise noted, commands on this page are **session commands**; run them
 
 > Copilot CLI uses just the plugin **name** (from `plugin.json`); no marketplace suffix needed for most commands.
 
-#### Marketplace commands
+### Marketplace commands
 
 | Action | Command                                  |
 | ------ | ---------------------------------------- |
@@ -122,9 +120,7 @@ Verify it's gone:
 <details>
 <summary><h2>Claude Code</h2></summary>
 
-### Claude Code command reference
-
-#### Claude Code plugin commands
+### Claude Code plugin commands
 
 | Action                   | Command                                  |
 | ------------------------ | ---------------------------------------- |
@@ -139,7 +135,7 @@ Verify it's gone:
 
 **Shortcuts:** `/plugin market` works in place of `/plugin marketplace`. `rm` works in place of `remove`.
 
-#### Claude Code marketplace commands
+### Claude Code marketplace commands
 
 | Action | Command                                  |
 | ------ | ---------------------------------------- |
