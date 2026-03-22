@@ -9,7 +9,7 @@ pricingRegion: global
 
 # Virtual Network Manager
 
-> **Warning**: Virtual Network Manager pricing is **Global-only**. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`. Prices are USD-only.
+> **Warning**: Virtual Network Manager pricing is **Global-only**. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`.
 
 > **Trap (shared serviceName)**: API `serviceName` is `Virtual Network`, shared with IP Addresses, VNet Peering, Private Link, and others. Always include `ProductName: Azure Virtual Network Manager` to isolate AVNM meters.
 
