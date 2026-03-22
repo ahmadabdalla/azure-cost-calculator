@@ -4,7 +4,7 @@ category: compute
 aliases: [HPC Batch, Batch Compute]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances, Spot Pricing]
-primaryCost: "No Batch fee — pay for VM compute, storage, and networking resources"
+primaryCost: "No Batch fee. Pay for VM compute, storage, and networking resources"
 hasMeters: false
 privateEndpoint: true
 ---
@@ -15,7 +15,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Pool nodes — price as Virtual Machines (e.g., 4-node D4s v5 pool)
+### Pool nodes: price as Virtual Machines (e.g., 4-node D4s v5 pool)
 
 ServiceName: Virtual Machines
 ArmSkuName: Standard_D4s_v5
@@ -37,7 +37,7 @@ InstanceCount: 4
 
 | Meter                      | unitOfMeasure | Notes                                                                                                                                         |
 | -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority — use `skuName` to select pricing tier |
+| _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority. Use `skuName` to select pricing tier |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
 
@@ -55,8 +55,8 @@ Job cost = VM_retailPrice × hoursPerJob × nodeCount × jobsPerMonth
 
 ## Notes
 
-- **Spot nodes** offer up to 90% discount but can be evicted at any time — best for fault-tolerant HPC and rendering workloads
+- **Spot nodes** offer up to 90% discount but can be evicted at any time; best for fault-tolerant HPC and rendering workloads
 - **Low Priority nodes** (classic pools) offer up to 80% discount with similar eviction risk
-- Batch supports auto-scale pools — estimate average node count rather than peak for monthly cost
+- Batch supports auto-scale pools; estimate average node count rather than peak for monthly cost
 - Common HPC VM sizes: `Standard_HB120rs_v3` (HPC), `Standard_NC24ads_A100_v4` (GPU), `Standard_D16s_v5` (general)
 - Capacity planning: 1 Batch node = 1 VM; node count × hours determines compute cost

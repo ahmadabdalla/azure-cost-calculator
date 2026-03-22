@@ -9,11 +9,11 @@ pricingRegion: global
 
 # Azure Route Server
 
-> **Warning**: Route Server pricing is **Global-only** — querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`. Prices are USD-only.
+> **Warning**: Route Server pricing is **Global-only**. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`. Prices are USD-only.
 
-> **Trap**: Unfiltered queries sum the base gateway and routing infrastructure unit meters — `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
+> **Trap**: Unfiltered queries sum the base gateway and routing infrastructure unit meters. `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 
-> **Trap (scaling units)**: The base gateway price includes **2 routing infrastructure units** supporting 4,000 VMs. The `Routing Infrastructure Unit` meter is for **additional** units only. Do NOT add 2 × unit cost to the base — those are already included.
+> **Trap (scaling units)**: The base gateway price includes **2 routing infrastructure units** supporting 4,000 VMs. The `Routing Infrastructure Unit` meter is for **additional** units only. Do NOT add 2 × unit cost to the base. Those are already included.
 
 ## Query Pattern
 
@@ -42,7 +42,7 @@ MeterName: Basic Gateway
 Region: Global
 InstanceCount: 3
 
-> **Note**: When estimating multiple Route Server instances, apply `InstanceCount` to both the gateway and scaling unit queries — each deployment bills independently.
+> **Note**: When estimating multiple Route Server instances, apply `InstanceCount` to both the gateway and scaling unit queries. Each deployment bills independently.
 
 ## Key Fields
 
@@ -71,10 +71,10 @@ Total monthly         = (Gateway + Scaling units) × instanceCount
 
 ## Notes
 
-- **Always-on cost**: Route Server bills per-hour from deployment — minimum monthly cost even with zero BGP sessions
+- **Always-on cost**: Route Server bills per-hour from deployment. Minimum monthly cost even with zero BGP sessions
 - **Default capacity**: Base deployment includes 2 routing infrastructure units supporting up to 4,000 VMs in the VNet and peered VNets
 - **Scaling**: The base deployment includes 2 routing infrastructure units. Beyond 4,000 VMs in the VNet and peered VNets, Route Server automatically scales by 1 unit per additional 1,000 VMs (e.g., 5,000 VMs = 1 additional unit, 6,000 VMs = 2 additional units; max 50,000 VMs total = 46 additional units)
 - **BGP limits**: Max 8 BGP peers per Route Server, 4,000 routes per BGP peer, 500 peered VNets
-- **Public IP required**: Each Route Server requires a Standard Static Public IP — billed separately under IP Addresses
+- **Public IP required**: Each Route Server requires a Standard Static Public IP, billed separately under IP Addresses
 - **Data transfer**: Route Server does not charge for routes processed or BGP sessions; NVA traffic egress is billed separately under Bandwidth
 - **Related services**: Commonly deployed alongside VPN Gateway or ExpressRoute for transit routing scenarios

@@ -42,7 +42,7 @@ EOF
 ---
 Issue references: #123, #456"
 
-    # Default jq mock — returns version from plugin.json
+    # Default jq mock: returns version from plugin.json
     create_mock "jq" "1.5.0"
 }
 

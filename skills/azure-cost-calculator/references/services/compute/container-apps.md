@@ -9,24 +9,24 @@ privateEndpoint: true
 
 # Azure Container Apps
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU — always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730 — use `UnitPrice` from API results directly. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Use `UnitPrice` from API results directly. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
 
 ## Query Pattern
 
-### Consumption (Standard) — per-second billing (use UnitPrice from API)
+### Consumption (Standard): per-second billing (use UnitPrice from API)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: Standard
 
-### Dedicated — per-hour billing (InstanceCount = workload profile instances)
+### Dedicated: per-hour billing (InstanceCount = workload profile instances)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: Dedicated
 InstanceCount: 3
 
-### Hybrid — per-hour billing (Arc-enabled environments)
+### Hybrid: per-hour billing (Arc-enabled environments)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
@@ -61,7 +61,7 @@ Dedicated:
   Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
 ```
 
-> **Agent instruction**: For Consumption, if request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s` — never assume 730 × 3600 (always-on) for Standard SKU.
+> **Agent instruction**: For Consumption, if request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s`. Never assume 730 × 3600 (always-on) for Standard SKU.
 
 ## Notes
 

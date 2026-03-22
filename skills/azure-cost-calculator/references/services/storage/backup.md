@@ -13,14 +13,14 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Azure VM backup — 10 protected VMs
+### Azure VM backup: 10 protected VMs
 
 ServiceName: Backup
 SkuName: Azure VM
 MeterName: Azure VM Protected Instances
 InstanceCount: 10
 
-### Backup storage — 500 GB LRS
+### Backup storage: 500 GB LRS
 
 ServiceName: Backup
 SkuName: Standard
@@ -71,13 +71,13 @@ Example: 10 VMs with 500 GB LRS storage
 
 ## Notes
 
-- Storage is billed separately from the protected instance fee — always query both components
-- Redundancy options: LRS, GRS, ZRS, RA-GRS — each has a different storage rate
+- Storage is billed separately from the protected instance fee; always query both components
+- Redundancy options: LRS, GRS, ZRS, RA-GRS; each has a different storage rate
 - Archive tier offers lower storage cost but applies to long-term retention points only; early delete fees apply
 - Reserved capacity available via `productName = 'Backup Reserved Capacity'` for 100 TB or 1 PB commitments (1-Year / 3-Year)
 - Protected instance fees vary significantly by workload: VM/Files are lower-cost per protected instance, SQL is mid-range, and SAP HANA/ASE are among the highest-cost options
 - First 31 days of Azure VM backup storage (up to 50 GB per VM) are free (not reflected in API)
-- **Cosmos DB vault backup vs native PITR**: Azure Backup vault protects Cosmos DB using standard vault storage meters (e.g., `LRS Data Stored` under `skuName: Standard`). There is no Cosmos DB-specific workload SKU. Do NOT confuse with Cosmos DB native PITR (`serviceName: Azure Cosmos DB`, `productName: Azure Cosmos DB - PITR`) which is ~9× more expensive per-GB — see `databases/cosmos-db.md`
+- **Cosmos DB vault backup vs native PITR**: Azure Backup vault protects Cosmos DB using standard vault storage meters (e.g., `LRS Data Stored` under `skuName: Standard`). There is no Cosmos DB-specific workload SKU. Do NOT confuse with Cosmos DB native PITR (`serviceName: Azure Cosmos DB`, `productName: Azure Cosmos DB - PITR`) which is ~9× more expensive per-GB; see `databases/cosmos-db.md`
 
 ## Reserved Instance Pricing
 

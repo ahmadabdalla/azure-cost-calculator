@@ -8,20 +8,20 @@ privateEndpoint: true
 
 # Power BI Embedded
 
-> **Trap (inflated totals)**: An unfiltered `ServiceName: Power BI Embedded` query returns all A-SKU sizes summed together — always include `SkuName` to isolate a single node type.
+> **Trap (inflated totals)**: An unfiltered `ServiceName: Power BI Embedded` query returns all A-SKU sizes summed together; always include `SkuName` to isolate a single node type.
 
-> **Trap (A7/A8 limited regions)**: A7 and A8 SKUs exist only in Global, germanynorth, germanywestcentral, and usgovvirginia. Querying standard commercial regions returns empty results — use `Region: Global` for reference pricing.
+> **Trap (A7/A8 limited regions)**: A7 and A8 SKUs exist only in Global, germanynorth, germanywestcentral, and usgovvirginia. Querying standard commercial regions returns empty results; use `Region: Global` for reference pricing.
 
 ## Query Pattern
 
-### A4 node — single capacity (8 vCores, 25 GB RAM)
+### A4 node: single capacity (8 vCores, 25 GB RAM)
 
 ServiceName: Power BI Embedded
 ProductName: Power BI Embedded
 SkuName: A4
 MeterName: A4 Node
 
-### A4 node — 3-node deployment (InstanceCount = number of capacities)
+### A4 node: 3-node deployment (InstanceCount = number of capacities)
 
 ServiceName: Power BI Embedded
 ProductName: Power BI Embedded
@@ -29,7 +29,7 @@ SkuName: A4
 MeterName: A4 Node
 InstanceCount: 3
 
-### A7 node — limited region availability
+### A7 node: limited region availability
 
 ServiceName: Power BI Embedded
 ProductName: Power BI Embedded
@@ -68,7 +68,7 @@ Monthly = retailPrice × 730 × nodeCount
 ## Notes
 
 - **Capacity planning**: Each A-SKU doubles vCores from the previous (A1=1, A2=2, A3=4, A4=8, A5=16, A6=32, A7=64, A8=128); RAM scales proportionally
-- **Paused capacity**: Billing stops entirely when capacity is paused — content is unavailable while paused
+- **Paused capacity**: Billing stops entirely when capacity is paused; content is unavailable while paused
 - **No reserved instances**: RI is not available; consider Microsoft Fabric F-SKUs (which support RI) for long-term commitments
-- **Workspace Collection (legacy)**: `Power BI Workspace Collection` uses per-session tiered pricing and is deprecated — use A-SKU nodes for new deployments
-- **Power BI Premium distinction**: EM/P-SKUs under serviceName `Power BI` are M365-licensed (API returns zero price) — do not mix with A-SKU queries
+- **Workspace Collection (legacy)**: `Power BI Workspace Collection` uses per-session tiered pricing and is deprecated; use A-SKU nodes for new deployments
+- **Power BI Premium distinction**: EM/P-SKUs under serviceName `Power BI` are M365-licensed (API returns zero price); do not mix with A-SKU queries

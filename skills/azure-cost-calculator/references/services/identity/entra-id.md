@@ -13,26 +13,26 @@ hasKnownRates: true
 
 > **Warning**: Microsoft Entra ID has **no meters** in the Azure Retail Prices API. All tiers (Free, P1, P2) return zero results. Use the published rates below.
 >
-> **Agent instruction**: Do NOT query the pricing scripts — they return zero results. Use the Known Rates table to estimate. Report 0 cost for Free tier. For P1/P2, multiply the per-user rate by user count.
+> **Agent instruction**: Do NOT query the pricing scripts; they return zero results. Use the Known Rates table to estimate. Report 0 cost for Free tier. For P1/P2, multiply the per-user rate by user count.
 
-> **Trap**: Do not confuse `Microsoft Entra ID` (this service — identity platform, no API meters) with `Microsoft Entra` (External ID / CIAM — separate service with consumption meters) or `Microsoft Entra Domain Services` (managed AD DS — separate service with hourly meters).
+> **Trap**: Do not confuse `Microsoft Entra ID` (this service, the identity platform, no API meters) with `Microsoft Entra` (External ID / CIAM, separate service with consumption meters) or `Microsoft Entra Domain Services` (managed AD DS, separate service with hourly meters).
 
 ## Query Pattern
 
-### No pricing meters exist — included for validation only
+### No pricing meters exist: included for validation only
 
 ServiceName: Microsoft Entra ID
 Quantity: 50  # number of licensed users
 
-### Expected: 0 results — this service has no retail meters
+### Expected: 0 results; this service has no retail meters
 
 ## Key Fields
 
 | Parameter     | How to determine            | Example values       |
 | ------------- | --------------------------- | -------------------- |
 | `serviceName` | Always `Microsoft Entra ID` | `Microsoft Entra ID` |
-| `productName` | N/A — no meters in API      | N/A                  |
-| `skuName`     | N/A — no meters in API      | N/A                  |
+| `productName` | N/A, no meters in API      | N/A                  |
+| `skuName`     | N/A, no meters in API      | N/A                  |
 
 ## Cost Formula
 
@@ -45,8 +45,8 @@ Free: Monthly(Free) = per_user_rate(Free) × userCount
 
 ## Notes
 
-- **Free tier** is included with every Azure subscription — covers SSO for unlimited apps, basic MFA via security defaults, and self-service password change
-- **P1/P2 licensing**: Sold per-user/month with annual commitment; also bundled in M365 E3/E5 — check existing licenses before estimating standalone cost
+- **Free tier** is included with every Azure subscription; covers SSO for unlimited apps, basic MFA via security defaults, and self-service password change
+- **P1/P2 licensing**: Sold per-user/month with annual commitment; also bundled in M365 E3/E5; check existing licenses before estimating standalone cost
 - P1 adds Conditional Access policies, group-based MFA, SSPR writeback, and App Proxy
 - P2 adds risk-based Conditional Access (Identity Protection), Privileged Identity Management (PIM), and access reviews
 - Related services billed separately: `Microsoft Entra Domain Services` (managed AD DS), `Microsoft Entra` (External ID / CIAM), `Multi-Factor Authentication` (legacy per-authentication billing)

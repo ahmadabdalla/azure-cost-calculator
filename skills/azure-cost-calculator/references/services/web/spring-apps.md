@@ -15,11 +15,11 @@ privateEndpoint: true
 
 > **Trap (Enterprise dual billing)**: Enterprise has infrastructure + VMware Tanzu licensing as separate meters. Query `Enterprise vCPU and Memory Group Duration` and `Enterprise VMware IP` separately. VMware IP is per-vCPU of user apps, not per instance.
 
-> **Trap (GB Hour MonthlyCost)**: Overage memory meters use `1 GB Hour` units. The script does not auto-convert this — `MonthlyCost` will be incorrect. Calculate manually: `retailPrice × GB × 730`.
+> **Trap (GB Hour MonthlyCost)**: Overage memory meters use `1 GB Hour` units. The script does not auto-convert this; `MonthlyCost` will be incorrect. Calculate manually: `retailPrice × GB × 730`.
 
 ## Query Pattern
 
-### {SkuName} tier — base group (use InstanceCount for multi-app deployments)
+### {SkuName} tier: base group (use InstanceCount for multi-app deployments)
 
 ServiceName: Azure Spring Cloud
 ProductName: Azure Spring Apps
@@ -35,7 +35,7 @@ SkuName: Enterprise
 MeterName: Enterprise VMware IP
 Quantity: {totalVCPUs}
 
-### Standard Consumption — query each: vCPU, memory, requests
+### Standard Consumption: query each: vCPU, memory, requests
 
 ServiceName: Azure Spring Cloud
 ProductName: Azure Spring Apps
@@ -72,7 +72,7 @@ Repeat with MeterName: `Standard Consumption Memory Active Usage` (Quantity: {av
 | `Standard Consumption Memory Active Usage` | `Standard Consumption` | `1 GiB Hour` | Serverless active memory |
 | `Standard Consumption Requests` | `Standard Consumption` | `1M` | Per million requests |
 
-Overage memory meters for Standard/Enterprise use same rates. Standard Consumption also has idle vCPU/memory, Eureka, and Config Server meters — query with the same pattern above.
+Overage memory meters for Standard/Enterprise use same rates. Standard Consumption also has idle vCPU/memory, Eureka, and Config Server meters; query with the same pattern above.
 
 ## Cost Formula
 
@@ -96,5 +96,5 @@ Standard Consumption:
 - **Free grant**: 50 vCPU-hours + 100 memory GB-hours per month (Basic/Standard/Enterprise pool). Standard Consumption: 50 vCPU-hours + 100 GiB-hours + 2M requests (shared with Container Apps environment).
 - **Tier base resources**: Basic: 2 vCPU + 4 GB per instance. Standard/Enterprise: 6 vCPU + 12 GB. Overage vCPU/memory charged beyond included amounts.
 - **Enterprise**: Infrastructure + VMware Tanzu licensing. Tanzu IP charged per total vCPU of running user apps. Standard Consumption: serverless active/idle vCPU + memory + per-request; managed components (Config Server, Eureka) at hourly rates.
-- **Standard Dedicated plan**: Uses Azure Container Apps Dedicated workload profile billing — no Spring Apps meters. Query `Azure Container Apps` serviceName instead.
-- **Private Endpoints**: Supported on Standard and Enterprise tiers — not available on Basic.
+- **Standard Dedicated plan**: Uses Azure Container Apps Dedicated workload profile billing; no Spring Apps meters. Query `Azure Container Apps` serviceName instead.
+- **Private Endpoints**: Supported on Standard and Enterprise tiers. Not available on Basic.

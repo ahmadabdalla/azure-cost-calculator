@@ -11,13 +11,13 @@ privateEndpoint: true
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all tiers, add-ons, and AI enrichment meters summed in `totalMonthlyCost`. Always include `SkuName` to isolate a single tier.
 
-> **Trap (CC variants)**: Each tier has a customer-controlled encryption variant (e.g., `Standard S1 CC`). These are separate SKUs with higher prices — do not confuse with the standard tier.
+> **Trap (CC variants)**: Each tier has a customer-controlled encryption variant (e.g., `Standard S1 CC`). These are separate SKUs with higher prices; do not confuse with the standard tier.
 
-> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. The script now auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30` — that would overcount by 30x.
+> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. The script now auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30`; that would overcount by 30x.
 
 ## Query Pattern
 
-### {SkuName} tier — use InstanceCount for multi-SU deployments
+### {SkuName} tier: use InstanceCount for multi-SU deployments
 
 ServiceName: Azure Cognitive Search
 SkuName: {SkuName}
@@ -36,7 +36,7 @@ MeterName: Semantic Ranker Unit
 | ------------- | ------------------------------------ | ------------------------------------------------------------- |
 | `serviceName` | Always `Azure Cognitive Search`      | `Azure Cognitive Search`                                      |
 | `productName` | Always `Azure AI Search`             | `Azure AI Search`                                             |
-| `skuName`     | Tier name — selects the pricing tier | `Basic`, `Standard S1`, `Standard S2`, `Standard S3`          |
+| `skuName`     | Tier name, selects the pricing tier | `Basic`, `Standard S1`, `Standard S2`, `Standard S3`          |
 | `meterName`   | Tier name + `Unit` suffix            | `Basic Unit`, `Standard S1 Unit`, `Storage Optimized L1 Unit` |
 
 ## Meter Names
@@ -69,4 +69,4 @@ Total = Monthly Base + Semantic
 - **Free tier**: 1 index, 50 MB storage, no SLA. Use `skuName='Free'`.
 - **Tier limits**: Basic supports up to 3 replicas, 1 partition. Standard tiers support up to 12 replicas, 12 partitions. L1/L2 support up to 12 replicas, 12 partitions.
 - **Semantic Ranker**: Billed daily, not hourly. Script auto-multiplies `1/Day` by 30. Also has per-query overage meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`).
-- **Private Endpoints**: Supported on Basic tier and above — not available on the Free tier.
+- **Private Endpoints**: Supported on Basic tier and above. Not available on the Free tier.

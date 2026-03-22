@@ -99,7 +99,7 @@ Before documenting traps, run these mandatory checks:
 3. **RI availability**: Run one query with `-PriceType Reservation`. If it returns results, add `Reserved Instances` to the `billingConsiderations` YAML field. If `skuName` differs from consumption queries (e.g., `vCore` vs `8 vCore`), document the difference. If zero results, do not add Reserved Instances - absence signals RI is unavailable.
 4. **Per-tier meter differences**: Test each tier independently. Document any meters that exist in one tier but not another (e.g., Capture only in Standard, not Basic).
 5. **Billing dependencies**: If the service's meters only cover a platform fee, orchestration charge, or analysis layer (no compute/storage/memory meters), identify which Azure service provides the underlying infrastructure and add it to the `billingNeeds` YAML field.
-6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`. If Azure Hybrid Benefit applies, verify the billing model per `shared.md` — for VMs, the Linux rate IS the AHUB rate; for SQL (Database / MI), the compute meter IS the AHUB rate (license is a separate additive meter, not a value to subtract). After querying compute and SQL License meters for **every tier**, compute `compute_retailPrice − sql_license_retailPrice` for each tier. A negative result (license rate > compute rate) proves the subtraction model is wrong — the additive model applies (AHUB = compute only, PAYG = compute + license).
+6. **Licensing/entitlement variants**: If the service has pricing variants tied to licensing (e.g., Azure Hybrid Benefit, M365 / Windows per-user licensing) or supports Spot/Low Priority pricing, add the appropriate values to `billingConsiderations`. If Azure Hybrid Benefit applies, verify the billing model per `shared.md`: for VMs, the Linux rate IS the AHUB rate; for SQL (Database / MI), the compute meter IS the AHUB rate (license is a separate additive meter, not a value to subtract). After querying compute and SQL License meters for **every tier**, compute `compute_retailPrice − sql_license_retailPrice` for each tier. A negative result (license rate > compute rate) proves the subtraction model is wrong; the additive model applies (AHUB = compute only, PAYG = compute + license).
 7. **Private endpoint support**: Check [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview#availability). If supported, set `privateEndpoint: true` in YAML. Only add a Notes bullet when there are tier restrictions/caveats (e.g., Premium required) or multiple PE sub-resources to list as never-assume parameters.
 
 Then, from the API results, identify any additional pricing traps. Common ones include:
@@ -151,8 +151,8 @@ All paths above are given from the repo root.
 
 After the AI generates the service reference file:
 
-1. **Add to routing map** — add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section, using the format: `- Service Display Name: alias1, alias2`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section.
-2. **Remove from catalog** — if the service was listed in `docs/service-catalog.md`, delete its entry. The catalog tracks only pending (unimplemented) services. Both the routing map and the catalog maintain entries in alphabetical order within each category.
+1. **Add to routing map**: Add the service entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section, using the format: `- Service Display Name: alias1, alias2`. **Insert the entry in alphabetical order** (ascending, A–Z by display name) within its category section.
+2. **Remove from catalog**: If the service was listed in `docs/service-catalog.md`, delete its entry. The catalog tracks only pending (unimplemented) services. Both the routing map and the catalog maintain entries in alphabetical order within each category.
 
 ### 2. Validate locally
 
@@ -175,20 +175,20 @@ Push your branch and open a pull request. CI runs the validation automatically.
 
 When a service reference file has incorrect pricing data or missing information (issues labeled `pricing-inaccuracy`):
 
-1. **Locate the file** — find the existing reference in `skills/azure-cost-calculator/references/services/{category}/`.
-2. **Verify current API data** — run the exploration script to check current pricing:
+1. **Locate the file**: Find the existing reference in `skills/azure-cost-calculator/references/services/{category}/`.
+2. **Verify current API data**: Run the exploration script to check current pricing:
    ```powershell
    skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{apiServiceName if present, otherwise serviceName from file YAML}'
    ```
-3. **Compare and update** — compare API results against the file's query patterns, meter names, and key fields. Update any values that have changed.
-4. **Validate** — run the validation script:
+3. **Compare and update**: Compare API results against the file's query patterns, meter names, and key fields. Update any values that have changed.
+4. **Validate**: Run the validation script:
    ```powershell
    tests/Validate-ServiceReference.ps1 `
        -Path skills/azure-cost-calculator/references/services/{category}/{filename}.md `
        -CheckAliasUniqueness `
        -CheckRoutingFileSync
    ```
-5. **Submit your PR** — push your branch and open a pull request. No routing map changes are needed for fixes to existing files.
+5. **Submit your PR**: Push your branch and open a pull request. No routing map changes are needed for fixes to existing files.
 
 ## Reviewing the Output
 

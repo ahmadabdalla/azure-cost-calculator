@@ -12,11 +12,11 @@ privateEndpoint: true
 
 > **Trap (v1 vs v2)**: The API has two separate service names: `Azure Data Factory` (v1, legacy) and `Azure Data Factory v2` (current). Most deployments use v2. Always confirm which version the user has before querying.
 
-> **Trap (inflated totals)**: Unfiltered `ServiceName 'Azure Data Factory v2'` returns hundreds of SSIS VM meters — `totalMonthlyCost` inflates by orders of magnitude. Always filter by `ProductName 'Azure Data Factory v2'` and `SkuName`.
+> **Trap (inflated totals)**: Unfiltered `ServiceName 'Azure Data Factory v2'` returns hundreds of SSIS VM meters; `totalMonthlyCost` inflates by orders of magnitude. Always filter by `ProductName 'Azure Data Factory v2'` and `SkuName`.
 
 ## Query Pattern
 
-### v2 Cloud — orchestration activity runs (per 1K runs, use Quantity for monthly volume)
+### v2 Cloud: orchestration activity runs (per 1K runs, use Quantity for monthly volume)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2
@@ -24,7 +24,7 @@ SkuName: Cloud
 MeterName: Cloud Orchestration Activity Run
 Quantity: 10000
 
-### v2 Cloud — data movement (per hour; multiply retailPrice × estimated monthly hours)
+### v2 Cloud: data movement (per hour; multiply retailPrice × estimated monthly hours)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2
@@ -32,13 +32,13 @@ SkuName: Cloud
 MeterName: Cloud Data Movement
 InstanceCount: 4
 
-### v2 Data Flow — General Purpose vCores (per hour; min 8 vCores per cluster)
+### v2 Data Flow: General Purpose vCores (per hour; min 8 vCores per cluster)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
 
-### v2 Self Hosted — pipeline activity (per hour)
+### v2 Self Hosted: pipeline activity (per hour)
 
 ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2
@@ -80,10 +80,10 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 
 ## Notes
 
-- **v2 is the current version** — v1 is legacy (`ServiceName 'Azure Data Factory' SkuName 'Cloud'`); new factories always deploy as v2
-- Data Flow: General Purpose, Compute Optimized, Memory Optimized — each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
+- **v2 is the current version**; v1 is legacy (`ServiceName 'Azure Data Factory' SkuName 'Cloud'`); new factories always deploy as v2
+- Data Flow: General Purpose, Compute Optimized, Memory Optimized, each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - **Managed Airflow** (Workflow Orchestration Manager): separate `ProductName 'Azure Data Factory v2 - Managed Airflow'` with Small and Large SKUs billed per vCore-hour
-- SSIS Integration Runtime is billed as VMs under this service — query with `ProductName 'SSIS ...'` product names
+- SSIS Integration Runtime is billed as VMs under this service; query with `ProductName 'SSIS ...'` product names
 - Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Cloud Read Write Operations` meter)
 
 ## Reserved Instance Pricing

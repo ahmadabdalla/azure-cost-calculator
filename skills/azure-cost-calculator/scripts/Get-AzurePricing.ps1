@@ -141,7 +141,7 @@ foreach ($regionName in $Region) {
     # Deduplicate: when isPrimaryMeterRegion is available, prefer primary items
     # per unique (meterName + skuName + productName + reservationTerm) combo. But keep non-primary
     # items when no primary exists for that combo (e.g., Key Vault Operations in AU).
-    # NOTE: reservationTerm MUST be in the grouping key — without it, 1-Year and 3-Year
+    # NOTE: reservationTerm MUST be in the grouping key. Without it, 1-Year and 3-Year
     # Reservation items collapse into one group. When both are isPrimaryMeterRegion=true,
     # $primary becomes an array, causing downstream type errors (unitOfMeasure becomes
     # an array instead of a string, failing Get-MonthlyMultiplier's [string] parameter).
@@ -165,14 +165,14 @@ foreach ($regionName in $Region) {
         # Calculate monthly cost
         $termMonths = Get-ReservationTermMonths -ReservationTerm $item.reservationTerm
         if ($termMonths) {
-            # RI: retailPrice is total prepaid cost — divide by term months
+            # RI: retailPrice is total prepaid cost. Divide by term months
             $monthlyCost = ($unitPrice / $termMonths) * $InstanceCount
             if ($Quantity -gt 0) {
                 $monthlyCost = $monthlyCost * $Quantity
             }
         }
         elseif (-not [string]::IsNullOrEmpty($item.reservationTerm)) {
-            # Unknown reservation term — warn instead of silently using consumption math
+            # Unknown reservation term: warn instead of silently using consumption math
             Write-Warning "Unknown reservationTerm '$($item.reservationTerm)' for '$($item.productName)'. MonthlyCost may be incorrect."
             if ($Quantity -gt 0) {
                 $monthlyCost = $unitPrice * $Quantity * $multiplier * $InstanceCount
@@ -182,7 +182,7 @@ foreach ($regionName in $Region) {
             }
         }
         else {
-            # Consumption: retailPrice is per-unit rate — multiply by monthly multiplier
+            # Consumption: retailPrice is per-unit rate. Multiply by monthly multiplier
             if ($Quantity -gt 0) {
                 $monthlyCost = $unitPrice * $Quantity * $multiplier * $InstanceCount
             }
@@ -237,7 +237,7 @@ switch ($OutputFormat) {
         Currency -AutoSize
     }
     'Json' {
-        # Project results outside the hashtable — inline if unwraps @() to $null in empty case
+        # Project results outside the hashtable. Inline if unwraps @() to $null in empty case
         $projectedResults = @($allResults)
         if ($excludeProps.Count -gt 0 -and $projectedResults.Count -gt 0) {
             $projectedResults = @($allResults | Select-Object -Property * -ExcludeProperty $excludeProps)

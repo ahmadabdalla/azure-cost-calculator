@@ -9,11 +9,11 @@ hasKnownRates: true
 
 # Azure NetApp Files
 
-> **Trap (MonthlyCost zero)**: Capacity meters use `1 GiB/Hour` which the script does not recognize as hourly — `MonthlyCost` shows zero. Calculate manually: `retailPrice × provisionedGiB × 730`. See Known Rates.
+> **Trap (MonthlyCost zero)**: Capacity meters use `1 GiB/Hour` which the script does not recognize as hourly; `MonthlyCost` shows zero. Calculate manually: `retailPrice × provisionedGiB × 730`. See Known Rates.
 >
 > **Agent instruction**: Do NOT report zero cost. Multiply `retailPrice × GiB × 730` for monthly capacity cost.
 
-> **Trap (Unfiltered Query)**: `ServiceName`-only query returns all tiers, backup, CRR, cool-access, Elastic ZRS, and double-encrypted meters — always filter by `SkuName` + `MeterName`.
+> **Trap (Unfiltered Query)**: `ServiceName`-only query returns all tiers, backup, CRR, cool-access, Elastic ZRS, and double-encrypted meters; always filter by `SkuName` + `MeterName`.
 
 ## Query Pattern
 
@@ -77,7 +77,7 @@ Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throug
 - Standard/Premium/Ultra/Flexible/Elastic ZRS differ in throughput/IOPS; tier is a never-assume parameter
 - Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge)
 - CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`), region-pair-specific, Days/Hours/Minutes frequency
-- Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link — no PE support
+- Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link; no PE support
 
 ## Known Rates
 
@@ -92,7 +92,7 @@ Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throug
 
 ## Reserved Instance Pricing
 
-Available for Standard/Premium/Ultra at 100 TiB or 1 PiB commitment levels (1-Year and 3-Year terms). Single encryption only — not available for Double Encrypted tiers.
+Available for Standard/Premium/Ultra at 100 TiB or 1 PiB commitment levels (1-Year and 3-Year terms). Single encryption only; not available for Double Encrypted tiers.
 
 ServiceName: Azure NetApp Files
 ProductName: Azure NetApp Files Reserved Capacity

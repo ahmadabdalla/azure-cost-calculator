@@ -7,12 +7,12 @@
 #
 # HOW IT WORKS
 # 1. GitHub triggers this workflow on EVERY pull request to
-#    dev/main (no paths: filter — required for branch
+#    dev/main (no paths: filter; required for branch
 #    protection status checks to always report).
 # 2. dorny/paths-filter checks whether the PR touches any
 #    relevant paths. If not, the job exits early with a
 #    green "skip" status.
-# 3. A bash step figures out WHAT changed — was it a service
+# 3. A bash step figures out WHAT changed: was it a service
 #    reference file, or an infrastructure file (tests, template,
 #    routing, catalog)?
 # 4. Based on that:
@@ -48,7 +48,7 @@ jobs:
     # --- Shared variables ---
     # Change these in ONE place if paths ever move.
     # NOTE: INFRA_PATHS is also used in the dorny/paths-filter
-    # 'relevant' list below — keep them in sync.
+    # 'relevant' list below; keep them in sync.
     env:
       SERVICES_ROOT: skills/azure-cost-calculator/references/services
       VALIDATION_SCRIPT: tests/Validate-ServiceReference.ps1
@@ -86,7 +86,7 @@ jobs:
               - '.github/scripts/validate/**'
 
       # --- Early exit when nothing relevant changed ---
-      - name: Skip — no relevant changes
+      - name: Skip; no relevant changes
         if: steps.filter.outputs.relevant == 'false'
         run: echo "No service-reference or infrastructure changes detected. Skipping validation."
 
@@ -134,7 +134,7 @@ jobs:
 
       # --- Step 4: Routing sync (fallback) ---
       # Steps 3a and 3b already include -CheckRoutingFileSync,
-      # so this only runs when NEITHER of them executed — e.g.
+      # so this only runs when NEITHER of them executed, e.g.
       # a service file was deleted but no other service files
       # were added/modified, yet paths-filter still detected a
       # relevant change.

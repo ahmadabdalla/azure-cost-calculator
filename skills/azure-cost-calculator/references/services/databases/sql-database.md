@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure SQL Database
 
-> **Trap (inflated totals)**: Omitting `SkuName` returns all vCore sizes summed. Always filter by `ProductName`, `SkuName`, and `MeterName` — the service has 39 products spanning vCore, DTU, Serverless, Elastic Pool, storage, and backup.
+> **Trap (inflated totals)**: Omitting `SkuName` returns all vCore sizes summed. Always filter by `ProductName`, `SkuName`, and `MeterName`; the service has 39 products spanning vCore, DTU, Serverless, Elastic Pool, storage, and backup.
 
 > **Trap (DTU billing)**: DTU tiers (Basic/Standard/Premium) use `unitOfMeasure: 1/Day`. The script auto-multiplies by 30 for these meters, so `MonthlyCost` is already the monthly cost.
 
@@ -37,7 +37,7 @@ Quantity: 256 # provisioned max data size in GB
 | ------------- | ------------------------------------------------- | ------------------------------------------ |
 | `serviceName` | Always `SQL Database`                             | `SQL Database`                             |
 | `productName` | Deployment type + tier + generation               | See Product Names section below            |
-| `skuName`     | vCore count — this selects the size               | `1 vCore`, `2 vCore`, `4 vCore`, `8 vCore` |
+| `skuName`     | vCore count, selects the size                     | `1 vCore`, `2 vCore`, `4 vCore`, `8 vCore` |
 | `meterName`   | Always `vCore` for compute, or storage meter name | `vCore`, `General Purpose Data Stored`     |
 
 ## Meter Names
@@ -57,8 +57,8 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 
 ## Notes
 
-- **Default storage**: GP and BC default to 32 GB max data size. Storage billed separately — no "free included" storage in vCore model. Charged for configured max size, not usage. Backup storage equal to max data size is free.
-- **DTU model**: Basic (5 DTU), Standard (S0–S12), Premium (P1–P15) — uses `1/Day` billing; compute+storage bundled with included storage per DTU level
+- **Default storage**: GP and BC default to 32 GB max data size. Storage billed separately. No "free included" storage in vCore model. Charged for configured max size, not usage. Backup storage equal to max data size is free.
+- **DTU model**: Basic (5 DTU), Standard (S0–S12), Premium (P1–P15): uses `1/Day` billing; compute+storage bundled with included storage per DTU level
 - **Tier guide**: GP for standard workloads; BC includes zone-redundant HA in base price; Hyperscale for up to 100 TB with log-based architecture and separate storage pricing
 - **Capacity**: vCore count determines compute capacity; double vCores for ~2× throughput
 
@@ -66,7 +66,7 @@ Total = Compute + Storage (unitPrice reflects total for selected vCore count)
 
 ### RI compute only (swap productName for BC). Returns 1-Year + 3-Year terms.
 
-### Omit SkuName for RI — unitPrice is per-vCore; multiply by your vCore count.
+### Omit SkuName for RI: unitPrice is per-vCore; multiply by your vCore count.
 
 ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - Compute Gen5
@@ -74,8 +74,8 @@ MeterName: vCore
 PriceType: Reservation
 
 > **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results.
-> **Note (RI per-vCore)**: RI `unitPrice` is per single vCore — multiply by the desired vCore count.
-> **Trap (RI + AHUB)**: RI `unitPrice` is already compute-only (license excluded). Do NOT subtract the SQL License rate from RI prices — the compute meter IS the AHUB rate.
+> **Note (RI per-vCore)**: RI `unitPrice` is per single vCore; multiply by the desired vCore count.
+> **Trap (RI + AHUB)**: RI `unitPrice` is already compute-only (license excluded). Do NOT subtract the SQL License rate from RI prices; the compute meter IS the AHUB rate.
 
 ## Product Names
 
@@ -95,4 +95,4 @@ ServiceName: SQL Database
 ProductName: SQL Database Single/Elastic Pool General Purpose - SQL License
 Region: Global
 
-> AHUB: compute meter only — compute `retailPrice` IS the AHUB rate. Omit `SkuName` to get a per-vCore rate; multiply by vCoreCount × 730. PAYG: add `sql_license_retailPrice` per vCore. **Do NOT subtract** — see shared.md AHUB section.
+> AHUB: compute meter only; compute `retailPrice` IS the AHUB rate. Omit `SkuName` to get a per-vCore rate; multiply by vCoreCount × 730. PAYG: add `sql_license_retailPrice` per vCore. **Do NOT subtract.** See shared.md AHUB section.

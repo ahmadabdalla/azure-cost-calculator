@@ -11,9 +11,9 @@ pricingRegion: empty-region
 
 > **Trap (mixed meters)**: The API `serviceName` "Azure DNS" returns meters across five `skuName` groups: `Public`, `Private`, `Private Resolver`, `DNS Security Policy Domains`, and `DNS Security Policy Queries`. Always filter with `skuName eq 'Private Resolver'` to isolate DNS Private Resolver pricing.
 
-> **Warning**: **Empty-region pricing** — scripts require a Region filter. Use `Region: Zone 1` as a workaround, or query the API directly with `armRegionName eq ''`. Prices are USD-only.
+> **Warning**: **Empty-region pricing**: scripts require a Region filter. Use `Region: Zone 1` as a workaround, or query the API directly with `armRegionName eq ''`. Prices are USD-only.
 
-> **Agent instruction**: All three meters use `unitOfMeasure: "1"` — this is a per-month per-unit charge. Multiply by endpoint/ruleset count only. Do not apply the 730-hour multiplier and ignore the script's auto-calculated MonthlyCost for these meters.
+> **Agent instruction**: All three meters use `unitOfMeasure: "1"`. This is a per-month per-unit charge. Multiply by endpoint/ruleset count only. Do not apply the 730-hour multiplier and ignore the script's auto-calculated MonthlyCost for these meters.
 
 ## Query Pattern
 
@@ -51,7 +51,7 @@ Region: Zone 1
 | `serviceName`   | Always `Azure DNS` (shared with public/private DNS) | `Azure DNS`                         |
 | `productName`   | Single product                                      | `Azure DNS`                         |
 | `skuName`       | `Private Resolver` for this service                 | `Private Resolver`                  |
-| `armRegionName` | Empty string or delivery zone — not ARM regions     | `''`, `Zone 1`, `Zone 2`            |
+| `armRegionName` | Empty string or delivery zone, not ARM regions     | `''`, `Zone 1`, `Zone 2`            |
 | `meterName`     | Endpoint type or ruleset                            | `Private Resolver Inbound Endpoint` |
 
 ## Meter Names
@@ -73,11 +73,11 @@ Monthly  = Inbound + Outbound + Rulesets
 
 ## Notes
 
-- The resolver resource itself is free — you only pay for endpoints and forwarding rulesets
-- DNS query processing is included in the endpoint price — no per-query charges (unlike Public/Private DNS Zones)
+- The resolver resource itself is free. You only pay for endpoints and forwarding rulesets
+- DNS query processing is included in the endpoint price. No per-query charges (unlike Public/Private DNS Zones)
 - Each endpoint handles up to 10,000 QPS; max 5 inbound + 5 outbound endpoints per resolver
 - Each endpoint requires a dedicated subnet (minimum /28) within the VNet
 - Endpoints and rulesets are billed monthly, prorated to hours if deleted mid-month
-- Each forwarding ruleset supports max 2 outbound endpoints, 1,000 forwarding rules, and 500 VNet links — plan for multiple rulesets in large deployments
-- Prices are uniform across all delivery zones — no regional variance
+- Each forwarding ruleset supports max 2 outbound endpoints, 1,000 forwarding rules, and 500 VNet links. Plan for multiple rulesets in large deployments
+- Prices are uniform across all delivery zones. No regional variance
 - See `networking/dns.md` and `networking/private-dns.md` for Public DNS and Private DNS Zone pricing (shared `serviceName`)

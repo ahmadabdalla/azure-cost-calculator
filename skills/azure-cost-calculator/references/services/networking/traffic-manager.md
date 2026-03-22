@@ -8,9 +8,9 @@ pricingRegion: global
 
 # Traffic Manager
 
-> **Trap (sub-cent rounding)**: DNS query pricing is per million queries — small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
+> **Trap (sub-cent rounding)**: DNS query pricing is per million queries. Small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
-> **Warning**: **Global-only pricing** — Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
+> **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
 
 ## Query Pattern
 
@@ -30,7 +30,7 @@ MeterName: Azure Endpoint Health Checks
 Region: Global
 InstanceCount: 5
 
-### Azure endpoint — Fast Interval health check add-on
+### Azure endpoint: Fast Interval health check add-on
 
 ServiceName: Traffic Manager
 SkuName: Azure Endpoint
@@ -72,7 +72,7 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `Non-Azure Region Real User Measurements`               | `Non-Azure Region`   | `1M`          | Free (retailPrice = 0)                 |
 | `Traffic View Data Points Processed`                    | `Traffic View`       | `1M`          | Per million data points                |
 
-> **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000, i.e. 0–1B and >1B queries). The script sums both tiers — ignore `totalMonthlyCost` and manually calculate using tier boundaries.
+> **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000, i.e. 0–1B and >1B queries). The script sums both tiers. Ignore `totalMonthlyCost` and manually calculate using tier boundaries.
 
 ## Cost Formula
 
@@ -90,4 +90,4 @@ Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 
 - **Real User Measurements**: Free (retailPrice = 0)
 - **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
-- **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month — use `retailPrice` from query results to calculate totals
+- **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month. Use `retailPrice` from query results to calculate totals

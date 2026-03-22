@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (productName OS variants)**: Windows plans use no OS suffix (e.g., `Azure App Service Premium v3 Plan`); Linux plans append `- Linux`. Querying the wrong variant returns a different price or zero results.
 
-> **Trap (Isolated platform fees)**: Isolated v1 has a mandatory `Stamp Fee` and Isolated v2 has an `ASIP` platform fee — both per-ASE hourly charges in addition to instance compute costs.
+> **Trap (Isolated platform fees)**: Isolated v1 has a mandatory `Stamp Fee` and Isolated v2 has an `ASIP` platform fee. Both are per-ASE hourly charges in addition to instance compute costs.
 
 ## Query Pattern
 
@@ -28,13 +28,13 @@ ServiceName: Azure App Service
 ProductName: Azure App Service Premium v3 Plan
 SkuName: P1 v3
 
-### Premium v4 — Linux (note: no space in skuName for v4 tier)
+### Premium v4: Linux (note: no space in skuName for v4 tier)
 
 ServiceName: Azure App Service
 ProductName: Azure App Service Premium v4 Plan - Linux
 SkuName: P1v4
 
-### Isolated v2 — platform fee (per ASE, in addition to instance cost)
+### Isolated v2: platform fee (per ASE, in addition to instance cost)
 
 ServiceName: Azure App Service
 ProductName: Azure App Service Isolated v2 Plan - Linux
@@ -56,13 +56,13 @@ Isolated v2 = (ASIP_retailPrice × 730) + (instance_retailPrice × 730 × instan
 
 ## Notes
 
-- Plans are billed whether or not apps are running — delete the plan to stop billing, not just the apps
+- Plans are billed whether or not apps are running. Delete the plan to stop billing, not just the apps
 - Multiple apps share one plan; cost is per-plan, not per-app
 - Free (F1) and Shared (D1) tiers exist but are not recommended for production
-- **Functions on Dedicated plans** (B1/S1/P1v3) bill through App Service — no meters under `Functions`
+- **Functions on Dedicated plans** (B1/S1/P1v3) bill through App Service; no meters under `Functions`
 - **Logic Apps Standard** creates WS-type plans but bills through `Logic Apps` meters, not App Service
 - Private endpoints require Basic tier or higher
-- RIs available for Premium v3, Premium v4, and Isolated v2 only — not Basic, Standard, or Premium v2
+- RIs available for Premium v3, Premium v4, and Isolated v2 only; not Basic, Standard, or Premium v2
 - Meter naming varies: Linux Basic uses `B1`/`B2`/`B3`; Premium v4 uses `P1v4`; other tiers append `App` (e.g., `P1 v3 App`)
 - Memory-optimized variants (`P1mv3`, `P1mv4`, `I1mv2`) offer higher memory-to-CPU ratios at a premium
 

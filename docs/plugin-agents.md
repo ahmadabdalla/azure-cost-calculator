@@ -15,7 +15,7 @@ This repository has two separate agent systems serving different audiences:
 | Invocation | Local terminal                                         | Hosted on GitHub infrastructure      |
 | Context    | Plugin files only (skill, scripts, references)         | Full repo access, issue/PR context   |
 
-Plugin agents are **not** copies of the CI agents — they are purpose-built for consumers who install the plugin and need cost estimation help.
+Plugin agents are **not** copies of the CI agents; they are purpose-built for consumers who install the plugin and need cost estimation help.
 
 ## Agent inventory
 
@@ -27,9 +27,9 @@ Plugin agents are **not** copies of the CI agents — they are purpose-built for
 
 The primary user-facing agent. Invoked when a user provides an architecture, deployment plan, or set of Azure resource requirements and needs a cost estimate. Uses the skill's pricing scripts (`Get-AzurePricing`, `Explore-AzurePricing`) to query the Azure Retail Prices API.
 
-The agent is a thin orchestration wrapper around `SKILL.md` — it owns intake, service grouping, sub-agent dispatch, and final presentation, but references SKILL.md steps by number rather than reimplementing them. Review checks (arithmetic verification, grand total re-sum) are performed inline via SKILL.md Steps 9 and 10 (Verify and Present).
+The agent is a thin orchestration wrapper around `SKILL.md`; it owns intake, service grouping, sub-agent dispatch, and final presentation, but references SKILL.md steps by number rather than reimplementing them. Review checks (arithmetic verification, grand total re-sum) are performed inline via SKILL.md Steps 9 and 10 (Verify and Present).
 
-> **Removed: cost-reviewer** — Previously planned as a separate quality-gate agent, but was never wired into the workflow. Its 4 checks are covered by SKILL.md Step 9 and the agent's inline Review step. Removed in #469 to eliminate dead code.
+> **Removed: cost-reviewer.** Previously planned as a separate quality-gate agent, but was never wired into the workflow. Its 4 checks are covered by SKILL.md Step 9 and the agent's inline Review step. Removed in #469 to eliminate dead code.
 
 ---
 
@@ -42,10 +42,10 @@ The agent is a thin orchestration wrapper around `SKILL.md` — it owns intake, 
 
 **Cross-platform solution**: Always use `*.agent.md`.
 
-- Copilot CLI requires it — the extension is how it discovers and identifies agents.
+- Copilot CLI requires it; the extension is how it discovers and identifies agents.
 - Claude Code discovers agents via the `agents/**/*.md` glob pattern. Files ending in `.agent.md` match because they end in `.md`.
 
-> **Validated**: Anthropic's own [`plugin-validator`](https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/agents/plugin-validator.md) agent uses `agents/**/*.md` for discovery. No extension-specific filtering — validation is on YAML frontmatter content, not filename pattern.
+> **Validated**: Anthropic's own [`plugin-validator`](https://github.com/anthropics/claude-code/blob/main/plugins/plugin-dev/agents/plugin-validator.md) agent uses `agents/**/*.md` for discovery. No extension-specific filtering; validation is on YAML frontmatter content, not filename pattern.
 
 ## File format
 
@@ -67,7 +67,7 @@ The full set of supported fields differs between platforms. Fields marked ✅ ar
 | -------------------------- | -------------------------------- | ----------------------------------------------------- | --------------------------------------------- |
 | `name`                     | ✅ Used                          | ✅ **Required**                                       | Unique identifier, kebab-case                 |
 | `description`              | ✅ Used                          | ✅ **Required**                                       | When to delegate; used for inference matching |
-| `tools`                    | ✅ JSON array `["bash", "edit"]` | ✅ Comma string `Read, Glob, Grep`                    | **Different format** — see below              |
+| `tools`                    | ✅ JSON array `["bash", "edit"]` | ✅ Comma string `Read, Glob, Grep`                    | **Different format** (see below)              |
 | `model`                    | ✅ Supported                     | ✅ `sonnet`/`opus`/`haiku`/`inherit`                  |                                               |
 | `user-invocable`           | ✅ Boolean                       | ❌                                                    | Copilot CLI only                              |
 | `disable-model-invocation` | ✅ Boolean                       | ❌                                                    | Copilot CLI only                              |
@@ -99,7 +99,7 @@ Copilot CLI and Claude Code use different names for the same tools:
 
 There is no single `tools` list that satisfies both platforms. Unknown tool names are silently ignored.
 
-**Current approach**: Omit `tools` entirely — both platforms inherit all available tools when the field is absent. Tool scoping will be added when agents are fleshed out with full prompts, using platform-specific testing to validate.
+**Current approach**: Omit `tools` entirely; both platforms inherit all available tools when the field is absent. Tool scoping will be added when agents are fleshed out with full prompts, using platform-specific testing to validate.
 
 **Intended tool scoping** (for future implementation):
 
@@ -109,7 +109,7 @@ There is no single `tools` list that satisfies both platforms. Unknown tool name
 
 The VS Code agent parser is strict about formatting:
 
-- **No YAML folded scalars** (`>` or `|`) — causes "Unexpected indentation" errors. Use single-line quoted strings instead.
+- **No YAML folded scalars** (`>` or `|`): causes "Unexpected indentation" errors. Use single-line quoted strings instead.
 - **Supported VS Code attributes**: `agents`, `argument-hint`, `description`, `disable-model-invocation`, `handoffs`, `model`, `name`, `target`, `tools`, `user-invocable`. Unknown fields produce warnings in the editor but are harmless at runtime.
 
 ---
@@ -150,7 +150,7 @@ Plugin agents run in the consumer's environment after plugin installation. Two t
 
 ### Path resolution
 
-When a consumer installs the plugin, files land in a platform-managed plugin directory — not the consumer's project root. Agent system prompts must use **relative paths from the plugin root** to reference skill files:
+When a consumer installs the plugin, files land in a platform-managed plugin directory, not the consumer's project root. Agent system prompts must use **relative paths from the plugin root** to reference skill files:
 
 | Resource           | Relative path from plugin root                                  |
 | ------------------ | --------------------------------------------------------------- |
@@ -166,15 +166,15 @@ The agent system prompt should instruct the agent to discover these paths relati
 
 Plugin agents inherit the **consumer's** permission settings, not this repository's. This has practical consequences:
 
-- **Shell execution**: cost-analyst needs to run pricing scripts via `Bash` (for both `pwsh` and shell invocations). Consumers must allowlist the relevant commands — e.g., `Bash(pwsh -File */scripts/Get-AzurePricing.ps1 *)` for PowerShell or `Bash(*/scripts/get-azure-pricing.sh *)` for Bash. Without these, each script call will prompt for permission or be denied.
+- **Shell execution**: cost-analyst needs to run pricing scripts via `Bash` (for both `pwsh` and shell invocations). Consumers must allowlist the relevant commands, e.g., `Bash(pwsh -File */scripts/Get-AzurePricing.ps1 *)` for PowerShell or `Bash(*/scripts/get-azure-pricing.sh *)` for Bash. Without these, each script call will prompt for permission or be denied.
 - **No plugin-level permission override**: Plugins cannot force-allow shell commands in the consumer's environment. The `permissionMode` frontmatter field controls the agent's _own_ permission behavior, not what the host allows.
 - **First-run friction**: Consumers using cost-analyst for the first time will likely see permission prompts for script execution. The agent's system prompt (or plugin documentation) should anticipate this.
 
 **Mitigation options** (to implement when agents are fleshed out):
 
 1. **Document required permissions** in the plugin README so consumers can pre-configure their allowlist for their chosen runtime (`pwsh` or `bash`).
-2. **Graceful degradation** in the system prompt — if script execution is denied, instruct the agent to explain what permissions are needed rather than failing silently.
-3. **Runtime detection** — the agent system prompt should detect available runtimes (`pwsh` vs `bash`) and use whichever is present, falling back with a clear error if neither is available.
+2. **Graceful degradation** in the system prompt: if script execution is denied, instruct the agent to explain what permissions are needed rather than failing silently.
+3. **Runtime detection**: the agent system prompt should detect available runtimes (`pwsh` vs `bash`) and use whichever is present, falling back with a clear error if neither is available.
 
 ### Command support
 
@@ -195,7 +195,7 @@ This is a platform limitation, not a plugin configuration issue. No changes to `
 
 1. Edit the agent file in `agents/`.
 2. Keep frontmatter to the shared subset (`name`, `description`). Add `tools` or `model` only when needed for both platforms.
-3. The Markdown body is the system prompt — keep it focused and under 30,000 characters.
+3. The Markdown body is the system prompt; keep it focused and under 30,000 characters.
 4. Use single-line quoted strings for `description` (no YAML folded scalars).
 5. Test locally by invoking the agent in both Copilot CLI and Claude Code (if available).
 6. Push changes via PR targeting `dev`.
@@ -206,15 +206,15 @@ This is a platform limitation, not a plugin configuration issue. No changes to `
 
 ### GitHub Copilot (Copilot CLI)
 
-- [Plugin Reference](https://docs.github.com/en/copilot/reference/cli-plugin-reference) — agent fields, loading order, full specification
-- [Creating Plugins](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-creating) — agent file format and structure
+- [Plugin Reference](https://docs.github.com/en/copilot/reference/cli-plugin-reference): agent fields, loading order, full specification
+- [Creating Plugins](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-creating): agent file format and structure
 
 ### Claude Code
 
-- [Sub-agents](https://docs.anthropic.com/en/docs/claude-code/sub-agents) — full frontmatter reference, discovery, dispatch
-- [Plugins](https://docs.anthropic.com/en/docs/claude-code/plugins) — plugin structure including agent directories
+- [Sub-agents](https://docs.anthropic.com/en/docs/claude-code/sub-agents): full frontmatter reference, discovery, dispatch
+- [Plugins](https://docs.anthropic.com/en/docs/claude-code/plugins): plugin structure including agent directories
 
-### GitHub Copilot coding agent (different system — for reference)
+### GitHub Copilot coding agent (different system, for reference)
 
 The CI agents in `.github/agents/` use the GitHub Copilot coding agent platform, which has its own specification:
 
@@ -225,6 +225,6 @@ The CI agents in `.github/agents/` use the GitHub Copilot coding agent platform,
 
 ## Related
 
-- [CI/ops custom agents](ops/custom-agents.md) — repository governance agents in `.github/agents/`
-- [Skill entry point](../skills/azure-cost-calculator/SKILL.md) — SKILL.md defining the agent workflow
-- [Plugin manifest](../.claude-plugin/plugin.json) — plugin configuration and agent wiring
+- [CI/ops custom agents](ops/custom-agents.md): repository governance agents in `.github/agents/`
+- [Skill entry point](../skills/azure-cost-calculator/SKILL.md): SKILL.md defining the agent workflow
+- [Plugin manifest](../.claude-plugin/plugin.json): plugin configuration and agent wiring

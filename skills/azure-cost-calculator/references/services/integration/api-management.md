@@ -9,13 +9,13 @@ privateEndpoint: true
 
 # API Management
 
-> **Trap (multiple meters)**: Tiers have multiple meters (e.g., `Standard v2 Unit`, `Secondary Unit`, `Self-hosted Gateway`, `Calls`). Use the primary `{Tier} Unit` meter for base cost. Secondary units, gateways, and workspace packs are additional — only include if user requests.
-> **Trap (v2 Calls)**: v2 tiers have a `Calls` meter — free up to threshold, then overage at `retailPrice` per 10K. Basic v2: first 10M free. Standard v2: first 50M free. Premium v2: unlimited included. Safe to ignore for typical workloads; include for high-volume APIs exceeding thresholds.
+> **Trap (multiple meters)**: Tiers have multiple meters (e.g., `Standard v2 Unit`, `Secondary Unit`, `Self-hosted Gateway`, `Calls`). Use the primary `{Tier} Unit` meter for base cost. Secondary units, gateways, and workspace packs are additional; only include if user requests.
+> **Trap (v2 Calls)**: v2 tiers have a `Calls` meter, free up to threshold, then overage at `retailPrice` per 10K. Basic v2: first 10M free. Standard v2: first 50M free. Premium v2: unlimited included. Safe to ignore for typical workloads; include for high-volume APIs exceeding thresholds.
 > **Trap (Consumption)**: Uses per-call pricing (`Consumption Calls`), not hourly units. Do NOT multiply by 730.
 
 ## Query Pattern
 
-### All tiers — substitute {Tier} from Meter Names table (InstanceCount for multi-unit)
+### All tiers: substitute {Tier} from Meter Names table (InstanceCount for multi-unit)
 
 ServiceName: API Management
 SkuName: {Tier}
@@ -45,7 +45,7 @@ MeterName: Secondary Unit
 | Parameter     | How to determine                          | Example values                                             |
 | ------------- | ----------------------------------------- | ---------------------------------------------------------- |
 | `productName` | Always `API Management`                   | `API Management`                                           |
-| `skuName`     | Tier name — this selects the pricing tier | `Developer`, `Basic`, `Standard`, `Premium`, `Standard v2` |
+| `skuName`     | Tier name, selects the pricing tier | `Developer`, `Basic`, `Standard`, `Premium`, `Standard v2` |
 | `meterName`   | Tier name + component                     | `Standard Unit`, `Standard v2 Unit`, `Gateway Unit`        |
 
 ## Meter Names
@@ -64,7 +64,7 @@ MeterName: Secondary Unit
 | Isolated    | `Isolated`    | `Isolated Unit`     | `1 Hour`      | Network-isolated              |
 
 > **Additional meters**: v2 tiers have `{Tier} Secondary Unit` (1 Hour each). Standard v2 and Premium v2 also have `{Tier} Self-hosted Gateway`. Premium classic has `Secondary Unit`.
-> **Workspace Packs**: Available for Developer, Standard, Premium, Standard v2, Premium v2, Isolated — query with `{Tier} Workspace Pack` meter (1/Hour).
+> **Workspace Packs**: Available for Developer, Standard, Premium, Standard v2, Premium v2, Isolated; query with `{Tier} Workspace Pack` meter (1/Hour).
 
 ## Cost Formula
 

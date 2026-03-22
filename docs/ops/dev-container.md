@@ -12,7 +12,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 ## How to use
 
 1. Open the repository in VS Code.
-2. When prompted, click **Reopen in Container** — or run the command palette action `Dev Containers: Reopen in Container`.
+2. When prompted, click **Reopen in Container**, or run the command palette action `Dev Containers: Reopen in Container`.
 3. VS Code builds the image (first run only) and opens a shell at `/workspace`.
 4. Run bats tests:
    ```bash
@@ -35,9 +35,9 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 | ------------------ | ------------------------------------------------------------------------------------------------------------ |
 | Base image         | `ubuntu:24.04`                                                                                               |
 | Tools              | `ca-certificates`, `curl`, `jq`, `git`, `nodejs`, `npm`, `bash`, `pwsh`                                      |
-| bats version       | `1.11.1` (matches CI — see `.github/scripts/test/install-bats.sh`)                                           |
-| Pester version     | `5.7.1` (matches CI — see `.github/scripts/test/Install-Pester.ps1`)                                         |
-| PSScriptAnalyzer   | `1.24.0` (matches CI — see `.github/scripts/test/Install-Pester.ps1`)                                        |
+| bats version       | `1.11.1` (matches CI; see `.github/scripts/test/install-bats.sh`)                                           |
+| Pester version     | `5.7.1` (matches CI; see `.github/scripts/test/Install-Pester.ps1`)                                         |
+| PSScriptAnalyzer   | `1.24.0` (matches CI; see `.github/scripts/test/Install-Pester.ps1`)                                        |
 | Workspace          | `/workspace` (bind-mounted from `localWorkspaceFolder`)                                                      |
 | User               | `ubuntu` (UID/GID 1000; built into `ubuntu:24.04`; auto-remapped to host UID/GID on Linux by Dev Containers) |
 | VS Code extensions | `shellcheck`, `shell-format`                                                                                 |

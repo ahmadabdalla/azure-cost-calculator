@@ -13,7 +13,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Per-server sync fee — 5 registered servers (4 billable)
+### Per-server sync fee: 5 registered servers (4 billable)
 
 ServiceName: Storage
 ProductName: File Sync
@@ -48,8 +48,8 @@ Where `serverCount` is total registered servers; first server is free per Storag
 ## Notes
 
 - First registered server per Storage Sync Service is free; each additional server incurs the `Standard Server` rate
-- Azure Files storage, transactions, and data transfer are billed separately under `serviceName: Storage` with Azure Files product names — see `storage/storage.md`
+- Azure Files storage, transactions, and data transfer are billed separately under `serviceName: Storage` with Azure Files product names; see `storage/storage.md`
 - Cloud tiering does not have a separate meter; recall operations generate Azure Files transactions and outbound data transfer charges
-- Prices vary by region (up to ~2.3× the base rate) — always query the user's region
+- Prices vary by region (up to ~2.3× the base rate); always query the user's region
 - US Gov regions may lack the `Standard Server - Free` meter; free grant may not apply in government cloud
-- Private endpoints supported on the Storage Sync Service resource — see `networking/private-link.md` for PE and DNS zone pricing
+- Private endpoints supported on the Storage Sync Service resource; see `networking/private-link.md` for PE and DNS zone pricing

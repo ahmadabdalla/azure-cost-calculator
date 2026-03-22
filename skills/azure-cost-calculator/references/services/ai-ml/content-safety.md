@@ -3,7 +3,7 @@ serviceName: Content Safety
 category: ai-ml
 aliases: [Content Moderation, Image Moderation, Text Moderation, AI Content Safety]
 apiServiceName: Foundry Tools
-primaryCost: "Per-transaction (per 1K) for text records and images — PAYG + commitment tier discounts."
+primaryCost: "Per-transaction (per 1K) for text records and images; PAYG + commitment tier discounts."
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -12,13 +12,13 @@ privateEndpoint: true
 
 > **Trap (serviceName)**: API `serviceName` is `Foundry Tools`, NOT `Content Safety`. Always filter by `ProductName` to isolate Content Safety meters from the 300+ Foundry Tools meters.
 
-> **Trap (multiple products)**: Two products: `Content Safety` (regional PAYG + commitment) and `Content Safety - Disconnected` (Global, annual). Disconnected bills annually (`1/Year`) — exclude from standard estimates.
+> **Trap (multiple products)**: Two products: `Content Safety` (regional PAYG + commitment) and `Content Safety - Disconnected` (Global, annual). Disconnected bills annually (`1/Year`). Exclude from standard estimates.
 
-> **Trap (commitment tier dual-meter)**: Each commitment tier has TWO meters — a `Unit` flat monthly fee and a `CT Overage Transactions` per-1K rate. Query each meter separately to avoid summing both.
+> **Trap (commitment tier dual-meter)**: Each commitment tier has TWO meters: a `Unit` flat monthly fee and a `CT Overage Transactions` per-1K rate. Query each meter separately to avoid summing both.
 
 ## Query Pattern
 
-### Text moderation — 50K records/month
+### Text moderation: 50K records/month
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Content Safety
@@ -26,14 +26,14 @@ SkuName: Standard
 MeterName: Standard Text Records
 Quantity: 50 # 50 × 1K = 50,000 text records
 
-### Image moderation — PAYG
+### Image moderation: PAYG
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Content Safety
 SkuName: Standard
 MeterName: Standard Images
 
-### Commitment tier — Text Azure 1M (base fee)
+### Commitment tier: Text Azure 1M (base fee)
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Content Safety
@@ -78,9 +78,9 @@ Free grant:        Billable text = max(0, records − 5000); Billable images = m
 ## Notes
 
 - **Free tier**: 5K text records + 5K images/month; hard stop at limit (no overages on Free tier)
-- **Commitment tiers**: One size per modality — Text Azure 1M and Image Azure 250K; Connected (`Conn`) variants are ~5% cheaper
-- **Disconnected containers**: `Content Safety - Disconnected` bills annually (`1/Year`); Global region only — divide by 12 for monthly cost
-- **Legacy rename**: `Content Moderator` → `Content Safety`. Do NOT query the legacy `Content Moderator` product — it has different tiered pricing
-- **Scope**: Content Safety is part of Foundry Tools (AI Services) — see `ai-services.md` for umbrella query patterns
+- **Commitment tiers**: One size per modality: Text Azure 1M and Image Azure 250K; Connected (`Conn`) variants are ~5% cheaper
+- **Disconnected containers**: `Content Safety - Disconnected` bills annually (`1/Year`); Global region only. Divide by 12 for monthly cost
+- **Legacy rename**: `Content Moderator` → `Content Safety`. Do NOT query the legacy `Content Moderator` product; it has different tiered pricing
+- **Scope**: Content Safety is part of Foundry Tools (AI Services). See `ai-services.md` for umbrella query patterns
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; text record = up to 1,000 Unicode characters
-- **Supports private endpoints** via the AI Services multi-service resource — see `networking/private-link.md` for PE pricing
+- **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)

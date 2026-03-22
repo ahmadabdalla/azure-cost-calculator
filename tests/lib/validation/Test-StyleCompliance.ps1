@@ -48,7 +48,7 @@ function Test-StyleCompliance {
                 -PassMessage 'Trap format is correct' `
                 -FailMessage 'Invalid trap format. Use: > **Trap**: ... or > **Trap ({name})**: ...'))
 
-    # Trap sections must not contain literal dollar amounts — prices change and become stale
+    # Trap sections must not contain literal dollar amounts; prices change and become stale
     $trapSections = [System.Collections.Generic.List[string]]::new()
     $inTrapSection = $false
     foreach ($line in $nonCodeLines) {

@@ -9,25 +9,25 @@ primaryCost: "Per-user access fee per month (varies by SKU) + VM compute, storag
 
 # Azure Virtual Desktop
 
-> **Trap**: The per-user access fees under this service apply only to users **without** eligible Microsoft 365 or Windows per-user licenses. M365 E3/E5/A3/A5/Business Premium or Windows E3/E5 users have no separate AVD access fee — their cost is entirely VM compute, storage, and networking (priced under Virtual Machines, Managed Disks, etc.). Always confirm license entitlements before including access fees.
+> **Trap**: The per-user access fees under this service apply only to users **without** eligible Microsoft 365 or Windows per-user licenses. M365 E3/E5/A3/A5/Business Premium or Windows E3/E5 users have no separate AVD access fee; their cost is entirely VM compute, storage, and networking (priced under Virtual Machines, Managed Disks, etc.). Always confirm license entitlements before including access fees.
 
 > **Trap (HCI meter)**: Unfiltered queries return the `AVD for Azure Stack HCI` meter (hourly per-vCPU) alongside per-user monthly meters. If estimating cloud-hosted AVD, filter by `SkuName` to exclude the HCI meter.
 
 ## Query Pattern
 
-### Desktop & App Hosting — 50 users (full desktop + remote apps)
+### Desktop & App Hosting: 50 users (full desktop + remote apps)
 
 ServiceName: Windows Virtual Desktop
 SkuName: Desktop & App Hosting
 InstanceCount: 50
 
-### App Hosting only — 50 users (remote apps only)
+### App Hosting only: 50 users (remote apps only)
 
 ServiceName: Windows Virtual Desktop
 SkuName: App Hosting
 InstanceCount: 50
 
-### AVD for Azure Stack HCI — per vCPU/hour
+### AVD for Azure Stack HCI: per vCPU/hour
 
 ServiceName: Windows Virtual Desktop
 SkuName: AVD for Azure Stack HCI
@@ -40,7 +40,7 @@ InstanceCount: 8
 | `serviceName` | Always `Windows Virtual Desktop`                        | `Windows Virtual Desktop`                                                                   |
 | `productName` | Always `Azure Virtual Desktop`                          | `Azure Virtual Desktop`                                                                     |
 | `skuName`     | Access tier: full desktop, app-only, upgrade, or HCI    | `Desktop & App Hosting`, `App Hosting`, `App to Desktop Upgrade`, `AVD for Azure Stack HCI` |
-| `meterName`   | Varies by SKU — multiple meter name variants per region | See Meter Names table                                                                       |
+| `meterName`   | Varies by SKU, multiple meter name variants per region | See Meter Names table                                                                       |
 
 ## Meter Names
 

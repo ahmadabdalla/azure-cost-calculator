@@ -5,13 +5,13 @@ aliases: [ACS TURN, TURN Relay]
 primaryCost: "Per-GB media relayed through TURN servers"
 ---
 
-# Azure Communication Services — Network Traversal
+# Azure Communication Services: Network Traversal
 
-> **Trap (productName encoding)**: The API returns the productName with a broken Unicode character (`TURN \ufffd Regional`). Omit `ProductName` from queries — `ServiceName` alone is sufficient for this single-meter service.
+> **Trap (productName encoding)**: The API returns the productName with a broken Unicode character (`TURN \ufffd Regional`). Omit `ProductName` from queries; `ServiceName` alone is sufficient for this single-meter service.
 
 ## Query Pattern
 
-### TURN relay — media relayed (Quantity = monthly GB)
+### TURN relay: media relayed (Quantity = monthly GB)
 
 ServiceName: Network Traversal
 SkuName: Standard
@@ -41,6 +41,6 @@ Monthly = retailPrice × dataGB
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Routing`
-- Single meter service — only `Standard Media Relayed` per-GB
+- **Part of ACS family**: Related services use separate API serviceNames: `Voice`, `SMS`, `Email`, `Messaging`, `Phone Numbers`, `Routing`
+- Single meter service, only `Standard Media Relayed` per-GB
 - Regional pricing varies (e.g., lower in US/EU, higher in Asia-Pacific/Brazil)

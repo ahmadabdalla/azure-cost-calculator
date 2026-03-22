@@ -44,7 +44,7 @@ jobs:
               - 'tests/unit/**'
               - '.github/scripts/**'
 
-      - name: Skip — no relevant changes
+      - name: Skip; no relevant changes
         if: steps.filter.outputs.relevant == 'false'
         run: echo "No script or test changes detected. Skipping PowerShell tests."
 
@@ -93,7 +93,7 @@ jobs:
               - 'tests/unit/**'
               - '.github/scripts/**'
 
-      - name: Skip — no relevant changes
+      - name: Skip; no relevant changes
         if: steps.filter.outputs.relevant == 'false'
         run: echo "No script or test changes detected. Skipping Bash tests."
 

@@ -11,31 +11,31 @@ privateEndpoint: true
 
 > **Trap (unfiltered query)**: Querying without `MeterName` returns multiple meters (Base Unit + Operations + Relay Hours). The `summary.totalMonthlyCost` sums all, inflating the estimate. Always filter by `MeterName`.
 
-> **Trap (Premium operations)**: Premium Messaging Units include operations at no extra charge — do NOT add an operations cost line for Premium tier.
+> **Trap (Premium operations)**: Premium Messaging Units include operations at no extra charge; do NOT add an operations cost line for Premium tier.
 
-> **Trap (Basic tier)**: Basic tier has NO hourly namespace charge — it is operations-only pricing (per 1M operations).
+> **Trap (Basic tier)**: Basic tier has NO hourly namespace charge; it is operations-only pricing (per 1M operations).
 
 ## Query Pattern
 
-### Basic tier — operations only (per 1M)
+### Basic tier: operations only (per 1M)
 
 ServiceName: Service Bus
 SkuName: Basic
 MeterName: Basic Messaging Operations
 
-### Standard tier — namespace base unit (hourly)
+### Standard tier: namespace base unit (hourly)
 
 ServiceName: Service Bus
 SkuName: Standard
 MeterName: Standard Base Unit
 
-### Standard tier — operations (per 1M, first 13M included)
+### Standard tier: operations (per 1M, first 13M included)
 
 ServiceName: Service Bus
 SkuName: Standard
 MeterName: Standard Messaging Operations
 
-### Premium — messaging unit (InstanceCount for multi-unit)
+### Premium: messaging unit (InstanceCount for multi-unit)
 
 ServiceName: Service Bus
 SkuName: Premium
@@ -65,5 +65,5 @@ Premium:  Monthly = MU_hourly × 730 × muCount (operations included)
 - Basic tier: queues and topics only, no sessions, no duplicate detection, max 256 KB message
 - Standard tier: first 13M operations/month included with Base Unit
 - Premium tier: messaging units provide dedicated resources; 1 MU ≈ sustained throughput for most workloads
-- **Private Endpoints**: Require Premium tier — not available on Basic or Standard
+- **Private Endpoints**: Require Premium tier. Not available on Basic or Standard
 - `serviceFamily eq 'Integration'` in the API; also includes Hybrid Connections and WCF Relay meters

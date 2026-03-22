@@ -3,7 +3,7 @@
 serviceName: { exact serviceName from API }
 category:
   {
-    category folder name — must match a category in shared.md Service Routing Map,
+    category folder name (must match a category in shared.md Service Routing Map),
     e.g.,
     compute,
     containers,
@@ -25,11 +25,11 @@ category:
     specialist,
   }
 aliases:
-  [{ from routing map — use exactly the aliases listed, do not add extras }]
+  [{ from routing map (use exactly the aliases listed, do not add extras) }]
 billingNeeds:
   [
     {
-      optional — services billed under a different serviceName,
+      optional; services billed under a different serviceName,
       e.g.,
       Virtual Machines,
       Managed Disks,
@@ -38,7 +38,7 @@ billingNeeds:
 billingConsiderations:
   [
     {
-      optional — pricing factors to ask user about: Reserved Instances,
+      optional; pricing factors to ask user about: Reserved Instances,
       Spot Pricing,
       Azure Hybrid Benefit,
       M365 / Windows per-user licensing,
@@ -52,18 +52,18 @@ billingConsiderations:
 # ── Pricing Profile ──────────────────────────────────────
 primaryCost:
   {
-    required — one-line billing summary (max 120 chars),
+    required; one-line billing summary (max 120 chars),
     e.g.,
     "Compute hours × 730 × instanceCount",
     "Per-execution + GB-seconds with free grant deduction",
   }
-# hasMeters: false                  # optional — default: true; set false for API-unavailable services
-# pricingRegion: global             # optional — default: regional; enum: regional | global | empty-region | api-unavailable
-# hasKnownRates: true               # optional — default: false; set true when file has Known Rates table
+# hasMeters: false                  # optional, default: true; set false for API-unavailable services
+# pricingRegion: global             # optional, default: regional; enum: regional | global | empty-region | api-unavailable
+# hasKnownRates: true               # optional, default: false; set true when file has Known Rates table
 
 # ── Service Capabilities (optional) ──────────────────────
-# hasFreeGrant: true                # optional — default: false; set true for free tier / included units
-# privateEndpoint: true             # optional — default: false; set true for PE support
+# hasFreeGrant: true                # optional, default: false; set true for free tier / included units
+# privateEndpoint: true             # optional, default: false; set true for PE support
 ---
 
 # {Service Display Name}
@@ -77,11 +77,11 @@ primaryCost:
      Ensure the first usable default Query Pattern (declarative Key: Value block,
      not including comments or purely instructional content) appears within lines
      1–45. Do not rely on exact line ranges for YAML front matter, titles, or
-     trap warnings — their length may vary.
+     trap warnings; their length may vary.
 
   0b. 100-LINE LIMIT: The total file length must not exceed 100 lines of markdown
       content. This budget covers YAML, title, traps, query patterns,
-      tables, formulas, and notes. Optimize for density — every line costs tokens
+      tables, formulas, and notes. Optimize for density; every line costs tokens
       at runtime.
 
   0c. SECTION ORDER (enforced by validation): Sections must appear in this order:
@@ -98,7 +98,7 @@ primaryCost:
   1b. METADATA (required): Add YAML front matter with `---` delimiters BEFORE the title:
      - serviceName: Display/logical service name matching the routing map entry. For most services this equals the API serviceName; for split-product services, use `apiServiceName` for the API value.
      - category: Category folder (compute, databases, etc.)
-     - aliases: Inline [...] format — common names, abbreviations, synonyms
+     - aliases: Inline [...] format (common names, abbreviations, synonyms)
      - billingNeeds (optional): Routing map display names of other services this depends on (e.g., Virtual Machines). Omit if self-contained.
      - billingConsiderations (optional): Reserved Instances, Spot Pricing, Azure Hybrid Benefit,
        M365 / Windows per-user licensing. Omit if standard PAYG only.
@@ -143,21 +143,21 @@ primaryCost:
 
   STYLE RULES:
   - No "verified" dates anywhere. Content is current as of last commit.
-  - No "(case-sensitive)" annotations on headers — universal rule in shared.md.
+  - No "(case-sensitive)" annotations on headers (universal rule in shared.md).
   - Clean headers: ## Meter Names, ## Product Names, etc.
   - Blockquote formats: > **Trap**: / > **Trap ({name})**: / > **Agent instruction**: /
-    > **Warning**: / > **Note**: — no emoji prefixes
+    > **Warning**: / > **Note**: (no emoji prefixes)
 
   DELETE THIS COMMENT BLOCK BEFORE PUBLISHING.
 -->
 
-> **Trap**: {Description of a common pricing API gotcha — e.g., unfiltered queries returning too many meters, summary totals being inflated, wrong meter names, sub-cent rounding to $0.00, etc. Explain what goes wrong and how to avoid it.}
+> **Trap**: {Description of a common pricing API gotcha, e.g., unfiltered queries returning too many meters, summary totals being inflated, wrong meter names, sub-cent rounding to $0.00, etc. Explain what goes wrong and how to avoid it.}
 >
-> **Agent instruction**: {Optional — specific guidance for the AI agent, e.g., "Do NOT report $0.00 to the user", "Always ignore the script's MonthlyCost for Reservation items", etc.}
+> **Agent instruction**: {Optional; specific guidance for the AI agent, e.g., "Do NOT report $0.00 to the user", "Always ignore the script's MonthlyCost for Reservation items", etc.}
 
-> **Warning**: {For API-unavailable, Global-only, or USD-only pricing notices — e.g., "This service has no regional pricing — use direct API query with USD only."}
+> **Warning**: {For API-unavailable, Global-only, or USD-only pricing notices, e.g., "This service has no regional pricing; use direct API query with USD only."}
 
-> **Note**: {For informational context that is not a trap or warning — e.g., "The Azure Portal calls this service 'X' but the API uses 'Y'."}
+> **Note**: {For informational context that is not a trap or warning, e.g., "The Azure Portal calls this service 'X' but the API uses 'Y'."}
 
 ## Query Pattern
 
@@ -170,7 +170,7 @@ MeterName: {meterName}
 
 <!--
   QUERY PATTERN GUIDANCE:
-  - Use declarative Key: Value pairs — no code fences, no script names
+  - Use declarative Key: Value pairs (no code fences, no script names)
   - Always include ServiceName at minimum; repeat it in every query block
   - Add ProductName, SkuName, MeterName as needed for precise results
   - Show the most filtered query first; add variants for tiers, OS, SKUs
@@ -239,10 +239,10 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 - {Tier limitations: features or meters that differ between tiers}
 - {Links to Azure pricing page if useful}
 - {Relationship to other services, e.g., "Node VMs are priced as Virtual Machines"}
-- {Private endpoint support — state whether the service supports PE and reference `networking/private-link.md` for PE and DNS zone pricing. Include tier requirements if PE is only available on certain tiers. If the service has multiple PE sub-resources, list them as never-assume parameters.}
+- {Private endpoint support: state whether the service supports PE and reference `networking/private-link.md` for PE and DNS zone pricing. Include tier requirements if PE is only available on certain tiers. If the service has multiple PE sub-resources, list them as never-assume parameters.}
 
 <!--
-  OPTIONAL SECTIONS — add any of the below as needed. Delete sections that don't apply.
+  OPTIONAL SECTIONS: add any of the below as needed. Delete sections that don't apply.
 -->
 
 <!-- === RESERVED INSTANCE PRICING === -->
@@ -251,7 +251,7 @@ Monthly = {formula using retailPrice, hours, quantities, etc.}
 ServiceName: {serviceName}
 MeterName: {meterName}
 PriceType: Reservation
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items — it multiplies
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items; it multiplies
 > the total term price by 730 hours. Always calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
 -->
 <!-- === MANUAL CALCULATION EXAMPLE === -->
@@ -270,7 +270,7 @@ Total = ${result} USD/month
 | ----- | ---- | -------------------- | ---------- |
 | `{meter}` | {unit} | ${rate} | {grant or N/A} |
 > These rates are from the [Azure pricing page]({url}). The API returns them
-> but at precision below what the script rounds to — the script shows `$0.00`.
+> but at precision below what the script rounds to. The script shows `$0.00`.
 > For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
 -->
 <!-- === COMMON SKUS TABLE === -->

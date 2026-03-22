@@ -98,7 +98,7 @@ fi
 
 # --- Check for existing release PR ---
 # Use exact title matching via jq filter (--search is case-insensitive and could match prefixes).
-# Do NOT suppress errors — API failures should surface, not silently create duplicates.
+# Do NOT suppress errors; API failures should surface, not silently create duplicates.
 existing_pr=$(gh pr list --base main --state open \
   --json number,title \
   --jq --arg v "release: v${VERSION}" 'first(.[] | select(.title == $v) | .number) // empty')
@@ -108,7 +108,7 @@ if [ -n "$existing_pr" ]; then
   gh pr edit "$existing_pr" --body-file "$PR_BODY_FILE"
   pr_number="$existing_pr"
 else
-  # Create the PR directly from dev — no new branch needed.
+  # Create the PR directly from dev; no new branch needed.
   # dev already contains the version bump, and the PR preserves its full history.
   pr_number=$(gh pr create \
     --base main \

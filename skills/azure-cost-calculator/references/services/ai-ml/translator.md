@@ -3,7 +3,7 @@ serviceName: Azure Translator
 category: ai-ml
 aliases: [Translator Text, Text Translation, Document Translation]
 apiServiceName: Foundry Tools
-primaryCost: "Per-character translation (per 1M chars) — S1 pay-per-use + commitment tier discounts."
+primaryCost: "Per-character translation (per 1M chars); S1 pay-per-use + commitment tier discounts."
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -12,7 +12,7 @@ privateEndpoint: true
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure Translator`. Queries using the display name return zero results.
 
-> **Trap (multiple products)**: Three `productName` values — `Translator Text` (regional), `Azure Translator` (Global-only), `Azure Translator - Disconnected` (annual). Always filter by `ProductName`.
+> **Trap (multiple products)**: Three `productName` values: `Translator Text` (regional), `Azure Translator` (Global-only), `Azure Translator - Disconnected` (annual). Always filter by `ProductName`.
 
 > **Trap (mixed units)**: `unitOfMeasure` varies: `1M` (characters), `1/Day` (S2–S4, C2–C4, D3), `1/Month` (commitment/hosting), `1/Year` (disconnected). Script auto-multiplies daily by 30; annual meters show raw price as MonthlyCost.
 
@@ -20,7 +20,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### S1 standard text translation — 10M characters/month
+### S1 standard text translation: 10M characters/month
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Translator Text
@@ -69,8 +69,8 @@ MeterName: Commitment Tier Azure 250M Unit
 | `S1 Custom Translation Characters` | `Translator Text` | `1M`          | Custom-trained model inference    |
 | `S1 Custom Training Characters`    | `Translator Text` | `1M`          | Custom model training data        |
 | `Custom Model Hosting Unit`        | `Translator Text` | `1/Month`     | Per model per region (all SKUs)   |
-| `C2 Unit`                          | `Translator Text` | `1/Day`       | Volume tier — 250M chars included |
-| `Commitment Tier Azure 250M Unit`  | `Translator Text` | `1/Month`     | Commitment — 250M chars included  |
+| `C2 Unit`                          | `Translator Text` | `1/Day`       | Volume tier, 250M chars included  |
+| `Commitment Tier Azure 250M Unit`  | `Translator Text` | `1/Month`     | Commitment, 250M chars included   |
 
 ## Cost Formula
 
@@ -85,9 +85,9 @@ Free grant:          Billable = max(0, chars − 2M free) then price per 1M
 ## Notes
 
 - **Free tier**: 2M characters/month (standard + custom training combined) on Free SKU; custom model hosting still costs per model per region
-- **Retiring tiers**: S2–S4 retiring Oct 2026 — use S1 pay-per-use + Commitment Tiers for new deployments
+- **Retiring tiers**: S2–S4 retiring Oct 2026; use S1 pay-per-use + Commitment Tiers for new deployments
 - **Commitment tiers**: Azure (250M/1000M/4000M) and Connected (250M/1000M/4000M) variants; Connected tiers run in customer containers at slightly lower rates
 - **Container tiers**: C2–C4 (connected) and D3 (disconnected) use daily billing with included character allowances + overage rates
-- **Disconnected containers**: `Azure Translator - Disconnected` bills annually (4000M and 10000M tiers) — divide by 12 for monthly equivalent
-- **Umbrella service**: Translator is part of Foundry Tools (AI Services) — see `ai-services.md` for umbrella query patterns and other sub-services
-- **Supports private endpoints** via the AI Services multi-service resource — see `networking/private-link.md` for PE pricing
+- **Disconnected containers**: `Azure Translator - Disconnected` bills annually (4000M and 10000M tiers). Divide by 12 for monthly equivalent
+- **Umbrella service**: Translator is part of Foundry Tools (AI Services). See `ai-services.md` for umbrella query patterns and other sub-services
+- **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
