@@ -1,14 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
-id: happy-path-app-service-001
+id: eval:compute/app-service/linux-p1-v3
 name: Happy Path - App Service Linux P1 v3
 description: >
   Tests a straightforward cost estimation for a well-specified App Service
   request. The user provides tier (P1 v3), OS (Linux), region (East US),
   and instance count (2). No disambiguation should be needed.
 tags:
+  - smoke
   - happy-path
   - single-service
   - compute
+  - service:app-service
 inputs:
   prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
 expected:

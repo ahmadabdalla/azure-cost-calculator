@@ -1,13 +1,15 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
-id: alias-routing-cosmosdb-001
+id: eval:smoke/alias-routing
 name: Alias Routing - CosmosDB to Azure Cosmos DB
 description: >
   Tests that the agent correctly resolves the alias "CosmosDB" to
   "Azure Cosmos DB" and locates the correct service reference file.
 tags:
+  - smoke
   - routing
   - alias
   - databases
+  - service:cosmos-db
 inputs:
   prompt: "How much does CosmosDB cost for 400 RU/s in East US?"
 expected:

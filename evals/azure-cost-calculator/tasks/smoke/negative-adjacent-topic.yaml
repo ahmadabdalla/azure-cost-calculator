@@ -1,11 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
-id: negative-adjacent-001
+id: eval:smoke/negative-adjacent-topic
 name: Negative - Adjacent Azure Topic (Certifications)
 description: >
   Tests a prompt that mentions Azure but is NOT about pricing or costs.
   The skill should not activate for general Azure questions unrelated
   to cost estimation.
 tags:
+  - smoke
   - negative
   - adjacent-topic
 inputs:
