@@ -18,7 +18,7 @@ on:
         required: false
         type: string
   pull_request:
-    branches: [dev, feat/evals-poc]
+    branches: [dev]
 
 # Workflow always triggers on PR (no paths: filter) so required status checks
 # report a status. Path filtering is handled inside each job using
