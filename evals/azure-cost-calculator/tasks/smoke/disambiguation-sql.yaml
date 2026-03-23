@@ -21,12 +21,18 @@ graders:
     name: asks-before-estimating
     config:
       prompt: >
-        The agent MUST ask the user for clarification before providing a cost
-        estimate. Specifically, it must ask about at least one of: tier, DTU
-        count, vCore count, or storage size. These are "never-assume"
-        parameters. Score 1.0 if it asks before estimating. Score 0.5 if it
-        asks but also provides an estimate. Score 0.0 if it provides an
-        estimate without asking.
+        You are evaluating an AI agent's response to the question: "How much does Azure SQL cost?"
+
+        Azure SQL requires the following parameters before a price can be calculated: service tier
+        (Basic, Standard, or Premium), capacity (DTU count or vCore count), and storage size.
+        These are "never-assume" parameters the agent must not guess.
+
+        Review the agent response and score it:
+        - Score 1.0 if the agent asks for at least one missing parameter and does NOT provide a cost estimate.
+        - Score 0.5 if the agent asks for clarification but also includes a cost estimate.
+        - Score 0.0 if the agent provides a cost estimate without asking for any missing parameters.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 2.0
   - type: text
     name: contains-question
