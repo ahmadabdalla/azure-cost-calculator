@@ -89,7 +89,7 @@ teardown() {
 }
 
 @test "non-markdown service files are filtered out" {
-    # ACMR diff returns a .txt file — grep '\.md$' filters it out
+    # ACMR diff returns a .txt file; grep '\.md$' filters it out
     create_sequenced_mock "git" \
         "services/compute/notes.txt|0" \
         "|0" \
@@ -163,7 +163,7 @@ services/network/vnet.md|0" \
 }
 
 @test "deletion of non-markdown file does not set service_deleted" {
-    # D diff returns a deleted non-.md file — grep filters it out
+    # D diff returns a deleted non-.md file; grep filters it out
     create_sequenced_mock "git" \
         "|0" \
         "services/compute/notes.txt|0" \

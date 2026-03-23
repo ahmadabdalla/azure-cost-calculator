@@ -2,7 +2,7 @@
 
 > Schema version: **1.0.0** · Source of truth: [`frontmatter-schema.psd1`](frontmatter-schema.psd1)
 
-This directory defines the YAML front matter schema for service reference files. The machine-readable schema in `frontmatter-schema.psd1` is the canonical definition — the validation pipeline imports it, and this README documents it for contributors.
+This directory defines the YAML front matter schema for service reference files. The machine-readable schema in `frontmatter-schema.psd1` is the canonical definition. The validation pipeline imports it, and this README documents it for contributors.
 
 ---
 
@@ -12,9 +12,9 @@ This directory defines the YAML front matter schema for service reference files.
 
 | Field         | Type   | Required | Default | Constraints      | Description                                                 |
 | ------------- | ------ | :------: | ------- | ---------------- | ----------------------------------------------------------- |
-| `serviceName` | string |    ✔     | —       | Exact API value  | Case-sensitive serviceName from the Azure Retail Prices API |
-| `category`    | string |    ✔     | —       | Enum (see below) | Folder name under `references/services/`                    |
-| `aliases`     | array  |    ✔     | —       | ≥ 1 item         | Common names, abbreviations, and synonyms for search        |
+| `serviceName` | string |    ✔     | n/a     | Exact API value  | Case-sensitive serviceName from the Azure Retail Prices API |
+| `category`    | string |    ✔     | n/a     | Enum (see below) | Folder name under `references/services/`                    |
+| `aliases`     | array  |    ✔     | n/a     | ≥ 1 item         | Common names, abbreviations, and synonyms for search        |
 
 **`category` values:** `compute`, `containers`, `databases`, `networking`, `storage`, `security`, `monitoring`, `management`, `integration`, `analytics`, `ai-ml`, `iot`, `developer-tools`, `identity`, `migration`, `web`, `communication`, `specialist`
 
@@ -22,8 +22,8 @@ This directory defines the YAML front matter schema for service reference files.
 
 | Field                   | Type  | Required | Default | Constraints             | Description                                   |
 | ----------------------- | ----- | :------: | ------- | ----------------------- | --------------------------------------------- |
-| `billingNeeds`          | array |    —     | omit    | Free-form service names | Services billed under a different serviceName |
-| `billingConsiderations` | array |    —     | omit    | Enum (see below)        | Pricing factors the agent asks the user about |
+| `billingNeeds`          | array |          | omit    | Free-form service names | Services billed under a different serviceName |
+| `billingConsiderations` | array |          | omit    | Enum (see below)        | Pricing factors the agent asks the user about |
 
 **`billingConsiderations` values:** `Reserved Instances`, `Spot Pricing`, `Azure Hybrid Benefit`, `M365 / Windows per-user licensing`
 
@@ -31,7 +31,7 @@ This directory defines the YAML front matter schema for service reference files.
 
 | Field            | Type   | Required | Default | Constraints | Description                                           |
 | ---------------- | ------ | :------: | ------- | ----------- | ----------------------------------------------------- |
-| `apiServiceName` | string |    —     | omit    | —           | API serviceName when it differs from the display name |
+| `apiServiceName` | string |          | omit    | n/a         | API serviceName when it differs from the display name |
 
 Use only when the Retail Prices API uses a different `serviceName` than the service's display name (e.g., VMware Solution → `Specialized Compute`, Static Web Apps → `Azure App Service`).
 
@@ -39,28 +39,28 @@ Use only when the Retail Prices API uses a different `serviceName` than the serv
 
 | Field           | Type    | Required | Default    | Constraints      | Description                                                      |
 | --------------- | ------- | :------: | ---------- | ---------------- | ---------------------------------------------------------------- |
-| `primaryCost`   | string  |    ✔     | —          | Max 120 chars    | One-line billing summary (replaces `**Primary cost**` body line) |
-| `hasMeters`     | boolean |    —     | `true`     | —                | `false` for services with no API meters                          |
-| `pricingRegion` | string  |    —     | `regional` | Enum (see below) | How region affects API queries                                   |
-| `hasKnownRates` | boolean |    —     | `false`    | —                | `true` when file contains a Known Rates table                    |
+| `primaryCost`   | string  |    ✔     | n/a        | Max 120 chars    | One-line billing summary (replaces `**Primary cost**` body line) |
+| `hasMeters`     | boolean |          | `true`     | n/a              | `false` for services with no API meters                          |
+| `pricingRegion` | string  |          | `regional` | Enum (see below) | How region affects API queries                                   |
+| `hasKnownRates` | boolean |          | `false`    | n/a              | `true` when file contains a Known Rates table                    |
 
 **`pricingRegion` values:**
 
 | Value             | Meaning                                             | Example services                   |
 | ----------------- | --------------------------------------------------- | ---------------------------------- |
 | `regional`        | Standard region parameter in queries                | Virtual Machines, SQL Database     |
-| `global`          | No region or `Global` in API — use direct API query | Private Link (data processing)     |
-| `empty-region`    | API returns results with empty `armRegionName`      | —                                  |
+| `global`          | No region or `Global` in API; use direct API query  | Private Link (data processing)     |
+| `empty-region`    | API returns results with empty `armRegionName`      | n/a                                |
 | `api-unavailable` | No meters exist in the API at all                   | Management Groups, DDoS Protection |
 
 ### Service Capabilities (new)
 
 | Field             | Type    | Required | Default | Constraints | Description                                         |
 | ----------------- | ------- | :------: | ------- | ----------- | --------------------------------------------------- |
-| `hasFreeGrant`    | boolean |    —     | `false` | —           | `true` when service has free tier or included units |
-| `privateEndpoint` | boolean |    —     | `false` | —           | `true` when service supports private endpoints      |
+| `hasFreeGrant`    | boolean |          | `false` | n/a         | `true` when service has free tier or included units |
+| `privateEndpoint` | boolean |          | `false` | n/a         | `true` when service supports private endpoints      |
 
-> `privateEndpoint` is boolean only — tier restrictions (e.g., "Premium required") stay in the Notes section of the service reference file.
+> `privateEndpoint` is boolean only. Tier restrictions (e.g., "Premium required") stay in the Notes section of the service reference file.
 
 ---
 
@@ -68,7 +68,7 @@ Use only when the Retail Prices API uses a different `serviceName` than the serv
 
 Optional fields whose value matches the default **should be omitted** from the YAML block. Only exceptions (non-default values) appear explicitly. This minimises author burden and keeps YAML blocks compact.
 
-For example, a standard regional service with API meters does **not** write `hasMeters: true` or `pricingRegion: regional` — those are the defaults.
+For example, a standard regional service with API meters does **not** write `hasMeters: true` or `pricingRegion: regional`; those are the defaults.
 
 ---
 
@@ -100,7 +100,7 @@ hasFreeGrant: true
 ---
 ```
 
-### Full (all fields explicit — for illustration only)
+### Full (all fields explicit, for illustration only)
 
 ```yaml
 ---
@@ -126,7 +126,7 @@ privateEndpoint: false
 serviceName: Management Groups
 category: management
 aliases: [Management Groups]
-primaryCost: "Free — no charge for management group operations"
+primaryCost: "Free, no charge for management group operations"
 hasMeters: false
 pricingRegion: api-unavailable
 hasKnownRates: false

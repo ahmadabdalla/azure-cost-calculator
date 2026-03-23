@@ -4,7 +4,7 @@ category: ai-ml
 aliases: [Content Extraction, Multi-modal AI, Document Understanding]
 billingNeeds: [Azure OpenAI Service]
 apiServiceName: Foundry Tools
-primaryCost: "Per-page (doc), per-hour (audio/video), per-1K-token (field extraction) — PAYG only."
+primaryCost: "Per-page (doc), per-hour (audio/video), per-1K-token (field extraction); PAYG only."
 privateEndpoint: true
 ---
 
@@ -12,13 +12,13 @@ privateEndpoint: true
 
 > **Trap (serviceName)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Content Understanding`. Always use `ServiceName: Foundry Tools` with `ProductName: Azure Content Understanding` (no "AI" in productName) to isolate meters.
 
-> **Trap (mixed units)**: Meters use 3 unit types: `1K` (pages/tokens/images/transactions), `1 Hour` (audio/video processing), `1K/Month` (face storage). Script's `× 730` only applies to `1 Hour` meters — verify unit per meter.
+> **Trap (mixed units)**: Meters use 3 unit types: `1K` (pages/tokens/images/transactions), `1 Hour` (audio/video processing), `1K/Month` (face storage). Script's `× 730` only applies to `1 Hour` meters. Verify unit per meter.
 
 > **Trap (regional gaps)**: Only 3 regions (westus, swedencentral, australiaeast) have all 22 meters. Default region eastus has only 7 GA content extraction meters. Field Extraction, Classification, and Face meters return empty in other regions.
 
 ## Query Pattern
 
-### Standard document content extraction — 10K pages/month
+### Standard document content extraction: 10K pages/month
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Content Understanding
@@ -26,7 +26,7 @@ SkuName: Standard Doc Content Extraction
 MeterName: Standard Doc Content Extraction Pages
 Quantity: 10 # 10 × 1K = 10,000 pages
 
-### Audio content extraction — 50 hours
+### Audio content extraction: 50 hours
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Content Understanding
@@ -41,7 +41,7 @@ ProductName: Azure Content Understanding
 SkuName: Video Content Extraction
 MeterName: Video Content Extraction
 
-### Standard field extraction — input tokens (3 regions only)
+### Standard field extraction: input tokens (3 regions only)
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Content Understanding
@@ -88,11 +88,11 @@ Composite:              Monthly = ContentExtraction + Contextualization + FieldE
 ## Notes
 
 - **No free tier**: Unlike sibling AI services, Content Understanding has no free tier or monthly grant
-- **Azure OpenAI dependency**: Field extraction incurs separate Azure OpenAI model charges — see `openai-service.md` for model pricing
-- **Extraction tiers** (never-assume): Documents offer Minimal/Basic/Standard tiers; contextualization and field extraction also have **Pro** variants — ask user which tier
+- **Azure OpenAI dependency**: Field extraction incurs separate Azure OpenAI model charges (see `openai-service.md` for model pricing)
+- **Extraction tiers** (never-assume): Documents offer Minimal/Basic/Standard tiers; contextualization and field extraction also have **Pro** variants. Ask user which tier
 - **Regional availability**: GA content extraction in 15–16 regions; Field Extraction/Classification/Face only in westus, swedencentral, australiaeast
-- **Two-phase billing**: Content extraction + field extraction are separate meters for all modalities (doc/audio/video) — field extraction rates are significantly higher
+- **Two-phase billing**: Content extraction + field extraction are separate meters for all modalities (doc/audio/video); field extraction rates are significantly higher
 - **Capacity planning**: `Quantity: 1` = 1K pages/tokens/images when `unitOfMeasure` is `1K`; `1 Hour` meters bill per hour of media processed
-- **Supports private endpoints** via AI Services multi-service resource — see `networking/private-link.md` for PE pricing
-- **10 additional meters** in 3-region tier: Classification In/Out, Pro Contextualization, Pro Field Extract In/Out, Audio/Video Field Extraction, Add-On Formula/Face Grouping, Face Transaction — query `ProductName: Azure Content Understanding` in westus
+- **Supports private endpoints** via AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
+- **10 additional meters** in 3-region tier: Classification In/Out, Pro Contextualization, Pro Field Extract In/Out, Audio/Video Field Extraction, Add-On Formula/Face Grouping, Face Transaction. Query `ProductName: Azure Content Understanding` in westus
 - **Scope**: For broader Foundry Tools coverage, see `ai-services.md`

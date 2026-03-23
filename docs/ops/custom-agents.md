@@ -1,8 +1,8 @@
-# Custom Copilot Coding Agents — Operations Guide
+# Custom Copilot Coding Agents: Operations Guide
 
 Multi-agent system that gives the Copilot coding agent research-first, consensus-driven workflows for service reference authoring and review.
 
-> **Two agent systems in this repo**: This document covers the **CI/ops agents** in `.github/agents/` — these run on the GitHub Copilot coding agent platform for repository governance (issue triage, service reference authoring, PR review). For the **plugin agents** shipped to end-users in `agents/`, see [Plugin Agents](../plugin-agents.md).
+> **Two agent systems in this repo**: This document covers the **CI/ops agents** in `.github/agents/`; these run on the GitHub Copilot coding agent platform for repository governance (issue triage, service reference authoring, PR review). For the **plugin agents** shipped to end-users in `agents/`, see [Plugin Agents](../plugin-agents.md).
 
 ## Service Reference Authoring Agent
 
@@ -22,14 +22,14 @@ When the Copilot coding agent is assigned to a service-reference issue using the
 
 1. **Orchestrator** (`service-reference`) reads the routing map and dispatches four sub-agent invocations independently.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) explores the Azure Retail Prices API, cross-checks Microsoft Learn documentation, and returns a structured **Pricing Investigation Report**.
-3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently explores the same API — may discover different meters or interpret results differently.
+3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently explores the same API; may discover different meters or interpret results differently.
 4. **Pricing Investigator C** (`pricing-investigator`, third instance, identical prompt) provides a third independent view for majority-based consensus.
 5. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
 6. **Orchestrator** compares Reports A, B, and C for majority agreement, dispatches a tiebreaker investigator (using a different coding model) for unresolved disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
 
 ### Why multi-agent?
 
-- **Independent views prevent blind spots**: three investigators may explore different search terms and find different meters — disagreement reveals areas needing closer investigation.
+- **Independent views prevent blind spots**: three investigators may explore different search terms and find different meters; disagreement reveals areas needing closer investigation.
 - **Majority consensus over speculation**: the orchestrator only writes what a majority (2/3 or 3/3) of investigators agree on. Unresolved disputes trigger a tiebreaker round with a different coding model.
 - **Separation of concerns**: data discovery (shell + web) vs rule interpretation (read-only) vs file authoring.
 
@@ -39,16 +39,16 @@ When the Copilot coding agent is assigned to a service-reference issue using the
 
 ### How issues flow to the agent
 
-1. **Triage** — when a new issue is opened, the [issue triage workflow](issue-triage.md) classifies it and applies labels (e.g., `new-service`, `pricing-inaccuracy`).
-2. **Maintainer review** — a maintainer reviews the triaged issue and decides whether to assign the Copilot coding agent or wait for a human contributor.
-3. **Assignment** — the maintainer assigns the Copilot coding agent to the issue by selecting the `service-reference` custom agent. The agent then runs the multi-agent workflow described below.
+1. **Triage**: when a new issue is opened, the [issue triage workflow](issue-triage.md) classifies it and applies labels (e.g., `new-service`, `pricing-inaccuracy`).
+2. **Maintainer review**: a maintainer reviews the triaged issue and decides whether to assign the Copilot coding agent or wait for a human contributor.
+3. **Assignment**: the maintainer assigns the Copilot coding agent to the issue by selecting the `service-reference` custom agent. The agent then runs the multi-agent workflow described below.
 
 ### Assignment criteria
 
 - **New service issues** (`new-service` label): Assign the agent when:
   - The contributor did not indicate they want to submit the change themselves, OR
   - The issue has been open without a PR for an extended period
-- **Pricing inaccuracy issues** (`pricing-inaccuracy` label): Currently requires manual review — the agent workflow is optimized for new file creation, not updates to existing files.
+- **Pricing inaccuracy issues** (`pricing-inaccuracy` label): Currently requires manual review; the agent workflow is optimized for new file creation, not updates to existing files.
 - **General enhancements** (`enhancement` label): Evaluate case-by-case; most enhancements are not service reference work.
 
 ### Contributor self-service
@@ -107,25 +107,25 @@ service-reference (orchestrator)
 
 | File                                        | Role                                                                                   | Tools                                   |
 | ------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
-| `.github/agents/service-reference.md`       | Orchestrator — dispatches, aggregates, writes                                          | read, search, edit, execute, agent, web |
-| `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator — verifies, reviews                                             | read, search, edit, execute, agent, web |
+| `.github/agents/service-reference.md`       | Orchestrator: dispatches, aggregates, writes                                           | read, search, edit, execute, agent, web |
+| `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator: verifies, reviews                                              | read, search, edit, execute, agent, web |
 | `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
 | `.github/agents/compliance-reviewer.md`     | Rules analysis sub-agent                                                               | read, search                            |
 
 1. Edit the agent file directly.
 2. **YAML frontmatter** controls metadata (`name`, `description`, `tools`).
 3. **Markdown body** is the agent's prompt (max 30,000 characters per file).
-4. Changes take effect on the next agent invocation — versioned by Git commit SHA.
+4. Changes take effect on the next agent invocation (versioned by Git commit SHA).
 5. Push / open a PR. Profiles are read from the **default branch**.
 
-> **Important:** The agents reference existing repo files (`CONTRIBUTING.md`, `docs/TEMPLATE.md`, etc.) at runtime. If rules change, update those files first — agents read them live, not from a snapshot in the prompt.
+> **Important:** The agents reference existing repo files (`CONTRIBUTING.md`, `docs/TEMPLATE.md`, etc.) at runtime. If rules change, update those files first; agents read them live, not from a snapshot in the prompt.
 
 ### Tool restrictions
 
 Sub-agents use restricted toolsets (principle of least privilege):
 
 - `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional tiebreaker round with a different coding model for unresolved disputes.
-- `compliance-reviewer` has only `read` and `search` — no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
+- `compliance-reviewer` has only `read` and `search`: no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
 - Only the orchestrators (`service-reference` and `service-ref-pr-reviewer`) have `edit` and `agent` tools
 
 ---
@@ -170,13 +170,13 @@ When the Copilot coding agent is assigned to review a PR using the `service-ref-
 
 1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
-3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation — may discover different discrepancies.
+3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation; may discover different discrepancies.
 4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
 5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), posts it as a PR comment mentioning the author, and cleans up the worktree.
 
 ### Why dual investigation?
 
-- **Independent verification**: two investigators may explore different search terms and find different discrepancies — disagreement reveals areas needing closer scrutiny.
+- **Independent verification**: two investigators may explore different search terms and find different discrepancies; disagreement reveals areas needing closer scrutiny.
 - **Consensus over false positives**: only report findings that a majority agrees on, reducing noise in PR reviews.
 - **Tiebreaker for disputes**: unresolved disagreements trigger a third investigation with a different coding model, ensuring no contested finding ships without arbitration.
 
@@ -223,11 +223,11 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | Symptom                          | Likely cause                                                                      | Fix                                                                        |
 | -------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | Agent not appearing              | File not merged to default branch                                                 | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
-| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected — agent posts a skip message and stops                            |
+| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent posts a skip message and stops                             |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
 | gh CLI commands fail             | Agent environment missing `gh` or not authenticated                               | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
-| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected — tiebreaker only runs when investigators disagree                |
+| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                |
 | Review comment not posted        | GitHub skill PR comment failed                                                    | Check authentication and PR permissions                                    |
 | Worktree not cleaned up          | Error in earlier phase interrupted cleanup                                        | Manually run `git worktree remove ../pr-review-{N} --force`                |
 
@@ -237,14 +237,14 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 
 ### GitHub Copilot coding agent
 
-- [Custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents) — how to create custom agent profiles
-- [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration) — frontmatter and prompt format
-- [Testing custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/test-custom-agents) — how to test agent changes
+- [Custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents): how to create custom agent profiles
+- [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration): frontmatter and prompt format
+- [Testing custom agents](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/test-custom-agents): how to test agent changes
 
 ---
 
 ## Related
 
-- [Plugin Agents](../plugin-agents.md) — consumer-facing agents shipped with the plugin (`agents/`)
-- [`AGENTS.md`](../../AGENTS.md) — repo-level context for all agents
-- [`CONTRIBUTING.md`](../../CONTRIBUTING.md) — contributor workflow referenced by agents at runtime
+- [Plugin Agents](../plugin-agents.md): consumer-facing agents shipped with the plugin (`agents/`)
+- [`AGENTS.md`](../../AGENTS.md): repo-level context for all agents
+- [`CONTRIBUTING.md`](../../CONTRIBUTING.md): contributor workflow referenced by agents at runtime

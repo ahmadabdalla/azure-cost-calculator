@@ -175,7 +175,7 @@ SCRIPT
     # when a single API page exceeds MAX_ARG_STRLEN (~128 KiB). The fix pipes both
     # all_items and page_items via stdin using printf | jq -s '.[0] + .[1]'.
     #
-    # 200 items × 750-byte padding ≈ 165 KiB for page_items — exceeds the limit,
+    # 200 items × 750-byte padding ≈ 165 KiB for page_items, exceeding the limit,
     # so --argjson b would crash on the very first page without the fix.
     local page_items_json
     page_items_json=$(jq -cn '[range(200) | {
@@ -269,7 +269,7 @@ SCRIPT
 }
 
 @test "HTTP 404 does not retry (non-retryable)" {
-    # 404 should fail immediately — no retry
+    # 404 should fail immediately; no retry
     cat > "$MOCK_DIR/curl" <<'SCRIPT'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"

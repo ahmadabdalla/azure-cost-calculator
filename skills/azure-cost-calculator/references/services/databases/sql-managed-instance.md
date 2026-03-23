@@ -11,9 +11,9 @@ privateEndpoint: true
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `SkuName` for compute queries.
 
-> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier — sum both hourly rates, then × 730.
+> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Sum both hourly rates, then × 730.
 
-> **Trap (AHUB)**: vCore compute prices are **base rates only** (infrastructure, no license). Under PAYG, Azure bills a separate SQL License meter (Global) as an add-on. For AHUB, only the compute meter applies — the compute `retailPrice` IS the AHUB price. **Do NOT subtract.** NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
+> **Trap (AHUB)**: vCore compute prices are **base rates only** (infrastructure, no license). Under PAYG, Azure bills a separate SQL License meter (Global) as an add-on. For AHUB, only the compute meter applies; the compute `retailPrice` IS the AHUB price. **Do NOT subtract.** NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
 
 ## Query Pattern
 
@@ -24,7 +24,7 @@ ProductName: SQL Managed Instance General Purpose - Compute Gen5
 SkuName: 8 vCore
 MeterName: vCore
 
-### Storage (General Purpose) — use Quantity for provisioned GB
+### Storage (General Purpose): use Quantity for provisioned GB
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Storage
@@ -37,7 +37,7 @@ Quantity: 256
 | ------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `serviceName` | Always `SQL Managed Instance`                  | `SQL Managed Instance`                                                                       |
 | `productName` | Tier + hardware series                         | See Product Names section below                                                              |
-| `skuName`     | vCore count — selects the size                 | `4 vCore`, `8 vCore`, `16 vCore`, `24 vCore`, `32 vCore`, `40 vCore`, `64 vCore`, `80 vCore` |
+| `skuName`     | vCore count, selects the size                  | `4 vCore`, `8 vCore`, `16 vCore`, `24 vCore`, `32 vCore`, `40 vCore`, `64 vCore`, `80 vCore` |
 | `meterName`   | `vCore` for compute, tier-specific for storage | `vCore`, `General Purpose Data Stored`, `Business Critical Data Stored`                      |
 
 ## Meter Names
@@ -64,7 +64,7 @@ Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 
 ## Reserved Instance Pricing
 
-### RI compute (swap productName for BC; omit SkuName — unitPrice is per-vCore)
+### RI compute (swap productName for BC; omit SkuName; unitPrice is per-vCore)
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Compute Gen5
@@ -81,7 +81,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge — Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` when querying compute for this calculation — returns a per-vCore rate, same as RI pattern. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
+The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge; Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` when querying compute for this calculation; returns a per-vCore rate, same as RI pattern. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
 
 ## Product Names
 

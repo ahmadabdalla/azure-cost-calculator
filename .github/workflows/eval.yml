@@ -1,0 +1,272 @@
+name: Run Skill Evaluations
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model to evaluate against"
+        required: false
+        default: "claude-sonnet-4.6"
+        type: choice
+        options:
+          - claude-sonnet-4.6
+          - claude-sonnet-4.5
+          - claude-opus-4.6
+          - gpt-5.3-codex
+      tag:
+        description: "Tag filter for tasks (blank runs all)"
+        required: false
+        type: string
+  pull_request:
+    branches: [dev]
+
+# Workflow always triggers on PR (no paths: filter) so required status checks
+# report a status. Path filtering is handled inside each job using
+# dorny/paths-filter, matching the convention in unit-tests.yml and
+# validate-service-references.yml.
+
+permissions:
+  contents: read
+  pull-requests: read # needed by dorny/paths-filter to list PR files
+
+jobs:
+  validate-eval-schema:
+    name: Validate Eval Schema
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check for relevant changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'tests/evals/**'
+              - 'skills/**'
+              - '.waza.yaml'
+              - '.github/workflows/eval.yml'
+              - '.github/actions/install-waza/**'
+      - name: Install waza
+        if: steps.filter.outputs.relevant == 'true'
+        uses: ./.github/actions/install-waza
+      - name: Validate schemas
+        if: steps.filter.outputs.relevant == 'true'
+        run: waza check
+
+  evaluate-mock:
+    name: Evaluate (Mock Executor)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: validate-eval-schema
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check for relevant changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          filters: |
+            relevant:
+              - 'tests/evals/**'
+              - 'skills/**'
+              - '.waza.yaml'
+              - '.github/workflows/eval.yml'
+              - '.github/actions/install-waza/**'
+      - name: Install waza
+        if: steps.filter.outputs.relevant == 'true'
+        uses: ./.github/actions/install-waza
+      - name: Override executor to mock
+        if: steps.filter.outputs.relevant == 'true'
+        run: |
+          sed -i 's/executor:[[:space:]]*copilot-sdk/executor: mock/' tests/evals/azure-cost-calculator/eval.yaml
+      - name: Run evaluations (mock)
+        if: steps.filter.outputs.relevant == 'true'
+        continue-on-error: true
+        run: waza run --verbose --output results.json
+      - name: Display results summary
+        if: always() && steps.filter.outputs.relevant == 'true'
+        run: |
+          if [ -f results.json ]; then
+            echo "## Evaluation Results (Mock)" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat results.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always() && steps.filter.outputs.relevant == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-results-mock
+          path: |
+            results.json
+            transcripts/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # Real LLM evaluation on PRs that modify files critical to skill behavior.
+  # dorny/paths-filter detects which file categories changed; a mapping step
+  # converts categories to eval task tags so only relevant tasks run.
+  # continue-on-error: true until prompt graders are fully stable.
+  evaluate-critical:
+    name: Evaluate Critical Changes (Copilot SDK)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: validate-eval-schema
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Detect critical file changes
+        id: filter
+        uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
+        with:
+          list-files: shell
+          filters: |
+            skill-core:
+              - 'skills/azure-cost-calculator/SKILL.md'
+              - 'agents/**'
+              - 'commands/**'
+            shared-context:
+              - 'skills/azure-cost-calculator/references/shared.md'
+            routing:
+              - 'skills/azure-cost-calculator/references/service-routing.md'
+            services:
+              - 'skills/azure-cost-calculator/references/services/**'
+            scripts:
+              - 'skills/azure-cost-calculator/scripts/**'
+      - name: Build eval scope
+        id: scope
+        env:
+          SKILL_CORE: ${{ steps.filter.outputs.skill-core }}
+          SHARED_CTX: ${{ steps.filter.outputs.shared-context }}
+          ROUTING: ${{ steps.filter.outputs.routing }}
+          SERVICES: ${{ steps.filter.outputs.services }}
+          SERVICES_FILES: ${{ steps.filter.outputs.services_files }}
+          SCRIPTS: ${{ steps.filter.outputs.scripts }}
+          HAS_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN != '' && 'true' || 'false' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ]; then
+            echo "::notice::COPILOT_GITHUB_TOKEN not configured; skipping critical evals"
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          TAGS=()
+          # Core skill definition or shared context changes: run smoke tests
+          if [ "$SKILL_CORE" == "true" ] || [ "$SHARED_CTX" == "true" ]; then
+            TAGS+=(smoke)
+          fi
+          # Service reference changes: extract service names for targeted evals
+          if [ "$SERVICES" == "true" ]; then
+            for f in $SERVICES_FILES; do
+              svc=$(basename "$f" .md)
+              TAGS+=("service:${svc}")
+            done
+          fi
+          # Routing file changes affect alias resolution
+          if [ "$ROUTING" == "true" ]; then
+            TAGS+=(routing)
+          fi
+          # Script changes affect the estimation pipeline: run smoke tests
+          if [ "$SCRIPTS" == "true" ]; then
+            TAGS+=(smoke)
+          fi
+          # Deduplicate and export
+          UNIQUE=($(printf '%s\n' "${TAGS[@]}" | sort -u))
+          if [ ${#UNIQUE[@]} -eq 0 ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "No critical skill files changed; skipping real evals"
+          else
+            TAG_CSV=$(IFS=,; echo "${UNIQUE[*]}")
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "tags=$TAG_CSV" >> "$GITHUB_OUTPUT"
+            echo "Targeted eval tags: $TAG_CSV"
+          fi
+      - name: Install waza
+        if: steps.scope.outputs.run == 'true'
+        uses: ./.github/actions/install-waza
+      - name: Run targeted evaluations
+        if: steps.scope.outputs.run == 'true'
+        continue-on-error: true
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          EVAL_TAGS: ${{ steps.scope.outputs.tags }}
+        run: |
+          # Build tag args from comma-separated list
+          IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAGS"
+          ARGS=(--verbose --output results.json)
+          for t in "${TAG_ARRAY[@]}"; do
+            ARGS+=(--tags "$t")
+          done
+          waza run "${ARGS[@]}"
+      - name: Display results summary
+        if: always() && steps.scope.outputs.run == 'true'
+        run: |
+          if [ -f results.json ]; then
+            echo "## Evaluation Results (Critical Path)" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat results.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always() && steps.scope.outputs.run == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-results-critical
+          path: |
+            results.json
+            transcripts/
+          retention-days: 30
+          if-no-files-found: warn
+
+  # The embedded Copilot CLI checks env vars in order: COPILOT_GITHUB_TOKEN,
+  # GH_TOKEN, GITHUB_TOKEN. The default GITHUB_TOKEN lacks Copilot access.
+  # COPILOT_GITHUB_TOKEN is a fine-grained PAT with "Copilot Requests" permission
+  # (same secret used by issue-triage and weekly-release workflows).
+  run-evals:
+    name: Run Evaluations (Copilot SDK)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Install waza
+        uses: ./.github/actions/install-waza
+      - name: Validate COPILOT_GITHUB_TOKEN
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$COPILOT_GITHUB_TOKEN" ]; then
+            echo "::error::COPILOT_GITHUB_TOKEN secret is not set. Required for Copilot SDK evals."
+            echo "Create a fine-grained PAT with 'Copilot Requests' permission and add it as a repository secret."
+            exit 1
+          fi
+          echo "COPILOT_GITHUB_TOKEN is configured"
+      - name: Run evaluations
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          EVAL_MODEL: ${{ inputs.model }}
+          EVAL_TAG: ${{ inputs.tag }}
+        run: |
+          ARGS=(--model "$EVAL_MODEL" --verbose --output results.json)
+          if [ -n "$EVAL_TAG" ]; then
+            ARGS+=(--tags "$EVAL_TAG")
+          fi
+          waza run "${ARGS[@]}"
+      - name: Display results summary
+        if: always()
+        env:
+          EVAL_MODEL: ${{ inputs.model }}
+        run: |
+          if [ -f results.json ]; then
+            echo "## Evaluation Results (${EVAL_MODEL})" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat results.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: eval-results-${{ inputs.model }}
+          path: |
+            results.json
+            transcripts/
+          retention-days: 30
+          if-no-files-found: warn

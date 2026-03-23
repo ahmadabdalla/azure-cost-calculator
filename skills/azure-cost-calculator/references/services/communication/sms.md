@@ -5,15 +5,15 @@ aliases: [ACS SMS, Text Messaging]
 primaryCost: "Per-consumption-unit SMS + per-month short code leasing"
 ---
 
-# Azure Communication Services — SMS
+# Azure Communication Services: SMS
 
 > **Trap (consumption units)**: SMS meters use abstract consumption unit pricing, not per-message rates. Actual per-message cost depends on destination country and is set by the carrier. Use `Quantity` with expected monthly consumption units.
 
-> **Trap (multi-product)**: SMS spans 36 productNames across regional and Global regions — covering Toll Free SMS, Short Codes, Local SMS (10DLC), Mobile SMS, Alphanumeric Sender ID, and surcharges. Many products are Global-only. Query each product type separately.
+> **Trap (multi-product)**: SMS spans 36 productNames across regional and Global regions: covering Toll Free SMS, Short Codes, Local SMS (10DLC), Mobile SMS, Alphanumeric Sender ID, and surcharges. Many products are Global-only. Query each product type separately.
 
 ## Query Pattern
 
-### Toll Free SMS outbound — consumption units (Quantity = monthly units)
+### Toll Free SMS outbound: consumption units (Quantity = monthly units)
 
 ServiceName: SMS
 ProductName: Toll Free SMS - Outbound
@@ -21,7 +21,7 @@ SkuName: ROW
 MeterName: ROW Consumption Unit - Outbound
 Quantity: 5000
 
-### Short code leasing — monthly lease
+### Short code leasing: monthly lease
 
 ServiceName: SMS
 ProductName: Short Codes - Leasing - Standard Number - I
@@ -64,9 +64,9 @@ Total Monthly      = Toll Free + Short Code (sum active components)
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
+- **Part of ACS family**: Related services use separate API serviceNames: `Voice`, `Email`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
 - **Country-dependent pricing**: SMS rates vary by destination country; `skuName` encodes country (e.g., `US`, `CA`, `UK`, `ROW`)
-- Short code provisioning fees are one-time charges — separate from monthly lease
+- Short code provisioning fees are one-time charges, separate from monthly lease
 - Surcharge products (`Toll Free SMS-OB-Surcharge`, etc.) add carrier-level fees on top of base consumption units
-- **Global-only products**: Alphanumeric Sender ID, Local SMS (10DLC), Mobile SMS, and non-`-I` Short Codes variants are only available in the Global region — use `Region: Global` to query
+- **Global-only products**: Alphanumeric Sender ID, Local SMS (10DLC), Mobile SMS, and non-`-I` Short Codes variants are only available in the Global region; use `Region: Global` to query
 - **Vanity short codes**: `Short Codes - Leasing - Vanity Number - I` at higher monthly lease than standard

@@ -5,3 +5,7 @@ __pycache__/
 .DS_Store
 prompts
 settings.local.json
+
+# Waza eval results and cache
+results/
+.waza-cache/

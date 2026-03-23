@@ -61,7 +61,7 @@ deleted_output=$(git diff --name-only --diff-filter=D \
 SERVICE_DELETED=$(echo "$deleted_output" | grep '\.md$' || true)
 
 # Infrastructure files (tests, template, routing, catalog).
-# Word-splitting on INFRA_PATHS is intentional — paths are
+# Word-splitting on INFRA_PATHS is intentional; paths are
 # owner-controlled values set in the workflow env block.
 # shellcheck disable=SC2086
 INFRA_CHANGED=$(git diff --name-only --diff-filter=ACMR \

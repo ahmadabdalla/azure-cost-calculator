@@ -14,27 +14,27 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Standard tier — throughput unit (base cost)
+### Standard tier: throughput unit (base cost)
 
 ServiceName: Event Hubs
 SkuName: Standard
 MeterName: Standard Throughput Unit
 
-### Standard tier — ingress events (per 1M events)
+### Standard tier: ingress events (per 1M events)
 
 ServiceName: Event Hubs
 SkuName: Standard
 MeterName: Standard Ingress Events
 Quantity: 10
 
-### Premium tier — 3 processing units (use InstanceCount for multi-unit)
+### Premium tier: 3 processing units (use InstanceCount for multi-unit)
 
 ServiceName: Event Hubs
 SkuName: Premium
 MeterName: Premium Processing Unit
 InstanceCount: 3
 
-### Dedicated tier — capacity unit
+### Dedicated tier: capacity unit
 
 ServiceName: Event Hubs
 SkuName: Dedicated
@@ -74,7 +74,7 @@ Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transfe
 - Standard tier: max 7-day retention; no extended retention meter available
 - Premium/Dedicated include ingress events at no extra charge
 - Capacity: 1 TU = 1 MB/s ingress / ~1K events/s; 1 PU ≈ 5–10 MB/s; 1 CU ≈ 20 MB/s
-- Geo-DR requires two separate Premium/Dedicated namespaces — budget 2× namespace cost plus replication transfer
-- All throughput/processing/capacity units are billed hourly — use 730 hours/month
+- Geo-DR requires two separate Premium/Dedicated namespaces; budget 2× namespace cost plus replication transfer
+- All throughput/processing/capacity units are billed hourly; use 730 hours/month
 - Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API
 - Private endpoints require Standard tier or higher

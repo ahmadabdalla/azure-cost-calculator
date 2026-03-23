@@ -13,7 +13,7 @@ pricingRegion: global
 
 > **Trap (Cross-region)**: When the PE and the target PaaS service are in different regions, both PE data processing charges AND standard Azure bandwidth egress charges apply. Deploy PEs in the same region as the target service to avoid double charges.
 
-> **Trap (Tiered data processing)**: Data processing meters return multiple rows with `tierMinimumUnits` (0, 1 000 000 GB, 5 000 000 GB). Use the tier matching the workload volume — do not sum all tiers. Most workloads stay in the first tier.
+> **Trap (Tiered data processing)**: Data processing meters return multiple rows with `tierMinimumUnits` (0, 1 000 000 GB, 5 000 000 GB). Use the tier matching the workload volume. Do not sum all tiers. Most workloads stay in the first tier.
 
 ## Query Pattern
 
@@ -32,7 +32,7 @@ MeterName: Standard Private Endpoint
 Region: Global
 InstanceCount: 5
 
-### Data processed — substitute {direction} with Ingress or Egress
+### Data processed: substitute {direction} with Ingress or Egress
 
 ServiceName: Virtual Network <!-- cross-service -->
 ProductName: Virtual Network Private Link
@@ -66,11 +66,11 @@ Monthly = endpoint_retailPrice × 730 × endpointCount
 
 ## Notes
 
-- **Companion cost**: PEs typically require a Private DNS Zone per service type — see `networking/private-dns.md` for zone hosting and query costs. Multiple PEs of the same type share one zone
-- **Service availability**: Do not maintain an internal PE support list — refer to [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/availability)
-- **AMPLS**: Azure Monitor Private Link Scope is a free grouping resource with no unique meters — uses standard PE billing. 1 PE per AMPLS-to-VNet connection. Requires 5 Private DNS zones (monitor, oms, ods, agentsvc, blob)
-- **Multi-PE services**: Some services support multiple PE sub-resources (e.g., blob, file, queue for Storage). The service's own reference file should document which sub-resources are available — this file only prices the generic private endpoint.
-- **Service-specific PE meters**: Some services (e.g., Notification Hubs) have their own Private Link meters under their `serviceName` — those are documented in the service file, not here. This file covers generic PEs billed under `serviceName: Virtual Network`
+- **Companion cost**: PEs typically require a Private DNS Zone per service type. See `networking/private-dns.md` for zone hosting and query costs. Multiple PEs of the same type share one zone
+- **Service availability**: Do not maintain an internal PE support list. Refer to [Azure Private Link availability](https://learn.microsoft.com/en-us/azure/private-link/availability)
+- **AMPLS**: Azure Monitor Private Link Scope is a free grouping resource with no unique meters. Uses standard PE billing. 1 PE per AMPLS-to-VNet connection. Requires 5 Private DNS zones (monitor, oms, ods, agentsvc, blob)
+- **Multi-PE services**: Some services support multiple PE sub-resources (e.g., blob, file, queue for Storage). The service's own reference file should document which sub-resources are available. This file only prices the generic private endpoint.
+- **Service-specific PE meters**: Some services (e.g., Notification Hubs) have their own Private Link meters under their `serviceName`. Those are documented in the service file, not here. This file covers generic PEs billed under `serviceName: Virtual Network`
 - Each PE consumes an IP address from the VNet subnet
 - Data processing is typically negligible compared to endpoint hours for moderate usage
-- **US Gov / edge zones**: PE meters also exist under `US Gov` and edge zone regions (e.g., `attatlanta1`, `sgxsingapore1`) at different rates — omit `Region: Global` and use the target region when estimating for sovereign or edge deployments
+- **US Gov / edge zones**: PE meters also exist under `US Gov` and edge zone regions (e.g., `attatlanta1`, `sgxsingapore1`) at different rates. Omit `Region: Global` and use the target region when estimating for sovereign or edge deployments

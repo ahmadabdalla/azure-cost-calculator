@@ -8,7 +8,7 @@ hasFreeGrant: true
 
 # Virtual WAN
 
-> **Trap**: Unfiltered queries sum **17 meters** (hub + VPN + ExpressRoute + NVA + data processing) — always query each billing component separately.
+> **Trap**: Unfiltered queries sum **17 meters** (hub + VPN + ExpressRoute + NVA + data processing). Always query each billing component separately.
 
 > **Trap (Basic tier)**: Basic WAN type is free with **no API meters**. Only Standard hubs incur charges.
 
@@ -27,7 +27,7 @@ SkuName: Standard Hub
 MeterName: Standard Hub Data Processed
 Quantity: 500
 
-### VPN S2S gateway — scale units (500 Mbps each)
+### VPN S2S gateway: scale units (500 Mbps each)
 
 ServiceName: Virtual WAN
 SkuName: VPN S2S Scale Unit
@@ -41,14 +41,14 @@ SkuName: VPN S2S Connection Unit
 MeterName: VPN S2S Connection Unit
 Quantity: 10
 
-### ExpressRoute gateway — scale units 1–5 (2 Gbps each)
+### ExpressRoute gateway: scale units 1–5 (2 Gbps each)
 
 ServiceName: Virtual WAN
 SkuName: ExpressRoute Scale Unit
 MeterName: ExpressRoute Scale Unit
 InstanceCount: 3
 
-> **Note**: ER units 6–10 use `SkuName: ExpressRoute Additional Scale Unit` at a lower rate. VPN P2S queries follow the S2S pattern — substitute `VPN P2S Scale Unit` / `VPN P2S Connection Unit`.
+> **Note**: ER units 6–10 use `SkuName: ExpressRoute Additional Scale Unit` at a lower rate. VPN P2S queries follow the S2S pattern; substitute `VPN P2S Scale Unit` / `VPN P2S Connection Unit`.
 
 ## Key Fields
 
@@ -96,5 +96,5 @@ Total monthly      = Hub + S2S VPN + P2S VPN + ER + Optional (sum only deployed 
 - **Basic tier** is free (S2S VPN only, no ER/P2S/inter-hub); Standard required for full features
 - **Capacity**: 1 VPN scale unit = 500 Mbps; 1 ER scale unit = 2 Gbps; base hub includes 2 routing units (3 Gbps, 2,000 VMs)
 - **Routing Infrastructure Unit**: auto-scales at 1 unit per additional 1,000 VMs beyond the included 2,000
-- **Secured Virtual Hub**: Azure Firewall in hub is billed under `Azure Firewall`, not Virtual WAN — see `networking/firewall.md`
+- **Secured Virtual Hub**: Azure Firewall in hub is billed under `Azure Firewall`, not Virtual WAN. See `networking/firewall.md`
 - **Data transfer**: outbound egress billed under Bandwidth; NVA marketplace licensing is additional to infra units

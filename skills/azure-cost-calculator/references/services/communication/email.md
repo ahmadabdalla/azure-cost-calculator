@@ -6,9 +6,9 @@ primaryCost: "Per-email sent + per-MB data transferred"
 hasKnownRates: true
 ---
 
-# Azure Communication Services — Email
+# Azure Communication Services: Email
 
-> **Trap (sub-cent pricing)**: Email meters are priced at sub-cent levels — the script may display zero cost. Use `Quantity` with expected monthly volume for accurate estimates.
+> **Trap (sub-cent pricing)**: Email meters are priced at sub-cent levels; the script may display zero cost. Use `Quantity` with expected monthly volume for accurate estimates.
 
 ## Query Pattern
 
@@ -52,8 +52,8 @@ Monthly = email_retailPrice × emails + dataTransfer_retailPrice × dataMB
 
 ## Notes
 
-- **Part of ACS family**: Related services use separate API serviceNames — `Voice`, `SMS`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
-- Only 2 meters — simple per-email + per-MB model
+- **Part of ACS family**: Related services use separate API serviceNames: `Voice`, `SMS`, `Messaging`, `Phone Numbers`, `Network Traversal`, `Routing`
+- Only 2 meters, simple per-email + per-MB model
 - Single product and SKU: all queries use `productName: Email`, `skuName: Basic`
 
 ## Known Rates

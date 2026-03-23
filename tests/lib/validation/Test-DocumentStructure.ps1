@@ -85,7 +85,7 @@ function Test-DocumentStructure {
     $optionalOrderOk = $optionalBeforeNotes.Count -eq 0
     $checks.Add((New-ValidationCheck -Name 'optional_sections_after_notes' -Pass $optionalOrderOk `
         -PassMessage 'All optional sections appear after Notes (or no optional sections present)' `
-        -FailMessage ('Optional sections before Notes: ' + ($optionalBeforeNotes -join ', ') + ' — must move after Notes')))
+        -FailMessage ('Optional sections before Notes: ' + ($optionalBeforeNotes -join ', ') + '. Must move after Notes')))
 
     , $checks
 }

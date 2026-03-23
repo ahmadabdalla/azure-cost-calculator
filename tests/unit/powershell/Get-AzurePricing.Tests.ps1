@@ -206,6 +206,82 @@ Describe 'Get-AzurePricing' {
         }
     }
 
+    Context 'Custom HoursPerMonth parameter' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -HoursPerMonth 744 -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should calculate MonthlyCost using custom hours' {
+            $script:Result.results[0].MonthlyCost | Should -Be 71.42
+        }
+
+        It 'Should still return correct UnitPrice' {
+            $script:Result.results[0].UnitPrice | Should -Be 0.096
+        }
+    }
+
+    Context 'Quantity and InstanceCount combined' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.096
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -Quantity 10 -InstanceCount 3 -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should multiply both Quantity and InstanceCount into MonthlyCost' {
+            $script:Result.results[0].MonthlyCost | Should -Be 2102.4
+        }
+
+        It 'Should report Quantity as 10' {
+            $script:Result.results[0].Quantity | Should -Be 10
+        }
+
+        It 'Should report InstanceCount as 3' {
+            $script:Result.results[0].InstanceCount | Should -Be 3
+        }
+    }
+
     Context 'Deduplication prefers isPrimaryMeterRegion' {
         BeforeAll {
             Mock Invoke-RestMethod {
@@ -256,6 +332,172 @@ Describe 'Get-AzurePricing' {
 
         It 'Should keep the primary meter region item' {
             $script:Result.results[0].UnitPrice | Should -Be 0.096
+        }
+    }
+
+    Context 'Deduplication falls back to first item when no primary exists' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @(
+                        [PSCustomObject]@{
+                            serviceName          = 'Key Vault'
+                            productName          = 'Key Vault Operations'
+                            skuName              = 'Standard'
+                            armSkuName           = ''
+                            meterName            = 'Operations'
+                            armRegionName        = 'australiaeast'
+                            retailPrice          = 0.03
+                            unitOfMeasure        = '10K Transactions'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $false
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        },
+                        [PSCustomObject]@{
+                            serviceName          = 'Key Vault'
+                            productName          = 'Key Vault Operations'
+                            skuName              = 'Standard'
+                            armSkuName           = ''
+                            meterName            = 'Operations'
+                            armRegionName        = 'australiaeast'
+                            retailPrice          = 0.05
+                            unitOfMeasure        = '10K Transactions'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $false
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        }
+                    )
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Key Vault' -Region 'australiaeast' -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should return only one result after deduplication' {
+            $script:Result.totalItems | Should -Be 1
+        }
+
+        It 'Should keep the first item when no primary exists' {
+            $script:Result.results[0].UnitPrice | Should -Be 0.03
+        }
+    }
+
+    Context 'Deduplication preserves distinct reservation terms' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @(
+                        [PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 600
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Reservation'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = '1 Year'
+                        },
+                        [PSCustomObject]@{
+                            serviceName          = 'Virtual Machines'
+                            productName          = 'Virtual Machines Dv5 Series'
+                            skuName              = 'D2s v5'
+                            armSkuName           = 'Standard_D2s_v5'
+                            meterName            = 'D2s v5'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 1500
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Reservation'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = '3 Years'
+                        }
+                    )
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Virtual Machines' -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should return both reservation terms' {
+            $script:Result.totalItems | Should -Be 2
+        }
+
+        It 'Should include 1 Year term' {
+            $script:Result.results | Where-Object { $_.ReservationTerm -eq '1 Year' } | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Should include 3 Years term' {
+            $script:Result.results | Where-Object { $_.ReservationTerm -eq '3 Years' } | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Should calculate correct monthly cost for 1 Year' {
+            ($script:Result.results | Where-Object { $_.ReservationTerm -eq '1 Year' }).MonthlyCost | Should -Be 50
+        }
+
+        It 'Should calculate correct monthly cost for 3 Years' {
+            ($script:Result.results | Where-Object { $_.ReservationTerm -eq '3 Years' }).MonthlyCost | Should -Be 41.67
+        }
+    }
+
+    Context 'Filter parameters pass through to query' {
+        BeforeAll {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{
+                    Items        = @([PSCustomObject]@{
+                            serviceName          = 'Azure Cache for Redis'
+                            productName          = 'Azure Cache for Redis'
+                            skuName              = 'C1 Standard'
+                            armSkuName           = 'Standard_C1'
+                            meterName            = 'Cache Units'
+                            armRegionName        = 'eastus'
+                            retailPrice          = 0.042
+                            unitOfMeasure        = '1 Hour'
+                            currencyCode         = 'USD'
+                            type                 = 'Consumption'
+                            isPrimaryMeterRegion = $true
+                            tierMinimumUnits     = 0
+                            reservationTerm      = $null
+                        })
+                    NextPageLink = $null
+                }
+            }
+
+            $raw = & $script:ScriptPath -ServiceName 'Azure Cache for Redis' -ProductName 'Azure Cache for Redis' -SkuName 'C1 Standard' -MeterName 'Cache Units' -ArmSkuName 'Standard_C1' -OutputFormat Json 3>$null
+            $script:Result = ($raw -join "`n") | ConvertFrom-Json
+        }
+
+        It 'Should include ProductName in query filters' {
+            $script:Result.query.filters.productName | Should -Be 'Azure Cache for Redis'
+        }
+
+        It 'Should include SkuName in query filters' {
+            $script:Result.query.filters.skuName | Should -Be 'C1 Standard'
+        }
+
+        It 'Should include MeterName in query filters' {
+            $script:Result.query.filters.meterName | Should -Be 'Cache Units'
+        }
+
+        It 'Should include ArmSkuName in query filters' {
+            $script:Result.query.filters.armSkuName | Should -Be 'Standard_C1'
+        }
+
+        It 'Should return the filtered result' {
+            $script:Result.totalItems | Should -Be 1
         }
     }
 

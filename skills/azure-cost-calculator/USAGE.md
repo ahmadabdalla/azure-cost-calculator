@@ -1,4 +1,4 @@
-# Azure Cost Calculator — Usage Guide
+# Azure Cost Calculator: Usage Guide
 
 Write prompts that produce deterministic cost estimates. A/B testing showed vague prompts cause $9K–$131K variance; fully-specified prompts produced 0% variance across 32 agent runs.
 
@@ -8,8 +8,8 @@ Write prompts that produce deterministic cost estimates. A/B testing showed vagu
 
 | Platform        | How to invoke                                                 | Notes                                                                         |
 | --------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| **Claude Code** | `/estimate-cost <description or @file>`                       | Slash command — runs in forked context                                        |
-| **Copilot CLI** | `@cost-analyst estimate the costs for <description or @file>` | Address the agent directly — CLI does not support slash commands from plugins |
+| **Claude Code** | `/estimate-cost <description or @file>`                       | Slash command; runs in forked context                                        |
+| **Copilot CLI** | `@cost-analyst estimate the costs for <description or @file>` | Address the agent directly; CLI does not support slash commands from plugins |
 
 Both methods invoke the same **cost-analyst** agent and follow the same workflow. Invocation syntax differs by platform, and output phrasing/token usage may vary slightly.
 
@@ -31,7 +31,7 @@ Both methods invoke the same **cost-analyst** agent and follow the same workflow
 | Pre-prod/UAT | 1-Year RI or PAYG   | Shorter commitment for changing requirements |
 | Dev/Test     | PAYG or Spot        | No commitment for ephemeral workloads        |
 
-**Step 3: State what you know — if no SKU, describe requirements**
+**Step 3: State what you know; if no SKU, describe requirements**
 
 ```
 Production (Australia East, AUD, 3-Year RI):
@@ -40,11 +40,11 @@ Production (Australia East, AUD, 3-Year RI):
 - 100 TB Blob Storage, Hot tier, LRS
 
 Dev/Test (Australia East, AUD, PAYG):
-- 5× B4ms VMs, Linux — need 16 GB RAM, 4 cores for CI runners
-- Or if unsure: "Need VMs with 64 GB RAM, 8 cores, 10K IOPS — recommend SKU"
+- 5× B4ms VMs, Linux (need 16 GB RAM, 4 cores for CI runners)
+- Or if unsure: "Need VMs with 64 GB RAM, 8 cores, 10K IOPS; recommend SKU"
 ```
 
-The agent performs a **Specification Review** before pricing — verifying inputs and disclosing defaults.
+The agent performs a **Specification Review** before pricing, verifying inputs and disclosing defaults.
 
 ## Required Parameters by Category
 
@@ -89,8 +89,8 @@ Always specify: **region** and **currency**.
 | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | Separate environments into distinct sections (different commitment strategies)   | Apply 3-Year RI to Dev/Test environments                                |
 | State licensing position up front (EA/CSP with core counts, not just "AHUB yes") | Mix primary and DR costs in one flat list                               |
-| Specify DR topology explicitly (active-active vs warm standby vs cold DR)        | Just say "migrate 400 VMs" — tier by workload, OS, sizing               |
-| Request comparative scenarios ("SQL MI vs SQL DB — give me both")                | Assume AHUB applies universally — it's constrained by license inventory |
+| Specify DR topology explicitly (active-active vs warm standby vs cold DR)        | Just say "migrate 400 VMs"; tier by workload, OS, sizing               |
+| Request comparative scenarios ("SQL MI vs SQL DB; give me both")                | Assume AHUB applies universally; it's constrained by license inventory |
 
 ## Ambiguity Traps (by Dollar Impact)
 
@@ -106,7 +106,7 @@ Always specify: **region** and **currency**.
 
 ## Hidden Cost Dependencies
 
-These services bill companion components separately — include them or the estimate is incomplete:
+These services bill companion components separately; include them or the estimate is incomplete:
 
 | Service                 | Also Include                      | Why                                    |
 | ----------------------- | --------------------------------- | -------------------------------------- |
@@ -133,14 +133,14 @@ Your disaster recovery strategy dramatically affects costs. State it explicitly 
 
 **Critical billing notes:**
 
-- SQL MI failover groups bill secondary compute even when passive — this is "warm standby" cost
+- SQL MI failover groups bill secondary compute even when passive; this is "warm standby" cost
 - SQL DB geo-replication bills the readable secondary at full compute rate
 - Site Recovery charges per protected VM + replica storage, but no standing compute
-- GRS storage replication is built into the redundancy tier — no separate DR cost
+- GRS storage replication is built into the redundancy tier; no separate DR cost
 
 ## How the Agent Works
 
-The agent analyzes your prompt and presents a **Specification Review** — what it found, what's missing, and defaults it will use. Review before pricing runs.
+The agent analyzes your prompt and presents a **Specification Review**: what it found, what's missing, and defaults it will use. Review before pricing runs.
 
 **Refine with specific follow-ups:**
 

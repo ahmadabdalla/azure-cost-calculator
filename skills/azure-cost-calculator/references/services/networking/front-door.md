@@ -8,14 +8,14 @@ privateEndpoint: true
 
 # Azure Front Door
 
-> **Trap (Zone regions)**: Front Door uses **zone-based regions** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'` — the default `eastus` returns zero results.
+> **Trap (Zone regions)**: Front Door uses **zone-based regions** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'`. The default `eastus` returns zero results.
 > **Trap (Two productNames)**: Standard/Premium profile meters use productName `Azure Front Door`. Classic WAF/routing meters use productName `Azure Front Door Service`. Always filter by `ProductName` to avoid mixing them.
 
 ## Query Pattern
 
 Substitute `{Tier}` with `Standard` or `Premium`.
 
-### {Tier} profile — base fee (Zone 1 = US/Europe)
+### {Tier} profile: base fee (Zone 1 = US/Europe)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
@@ -23,7 +23,7 @@ SkuName: {Tier}
 MeterName: {Tier} Base Fees
 Region: Zone 1
 
-### {Tier} — data transfer out (use Quantity for estimated monthly GB)
+### {Tier}: data transfer out (use Quantity for estimated monthly GB)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
@@ -32,7 +32,7 @@ MeterName: {Tier} Data Transfer Out
 Quantity: 500
 Region: Zone 1
 
-### {Tier} — requests (per 10K)
+### {Tier}: requests (per 10K)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
@@ -40,14 +40,14 @@ SkuName: {Tier}
 MeterName: {Tier} Requests
 Region: Zone 1
 
-### Classic WAF — policy and rules (productName: `Azure Front Door Service`)
+### Classic WAF: policy and rules (productName: `Azure Front Door Service`)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door Service
 MeterName: Standard Policy
 Region: Zone 1
 
-### Classic WAF — managed ruleset requests (use Quantity for monthly millions)
+### Classic WAF: managed ruleset requests (use Quantity for monthly millions)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door Service
@@ -75,7 +75,7 @@ Region: Zone 1
 | `Standard Bot Protection Request` | `Standard` | `1M/Month`    | Bot protection requests (Classic)       |
 | `Premium Captcha Sessions`        | `Premium`  | `1K`          | CAPTCHA (only Premium WAF add-on meter) |
 
-> **Trap (Tiered egress)**: Data transfer out queries return **multiple rows** with `tierMinimumUnits` (0 GB, 10 TB, 50 TB, etc.). The script's `totalMonthlyCost` sums `retailPrice × Quantity` per row without applying tier boundaries — ignore it. Manually calculate: sum each tier's volume × its `retailPrice`.
+> **Trap (Tiered egress)**: Data transfer out queries return **multiple rows** with `tierMinimumUnits` (0 GB, 10 TB, 50 TB, etc.). The script's `totalMonthlyCost` sums `retailPrice × Quantity` per row without applying tier boundaries. Ignore it. Manually calculate: sum each tier's volume × its `retailPrice`.
 
 ## Cost Formula
 
@@ -95,6 +95,6 @@ Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 ## Notes
 
 - **Zone mapping**: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Japan/Australia, Zone 3 = South America/Africa/Middle East. Additional zones (4-8) exist for specific geographies
-- **Standard vs Premium**: Premium adds Private Link origins, enhanced WAF with bot protection and managed rule sets, and Microsoft Threat Intelligence. Premium WAF is included in base fee — only `Premium Captcha Sessions` billed separately
-- **Data transfer out is tiered** — the first 10 TB is the highest rate; volume discounts apply at 50 TB+
-- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, and bot protection billed separately under productName `Azure Front Door Service`. Sub-cent per-request — use `Quantity`. Being retired in favor of Standard/Premium
+- **Standard vs Premium**: Premium adds Private Link origins, enhanced WAF with bot protection and managed rule sets, and Microsoft Threat Intelligence. Premium WAF is included in base fee; only `Premium Captcha Sessions` billed separately
+- **Data transfer out is tiered**. The first 10 TB is the highest rate; volume discounts apply at 50 TB+
+- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, and bot protection billed separately under productName `Azure Front Door Service`. Sub-cent per-request; use `Quantity`. Being retired in favor of Standard/Premium

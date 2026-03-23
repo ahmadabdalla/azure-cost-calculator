@@ -12,7 +12,7 @@ pricingRegion: empty-region
 >
 > **Trap (tiered pricing)**: Zone and query meters each return two rows (one per tier). For zones: apply tier 1 rate to the first 25, tier 2 rate to the remainder. For queries: apply tier 1 rate to the first 1B, tier 2 to the remainder. Do NOT use a single tier's rate for all units.
 
-> **Warning**: **Zone-based regions / Global pricing** — use `Region: Zone 1` (not ARM regions) or query the API directly with empty armRegionName.
+> **Warning**: **Zone-based regions / Global pricing**: use `Region: Zone 1` (not ARM regions) or query the API directly with empty armRegionName.
 
 ## Query Pattern
 
@@ -55,7 +55,7 @@ Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 | `Public Queries` | `1M`          | First 1B     | Per million queries            |
 | `Public Queries` | `1M`          | 1B+          | Lower rate for high volume     |
 
-> **Note**: Private DNS, Private Resolver, and DNS Security Policy meters share the same serviceName — see `private-dns.md` for Private DNS pricing, `dns-private-resolver.md` for Private Resolver pricing, and `dns-security-policy.md` for DNS Security Policy pricing.
+> **Note**: Private DNS, Private Resolver, and DNS Security Policy meters share the same serviceName. See `private-dns.md` for Private DNS pricing, `dns-private-resolver.md` for Private Resolver pricing, and `dns-security-policy.md` for DNS Security Policy pricing.
 
 ## Cost Formula
 
@@ -78,6 +78,6 @@ Monthly = Zones + Queries
 - Zone pricing is per month; query pricing is per million queries
 - First 25 zones are at the higher rate; zones 26+ at a lower rate
 - First 1 billion queries at higher rate; queries beyond 1B at lower rate
-- Query volume is typically low — zone hosting fee dominates most deployments
+- Query volume is typically low. Zone hosting fee dominates most deployments
 - See `private-dns.md` for Private DNS zone pricing and `dns-private-resolver.md` for Private Resolver pricing
 - See `dns-security-policy.md` for DNS Security Policy pricing

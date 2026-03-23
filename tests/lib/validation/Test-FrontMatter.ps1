@@ -47,7 +47,7 @@ function Test-FrontMatter {
                         -FailMessage "Missing required front matter field: $field"))
         }
 
-        # aliases field may be present but empty — require at least one entry
+        # aliases field may be present but empty; require at least one entry
         if ($FrontMatter.Fields.ContainsKey('aliases')) {
             $aliasValue = $FrontMatter.Fields['aliases']
             $parsedAliases = @()
@@ -103,7 +103,7 @@ function Test-FrontMatter {
 
             $rawValue = $FrontMatter.Fields[$fieldName].Trim() -replace '^[''"]', '' -replace '[''"]$', ''
 
-            # Type: boolean — must be 'true' or 'false'
+            # Type: boolean. Must be 'true' or 'false'
             if ($fieldDef.Type -eq 'boolean') {
                 $isValidBool = $rawValue -in @('true', 'false')
                 $checks.Add((New-ValidationCheck -Name "frontmatter_${fieldName}_type" -Pass $isValidBool `
@@ -118,7 +118,7 @@ function Test-FrontMatter {
                 $lengthOk = $valueLength -le $maxLen
                 $checks.Add((New-ValidationCheck -Name "frontmatter_${fieldName}_length" -Pass $lengthOk `
                             -PassMessage "$fieldName is $valueLength chars (limit: $maxLen)" `
-                            -FailMessage "$fieldName is $valueLength chars — exceeds $maxLen-char limit"))
+                            -FailMessage "$fieldName is $valueLength chars (exceeds $maxLen-char limit)"))
             }
 
             # AllowedValues enum constraint (e.g., pricingRegion)

@@ -130,7 +130,7 @@ Commit the updated lock files after upgrading.
 
 ## References
 
-- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/) — GitHub Agentic Workflows engine
-- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/) — the trigger pattern this workflow uses
-- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md) — service eligibility map queried by the agent (implemented services)
-- [service-catalog.md](../../docs/service-catalog.md) — full service catalog including pending services
+- [gh-aw overview](https://github.github.io/gh-aw/introduction/overview/): GitHub Agentic Workflows engine
+- [IssueOps pattern](https://github.github.io/gh-aw/patterns/issueops/): the trigger pattern this workflow uses
+- [service-routing.md](../../skills/azure-cost-calculator/references/service-routing.md): service eligibility map queried by the agent (implemented services)
+- [service-catalog.md](../../docs/service-catalog.md): full service catalog including pending services

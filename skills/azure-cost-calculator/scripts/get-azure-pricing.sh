@@ -187,7 +187,7 @@ for region_name in "${regions[@]}"; do
     ' <<< "$items")
 
     # Calculate monthly costs and build result objects in a single jq call.
-    # Reservation pricing: retailPrice is total prepaid — divide by term months.
+    # Reservation pricing: retailPrice is total prepaid; divide by term months.
     # Consumption pricing: hourly units use hours_per_month; daily units use 30; else 1.
     processed=$(jq -c --argjson qty "$quantity" \
         --argjson hpm "$hours_per_month" \
@@ -205,16 +205,16 @@ for region_name in "${regions[@]}"; do
              elif .reservationTerm == "5 Years" then 60
              else null end) as $term_months |
             (if $term_months then
-                # RI: retailPrice is total prepaid cost — divide by term months
+                # RI: retailPrice is total prepaid cost. Divide by term months
                 if $qty > 0 then ($up / $term_months) * $qty * $ic
                 else ($up / $term_months) * $ic end
              elif (.reservationTerm // "" | length) > 0 then
-                # Unknown reservation term — warn and fall back to consumption math
+                # Unknown reservation term: warn and fall back to consumption math
                 (("WARNING: Unknown reservationTerm \u0027" + .reservationTerm + "\u0027 for \u0027" + .productName + "\u0027. MonthlyCost may be incorrect." | stderr) as $_ |
                 if $qty > 0 then $up * $qty * $multiplier * $ic
                 else $up * $multiplier * $ic end)
              else
-                # Consumption: retailPrice is per-unit rate — multiply by monthly multiplier
+                # Consumption: retailPrice is per-unit rate. Multiply by monthly multiplier
                 if $qty > 0 then $up * $qty * $multiplier * $ic
                 else $up * $multiplier * $ic end
              end) as $raw_cost |

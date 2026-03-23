@@ -11,13 +11,13 @@ hasFreeGrant: true
 
 # Azure DevOps
 
-> **Note**: All Azure DevOps meters are Global-only (`armRegionName: Global`). For Artifacts, the API returns tiered pricing — use the first tier for estimates under 10 GB.
+> **Note**: All Azure DevOps meters are Global-only (`armRegionName: Global`). For Artifacts, the API returns tiered pricing; use the first tier for estimates under 10 GB.
 
-> **Trap**: Do not confuse `Azure DevOps` (this service — DevOps platform) with `Azure DevOps Server` (on-premises, licensed separately) or `Azure Synapse Pipelines` (data integration — separate service with consumption meters in the API).
+> **Trap**: Do not confuse `Azure DevOps` (this service, the DevOps platform) with `Azure DevOps Server` (on-premises, licensed separately) or `Azure Synapse Pipelines` (data integration, separate service with consumption meters in the API).
 
 ## Query Pattern
 
-### Basic user license — most common query
+### Basic user license: most common query
 
 ServiceName: Azure DevOps
 ProductName: Azure Repos and Boards (Basic)
@@ -72,9 +72,9 @@ Monthly = (basic_users × basic_retailPrice) + (testplan_users × testplan_retai
 ## Notes
 
 - **Free tier**: First 5 Basic users free, 1 MS-Hosted parallel job (1,800 min/month) free, 1 Self-Hosted parallel job free (unlimited for public projects), 2 GB Artifacts storage free
-- **Stakeholder access** is free and unlimited — provides work item tracking and dashboards only
-- Parallel jobs are billed per-job/month, not per-minute — one parallel job allows one concurrent pipeline run
-- **Artifacts tiered pricing**: 0–8 GB at first-tier rate, 8–98 GB, 98–998 GB, 998+ GB — tiers from API `tierMinimumUnits`
+- **Stakeholder access** is free and unlimited; provides work item tracking and dashboards only
+- Parallel jobs are billed per-job/month, not per-minute; one parallel job allows one concurrent pipeline run
+- **Artifacts tiered pricing**: 0–8 GB at first-tier rate, 8–98 GB, 98–998 GB, 998+ GB; tiers from API `tierMinimumUnits`
 - Related services billed separately: build agent VMs (if self-hosted on Azure VMs), Azure Test Plans load testing infrastructure
 
 ## Known Rates

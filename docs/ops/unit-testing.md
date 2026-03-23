@@ -1,4 +1,4 @@
-# Unit Testing — Operations Guide
+# Unit Testing: Operations Guide
 
 Unit tests for the core skill scripts and CI workflow scripts (PowerShell + Bash) using **Pester 5** and **bats-core**.
 
@@ -46,7 +46,7 @@ The 10 scripts under `.github/scripts/` that power the GitHub Actions workflows:
 |             | `Invoke-ScriptAnalyzer.ps1` | Lint with Error/Warning fail gate       |
 |             | `install-bats.sh`           | Install bats-core + jq                  |
 
-Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) and CI commands (`git`, `gh`) are mocked with synthetic data. Library functions are exercised with their real implementations.
+Tests run **offline**; external API calls (`Invoke-RestMethod`, `curl`) and CI commands (`git`, `gh`) are mocked with synthetic data. Library functions are exercised with their real implementations.
 
 ---
 
@@ -66,7 +66,7 @@ Tests run **offline** — external API calls (`Invoke-RestMethod`, `curl`) and C
 
 ### CI
 
-The GitHub Actions workflow installs Pester 5.7.1, PSScriptAnalyzer 1.24.0, and bats-core automatically — no manual setup needed.
+The GitHub Actions workflow installs Pester 5.7.1, PSScriptAnalyzer 1.24.0, and bats-core automatically; no manual setup needed.
 
 ---
 
@@ -85,7 +85,7 @@ powershell.exe -ExecutionPolicy Bypass -File tests/unit/Run-PesterTests.ps1
 Options:
 
 - `-OutputFormat Detailed` (default) / `Normal` / `Minimal`
-- `-CIOutputPath results/pester.xml` — write NUnit XML report
+- `-CIOutputPath results/pester.xml`: write NUnit XML report
 
 ### All Bash tests
 
@@ -95,16 +95,16 @@ bash tests/unit/run-bats-tests.sh
 
 Options:
 
-- `--tap` — TAP output for CI
+- `--tap`: TAP output for CI
 - Pass a specific `.bats` file to run only that test
 
 ### Single test file
 
 ```bash
-# PowerShell — run one test file directly
+# PowerShell: run one test file directly
 pwsh -Command "Invoke-Pester tests/unit/powershell/lib/Build-ODataFilter.Tests.ps1 -Output Detailed"
 
-# Bash — run one bats file
+# Bash: run one bats file
 bats tests/unit/bash/lib/build-odata-filter.bats
 ```
 
@@ -269,5 +269,5 @@ $items = ConvertFrom-JsonArray $jsonString
 
 ## References
 
-- [Pester 5 documentation](https://pester.dev/docs/quick-start) — PowerShell testing framework
-- [bats-core documentation](https://bats-core.readthedocs.io/) — Bash testing framework
+- [Pester 5 documentation](https://pester.dev/docs/quick-start): PowerShell testing framework
+- [bats-core documentation](https://bats-core.readthedocs.io/): Bash testing framework

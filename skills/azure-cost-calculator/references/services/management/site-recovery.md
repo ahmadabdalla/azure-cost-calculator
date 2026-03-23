@@ -4,7 +4,7 @@ category: management
 aliases: [ASR, Disaster Recovery, DR]
 billingNeeds: [Storage]
 billingConsiderations: [Azure Hybrid Benefit]
-primaryCost: "Per protected VM instance per month — flat rate varies by replication target (Azure, System Center, or on-prem)."
+primaryCost: "Per protected VM instance per month; flat rate varies by replication target (Azure, System Center, or on-prem)."
 privateEndpoint: true
 ---
 
@@ -16,14 +16,14 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Azure-to-Azure replication — 10 protected VMs
+### Azure-to-Azure replication: 10 protected VMs
 
 ServiceName: Azure Site Recovery
 SkuName: Azure
 MeterName: VM Replicated to Azure
 InstanceCount: 10
 
-### System Center (on-premises VMM) replication — 5 protected VMs
+### System Center (on-premises VMM) replication: 5 protected VMs
 
 ServiceName: Azure Site Recovery
 SkuName: System Center
@@ -60,8 +60,8 @@ System Center target:  retailPrice (System Center SKU) × VM count
 
 ## Notes
 
-- First 31 days of protection for each new instance are free (not reflected in API). When ASR is used via Azure Migrate for server migration, a longer **180-day** free period applies — see the Azure Migrate reference
+- First 31 days of protection for each new instance are free (not reflected in API). When ASR is used via Azure Migrate for server migration, a longer **180-day** free period applies; see the Azure Migrate reference
 - The ASR license fee is per-instance; VM size and disk count do not affect the rate
 - `Azure` SKU covers both Azure-to-Azure and on-premises-to-Azure scenarios
 - `System Center` SKU is for on-premises-to-on-premises replication via VMM
-- Some regions use `On-premise` SKU instead of `System Center` (same price) — if `System Center` returns empty, query with `SkuName: On-premise`
+- Some regions use `On-premise` SKU instead of `System Center` (same price); if `System Center` returns empty, query with `SkuName: On-premise`

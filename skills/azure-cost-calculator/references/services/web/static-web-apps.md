@@ -17,18 +17,18 @@ privateEndpoint: true
 
 > **Trap (Inflated totals)**: Omitting `MeterName` returns app + AFD + bandwidth meters summed together. Always filter by `MeterName` to get individual component costs.
 
-> **Trap (Bandwidth tiered pricing)**: The script returns two rows — one at zero price (`tierMinimumUnits=0`, first 100 GB free) and one at the overage rate (`tierMinimumUnits=100`). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost` — manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
+> **Trap (Bandwidth tiered pricing)**: The script returns two rows, one at zero price (`tierMinimumUnits=0`, first 100 GB free) and one at the overage rate (`tierMinimumUnits=100`). The script multiplies `Quantity` × `unitPrice` per row without subtracting the free tier. Ignore `totalMonthlyCost`; manually calculate overage: `max(0, totalGB - 100) × overage_retailPrice`.
 
 ## Query Pattern
 
-### Standard plan — per-app monthly fee (use Region eastus2; eastus has no data)
+### Standard plan: per-app monthly fee (use Region eastus2; eastus has no data)
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard App
 Region: eastus2
 
-### Bandwidth — pass Quantity with total GB to see per-tier unit prices
+### Bandwidth: pass Quantity with total GB to see per-tier unit prices
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
@@ -64,16 +64,16 @@ Region: eastus2
 
 ```
 App         = app_retailPrice × appCount
-Bandwidth   = max(0, totalGB - 100) × overage_retailPrice  (manual calc — see trap)
+Bandwidth   = max(0, totalGB - 100) × overage_retailPrice  (manual calc; see trap)
 AFD Add-on  = afd_retailPrice × 730 (if enabled)
 Total       = App + Bandwidth + AFD Add-on
 ```
 
 ## Notes
 
-- **Free tier**: Includes 2 custom domains, 100 GB bandwidth/month, built-in auth, and serverless APIs. No meters in the API — zero cost.
+- **Free tier**: Includes 2 custom domains, 100 GB bandwidth/month, built-in auth, and serverless APIs. No meters in the API; zero cost.
 - **Standard tier**: Query API with eastus2 for current per-app monthly fee. Adds custom auth, SLA, and more APIs.
-- **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB — the API returns two bandwidth rows per region (free tier and overage tier).
+- **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB; the API returns two bandwidth rows per region (free tier and overage tier).
 - **Azure Front Door add-on**: Optional. Provides enterprise-grade edge with WAF, custom rules, and bot protection. Query API for current hourly rate.
-- **Tier limitations**: Free tier — 2 custom domains, 0.5 GB storage, community support. Standard tier — 5 custom domains, 2 GB storage, SLA-backed.
-- **Private Endpoints**: Supported on Standard tier only — not available on the Free tier.
+- **Tier limitations**: Free tier: 2 custom domains, 0.5 GB storage, community support. Standard tier: 5 custom domains, 2 GB storage, SLA-backed.
+- **Private Endpoints**: Supported on Standard tier only. Not available on the Free tier.

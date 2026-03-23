@@ -59,7 +59,7 @@ function Get-FrontMatter {
             continue
         }
 
-        # "key:" with no value — consume bracketed list or YAML sequence below it
+        # "key:" with no value: consume bracketed list or YAML sequence below it
         if ($line -match '^\s*([\w-]+)\s*:\s*$') {
             $key = $Matches[1]
             $index++

@@ -7,7 +7,7 @@ primaryCost: "Plan hourly rate × 730 + overage IPs + data processing per-GB (ti
 
 # Azure DDOS Protection
 
-> **Trap (tiered data)**: Network Protection data processing returns 4 tiered rows (0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+; last two share the same rate). The script's `totalMonthlyCost` sums all tiers — query each tier's rate and calculate manually based on actual volume.
+> **Trap (tiered data)**: Network Protection data processing returns 4 tiered rows (0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+; last two share the same rate). The script's `totalMonthlyCost` sums all tiers. Query each tier's rate and calculate manually based on actual volume.
 
 > **Trap (case-sensitive)**: The API serviceName is `Azure DDOS Protection` (all-caps "DDOS"). Searching with "DDoS" returns zero results.
 
@@ -15,27 +15,27 @@ primaryCost: "Plan hourly rate × 730 + overage IPs + data processing per-GB (ti
 
 ## Query Pattern
 
-### Network Protection — base plan (always-on)
+### Network Protection: base plan (always-on)
 
 ServiceName: Azure DDOS Protection
 SkuName: Network Protection
 MeterName: Network Protection Plan
 
-### IP Protection — per-IP (InstanceCount = number of protected public IPs)
+### IP Protection: per-IP (InstanceCount = number of protected public IPs)
 
 ServiceName: Azure DDOS Protection
 SkuName: Azure DDoS Protection IP Protection
 MeterName: IP Protection Resource
 InstanceCount: 5
 
-### Network Protection — overage IPs beyond 100 (InstanceCount = additional IPs)
+### Network Protection: overage IPs beyond 100 (InstanceCount = additional IPs)
 
 ServiceName: Azure DDOS Protection
 SkuName: Network Protection
 MeterName: Network Protection Resource
 InstanceCount: 20
 
-### Network Protection — data processed (Quantity = estimated monthly GB)
+### Network Protection: data processed (Quantity = estimated monthly GB)
 
 ServiceName: Azure DDOS Protection
 SkuName: Network Protection
@@ -67,6 +67,6 @@ IP Protection:
 ## Notes
 
 - **Tier comparison**: IP Protection is cheaper for small deployments (≤14 IPs); Network Protection's flat plan is cheaper at ~15+ IPs
-- **Data processing tiers**: Typically minimal unless under active DDoS attack — most customers pay only the base plan/IP cost
+- **Data processing tiers**: Typically minimal unless under active DDoS attack. Most customers pay only the base plan/IP cost
 - **WAF discount**: Azure Firewall Premium and Application Gateway WAF v2 are eligible for DDoS cost benefits under Network Protection
-- **No RI available**: Both plans are PAYG only — no reserved instance pricing exists
+- **No RI available**: Both plans are PAYG only. No reserved instance pricing exists

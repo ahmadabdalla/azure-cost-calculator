@@ -7,8 +7,8 @@
 #   invoke_retail_prices_query "$filter_string" "USD" 100
 #
 # Optional env vars:
-#   RETAIL_API_MAX_ATTEMPTS  — max total attempts per request (default: 3)
-#   RETAIL_API_BASE_DELAY    — base delay in seconds for exponential backoff (default: 2)
+#   RETAIL_API_MAX_ATTEMPTS  : max total attempts per request (default: 3)
+#   RETAIL_API_BASE_DELAY    : base delay in seconds for exponential backoff (default: 2)
 
 invoke_retail_prices_query() {
     local filter="$1"
@@ -72,7 +72,7 @@ invoke_retail_prices_query() {
                 return 1
             fi
 
-            # Success — break out of retry loop
+            # Success: break out of retry loop
             break
         done
 

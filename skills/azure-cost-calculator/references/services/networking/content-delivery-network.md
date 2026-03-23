@@ -7,15 +7,15 @@ primaryCost: "Data transfer out per-GB (tiered) + HTTP requests per-million, pri
 
 # Content Delivery Network
 
-> **Trap (Zone regions)**: CDN uses delivery zones (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'` — the default `eastus` returns zero results. Zone 1 = North America/Europe, Zone 2 = Asia Pacific, Zone 3 = South America, Zone 4 = Middle East/Africa, Zone 5 = Australia/India.
+> **Trap (Zone regions)**: CDN uses delivery zones (`Zone 1`, `Zone 2`, etc.), not ARM regions. Queries MUST use `-Region 'Zone 1'`. The default `eastus` returns zero results. Zone 1 = North America/Europe, Zone 2 = Asia Pacific, Zone 3 = South America, Zone 4 = Middle East/Africa, Zone 5 = Australia/India.
 >
-> **Trap (Tiered pricing)**: Data transfer has volume tiers (0–10 TB, 10–50 TB, etc.). The script returns all tiers — use `tierMinimumUnits` to identify the correct tier for the customer's expected volume. Do NOT sum all tiers.
+> **Trap (Tiered pricing)**: Data transfer has volume tiers (0–10 TB, 10–50 TB, etc.). The script returns all tiers. Use `tierMinimumUnits` to identify the correct tier for the customer's expected volume. Do NOT sum all tiers.
 >
-> **Trap (Multiple providers)**: Three `productName` values exist — `Azure CDN from Microsoft`, `Azure CDN from Verizon`, `Azure CDN from Akamai`. Always filter by `productName` to avoid mixing providers.
+> **Trap (Multiple providers)**: Three `productName` values exist: `Azure CDN from Microsoft`, `Azure CDN from Verizon`, `Azure CDN from Akamai`. Always filter by `productName` to avoid mixing providers.
 
 ## Query Pattern
 
-### Standard Microsoft — data transfer (Zone 1, most common)
+### Standard Microsoft: data transfer (Zone 1, most common)
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Microsoft
@@ -23,7 +23,7 @@ SkuName: Standard
 MeterName: Standard Data Transfer
 Region: Zone 1
 
-### Standard Microsoft — request pricing (per 1M requests)
+### Standard Microsoft: request pricing (per 1M requests)
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Microsoft
@@ -31,7 +31,7 @@ SkuName: Standard
 MeterName: Standard Requests
 Region: Zone 1
 
-### Premium Verizon — data transfer with volume estimate
+### Premium Verizon: data transfer with volume estimate
 
 ServiceName: Content Delivery Network
 ProductName: Azure CDN from Verizon

@@ -8,19 +8,19 @@ primaryCost: "Gateway SKU hourly rate × 730 + S2S tunnels beyond 10 free + P2S 
 
 # VPN Gateway
 
-> **Trap (S2S included tunnels)**: All VpnGw1+ SKUs include **10 S2S tunnels free** in the base gateway price. Basic SKU supports max 10 tunnels total (cannot exceed 10). The API always returns a non-zero `S2S Connection` rate regardless of SKU — do NOT multiply it by total tunnel count. Only tunnels beyond the first 10 incur the per-tunnel hourly charge. Applying the S2S rate to all tunnels grossly inflates the estimate.
+> **Trap (S2S included tunnels)**: All VpnGw1+ SKUs include **10 S2S tunnels free** in the base gateway price. Basic SKU supports max 10 tunnels total (cannot exceed 10). The API always returns a non-zero `S2S Connection` rate regardless of SKU. Do NOT multiply it by total tunnel count. Only tunnels beyond the first 10 incur the per-tunnel hourly charge. Applying the S2S rate to all tunnels grossly inflates the estimate.
 >
 > **Agent instruction**: For Basic SKU, S2S cost is always zero (max 10 tunnels, all included). For VpnGw1+, calculate S2S cost as `max(0, tunnelCount - 10) × s2s_retailPrice × 730`.
 
-> **Trap (P2S included connections)**: All SKUs include **128 P2S connections free** in the base gateway price. The API returns a non-zero `P2S Connection` rate regardless — only connections beyond 128 incur charges. Basic SKU max is 128 (all free, no P2S charge possible).
+> **Trap (P2S included connections)**: All SKUs include **128 P2S connections free** in the base gateway price. The API returns a non-zero `P2S Connection` rate regardless. Only connections beyond 128 incur charges. Basic SKU max is 128 (all free, no P2S charge possible).
 >
 > **Agent instruction**: Calculate P2S cost as `max(0, concurrentConnections - 128) × p2s_retailPrice × 730`.
 
-> **Trap**: Unfiltered queries return **gateway meters AND connection meters** combined — always query gateway SKU and connection meters separately.
+> **Trap**: Unfiltered queries return **gateway meters AND connection meters** combined. Always query gateway SKU and connection meters separately.
 
 ## Query Pattern
 
-### Gateway hourly cost — substitute {GatewayMeter} from Meter Names table
+### Gateway hourly cost: substitute {GatewayMeter} from Meter Names table
 
 ServiceName: VPN Gateway
 MeterName: {GatewayMeter}
@@ -39,7 +39,7 @@ SkuName: {GatewaySku}
 MeterName: P2S Connection
 Quantity: 50
 
-> **Gateway placeholders**: `{GatewayMeter}` (for `MeterName`) = Basic Gateway, VpnGw1, VpnGw1AZ, VpnGw2, VpnGw2AZ, VpnGw3, VpnGw3AZ, VpnGw4, VpnGw4AZ, VpnGw5, VpnGw5AZ. `{GatewaySku}` (for `SkuName`) uses the same values. For VpnGw4AZ/VpnGw5AZ P2S/S2S queries, use VpnGw4/VpnGw5 — the API lacks connection meters for those AZ SKUs.
+> **Gateway placeholders**: `{GatewayMeter}` (for `MeterName`) = Basic Gateway, VpnGw1, VpnGw1AZ, VpnGw2, VpnGw2AZ, VpnGw3, VpnGw3AZ, VpnGw4, VpnGw4AZ, VpnGw5, VpnGw5AZ. `{GatewaySku}` (for `SkuName`) uses the same values. For VpnGw4AZ/VpnGw5AZ P2S/S2S queries, use VpnGw4/VpnGw5. The API lacks connection meters for those AZ SKUs.
 
 ## Key Fields
 
@@ -79,6 +79,6 @@ Total monthly      = Gateway + S2S + P2S
 - **128 P2S connections included free** in base price for all SKUs; only connections 129+ are billed. Basic max 128 (all included).
 - **Max S2S tunnels**: Basic 10, VpnGw1–3 30, VpnGw4–5 100 (same limits for AZ variants)
 - **AZ variants** provide zone redundancy at higher cost; VpnGw2AZ/VpnGw3AZ have higher throughput than non-AZ
-- **Basic SKU** is legacy with limited features (no BGP, no IKEv2, no P2S OpenVPN) — use VpnGw1+ for production
+- **Basic SKU** is legacy with limited features (no BGP, no IKEv2, no P2S OpenVPN). Use VpnGw1+ for production
 - **Data transfer**: Outbound data egress is billed separately under the Bandwidth service, not VPN Gateway
 - **VpnGw4AZ/VpnGw5AZ**: API lacks P2S/S2S connection meters for these SKUs; use non-AZ variant meters (same rates)

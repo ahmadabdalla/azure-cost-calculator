@@ -1,4 +1,4 @@
-# 3-Tier Web App — Azure Architecture
+# 3-Tier Web App: Azure Architecture
 
 ## Web Tier
 

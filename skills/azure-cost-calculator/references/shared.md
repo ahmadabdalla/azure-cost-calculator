@@ -1,4 +1,4 @@
-# Shared Reference — Constants, Service Categories, Pricing Factors
+# Shared Reference: Constants, Service Categories, Pricing Factors
 
 ## Constants
 
@@ -11,7 +11,7 @@
 | GB per TB       | **1,000**                                    | Decimal (SI): 1 TB = 1,000 GB. Use when `unitOfMeasure` says **GB**.    |
 | GiB per TiB     | **1,024**                                    | Binary (IEC): 1 TiB = 1,024 GiB. Use when `unitOfMeasure` says **GiB**. |
 
-> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units — even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting. **TB vs TiB context:** GiB-billed services (Ultra Disks, NetApp Files, etc.) use TiB in Azure's own portal and documentation — when a user specifies "TB" for these services, treat it as TiB and convert with × 1,024. For GB-billed services, "TB" means decimal TB and converts with × 1,000. Never cross-convert (e.g., TB → GiB directly).
+> **`unitOfMeasure` is authoritative.** Azure mixes decimal (GB) and binary (GiB) units; even within the same service (e.g., Premium Files uses `1 GB/Month` for provisioned capacity but `1 GiB` for burst). Always check the `unitOfMeasure` field in the API response before converting. **TB vs TiB context:** GiB-billed services (Ultra Disks, NetApp Files, etc.) use TiB in Azure's own portal and documentation; when a user specifies "TB" for these services, treat it as TiB and convert with × 1,024. For GB-billed services, "TB" means decimal TB and converts with × 1,000. Never cross-convert (e.g., TB → GiB directly).
 
 For region names, currency conversion, and API-unavailable services, see [regions-and-currencies.md](regions-and-currencies.md).
 
@@ -19,11 +19,11 @@ For region names, currency conversion, and API-unavailable services, see [region
 
 Service reference files are organized by category. To find a service file:
 
-1. **File search** — search for files matching `services/**/*<keyword>*.md`
-2. **Routing map** — if search returns 0 or ambiguous results, check [service-routing.md](service-routing.md) for the authoritative category and filename
-3. **Category browse** — pick the category below and list the directory
-4. **Broad search** — list `services/**/*.md` to see all files
-5. **Discovery** — use the explore script for services not yet documented
+1. **File search**: search for files matching `services/**/*<keyword>*.md`
+2. **Routing map**: if search returns 0 or ambiguous results, check [service-routing.md](service-routing.md) for the authoritative category and filename
+3. **Category browse**: pick the category below and list the directory
+4. **Broad search**: list `services/**/*.md` to see all files
+5. **Discovery**: use the explore script for services not yet documented
 
 > Each service file contains its own `serviceName`, `category`, and `aliases` metadata. For the full routing map of services to categories and filenames, see [service-routing.md](service-routing.md).
 
@@ -57,20 +57,20 @@ Service reference files are organized by category. To find a service file:
 
 ### API-Unavailable Services
 
-Some services have **no data** in the Retail Prices API — scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and USD-to-local conversion handling for USD-only services.
+Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and USD-to-local conversion handling for USD-only services.
 
 ### Global/Empty-Region Services
 
-Some services use `Global` or empty `armRegionName` instead of standard regions — querying a standard region returns nothing silently. See [pitfalls.md](pitfalls.md) for handling details and [regions-and-currencies.md](regions-and-currencies.md) for the affected-services list.
+Some services use `Global` or empty `armRegionName` instead of standard regions; querying a standard region returns nothing silently. See [pitfalls.md](pitfalls.md) for handling details and [regions-and-currencies.md](regions-and-currencies.md) for the affected-services list.
 
-### USD-Only Prices — Mandatory Conversion
+### USD-Only Prices: Mandatory Conversion
 
 API-unavailable and Global-region services return **USD-only** prices. If the user requested a non-USD currency, you **MUST** derive a conversion factor and apply it. Do NOT leave prices in USD. Do NOT direct users to the Azure pricing calculator.
 Method: [regions-and-currencies.md & Deriving a USD→local currency conversion factor](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
 
 ### Sub-Cent Pricing ($0.00 Display)
 
-Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00` — this is a rounding issue, not the actual price. Always query in the user's target currency first — if the Retail Prices API returns a non-zero `unitPrice`/`retailPrice` value, use that API value directly (Azure publishes rounded non-USD rates that can differ significantly from direct FX conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](regions-and-currencies.md). Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
+Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00`; this is a rounding issue, not the actual price. Always query in the user's target currency first; if the Retail Prices API returns a non-zero `unitPrice`/`retailPrice` value, use that API value directly (Azure publishes rounded non-USD rates that can differ significantly from direct FX conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](regions-and-currencies.md). Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
 
 ### Reserved Instance MonthlyCost
 
@@ -86,7 +86,7 @@ Before querying prices, classify every sizing parameter against this table. Miss
 
 | Category         | Parameters                                                                                            | Rule                                       |
 | ---------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| **Never-assume** | tier, SKU, vCores, instance count, storage size, node count, DTU, throughput (RU/s), PE sub-resources | MUST ask user — do not guess               |
+| **Never-assume** | tier, SKU, vCores, instance count, storage size, node count, DTU, throughput (RU/s), PE sub-resources | MUST ask user; do not guess               |
 | **Safe-default** | region, zone redundancy, storage redundancy, reserved term, hybrid benefit                            | Use default below, disclose in assumptions |
 
 **Safe defaults when unspecified:** region = eastus, zone redundancy = disabled, storage redundancy = LRS, commitment = PAYG, AHUB = none.
@@ -95,8 +95,8 @@ Before querying prices, classify every sizing parameter against this table. Miss
 
 | Modifier    | How to Query                                                                                  | Monthly Calculation                      |
 | ----------- | --------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| AHUB (VMs)  | Query Linux meter for same SKU — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate              |
-| AHUB (SQL)  | Query compute meter only — see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below       | `compute_retailPrice × vCoreCount × 730` |
+| AHUB (VMs)  | Query Linux meter for same SKU; see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate              |
+| AHUB (SQL)  | Query compute meter only; see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below       | `compute_retailPrice × vCoreCount × 730` |
 | Reserved 1Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 12`                         |
 | Reserved 3Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 36`                         |
 | Spot        | Filter `skuName` contains "Spot"                                                              | Use returned rate directly               |
@@ -118,19 +118,19 @@ Omit lines where the user explicitly specified the value. Only disclose values t
 
 ### Azure Hybrid Benefit (AHUB)
 
-AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly — **NEVER manually compute a percentage discount**.
+AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly; **NEVER manually compute a percentage discount**.
 
 | Workload                                | How to query                                                                                                                                                                                                               | Why                                                                                                                                                         |
 | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                           | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate — no math needed.                                                                    |
-| **SQL Database / SQL Managed Instance** | AHUB: compute meter only — compute `retailPrice` IS the AHUB rate. PAYG: also query `SQL License` product (Global, per-vCore) — PAYG rate = compute `retailPrice` + `sql_license_retailPrice`. Monthly × vCoreCount × 730. | Compute and license are separate additive meters. AHUB drops the license to zero. **Do NOT subtract** — a negative result means the billing model is wrong. |
+| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                           | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate; no math needed.                                                                    |
+| **SQL Database / SQL Managed Instance** | AHUB: compute meter only; compute `retailPrice` IS the AHUB rate. PAYG: also query `SQL License` product (Global, per-vCore); PAYG rate = compute `retailPrice` + `sql_license_retailPrice`. Monthly × vCoreCount × 730. | Compute and license are separate additive meters. AHUB drops the license to zero. **Do NOT subtract**; a negative result means the billing model is wrong. |
 
 **Rules:**
 
 1. NEVER apply a percentage discount (40%, 55%, etc.) to a non-AHUB price. The API gives the exact AHUB price.
-2. NEVER double-apply: if you queried the Linux meter or the AHUB `productName`, the price already reflects the benefit — do not reduce it further.
+2. NEVER double-apply: if you queried the Linux meter or the AHUB `productName`, the price already reflects the benefit; do not reduce it further.
 3. For VMs: AHUB rate = Linux rate for the same SKU. Do NOT start from the Windows rate and subtract.
-4. For SQL: compute IS the AHUB rate — never subtract the license rate. PAYG = compute + license; AHUB = compute only.
+4. For SQL: compute IS the AHUB rate; never subtract the license rate. PAYG = compute + license; AHUB = compute only.
 
 ### Zone Redundancy (ZR)
 
@@ -145,7 +145,7 @@ AHUB means the customer already owns Windows Server or SQL Server licenses. The 
 ### Other Pricing Factors
 
 - **Reserved Instances**: Use `PriceType: Reservation`. See [reserved-instances.md](reserved-instances.md) for RI traps and monthly calculation rules.
-- **Savings Plans**: Flexible compute commitment. Not queryable via scripts — note to user if requested.
+- **Savings Plans**: Flexible compute commitment. Not queryable via scripts; note to user if requested.
 - **Dev/Test**: Use `PriceType: DevTestConsumption` for dev/test subscriptions.
-- **Regional variance**: Same SKU can vary ~9%+ across regions — always query the user's specified region.
+- **Regional variance**: Same SKU can vary ~9%+ across regions; always query the user's specified region.
 - **Data transfer**: Intra-region free, inter-region ~$0.02/GB, outbound ~$0.087/GB (first 5 GB/month free).

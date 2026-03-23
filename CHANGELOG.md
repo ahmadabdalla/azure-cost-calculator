@@ -4,6 +4,14 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+<!-- versions -->
+
+## [1.5.2] - 2026-03-23
+
+### Changed
+
+- Improved text formatting and punctuation consistency across all skill documentation and service reference files (120 service files updated with em dash to colon/semicolon/comma conversions)
+
 ## [1.5.1] - 2026-03-19
 
 ### Changed
@@ -20,20 +28,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - New service: DNS Security Policy (`dns-security-policy.md`)
 - New service: Azure Route Server (`route-server.md`)
 - **Examples**: Enterprise datacenter migration example with 100-VM multi-tier architecture (`enterprise-datacenter-migration.md`)
-- **Scripts**: Compact output format (`OutputFormat: Compact` or `--output-format Compact`) returns only 9 essential fields for batch queries — reduces token usage by ~70% compared to full JSON output
+- **Scripts**: Compact output format (`OutputFormat: Compact` or `--output-format Compact`) returns only 9 essential fields for batch queries; reduces token usage by ~70% compared to full JSON output
 
 ### Changed
 
 - **shared.md**: Distinguished GB (decimal: 1 TB = 1,000 GB) from GiB (binary: 1 TiB = 1,024 GiB) with authoritative `unitOfMeasure` guidance. Added both conversion factors to Constants table
 - **pitfalls.md**: Added GB/GiB distinction trap with cross-service examples (Blob Storage vs Ultra Disks). Clarified `currencyCode` must be a top-level query parameter (not inside `$filter`)
-- **regions-and-currencies.md**: Documented USD-only service boundaries — Global-region services and Private DNS consistently return USD-only pricing
+- **regions-and-currencies.md**: Documented USD-only service boundaries; Global-region services and Private DNS consistently return USD-only pricing
 
 ### Fixed
 
 - **Virtual Machines**: Made `ProductName` filter mandatory in all VM queries to prevent Low Priority rate selection when querying by `ArmSkuName` alone. Documented capital-S casing rule for pre-v4 series (FSv2, DSv2, ESv3) vs lowercase `s` for v4+ series (Dsv5, Esv5)
-- **SQL Managed Instance**: Corrected AHUB formula — compute meter `retailPrice` IS the AHUB rate (base infrastructure only). For PAYG, add the separate SQL License meter; for AHUB, use compute only. **Do NOT subtract**. Added missing vCore sizes (24, 40)
+- **SQL Managed Instance**: Corrected AHUB formula: compute meter `retailPrice` IS the AHUB rate (base infrastructure only). For PAYG, add the separate SQL License meter; for AHUB, use compute only. **Do NOT subtract**. Added missing vCore sizes (24, 40)
 - **Cosmos DB**: Fixed serverless `skuName` pattern, corrected storage billing boundary for serverless, added missing add-ons (Continuous Backup, Analytical Storage, Availability Zones)
-- **Sentinel**: Added pricing model default trap — Sentinel defaults to simplified pricing when enabling Microsoft Defender for Cloud on a Log Analytics workspace without explicitly selecting classic meters
+- **Sentinel**: Added pricing model default trap: Sentinel defaults to simplified pricing when enabling Microsoft Defender for Cloud on a Log Analytics workspace without explicitly selecting classic meters
 - **Azure NetApp Files**: Added missing CRR (Cross-Region Replication) meter, corrected ZRS surcharge formula, documented CRR naming convention (`-CRR` suffix)
 - **Scripts (PowerShell)**: `Explore-AzurePricing.ps1` catch blocks now exit with code 1 on Azure Retail Prices API failures (previously exited 0). On zero results in `Json` mode, emits parseable empty JSON array `[]` before clean exit
 - **Scripts (Bash)**: On zero results in JSON mode, emit parseable empty JSON envelope (`{"results": []}`) instead of exiting with code 2
@@ -74,7 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Fixed
 
-- **Azure Functions**: Added caveat for Flex Consumption non-USD rate inflation when total GB-s exceeds 1M/month — API-published rates may overstate cost by ~4× vs USD-derived rate
+- **Azure Functions**: Added caveat for Flex Consumption non-USD rate inflation when total GB-s exceeds 1M/month; API-published rates may overstate cost by ~4× vs USD-derived rate
 - **Cosmos DB**: Added disambiguation heuristics to clarify PITR (native continuous backup) vs Azure Backup vault backup
 - **Application Insights**: Clarified that when Microsoft Sentinel simplified pricing is enabled on a shared workspace, App Insights ingestion is absorbed into Sentinel meters (no separate charge)
 
@@ -96,12 +104,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Added
 
-- **New plugin agent**: `cost-analyst` — primary user-facing agent for architecture cost assessments
-- **New command**: `estimate-cost` — CLI command that invokes the cost-analyst agent for quick estimations
+- **New plugin agent**: `cost-analyst`: primary user-facing agent for architecture cost assessments
+- **New command**: `estimate-cost`: CLI command that invokes the cost-analyst agent for quick estimations
 
 ### Changed
 
-- **Category naming enforcement**: SKILL.md now mandates using exact Category Index names from shared.md in all output (e.g., "Compute", "Databases") — no paraphrasing allowed
+- **Category naming enforcement**: SKILL.md now mandates using exact Category Index names from shared.md in all output (e.g., "Compute", "Databases"); no paraphrasing allowed
 - **Sub-cent pricing logic**: Updated Functions and shared.md to query in target currency first; Azure publishes rounded non-USD rates that differ from manual FX conversion (e.g., AUD 0.0001 vs ~0.00005)
 - **Currency conversion**: Replaced flexible anchor SKU with mandatory fixed anchor (VM Standard_B2s from BS Series) to eliminate non-deterministic conversion factors
 - **Service routing**: Added service-routing.md to file search workflow as authoritative category/filename map when glob returns ambiguous results
@@ -111,7 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 - **Functions free grant**: Clarified that Consumption plan's 1M executions + 400K GB-s are per-subscription (not per-app) and added GiB conversion formula
 - **Cosmos DB PITR pricing**: Added trap note distinguishing native PITR (~9× rate, billed under Databases) from Azure Backup vault storage (Storage category)
-- **Sentinel + App Insights billing**: Clarified that Sentinel simplified pricing absorbs all workspace data including App Insights telemetry — no separate ingestion charges
+- **Sentinel + App Insights billing**: Clarified that Sentinel simplified pricing absorbs all workspace data including App Insights telemetry; no separate ingestion charges
 - **Example architecture**: Corrected impossible Consumption plan + VNet integration combination in event-driven-serverless.md
 - **argument-hint visibility**: Moved `argument-hint` to top-level frontmatter in SKILL.md for Claude Code compatibility
 

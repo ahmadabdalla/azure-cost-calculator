@@ -6,7 +6,7 @@
     # Each field specifies Type, Required, and optionally Default,
     # AllowedValues, MinItems, and MaxLength.  The validation pipeline
     # imports this file as the single source of truth for front matter
-    # checks — keep it in sync with docs/TEMPLATE.md and CONTRIBUTING.md.
+    # checks. Keep it in sync with docs/TEMPLATE.md and CONTRIBUTING.md.
 
     Fields             = @{
 
@@ -25,13 +25,13 @@
                 'ai-ml'; 'iot'; 'developer-tools'; 'identity'; 'migration'
                 'web'; 'communication'; 'specialist'
             )
-            Description   = 'Category folder name — must match a folder under references/services/'
+            Description   = 'Category folder name. Must match a folder under references/services/'
         }
         aliases               = @{
             Type        = 'array'
             Required    = $true
             MinItems    = 1
-            Description = 'Search index — common names, abbreviations, and synonyms'
+            Description = 'Search index: common names, abbreviations, and synonyms'
         }
 
         # ── Billing Graph (existing) ─────────────────────────────────────
@@ -64,7 +64,7 @@
             Type        = 'string'
             Required    = $true
             MaxLength   = 120
-            Description = 'One-line billing summary — replaces bold **Primary cost** line in body'
+            Description = 'One-line billing summary. Replaces bold **Primary cost** line in body'
         }
         hasMeters             = @{
             Type        = 'boolean'
@@ -97,7 +97,7 @@
             Type        = 'boolean'
             Required    = $false
             Default     = $false
-            Description = 'Whether the service supports private endpoints — tier restrictions stay in Notes'
+            Description = 'Whether the service supports private endpoints. Tier restrictions stay in Notes'
         }
     }
 

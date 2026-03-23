@@ -9,7 +9,7 @@ pricingRegion: global
 
 # NAT Gateway
 
-> **Trap**: Unfiltered queries return gateway (hourly), data processing (per-GB), and StandardV2 logging (monthly) meters summed — `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
+> **Trap**: Unfiltered queries return gateway (hourly), data processing (per-GB), and StandardV2 logging (monthly) meters summed. `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 
 > **Trap (always-on)**: NAT Gateway bills per-hour from resource creation, not per-use. Even with zero outbound traffic, the gateway meter charges continuously (730 hours/month).
 
@@ -65,9 +65,9 @@ Total monthly    = Gateway + Data
 
 ## Notes
 
-- **Always-on cost**: Gateway hourly charge runs continuously from deployment — minimum monthly cost is gateway_retailPrice × 730 per gateway, even with zero traffic
+- **Always-on cost**: Gateway hourly charge runs continuously from deployment. Minimum monthly cost is gateway_retailPrice × 730 per gateway, even with zero traffic
 - **Data processing scope**: Charges apply to both outbound and return traffic through the gateway
-- **StandardV2**: Same pricing as Standard for gateway and data meters — only difference is an optional flow logs meter. StandardV2 adds zone redundancy, IPv6 support, and 100 Gbps throughput (vs 50 Gbps for Standard)
-- **Public IPs billed separately**: NAT Gateway requires Standard SKU Public IP addresses (up to 16) — billed separately under Virtual Network
+- **StandardV2**: Same pricing as Standard for gateway and data meters. The only difference is an optional flow logs meter. StandardV2 adds zone redundancy, IPv6 support, and 100 Gbps throughput (vs 50 Gbps for Standard)
+- **Public IPs billed separately**: NAT Gateway requires Standard SKU Public IP addresses (up to 16), billed separately under Virtual Network
 - **Bandwidth egress**: Standard Azure bandwidth charges for internet-bound traffic apply separately from the NAT Gateway data processing fee
-- **Multi-gateway scaling**: Each NAT Gateway resource is billed independently — multiply total cost by gateway count
+- **Multi-gateway scaling**: Each NAT Gateway resource is billed independently. Multiply total cost by gateway count
