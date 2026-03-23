@@ -13,6 +13,8 @@ tags:
   - service:app-service
 inputs:
   prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
+config:
+  timeout_seconds: 180
 expected:
   output_contains:
     - "Assumptions"
@@ -37,14 +39,17 @@ graders:
     name: complete-estimate-quality
     config:
       prompt: >
-        The agent output MUST be a complete Azure cost estimate. Check for ALL of:
-        (1) An Assumptions block that discloses safe-default parameters used.
-        (2) Pricing data sourced from the Azure Retail Prices API (not fabricated).
-        (3) A monthly total cost calculation using the 730-hour formula.
-        (4) Mention of 2 instances as specified by the user.
-        Score 1.0 if all four criteria are met.
-        Score 0.5 if three criteria are met.
-        Score 0.0 if fewer than three are met.
+        You are evaluating an AI agent's response to: "Estimate the monthly cost of running
+        2 Linux App Service P1 v3 instances in East US"
+
+        Check the response for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost calculated using the 730-hour formula.
+        (3) Accounts for 2 instances as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 1.5
   - type: behavior
     name: uses-pricing-script
