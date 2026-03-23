@@ -7,7 +7,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 | Workflow         | `.github/workflows/eval.yml`                                              |
 | Composite action | `.github/actions/install-waza/action.yml`                                 |
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                             |
-| Task files       | `tests/evals/azure-cost-calculator/tasks/**/*.yaml` (nested dirs)         |
+| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tasks/*/*/*.yaml` |
 | Project config   | `.waza.yaml`                                                              |
 | Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)  |
 
@@ -149,6 +149,7 @@ Tip: copy an existing task in the same category as a starting template.
 | --- | --- |
 | Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally) | Override per task with `config.timeout_seconds` if a specific task needs more or less |
 | Prompt grader variance on borderline values | Use `code` grader for numeric checks |
+| `**` glob not supported recursively in waza v0.23.0 — tasks at depth 2+ silently skipped | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml` |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens) | Intentional; skill carries domain reference architecture |
 | `argument-hint` frontmatter diverges from agentskills.io spec | Project convention; not blocking for evals |
 
