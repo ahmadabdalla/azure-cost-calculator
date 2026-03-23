@@ -38,4 +38,5 @@ graders:
     weight: 1.0
 
 tasks:
-  - "tasks/**/*.yaml"
+  - "tasks/*/*.yaml"
+  - "tasks/*/*/*.yaml"
