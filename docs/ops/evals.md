@@ -7,7 +7,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 | Workflow         | `.github/workflows/eval.yml`                                              |
 | Composite action | `.github/actions/install-waza/action.yml`                                 |
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                             |
-| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tasks/*/*/*.yaml` |
+| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml` |
 | Project config   | `.waza.yaml`                                                              |
 | Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)  |
 
