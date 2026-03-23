@@ -33,8 +33,8 @@ These constraints are absolute and override all other instructions:
 
 - **Never** push directly to any branch; only create a pull request.
 - **Never** use `git push`, `gh pr create`, or any direct CLI commands to push branches or open pull requests. Local commits with `git` are expected; use the `create_pull_request` tool to publish the branch and submit the PR.
-- **Never** switch away from the initially checked-out branch (the default branch). Do not run `git checkout -b ...` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout; switching branches produces an empty or oversized patch and fails with "No changes to commit". Use `git checkout origin/dev -- <file>` (with `--`) to import individual files without switching branches.
-- **Never** modify files beyond what is required for the version bump; only import and update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md`.
+- **Never** switch away from the initially checked-out branch (the default branch). Do not run `git checkout -b ...` or any command that changes HEAD to a different branch. The `create_pull_request` tool generates a patch from commits relative to the initial checkout; switching branches produces an empty or oversized patch and fails with "No changes to commit".
+- **Never** modify files beyond what is required for the version bump; only update `.claude-plugin/plugin.json`, `CHANGELOG.md`, and `skills/azure-cost-calculator/SKILL.md`.
 - **Never** fabricate changes; only document what actually changed in the diff.
 - If you are uncertain about a change classification, use the more conservative category.
 
@@ -116,18 +116,10 @@ Apply SemVer rules based on the changelog categories you identified:
 ## Step 5: Prepare version bump files
 
 > **Critical (patch mechanism constraint)**: Stay on the initially checked-out branch (the default branch). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The `safe-outputs` job then applies this patch on a fresh `dev` checkout. If you switch branches, the patch will be empty or fail.
+>
+> Do **not** use `git checkout origin/dev -- <file>` to import files from `dev`. Importing whole files produces a patch whose context lines are anchored to the `dev` content. When `safe-outputs` applies that patch against `dev`, lines that `dev` already changed conflict and `git am` exits 128. Make only the minimal, version-specific edits described below.
 
-### 5a. Import version files from `dev`
-
-The agent is checked out on the default branch, which may differ from `dev`. Import the three files that need version bumps from `origin/dev` using the `--` file-checkout syntax (this does **not** switch branches):
-
-```bash
-git checkout origin/dev -- .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
-```
-
-This ensures you are editing the `dev` versions of these files. The resulting patch will apply cleanly when `safe-outputs` applies it on `dev`.
-
-### 5b. Update `CHANGELOG.md`
+### 5a. Update `CHANGELOG.md`
 
 Insert a new version section **immediately after the `<!-- versions -->` comment** in `CHANGELOG.md`. Use today's date in YYYY-MM-DD format. The `<!-- versions -->` comment is a stable anchor that ensures the patch context lines are always the same fixed prose, regardless of what content appears in prior version sections.
 
@@ -159,15 +151,27 @@ Format:
 
 Omit empty categories. Order: Breaking, Added, Changed, Fixed, Removed.
 
-### 5c. Update `.claude-plugin/plugin.json`
+### 5b. Update `.claude-plugin/plugin.json`
 
-Update the `"version"` field to the new version.
+Update **only** the `"version"` field using `jq`. Do not read or overwrite the file from `origin/dev`:
 
-### 5d. Update `SKILL.md`
+```bash
+NEW_VERSION="X.Y.Z"
+jq --arg v "$NEW_VERSION" '.version = $v' .claude-plugin/plugin.json > /tmp/plugin.json \
+  && mv /tmp/plugin.json .claude-plugin/plugin.json
+```
 
-Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
+### 5c. Update `SKILL.md`
 
-### 5e. Commit the version bump
+Update **only** the `version:` field in the YAML frontmatter using `sed`. Do not read or overwrite the file from `origin/dev`:
+
+```bash
+CURRENT_VERSION=$(git show origin/dev:.claude-plugin/plugin.json | jq -r .version)
+sed -i "s/  version: \"$CURRENT_VERSION\"/  version: \"$NEW_VERSION\"/" \
+  skills/azure-cost-calculator/SKILL.md
+```
+
+### 5d. Commit the version bump
 
 ```bash
 git add .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
