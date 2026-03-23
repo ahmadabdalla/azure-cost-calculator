@@ -125,11 +125,13 @@ The agent is checked out on the default branch, which may differ from `dev`. Imp
 git checkout origin/dev -- .claude-plugin/plugin.json CHANGELOG.md skills/azure-cost-calculator/SKILL.md
 ```
 
-This ensures you are editing the `dev` versions of these files. The resulting patch will apply cleanly when `safe-outputs` applies it on `dev`.
+This ensures you are editing the `dev` versions of these files. The patch context lines for each file are deliberately placed around stable structural markers (`<!-- versions -->` in CHANGELOG.md, frontmatter `metadata:` block at the top of SKILL.md, JSON `{` in plugin.json) to minimise the chance of context mismatch when `safe-outputs` applies the patch on `dev`.
 
 ### 5b. Update `CHANGELOG.md`
 
-Insert a new version section **above** the previous version entry. Use today's date in YYYY-MM-DD format. Format:
+Insert a new version section **immediately after the `<!-- versions -->` comment** in `CHANGELOG.md`. Use today's date in YYYY-MM-DD format. The `<!-- versions -->` comment is a stable anchor that ensures the patch context lines are always the same fixed prose, regardless of what content appears in prior version sections.
+
+Format:
 
 ```markdown
 ## [X.Y.Z] - YYYY-MM-DD
@@ -163,7 +165,7 @@ Update the `"version"` field to the new version.
 
 ### 5d. Update `SKILL.md`
 
-Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version.
+Update the `version:` field in the YAML frontmatter of `skills/azure-cost-calculator/SKILL.md` to the new version. The field is at the top of the frontmatter under `metadata:` (line 4), ensuring its patch context lines are always stable (`---`, `metadata:`, `  author:`).
 
 ### 5e. Commit the version bump
 
