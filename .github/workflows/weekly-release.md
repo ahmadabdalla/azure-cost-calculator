@@ -117,7 +117,7 @@ Apply SemVer rules based on the changelog categories you identified:
 
 > **Critical (patch mechanism constraint)**: Stay on the initially checked-out branch (the default branch). The `create_pull_request` tool generates a `git format-patch` of your commits relative to the initial checkout. The `safe-outputs` job then applies this patch on a fresh `dev` checkout. If you switch branches, the patch will be empty or fail.
 >
-> Do **not** use `git checkout origin/dev -- <file>` to import files from `dev`. Importing whole files produces a patch whose context lines are anchored to the `dev` content. When `safe-outputs` applies that patch against `dev`, lines that `dev` already changed conflict and `git am` exits 128. Make only the minimal, version-specific edits described below.
+> Do **not** use `git checkout origin/dev -- <file>` to import files from `dev`. `git format-patch` always records the preimage from the initially checked-out branch (the default branch), so a commit that wholesale-replaces a file with the `dev` copy produces hunks whose `-` context lines describe the old default-branch content. When `safe-outputs` later applies that patch on top of a fresh `dev` checkout, those `-` lines no longer exist, `git am` cannot find anchors, and it exits 128. Make only the minimal, version-specific edits described below.
 
 ### 5a. Update `CHANGELOG.md`
 
@@ -166,8 +166,8 @@ jq --arg v "$NEW_VERSION" '.version = $v' .claude-plugin/plugin.json > /tmp/plug
 Update **only** the `version:` field in the YAML frontmatter using `sed`. Do not read or overwrite the file from `origin/dev`:
 
 ```bash
-CURRENT_VERSION=$(git show origin/dev:.claude-plugin/plugin.json | jq -r .version)
-sed -i "s/  version: \"$CURRENT_VERSION\"/  version: \"$NEW_VERSION\"/" \
+# $NEW_VERSION must already be set (defined in step 5b)
+sed -i "s/\(  version: \"\)[^\"]*/\1$NEW_VERSION/" \
   skills/azure-cost-calculator/SKILL.md
 ```
 
