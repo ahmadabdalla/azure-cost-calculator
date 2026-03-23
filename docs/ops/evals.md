@@ -2,14 +2,14 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills. Validates behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation, service routing, and trigger specificity.
 
-| Item             | Detail                                                                    |
-| ---------------- | ------------------------------------------------------------------------- |
-| Workflow         | `.github/workflows/eval.yml`                                              |
-| Composite action | `.github/actions/install-waza/action.yml`                                 |
-| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                             |
+| Item             | Detail                                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------------------- |
+| Workflow         | `.github/workflows/eval.yml`                                                                                |
+| Composite action | `.github/actions/install-waza/action.yml`                                                                   |
+| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                                                               |
 | Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml` |
-| Project config   | `.waza.yaml`                                                              |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)  |
+| Project config   | `.waza.yaml`                                                                                                |
+| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                    |
 
 ## Quick start
 
@@ -67,46 +67,46 @@ tasks/
 
 **Tags** drive CI targeting:
 
-| Tag type | Example | Purpose |
-| --- | --- | --- |
-| `smoke` | `smoke` | Core skill tests; runs on broad changes |
-| `service:<name>` | `service:virtual-machines` | Per-service; matches service reference filename |
-| Category | `compute`, `databases` | Grouping |
-| Test type | `happy-path`, `negative`, `routing` | Filtering by scenario kind |
+| Tag type         | Example                             | Purpose                                         |
+| ---------------- | ----------------------------------- | ----------------------------------------------- |
+| `smoke`          | `smoke`                             | Core skill tests; runs on broad changes         |
+| `service:<name>` | `service:virtual-machines`          | Per-service; matches service reference filename |
+| Category         | `compute`, `databases`              | Grouping                                        |
+| Test type        | `happy-path`, `negative`, `routing` | Filtering by scenario kind                      |
 
 ## CI pipeline
 
 Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
 
-| Job | Executor | What it does | LLM calls |
-| --- | --- | --- | --- |
-| `validate-eval-schema` | n/a | `waza check` (schema validation only) | 0 |
-| `evaluate-mock` | `mock` | Validates eval pipeline with simulated responses | 0 |
-| `evaluate-critical` | `copilot-sdk` | Real AI evals; only tasks matching changed files; 1 trial | 0-8 |
-| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks; 3 trials each | up to 24 |
+| Job                           | Executor      | What it does                                          | LLM calls |
+| ----------------------------- | ------------- | ----------------------------------------------------- | --------- |
+| `validate-eval-schema`        | n/a           | `waza check` (schema validation only)                 | 0         |
+| `evaluate-mock`               | `mock`        | Validates eval pipeline with simulated responses      | 0         |
+| `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files      | 0-8       |
+| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks; 1 trial each                               | up to 8   |
 
 ### How `evaluate-critical` targets tasks
 
 The workflow uses [dorny/paths-filter](https://github.com/dorny/paths-filter) to detect which files changed, then maps them to Waza tags:
 
-| Changed file | Tag triggered | Tasks run |
-| --- | --- | --- |
-| `skills/azure-cost-calculator/SKILL.md`, `agents/**`, `commands/**` | `smoke` | 4 smoke tasks |
-| `skills/azure-cost-calculator/references/shared.md` | `smoke` | 4 smoke tasks |
-| `skills/azure-cost-calculator/references/service-routing.md` | `routing` | alias-routing |
-| `skills/azure-cost-calculator/references/services/**/X.md` | `service:X` | All tasks tagged `service:X` |
-| `skills/azure-cost-calculator/scripts/**` | `smoke` | 4 smoke tasks |
+| Changed file                                                        | Tag triggered | Tasks run                    |
+| ------------------------------------------------------------------- | ------------- | ---------------------------- |
+| `skills/azure-cost-calculator/SKILL.md`, `agents/**`, `commands/**` | `smoke`       | 4 smoke tasks                |
+| `skills/azure-cost-calculator/references/shared.md`                 | `smoke`       | 4 smoke tasks                |
+| `skills/azure-cost-calculator/references/service-routing.md`        | `routing`     | alias-routing                |
+| `skills/azure-cost-calculator/references/services/**/X.md`          | `service:X`   | All tasks tagged `service:X` |
+| `skills/azure-cost-calculator/scripts/**`                           | `smoke`       | 4 smoke tasks                |
 
 Service names are extracted from filenames dynamically (`basename virtual-machines.md .md` becomes `--tags service:virtual-machines`). Multiple tags are OR'd.
 
 **Cost examples:**
 
-| PR scenario | LLM calls |
-| --- | --- |
-| Single service file (e.g. virtual-machines.md) | 2 |
-| Docs-only change | 0 |
-| SKILL.md + 1 service file | 6 |
-| Manual dispatch (all 8 tasks x 3 trials) | 24 |
+| PR scenario                                    | LLM calls |
+| ---------------------------------------------- | --------- |
+| Single service file (e.g. virtual-machines.md) | 2         |
+| Docs-only change                               | 0         |
+| SKILL.md + 1 service file                      | 6         |
+| Manual dispatch (all 8 tasks x 1 trial)        | 8         |
 
 The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. `continue-on-error: true` prevents eval failures from blocking PRs while graders are being tuned.
 
@@ -122,14 +122,14 @@ Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `
 
 ## Graders
 
-| Grader | Purpose | Deterministic |
-| --- | --- | --- |
-| `text` | String/regex matching on output | Yes |
-| `behavior` | Required tools, max tool calls | Yes |
-| `trigger` | Skill activation/deactivation | Yes |
-| `skill_invocation` | Correct skill invoked | Yes |
-| `prompt` | LLM-as-judge for qualitative checks | No (use `trials_per_task: 3`) |
-| `code` (planned) | Python assertions for numeric accuracy | Yes |
+| Grader             | Purpose                                | Deterministic                                              |
+| ------------------ | -------------------------------------- | ---------------------------------------------------------- |
+| `text`             | String/regex matching on output        | Yes                                                        |
+| `behavior`         | Required tools, max tool calls         | Yes                                                        |
+| `trigger`          | Skill activation/deactivation          | Yes                                                        |
+| `skill_invocation` | Correct skill invoked                  | Yes                                                        |
+| `prompt`           | LLM-as-judge for qualitative checks    | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
+| `code` (planned)   | Python assertions for numeric accuracy | Yes                                                        |
 
 ## Adding a task
 
@@ -145,22 +145,22 @@ Tip: copy an existing task in the same category as a starting template.
 
 ## Known limitations
 
-| Limitation | Mitigation |
-| --- | --- |
+| Limitation                                                                                                | Mitigation                                                                            |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally) | Override per task with `config.timeout_seconds` if a specific task needs more or less |
-| Prompt grader variance on borderline values | Use `code` grader for numeric checks |
-| `**` glob not supported recursively in waza v0.23.0 — tasks at depth 2+ silently skipped | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml` |
-| SKILL.md exceeds Waza 500-token recommendation (3800 tokens) | Intentional; skill carries domain reference architecture |
-| `argument-hint` frontmatter diverges from agentskills.io spec | Project convention; not blocking for evals |
+| Prompt grader variance on borderline values                                                               | Use `code` grader for numeric checks                                                  |
+| `**` glob not supported recursively in waza v0.23.0 — tasks at depth 2+ silently skipped                  | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                  |
+| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                              | Intentional; skill carries domain reference architecture                              |
+| `argument-hint` frontmatter diverges from agentskills.io spec                                             | Project convention; not blocking for evals                                            |
 
 ## Troubleshooting
 
-| Symptom | Fix |
-| --- | --- |
-| `copilot is not authenticated` | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
-| `waza check` schema errors | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL |
-| Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording |
-| Tasks skipped or results empty | Verify `--tags` matches task tags; check `results/` directory is writable |
+| Symptom                             | Fix                                                                            |
+| ----------------------------------- | ------------------------------------------------------------------------------ |
+| `copilot is not authenticated`      | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
+| `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL              |
+| Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording    |
+| Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable      |
 
 ## References
 

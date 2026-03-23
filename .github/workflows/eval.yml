@@ -106,7 +106,6 @@ jobs:
   # Real LLM evaluation on PRs that modify files critical to skill behavior.
   # dorny/paths-filter detects which file categories changed; a mapping step
   # converts categories to eval task tags so only relevant tasks run.
-  # Single trial per task (vs 3 for dispatch) to limit cost.
   # continue-on-error: true until prompt graders are fully stable.
   evaluate-critical:
     name: Evaluate Critical Changes (Copilot SDK)
@@ -190,8 +189,6 @@ jobs:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           EVAL_TAGS: ${{ steps.scope.outputs.tags }}
         run: |
-          # Single trial for PR runs (cost-efficient); dispatch uses 3
-          sed -i 's/trials_per_task:[[:space:]]*3/trials_per_task: 1/' tests/evals/azure-cost-calculator/eval.yaml
           # Build tag args from comma-separated list
           IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAGS"
           ARGS=(--verbose --output results.json)

@@ -13,7 +13,7 @@ tags:
 inputs:
   prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
 config:
-  timeout_seconds: 180
+  timeout_seconds: 30
 expected:
   output_contains:
     - "Assumptions"

@@ -5,6 +5,7 @@ description: >
   Tests that the agent identifies missing never-assume parameters and asks
   before estimating. "Azure SQL" maps to SQL Database but the user has not
   specified tier, DTU/vCores, or storage size.
+timeout_seconds: 30
 tags:
   - smoke
   - disambiguation
