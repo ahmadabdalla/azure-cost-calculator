@@ -39,6 +39,18 @@ graders:
       contains:
         - "4"
     weight: 0.5
+  - type: text
+    name: no-spot-pricing
+    config:
+      not_contains:
+        - "Spot"
+    weight: 1.0
+  - type: text
+    name: no-low-priority-pricing
+    config:
+      not_contains:
+        - "Low Priority"
+    weight: 1.0
   - type: behavior
     name: uses-pricing-script
     config:
