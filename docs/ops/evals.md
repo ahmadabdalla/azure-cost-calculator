@@ -76,7 +76,7 @@ tasks/
 
 ## CI pipeline
 
-Four jobs in `.github/workflows/eval.yml`, triggered on PRs to `dev`:
+Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
 
 | Job | Executor | What it does | LLM calls |
 | --- | --- | --- | --- |
