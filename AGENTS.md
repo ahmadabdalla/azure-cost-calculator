@@ -4,16 +4,18 @@ AI agent plugin for real-time Azure cost estimation using the Azure Retail Price
 
 ## Repository layout
 
-| Path                                       | Purpose                                                                                                                                    |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `skills/azure-cost-calculator/`            | Installable skill (entry point: `SKILL.md`)                                                                                                |
+| Path                                       | Purpose                                                                                                                                   |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `skills/azure-cost-calculator/`            | Installable skill (entry point: `SKILL.md`)                                                                                               |
 | `skills/azure-cost-calculator/scripts/`    | Pricing scripts: PowerShell (`Get-AzurePricing.ps1`, `Explore-AzurePricing.ps1`) and Bash equivalents, plus shared libs in `scripts/lib/` |
-| `skills/azure-cost-calculator/references/` | Service reference files, shared context, and example architectures (`references/examples/`)                                                |
-| `agents/`                                  | Plugin agents (e.g. `cost-analyst.agent.md`)                                                                                               |
-| `commands/`                                | Plugin commands (e.g. `estimate-cost.md`)                                                                                                  |
-| `.claude-plugin/plugin.json`               | Plugin manifest (canonical source of version)                                                                                              |
-| `tests/`                                   | Validation scripts and unit tests (Pester 5 + bats-core)                                                                                   |
-| `docs/`                                    | Templates (`TEMPLATE.md`), plugin docs, and operational guides (`docs/ops/`)                                                               |
+| `skills/azure-cost-calculator/references/` | Service reference files, shared context, and example architectures (`references/examples/`)                                               |
+| `agents/`                                  | Plugin agents (e.g. `cost-analyst.agent.md`)                                                                                              |
+| `commands/`                                | Plugin commands (e.g. `estimate-cost.md`)                                                                                                 |
+| `.claude-plugin/plugin.json`               | Plugin manifest (canonical source of version)                                                                                             |
+| `tests/`                                   | Validation scripts and unit tests (Pester 5 + bats-core)                                                                                  |
+| `tests/evals/`                             | Waza evaluation suites and task definitions for behavior quality checks                                                                   |
+| `.waza.yaml`                               | Project-level Waza configuration (paths, defaults, and runtime settings)                                                                  |
+| `docs/`                                    | Templates (`TEMPLATE.md`), plugin docs, and operational guides (`docs/ops/`)                                                              |
 
 ## Git conventions
 
@@ -25,6 +27,7 @@ PRs automatically run:
 
 - **validate-service-references**: Syntax, routing, alias uniqueness checks on service reference files.
 - **unit-tests**: PowerShell (Pester) and Bash (bats) tests when scripts or tests change.
+- **eval**: Waza schema validation, mock pipeline check, and targeted critical-path evals for relevant skill changes.
 
 Releases are handled by `create-release.yml` when a PR with a `release: ` prefix merges to `main`. Version is read from `.claude-plugin/plugin.json`.
 
@@ -42,6 +45,12 @@ Releases are handled by `create-release.yml` when a PR with a `release: ` prefix
   pwsh tests/unit/Run-PesterTests.ps1
   bash tests/unit/run-bats-tests.sh
   ```
+- Run eval checks when changing skill behavior, service references, eval tasks, or eval workflow:
+  ```
+  waza check
+  waza run --tags "service:<service-name>" --output results/results.json
+  ```
+- For real-model eval runs, set `COPILOT_GITHUB_TOKEN` (fine-grained PAT with "Copilot Requests" permission).
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for the full contributor guide.
 
 ## For maintainers

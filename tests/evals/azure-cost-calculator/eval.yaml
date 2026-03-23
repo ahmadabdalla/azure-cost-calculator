@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/eval.schema.json
+name: azure-cost-calculator-eval
+description: >
+  Evaluation suite for the Azure Cost Calculator skill. Validates cost
+  estimation accuracy, disambiguation protocol adherence, alias routing,
+  and trigger specificity using the Azure Retail Prices API.
+skill: azure-cost-calculator
+version: "1.0"
+
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: claude-sonnet-4.6
+  judge_model: claude-sonnet-4.6
+
+metrics:
+  - name: task_completion
+    weight: 1.0
+    threshold: 0.8
+    description: Did the skill produce a correct and complete cost estimate (or appropriate response) for the given prompt?
+  - name: protocol_adherence
+    weight: 1.5
+    threshold: 0.9
+    description: Did the skill follow the disambiguation protocol, disclose assumptions, and use the correct output format?
+  - name: trigger_accuracy
+    weight: 1.0
+    threshold: 1.0
+    description: Did the skill correctly activate (or not activate) based on whether the prompt is about Azure pricing?
+
+graders:
+  - type: text
+    name: no-summary-format
+    config:
+      not_contains:
+        - "Summary format"
+    weight: 1.0
+
+tasks:
+  - "tasks/*/*.yaml"
+  - "tasks/*/*/*.yaml"

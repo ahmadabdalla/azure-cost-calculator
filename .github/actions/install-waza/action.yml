@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+name: Install Waza CLI
+description: Downloads and verifies the Waza binary for Linux runners.
+
+# IMPORTANT: `version` and `checksum` are coupled. The default checksum is
+# pinned to the default version (v0.23.0 linux-amd64). If you update `version`,
+# you MUST also update `checksum` to match the new binary. Mismatched values
+# will cause sha256sum verification to fail.
+
+inputs:
+  version:
+    description: "Waza release tag (e.g. v0.23.0)"
+    required: false
+    default: "v0.23.0"
+  checksum:
+    description: "SHA256 checksum of the waza-linux-amd64 binary. Must match the version input."
+    required: false
+    default: "9cf7c99292100892b3274155b39f62e54c66d6dbd43d69b1a626a9ef5d35668b"
+
+runs:
+  using: composite
+  steps:
+    - name: Download and verify Waza binary
+      shell: bash
+      env:
+        WAZA_VERSION: ${{ inputs.version }}
+        WAZA_CHECKSUM: ${{ inputs.checksum }}
+      run: |
+        set -e
+        TMP_WAZA="$(mktemp)"
+        curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o "${TMP_WAZA}"
+        echo "${WAZA_CHECKSUM}  ${TMP_WAZA}" | sha256sum -c -
+        sudo install -m 755 "${TMP_WAZA}" /usr/local/bin/waza
+        rm -f "${TMP_WAZA}"
+        echo "Installed waza ${WAZA_VERSION}"
