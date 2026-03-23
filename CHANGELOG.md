@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.5.2] - 2026-03-23
+
+### Changed
+
+- Improved text formatting and punctuation consistency across all skill documentation and service reference files (120 service files updated with em dash to colon/semicolon/comma conversions)
+
 ## [1.5.1] - 2026-03-19
 
 ### Changed
