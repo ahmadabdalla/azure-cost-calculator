@@ -91,11 +91,11 @@ The workflow uses [dorny/paths-filter](https://github.com/dorny/paths-filter) to
 
 | Changed file | Tag triggered | Tasks run |
 | --- | --- | --- |
-| `SKILL.md`, `agents/**`, `commands/**` | `smoke` | 4 smoke tasks |
-| `references/shared.md` | `smoke` | 4 smoke tasks |
-| `references/service-routing.md` | `routing` | alias-routing |
-| `references/services/**/X.md` | `service:X` | All tasks tagged `service:X` |
-| `scripts/**` | `smoke` | 4 smoke tasks |
+| `skills/azure-cost-calculator/SKILL.md`, `agents/**`, `commands/**` | `smoke` | 4 smoke tasks |
+| `skills/azure-cost-calculator/references/shared.md` | `smoke` | 4 smoke tasks |
+| `skills/azure-cost-calculator/references/service-routing.md` | `routing` | alias-routing |
+| `skills/azure-cost-calculator/references/services/**/X.md` | `service:X` | All tasks tagged `service:X` |
+| `skills/azure-cost-calculator/scripts/**` | `smoke` | 4 smoke tasks |
 
 Service names are extracted from filenames dynamically (`basename virtual-machines.md .md` becomes `--tags service:virtual-machines`). Multiple tags are OR'd.
 
@@ -105,7 +105,7 @@ Service names are extracted from filenames dynamically (`basename virtual-machin
 | --- | --- |
 | Single service file (e.g. virtual-machines.md) | 2 |
 | Docs-only change | 0 |
-| SKILL.md + 1 service file | 5 |
+| SKILL.md + 1 service file | 6 |
 | Manual dispatch (all 8 tasks x 3 trials) | 24 |
 
 The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. `continue-on-error: true` prevents eval failures from blocking PRs while graders are being tuned.
@@ -147,7 +147,7 @@ Tip: copy an existing task in the same category as a starting template.
 
 | Limitation | Mitigation |
 | --- | --- |
-| Prompt grader timeout (60s default) too short for long responses | Add `config.timeout_seconds` to the task file |
+| Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally) | Override per task with `config.timeout_seconds` if a specific task needs more or less |
 | Prompt grader variance on borderline values | Use `code` grader for numeric checks |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens) | Intentional; skill carries domain reference architecture |
 | `argument-hint` frontmatter diverges from agentskills.io spec | Project convention; not blocking for evals |
