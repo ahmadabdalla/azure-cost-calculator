@@ -46,6 +46,7 @@ jobs:
               - 'skills/**'
               - '.waza.yaml'
               - '.github/workflows/eval.yml'
+              - '.github/actions/install-waza/**'
       - name: Install waza
         if: steps.filter.outputs.relevant == 'true'
         uses: ./.github/actions/install-waza
@@ -70,6 +71,7 @@ jobs:
               - 'skills/**'
               - '.waza.yaml'
               - '.github/workflows/eval.yml'
+              - '.github/actions/install-waza/**'
       - name: Install waza
         if: steps.filter.outputs.relevant == 'true'
         uses: ./.github/actions/install-waza
