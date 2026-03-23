@@ -4,6 +4,8 @@ All notable changes to the Azure Cost Calculator skill will be documented in thi
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+<!-- versions -->
+
 ## [1.5.1] - 2026-03-19
 
 ### Changed
