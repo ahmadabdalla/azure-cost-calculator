@@ -13,11 +13,21 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 
 ## Quick start
 
+Install Waza for your platform, then run evaluations locally.
+
 ```bash
-# One-time setup
 WAZA_VERSION="v0.23.0"
 mkdir -p ~/bin
+
+# macOS (Apple Silicon)
 curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-darwin-arm64" -o ~/bin/waza
+
+# macOS (Intel)
+# curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-darwin-amd64" -o ~/bin/waza
+
+# Linux (amd64)
+# curl -fsSL "https://github.com/microsoft/waza/releases/download/${WAZA_VERSION}/waza-linux-amd64" -o ~/bin/waza
+
 chmod +x ~/bin/waza
 
 # Validate YAML (no LLM calls)
@@ -25,10 +35,10 @@ waza check
 
 # Run evals with real AI
 export COPILOT_GITHUB_TOKEN="<your-pat>"
-waza run --verbose --output results.json
+waza run --verbose --output results/results.json
 
 # Run a specific service
-waza run --tags "service:virtual-machines"
+waza run --tags "service:virtual-machines" --output results/results.json
 ```
 
 ## Task structure
@@ -137,7 +147,7 @@ Tip: copy an existing task in the same category as a starting template.
 
 | Limitation | Mitigation |
 | --- | --- |
-| Prompt grader timeout (60s default) too short for long responses | Increase `timeout_seconds` per task |
+| Prompt grader timeout (60s default) too short for long responses | Add `config.timeout_seconds` to the task file |
 | Prompt grader variance on borderline values | Use `code` grader for numeric checks |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens) | Intentional; skill carries domain reference architecture |
 | `argument-hint` frontmatter diverges from agentskills.io spec | Project convention; not blocking for evals |
@@ -149,7 +159,7 @@ Tip: copy an existing task in the same category as a starting template.
 | `copilot is not authenticated` | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
 | `waza check` schema errors | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL |
 | Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording |
-| Tasks skipped or results empty | Verify `--tags` matches task tags; check output directory is writable |
+| Tasks skipped or results empty | Verify `--tags` matches task tags; check `results/` directory is writable |
 
 ## References
 
