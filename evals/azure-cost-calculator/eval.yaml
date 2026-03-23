@@ -39,4 +39,3 @@ graders:
 
 tasks:
   - "tasks/**/*.yaml"
-  - "tasks/**/**/*.yaml"
