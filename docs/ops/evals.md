@@ -150,6 +150,7 @@ Tip: copy an existing task in the same category as a starting template.
 | Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally) | Override per task with `config.timeout_seconds` if a specific task needs more or less |
 | Prompt grader variance on borderline values                                                               | Use `code` grader for numeric checks                                                  |
 | `**` glob not supported recursively in waza v0.23.0 — tasks at depth 2+ silently skipped                  | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                  |
+| `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0` — editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                              | Intentional; skill carries domain reference architecture                              |
 | `argument-hint` frontmatter diverges from agentskills.io spec                                             | Project convention; not blocking for evals                                            |
 
@@ -168,5 +169,5 @@ Tip: copy an existing task in the same category as a starting template.
 - [Getting started guide](https://github.com/microsoft/waza/blob/main/docs/GETTING-STARTED.md)
 - [CI/CD integration guide](https://github.com/microsoft/waza/blob/main/docs/SKILLS_CI_INTEGRATION.md)
 - [Integration testing (Copilot SDK)](https://github.com/microsoft/waza/blob/main/docs/INTEGRATION-TESTING.md)
-- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/main/schemas/eval.schema.json)
-- [Task schema](https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json)
+- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/eval.schema.json)
+- [Task schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json)

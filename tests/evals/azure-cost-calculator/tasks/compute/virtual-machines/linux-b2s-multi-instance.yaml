@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
 id: eval:compute/virtual-machines/linux-b2s-multi-instance
 name: Virtual Machines - Linux B2s Multi-Instance
 description: >
