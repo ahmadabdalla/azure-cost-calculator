@@ -6,7 +6,6 @@ description: >
   request. The user provides tier (P1 v3), OS (Linux), region (East US),
   and instance count (2). No disambiguation should be needed.
 tags:
-  - smoke
   - happy-path
   - single-service
   - compute
