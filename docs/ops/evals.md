@@ -11,6 +11,25 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 | Project config   | `.waza.yaml`                                                                                                |
 | Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                    |
 
+## Read this first
+
+Use this section order when working with evals:
+
+1. **Run locally:** [Quick start](#quick-start)
+2. **Understand CI behavior:** [CI pipeline](#ci-pipeline)
+3. **Create or update tests:** [Adding a task](#adding-a-task) + [Authoring pattern](#authoring-pattern)
+4. **Debug failures:** [Troubleshooting](#troubleshooting)
+5. **Upgrade safely:** [Known limitations](#known-limitations)
+
+### Contributor workflow (fast path)
+
+1. Pick the service reference and identify traps (shared serviceName, global region, daily meters, no meters).
+2. Select one core scenario pack and any needed exception pack.
+3. Author the task with required tags (`service:<name>`, category, scenario).
+4. Run `waza check`.
+5. Run a targeted eval: `waza run --tags "service:<name>" --output results/results.json`.
+6. Open PR and review CI artifacts for `evaluate-mock` and `evaluate-critical`.
+
 ## Quick start
 
 Install Waza for your platform, then run evaluations locally.
@@ -78,12 +97,12 @@ tasks/
 
 Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
 
-| Job                           | Executor      | What it does                                          | LLM calls |
-| ----------------------------- | ------------- | ----------------------------------------------------- | --------- |
-| `validate-eval-schema`        | n/a           | `waza check` (schema validation only)                 | 0         |
-| `evaluate-mock`               | `mock`        | Validates eval pipeline with simulated responses      | 0         |
-| `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files      | 0-8       |
-| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks; 1 trial each                               | up to 8   |
+| Job                           | Executor      | What it does                                     | LLM calls |
+| ----------------------------- | ------------- | ------------------------------------------------ | --------- |
+| `validate-eval-schema`        | n/a           | `waza check` (schema validation only)            | 0         |
+| `evaluate-mock`               | `mock`        | Validates eval pipeline with simulated responses | 0         |
+| `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
+| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks; 1 trial each                          | up to 8   |
 
 ### How `evaluate-critical` targets tasks
 
@@ -122,14 +141,14 @@ Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `
 
 ## Graders
 
-| Grader             | Purpose                                | Deterministic                                              |
-| ------------------ | -------------------------------------- | ---------------------------------------------------------- |
-| `text`             | String/regex matching on output        | Yes                                                        |
-| `behavior`         | Required tools, max tool calls         | Yes                                                        |
-| `trigger`          | Skill activation/deactivation          | Yes                                                        |
-| `skill_invocation` | Correct skill invoked                  | Yes                                                        |
+| Grader             | Purpose                                | Deterministic                                                  |
+| ------------------ | -------------------------------------- | -------------------------------------------------------------- |
+| `text`             | String/regex matching on output        | Yes                                                            |
+| `behavior`         | Required tools, max tool calls         | Yes                                                            |
+| `trigger`          | Skill activation/deactivation          | Yes                                                            |
+| `skill_invocation` | Correct skill invoked                  | Yes                                                            |
 | `prompt`           | LLM-as-judge for qualitative checks    | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
-| `code` (planned)   | Python assertions for numeric accuracy | Yes                                                        |
+| `code` (planned)   | Python assertions for numeric accuracy | Yes                                                            |
 
 ## Adding a task
 
@@ -143,16 +162,89 @@ For smoke tests: `tasks/smoke/<scenario>.yaml` with `id: eval:smoke/<scenario>` 
 
 Tip: copy an existing task in the same category as a starting template.
 
+## Authoring pattern
+
+Use a pack-based pattern so new service tests are consistent and easy to extend.
+
+### Core scenario packs
+
+| Pack                      | Required intent                                                    | Minimum tags                                 |
+| ------------------------- | ------------------------------------------------------------------ | -------------------------------------------- |
+| `smoke-routing`           | Alias or route resolves to the right service                       | `smoke`, `routing`, `service:<name>`         |
+| `smoke-disambiguation`    | Missing "never-assume" parameters trigger a clarification question | `smoke`, `disambiguation`                    |
+| `happy-path-single-meter` | One primary meter estimate with assumptions and monthly output     | `<category>`, `service:<name>`, `happy-path` |
+| `happy-path-multi-meter`  | Multi-component estimate with component breakdown and total        | `<category>`, `service:<name>`, `happy-path` |
+| `negative-trigger`        | Non-pricing prompt does not activate the skill                     | `smoke`, `negative`                          |
+
+### Exception packs
+
+Use these only when a service reference documents the corresponding trap.
+
+| Exception pack              | When to use                                                    | Typical assertion                             |
+| --------------------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| `cross-service-name`        | API `serviceName` is shared across multiple products           | `ProductName` filter is present and correct   |
+| `global-region-only`        | Meters bill only in `Global` region                            | Query includes `Region: Global`               |
+| `daily-meter-normalization` | Meters bill per-day instead of per-hour                        | Daily meter is normalized to monthly once     |
+| `no-retail-meters`          | Service has no retail API meters and depends on `billingNeeds` | Skill does not fabricate direct meter pricing |
+
+### Task contract
+
+Every task should satisfy this contract:
+
+1. Path: `tasks/<category>/<service>/<scenario>.yaml` or `tasks/smoke/<scenario>.yaml`
+2. ID: `eval:<category>/<service>/<scenario>` or `eval:smoke/<scenario>`
+3. Tags: always include `service:<service-name>` for service tasks plus category and scenario tags
+4. Assertions: include at least one deterministic grader (`text`, `behavior`, `trigger`, or `skill_invocation`)
+5. Validation: `waza check` must pass before PR submission
+
+### Service mapping rule
+
+For each service reference file:
+
+1. Include at least one core happy-path pack
+2. Include smoke coverage (`smoke-routing` or `smoke-disambiguation`) where applicable
+3. Add exception packs only for documented traps in that service file
+4. Add `negative-trigger` coverage for adjacent non-pricing prompts at the suite level
+
+### Definition of done
+
+A new or updated service is eval-ready when:
+
+1. Required pack(s) are present and tagged correctly
+2. `service:<name>` tag matches the service reference filename
+3. `waza check` passes with no schema errors
+4. The task set includes deterministic checks, not only prompt-judge checks
+
+### PR checklist (copy into description)
+
+1. Added or updated task files under `tests/evals/azure-cost-calculator/tasks/**`
+2. Task IDs and tags follow the contract (`service:<name>` matches filename)
+3. Required scenario and exception packs are covered
+4. `waza check` passes locally
+5. Targeted run completed for changed service tags
+6. CI artifacts reviewed (`eval-results-mock`, `eval-results-critical` when applicable)
+
+### Reference mappings
+
+Examples from current service references:
+
+| Service reference             | Core packs                       | Exception packs                                   |
+| ----------------------------- | -------------------------------- | ------------------------------------------------- |
+| `compute/app-service.md`      | `happy-path-single-meter`        | None                                              |
+| `networking/ip-addresses.md`  | `happy-path-single-meter`        | `cross-service-name`                              |
+| `storage/data-box-gateway.md` | `happy-path-single-meter`        | `cross-service-name`, `daily-meter-normalization` |
+| `management/migrate.md`       | `negative-trigger` (suite-level) | `no-retail-meters`                                |
+
 ## Known limitations
 
-| Limitation                                                                                                | Mitigation                                                                            |
-| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally) | Override per task with `config.timeout_seconds` if a specific task needs more or less |
-| Prompt grader variance on borderline values                                                               | Use `code` grader for numeric checks                                                  |
-| `**` glob not supported recursively in waza v0.23.0 — tasks at depth 2+ silently skipped                  | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                  |
-| `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0` — editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag |
-| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                              | Intentional; skill carries domain reference architecture                              |
-| `argument-hint` frontmatter diverges from agentskills.io spec                                             | Project convention; not blocking for evals                                            |
+| Limitation                                                                                                                              | Mitigation                                                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally)                               | Override per task with `config.timeout_seconds` if a specific task needs more or less                                                                                                              |
+| Prompt grader variance on borderline values                                                                                             | Use `code` grader for numeric checks                                                                                                                                                               |
+| `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                                                 | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                               |
+| `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0`: editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag |
+| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                                                            | Intentional; skill carries domain reference architecture                                                                                                                                           |
+| `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                         |
 
 ## Troubleshooting
 
@@ -162,6 +254,23 @@ Tip: copy an existing task in the same category as a starting template.
 | `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL              |
 | Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording    |
 | Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable      |
+
+## Maintenance routine
+
+Use this lightweight routine to keep the eval system easy to operate.
+
+### Per PR
+
+1. Ensure changed service references map to corresponding `service:<name>` eval tags.
+2. Confirm at least one deterministic grader remains in each changed task.
+3. Keep new task files aligned with the pack pattern instead of one-off grader logic.
+
+### Monthly
+
+1. Recheck Waza pin and checksum in `.github/actions/install-waza/action.yml`.
+2. If upgrading Waza, update all pinned schema URLs in eval docs and YAML files.
+3. Review `Known limitations` and remove stale mitigations.
+4. Review flaky prompt graders and convert high-value checks to deterministic graders where possible.
 
 ## References
 
