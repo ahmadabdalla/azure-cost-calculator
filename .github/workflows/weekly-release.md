@@ -129,7 +129,9 @@ This ensures you are editing the `dev` versions of these files. The resulting pa
 
 ### 5b. Update `CHANGELOG.md`
 
-Insert a new version section **above** the previous version entry. Use today's date in YYYY-MM-DD format. Format:
+Insert a new version section **immediately after the `<!-- versions -->` comment** in `CHANGELOG.md`. Use today's date in YYYY-MM-DD format. The `<!-- versions -->` comment is a stable anchor that ensures the patch context lines are always the same fixed prose, regardless of what content appears in prior version sections.
+
+Format:
 
 ```markdown
 ## [X.Y.Z] - YYYY-MM-DD
