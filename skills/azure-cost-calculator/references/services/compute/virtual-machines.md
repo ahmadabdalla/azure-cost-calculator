@@ -84,4 +84,6 @@ PriceType: Reservation
 | `Standard_D8s_v5` | 8     | 32       | General purpose       |
 | `Standard_E2s_v5` | 2     | 16       | Memory optimized      |
 | `Standard_E4s_v5` | 4     | 32       | Memory optimized      |
-| `Standard_F2s_v2` | 2     | 4        | Compute optimized     |
+| `Standard_D16s_v5` | 16    | 64       | General purpose       |
+| `Standard_E8s_v5`  | 8     | 64       | Memory optimized      |
+| `Standard_F2s_v2`  | 2     | 4        | Compute optimized     |
