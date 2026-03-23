@@ -2,14 +2,14 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills. Validates behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation, service routing, and trigger specificity.
 
-| Item             | Detail                                                      |
-| ---------------- | ----------------------------------------------------------- |
-| Workflow         | `.github/workflows/eval.yml`                                |
-| Composite action | `.github/actions/install-waza/action.yml`                   |
-| Eval suite       | `evals/azure-cost-calculator/eval.yaml`                     |
-| Task files       | `evals/azure-cost-calculator/tasks/**/*.yaml` (nested dirs) |
-| Project config   | `.waza.yaml`                                                |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission) |
+| Item             | Detail                                                                    |
+| ---------------- | ------------------------------------------------------------------------- |
+| Workflow         | `.github/workflows/eval.yml`                                              |
+| Composite action | `.github/actions/install-waza/action.yml`                                 |
+| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                             |
+| Task files       | `tests/evals/azure-cost-calculator/tasks/**/*.yaml` (nested dirs)         |
+| Project config   | `.waza.yaml`                                                              |
+| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)  |
 
 ## Quick start
 

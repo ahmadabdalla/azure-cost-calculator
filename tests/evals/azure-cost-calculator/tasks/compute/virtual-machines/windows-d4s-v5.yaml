@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+id: eval:compute/virtual-machines/windows-d4s-v5
+name: Happy Path - Virtual Machines D4s v5 Windows
+description: >
+  Tests cost estimation for a multi-meter service. Windows VMs require
+  correct ProductName filtering (series + OS indicator) to avoid returning
+  Linux, Spot, or Low Priority pricing. Validates instance count handling
+  and the 730-hour formula.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:virtual-machines
+inputs:
+  prompt: "Estimate the monthly cost of running 4 Windows Standard_D4s_v5 instances in West Europe"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+    - "Virtual Machines"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Virtual Machines"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: behavior
+    name: uses-pricing-script
+    config:
+      required_tools:
+        - "get-azure-pricing"
+    weight: 1.0

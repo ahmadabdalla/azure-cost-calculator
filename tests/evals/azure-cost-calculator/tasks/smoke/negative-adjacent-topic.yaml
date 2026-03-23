@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+id: eval:smoke/negative-adjacent-topic
+name: Negative - Adjacent Azure Topic (Certifications)
+description: >
+  Tests a prompt that mentions Azure but is NOT about pricing or costs.
+  The skill should not activate for general Azure questions unrelated
+  to cost estimation.
+tags:
+  - smoke
+  - negative
+  - adjacent-topic
+inputs:
+  prompt: "What Azure certifications should I study for?"
+expected:
+  should_trigger: false
+  output_not_contains:
+    - "retailPrice"
+    - "Monthly ="
+    - "get-azure-pricing"
+graders:
+  - type: trigger
+    name: skill-does-not-activate
+    config:
+      skill_path: "skills/azure-cost-calculator"
+      mode: "negative"
+    weight: 1.0

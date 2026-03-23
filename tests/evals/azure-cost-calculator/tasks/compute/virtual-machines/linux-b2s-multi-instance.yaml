@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/main/schemas/task.schema.json
+id: eval:compute/virtual-machines/linux-b2s-multi-instance
+name: Virtual Machines - Linux B2s Multi-Instance
+description: >
+  Tests cost estimation for a burstable Linux VM with multiple instances.
+  B-series VMs have different pricing tiers than D-series. Validates that
+  the agent correctly filters for Linux pricing (no Windows license cost)
+  and scales by instance count.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:virtual-machines
+inputs:
+  prompt: "How much would 10 Standard_B2s Linux VMs cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+    - "Virtual Machines"
+  output_not_contains:
+    - "Windows"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Virtual Machines"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: text
+    name: no-windows-pricing
+    config:
+      not_contains:
+        - "Windows license"
+    weight: 0.5
+  - type: behavior
+    name: uses-pricing-script
+    config:
+      required_tools:
+        - "get-azure-pricing"
+    weight: 1.0

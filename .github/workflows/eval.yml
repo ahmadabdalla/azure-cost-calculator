@@ -42,7 +42,7 @@ jobs:
         with:
           filters: |
             relevant:
-              - 'evals/**'
+              - 'tests/evals/**'
               - 'skills/**'
               - '.waza.yaml'
               - '.github/workflows/eval.yml'
@@ -66,7 +66,7 @@ jobs:
         with:
           filters: |
             relevant:
-              - 'evals/**'
+              - 'tests/evals/**'
               - 'skills/**'
               - '.waza.yaml'
               - '.github/workflows/eval.yml'
@@ -76,7 +76,7 @@ jobs:
       - name: Override executor to mock
         if: steps.filter.outputs.relevant == 'true'
         run: |
-          sed -i 's/executor:[[:space:]]*copilot-sdk/executor: mock/' evals/azure-cost-calculator/eval.yaml
+          sed -i 's/executor:[[:space:]]*copilot-sdk/executor: mock/' tests/evals/azure-cost-calculator/eval.yaml
       - name: Run evaluations (mock)
         if: steps.filter.outputs.relevant == 'true'
         continue-on-error: true
@@ -189,7 +189,7 @@ jobs:
           EVAL_TAGS: ${{ steps.scope.outputs.tags }}
         run: |
           # Single trial for PR runs (cost-efficient); dispatch uses 3
-          sed -i 's/trials_per_task:[[:space:]]*3/trials_per_task: 1/' evals/azure-cost-calculator/eval.yaml
+          sed -i 's/trials_per_task:[[:space:]]*3/trials_per_task: 1/' tests/evals/azure-cost-calculator/eval.yaml
           # Build tag args from comma-separated list
           IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAGS"
           ARGS=(--verbose --output results.json)
