@@ -100,7 +100,7 @@ Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional j
 | Job                           | Executor      | What it does                                     | LLM calls |
 | ----------------------------- | ------------- | ------------------------------------------------ | --------- |
 | `validate-eval-schema`        | n/a           | `waza check` (schema validation only)            | 0         |
-| `evaluate-mock`               | `mock`        | Validates eval pipeline with simulated responses | 0         |
+| `evaluate-mock`               | `mock`        | Runs `--tags negative` only; validates trigger grader wiring | 0         |
 | `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
 | `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter   | up to 8   |
 
@@ -135,7 +135,7 @@ The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. 
 
 ### Mock executor
 
-Validates eval YAML parsing, grader config, and pipeline without authentication. Positive tests fail under mock (no real AI output); negative tests pass (mock does not activate skills). Uses `continue-on-error: true`.
+Runs only `--tags negative` tasks. Negative tests pass deterministically under mock because the mock executor never activates skills. Positive tests are excluded: they require real AI output and always fail under mock, producing no actionable signal. `waza check` (run in `validate-eval-schema`) already covers schema and grader config validation.
 
 ### Copilot SDK executor
 
