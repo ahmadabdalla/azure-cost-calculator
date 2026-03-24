@@ -230,7 +230,9 @@ jobs:
           if [ -n "$EVAL_TAG" ]; then
             IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAG"
             for t in "${TAG_ARRAY[@]}"; do
-              ARGS+=(--tags "$t")
+              t="${t#"${t%%[![:space:]]*}"}"
+              t="${t%"${t##*[![:space:]]}"}"
+              [ -n "$t" ] && ARGS+=(--tags "$t")
             done
           fi
           waza run "${ARGS[@]}"

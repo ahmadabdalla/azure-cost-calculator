@@ -102,7 +102,7 @@ Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional j
 | `validate-eval-schema`        | n/a           | `waza check` (schema validation only)            | 0         |
 | `evaluate-mock`               | `mock`        | Validates eval pipeline with simulated responses | 0         |
 | `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
-| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks; 1 trial each; accepts comma-separated tag filter | up to 8   |
+| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter   | up to 8   |
 
 ### How `evaluate-critical` targets tasks
 
