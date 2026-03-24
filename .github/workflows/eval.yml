@@ -82,7 +82,7 @@ jobs:
       - name: Run evaluations (mock)
         if: steps.filter.outputs.relevant == 'true'
         continue-on-error: true
-        run: waza run --verbose --output results.json
+        run: waza run --verbose --output results.json --reporter junit:results-junit.xml
       - name: Display results summary
         if: always() && steps.filter.outputs.relevant == 'true'
         run: |
@@ -99,6 +99,7 @@ jobs:
           name: eval-results-mock
           path: |
             results.json
+            results-junit.xml
             transcripts/
           retention-days: 30
           if-no-files-found: warn
@@ -191,7 +192,7 @@ jobs:
         run: |
           # Build tag args from comma-separated list
           IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAGS"
-          ARGS=(--verbose --output results.json)
+          ARGS=(--verbose --output results.json --reporter junit:results-junit.xml)
           for t in "${TAG_ARRAY[@]}"; do
             ARGS+=(--tags "$t")
           done
@@ -212,6 +213,7 @@ jobs:
           name: eval-results-critical
           path: |
             results.json
+            results-junit.xml
             transcripts/
           retention-days: 30
           if-no-files-found: warn
@@ -244,7 +246,7 @@ jobs:
           EVAL_MODEL: ${{ inputs.model }}
           EVAL_TAG: ${{ inputs.tag }}
         run: |
-          ARGS=(--model "$EVAL_MODEL" --verbose --output results.json)
+          ARGS=(--model "$EVAL_MODEL" --verbose --output results.json --reporter junit:results-junit.xml)
           if [ -n "$EVAL_TAG" ]; then
             ARGS+=(--tags "$EVAL_TAG")
           fi
@@ -267,6 +269,7 @@ jobs:
           name: eval-results-${{ inputs.model }}
           path: |
             results.json
+            results-junit.xml
             transcripts/
           retention-days: 30
           if-no-files-found: warn
