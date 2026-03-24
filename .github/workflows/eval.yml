@@ -14,7 +14,7 @@ on:
           - claude-opus-4.6
           - gpt-5.3-codex
       tag:
-        description: "Tag filter for tasks (blank runs all)"
+        description: "Tag filter for tasks (blank runs all; comma-separated for multiple, e.g. service:cosmos-db,service:virtual-machines)"
         required: false
         type: string
   pull_request:
@@ -228,7 +228,12 @@ jobs:
         run: |
           ARGS=(--model "$EVAL_MODEL" --verbose --output results.json)
           if [ -n "$EVAL_TAG" ]; then
-            ARGS+=(--tags "$EVAL_TAG")
+            IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAG"
+            for t in "${TAG_ARRAY[@]}"; do
+              t="${t#"${t%%[![:space:]]*}"}"
+              t="${t%"${t##*[![:space:]]}"}"
+              [ -n "$t" ] && ARGS+=(--tags "$t")
+            done
           fi
           waza run "${ARGS[@]}"
       - name: Upload results
