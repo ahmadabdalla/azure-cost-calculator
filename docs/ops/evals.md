@@ -6,7 +6,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 | ---------------- | ----------------------------------------------------------------------------------------------------------- |
 | Workflow         | `.github/workflows/eval.yml`                                                                                |
 | Composite action | `.github/actions/install-waza/action.yml`                                                                   |
-| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml`                                                               |
+| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock) |
 | Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml` |
 | Project config   | `.waza.yaml`                                                                                                |
 | Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                    |
@@ -136,6 +136,8 @@ The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. 
 ### Mock executor
 
 Runs only `--tags negative` tasks. Negative tests pass deterministically under mock because the mock executor never activates skills. Positive tests are excluded: they require real AI output and always fail under mock, producing no actionable signal. `waza check` (run in `validate-eval-schema`) already covers schema and grader config validation.
+
+The mock executor is configured in `eval-mock.yaml` alongside `eval.yaml`. Both files share the same task globs; the only difference is `executor: mock`. This avoids mutating `eval.yaml` in CI.
 
 ### Copilot SDK executor
 

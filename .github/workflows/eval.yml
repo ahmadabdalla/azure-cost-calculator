@@ -75,13 +75,9 @@ jobs:
       - name: Install waza
         if: steps.filter.outputs.relevant == 'true'
         uses: ./.github/actions/install-waza
-      - name: Override executor to mock
-        if: steps.filter.outputs.relevant == 'true'
-        run: |
-          sed -i 's/executor:[[:space:]]*copilot-sdk/executor: mock/' tests/evals/azure-cost-calculator/eval.yaml
       - name: Run evaluations (mock)
         if: steps.filter.outputs.relevant == 'true'
-        run: waza run --tags negative --verbose --output results.json
+        run: waza run tests/evals/azure-cost-calculator/eval-mock.yaml --tags negative --verbose --output results.json
       - name: Upload results
         if: always() && steps.filter.outputs.relevant == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
