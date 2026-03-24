@@ -115,6 +115,7 @@ The workflow uses [dorny/paths-filter](https://github.com/dorny/paths-filter) to
 | `skills/azure-cost-calculator/references/service-routing.md`        | `routing`     | alias-routing                |
 | `skills/azure-cost-calculator/references/services/**/X.md`          | `service:X`   | All tasks tagged `service:X` |
 | `skills/azure-cost-calculator/scripts/**`                           | `smoke`       | 4 smoke tasks                |
+| `tests/evals/**`                                                    | `smoke`       | 4 smoke tasks                |
 
 Service names are extracted from filenames dynamically (`basename virtual-machines.md .md` becomes `--tags service:virtual-machines`). Multiple tags are OR'd.
 
@@ -125,6 +126,7 @@ Service names are extracted from filenames dynamically (`basename virtual-machin
 | Single service file (e.g. virtual-machines.md) | 2         |
 | Docs-only change                               | 0         |
 | SKILL.md + 1 service file                      | 6         |
+| Eval task or grader change                     | 4         |
 | Manual dispatch (all 8 tasks x 1 trial)        | 8         |
 
 The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. `continue-on-error: true` prevents eval failures from blocking PRs while graders are being tuned.

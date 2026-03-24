@@ -123,6 +123,8 @@ jobs:
               - 'skills/azure-cost-calculator/references/services/**'
             scripts:
               - 'skills/azure-cost-calculator/scripts/**'
+            eval-tasks:
+              - 'tests/evals/**'
       - name: Build eval scope
         id: scope
         env:
@@ -132,6 +134,7 @@ jobs:
           SERVICES: ${{ steps.filter.outputs.services }}
           SERVICES_FILES: ${{ steps.filter.outputs.services_files }}
           SCRIPTS: ${{ steps.filter.outputs.scripts }}
+          EVAL_TASKS: ${{ steps.filter.outputs.eval-tasks }}
           HAS_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN != '' && 'true' || 'false' }}
         run: |
           if [ "$HAS_TOKEN" != "true" ]; then
@@ -157,6 +160,10 @@ jobs:
           fi
           # Script changes affect the estimation pipeline: run smoke tests
           if [ "$SCRIPTS" == "true" ]; then
+            TAGS+=(smoke)
+          fi
+          # Eval task or grader changes: run smoke tests to validate the pipeline
+          if [ "$EVAL_TASKS" == "true" ]; then
             TAGS+=(smoke)
           fi
           # Deduplicate and export
