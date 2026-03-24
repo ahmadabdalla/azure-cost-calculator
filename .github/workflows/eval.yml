@@ -82,24 +82,13 @@ jobs:
       - name: Run evaluations (mock)
         if: steps.filter.outputs.relevant == 'true'
         continue-on-error: true
-        run: waza run --verbose --output results.json
-      - name: Display results summary
-        if: always() && steps.filter.outputs.relevant == 'true'
-        run: |
-          if [ -f results.json ]; then
-            echo "## Evaluation Results (Mock)" >> "$GITHUB_STEP_SUMMARY"
-            echo '```json' >> "$GITHUB_STEP_SUMMARY"
-            cat results.json >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - name: Upload results
+        run: waza run --verbose
+      - name: Upload transcripts
         if: always() && steps.filter.outputs.relevant == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: eval-results-mock
-          path: |
-            results.json
-            transcripts/
+          name: eval-transcripts-mock
+          path: transcripts/
           retention-days: 30
           if-no-files-found: warn
 
@@ -191,28 +180,17 @@ jobs:
         run: |
           # Build tag args from comma-separated list
           IFS=',' read -ra TAG_ARRAY <<< "$EVAL_TAGS"
-          ARGS=(--verbose --output results.json)
+          ARGS=(--verbose)
           for t in "${TAG_ARRAY[@]}"; do
             ARGS+=(--tags "$t")
           done
           waza run "${ARGS[@]}"
-      - name: Display results summary
-        if: always() && steps.scope.outputs.run == 'true'
-        run: |
-          if [ -f results.json ]; then
-            echo "## Evaluation Results (Critical Path)" >> "$GITHUB_STEP_SUMMARY"
-            echo '```json' >> "$GITHUB_STEP_SUMMARY"
-            cat results.json >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - name: Upload results
+      - name: Upload transcripts
         if: always() && steps.scope.outputs.run == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: eval-results-critical
-          path: |
-            results.json
-            transcripts/
+          name: eval-transcripts-critical
+          path: transcripts/
           retention-days: 30
           if-no-files-found: warn
 
@@ -244,29 +222,16 @@ jobs:
           EVAL_MODEL: ${{ inputs.model }}
           EVAL_TAG: ${{ inputs.tag }}
         run: |
-          ARGS=(--model "$EVAL_MODEL" --verbose --output results.json)
+          ARGS=(--model "$EVAL_MODEL" --verbose)
           if [ -n "$EVAL_TAG" ]; then
             ARGS+=(--tags "$EVAL_TAG")
           fi
           waza run "${ARGS[@]}"
-      - name: Display results summary
-        if: always()
-        env:
-          EVAL_MODEL: ${{ inputs.model }}
-        run: |
-          if [ -f results.json ]; then
-            echo "## Evaluation Results (${EVAL_MODEL})" >> "$GITHUB_STEP_SUMMARY"
-            echo '```json' >> "$GITHUB_STEP_SUMMARY"
-            cat results.json >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-          fi
-      - name: Upload results
+      - name: Upload transcripts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: eval-results-${{ inputs.model }}
-          path: |
-            results.json
-            transcripts/
+          name: eval-transcripts-${{ inputs.model }}
+          path: transcripts/
           retention-days: 30
           if-no-files-found: warn
