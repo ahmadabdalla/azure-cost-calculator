@@ -1,4 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# temp: trigger test for #594 — delete this branch after validation
 id: eval:smoke/should-not-trigger
 name: Negative Trigger - Unrelated Prompt
 description: >
