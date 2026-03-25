@@ -49,9 +49,10 @@ graders:
 
         Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 1.5
-  - type: behavior
+  - type: tool_constraint
     name: uses-pricing-script
     config:
-      required_tools:
-        - "get-azure-pricing"
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
     weight: 1.0

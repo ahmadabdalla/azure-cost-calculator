@@ -147,12 +147,13 @@ Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `
 
 | Grader             | Purpose                                | Deterministic                                                  |
 | ------------------ | -------------------------------------- | -------------------------------------------------------------- |
-| `text`             | String/regex matching on output        | Yes                                                            |
-| `behavior`         | Required tools, max tool calls         | Yes                                                            |
-| `trigger`          | Skill activation/deactivation          | Yes                                                            |
-| `skill_invocation` | Correct skill invoked                  | Yes                                                            |
-| `prompt`           | LLM-as-judge for qualitative checks    | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
-| `code` (planned)   | Python assertions for numeric accuracy | Yes                                                            |
+| `text`             | String/regex matching on output                       | Yes                                                            |
+| `behavior`         | Required tools by name, max tool calls                | Yes; do NOT use for script invocation — tool name is `bash`, not the script filename |
+| `tool_constraint`  | Tool name + optional command pattern (regex on args)  | Yes; use this to assert pricing script invocation (`tool: bash`, `command_pattern: "get-azure-pricing\\.sh"`) |
+| `trigger`          | Skill activation/deactivation                         | Yes                                                            |
+| `skill_invocation` | Correct skill invoked                                 | Yes                                                            |
+| `prompt`           | LLM-as-judge for qualitative checks                   | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
+| `code` (planned)   | Python assertions for numeric accuracy                | Yes                                                            |
 
 ## Adding a task
 
