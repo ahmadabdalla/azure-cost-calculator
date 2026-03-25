@@ -145,15 +145,31 @@ Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `
 
 ## Graders
 
-| Grader             | Purpose                                | Deterministic                                                  |
-| ------------------ | -------------------------------------- | -------------------------------------------------------------- |
-| `text`             | String/regex matching on output                       | Yes                                                            |
+| Grader             | Purpose                                               | Deterministic |
+| ------------------ | ----------------------------------------------------- | ------------- |
+| `text`             | String/regex matching on output                       | Yes |
 | `behavior`         | Required tools by name, max tool calls                | Yes; do NOT use for script invocation — tool name is `bash`, not the script filename |
-| `tool_constraint`  | Tool name + optional command pattern (regex on args)  | Yes; use this to assert pricing script invocation (`tool: bash`, `command_pattern: "get-azure-pricing\\.sh"`) |
-| `trigger`          | Skill activation/deactivation                         | Yes                                                            |
-| `skill_invocation` | Correct skill invoked                                 | Yes                                                            |
+| `tool_constraint`  | Tool name + optional command pattern (regex on args)  | Yes; use for pricing script invocation (see snippet below) |
+| `trigger`          | Skill activation/deactivation                         | Yes |
+| `skill_invocation` | Correct skill invoked                                 | Yes |
 | `prompt`           | LLM-as-judge for qualitative checks                   | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
-| `code` (planned)   | Python assertions for numeric accuracy                | Yes                                                            |
+| `code` (planned)   | Python assertions for numeric accuracy                | Yes |
+
+### Standard graders for happy-path tasks
+
+Every happy-path task must include the `uses-pricing-script` grader. The Bash tool reports as `bash` in session tool names — not as the script filename. `behavior.required_tools` cannot match script names and silently passes without asserting anything. Use `tool_constraint` instead:
+
+```yaml
+- type: tool_constraint
+  name: uses-pricing-script
+  config:
+    expect_tools:
+      - tool: bash
+        command_pattern: "get-azure-pricing\\.sh"
+  weight: 1.0
+```
+
+This grader is intentionally identical across all happy-path tasks. Copy it verbatim. Do not substitute `behavior.required_tools`.
 
 ## Adding a task
 
@@ -199,8 +215,9 @@ Every task should satisfy this contract:
 1. Path: `tasks/<category>/<service>/<scenario>.yaml` or `tasks/smoke/<scenario>.yaml`
 2. ID: `eval:<category>/<service>/<scenario>` or `eval:smoke/<scenario>`
 3. Tags: always include `service:<service-name>` for service tasks plus category and scenario tags
-4. Assertions: include at least one deterministic grader (`text`, `behavior`, `trigger`, or `skill_invocation`)
-5. Validation: `waza check` must pass before PR submission
+4. Assertions: include at least one deterministic grader (`text`, `tool_constraint`, `trigger`, or `skill_invocation`); do not use `behavior` for script invocation (see [Graders](#graders))
+5. Happy-path tasks: include the standard `uses-pricing-script` `tool_constraint` grader (see [Standard graders](#standard-graders-for-happy-path-tasks))
+6. Validation: `waza check` must pass before PR submission
 
 ### Service mapping rule
 
@@ -219,15 +236,17 @@ A new or updated service is eval-ready when:
 2. `service:<name>` tag matches the service reference filename
 3. `waza check` passes with no schema errors
 4. The task set includes deterministic checks, not only prompt-judge checks
+5. Every happy-path task includes the `uses-pricing-script` `tool_constraint` grader
 
 ### PR checklist (copy into description)
 
 1. Added or updated task files under `tests/evals/azure-cost-calculator/tasks/**`
 2. Task IDs and tags follow the contract (`service:<name>` matches filename)
 3. Required scenario and exception packs are covered
-4. `waza check` passes locally
-5. Targeted run completed for changed service tags
-6. CI artifacts reviewed (`eval-results-mock`, `eval-results-critical` when applicable)
+4. Every happy-path task includes the `uses-pricing-script` `tool_constraint` grader
+5. `waza check` passes locally
+6. Targeted run completed for changed service tags
+7. CI artifacts reviewed (`eval-results-mock`, `eval-results-critical` when applicable)
 
 ### Reference mappings
 
@@ -248,6 +267,7 @@ Examples from current service references:
 | Prompt grader variance on borderline values                                                                                             | Use `code` grader for numeric checks                                                                                                                                                               |
 | `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                                                 | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                               |
 | `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0`: editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag |
+| `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                                                         | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                    |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                                                            | Intentional; skill carries domain reference architecture                                                                                                                                           |
 | `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                         |
 
@@ -258,6 +278,7 @@ Examples from current service references:
 | `copilot is not authenticated`      | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
 | `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL              |
 | Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording    |
+| `uses-pricing-script` scores 0      | The task used `behavior.required_tools` instead of `tool_constraint`; replace with the standard grader (see [Standard graders](#standard-graders-for-happy-path-tasks)) |
 | Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable      |
 
 ## Maintenance routine
