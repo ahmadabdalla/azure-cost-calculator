@@ -12,7 +12,7 @@ tags:
   - compute
   - service:virtual-machines
 inputs:
-  prompt: "Estimate the monthly cost of running 4 Windows Standard_D4s_v5 instances in West Europe"
+  prompt: "Estimate the monthly cost of running 4 Windows Standard_D4s_v5 instances in East US"
 expected:
   output_contains:
     - "Assumptions"

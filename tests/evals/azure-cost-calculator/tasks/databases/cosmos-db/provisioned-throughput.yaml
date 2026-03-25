@@ -35,7 +35,7 @@ graders:
     name: throughput-acknowledged
     config:
       contains:
-        - "1000"
+        - "1,000"
     weight: 0.5
   - type: text
     name: storage-acknowledged
