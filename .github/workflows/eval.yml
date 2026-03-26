@@ -40,6 +40,7 @@ jobs:
         id: filter
         uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3
         with:
+          list-files: shell
           filters: |
             relevant:
               - 'tests/evals/**'
@@ -47,12 +48,29 @@ jobs:
               - '.waza.yaml'
               - '.github/workflows/eval.yml'
               - '.github/actions/install-waza/**'
+            services:
+              - 'skills/azure-cost-calculator/references/services/**'
       - name: Install waza
         if: steps.filter.outputs.relevant == 'true'
         uses: ./.github/actions/install-waza
       - name: Validate schemas
         if: steps.filter.outputs.relevant == 'true'
         run: waza check
+      - name: Check eval coverage for changed service files
+        if: steps.filter.outputs.services == 'true'
+        env:
+          SERVICES_FILES: ${{ steps.filter.outputs.services_files }}
+        run: |
+          mapfile -t FILES <<< "$SERVICES_FILES"
+          UNCOVERED=$(bash tests/check-eval-coverage.sh "${FILES[@]}")
+          if [ -n "$UNCOVERED" ]; then
+            echo "The following service reference files have no happy-path eval task:"
+            while IFS='|' read -r svc path; do
+              echo "  $svc — add a task at $path"
+            done <<< "$UNCOVERED"
+            exit 1
+          fi
+          echo "All changed service files have eval coverage."
 
   evaluate-mock:
     name: Evaluate (Mock Executor)
