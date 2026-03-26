@@ -217,7 +217,38 @@ From the Compliance Contract's checklist, verify each item passes. If any fail, 
 
 ---
 
-## Phase 7: Commit and PR
+## Phase 7: Author the Eval Task
+
+CI enforces the coverage contract: a service reference file is not mergeable unless at least one task YAML is tagged `happy-path` and `service:<service-name>`. Author this task before committing.
+
+### 7.1 - Read the reference material
+
+1. Read `docs/ops/evals.md` sections: **Task contract**, **Coverage contract**, and **Standard graders for happy-path tasks**. These define the required file path format, ID convention, tag set, and required graders — no inference required.
+2. Read one existing task to confirm your output matches a finished example:
+   - Hourly (VMs): `tests/evals/azure-cost-calculator/tasks/compute/virtual-machines/linux-b2s-multi-instance.yaml`
+   - Consumption/multi-meter (Cosmos DB): `tests/evals/azure-cost-calculator/tasks/databases/cosmos-db/provisioned-throughput.yaml`
+
+Do NOT use `waza suggest` — it diverges from project conventions and fails intermittently.
+
+### 7.2 - Author and validate
+
+Following the contract and the standard grader definitions, create the task file at:
+
+```text
+tests/evals/azure-cost-calculator/tasks/{category}/{service-name}/{scenario}.yaml
+```
+
+Then run:
+
+```bash
+waza check
+```
+
+Fix all schema errors and re-run until clean before proceeding to Phase 8.
+
+---
+
+## Phase 8: Commit and PR
 
 - Create a branch, commit your changes, and open a pull request
 - PR title format: `Add service reference: {Service Name}`
@@ -228,3 +259,4 @@ From the Compliance Contract's checklist, verify each item passes. If any fail, 
   - Documentation cross-check findings from Microsoft Learn
   - How data-vs-rules conflicts were resolved (if any)
   - Validation script output (passing)
+  - Eval task file path and the `waza check` result

@@ -2,14 +2,14 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills. Validates behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation, service routing, and trigger specificity.
 
-| Item             | Detail                                                                                                      |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| Workflow         | `.github/workflows/eval.yml`                                                                                |
-| Composite action | `.github/actions/install-waza/action.yml`                                                                   |
+| Item             | Detail                                                                                                                 |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Workflow         | `.github/workflows/eval.yml`                                                                                           |
+| Composite action | `.github/actions/install-waza/action.yml`                                                                              |
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock) |
-| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml` |
-| Project config   | `.waza.yaml`                                                                                                |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                    |
+| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml`            |
+| Project config   | `.waza.yaml`                                                                                                           |
+| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                               |
 
 ## Read this first
 
@@ -101,12 +101,12 @@ tasks/
 
 Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
 
-| Job                           | Executor      | What it does                                     | LLM calls |
-| ----------------------------- | ------------- | ------------------------------------------------ | --------- |
+| Job                           | Executor      | What it does                                                                          | LLM calls |
+| ----------------------------- | ------------- | ------------------------------------------------------------------------------------- | --------- |
 | `validate-eval-schema`        | n/a           | `waza check` (schema validation only) + eval coverage check for changed service files | 0         |
-| `evaluate-mock`               | `mock`        | Runs `--tags negative` only; validates trigger grader wiring | 0         |
-| `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
-| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter   | up to 8   |
+| `evaluate-mock`               | `mock`        | Runs `--tags negative` only; validates trigger grader wiring                          | 0         |
+| `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files                                      | 0-8       |
+| `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter                             | up to 8   |
 
 ### How `evaluate-critical` targets tasks
 
@@ -149,19 +149,77 @@ Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `
 
 ## Graders
 
-| Grader             | Purpose                                               | Deterministic |
-| ------------------ | ----------------------------------------------------- | ------------- |
-| `text`             | String/regex matching on output                       | Yes |
-| `behavior`         | Required tools by name, max tool calls                | Yes; do NOT use for script invocation — tool name is `bash`, not the script filename |
-| `tool_constraint`  | Tool name + optional command pattern (regex on args)  | Yes; use for pricing script invocation (see snippet below) |
-| `trigger`          | Skill activation/deactivation                         | Yes |
-| `skill_invocation` | Correct skill invoked                                 | Yes |
-| `prompt`           | LLM-as-judge for qualitative checks                   | No; set task-level `timeout_seconds: 30` to prevent mock hangs |
-| `code` (planned)   | Python assertions for numeric accuracy                | Yes |
+| Grader             | Purpose                                              | Deterministic                                                                        |
+| ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `text`             | String/regex matching on output                      | Yes                                                                                  |
+| `behavior`         | Required tools by name, max tool calls               | Yes; do NOT use for script invocation — tool name is `bash`, not the script filename |
+| `tool_constraint`  | Tool name + optional command pattern (regex on args) | Yes; use for pricing script invocation (see snippet below)                           |
+| `trigger`          | Skill activation/deactivation                        | Yes                                                                                  |
+| `skill_invocation` | Correct skill invoked                                | Yes                                                                                  |
+| `prompt`           | LLM-as-judge for qualitative checks                  | No; set task-level `timeout_seconds: 30` to prevent mock hangs                       |
+| `code` (planned)   | Python assertions for numeric accuracy               | Yes                                                                                  |
 
 ### Standard graders for happy-path tasks
 
-Every happy-path task must include the `uses-pricing-script` grader. The Bash tool reports as `bash` in session tool names — not as the script filename. `behavior.required_tools` cannot match script names and silently passes without asserting anything. Use `tool_constraint` instead:
+Happy-path tasks use the following graders. The first two and `uses-pricing-script` are required in every task. `{parameter}-acknowledged` and `complete-estimate-quality` are service-specific — include at least one of the two.
+
+**1. correct-service-name** — verifies the agent names the service correctly. Set the regex to the primary display name and its most common alias (pipe-separated):
+
+```yaml
+- type: text
+  name: correct-service-name
+  config:
+    regex_match:
+      - "Azure App Service|App Service"
+  weight: 1.0
+```
+
+**2. currency-format** — verifies a formatted dollar amount is present. Copy verbatim; do not change the regex:
+
+```yaml
+- type: text
+  name: currency-format
+  config:
+    regex_match:
+      - "\\$[\\d,]+\\.\\d{2}"
+  weight: 1.0
+```
+
+This grader assumes USD output. Always use East US as the region in the task prompt.
+
+**3. {parameter}-acknowledged** — verifies the agent echoed back the key quantity from the prompt (instance count, throughput, tier). Name the grader after the parameter (e.g., `instance-count-acknowledged`, `throughput-acknowledged`). Use `contains`, not `regex_match`. Format numbers with thousands separator where applicable (`"1,000"` not `"1000"`):
+
+```yaml
+- type: text
+  name: instance-count-acknowledged
+  config:
+    contains:
+      - "2"
+  weight: 0.5
+```
+
+**4. complete-estimate-quality** — LLM-as-judge grader that checks Assumptions section, correct billing model, and key parameter. The prompt must repeat `inputs.prompt` verbatim in its opening line. Criteria (3) must reference the specific quantity from the prompt:
+
+```yaml
+- type: prompt
+  name: complete-estimate-quality
+  config:
+    continue_session: true
+    prompt: >
+      You are evaluating an AI agent's response to: "{verbatim copy of inputs.prompt}"
+
+      The agent's response is in the conversation above. Check it for these criteria:
+      (1) Includes an Assumptions section disclosing safe-default parameters.
+      (2) Shows a monthly total cost using the correct billing model for {Service Display Name}.
+      (3) Accounts for {key quantity, e.g., "2 instances as specified"}.
+
+      Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+      Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+  weight: 1.5
+```
+
+**5. uses-pricing-script** — verifies the agent called the pricing script. The Bash tool reports as `bash` in session tool names, not as the script filename. `behavior.required_tools` cannot match script names and silently passes without asserting anything. Copy verbatim; do not substitute `behavior.required_tools`:
 
 ```yaml
 - type: tool_constraint
@@ -173,7 +231,7 @@ Every happy-path task must include the `uses-pricing-script` grader. The Bash to
   weight: 1.0
 ```
 
-This grader is intentionally identical across all happy-path tasks. Copy it verbatim. Do not substitute `behavior.required_tools`.
+**Exception:** services with `hasMeters: false` in their reference YAML have no pricing API data and are not happy-path pricing flows. Do not tag these tasks `happy-path`. Use a `text` grader verifying the agent communicates that no API pricing data is available, and omit `uses-pricing-script`.
 
 ## Adding a task
 
@@ -184,8 +242,6 @@ This grader is intentionally identical across all happy-path tasks. Copy it verb
 5. Run `waza check` to validate
 
 For smoke tests: `tasks/smoke/<scenario>.yaml` with `id: eval:smoke/<scenario>` and the `smoke` tag.
-
-Tip: use `waza suggest skills/azure-cost-calculator --dry-run` to scaffold a starting task YAML from SKILL.md. Review the output and adjust to project conventions (ID format, tags, graders) before writing the file. See [Known limitations](#known-limitations) for what `waza suggest` does not generate correctly.
 
 ## Authoring pattern
 
@@ -275,28 +331,28 @@ Examples from current service references:
 
 ## Known limitations
 
-| Limitation                                                                                                                              | Mitigation                                                                                                                                                                                         |
-| --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally)                               | Override per task with `config.timeout_seconds` if a specific task needs more or less                                                                                                              |
-| Prompt grader variance on borderline values                                                                                             | Use `code` grader for numeric checks                                                                                                                                                               |
-| `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                                                 | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                               |
-| `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0`: editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag |
-| `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                                                         | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                    |
-| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                                                            | Intentional; skill carries domain reference architecture                                                                                                                                           |
-| `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                         |
-| `waza suggest` output directory defaults to `<skill-path>/evals` (i.e. `skills/azure-cost-calculator/evals`)                            | Pass `--output-dir tests/evals/azure-cost-calculator` to place files in the correct location                                                                                                        |
+| Limitation                                                                                                                              | Mitigation                                                                                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Prompt grader timeout too short for long responses (waza default is 60s; this project sets 300s globally)                               | Override per task with `config.timeout_seconds` if a specific task needs more or less                                                                                                                                    |
+| Prompt grader variance on borderline values                                                                                             | Use `code` grader for numeric checks                                                                                                                                                                                     |
+| `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                                                 | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                                                     |
+| `yaml-language-server: $schema` URLs and docs schema links are pinned to `v0.23.0`: editor validation will not reflect upstream changes | When upgrading waza, update the version in `.github/actions/install-waza/action.yml`, then update all `$schema` URLs in `eval.yaml`, `.waza.yaml`, and all task files to match the new release tag                       |
+| `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                                                          | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                                          |
+| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                                                            | Intentional; skill carries domain reference architecture                                                                                                                                                                 |
+| `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                                               |
+| `waza suggest` output directory defaults to `<skill-path>/evals` (i.e. `skills/azure-cost-calculator/evals`)                            | Pass `--output-dir tests/evals/azure-cost-calculator` to place files in the correct location                                                                                                                             |
 | `waza suggest` generates task IDs, globs, and graders that diverge from project conventions                                             | Treat output as a scaffold only: rename IDs to `eval:<category>/<service>/<scenario>`, add correct tags, replace any prompt grader model references, and add the standard `uses-pricing-script` `tool_constraint` grader |
-| `waza suggest` fails intermittently with `parsing suggest response: response is not valid suggestion YAML`                               | LLM output occasionally does not parse; retry the command |
+| `waza suggest` fails intermittently with `parsing suggest response: response is not valid suggestion YAML`                              | LLM output occasionally does not parse; retry the command                                                                                                                                                                |
 
 ## Troubleshooting
 
-| Symptom                             | Fix                                                                            |
-| ----------------------------------- | ------------------------------------------------------------------------------ |
-| `copilot is not authenticated`      | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret |
-| `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL              |
-| Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording    |
+| Symptom                             | Fix                                                                                                                                                                     |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `copilot is not authenticated`      | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret                                                                                          |
+| `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL                                                                                                       |
+| Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording                                                                                             |
 | `uses-pricing-script` scores 0      | The task used `behavior.required_tools` instead of `tool_constraint`; replace with the standard grader (see [Standard graders](#standard-graders-for-happy-path-tasks)) |
-| Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable      |
+| Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable                                                                                               |
 
 ## Maintenance routine
 
