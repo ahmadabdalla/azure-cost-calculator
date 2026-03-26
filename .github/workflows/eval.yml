@@ -61,12 +61,12 @@ jobs:
         env:
           SERVICES_FILES: ${{ steps.filter.outputs.services_files }}
         run: |
-          mapfile -t FILES <<< "$SERVICES_FILES"
+          read -r -a FILES <<< "$SERVICES_FILES"
           UNCOVERED=$(bash tests/check-eval-coverage.sh "${FILES[@]}")
           if [ -n "$UNCOVERED" ]; then
             echo "The following service reference files have no happy-path eval task:"
             while IFS='|' read -r svc path; do
-              echo "  $svc — add a task at $path"
+              echo "  $svc: add a task at $path"
             done <<< "$UNCOVERED"
             exit 1
           fi

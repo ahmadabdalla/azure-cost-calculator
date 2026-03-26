@@ -11,7 +11,8 @@
 
 set -euo pipefail
 
-TASKS_DIR="tests/evals/azure-cost-calculator/tasks"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+TASKS_DIR="${REPO_ROOT}/tests/evals/azure-cost-calculator/tasks"
 
 uncovered=()
 
@@ -28,7 +29,7 @@ for f in "$@"; do
       break
     fi
   done < <(find "$TASKS_DIR" -type f \( -name '*.yml' -o -name '*.yaml' \) -print0 \
-    | xargs -0 grep -l -E "^[[:space:]]*-[[:space:]]*service:${svc}[[:space:]]*$" 2>/dev/null || true)
+    | xargs -0 -r grep -l -E "^[[:space:]]*-[[:space:]]*service:${svc}[[:space:]]*$" 2>/dev/null || true)
 
   if [ "$found" = false ]; then
     uncovered+=("${category}/${svc}|${suggested_path}")
