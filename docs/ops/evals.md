@@ -25,10 +25,11 @@ Use this section order when working with evals:
 
 1. Pick the service reference and identify traps (shared serviceName, global region, daily meters, no meters).
 2. Select one core scenario pack and any needed exception pack.
-3. Author the task with required tags (`service:<name>`, category, scenario).
-4. Run `waza check`.
-5. Run a targeted eval: `waza run --tags "service:<name>" --output results/results.json`.
-6. Open PR and review CI artifacts for `evaluate-mock` and `evaluate-critical`.
+3. Run `waza suggest` to scaffold a starting task YAML (see [Quick start](#quick-start)); review and adjust to project conventions before use.
+4. Author the task with required tags (`service:<name>`, category, scenario).
+5. Run `waza check`.
+6. Run a targeted eval: `waza run --tags "service:<name>" --output results/results.json`.
+7. Open PR and review CI artifacts for `evaluate-mock` and `evaluate-critical`.
 
 ## Quick start
 
@@ -52,8 +53,11 @@ chmod +x ~/bin/waza
 # Validate YAML (no LLM calls)
 waza check
 
-# Run evals with real AI
+# Scaffold a new task from SKILL.md (requires COPILOT_GITHUB_TOKEN; --dry-run is the default)
 export COPILOT_GITHUB_TOKEN="<your-pat>"
+waza suggest skills/azure-cost-calculator --dry-run
+
+# Run evals with real AI
 waza run --verbose --output results/results.json
 
 # Run a specific service
@@ -181,7 +185,7 @@ This grader is intentionally identical across all happy-path tasks. Copy it verb
 
 For smoke tests: `tasks/smoke/<scenario>.yaml` with `id: eval:smoke/<scenario>` and the `smoke` tag.
 
-Tip: copy an existing task in the same category as a starting template.
+Tip: use `waza suggest skills/azure-cost-calculator --dry-run` to scaffold a starting task YAML from SKILL.md. Review the output and adjust to project conventions (ID format, tags, graders) before writing the file. See [Known limitations](#known-limitations) for what `waza suggest` does not generate correctly.
 
 ## Authoring pattern
 
@@ -270,6 +274,9 @@ Examples from current service references:
 | `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                                                         | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                    |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                                                            | Intentional; skill carries domain reference architecture                                                                                                                                           |
 | `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                         |
+| `waza suggest` output directory defaults to `<skill-path>/evals` (i.e. `skills/azure-cost-calculator/evals`)                            | Pass `--output-dir tests/evals/azure-cost-calculator` to place files in the correct location                                                                                                        |
+| `waza suggest` generates task IDs, globs, and graders that diverge from project conventions                                             | Treat output as a scaffold only: rename IDs to `eval:<category>/<service>/<scenario>`, add correct tags, replace any prompt grader model references, and add the standard `uses-pricing-script` `tool_constraint` grader |
+| `waza suggest` fails intermittently with `parsing suggest response: response is not valid suggestion YAML`                               | LLM output occasionally does not parse; retry the command |
 
 ## Troubleshooting
 
