@@ -249,13 +249,13 @@ Use a pack-based pattern so new service tests are consistent and easy to extend.
 
 ### Core scenario packs
 
-| Pack                      | Required intent                                                    | Minimum tags                                 |
-| ------------------------- | ------------------------------------------------------------------ | -------------------------------------------- |
-| `smoke-routing`           | Alias or route resolves to the right service                       | `smoke`, `routing`, `service:<name>`         |
-| `smoke-disambiguation`    | Missing "never-assume" parameters trigger a clarification question | `smoke`, `disambiguation`                    |
-| `happy-path-single-meter` | One primary meter estimate with assumptions and monthly output     | `<category>`, `service:<name>`, `happy-path` |
-| `happy-path-multi-meter`  | Multi-component estimate with component breakdown and total        | `<category>`, `service:<name>`, `happy-path` |
-| `negative-trigger`        | Non-pricing prompt does not activate the skill                     | `smoke`, `negative`                          |
+| Pack                      | Required intent                                                                      | Minimum tags                                 |
+| ------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------- |
+| `smoke-routing`           | Alias or route resolves to the right service; prompt omits never-assume parameters   | `smoke`, `routing`, `service:<name>`         |
+| `smoke-disambiguation`    | Missing "never-assume" parameters trigger a clarification question                   | `smoke`, `disambiguation`                    |
+| `happy-path-single-meter` | One primary meter estimate with assumptions and monthly output                       | `<category>`, `service:<name>`, `happy-path` |
+| `happy-path-multi-meter`  | Multi-component estimate with component breakdown and total                          | `<category>`, `service:<name>`, `happy-path` |
+| `negative-trigger`        | Non-pricing prompt does not activate the skill                                       | `smoke`, `negative`                          |
 
 ### Exception packs
 
@@ -267,6 +267,41 @@ Use these only when a service reference documents the corresponding trap.
 | `global-region-only`        | Meters bill only in `Global` region                            | Query includes `Region: Global`               |
 | `daily-meter-normalization` | Meters bill per-day instead of per-hour                        | Daily meter is normalized to monthly once     |
 | `no-retail-meters`          | Service has no retail API meters and depends on `billingNeeds` | Skill does not fabricate direct meter pricing |
+
+### Routing task design
+
+A routing smoke test verifies that an alias or informal service name resolves to the correct service reference. Two design decisions directly determine whether the task is reliable.
+
+**Use a parameter-free prompt.** A prompt that supplies all required parameters (e.g., `"How much does CosmosDB cost for 400 RU/s in East US?"`) triggers a full estimation run. For services with complex billing models this can produce very long responses, exhausting the 300s session timeout and failing all graders on incomplete output. A prompt that omits never-assume parameters (e.g., `"How much does CosmosDB cost?"`) triggers the disambiguation flow instead: the agent reads the routing file, finds the service reference, and asks for missing parameters — completing in under 30s with a short, predictable response.
+
+**Do not use text graders to check the service name.** In a disambiguation response the agent echoes whatever name the user typed, uses an informal variant, or drops the name entirely. Across runs you will see `"Cosmos DB"`, `"CosmosDB"`, and `"Before I can give you an accurate estimate, I need a few details"` — all from the same task. No substring or regex reliably matches all forms across runs.
+
+Routing is proven indirectly, via the agent's knowledge of the service's never-assume parameters. If the agent asks for RU/s and storage, it read the Cosmos DB reference — no other service has that parameter set. Use an `asks-before-estimating` prompt grader (LLM judge) that names the service-specific parameters in its criteria:
+
+```yaml
+- type: prompt
+  name: asks-before-estimating
+  config:
+    continue_session: true
+    prompt: >
+      You are evaluating an AI agent's response to the question: "How much does CosmosDB cost?"
+
+      The agent's response is in the conversation above. Azure Cosmos DB requires the following
+      parameters before a price can be calculated: provisioned throughput (RU/s) and storage (GB).
+      These are "never-assume" parameters the agent must not guess.
+
+      Review the agent response and score it:
+      - Score 1.0 if the agent asks for at least one missing parameter and does NOT provide a cost estimate.
+      - Score 0.5 if the agent asks for clarification but also includes a cost estimate.
+      - Score 0.0 if the agent provides a cost estimate without asking for any missing parameters.
+
+      Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+  weight: 2.0
+```
+
+Pair this with `skill_invocation` to confirm the skill activated. No text graders are needed.
+
+The existing `provisioned-throughput` happy-path task covers full estimation for the same service. A routing smoke test and a happy-path task are complementary, not redundant.
 
 ### Task contract
 
@@ -346,13 +381,15 @@ Examples from current service references:
 
 ## Troubleshooting
 
-| Symptom                             | Fix                                                                                                                                                                     |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `copilot is not authenticated`      | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret                                                                                          |
-| `waza check` schema errors          | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL                                                                                                       |
-| Prompt grader scores 0 unexpectedly | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording                                                                                             |
-| `uses-pricing-script` scores 0      | The task used `behavior.required_tools` instead of `tool_constraint`; replace with the standard grader (see [Standard graders](#standard-graders-for-happy-path-tasks)) |
-| Tasks skipped or results empty      | Verify `--tags` matches task tags; check `results/` directory is writable                                                                                               |
+| Symptom                                                            | Fix                                                                                                                                                                                           |
+| ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `copilot is not authenticated`                                     | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret                                                                                                                |
+| `waza check` schema errors                                         | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL                                                                                                                            |
+| Prompt grader scores 0 unexpectedly                                | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording                                                                                                                   |
+| `uses-pricing-script` scores 0                                     | The task used `behavior.required_tools` instead of `tool_constraint`; replace with the standard grader (see [Standard graders](#standard-graders-for-happy-path-tasks))                       |
+| Tasks skipped or results empty                                     | Verify `--tags` matches task tags; check `results/` directory is writable                                                                                                                     |
+| Routing smoke task hits session timeout (`context deadline exceeded`) | Prompt includes all parameters and triggers full estimation; switch to a parameter-free prompt so the task enters the disambiguation flow instead (see [Routing task design](#routing-task-design)) |
+| Text grader on service name fails non-deterministically in routing task | Agent wording in disambiguation responses is non-deterministic; replace with a prompt grader checking for service-specific never-assume parameters (see [Routing task design](#routing-task-design)) |
 
 ## Maintenance routine
 
