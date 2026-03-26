@@ -5,7 +5,6 @@ description: >
   Tests that the agent identifies missing never-assume parameters and asks
   before estimating. "Azure SQL" maps to SQL Database but the user has not
   specified tier, DTU/vCores, or storage size.
-timeout_seconds: 30
 tags:
   - smoke
   - disambiguation
@@ -21,12 +20,14 @@ graders:
   - type: prompt
     name: asks-before-estimating
     config:
+      continue_session: true
       prompt: >
         You are evaluating an AI agent's response to the question: "How much does Azure SQL cost?"
 
-        Azure SQL requires the following parameters before a price can be calculated: service tier
-        (Basic, Standard, or Premium), capacity (DTU count or vCore count), and storage size.
-        These are "never-assume" parameters the agent must not guess.
+        The agent's response is in the conversation above. Azure SQL requires the following
+        parameters before a price can be calculated: service tier (Basic, Standard, or Premium),
+        capacity (DTU count or vCore count), and storage size. These are "never-assume" parameters
+        the agent must not guess.
 
         Review the agent response and score it:
         - Score 1.0 if the agent asks for at least one missing parameter and does NOT provide a cost estimate.
