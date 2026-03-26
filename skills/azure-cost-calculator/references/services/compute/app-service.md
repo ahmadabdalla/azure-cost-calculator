@@ -94,4 +94,3 @@ ServiceName: Azure App Service
 ProductName: Azure App Service Premium v3 Plan - Linux
 SkuName: P1 v3
 PriceType: Reservation
-
