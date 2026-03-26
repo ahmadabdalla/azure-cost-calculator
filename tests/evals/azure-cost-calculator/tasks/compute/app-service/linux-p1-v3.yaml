@@ -10,7 +10,6 @@ tags:
   - single-service
   - compute
   - service:app-service
-timeout_seconds: 30
 inputs:
   prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
 expected:
@@ -36,11 +35,12 @@ graders:
   - type: prompt
     name: complete-estimate-quality
     config:
+      continue_session: true
       prompt: >
         You are evaluating an AI agent's response to: "Estimate the monthly cost of running
         2 Linux App Service P1 v3 instances in East US"
 
-        Check the response for these criteria:
+        The agent's response is in the conversation above. Check it for these criteria:
         (1) Includes an Assumptions section disclosing safe-default parameters.
         (2) Shows a monthly total cost calculated using the 730-hour formula.
         (3) Accounts for 2 instances as specified.
