@@ -231,9 +231,9 @@ Routing is proven indirectly through the agent's knowledge of the service's neve
       These are "never-assume" parameters the agent must not guess.
 
       Review the agent response and score it:
-      - Score 1.0 if the agent asks for at least one missing parameter and does NOT provide a cost estimate.
-      - Score 0.5 if the agent asks for clarification but also includes a cost estimate.
-      - Score 0.0 if the agent provides a cost estimate without asking for any missing parameters.
+      - Score 1.0 if the agent asks for at least one of the listed never-assume parameters and does NOT provide a cost estimate.
+      - Score 0.5 if the agent asks for at least one of the listed never-assume parameters but also includes a cost estimate.
+      - Score 0.0 if the agent provides a cost estimate without asking for any of the listed never-assume parameters.
 
       Return ONLY a decimal number between 0.0 and 1.0 with no other text.
   weight: 2.0
