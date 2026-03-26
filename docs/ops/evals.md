@@ -103,7 +103,7 @@ Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional j
 
 | Job                           | Executor      | What it does                                     | LLM calls |
 | ----------------------------- | ------------- | ------------------------------------------------ | --------- |
-| `validate-eval-schema`        | n/a           | `waza check` (schema validation only)            | 0         |
+| `validate-eval-schema`        | n/a           | `waza check` (schema validation only) + eval coverage check for changed service files | 0         |
 | `evaluate-mock`               | `mock`        | Runs `--tags negative` only; validates trigger grader wiring | 0         |
 | `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
 | `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter   | up to 8   |
@@ -231,6 +231,16 @@ For each service reference file:
 2. Include smoke coverage (`smoke-routing` or `smoke-disambiguation`) where applicable
 3. Add exception packs only for documented traps in that service file
 4. Add `negative-trigger` coverage for adjacent non-pricing prompts at the suite level
+
+### Coverage contract
+
+A service reference file is considered **covered** when at least one eval task satisfies all of:
+
+- Tagged `happy-path`
+- Tagged `service:<service-name>` (where `<service-name>` matches the reference filename without `.md`)
+- Passes `waza check` with no schema errors
+
+The `validate-eval-schema` job enforces this: if a PR changes a service reference file and no matching `happy-path` task exists, the coverage check step fails and lists the missing services with the path where the task should be added. Run `bash tests/check-eval-coverage.sh <file>` locally to check before pushing.
 
 ### Definition of done
 
