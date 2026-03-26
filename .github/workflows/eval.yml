@@ -223,15 +223,19 @@ jobs:
             gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
               --jq '.[] | select(.filename | startswith("skills/azure-cost-calculator/references/services/")) | .filename'
           )
+          echo "Service files changed in PR: ${#SERVICE_FILES[@]}"
+          for f in "${SERVICE_FILES[@]}"; do echo "  $f"; done
 
           # Find an existing coverage notice comment
           COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
             --jq '.[] | select(.body | startswith("<!-- eval-coverage-notice -->")) | .id' \
             | head -1)
+          echo "Existing coverage comment ID: ${COMMENT_ID:-none}"
 
           if [ ${#SERVICE_FILES[@]} -eq 0 ]; then
-            # No service files in this PR — remove stale comment if present
+            echo "No service files in PR — skipping coverage check"
             if [ -n "$COMMENT_ID" ]; then
+              echo "Deleting stale comment ${COMMENT_ID}"
               gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
             fi
             exit 0
@@ -239,10 +243,12 @@ jobs:
 
           chmod +x tests/check-eval-coverage.sh
           UNCOVERED=$(bash tests/check-eval-coverage.sh "${SERVICE_FILES[@]}")
+          echo "Uncovered services: ${UNCOVERED:-none}"
 
           if [ -z "$UNCOVERED" ]; then
-            # All covered — remove comment if present
+            echo "All changed services are covered"
             if [ -n "$COMMENT_ID" ]; then
+              echo "Deleting resolved comment ${COMMENT_ID}"
               gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
             fi
             exit 0
@@ -265,9 +271,11 @@ jobs:
           BODY=$(cat "$BODY_FILE")
 
           if [ -n "$COMMENT_ID" ]; then
+            echo "Updating existing comment ${COMMENT_ID}"
             gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" \
               -X PATCH -f body="$BODY"
           else
+            echo "Creating new coverage notice comment"
             gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
               -f body="$BODY"
           fi
