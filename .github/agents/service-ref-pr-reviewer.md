@@ -185,6 +185,16 @@ If the PR modifies `service-routing.md` or `service-catalog.md`:
 - Entries must be in alphabetical order within their category section
 - Aliases must be unique across all services
 
+### 4.5 - Check eval coverage
+
+For each changed service reference file, run:
+
+```bash
+bash tests/check-eval-coverage.sh {filepath}
+```
+
+If the script produces output, the service has no happy-path eval task — this is a **Blocking** issue. Report the missing task path from the script output.
+
 ---
 
 ## Phase 5: Compile Review
@@ -251,6 +261,7 @@ Organize findings into this format:
 - Line count: {N}/100
 - First query line: {N}/45
 - Routing/catalog: {consistent/issues found}
+- Eval coverage: {covered/missing — path where task should be added if missing}
 
 ### Pricing Accuracy
 
