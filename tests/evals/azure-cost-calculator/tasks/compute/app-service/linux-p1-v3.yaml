@@ -23,8 +23,8 @@ graders:
   - type: text
     name: correct-service-name
     config:
-      contains_cs:
-        - "Azure App Service"
+      regex_match:
+        - "Azure App Service|App Service"
     weight: 1.0
   - type: text
     name: currency-format
