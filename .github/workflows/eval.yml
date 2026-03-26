@@ -209,6 +209,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     permissions:
+      contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -221,13 +222,13 @@ jobs:
           # Get all service reference files changed anywhere in this PR
           mapfile -t SERVICE_FILES < <(
             gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate \
-              --jq '.[] | select(.filename | startswith("skills/azure-cost-calculator/references/services/")) | .filename'
+              --jq '.[] | select(.status != "removed" and (.filename | startswith("skills/azure-cost-calculator/references/services/"))) | .filename'
           )
           echo "Service files changed in PR: ${#SERVICE_FILES[@]}"
           for f in "${SERVICE_FILES[@]}"; do echo "  $f"; done
 
           # Find an existing coverage notice comment
-          COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+          COMMENT_ID=$(gh api --paginate "repos/${REPO}/issues/${PR_NUMBER}/comments" \
             --jq '.[] | select(.body | startswith("<!-- eval-coverage-notice -->")) | .id' \
             | head -1)
           echo "Existing coverage comment ID: ${COMMENT_ID:-none}"

@@ -27,7 +27,8 @@ for f in "$@"; do
       found=true
       break
     fi
-  done < <(grep -r -l -e "service:${svc}" "$TASKS_DIR" 2>/dev/null || true)
+  done < <(find "$TASKS_DIR" -type f \( -name '*.yml' -o -name '*.yaml' \) -print0 \
+    | xargs -0 grep -l -E "^[[:space:]]*-[[:space:]]*service:${svc}[[:space:]]*$" 2>/dev/null || true)
 
   if [ "$found" = false ]; then
     uncovered+=("${category}/${svc}|${suggested_path}")

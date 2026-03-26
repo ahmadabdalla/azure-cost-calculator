@@ -99,7 +99,7 @@ tasks/
 
 ## CI pipeline
 
-Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
+Four jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
 
 | Job                           | Executor      | What it does                                     | LLM calls |
 | ----------------------------- | ------------- | ------------------------------------------------ | --------- |
@@ -241,7 +241,7 @@ A service reference file is considered **covered** when at least one eval task s
 - Tagged `service:<service-name>` (where `<service-name>` matches the reference filename without `.md`)
 - Passes `waza check` with no schema errors
 
-CI enforces this contract via the `coverage-notice` job: when a PR changes service reference files, the job posts a comment listing any that lack coverage. The comment is deleted automatically when coverage is added. The check is non-blocking (does not fail the PR).
+CI provides a non-blocking coverage notice via the `coverage-notice` job: when a PR changes service reference files, the job checks for at least one eval task tagged `happy-path` and `service:<service-name>` and posts a comment listing any that appear to lack such coverage. The comment is deleted automatically when coverage is added. This job does not validate `waza check` success; schema validity is enforced separately by the `validate-eval-schema` job.
 
 ### Definition of done
 
