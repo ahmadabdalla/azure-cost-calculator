@@ -276,6 +276,7 @@ Examples from current service references:
 | `argument-hint` frontmatter diverges from agentskills.io spec                                                                           | Project convention; not blocking for evals                                                                                                                                                         |
 | `waza suggest` output directory defaults to `<skill-path>/evals` (i.e. `skills/azure-cost-calculator/evals`)                            | Pass `--output-dir tests/evals/azure-cost-calculator` to place files in the correct location                                                                                                        |
 | `waza suggest` generates task IDs, globs, and graders that diverge from project conventions                                             | Treat output as a scaffold only: rename IDs to `eval:<category>/<service>/<scenario>`, add correct tags, replace any prompt grader model references, and add the standard `uses-pricing-script` `tool_constraint` grader |
+| `waza suggest` fails intermittently with `parsing suggest response: response is not valid suggestion YAML`                               | LLM output occasionally does not parse; retry the command |
 
 ## Troubleshooting
 
