@@ -106,6 +106,7 @@ Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional j
 | `validate-eval-schema`        | n/a           | `waza check` (schema validation only)            | 0         |
 | `evaluate-mock`               | `mock`        | Runs `--tags negative` only; validates trigger grader wiring | 0         |
 | `evaluate-critical`           | `copilot-sdk` | Real AI evals; only tasks matching changed files | 0-8       |
+| `coverage-notice`             | n/a           | Posts a PR comment listing service files in the PR that lack a `happy-path` eval task; deletes the comment when all are covered | 0 |
 | `run-evals` (manual dispatch) | `copilot-sdk` | All tasks by default; optional comma-separated tag filter   | up to 8   |
 
 ### How `evaluate-critical` targets tasks
@@ -231,6 +232,16 @@ For each service reference file:
 2. Include smoke coverage (`smoke-routing` or `smoke-disambiguation`) where applicable
 3. Add exception packs only for documented traps in that service file
 4. Add `negative-trigger` coverage for adjacent non-pricing prompts at the suite level
+
+### Coverage contract
+
+A service reference file is considered **covered** when at least one eval task satisfies all of:
+
+- Tagged `happy-path`
+- Tagged `service:<service-name>` (where `<service-name>` matches the reference filename without `.md`)
+- Passes `waza check` with no schema errors
+
+CI enforces this contract via the `coverage-notice` job: when a PR changes service reference files, the job posts a comment listing any that lack coverage. The comment is deleted automatically when coverage is added. The check is non-blocking (does not fail the PR).
 
 ### Definition of done
 

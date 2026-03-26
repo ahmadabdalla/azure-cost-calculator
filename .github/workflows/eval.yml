@@ -200,6 +200,78 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
 
+  # Posts or updates a PR comment listing service reference files changed in the
+  # PR that lack a happy-path eval task. Deletes the comment when all changed
+  # services are covered. Uses the full PR file list (not just the current push)
+  # so the comment clears automatically when a follow-up commit adds the task.
+  coverage-notice:
+    name: Eval Coverage Notice
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Check coverage and update PR comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # Get all service reference files changed anywhere in this PR
+          mapfile -t SERVICE_FILES < <(
+            gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+              --jq '.[] | select(.filename | startswith("skills/azure-cost-calculator/references/services/")) | .filename'
+          )
+
+          # Find an existing coverage notice comment
+          COMMENT_ID=$(gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+            --jq '.[] | select(.body | startswith("<!-- eval-coverage-notice -->")) | .id' \
+            | head -1)
+
+          if [ ${#SERVICE_FILES[@]} -eq 0 ]; then
+            # No service files in this PR — remove stale comment if present
+            if [ -n "$COMMENT_ID" ]; then
+              gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
+            fi
+            exit 0
+          fi
+
+          chmod +x tests/check-eval-coverage.sh
+          UNCOVERED=$(bash tests/check-eval-coverage.sh "${SERVICE_FILES[@]}")
+
+          if [ -z "$UNCOVERED" ]; then
+            # All covered — remove comment if present
+            if [ -n "$COMMENT_ID" ]; then
+              gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
+            fi
+            exit 0
+          fi
+
+          # Build comment body into a temp file to avoid quoting issues
+          BODY_FILE=$(mktemp)
+          {
+            printf '<!-- eval-coverage-notice -->\n'
+            printf '## Eval coverage gap\n\n'
+            printf 'The following service(s) changed in this PR have no `happy-path` eval task:\n\n'
+            printf '| Service | Suggested task path |\n'
+            printf '|---|---|\n'
+            while IFS='|' read -r svc path; do
+              printf '| `%s` | `%s` |\n' "$svc" "$path"
+            done <<< "$UNCOVERED"
+            printf '\nA service is considered covered when it has at least one eval task tagged `happy-path` and `service:<name>`. See [Adding a task](docs/ops/evals.md#adding-a-task) for how to add one.\n'
+          } > "$BODY_FILE"
+
+          BODY=$(cat "$BODY_FILE")
+
+          if [ -n "$COMMENT_ID" ]; then
+            gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" \
+              -X PATCH -f body="$BODY"
+          else
+            gh api "repos/${REPO}/issues/${PR_NUMBER}/comments" \
+              -f body="$BODY"
+          fi
+
   # The embedded Copilot CLI checks env vars in order: COPILOT_GITHUB_TOKEN,
   # GH_TOKEN, GITHUB_TOKEN. The default GITHUB_TOKEN lacks Copilot access.
   # COPILOT_GITHUB_TOKEN is a fine-grained PAT with "Copilot Requests" permission
