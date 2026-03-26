@@ -236,7 +236,7 @@ jobs:
             echo "No service files in PR — skipping coverage check"
             if [ -n "$COMMENT_ID" ]; then
               echo "Deleting stale comment ${COMMENT_ID}"
-              gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
+              gh api "repos/${REPO}/issues/comments/${COMMENT_ID}" -X DELETE
             fi
             exit 0
           fi
@@ -249,7 +249,7 @@ jobs:
             echo "All changed services are covered"
             if [ -n "$COMMENT_ID" ]; then
               echo "Deleting resolved comment ${COMMENT_ID}"
-              gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" -X DELETE
+              gh api "repos/${REPO}/issues/comments/${COMMENT_ID}" -X DELETE
             fi
             exit 0
           fi
@@ -272,7 +272,7 @@ jobs:
 
           if [ -n "$COMMENT_ID" ]; then
             echo "Updating existing comment ${COMMENT_ID}"
-            gh api "repos/${REPO}/issues/${PR_NUMBER}/comments/${COMMENT_ID}" \
+            gh api "repos/${REPO}/issues/comments/${COMMENT_ID}" \
               -X PATCH -f body="$BODY"
           else
             echo "Creating new coverage notice comment"
