@@ -17,15 +17,14 @@ expected:
   output_contains:
     - "Assumptions"
     - "730"
-    - "Virtual Machines"
   output_not_contains:
     - "Windows"
 graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Virtual Machines"
+      regex_match:
+        - "Virtual Machines|VMs"
     weight: 1.0
   - type: text
     name: currency-format

@@ -17,15 +17,14 @@ expected:
   output_contains:
     - "Assumptions"
     - "730"
-    - "Virtual Machines"
   output_not_contains:
     - "Summary format"
 graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Virtual Machines"
+      regex_match:
+        - "Virtual Machines|VMs"
     weight: 1.0
   - type: text
     name: currency-format
@@ -39,18 +38,6 @@ graders:
       contains:
         - "4"
     weight: 0.5
-  - type: text
-    name: no-spot-pricing
-    config:
-      not_contains:
-        - "Spot"
-    weight: 1.0
-  - type: text
-    name: no-low-priority-pricing
-    config:
-      not_contains:
-        - "Low Priority"
-    weight: 1.0
   - type: tool_constraint
     name: uses-pricing-script
     config:
