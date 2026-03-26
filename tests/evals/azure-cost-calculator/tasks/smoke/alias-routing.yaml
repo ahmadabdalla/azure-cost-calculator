@@ -22,7 +22,7 @@ graders:
     name: resolved-service-name
     config:
       contains:
-        - "Azure Cosmos DB"
+        - "Cosmos DB"
     weight: 1.5
   - type: prompt
     name: asks-before-estimating
