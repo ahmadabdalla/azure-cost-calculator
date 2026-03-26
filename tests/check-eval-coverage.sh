@@ -23,7 +23,7 @@ for f in "$@"; do
   # Check if any task YAML has both 'service:<svc>' and 'happy-path' tags
   found=false
   while IFS= read -r task_file; do
-    if grep -qe "- happy-path" "$task_file"; then
+    if grep -qEe "^[[:space:]]*- happy-path[[:space:]]*$" "$task_file"; then
       found=true
       break
     fi

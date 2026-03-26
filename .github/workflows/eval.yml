@@ -220,7 +220,7 @@ jobs:
         run: |
           # Get all service reference files changed anywhere in this PR
           mapfile -t SERVICE_FILES < <(
-            gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+            gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate \
               --jq '.[] | select(.filename | startswith("skills/azure-cost-calculator/references/services/")) | .filename'
           )
           echo "Service files changed in PR: ${#SERVICE_FILES[@]}"
@@ -256,6 +256,7 @@ jobs:
 
           # Build comment body into a temp file to avoid quoting issues
           BODY_FILE=$(mktemp)
+          trap 'rm -f "$BODY_FILE"' EXIT
           {
             printf '<!-- eval-coverage-notice -->\n'
             printf '## Eval coverage gap\n\n'
