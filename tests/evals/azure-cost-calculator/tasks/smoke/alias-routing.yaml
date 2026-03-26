@@ -21,8 +21,8 @@ graders:
   - type: text
     name: resolved-service-name
     config:
-      contains:
-        - "Cosmos DB"
+      regex_match:
+        - "Cosmos\\s*DB"
     weight: 1.5
   - type: prompt
     name: asks-before-estimating
