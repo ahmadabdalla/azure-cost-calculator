@@ -56,6 +56,25 @@ jobs:
       - name: Validate schemas
         if: steps.filter.outputs.relevant == 'true'
         run: waza check
+      - name: Assert model pinning is consistent across eval YAMLs
+        run: |
+          base="tests/evals/azure-cost-calculator/eval.yaml"
+          base_model=$(grep '^  model:' "$base" | awk '{print $2}')
+          base_judge=$(grep '^  judge_model:' "$base" | awk '{print $2}')
+          ok=true
+          for yaml in \
+            tests/evals/azure-cost-calculator/eval-experiment.yaml \
+            tests/evals/azure-cost-calculator/eval-mock.yaml; do
+            m=$(grep '^  model:' "$yaml" | awk '{print $2}')
+            j=$(grep '^  judge_model:' "$yaml" | awk '{print $2}')
+            if [ "$m" != "$base_model" ] || [ "$j" != "$base_judge" ]; then
+              echo "::error file=$yaml::Model mismatch: model=$m judge_model=$j (eval.yaml has model=$base_model judge_model=$base_judge)"
+              ok=false
+            fi
+          done
+          if [ "$ok" = "false" ]; then exit 1; fi
+          echo "Model pinning consistent: model=$base_model judge_model=$base_judge"
+
       - name: Check eval coverage for changed service files
         if: steps.filter.outputs.services == 'true'
         env:

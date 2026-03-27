@@ -1,0 +1,138 @@
+# Calibrate the experiment workflow noise floor.
+#
+# Runs eval-experiment.yaml twice in sequence with no skill changes and
+# asserts the comparison result is INCONCLUSIVE. An INCONCLUSIVE outcome means
+# the ci95 bands at trials_per_task=3 are stable enough to distinguish real
+# signal from LLM run-to-run variance.
+#
+# If the control produces SIGNAL or REGRESSION, the noise floor is too high
+# at the current trial count. Increase trials_per_task in eval-experiment.yaml
+# and re-run.
+#
+# Trigger: workflow_dispatch only. This workflow makes real LLM calls
+# (3 trials x N tasks x 2 runs). Do not add PR or push triggers.
+#
+# Requires: COPILOT_GITHUB_TOKEN secret (fine-grained PAT, "Copilot Requests" permission).
+
+name: Calibrate Experiment Workflow
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  control-calibration:
+    name: Control Calibration (no-change test)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Install waza
+        uses: ./.github/actions/install-waza
+
+      - name: Validate COPILOT_GITHUB_TOKEN
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$COPILOT_GITHUB_TOKEN" ]; then
+            echo "::error::COPILOT_GITHUB_TOKEN secret is not set. Required for Copilot SDK evals."
+            echo "Create a fine-grained PAT with 'Copilot Requests' permission and add it as a repository secret."
+            exit 1
+          fi
+
+      - name: Run baseline
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          mkdir -p results
+          waza run tests/evals/azure-cost-calculator/eval-experiment.yaml \
+            --output results/run1.json \
+            --verbose
+
+      - name: Run candidate (same eval, no changes)
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: |
+          waza run tests/evals/azure-cost-calculator/eval-experiment.yaml \
+            --output results/run2.json \
+            --verbose
+
+      - name: Compare runs
+        id: compare
+        run: |
+          bash tests/evals/compare-experiment.sh results/run1.json results/run2.json \
+            > results/comparison.txt 2>&1 || COMPARE_EXIT=$?
+          COMPARE_EXIT=${COMPARE_EXIT:-0}
+
+          cat results/comparison.txt
+
+          # Exit code contract from compare-experiment.sh:
+          #   0 = SIGNAL (improvement), 1 = INCONCLUSIVE, 2 = REGRESSION or error
+          if   [ "$COMPARE_EXIT" -eq 1 ]; then VERDICT="INCONCLUSIVE"
+          elif [ "$COMPARE_EXIT" -eq 0 ]; then VERDICT="SIGNAL"
+          else                                  VERDICT="REGRESSION"
+          fi
+
+          echo "exit_code=$COMPARE_EXIT" >> "$GITHUB_OUTPUT"
+          echo "verdict=$VERDICT"        >> "$GITHUB_OUTPUT"
+
+      - name: Write job summary
+        if: always()
+        env:
+          VERDICT: ${{ steps.compare.outputs.verdict }}
+        run: |
+          {
+            echo "## Calibration result: $VERDICT"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Eval config | \`eval-experiment.yaml\` (trials_per_task: 3) |"
+            echo "| Baseline    | \`results/run1.json\` |"
+            echo "| Candidate   | \`results/run2.json\` (same eval, no changes) |"
+            echo "| Expected    | INCONCLUSIVE |"
+            echo "| Actual      | $VERDICT |"
+            echo ""
+            if [ "$VERDICT" = "INCONCLUSIVE" ]; then
+              echo "**PASS** — noise floor is stable. The experiment workflow can distinguish real signal from LLM variance at \`trials_per_task: 3\`."
+            else
+              echo "**FAIL** — control run produced $VERDICT. Same skill, two consecutive runs produced non-overlapping ci95 bands."
+              echo ""
+              echo "This means \`trials_per_task: 3\` is not sufficient to stabilize the bands for this skill."
+              echo "Increase \`trials_per_task\` in \`eval-experiment.yaml\` (try 5) and re-run."
+            fi
+            echo ""
+            echo "### Comparison output"
+            echo ""
+            echo '```'
+            cat results/comparison.txt || echo "(no output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Assert control is inconclusive
+        env:
+          VERDICT: ${{ steps.compare.outputs.verdict }}
+        run: |
+          if [ "$VERDICT" = "INCONCLUSIVE" ]; then
+            echo "PASS: noise floor is acceptable at trials_per_task=3"
+          elif [ "$VERDICT" = "SIGNAL" ]; then
+            echo "::error::Control produced SIGNAL — false positive. Same skill ran twice and showed apparent improvement. Increase trials_per_task in eval-experiment.yaml."
+            exit 1
+          else
+            echo "::error::Control produced REGRESSION — false negative. Same skill ran twice and showed apparent degradation. Increase trials_per_task in eval-experiment.yaml."
+            exit 1
+          fi
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: calibration-results
+          path: |
+            results/run1.json
+            results/run2.json
+            results/comparison.txt
+          retention-days: 30
+          if-no-files-found: warn

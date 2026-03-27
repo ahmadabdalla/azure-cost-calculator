@@ -91,6 +91,7 @@ jobs:
             relevant:
               - 'skills/azure-cost-calculator/scripts/**'
               - 'tests/unit/**'
+              - 'tests/evals/compare-experiment.sh'
               - '.github/scripts/**'
 
       - name: Skip; no relevant changes

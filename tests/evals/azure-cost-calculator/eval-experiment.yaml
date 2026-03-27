@@ -7,11 +7,22 @@ description: >
 skill: azure-cost-calculator
 version: "1.0"
 
+# Experiment config: used for controlled before/after SKILL.md experiments.
+# Not used in CI. Run on-demand with:
+#   waza run --eval tests/evals/azure-cost-calculator/eval-experiment.yaml \
+#            --output results/before.json
+#
+# Assumptions:
+#   - Both model and judge_model use claude-sonnet-4.6. Using a different
+#     judge would introduce a second variable into the comparison.
+#   - trials_per_task: 3 is the minimum for ci95 bands to be meaningful.
+#     The compare-experiment.sh script requires these bands to produce a
+#     variance-aware verdict.
 config:
-  trials_per_task: 1
+  trials_per_task: 3
   timeout_seconds: 300
   parallel: false
-  executor: mock
+  executor: copilot-sdk
   model: claude-sonnet-4.6
   judge_model: claude-sonnet-4.6
 
