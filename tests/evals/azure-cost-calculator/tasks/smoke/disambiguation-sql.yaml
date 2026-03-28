@@ -36,9 +36,3 @@ graders:
 
         Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 2.0
-  - type: text
-    name: contains-question
-    config:
-      regex_match:
-        - "\\?"
-    weight: 1.0
