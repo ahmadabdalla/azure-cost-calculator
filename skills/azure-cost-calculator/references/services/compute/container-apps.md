@@ -57,19 +57,24 @@ Consumption (Standard):
   Monthly = (max(0, vCPU_s − 180K) × vCPU_UnitPrice) + (max(0, GiB_s − 360K) × mem_UnitPrice)
            + max(0, requests − 2M) / 1M × request_UnitPrice
 
-Dedicated:
+Dedicated (non-GPU):
   Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
+Dedicated (GPU): Monthly = (GPU_price × 730) + (mgmt_price × 730)
+Hybrid:  Monthly = vCPUs × hybrid_price × 730
+Dynamic: Monthly = sessions × session_price × 730
 ```
 
 > **Agent instruction**: For Consumption, if request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s`. Never assume 730 × 3600 (always-on) for Standard SKU.
 
 ## Notes
 
-- Dedicated plan charges per-environment management fee in addition to vCPU/memory; fee is additive for private endpoints and planned maintenance
-- GPU: Standard supports T4 and A100 (additive to vCPU/memory charges); Dedicated has generic GPU meter
+- Dedicated management fee is per-feature: Dedicated plan + PE + planned maintenance each add 1× mgmt_price/hr
+- GPU: Standard T4/A100 are additive to vCPU/memory; Dedicated GPU replaces vCPU/memory (GPU + management only)
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle rate ~1/8 of active; memory idle = active; replicas at min count > 0 charge active rate
 - Scale to zero incurs zero charges; health probe and intra-environment requests are not billable
+- Private endpoints require a Dedicated plan environment
+- Savings Plans (1-year/3-year) shown on pricing page but not queryable via Retail Prices API
 
 ## SKU Selection Guide
 

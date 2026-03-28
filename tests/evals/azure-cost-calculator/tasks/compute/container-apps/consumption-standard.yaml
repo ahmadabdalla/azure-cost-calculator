@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/container-apps/consumption-standard
+name: Happy Path - Container Apps Consumption (Standard)
+description: >
+  Tests a straightforward cost estimation for Azure Container Apps on the
+  Consumption (Standard) plan. The user provides request volume, vCPU,
+  memory, and average request duration. No disambiguation should be needed.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:container-apps
+inputs:
+  prompt: "Estimate the monthly cost of running an Azure Container Apps workload on the Consumption plan in East US handling 5 million requests per month with 0.5 vCPU and 1 GiB memory at 1 second average duration per request"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "Container Apps"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Container Apps|Container Apps"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost of running
+        an Azure Container Apps workload on the Consumption plan in East US handling 5 million
+        requests per month with 0.5 vCPU and 1 GiB memory at 1 second average duration per request"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using UnitPrice from the API (not the script MonthlyCost).
+        (3) Accounts for the free grant deduction (180K vCPU-seconds, 360K GiB-seconds, 2M requests).
+        (4) Correctly uses the Standard SKU / Consumption plan.
+
+        Score 1.0 if all four criteria are met. Score 0.5 if two or three are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
