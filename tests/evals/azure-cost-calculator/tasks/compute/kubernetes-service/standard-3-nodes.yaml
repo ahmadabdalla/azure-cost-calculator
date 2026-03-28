@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/kubernetes-service/standard-3-nodes
+name: Happy Path - AKS Standard 3 Nodes
+description: >
+  Tests cost estimation for an AKS Standard cluster with 3 D4s v5 nodes.
+  The user provides tier (Standard), node size, node count, and region.
+  Validates that the agent queries both the AKS management fee and VM
+  node costs separately, using the correct ProductName filter.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:kubernetes-service
+inputs:
+  prompt: "Estimate the monthly cost of an AKS Standard cluster with 3 Standard_D4s_v5 nodes in East US"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Kubernetes Service|AKS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: node-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost of an AKS Standard cluster with 3 Standard_D4s_v5 nodes in East US"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost that includes both the AKS management fee and VM node costs.
+        (3) Accounts for 3 nodes as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

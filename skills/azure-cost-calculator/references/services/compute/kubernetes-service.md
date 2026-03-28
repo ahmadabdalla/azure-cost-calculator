@@ -53,37 +53,37 @@ InstanceCount: 3
 
 | Parameter     | How to determine                           | Example values                                       |
 | ------------- | ------------------------------------------ | ---------------------------------------------------- |
-| `productName` | Differs by SKU, must include to avoid mix | `Azure Kubernetes Service`, `...Service - Automatic` |
+| `productName` | Differs by SKU, must include to avoid mix | `Azure Kubernetes Service`, `Azure Kubernetes Service - Automatic` |
 | `skuName`     | Cluster SKU type                           | `Standard`, `Automatic`                              |
 | `meterName`   | Tier-prefixed; see Meter Names table       | `Standard Uptime SLA`, `Automatic General Purpose`   |
 
 ## Meter Names
 
-| SKU       | Meter                                | Billing unit     | Purpose                            |
-| --------- | ------------------------------------ | ---------------- | ---------------------------------- |
-| Standard  | `Standard Uptime SLA`                | per cluster-hour | Management fee with uptime SLA     |
-| Standard  | `Standard Long Term Support`         | per cluster-hour | Optional LTS add-on (Premium tier) |
-| Automatic | `Automatic Hosted Control Plane`     | per cluster-hour | Flat-rate cluster management       |
-| Automatic | `Automatic General Purpose`          | per vCPU-hour    | Standard workloads                 |
-| Automatic | `Automatic Compute Optimized`        | per vCPU-hour    | CPU-intensive workloads            |
-| Automatic | `Automatic Memory Optimized`         | per vCPU-hour    | Memory-intensive workloads         |
-| Automatic | `Automatic Storage Optimized`        | per vCPU-hour    | Storage-intensive workloads        |
-| Automatic | `Automatic GPU Accelerated`          | per vCPU-hour    | GPU workloads (highest rate)       |
-| Automatic | `Automatic Confidential Compute`     | per vCPU-hour    | Confidential computing             |
-| Automatic | `Automatic High Performance Compute` | per vCPU-hour    | HPC workloads                      |
+| SKU       | Meter                                | unitOfMeasure | Notes                                                    |
+| --------- | ------------------------------------ | ------------- | -------------------------------------------------------- |
+| Standard  | `Standard Uptime SLA`                | `1 Hour`      | Per cluster-hour; management fee with uptime SLA         |
+| Standard  | `Standard Long Term Support`         | `1 Hour`      | Per cluster-hour; Premium tier (replaces Standard fee)   |
+| Automatic | `Automatic Hosted Control Plane`     | `1 Hour`      | Per cluster-hour; flat-rate cluster management           |
+| Automatic | `Automatic General Purpose`          | `1 Hour`      | Per vCPU-hour; standard workloads                        |
+| Automatic | `Automatic Compute Optimized`        | `1 Hour`      | Per vCPU-hour; CPU-intensive workloads                   |
+| Automatic | `Automatic Memory Optimized`         | `1 Hour`      | Per vCPU-hour; memory-intensive workloads                |
+| Automatic | `Automatic Storage Optimized`        | `1 Hour`      | Per vCPU-hour; storage-intensive workloads               |
+| Automatic | `Automatic GPU Accelerated`          | `1 Hour`      | Per vCPU-hour; GPU workloads (highest rate)              |
+| Automatic | `Automatic Confidential Compute`     | `1 Hour`      | Per vCPU-hour; confidential computing                    |
+| Automatic | `Automatic High Performance Compute` | `1 Hour`      | Per vCPU-hour; HPC workloads                             |
 
 ## Cost Formula
 
 ```
-### Standard:  Monthly = uptime_SLA_fee × 730 + (VM_hourly × 730 × nodeCount)
-### Automatic: Monthly = (controlPlane × 730 × clusterCount) + Σ(workloadClass × vCPUs × 730) + (VM_hourly × 730 × nodeCount)
+Standard:  Monthly = uptimeSLA_retailPrice × 730 + (vm_retailPrice × 730 × nodeCount)
+Automatic: Monthly = (controlPlane_retailPrice × 730 × clusterCount) + Σ(workloadClass_retailPrice × vCPUs × 730) + (vm_retailPrice × 730 × nodeCount)
 ```
 
 ## Notes
 
 - **Two SKUs, one service**: Standard (Base) and Automatic share the same ARM resource type (`managedClusters`). Automatic is a SKU, not a separate product
 - Free tier (Standard SKU only): no uptime SLA fee, no financially-backed SLA; includes all AKS features
-- **Do NOT include** `Standard Long Term Support` unless explicitly requested (optional LTS add-on)
+- **Do NOT include** `Standard Long Term Support` unless explicitly requested — Premium tier replaces (not supplements) the Standard Uptime SLA fee
 - Automatic clusters always use Standard pricing tier; control plane fee always applies, no free tier
 - Automatic per-vCPU fees are a surcharge **in addition to** VM node costs; VMs still billed via `billingNeeds`
 - `billingConsiderations: [Reserved Instances, Spot Pricing]` applies to underlying VMs only, not AKS meters
