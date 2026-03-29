@@ -4,7 +4,7 @@ name: Happy Path - Health Bot Standard Tier
 description: >
   Tests cost estimation for Azure Health Bot Standard tier.
   Standard tier uses daily billing with multiple meters (base fee, MCU overage, message overage).
-  Validates that the agent queries the correct MeterName to avoid inflated totals.
+  Validates that the agent identifies Health Bot and produces a currency-formatted estimate.
 tags:
   - happy-path
   - single-service

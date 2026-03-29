@@ -4,7 +4,6 @@ category: ai-ml
 aliases: [Bot Framework, Chatbot]
 billingNeeds: [Azure App Service, Functions]
 primaryCost: "Health Bot Standard daily fee (×30) + MCU/message overage. Basic Bot Service channels are free."
-pricingRegion: global
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -23,6 +22,20 @@ ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Standard
 MeterName: Standard Unit
+
+### Health Bot: Standard tier MCU overage
+
+ServiceName: Azure Bot Service
+ProductName: Microsoft Azure Health Bot
+SkuName: Standard
+MeterName: Standard Overage MCU
+
+### Health Bot: Standard tier message overage
+
+ServiceName: Azure Bot Service
+ProductName: Microsoft Azure Health Bot
+SkuName: Standard
+MeterName: Standard Overage Messages
 
 ### Health Bot: Agent Tier (5K actions/month)
 
