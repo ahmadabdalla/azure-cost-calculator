@@ -4,6 +4,7 @@ category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 primaryCost: "Per-token billing (input + output tokens per 1M or 1K), varying by model and deployment type."
 privateEndpoint: true
+billingConsiderations: [Reserved Instances]
 ---
 
 # Azure OpenAI Service
@@ -24,8 +25,7 @@ privateEndpoint: true
 
 ### Discover available models (always run first; model names change frequently)
 
-SearchTerm: Azure OpenAI
-Top: 20
+Run explore with `SearchTerm: Azure OpenAI` and `Top: 20` to discover current models, then fill query templates below.
 
 ### Chat / completion model: substitute discovered values
 
