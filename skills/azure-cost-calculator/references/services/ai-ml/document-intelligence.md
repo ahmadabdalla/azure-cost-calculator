@@ -50,7 +50,7 @@ MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfM
 
 | Parameter     | How to determine                        | Example values                                                              |
 | ------------- | --------------------------------------- | --------------------------------------------------------------------------- |
-| `apiServiceName` | Always `Foundry Tools` (API name)    | `Foundry Tools`                                                             |
+| `serviceName` | Always `Foundry Tools` (API filter; YAML `apiServiceName`) | `Foundry Tools`                                                             |
 | `productName` | Deployment model                        | `Azure Document Intelligence`, `Azure Document Intelligence - Disconnected` |
 | `skuName`     | Tier + model type + deployment + volume | `S0`, `Free`, `Commitment Tier Pre-Built Azure 100K`                        |
 | `meterName`   | Billing dimension                       | `S0 Read Pages`, `S0 Pre-built Pages`, `S0 Custom Pages`                   |
