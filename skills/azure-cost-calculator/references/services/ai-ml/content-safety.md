@@ -40,6 +40,27 @@ ProductName: Content Safety
 SkuName: Commitment Tier Txt Azure 1M
 MeterName: Commitment Tier Txt Azure 1M Unit
 
+### Commitment tier: Text Azure 1M (overage)
+
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Content Safety
+SkuName: Commitment Tier Txt Azure 1M
+MeterName: Commitment Tier Txt Azure 1M CT Overage Transactions
+
+### Commitment tier: Image Azure 250K (base fee)
+
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Content Safety
+SkuName: Commitment Tier Image Azure 250K
+MeterName: Commitment Tier Image Azure 250K Unit
+
+### Commitment tier: Image Azure 250K (overage)
+
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Content Safety
+SkuName: Commitment Tier Image Azure 250K
+MeterName: Commitment Tier Image Azure 250K CT Overage Transactions
+
 ## Key Fields
 
 | Parameter     | How to determine         | Example values                                            |
@@ -61,10 +82,6 @@ MeterName: Commitment Tier Txt Azure 1M Unit
 | `Commitment Tier Txt Azure 1M CT Overage Transactions` | `Commitment Tier Txt Azure 1M` | `1K` | Overage beyond 1M included |
 | `Commitment Tier Image Azure 250K Unit` | `Commitment Tier Image Azure 250K` | `1/Month` | Flat fee, includes 250K images |
 | `Commitment Tier Image Azure 250K CT Overage Transactions` | `Commitment Tier Image Azure 250K` | `1K` | Overage beyond 250K included |
-| `Commitment Tier Txt Conn 1M Unit` | `Commitment Tier Txt Conn 1M` | `1/Month` | Connected container text fee |
-| `Commitment Tier Txt Conn 1M CT Overage Transactions` | `Commitment Tier Txt Conn 1M` | `1K` | Connected container text overage |
-| `Commitment Tier Image Conn 250K Unit` | `Commitment Tier Image Conn 250K` | `1/Month` | Connected container image fee |
-| `Commitment Tier Image Conn 250K CT Overage Transactions` | `Commitment Tier Image Conn 250K` | `1K` | Connected container image overage |
 
 ## Cost Formula
 
@@ -78,9 +95,6 @@ Free grant:        Billable text = max(0, records − 5000); Billable images = m
 ## Notes
 
 - **Free tier**: 5K text records + 5K images/month; hard stop at limit (no overages on Free tier)
-- **Commitment tiers**: One size per modality: Text Azure 1M and Image Azure 250K; Connected (`Conn`) variants are ~5% cheaper
-- **Disconnected containers**: `Content Safety - Disconnected` bills annually (`1/Year`); Global region only. Divide by 12 for monthly cost
-- **Legacy rename**: `Content Moderator` → `Content Safety`. Do NOT query the legacy `Content Moderator` product; it has different tiered pricing
-- **Scope**: Content Safety is part of Foundry Tools (AI Services). See `ai-services.md` for umbrella query patterns
+- **Commitment tiers**: Text Azure 1M + Image Azure 250K per modality; Connected (`Conn`) variants are ~5% cheaper (same query structure, substitute `Conn` for `Azure` in skuName/meterName)
+- **Legacy/Disconnected**: `Content Moderator` → `Content Safety` (different tiered pricing; do NOT query). Disconnected product bills annually (`1/Year`), Global-only; divide by 12 for monthly
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; text record = up to 1,000 Unicode characters
-- **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
