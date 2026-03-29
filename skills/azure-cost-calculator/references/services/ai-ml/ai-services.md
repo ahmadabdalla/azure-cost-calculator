@@ -15,6 +15,8 @@ privateEndpoint: true
 
 > **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
 
+> **Agent instruction**: Tiered meters (e.g., `Standard Text Records`) return multiple rows with different `tierMinimumUnits`. Use the tier matching the user's volume; do not sum all tiers.
+
 ## Query Pattern
 
 ### Language: text analytics (tiered meter)
@@ -55,15 +57,22 @@ Quantity: 10
 | `serviceName` | Always `Foundry Tools`         | `Foundry Tools`                                            |
 | `productName` | Cognitive domain (sub-service) | `Azure Language`, `Azure Vision - Face`, `Translator Text` |
 | `skuName`     | Tier, varies by sub-service    | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
+| `meterName`   | SKU prefix + feature description | `Standard Text Records`, `S0 Read Pages`, `S1 Characters` |
 
 ## Meter Names
 
 | Meter                   | productName                   | unitOfMeasure | Notes                   |
 | ----------------------- | ----------------------------- | ------------- | ----------------------- |
-| `Standard Text Records` | `Azure Language`              | `1K`          | Tiered pricing          |
-| `S0 Read Pages`         | `Azure Document Intelligence` | `1K`          | OCR/layout extraction   |
-| `Standard Transactions` | `Azure Vision - Face`         | `1K`          | Face detection/identify |
-| `S1 Characters`         | `Translator Text`             | `1M`          | Text translation        |
+| `Standard Text Records` | `Azure Language`              | `1K`          | Tiered; see `language.md` |
+| `S0 Read Pages`         | `Azure Document Intelligence` | `1K`          | OCR/layout; see `document-intelligence.md` |
+| `Standard Transactions` | `Azure Vision - Face`         | `1K`          | Tiered; see `vision.md` |
+| `S1 Characters`         | `Translator Text`             | `1M`          | Text translation; see `translator.md` |
+| `S1 Speech To Text`     | `Azure Speech`                | `1 Hour`      | Core STT; see `speech.md` |
+| `Standard Text Records` | `Content Safety`              | `1K`          | Text moderation; see `content-safety.md` |
+| `Standard Transactions` | `Anomaly Detector`            | `1K`          | Anomaly detection PAYG |
+| `S0 Predictions`        | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training Images` |
+| `Standard Doc Content Extraction Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
+| `Evaluations input tokens Tokens` | `Observability`       | `1K`          | Foundry eval; also Output variant |
 
 ## Cost Formula
 
@@ -80,19 +89,6 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 - **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate (see `openai-service.md`)
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day`; script auto-multiplies by 30
-- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually. Exclude
-
-## Product Names
-
-| productName                   | Common skuNames                                                                                                                             |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Azure Language`              | `Standard`, `S0`–`S4`                                                                                                                       |
-| `Azure Vision - Face`         | `Standard`                                                                                                                                  |
-| `Azure Document Intelligence` | `S0`, `Free`                                                                                                                                |
-| `Azure Speech`                | `Free`, commitment tiers, specialized SKUs (see `speech.md`)                                                                                |
-| `Translator Text`             | `S1`–`S4`, `C2`–`C4`, `Free`                                                                                                                |
-| `Content Safety`              | `Standard`                                                                                                                                  |
-| `Anomaly Detector`            | `Standard`, `Free`                                                                                                                          |
-| `Azure Custom Vision`         | `S0`, `Free`                                                                                                                                |
-| `Azure Content Understanding` | `Basic Doc`, `Basic Audio`, `Basic Video`, `Standard Doc`, `Standard Audio`, `Standard Video`, `Add-On Doc`, `Add-On Audio`, `Add-On Video` |
-| `Observability`               | `Evaluations input tokens`, `Evaluations output tokens` (meterNames append ` Tokens`)                                                      |
+- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually. Exclude from monthly estimates
+- **Sub-service files**: Language, Vision, Speech, Translator, Document Intelligence, Content Safety, and Content Understanding each have dedicated reference files with full meter tables
+- **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
