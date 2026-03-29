@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:ai-ml/content-safety/text-moderation-50k
+name: Happy Path - Content Safety Text Moderation 50K
+description: >
+  Tests cost estimation for Azure Content Safety text moderation.
+  Ensures the response acknowledges 50,000 text records, uses per-1K billing,
+  and calls the Azure pricing script for Content Safety.
+tags:
+  - happy-path
+  - single-service
+  - ai-ml
+  - service:content-safety
+inputs:
+  prompt: "What is the monthly cost for Azure Content Safety text moderation processing 50,000 text records in East US?"
+expected:
+  output_contains:
+    - "Content Safety"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Content Safety"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: records-acknowledged
+    config:
+      contains:
+        - "50,000"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Azure Content Safety text moderation processing 50,000 text records in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct per-1K transaction billing model for Content Safety.
+        (3) Accounts for 50,000 text records as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
