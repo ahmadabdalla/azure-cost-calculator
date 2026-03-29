@@ -2,7 +2,6 @@
 serviceName: Foundry Models
 category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
-billingConsiderations: [Reserved Instances]
 primaryCost: "Per-token billing (input + output tokens per 1M or 1K), varying by model and deployment type."
 privateEndpoint: true
 ---
@@ -17,7 +16,9 @@ privateEndpoint: true
 
 > **Trap (mixed units)**: `unitOfMeasure` varies across products: `1K` or `1M` for tokens, `1/Hour` for PTU, `100` for DALL-E images, `1` for Sora video seconds. Always check `unitOfMeasure` per meter.
 
-> **Agent instruction**: Model names change frequently. Always discover current models before querying. Run the discovery query below first, then construct pricing queries using the naming conventions documented in this file.
+> **Trap (PTU reservations)**: Provisioned Throughput reservations use a separate `serviceName`: `Azure AI Foundry Provisioned Throughput Reservation`. Standard RI query patterns do not apply to `Foundry Models`.
+
+> **Agent instruction**: Model names change frequently. Always discover current models before querying. Run the discovery query below first, then construct pricing queries using the patterns in this file.
 
 ## Query Pattern
 
@@ -31,42 +32,42 @@ Top: 20
 ServiceName: Foundry Models
 ProductName: {productName from discovery}
 SkuName: {model} {direction} {deployment}
-Quantity: {tokenCount in units matching unitOfMeasure}
+Quantity: 100 # units of unitOfMeasure; 100M tokens when UoM is 1M
 
 ### Embeddings: Global/Regional (substitute discovered embedding skuName)
 
 ServiceName: Foundry Models
 ProductName: Azure OpenAI
 SkuName: {embedding model} {deployment}
-Quantity: {tokenCount in units matching unitOfMeasure}
+Quantity: 500 # units of unitOfMeasure; 500K tokens when UoM is 1K
 
 ### Embeddings: Data Zone text-embedding-3 (separate product)
 
 ServiceName: Foundry Models
 ProductName: Azure OpenAI Embedding
 SkuName: {text embedding 3 model} DZ
-Quantity: {tokenCount in units matching unitOfMeasure}
+Quantity: 500 # units of unitOfMeasure; 500K tokens when UoM is 1K
 
 ## Key Fields
 
-| Parameter     | How to determine                              | Stable pattern                                                      |
+| Parameter     | How to determine                              | Example values                                                      |
 | ------------- | --------------------------------------------- | ------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Models`                       | `Foundry Models`                                                    |
 | `productName` | Model family, use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding` |
 | `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl` |
 | `meterName`   | skuName + ` 1M Tokens` or ` Tokens`           | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
 
-## SKU Naming Conventions
+## Meter Names
 
-Meter names follow a predictable pattern. Use these to construct queries from discovered model names:
-
-| Component  | Values                                                                                           | Notes                             |
-| ---------- | ------------------------------------------------------------------------------------------------ | --------------------------------- |
-| Direction  | `Inpt`/`Inp`/`inp`/`Input`/`in` = input, `outpt`/`Outp`/`out`/`Output` = output                  | Casing varies by model family     |
-| Deployment | `glbl`/`Gl`/`global` = Global (cheapest), `DZone`/`Dz`/`DZ`/`Data Zone` = Data Zone (+10%), `regnl`/`rgnl` = Regional (+10%) | |
-| Cached     | `cchd`/`cd` prefix on input meters                                                               | 50-90% discount vs standard input |
-| Batch      | `Batch` in skuName                                                                               | ~50% discount, async processing   |
-| Codex      | `codex` in skuName                                                                               | Code-focused variants             |
+| Meter | productName | unitOfMeasure | Notes |
+| ----- | ----------- | ------------- | ----- |
+| `5.4 inp Gl 1M Tokens` | `Azure OpenAI GPT5` | `1M` | Direction: inp/Inp/in=input, opt/Opt/out=output |
+| `5.4 mini cd Inp Gl 1M Tokens` | `Azure OpenAI GPT5` | `1M` | `cd`/`cchd` = cached input (50-90% discount) |
+| `o4-mini 0416 Inp glbl Tokens` | `Azure OpenAI Reasoning` | `1K` | Reasoning; deploy: glbl/Gl, DZone/Dz, regnl |
+| `text-embedding-3-large-regional Tokens` | `Azure OpenAI` | `1K` | Embeddings `1K`; DZ: separate `Azure OpenAI Embedding` |
+| `Provisioned Managed Global Unit` | `Azure OpenAI` | `1/Hour` | PTU hourly; also Regional, Data Zone variants |
+| `Image-Dall-E-3 Std LowRes-regnl EP Images` | `Azure OpenAI` | `100` | Per 100 images |
+| `Sora 2 dzone Second` | `Azure OpenAI Media` | `1` | Video generation per-second |
 
 ## Cost Formula
 
