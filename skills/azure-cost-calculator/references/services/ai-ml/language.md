@@ -2,6 +2,7 @@
 serviceName: Azure Language
 category: ai-ml
 aliases: [Language Understanding, LUIS, Text Analytics, NER, Sentiment Analysis, CLU]
+billingNeeds: [Azure Cognitive Search]
 apiServiceName: Foundry Tools
 primaryCost: "Per-1K text records (tiered by feature) + training per hour + optional commitment tiers."
 hasFreeGrant: true
@@ -15,6 +16,8 @@ privateEndpoint: true
 > **Trap (tiered pricing)**: Standard Text Records returns multiple rows with different `tierMinimumUnits`. The script sums all tiers; use the tier matching your volume.
 
 > **Trap (training MonthlyCost)**: Training meters use `1 Hour`. The script multiplies by 730. Calculate as `trainingHours × retailPrice` instead.
+
+> **Agent instruction**: When estimating Question Answering, also pull in `Azure Cognitive Search` pricing — QA requires a dedicated search index billed separately.
 
 ## Query Pattern
 
