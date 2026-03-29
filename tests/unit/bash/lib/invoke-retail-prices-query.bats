@@ -66,13 +66,14 @@ SCRIPT
     local url
     url=$(cat "$MOCK_DIR/curl_args")
 
-    # currencyCode must appear as a separate &currencyCode= parameter
-    [[ "$url" == *"&currencyCode=AUD"* ]]
+    # currencyCode must appear as its own query parameter (order-independent)
+    [[ "$url" == *'?currencyCode=AUD'* || "$url" == *'&currencyCode=AUD'* ]]
 
     # currencyCode must NOT appear inside the $filter= value
-    # Extract the portion before &currencyCode= and verify it contains no 'currencyCode'
-    local filter_part="${url%%&currencyCode=*}"
-    [[ "$filter_part" != *"currencyCode"* ]]
+    if grep -q '\$filter=[^&]*currencyCode' <<< "$url"; then
+        echo "currencyCode unexpectedly found inside \$filter parameter in URL: $url" >&2
+        false
+    fi
 }
 
 @test "currency code with special characters is URL-encoded" {

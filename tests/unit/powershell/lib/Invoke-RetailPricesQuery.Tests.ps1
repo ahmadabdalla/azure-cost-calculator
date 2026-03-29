@@ -156,8 +156,8 @@ Describe 'Invoke-RetailPricesQuery' {
             Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -CurrencyCode 'AUD'
 
             Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
-                $Uri -like '*&currencyCode=AUD*' -and
-                ($Uri -replace '&currencyCode=.*$', '') -notlike '*currencyCode*'
+                $Uri -match '[?\&]currencyCode=AUD(\&|$)' -and
+                ($Uri -replace '[?\&]currencyCode=[^\&]*', '') -notmatch 'currencyCode'
             }
         }
     }
