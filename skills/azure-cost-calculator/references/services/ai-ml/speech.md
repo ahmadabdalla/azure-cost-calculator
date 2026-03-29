@@ -66,7 +66,8 @@ Quantity: 100 # audio hours
 | `S1 Neural Text To Speech Characters` | `S1` | `1M` | Core Neural TTS |
 | `S1 Speech Translation` | `S1` | `1 Hour` | Realtime translation |
 | `S1 Speech to Text Batch` | `S1` | `1 Hour` | Batch transcription |
-| `Fast Transcription Speech To Text` | `Fast Transcription` | `1 Hour` | Fast/LLM transcription |
+| `Fast Transcription Speech To Text` | `Fast Transcription` | `1 Hour` | Fast/LLM transcription; also `Custom - Fast Transcription` SKU |
+| `Custom - Fast Transcription Speech To Text` | `Custom - Fast Transcription` | `1 Hour` | Custom model fast transcription (higher rate) |
 | `Neural HD Text to Speech Characters` | `Neural HD Text to Speech` | `1M` | HD prebuilt voices |
 | `S1 Custom Neural Realtime Characters` | `S1` | `1M` | Custom neural TTS |
 | `S1 Text To Speech Characters` | `S1` | `1M` | Standard TTS (deprecated) |
@@ -74,6 +75,7 @@ Quantity: 100 # audio hours
 | `S1 Custom Speech Model Hosting Unit` | `S1` | `1/Day` | Custom STT model hosting (daily) |
 | `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Hour` | Custom voice hosting |
 | `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Day` | Custom voice hosting (daily) |
+| `S1 Custom Neural Voice Model Hosting Unit` | `S1` | `1/Hour` | Custom neural voice hosting (no 1/Day variant) |
 | `Commitment Tier Speech to Text Azure 2K Unit` | `Commitment Tier Speech to Text Azure 2K` | `1/Month` | Monthly flat fee (many variants) |
 
 ## Cost Formula

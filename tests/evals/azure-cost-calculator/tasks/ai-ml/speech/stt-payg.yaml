@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:ai-ml/speech/stt-payg
+name: Happy Path - Speech to Text PAYG
+description: >
+  Tests cost estimation for Azure Speech to Text standard PAYG tier.
+  Validates correct serviceName filter (Foundry Tools), productName isolation,
+  and per-hour billing model for S1 Speech To Text.
+tags:
+  - happy-path
+  - single-service
+  - ai-ml
+  - service:speech
+inputs:
+  prompt: "What is the monthly cost for Azure Speech to Text with 100 audio hours in East US?"
+expected:
+  output_contains:
+    - "Speech"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Speech"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: hours-acknowledged
+    config:
+      contains:
+        - "100"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Azure Speech to Text with 100 audio hours in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct per-hour billing model for Azure Speech.
+        (3) Accounts for 100 audio hours as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
