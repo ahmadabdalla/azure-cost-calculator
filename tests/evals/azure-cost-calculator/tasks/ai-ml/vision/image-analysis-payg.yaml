@@ -2,7 +2,7 @@
 id: eval:ai-ml/vision/image-analysis-payg
 name: Happy Path - Vision Image Analysis PAYG
 description: >
-  Tests cost estimation for Azure Vision Image Analysis Group 1 transactions.
+  Tests cost estimation for Azure Vision Image Analysis transactions.
   Validates correct serviceName filter (Foundry Tools), productName isolation,
   and per-1K transaction billing model.
 tags:
@@ -14,7 +14,7 @@ inputs:
   prompt: "What is the monthly cost for Azure Vision Image Analysis with 100,000 transactions in East US?"
 expected:
   output_contains:
-    - "Vision"
+    - "Azure Vision"
     - "Assumptions"
   output_not_contains:
     - "Summary format"
@@ -23,7 +23,7 @@ graders:
     name: correct-service-name
     config:
       contains:
-        - "Vision"
+        - "Azure Vision"
     weight: 1.0
   - type: text
     name: currency-format
