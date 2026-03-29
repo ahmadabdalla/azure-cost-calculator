@@ -30,6 +30,7 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Document Intelligence
 SkuName: S0
 MeterName: S0 Read Pages
+Quantity: 1 # 1 × 1K = 1,000 pages; tiered at 1M
 
 ### Custom extraction models
 
@@ -43,13 +44,13 @@ MeterName: S0 Custom Pages
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Document Intelligence
 SkuName: Commitment Tier Pre-Built Azure 100K
-MeterName: Commitment Tier Pre-Built Azure 100K Unit
+MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfMeasure: 1/Month
 
 ## Key Fields
 
 | Parameter     | How to determine                        | Example values                                                              |
 | ------------- | --------------------------------------- | --------------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools` (API name)       | `Foundry Tools`                                                             |
+| `apiServiceName` | Always `Foundry Tools` (API name)    | `Foundry Tools`                                                             |
 | `productName` | Deployment model                        | `Azure Document Intelligence`, `Azure Document Intelligence - Disconnected` |
 | `skuName`     | Tier + model type + deployment + volume | `S0`, `Free`, `Commitment Tier Pre-Built Azure 100K`                        |
 | `meterName`   | Billing dimension                       | `S0 Read Pages`, `S0 Pre-built Pages`, `S0 Custom Pages`                   |
