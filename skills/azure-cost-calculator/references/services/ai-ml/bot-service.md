@@ -3,7 +3,7 @@ serviceName: Azure Bot Service
 category: ai-ml
 aliases: [Bot Framework, Chatbot]
 billingNeeds: [Azure App Service, Functions]
-primaryCost: "Health Bot Standard daily fee (×30) + MCU/message overage. Basic Bot Service channels are free."
+primaryCost: "Health Bot Agent Tier per-action (recommended); Standard daily ×30 + overage (legacy). Channels free."
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -14,23 +14,25 @@ privateEndpoint: true
 
 > **Trap (daily billing)**: Standard tier uses `1/Day` unit; the script auto-multiplies by 30 for monthly cost. Do not manually multiply again.
 
+> **Trap (deprecated tier)**: Standard (S1) was deprecated in November 2025; no new instances can be created. For new deployments, use Agent Tier.
+
 ## Query Pattern
 
-### Health Bot: Standard tier (daily base fee)
+### Health Bot: Standard tier (daily base fee, legacy)
 
 ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Standard
 MeterName: Standard Unit
 
-### Health Bot: Standard tier MCU overage
+### Health Bot: Standard tier MCU overage (legacy)
 
 ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Standard
 MeterName: Standard Overage MCU
 
-### Health Bot: Standard tier message overage
+### Health Bot: Standard tier message overage (legacy)
 
 ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
