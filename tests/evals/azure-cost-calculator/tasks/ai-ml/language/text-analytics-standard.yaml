@@ -22,7 +22,7 @@ graders:
     name: correct-service-name
     config:
       regex_match:
-        - "Azure Language|Language|Text Analytics"
+        - "Azure Language|Text Analytics"
     weight: 1.0
   - type: text
     name: currency-format
