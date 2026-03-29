@@ -14,9 +14,7 @@ privateEndpoint: true
 
 > **Trap (multiple products)**: Three `productName` values: `Translator Text` (regional), `Azure Translator` (Global-only), `Azure Translator - Disconnected` (annual). Always filter by `ProductName`.
 
-> **Trap (mixed units)**: `unitOfMeasure` varies: `1M` (characters), `1/Day` (S2–S4, C2–C4, D3), `1/Month` (commitment/hosting), `1/Year` (disconnected). Script auto-multiplies daily by 30; annual meters show raw price as MonthlyCost.
-
-> **Trap (Global meter naming)**: `Azure Translator` (Global-only product) uses different meter/SKU names than `Translator Text` (regional): e.g., `S1 Standard Characters` vs `S1 Characters`, `S1 Document` SKU vs `S1`. Always verify meter names per product.
+> **Trap (mixed units + Global naming)**: `unitOfMeasure` varies: `1M`, `1/Day` (S2–S4, C2–C4, D3), `1/Month`, `1/Year` (disconnected); script auto-multiplies daily by 30. `Azure Translator` (Global) uses different names: `S1 Standard`/`S1 Standard Characters` vs `S1`/`S1 Characters`.
 
 ## Query Pattern
 
@@ -34,7 +32,6 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Document Characters
-Quantity: 10 # millions of document characters
 
 ### S1 custom model translation
 
@@ -42,7 +39,6 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Custom Translation Characters
-Quantity: 10 # millions of characters
 
 ### Commitment tier (Azure 250M chars/month)
 
@@ -51,26 +47,38 @@ ProductName: Translator Text
 SkuName: Commitment Tier Azure 250M
 MeterName: Commitment Tier Azure 250M Unit
 
+### S1 standard text translation (Global product)
+
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Azure Translator
+SkuName: S1 Standard
+MeterName: S1 Standard Characters
+Region: Global
+
 ## Key Fields
 
 | Parameter     | How to determine                  | Example values                                                           |
 | ------------- | --------------------------------- | ------------------------------------------------------------------------ |
 | `serviceName` | Always `Foundry Tools` (API name) | `Foundry Tools`                                                          |
 | `productName` | Deployment model                  | `Translator Text`, `Azure Translator`, `Azure Translator - Disconnected` |
-| `skuName`     | Tier and feature                  | `S1`, `C2`, `Commitment Tier Azure 250M`, `Free`                        |
-| `meterName`   | Billing dimension                 | `S1 Characters`, `S1 Document Characters`, `Custom Model Hosting Unit`   |
+| `skuName`     | Tier and feature                  | `S1`, `S1 Standard` (Global), `C2`, `Commitment Tier Azure 250M`, `Free`        |
+| `meterName`   | Billing dimension                 | `S1 Characters`, `S1 Standard Characters` (Global), `Custom Model Hosting Unit`  |
 
 ## Meter Names
 
-| Meter                              | productName       | unitOfMeasure | Notes                             |
-| ---------------------------------- | ----------------- | ------------- | --------------------------------- |
-| `S1 Characters`                    | `Translator Text` | `1M`          | Standard text translation         |
-| `S1 Document Characters`           | `Translator Text` | `1M`          | Document translation              |
-| `S1 Custom Translation Characters` | `Translator Text` | `1M`          | Custom-trained model inference    |
-| `S1 Custom Training Characters`    | `Translator Text` | `1M`          | Custom model training data        |
-| `Custom Model Hosting Unit`        | `Translator Text` | `1/Month`     | Per model per region (all SKUs)   |
-| `C2 Unit`                          | `Translator Text` | `1/Day`       | Volume tier, 250M chars included  |
-| `Commitment Tier Azure 250M Unit`  | `Translator Text` | `1/Month`     | Commitment, 250M chars included   |
+| Meter                              | skuName                      | productName        | unitOfMeasure | Notes                            |
+| ---------------------------------- | ---------------------------- | ------------------ | ------------- | -------------------------------- |
+| `S1 Characters`                    | `S1`                         | `Translator Text`  | `1M`          | Standard text translation        |
+| `S1 Document Characters`           | `S1`                         | `Translator Text`  | `1M`          | Document translation             |
+| `S1 Custom Translation Characters` | `S1`                         | `Translator Text`  | `1M`          | Custom model inference           |
+| `S1 Custom Training Characters`    | `S1`                         | `Translator Text`  | `1M`          | Custom model training            |
+| `Custom Model Hosting Unit`        | `S1`                         | `Translator Text`  | `1/Month`     | Per model per region (all SKUs)  |
+| `C2 Unit`                          | `C2`                         | `Translator Text`  | `1/Day`       | 250M chars included              |
+| `S2–S4 Unit`                       | `S2`–`S4`                    | `Translator Text`  | `1/Day`       | Retiring daily tiers + overage   |
+| `C3–C4 Unit`                       | `C3`–`C4`                    | `Translator Text`  | `1/Day`       | Container tiers, 1B/10B chars    |
+| `D3 Unit`                          | `D3`                         | `Translator Text`  | `1/Day`       | Disconnected container           |
+| `S1 Standard Characters`           | `S1 Standard`                | `Azure Translator` | `1M`          | Global-only equiv of S1 regional |
+| `Commitment Tier Azure 250M Unit`  | `Commitment Tier Azure 250M` | `Translator Text`  | `1/Month`     | 250M chars included              |
 
 ## Cost Formula
 
@@ -87,7 +95,6 @@ Free grant:          Billable = max(0, chars − 2M free) then price per 1M
 - **Free tier**: 2M characters/month (standard + custom training combined) on Free SKU; custom model hosting still costs per model per region
 - **Retiring tiers**: S2–S4 retiring Oct 2026; use S1 pay-per-use + Commitment Tiers for new deployments
 - **Commitment tiers**: Azure (250M/1000M/4000M) and Connected (250M/1000M/4000M) variants; Connected tiers run in customer containers at slightly lower rates
-- **Container tiers**: C2–C4 (connected) and D3 (disconnected) use daily billing with included character allowances + overage rates
-- **Disconnected containers**: `Azure Translator - Disconnected` bills annually (4000M and 10000M tiers). Divide by 12 for monthly equivalent
+- **Containers**: C2–C4 (connected, daily + overage) and D3 (disconnected, daily); `Azure Translator - Disconnected` bills annually (4000M/10000M, ÷12 for monthly)
 - **Umbrella service**: Translator is part of Foundry Tools (AI Services). See `ai-services.md` for umbrella query patterns and other sub-services
 - **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
