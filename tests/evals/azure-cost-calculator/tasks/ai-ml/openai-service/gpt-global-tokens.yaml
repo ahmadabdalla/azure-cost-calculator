@@ -22,7 +22,8 @@ graders:
     name: correct-service-name
     config:
       regex_match:
-        - "OpenAI|Foundry Models|GPT"
+        - "Foundry Models"
+        - "ProductName: Azure OpenAI"
     weight: 1.0
   - type: text
     name: currency-format
