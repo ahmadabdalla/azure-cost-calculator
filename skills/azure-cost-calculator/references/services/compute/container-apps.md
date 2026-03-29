@@ -32,6 +32,12 @@ ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: Hybrid
 
+### Dynamic Sessions: per-hour billing
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Dynamic Sessions
+
 ## Meter Names
 
 | Plan             | Meter                           | unitOfMeasure | Notes                                        |
@@ -48,7 +54,7 @@ SkuName: Hybrid
 | Dedicated        | `Dedicated Plan Management`     | 1 Hour        | Per environment; additive for PE/maintenance |
 | Dedicated        | `Dedicated GPU Usage`           | 1 Hour        | GPU workloads only                           |
 | Hybrid           | `Hybrid vCPU Usage`             | 1 Hour        | Arc-enabled; memory included                 |
-| Dynamic Sessions | `Dynamic Sessions`              | 1 Hour        | Per session hour (Consumption only)          |
+| Dynamic Sessions | `Dynamic Sessions`              | 1 Hour        | Per session hour; billed separately          |
 
 ## Cost Formula
 
@@ -56,20 +62,24 @@ SkuName: Hybrid
 Consumption (Standard):
   Monthly = (max(0, vCPU_s − 180K) × vCPU_UnitPrice) + (max(0, GiB_s − 360K) × mem_UnitPrice)
            + max(0, requests − 2M) / 1M × request_UnitPrice
-
-Dedicated:
-  Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (mgmt_price × 730)
+Dedicated (non-GPU):
+  Monthly = (vCPUs × vCPU_price × 730) + (GiB × mem_price × 730) + (N × mgmt_price × 730)
+Dedicated (GPU): Monthly = (GPU_count × GPU_price × 730) + (N × mgmt_price × 730)
+Hybrid:  Monthly = vCPUs × hybrid_price × 730
+Dynamic: Monthly = sessions × session_price × 730
+  N = enabled features (base Dedicated=1, +PE=1, +planned maintenance=1)
 ```
 
 > **Agent instruction**: For Consumption, if request count given without per-request duration, assume **1s/request**. Derive `active_seconds = requests × 1s`. Never assume 730 × 3600 (always-on) for Standard SKU.
 
 ## Notes
 
-- Dedicated plan charges per-environment management fee in addition to vCPU/memory; fee is additive for private endpoints and planned maintenance
-- GPU: Standard supports T4 and A100 (additive to vCPU/memory charges); Dedicated has generic GPU meter
+- Dedicated management fee (N in formula): base Dedicated = 1, +1 per PE, +1 per planned maintenance
+- GPU: Standard T4/A100 are additive to vCPU/memory; Dedicated GPU replaces vCPU/memory (GPU + management only)
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
-- Idle vs Active: vCPU idle rate ~1/8 of active; memory idle = active; replicas at min count > 0 charge active rate
-- Scale to zero incurs zero charges; health probe and intra-environment requests are not billable
+- Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 charge active rate
+- Scale to zero = zero charges; health probe and intra-environment requests are not billable
+- Private endpoints require Dedicated plan; Savings Plans shown on pricing page but not in Retail Prices API
 
 ## SKU Selection Guide
 
@@ -78,16 +88,13 @@ Dedicated:
 | Scale-to-zero, event-driven | `Standard`         | Per-second    | Free grant: 180K vCPU-s + 360K GiB-s/mo |
 | Always-on, min replicas > 0 | `Dedicated`        | Per-hour      | Background workers, ML pipelines        |
 | Hybrid (on-prem connected)  | `Hybrid`           | Per-hour      | Arc-enabled environments                |
-| Code interpreter sessions   | `Dynamic Sessions` | Per-hour      | Consumption plan only                   |
+| Code interpreter sessions   | `Dynamic Sessions` | Per-hour      | Billed separately by session duration   |
 
 ## Manual Calculation Example
-
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
 
 ```
 Active-s = 10M × 0.8 = 8M | vCPU-s = 8M × 0.5 = 4M | GiB-s = 8M × 1 = 8M
-Billable: vCPU-s = 4M − 180K = 3,820K · GiB-s = 8M − 360K = 7,640K · reqs = 10M − 2M = 8M
-Cost: (3,820K × vCPU_UnitPrice) + (7,640K × mem_UnitPrice) + (8 × request_UnitPrice)
+Billable vCPU-s = 4M − 180K = 3,820K · GiB-s = 8M − 360K = 7,640K · reqs = 10M − 2M = 8M
+Cost = (3,820K × vCPU_UnitPrice) + (7,640K × mem_UnitPrice) + (8 × request_UnitPrice)
 ```
-
-> Query API for `Standard vCPU Active Usage`, `Standard Memory Active Usage`, and `Standard Requests` UnitPrice values.
