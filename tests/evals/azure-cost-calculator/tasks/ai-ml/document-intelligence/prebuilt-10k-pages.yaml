@@ -3,8 +3,8 @@ id: eval:ai-ml/document-intelligence/prebuilt-10k-pages
 name: Happy Path - Document Intelligence Pre-built 10K Pages
 description: >
   Tests cost estimation for Azure Document Intelligence pre-built models.
-  Validates correct serviceName filter (Foundry Tools), productName isolation,
-  and per-1K page billing model with 10,000 pages.
+  Ensures the response acknowledges 10,000 pages, uses a per-1K page billing model,
+  and calls the Azure pricing script for Document Intelligence.
 tags:
   - happy-path
   - single-service
