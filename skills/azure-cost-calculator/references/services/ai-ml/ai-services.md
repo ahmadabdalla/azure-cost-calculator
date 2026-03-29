@@ -57,7 +57,7 @@ Quantity: 10
 | `serviceName` | Always `Foundry Tools`         | `Foundry Tools`                                            |
 | `productName` | Cognitive domain (sub-service) | `Azure Language`, `Azure Vision - Face`, `Translator Text` |
 | `skuName`     | Tier, varies by sub-service    | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
-| `meterName`   | SKU prefix + feature description | `Standard Text Records`, `S0 Read Pages`, `S1 Characters` |
+| `meterName`   | Billing dimension, varies by product | `Standard Text Records`, `S0 Read Pages`, `S1 Characters` |
 
 ## Meter Names
 
