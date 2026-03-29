@@ -52,6 +52,30 @@ SCRIPT
     [ "$count" -eq 1 ]
 }
 
+@test "currencyCode is a separate query parameter, not inside the filter string" {
+    cat > "$MOCK_DIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+printf '%s\n' "$*" >> "$MOCK_DIR/curl_args"
+printf '%s\n%s' '{"Items":[],"NextPageLink":null}' '200'
+SCRIPT
+    chmod +x "$MOCK_DIR/curl"
+
+    run invoke_retail_prices_query "serviceName eq 'Test'" "AUD"
+    [ "$status" -eq 0 ]
+
+    local url
+    url=$(cat "$MOCK_DIR/curl_args")
+
+    # currencyCode must appear as its own query parameter (order-independent)
+    [[ "$url" == *'?currencyCode=AUD'* || "$url" == *'&currencyCode=AUD'* ]]
+
+    # currencyCode must NOT appear inside the $filter= value
+    if grep -q '\$filter=[^&]*currencyCode' <<< "$url"; then
+        echo "currencyCode unexpectedly found inside \$filter parameter in URL: $url" >&2
+        false
+    fi
+}
+
 @test "currency code with special characters is URL-encoded" {
     cat > "$MOCK_DIR/curl" <<'SCRIPT'
 #!/usr/bin/env bash
