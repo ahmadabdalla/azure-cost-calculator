@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:ai-ml/translator/s1-text-translation
+name: Happy Path - Translator S1 Text Translation
+description: >
+  Tests cost estimation for Azure Translator S1 standard text translation.
+  Validates correct serviceName filter (Foundry Tools), productName isolation
+  (Translator Text), and per-1M character billing model.
+tags:
+  - happy-path
+  - single-service
+  - ai-ml
+  - service:translator
+inputs:
+  prompt: "What is the monthly cost for Azure Translator S1 standard text translation with 10 million characters in East US?"
+expected:
+  output_contains:
+    - "Translator"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Translator"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: characters-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Azure Translator S1 standard text translation with 10 million characters in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct per-character billing model for Azure Translator.
+        (3) Accounts for 10 million characters as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
