@@ -22,8 +22,8 @@ graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Speech"
+      regex_match:
+        - "Azure Speech|Speech to Text"
     weight: 1.0
   - type: text
     name: currency-format
