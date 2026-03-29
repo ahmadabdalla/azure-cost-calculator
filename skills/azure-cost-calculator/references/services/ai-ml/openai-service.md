@@ -16,7 +16,7 @@ privateEndpoint: true
 
 > **Trap (mixed units)**: `unitOfMeasure` varies across products: `1K` or `1M` for tokens, `1/Hour` for PTU, `100` for DALL-E images, `1` for Sora video seconds. Always check `unitOfMeasure` per meter.
 
-> **Trap (PTU reservations)**: Provisioned Throughput reservations use a separate `serviceName`: `Azure AI Foundry Provisioned Throughput Reservation`. Standard RI query patterns do not apply to `Foundry Models`.
+> **Trap (PTU reservations)**: Provisioned Throughput reservations use a separate `productName`: `Azure AI Foundry Provisioned Throughput Reservation`. Standard RI query patterns require a `ProductName` filter; unfiltered `PriceType: Reservation` queries under `Foundry Models` return PTU and Agent pre-purchase meters.
 
 > **Agent instruction**: Model names change frequently. Always discover current models before querying. Run the discovery query below first, then construct pricing queries using the patterns in this file.
 
