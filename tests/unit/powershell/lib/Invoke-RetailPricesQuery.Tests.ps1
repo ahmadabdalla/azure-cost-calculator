@@ -147,6 +147,19 @@ Describe 'Invoke-RetailPricesQuery' {
                 $Uri -like '*currencyCode=US%26D*' -and $Uri -notlike '*currencyCode=US&D*'
             }
         }
+
+        It 'should pass currencyCode as a separate query parameter, not inside the filter string' {
+            Mock Invoke-RestMethod {
+                [PSCustomObject]@{ Items = @(); NextPageLink = $null }
+            }
+
+            Invoke-RetailPricesQuery -Filter "serviceName eq 'VMs'" -CurrencyCode 'AUD'
+
+            Should -Invoke Invoke-RestMethod -Times 1 -Exactly -ParameterFilter {
+                $Uri -like '*&currencyCode=AUD*' -and
+                ($Uri -replace '&currencyCode=.*$', '') -notlike '*currencyCode*'
+            }
+        }
     }
 
     Context 'when the filter is URL-encoded in the request' {
