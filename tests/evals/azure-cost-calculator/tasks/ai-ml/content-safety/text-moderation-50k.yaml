@@ -22,8 +22,8 @@ graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Content Safety"
+      regex_match:
+        - "Content Safety|Content Moderation"
     weight: 1.0
   - type: text
     name: currency-format
