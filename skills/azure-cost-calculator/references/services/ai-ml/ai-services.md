@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Services` or `Cognitive Services`. Old names return zero results.
 
-> **Trap (inflated totals)**: Unfiltered queries return 300+ meters across 37 product families. Always filter by `ProductName`.
+> **Trap (inflated totals)**: Unfiltered queries return 500+ meters across 28+ product families. Always filter by `ProductName`.
 
 > **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
 
@@ -64,14 +64,14 @@ Quantity: 10
 | Meter                   | productName                   | unitOfMeasure | Notes                   |
 | ----------------------- | ----------------------------- | ------------- | ----------------------- |
 | `Standard Text Records` | `Azure Language`              | `1K`          | Tiered; see `language.md` |
-| `S0 Read Pages`         | `Azure Document Intelligence` | `1K`          | OCR/layout; see `document-intelligence.md` |
+| `S0 Read Pages`         | `Azure Document Intelligence` | `1K`          | Tiered; OCR/layout; see `document-intelligence.md` |
 | `Standard Transactions` | `Azure Vision - Face`         | `1K`          | Tiered; see `vision.md` |
 | `S1 Characters`         | `Translator Text`             | `1M`          | Text translation; see `translator.md` |
 | `S1 Speech To Text`     | `Azure Speech`                | `1 Hour`      | Core STT; see `speech.md` |
 | `Standard Text Records` | `Content Safety`              | `1K`          | Text moderation; see `content-safety.md` |
-| `Standard Transactions` | `Anomaly Detector`            | `1K`          | Anomaly detection PAYG |
-| `S0 Predictions`        | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training Images` |
-| `Standard Doc Content Extraction Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
+| `Standard Univariate Transactions` | `Anomaly Detector`   | `1K`          | Anomaly detection PAYG |
+| `S0 Transactions`       | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training`, `S0 Image Storage` |
+| `Doc Content Extraction Standard Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
 | `Evaluations input tokens Tokens` | `Observability`       | `1K`          | Foundry eval; also Output variant |
 
 ## Cost Formula
