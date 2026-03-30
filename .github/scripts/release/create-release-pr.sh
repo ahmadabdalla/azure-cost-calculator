@@ -51,7 +51,7 @@ echo "::notice::Detected version: $VERSION" >&2
 # --- Extract changelog section ---
 # Allocate and protect both temp files before doing any work that could fail.
 CHANGELOG_TMP=$(mktemp)
-trap 'rm -f "$CHANGELOG_TMP" "${PR_BODY_FILE:-}"' EXIT
+trap 'rm -f "$CHANGELOG_TMP"; [ -n "${PR_BODY_FILE:-}" ] && rm -f "$PR_BODY_FILE"' EXIT
 PR_BODY_FILE=$(mktemp)
 
 # Delegate to extract-changelog.sh; on failure (section not found or any other
@@ -71,9 +71,9 @@ if issue_line=$(printf '%s\n' "$PR_BODY" | grep -i '^Issue references:' | head -
 fi
 
 # --- Build the release PR body ---
-# Use a quoted heredoc (<<'BODY') for static structure to prevent shell expansion
-# of changelog or footer content, which is partially attacker-influenced.
-# Dynamic values are appended separately with printf.
+# Use printf so dynamic content (including partially attacker-influenced changelog
+# or footer text) is passed as printf arguments rather than being subject to shell
+# expansion.
 CLOSES_FOOTER=""
 if [ -n "$ISSUE_REFS" ]; then
   # Convert "#123, #456" to "Closes #123, closes #456"
