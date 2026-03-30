@@ -29,6 +29,8 @@ PLUGIN_JSON="${PLUGIN_JSON:-.claude-plugin/plugin.json}"
 CHANGELOG="${CHANGELOG:-CHANGELOG.md}"
 
 # --- Extract and validate version ---
+# jq -e exits non-zero for null/false but not for empty string; the explicit
+# empty check below is intentional and must not be removed.
 if ! VERSION=$(jq -er '.version' "$PLUGIN_JSON"); then
   echo "::error::Failed to read '.version' from $PLUGIN_JSON" >&2
   exit 1
@@ -47,61 +49,59 @@ fi
 echo "::notice::Detected version: $VERSION" >&2
 
 # --- Extract changelog section ---
-CHANGELOG_BODY=$(awk -v ver="$VERSION" '
-  index($0, "## [" ver "]") == 1 { found=1; next }
-  /^## \[/ { if (found) exit }
-  found { print }
-' "$CHANGELOG")
+# Allocate and protect both temp files before doing any work that could fail.
+CHANGELOG_TMP=$(mktemp)
+trap 'rm -f "$CHANGELOG_TMP"; [ -n "${PR_BODY_FILE:-}" ] && rm -f "$PR_BODY_FILE"' EXIT
+PR_BODY_FILE=$(mktemp)
 
-if [ -z "$CHANGELOG_BODY" ]; then
+# Delegate to extract-changelog.sh; on failure (section not found or any other
+# error) fall back to a placeholder so the release PR is still created.
+if bash "$(dirname -- "$0")/extract-changelog.sh" "$VERSION" "$CHANGELOG" "$CHANGELOG_TMP"; then
+  CHANGELOG_BODY=$(cat "$CHANGELOG_TMP")
+else
   echo "::warning::No changelog section found for v${VERSION}; using placeholder" >&2
   CHANGELOG_BODY="See CHANGELOG.md for details."
 fi
 
 # --- Extract issue references from version-bump PR body ---
-# Looks for "Issue references: #123, #456, #789" in the PR body
+# Looks for "Issue references: #123, #456, #789" in the PR body.
 ISSUE_REFS=""
 if issue_line=$(printf '%s\n' "$PR_BODY" | grep -i '^Issue references:' | head -1); then
-  # Extract just the issue numbers
-  ISSUE_REFS=$(printf '%s\n' "$issue_line" | grep -oE '#[0-9]+' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')
+  ISSUE_REFS=$(printf '%s\n' "$issue_line" | grep -oE '#[0-9]+' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g' || true)
 fi
 
 # --- Build the release PR body ---
+# Use printf so dynamic content (including partially attacker-influenced changelog
+# or footer text) is passed as printf arguments rather than being subject to shell
+# expansion.
 CLOSES_FOOTER=""
 if [ -n "$ISSUE_REFS" ]; then
   # Convert "#123, #456" to "Closes #123, closes #456"
   CLOSES_FOOTER=$(printf '%s\n' "$ISSUE_REFS" | sed 's/#\([0-9]*\)/closes #\1/g; s/^closes/Closes/')
 fi
 
-PR_BODY_FILE=$(mktemp)
-trap 'rm -f "$PR_BODY_FILE"' EXIT
-
-cat > "$PR_BODY_FILE" <<BODY
-## Release v${VERSION}
-
-Merges \`dev\` into \`main\` for release v${VERSION}.
-
-> **Merge this PR with a merge commit** (not squash) to preserve the full commit history from \`dev\`.
-
-### Changelog
-
-${CHANGELOG_BODY}
-BODY
+{
+  printf '## Release v%s\n\n' "$VERSION"
+  printf 'Merges `dev` into `main` for release v%s.\n\n' "$VERSION"
+  printf '> **Merge this PR with a merge commit** (not squash) to preserve the full commit history from `dev`.\n\n'
+  printf '### Changelog\n\n'
+  printf '%s\n' "$CHANGELOG_BODY"
+} > "$PR_BODY_FILE"
 
 if [ -n "$CLOSES_FOOTER" ]; then
-  cat >> "$PR_BODY_FILE" <<BODY
-
----
-${CLOSES_FOOTER}
-BODY
+  printf '\n---\n%s\n' "$CLOSES_FOOTER" >> "$PR_BODY_FILE"
 fi
 
 # --- Check for existing release PR ---
 # Use exact title matching via jq filter (--search is case-insensitive and could match prefixes).
-# Do NOT suppress errors; API failures should surface, not silently create duplicates.
-existing_pr=$(gh pr list --base main --state open \
-  --json number,title \
-  --jq --arg v "release: v${VERSION}" 'first(.[] | select(.title == $v) | .number) // empty')
+# Explicit error guard: a gh API failure must surface as a clear error, not silently
+# fall through to the create path and create a duplicate PR.
+if ! gh_pr_list_output=$(gh pr list --base main --state open --json number,title); then
+  echo "::error::Failed to query open PRs from GitHub API" >&2
+  exit 1
+fi
+existing_pr=$(printf '%s\n' "$gh_pr_list_output" \
+  | jq -r --arg v "release: v${VERSION}" 'first(.[] | select(.title == $v) | .number) // empty')
 
 if [ -n "$existing_pr" ]; then
   echo "::notice::Release PR #${existing_pr} already exists for v${VERSION}; updating body" >&2
@@ -110,22 +110,28 @@ if [ -n "$existing_pr" ]; then
 else
   # Create the PR directly from dev; no new branch needed.
   # dev already contains the version bump, and the PR preserves its full history.
-  pr_number=$(gh pr create \
+  pr_url=$(gh pr create \
     --base main \
     --head dev \
     --title "release: v${VERSION}" \
     --label release \
-    --body-file "$PR_BODY_FILE" \
-    --json number \
-    --jq '.number') || {
+    --body-file "$PR_BODY_FILE") || {
       echo "::error::Failed to create release PR" >&2
       exit 1
     }
+  pr_number=$(printf '%s\n' "$pr_url" | grep -oE 'pull/[0-9]+' | head -1 | grep -oE '[0-9]+' || true)
+  if [ -z "$pr_number" ]; then
+    echo "::error::Could not extract PR number from gh output: $pr_url" >&2
+    exit 1
+  fi
   echo "::notice::Created release PR #${pr_number} for v${VERSION}" >&2
 fi
 
 # --- Write outputs ---
+# Use the HEREDOC delimiter format to prevent newline injection into GITHUB_OUTPUT.
 if [ -n "${GITHUB_OUTPUT:-}" ]; then
-  echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-  echo "pr_number=${pr_number}" >> "$GITHUB_OUTPUT"
+  {
+    printf 'version<<_EOF\n%s\n_EOF\n' "$VERSION"
+    printf 'pr_number<<_EOF\n%s\n_EOF\n' "$pr_number"
+  } >> "$GITHUB_OUTPUT"
 fi
