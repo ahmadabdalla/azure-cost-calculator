@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.5.3] - 2026-03-30
+
+### Fixed
+
+- Fixed AI Services service reference: updated meter counts, added tiered meter handling guidance, expanded meter table with 6 new sub-services
+- Fixed Bot Service service reference: added deprecated Standard tier notice, clarified Agent Tier recommended pricing, added MeterName filters to all query patterns, added RI verification note
+- Fixed Content Safety service reference: added commitment tier overage query patterns for Text Azure 1M and Image Azure 250K tiers
+- Fixed Document Intelligence service reference: clarified Key Fields `serviceName` label, added unit context to commitment tier query, added tiered scaling guidance to Read query
+- Fixed Foundry Agents service reference: corrected `InstanceCount` to `Quantity` for vCPU meter, clarified `apiServiceName` usage in Key Fields
+- Fixed Language service reference: added `billingNeeds: [Azure Cognitive Search]` dependency, added agent instruction for Question Answering scenarios
+- Fixed OpenAI service reference: added PTU reservation trap note, restructured meter discovery guidance, updated Key Fields table
+- Fixed Speech service reference: added Fast Transcription query pattern, expanded meter table with hosting meters and custom model variants, clarified hosting cost formulas
+- Fixed Translator service reference: added Global product query pattern (`S1 Standard`), added `skuName` column to Meter Names table, added 8 missing meter rows
+- Fixed Vision service reference: added `skuName` column to Meter Names table, added P-series daily billing meter row
+- Fixed Container Apps service reference: clarified GPU billing (replaces vCPU/memory), updated management fee formula (additive for PE/maintenance), improved cost formula structure
+- Fixed AKS service reference: clarified LTS billing (replaces Standard fee, not additive), updated Meter Names table with consistent `unitOfMeasure` column
+
 ## [1.5.2] - 2026-03-23
 
 ### Changed
