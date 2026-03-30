@@ -6,13 +6,13 @@ primaryCost: "Daily rate × 30 × planCount + overage per 1K; Classic hourly × 
 hasFreeGrant: true
 ---
 
-# Machine Learning Studio (classic)
+# Machine Learning Studio
 
 > **Warning**: Machine Learning Studio (classic) is a **legacy service being retired**. Use Azure Machine Learning for new workloads. Pricing meters remain in the API for existing deployments.
 
 > **Trap (daily billing)**: Plan meters (S1, S2, S3) use `1/Day` units. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30`; that would overcount by 30x.
 
-> **Trap (no eastus meters)**: This service has **no meters in `eastus`**. Use `Region: Global` (primary for all commercial meters) or a specific region: `southcentralus`, `westeurope`, `eastus2`.
+> **Trap (no eastus meters)**: No meters in `eastus`. Use `Region: Global` for all queries (full meter set). Commercial alternatives: `southcentralus`, `westeurope`, `southeastasia`, `japaneast`, `westcentralus`; `eastus2` has no workspace meters.
 
 ## Query Pattern
 
@@ -22,7 +22,7 @@ ServiceName: Machine Learning Studio
 ProductName: Machine Learning Studio Production Web API
 SkuName: S1
 MeterName: S1 Plan
-Region: southcentralus
+Region: Global
 InstanceCount: 3
 
 ### S1 overage transactions: 500K transactions
@@ -31,7 +31,7 @@ ServiceName: Machine Learning Studio
 ProductName: Machine Learning Studio Production Web API
 SkuName: S1
 MeterName: S1 Overage Transactions
-Region: westeurope
+Region: Global
 Quantity: 500
 
 ### Classic hourly tier: 2 instances
@@ -65,6 +65,7 @@ Region: Global
 | `productName` | Workspace, Standard API, or Classic       | `Machine Learning Studio`, `...Production Web API`, `...Production Web API Classic` |
 | `skuName`     | Plan tier or Classic                      | `S1`, `S2`, `S3`, `Classic`                                                       |
 | `meterName`   | Plan, overage, or included quantity meter | `S1 Plan`, `S1 Overage Transactions`, `Standard Workspace fee`, `Classic`         |
+| `Region`      | `Global` for all; see trap for alternates | `Global`, `southcentralus`, `westeurope`                                          |
 
 ## Meter Names
 
@@ -80,7 +81,7 @@ Region: Global
 | `Standard Experiment Compute`      | `Standard` | `1 Hour`      | Workspace experiment compute       |
 | `Standard Workspace fee`           | `Standard` | `1/Month`     | Monthly workspace subscription     |
 
-> S2 and S3 tiers have equivalent Plan, Overage Transactions, Overage Compute, and Included Quantity meters; shown above for S1 only.
+> S2 and S3 tiers have equivalent meters (e.g., `S2 Plan`, `S3 Overage Compute`); substitute tier prefix in queries above.
 
 ## Cost Formula
 
@@ -95,5 +96,5 @@ Workspace Monthly = (workspace_fee_retailPrice × 1) + (experiment_retailPrice �
 
 - **Deprecated**: Machine Learning Studio (classic) is being retired. Migrate to Azure Machine Learning (`machine-learning.md`)
 - Each plan tier includes free compute hours and transactions (meters return zero price); overage is billed per 1K transactions above the included quantity
-- Meters are available in `Global` and in select regions: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
+- Meters are available in `Global` and select regions: `southcentralus`, `westcentralus`, `eastus2` (no workspace), `westeurope`, `japaneast`, `southeastasia`
 - Standard workspace product has `Standard Experiment Compute` (hourly) and `Standard Workspace fee` (monthly) meters separate from the Production Web API plans
