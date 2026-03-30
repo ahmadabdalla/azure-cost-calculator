@@ -67,7 +67,7 @@ fi
 # Looks for "Issue references: #123, #456, #789" in the PR body.
 ISSUE_REFS=""
 if issue_line=$(printf '%s\n' "$PR_BODY" | grep -i '^Issue references:' | head -1); then
-  ISSUE_REFS=$(printf '%s\n' "$issue_line" | grep -oE '#[0-9]+' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g')
+  ISSUE_REFS=$(printf '%s\n' "$issue_line" | grep -oE '#[0-9]+' | tr '\n' ',' | sed 's/,$//' | sed 's/,/, /g' || true)
 fi
 
 # --- Build the release PR body ---

@@ -113,6 +113,20 @@ Issue references: #999"
     [ "$status" -eq 0 ]
 }
 
+@test "handles issue references line with no hash numbers" {
+    # "Issue references: N/A" — line present but no #NNN; must not trip set -e
+    export PR_BODY="Summary
+
+---
+Issue references: N/A"
+    create_gh_dispatch_mock
+    set_gh_response "pr_list" '[]' 0
+    set_gh_response "pr_create" "https://github.com/ahmadabdalla/azure-cost-calculator-skill/pull/42" 0
+
+    run bash "$CI_SCRIPTS_DIR/release/create-release-pr.sh"
+    [ "$status" -eq 0 ]
+}
+
 @test "handles PR body with no issue references" {
     export PR_BODY="Summary of changes only, no issue refs"
     create_gh_dispatch_mock
