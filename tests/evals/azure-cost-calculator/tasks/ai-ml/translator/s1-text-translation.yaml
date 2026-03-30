@@ -22,8 +22,8 @@ graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Translator"
+      regex_match:
+        - "Azure Translator|Translator Text"
     weight: 1.0
   - type: text
     name: currency-format
@@ -35,7 +35,7 @@ graders:
     name: characters-acknowledged
     config:
       contains:
-        - "10"
+        - "10,000,000"
     weight: 0.5
   - type: prompt
     name: complete-estimate-quality
