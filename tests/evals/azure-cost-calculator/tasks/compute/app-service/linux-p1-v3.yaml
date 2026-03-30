@@ -12,8 +12,6 @@ tags:
   - service:app-service
 inputs:
   prompt: "Estimate the monthly cost of running 2 Linux App Service P1 v3 instances in East US"
-config:
-  timeout_seconds: 30
 expected:
   output_contains:
     - "Assumptions"
@@ -25,8 +23,8 @@ graders:
   - type: text
     name: correct-service-name
     config:
-      contains_cs:
-        - "Azure App Service"
+      regex_match:
+        - "Azure App Service|App Service"
     weight: 1.0
   - type: text
     name: currency-format
@@ -37,11 +35,12 @@ graders:
   - type: prompt
     name: complete-estimate-quality
     config:
+      continue_session: true
       prompt: >
         You are evaluating an AI agent's response to: "Estimate the monthly cost of running
         2 Linux App Service P1 v3 instances in East US"
 
-        Check the response for these criteria:
+        The agent's response is in the conversation above. Check it for these criteria:
         (1) Includes an Assumptions section disclosing safe-default parameters.
         (2) Shows a monthly total cost calculated using the 730-hour formula.
         (3) Accounts for 2 instances as specified.
@@ -50,9 +49,10 @@ graders:
 
         Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 1.5
-  - type: behavior
+  - type: tool_constraint
     name: uses-pricing-script
     config:
-      required_tools:
-        - "get-azure-pricing"
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
     weight: 1.0

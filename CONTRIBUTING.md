@@ -167,7 +167,21 @@ tests/Validate-ServiceReference.ps1 `
 
 Fix any reported failures - the same checks run in CI.
 
-### 3. Submit your PR
+### 3. Add an eval task
+
+CI will fail if you change a service reference file without a matching happy-path eval task. A service is **covered** when at least one task YAML under `tests/evals/azure-cost-calculator/tasks/` is tagged with both `happy-path` and `service:<service-name>` (where `<service-name>` is the reference filename without `.md`).
+
+Add a task at: `tests/evals/azure-cost-calculator/tasks/{category}/{service-name}/<scenario>.yaml`
+
+Check coverage locally before pushing (no output means covered; any output means a task is missing):
+
+```bash
+bash tests/check-eval-coverage.sh skills/azure-cost-calculator/references/services/{category}/{filename}.md
+```
+
+See `docs/ops/evals.md` for the full coverage contract, task format, and required graders.
+
+### 4. Submit your PR
 
 Push your branch and open a pull request. CI runs the validation automatically.
 
@@ -194,15 +208,11 @@ When a service reference file has incorrect pricing data or missing information 
 
 If the AI-generated file fails validation or looks wrong, check these common issues:
 
-**Wrong `serviceName` casing** - The API value is case-sensitive. The exploration script returns the exact value; the AI should have used it verbatim. If it didn't, re-run `skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1` and correct the YAML front matter.
-
-**Missing filters causing inflated totals** - If `totalMonthlyCost` looks unreasonably high, the query is probably returning extra meters. Add `-MeterName` or `-ProductName` filters to narrow results.
-
-**Query pattern below line 45** - The YAML, title, and trap must be concise enough that the first declarative query block starts within the first 45 lines. Shorten the trap text or remove unnecessary blank lines.
-
-**Hardcoded prices** - The file should use `retailPrice` in formulas, never literal dollar amounts (except in a Known Rates table for sub-cent pricing where the script shows `$0.00`).
-
-**Missing traps** - If you spot an API gotcha the AI missed (e.g., multiple meters being summed, RI cost miscalculation), add a trap block manually.
+- **Wrong `serviceName` casing**: The API value is case-sensitive. The exploration script returns the exact value; the AI should have used it verbatim. If it didn't, re-run `skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1` and correct the YAML front matter.
+- **Missing filters causing inflated totals**: If `totalMonthlyCost` looks unreasonably high, the query is probably returning extra meters. Add `-MeterName` or `-ProductName` filters to narrow results.
+- **Query pattern below line 45**: The YAML, title, and trap must be concise enough that the first declarative query block starts within the first 45 lines. Shorten the trap text or remove unnecessary blank lines.
+- **Hardcoded prices**: The file should use `retailPrice` in formulas, never literal dollar amounts (except in a Known Rates table for sub-cent pricing where the script shows `$0.00`).
+- **Missing traps**: If you spot an API gotcha the AI missed (e.g., multiple meters being summed, RI cost miscalculation), add a trap block manually.
 
 ## Category Design Principles
 

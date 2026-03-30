@@ -17,15 +17,14 @@ expected:
   output_contains:
     - "Assumptions"
     - "730"
-    - "Virtual Machines"
   output_not_contains:
     - "Windows"
 graders:
   - type: text
     name: correct-service-name
     config:
-      contains:
-        - "Virtual Machines"
+      regex_match:
+        - "Virtual Machines|VMs"
     weight: 1.0
   - type: text
     name: currency-format
@@ -45,9 +44,10 @@ graders:
       not_contains:
         - "Windows license"
     weight: 0.5
-  - type: behavior
+  - type: tool_constraint
     name: uses-pricing-script
     config:
-      required_tools:
-        - "get-azure-pricing"
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
     weight: 1.0

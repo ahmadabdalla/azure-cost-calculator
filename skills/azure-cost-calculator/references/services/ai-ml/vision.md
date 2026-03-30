@@ -59,20 +59,21 @@ MeterName: Video Retrieval and Description - Ingestion Vision
 
 ## Meter Names
 
-| Meter | productName | unitOfMeasure | Notes |
-| ----- | ----------- | ------------- | ----- |
-| `Image Analysis Group 1 Transactions` | `Azure Vision` | `1K` | Tiered: Tag, Face detect, Thumbnail |
-| `Image Analysis Group 2 Transactions` | `Azure Vision` | `1K` | Tiered: Describe |
-| `Standard Transactions` | `Azure Vision - Face` | `1K` | Tiered: Face detection/identify |
-| `Face Storage` | `Azure Vision - Face` | `1K` | Per 1K faces stored |
-| `Standard Faces` | `Azure Vision - Face` | `1M` | Face IDs stored for training |
-| `Liveness Transactions` | `Azure Vision - Face` | `1K` | Face liveness detection |
-| `Liveness and Verification Transactions` | `Azure Vision - Face` | `1K` | Liveness + face verification |
-| `Spatial Analysis Video Stream Edge` | `Azure Vision` | `1 Hour` | ~1¢ per camera-hour |
-| `Video Retrieval and Description - Ingestion Vision` | `Azure Vision` | `1 Hour` | Video ingestion |
-| `Vectorize Image Transactions` | `Azure Vision` | `1K` | Image embeddings |
-| `Custom Image Classification Training` | `Azure Vision` | `1 Hour` | Custom model training |
-| `Commitment Tier Disconnected 2000K Unit` | `Azure Vision - Disconnected` | `1/Year` | Annual billing, divide by 12  |
+| Meter | skuName | productName | unitOfMeasure | Notes |
+| ----- | ------- | ----------- | ------------- | ----- |
+| `Image Analysis Group 1 Transactions` | `Image Analysis Group 1` | `Azure Vision` | `1K` | Tiered: Tag, Face detect, Thumbnail |
+| `Image Analysis Group 2 Transactions` | `Image Analysis Group 2` | `Azure Vision` | `1K` | Tiered: Describe |
+| `Standard Transactions` | `Standard` | `Azure Vision - Face` | `1K` | Tiered: Face detection/identify |
+| `Face Storage` | `Standard` | `Azure Vision - Face` | `1K` | Per 1K faces stored |
+| `Standard Faces` | `Standard` | `Azure Vision - Face` | `1M` | Face IDs stored for training |
+| `Liveness Transactions` | `Liveness` | `Azure Vision - Face` | `1K` | Face liveness detection |
+| `Liveness and Verification Transactions` | `Liveness and Verification` | `Azure Vision - Face` | `1K` | Liveness + face verification |
+| `Spatial Analysis Video Stream Edge` | `Spatial Analysis` | `Azure Vision` | `1 Hour` | Per camera-hour |
+| `Video Retrieval and Description - Ingestion Vision` | `Video Retrieval and Description - Ingestion` | `Azure Vision` | `1 Hour` | Video ingestion |
+| `Vectorize Image Transactions` | `Vectorize Image` | `Azure Vision` | `1K` | Image embeddings |
+| `Custom Image Classification Training` | `Custom Image Classification` | `Azure Vision` | `1 Hour` | Custom model training |
+| `P1 Unit` | `P1` | `Azure Vision` | `1/Day` | P-series daily fee; P1/P3 daily-only, P2 daily + overage |
+| `Commitment Tier Disconnected 2000K Unit` | `Commitment Tier Disconnected 2000K` | `Azure Vision - Disconnected` | `1/Year` | Annual billing, divide by 12 |
 
 ## Cost Formula
 

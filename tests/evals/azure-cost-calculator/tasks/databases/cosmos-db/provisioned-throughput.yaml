@@ -35,7 +35,7 @@ graders:
     name: throughput-acknowledged
     config:
       contains:
-        - "1000"
+        - "1,000"
     weight: 0.5
   - type: text
     name: storage-acknowledged
@@ -43,9 +43,10 @@ graders:
       contains:
         - "50"
     weight: 0.5
-  - type: behavior
+  - type: tool_constraint
     name: uses-pricing-script
     config:
-      required_tools:
-        - "get-azure-pricing"
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
     weight: 1.0

@@ -3,10 +3,12 @@ serviceName: Microsoft Genomics
 category: ai-ml
 aliases: [Genomics Workspace]
 billingNeeds: [Storage]
-primaryCost: "Per-genome flat rate + per-incremental-gigabase volume fee"
+primaryCost: "genome_retailPrice × genomeCount + gigabase_retailPrice × incrementalGB"
 ---
 
 # Microsoft Genomics
+
+> **Trap (unitOfMeasure)**: Both meters use `unitOfMeasure: "1"` (flat rate per unit), not hourly. The script treats this as unitless (monthly multiplier `1`, not `730`). `MonthlyCost` reflects a single unit only. Always set `Quantity` to the actual count of genomes or gigabases.
 
 ## Query Pattern
 
@@ -14,6 +16,7 @@ primaryCost: "Per-genome flat rate + per-incremental-gigabase volume fee"
 
 ServiceName: Microsoft Genomics
 ProductName: Microsoft Genomics
+SkuName: Alignment and Variant Calling
 MeterName: Alignment and Variant Calling Genome
 Quantity: 5
 
@@ -21,6 +24,7 @@ Quantity: 5
 
 ServiceName: Microsoft Genomics
 ProductName: Microsoft Genomics
+SkuName: Alignment and Variant Calling
 MeterName: Alignment and Variant Calling Incremental Gigabase
 Quantity: 10
 

@@ -243,6 +243,7 @@ Every item below is a pass/fail gate. The file must satisfy all of them:
 9. [ ] Elision rule followed - no fields set to their default values
 10. [ ] Total file length < 100 lines
 11. [ ] Validation script passes: `pwsh tests/Validate-ServiceReference.ps1 -Path {filepath} -CheckAliasUniqueness`
+12. [ ] Happy-path eval task exists at `tests/evals/azure-cost-calculator/tasks/{category}/{service-name}/` tagged `happy-path` and `service:<service-name>`, and `waza check` passes
 
 ### Exemplar Analysis
 
