@@ -4,8 +4,8 @@ name: Happy Path - Foundry Agents Hosted Compute 4 vCPU
 description: >
   Tests cost estimation for Foundry Agents hosted compute with vCPU and memory.
   The API serviceName is Foundry Tools (cross-service); queries must filter by
-  ProductName to isolate agent meters. Validates the agent handles the mixed-unit
-  billing model (hourly compute × 730, per-unit SRE).
+  ProductName to isolate agent meters. Validates the agent handles the hourly
+  hosted compute billing model (vCPU and memory billed hourly × 730).
 tags:
   - happy-path
   - single-service
