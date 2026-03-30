@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.5.4] - 2026-03-30
+
+### Fixed
+
+- Refreshed Azure Genomics service reference: added trap guidance, SkuName column, and eval task
+
 ## [1.5.3] - 2026-03-30
 
 ### Fixed
