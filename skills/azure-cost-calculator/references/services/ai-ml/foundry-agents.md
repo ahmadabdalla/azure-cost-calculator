@@ -23,7 +23,7 @@ ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Foundry Agents
 SkuName: Hosted HOBO
 MeterName: Hosted HOBO vCPU Usage
-InstanceCount: 4 # vCPUs allocated
+Quantity: 4 # vCPUs allocated
 
 ### Hosted agent compute: memory
 
@@ -45,7 +45,7 @@ Quantity: 500 # agent units consumed
 
 | Parameter     | How to determine               | Example values                             |
 | ------------- | ------------------------------ | ------------------------------------------ |
-| `serviceName` | Always `Foundry Tools`         | `Foundry Tools`                            |
+| `serviceName` | Always `Foundry Tools` (API value; see apiServiceName in frontmatter) | `Foundry Tools` |
 | `productName` | Billing dimension              | `Foundry Agents`, `Azure Agent Unit`       |
 | `skuName`     | Compute SKU or agent type      | `Hosted HOBO`, `SRE`                       |
 | `meterName`   | Specific resource being billed | `Hosted HOBO vCPU Usage`, `SRE Agent Unit` |
@@ -71,5 +71,5 @@ Total:   Monthly = vCPU + Memory + SRE
 
 - **Billing dependency**: Agent compute only; model inference (LLM tokens) billed separately via Azure OpenAI; see `openai-service.md`
 - **Regional availability**: Compute meters in 24 regions; SRE Agent Unit in 6 regions only (eastus, eastus2, centralus, westus3, swedencentral, australiaeast)
-- **Capacity planning**: 1 unit = 1 vCPU-hour or 1 GB-hour (compute), 1 agent unit (SRE); scale `InstanceCount`/`Quantity` to match allocation
+- **Capacity planning**: 1 unit = 1 vCPU-hour or 1 GB-hour (compute), 1 agent unit (SRE); scale `Quantity` to match allocation
 - **Scope**: Part of Foundry Tools umbrella (see `ai-services.md` for other sub-services)
