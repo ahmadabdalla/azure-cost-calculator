@@ -26,7 +26,7 @@ All GitHub REST API calls below require no authentication (repo is public). Use 
 
 Fetch PR details from the GitHub REST API:
 
-```
+```http
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}
 ```
 
@@ -36,7 +36,7 @@ Extract: number, author login, head branch name, `head.sha`, `head.repo.full_nam
 
 Fetch all PR comments and review comments (add `?per_page=100` and follow `Link: rel="next"` pagination until exhausted):
 
-```
+```http
 GET https://api.github.com/repos/{owner}/{repo}/issues/{PR_NUMBER}/comments?per_page=100
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/comments?per_page=100
 ```
@@ -47,7 +47,7 @@ Store all comments; they may contain context about design decisions, known issue
 
 Fetch the list of changed files (add `?per_page=100` and follow `Link: rel="next"` pagination until exhausted):
 
-```
+```http
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/files?per_page=100
 ```
 
@@ -60,9 +60,9 @@ If no service reference files are changed, display: "No service reference files 
 For fork PRs, `head.repo.full_name` will differ from the base repo; fetch the ref explicitly using `head.sha` before creating the worktree:
 
 ```bash
-git fetch origin pull/{PR_NUMBER}/head
+git fetch origin "pull/$PR_NUMBER/head"
 WORKTREE_DIR="../pr-review-$PR_NUMBER"
-git worktree add "$WORKTREE_DIR" "$HEAD_SHA"
+git worktree add "$WORKTREE_DIR" FETCH_HEAD
 cd "$WORKTREE_DIR"
 ```
 
@@ -89,7 +89,7 @@ For each changed service reference file, read the full content. Note:
 
 Fetch the full PR diff from the GitHub REST API:
 
-```
+```http
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}
 Accept: application/vnd.github.diff
 ```
@@ -326,12 +326,22 @@ Output the compiled review to the console in full. This is the primary output of
 
 After displaying it, ask the user: **"Do you want to post this review to the PR? (yes/no)"**
 
-If the user confirms, write the review body to a unique temp file using the `edit` tool, then post it:
+If the user confirms:
+
+1. Create a temp directory and set the file path:
 
 ```bash
-REVIEW_FILE=$(mktemp /tmp/pr-review-XXXXXX.md)
-gh pr comment {PR_NUMBER} --body-file "$REVIEW_FILE"
-rm -f "$REVIEW_FILE"
+REVIEW_DIR=$(mktemp -d "${TMPDIR:-/tmp}/pr-review.XXXXXX")
+REVIEW_FILE="$REVIEW_DIR/pr-review.md"
+```
+
+2. Use the `edit` tool to write the full compiled review content into `$REVIEW_FILE`.
+
+3. Post the comment and clean up:
+
+```bash
+gh pr comment $PR_NUMBER --body-file "$REVIEW_FILE"
+rm -rf "$REVIEW_DIR"
 ```
 
 If there are **blocking issues**, also submit a formal review requesting changes:

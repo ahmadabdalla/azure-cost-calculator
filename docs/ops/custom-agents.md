@@ -166,7 +166,7 @@ Sub-agents use restricted toolsets (principle of least privilege):
 
 ### What it does
 
-When the Copilot coding agent is assigned to review a PR using the `service-ref-pr-reviewer` custom agent, it runs a review-focused consensus workflow:
+When a human invokes the `service-ref-pr-reviewer` agent locally with a PR number, it runs a review-focused consensus workflow:
 
 1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
@@ -223,7 +223,7 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | Symptom                          | Likely cause                                                                      | Fix                                                                        |
 | -------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | Agent not appearing              | File not merged to default branch                                                 | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
-| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent posts a skip message and stops                             |
+| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent displays a skip message in the console and stops           |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
 | GitHub API fetch fails           | Network issue or unauthenticated GitHub API rate limiting after multiple requests | Retry; if rate-limited, wait and retry, or set `GH_TOKEN` to raise limits  |
