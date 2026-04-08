@@ -64,9 +64,6 @@ primaryCost:
 # ── Service Capabilities (optional) ──────────────────────
 # hasFreeGrant: true                # optional, default: false; set true for free tier / included units
 # privateEndpoint: true             # optional, default: false; set true for PE support
-
-# ── Lifecycle (optional) ─────────────────────────────────
-# retired: true                     # optional, default: false; set true when service is fully decommissioned
 ---
 
 # {Service Display Name}
@@ -112,7 +109,6 @@ primaryCost:
      - hasKnownRates (optional, default: false): Set true when file has Known Rates table. Omit when false.
      - hasFreeGrant (optional, default: false): Set true for free tier / included units. Omit when false.
      - privateEndpoint (optional, default: false): Set true for PE support. Omit when false.
-     - retired (optional, default: false): Set true when the service is fully decommissioned. Agent skips API queries and informs user. Omit when false.
      Elision rule: omit any field whose value matches its default.
 
   2. TRAPS (optional but highly encouraged): Document pricing API gotchas.

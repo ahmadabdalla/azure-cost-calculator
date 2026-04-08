@@ -55,10 +55,6 @@ Service reference files are organized by category. To find a service file:
 
 ## Common Traps (read once, apply to all affected services)
 
-### Retired Services
-
-Services marked `retired: true` in their YAML front matter have been fully decommissioned. Do NOT query the API; the endpoint may return stale data, zero results, or errors. Instead, inform the user that the service has been retired and cannot be estimated. Include any migration guidance from the service file's Warning blockquote.
-
 ### API-Unavailable Services
 
 Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and USD-to-local conversion handling for USD-only services.

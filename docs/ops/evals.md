@@ -184,8 +184,6 @@ This grader assumes USD output. Use a USD-billed region in the task prompt (East
 
 **Exception:** services with `hasMeters: false` in their reference YAML have no pricing API data and are not happy-path pricing flows. Do not tag these tasks `happy-path`. Use a `text` grader verifying the agent communicates that no API pricing data is available, and omit `uses-pricing-script`.
 
-**Exception:** services with `retired: true` in their reference YAML are fully decommissioned. They are exempt from the happy-path coverage requirement. Do not tag these tasks `happy-path`. The `check-eval-coverage.sh` script skips retired services automatically. If adding a task for a retired service, use a `text` grader verifying the agent communicates that the service is retired, and omit `uses-pricing-script`.
-
 ## Authoring pattern
 
 Use a pack-based pattern so new service tests are consistent and easy to extend.
@@ -258,8 +256,6 @@ Every task must satisfy:
 ### Coverage contract
 
 A service reference file is **covered** when at least one eval task is tagged `happy-path` and `service:<service-name>` (where `<service-name>` matches the reference filename without `.md`) and passes `waza check`.
-
-**Exception:** services with `retired: true` are exempt from happy-path coverage. The coverage check script skips them automatically.
 
 The `validate-eval-schema` job enforces this: if a PR changes a service reference file with no matching `happy-path` task, the coverage check fails and lists the missing services with the path where the task should be added. Run `bash tests/check-eval-coverage.sh <file>` locally before pushing.
 

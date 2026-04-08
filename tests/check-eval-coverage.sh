@@ -6,9 +6,6 @@
 # A service is covered when at least one task YAML under tests/evals/ is tagged
 # with both 'happy-path' and 'service:<service-name>'.
 #
-# Retired services (retired: true in YAML front matter) are exempt from the
-# happy-path requirement because their API endpoints are decommissioned.
-#
 # Prints one line per uncovered service: <category>/<service>|<suggested-path>
 # Always exits 0.
 
@@ -23,11 +20,6 @@ for f in "$@"; do
   svc=$(basename "$f" .md)
   category=$(basename "$(dirname "$f")")
   suggested_path="${TASKS_DIR}/${category}/${svc}/"
-
-  # Skip retired services — they cannot produce happy-path pricing estimates
-  if grep -qE "^retired:[[:space:]]*true" "$f" 2>/dev/null; then
-    continue
-  fi
 
   # Check if any task YAML has both 'service:<svc>' and 'happy-path' tags
   found=false

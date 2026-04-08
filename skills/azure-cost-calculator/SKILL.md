@@ -109,7 +109,6 @@ YAML front matter fields. Optional fields use default elision; omitted means the
 | `hasKnownRates`         |    -     | `false`    | `true` → file contains manual pricing table                                             |
 | `hasFreeGrant`          |    -     | `false`    | `true` → apply free grant deduction from Cost Formula                                   |
 | `privateEndpoint`       |    -     | `false`    | `true` → aggregate PE costs via `networking/private-link.md`                            |
-| `retired`               |    -     | `false`    | `true` → skip API; inform user the service is decommissioned                            |
 
 ## Universal Traps
 
@@ -125,7 +124,6 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
 
 1. **Partial reads**: read only lines 1–45 of each service file (YAML front matter, trap, first query pattern).
 2. **Front matter routing**: use YAML metadata to skip unnecessary work:
-   - `retired: true` → skip API entirely; inform user the service is decommissioned and cannot be estimated
    - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
    - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
    - `apiServiceName` → use instead of `serviceName` in queries
