@@ -3,6 +3,7 @@ serviceName: Application Gateway for Containers
 category: networking
 aliases: [AGfC, AGC, App Gateway for Containers]
 apiServiceName: Application Gateway
+billingNeeds: [IP Addresses]
 primaryCost: "AGC + frontend + association hours (fixed) + capacity unit hours (variable) per variant"
 ---
 
@@ -67,4 +68,5 @@ Monthly = agc_retailPrice × 730
 - Standard vs WAF: WAF adds web application firewall protection; all 4 meters are priced higher. No mixed billing — all meters use the same variant
 - AGfC is a separate product from Application Gateway v2; see `networking/application-gateway.md` for the v2 reference
 - Typical deployment: 1 AGC, 1+ frontends, 1+ associations. Frontend and association counts are never-assume parameters
+- **Public IPs billed separately**: Internet-facing AGfC frontends require Standard SKU Public IP addresses, billed under IP Addresses
 - `skuName` is `Standard` for both variants; only `productName` distinguishes Standard from WAF
