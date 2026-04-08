@@ -99,6 +99,14 @@
             Default     = $false
             Description = 'Whether the service supports private endpoints. Tier restrictions stay in Notes'
         }
+
+        # ── Lifecycle (new) ──────────────────────────────────────────────
+        retired               = @{
+            Type        = 'boolean'
+            Required    = $false
+            Default     = $false
+            Description = 'Service has been fully decommissioned. Agent must not attempt API queries; inform user of retirement'
+        }
     }
 
     # ── Field groups (display and documentation order) ────────────────────
@@ -108,6 +116,7 @@
         @{ Name = 'API Identity'; Fields = @('apiServiceName') }
         @{ Name = 'Pricing Profile'; Fields = @('primaryCost'; 'hasMeters'; 'pricingRegion'; 'hasKnownRates') }
         @{ Name = 'Service Capabilities'; Fields = @('hasFreeGrant'; 'privateEndpoint') }
+        @{ Name = 'Lifecycle'; Fields = @('retired') }
     )
 
     # ── Elision rule ──────────────────────────────────────────────────────

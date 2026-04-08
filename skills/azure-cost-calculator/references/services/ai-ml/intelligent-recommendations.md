@@ -4,17 +4,14 @@ category: ai-ml
 aliases: [Recommendations, Personalization]
 primaryCost: "Token-based billing for Serving (inference) and Modelling (training)"
 hasKnownRates: true
+retired: true
 ---
 
 # Intelligent Recommendations
 
-> **Warning**: Intelligent Recommendations **retires March 31, 2026**. No equivalent Microsoft service is available. Plan for migration or decommissioning before shutdown.
+> **Warning**: Intelligent Recommendations **retired March 31, 2026**. The API endpoint is decommissioned and may return stale data or errors. Do NOT attempt pricing queries. No equivalent Microsoft service is available.
 
-> **Trap (sub-cent pricing)**: `Serving Request Token` has sub-cent per-token pricing; the script displays zero cost. Use the Known Rates table or large `Quantity` values (e.g., 1000000) for accurate estimates.
-
-> **Trap (tracking meters)**: `Serving Request Usage` and `Modelling Usage` return zero price. These are tracking/included-quantity meters, not billable. Only `Serving Request Token` and `Modelling Token` generate cost.
-
-> **Agent instruction**: Do NOT report zero cost to the user for token meters. Use Known Rates table values and multiply by expected token volume.
+> **Agent instruction**: This service is retired. Do NOT run any pricing scripts or API queries. Inform the user that the service was decommissioned on March 31, 2026 and cost estimation is no longer available.
 
 ## Query Pattern
 
@@ -66,6 +63,7 @@ Total Monthly     = Serving Monthly + Modelling Monthly
 
 ## Notes
 
+- **Retired**: Service was decommissioned March 31, 2026. No new deployments; API endpoint is no longer active
 - Two SKU categories: **Serving** (inference) and **Modelling** (training); each has a token meter and a tracking meter
 - Only token meters (`Serving Request Token`, `Modelling Token`) generate billable cost
 - Usage meters (`Serving Request Usage`, `Modelling Usage`) are zero-price tracking meters. Exclude from estimates
@@ -88,4 +86,4 @@ Modelling = 200,000 × modelling_token_retailPrice
 Total     = Serving + Modelling
 ```
 
-> Use rates from the Known Rates table above or query the API for `Serving Request Token` and `Modelling Token` retailPrice values.
+> These rates were from the [Azure pricing page](https://azure.microsoft.com/pricing/details/intelligent-recommendations/) prior to service retirement. The service was decommissioned March 31, 2026; API queries may return stale or no data.
