@@ -47,7 +47,8 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...`. Display name may diff
 
 ## Networking (services/networking/)
 
-- Application Gateway: App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy
+- Application Gateway: App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, AGIC, Application Gateway Ingress Controller
+- Application Gateway for Containers: AGfC, AGC, App Gateway for Containers
 - Azure Bastion: Bastion Host, Jump Host, Jump Box
 - Azure DDOS Protection: DDoS, DDoS Protection, DDoS Network Protection, DDoS IP Protection
 - Azure DNS: DNS Zones, Public DNS Zones
@@ -142,7 +143,6 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...`. Display name may diff
 - Content Safety: Content Moderation, Image Moderation, Text Moderation, AI Content Safety
 - Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision
-- Intelligent Recommendations: Recommendations, Personalization
 - Machine Learning Studio: ML Studio (classic), Classic ML
 - Microsoft Genomics: Genomics Workspace
 
