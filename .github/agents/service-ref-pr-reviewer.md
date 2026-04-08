@@ -91,7 +91,7 @@ Fetch the full PR diff from the GitHub REST API:
 
 ```
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}
-Accept: application/vnd.github.v3.diff
+Accept: application/vnd.github.diff
 ```
 
 Understand exactly what changed: added lines, removed lines, modified sections. This is critical for update/fix PRs where only specific sections changed.
