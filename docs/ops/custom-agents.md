@@ -161,18 +161,18 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | ---------------- | ------------------------------------------------------------------------------------------ |
 | Orchestrator     | `.github/agents/service-ref-pr-reviewer.md`                                                |
 | Sub-agent (data) | `.github/agents/pricing-investigator.md` (invoked ×2, + optional tiebreaker)               |
-| Trigger          | Copilot coding agent assigned to review a PR with service reference changes                |
-| Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`, GitHub skill |
+| Trigger          | Human runs the agent locally in a Copilot session, passing the PR number                   |
+| Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`               |
 
 ### What it does
 
-When the Copilot coding agent is assigned to review a PR using the `service-ref-pr-reviewer` custom agent, it runs a review-focused consensus workflow:
+When a human invokes the `service-ref-pr-reviewer` agent locally with a PR number, it runs a review-focused consensus workflow:
 
 1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation; may discover different discrepancies.
 4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
-5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), posts it as a PR comment mentioning the author, and cleans up the worktree.
+5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), displays it in the console, optionally posts it to the PR via `gh` CLI if the user confirms, and cleans up the worktree.
 
 ### Why dual investigation?
 
@@ -184,7 +184,7 @@ When the Copilot coding agent is assigned to review a PR using the `service-ref-
 
 ```
 service-ref-pr-reviewer (orchestrator)
-  ├── GitHub skill: gather PR metadata, diff, comments
+  ├── GitHub REST API (web fetch, no auth): gather PR metadata, diff, comments
   ├── git worktree: check out PR branch
   │
   ├── invokes: pricing-investigator (instance A)
@@ -207,9 +207,9 @@ service-ref-pr-reviewer (orchestrator)
   ├── orchestrator: compiles review, categorizes by severity
   │     (blocking / warning / info)
   │
-  ├── GitHub skill: posts review mentioning @author
-  │     If blocking → request changes
-  │     If clean    → approve
+  ├── orchestrator: displays review in console
+  │     User prompted: post to PR? (optional)
+  │     If yes → gh pr comment + gh pr review (approve or request-changes)
   │
   └── git worktree remove: cleanup
 ```
@@ -223,12 +223,12 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | Symptom                          | Likely cause                                                                      | Fix                                                                        |
 | -------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | Agent not appearing              | File not merged to default branch                                                 | Merge to main; verify `.github/agents/service-ref-pr-reviewer.md` exists   |
-| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent posts a skip message and stops                             |
+| No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent displays a skip message in the console and stops           |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
-| gh CLI commands fail             | Agent environment missing `gh` or not authenticated                               | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
-| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                |
-| Review comment not posted        | GitHub skill PR comment failed                                                    | Check authentication and PR permissions                                    |
+| GitHub API fetch fails           | Network issue or unauthenticated GitHub API rate limiting after multiple requests | Retry; if rate-limited, wait and retry, or set `GH_TOKEN` to raise limits  |
+| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                 |
+| Review not posted after confirm  | `gh` not installed or not authenticated                                           | Run `gh auth status`; install `gh` CLI if missing                          |
 | Worktree not cleaned up          | Error in earlier phase interrupted cleanup                                        | Manually run `git worktree remove ../pr-review-{N} --force`                |
 
 ---
