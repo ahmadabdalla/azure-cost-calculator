@@ -161,8 +161,8 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | ---------------- | ------------------------------------------------------------------------------------------ |
 | Orchestrator     | `.github/agents/service-ref-pr-reviewer.md`                                                |
 | Sub-agent (data) | `.github/agents/pricing-investigator.md` (invoked ×2, + optional tiebreaker)               |
-| Trigger          | Copilot coding agent assigned to review a PR with service reference changes                |
-| Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`, GitHub skill |
+| Trigger          | Human runs the agent locally in a Copilot session, passing the PR number                   |
+| Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`               |
 
 ### What it does
 
@@ -172,7 +172,7 @@ When the Copilot coding agent is assigned to review a PR using the `service-ref-
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation; may discover different discrepancies.
 4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
-5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), posts it as a PR comment mentioning the author, and cleans up the worktree.
+5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), displays it in the console, optionally posts it to the PR via `gh` CLI if the user confirms, and cleans up the worktree.
 
 ### Why dual investigation?
 
@@ -184,7 +184,7 @@ When the Copilot coding agent is assigned to review a PR using the `service-ref-
 
 ```
 service-ref-pr-reviewer (orchestrator)
-  ├── GitHub skill: gather PR metadata, diff, comments
+  ├── GitHub REST API (web fetch, no auth): gather PR metadata, diff, comments
   ├── git worktree: check out PR branch
   │
   ├── invokes: pricing-investigator (instance A)
@@ -207,9 +207,9 @@ service-ref-pr-reviewer (orchestrator)
   ├── orchestrator: compiles review, categorizes by severity
   │     (blocking / warning / info)
   │
-  ├── GitHub skill: posts review mentioning @author
-  │     If blocking → request changes
-  │     If clean    → approve
+  ├── orchestrator: displays review in console
+  │     User prompted: post to PR? (optional)
+  │     If yes → gh pr comment + gh pr review (approve or request-changes)
   │
   └── git worktree remove: cleanup
 ```
@@ -226,9 +226,9 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent posts a skip message and stops                             |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
-| gh CLI commands fail             | Agent environment missing `gh` or not authenticated                               | Ensure GitHub skill prerequisites are met (gh installed and authenticated) |
-| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                |
-| Review comment not posted        | GitHub skill PR comment failed                                                    | Check authentication and PR permissions                                    |
+| GitHub API fetch fails           | Network issue or rate limit (unlikely for public repo, no auth)                   | Retry; if rate-limited, wait and retry or pass a `GH_TOKEN` env var        |
+| Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                 |
+| Review not posted after confirm  | `gh` not installed or not authenticated                                           | Run `gh auth status`; install `gh` CLI if missing                          |
 | Worktree not cleaned up          | Error in earlier phase interrupted cleanup                                        | Manually run `git worktree remove ../pr-review-{N} --force`                |
 
 ---
