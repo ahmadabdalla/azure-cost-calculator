@@ -23,32 +23,32 @@ ProductName: Azure Video Indexer
 SkuName: Basic Audio Indexing Analysis
 MeterName: Basic Audio Indexing Analysis Input Content Minutes
 Quantity: 1000 # minutes of audio content
-
 ### Basic Video Indexing: 1,000 minutes/month
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Basic Video Indexing Analysis
 MeterName: Basic Video Indexing Analysis Input Content Minutes
 Quantity: 1000 # minutes of video content
-
 ### Standard Audio Indexing
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Standard Audio Indexing Analysis
 MeterName: Standard Audio Indexing Analysis Input Content Minutes
-
 ### Standard Video Indexing
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Standard Video Indexing Analysis
 MeterName: Standard Video Indexing Analysis Input Content Minutes
-
+### Advanced Audio Indexing
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Azure Video Indexer
+SkuName: Advanced Audio Indexing Analysis
+MeterName: Advanced Audio Indexing Analysis Input Content Minutes
 ### Advanced Video Indexing
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Advanced Video Indexing Analysis
 MeterName: Advanced Video Indexing Analysis Input Content Minutes
-
 ### Video Modification (face redaction / encoding)
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
