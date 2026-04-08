@@ -4,6 +4,7 @@ category: ai-ml
 aliases: [Video AI, Media Indexer, Video Analysis]
 apiServiceName: Foundry Tools
 primaryCost: "Per-minute audio/video analysis, separate meters per preset tier; no commitment tiers."
+privateEndpoint: true
 ---
 
 # Azure Video Indexer
@@ -17,7 +18,6 @@ primaryCost: "Per-minute audio/video analysis, separate meters per preset tier; 
 ## Query Pattern
 
 ### Basic Audio Indexing: 1,000 minutes/month
-
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Basic Audio Indexing Analysis
@@ -25,22 +25,31 @@ MeterName: Basic Audio Indexing Analysis Input Content Minutes
 Quantity: 1000 # minutes of audio content
 
 ### Basic Video Indexing: 1,000 minutes/month
-
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Basic Video Indexing Analysis
 MeterName: Basic Video Indexing Analysis Input Content Minutes
 Quantity: 1000 # minutes of video content
 
-### Advanced Video Indexing
+### Standard Audio Indexing
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Azure Video Indexer
+SkuName: Standard Audio Indexing Analysis
+MeterName: Standard Audio Indexing Analysis Input Content Minutes
 
+### Standard Video Indexing
+ServiceName: Foundry Tools <!-- cross-service -->
+ProductName: Azure Video Indexer
+SkuName: Standard Video Indexing Analysis
+MeterName: Standard Video Indexing Analysis Input Content Minutes
+
+### Advanced Video Indexing
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Advanced Video Indexing Analysis
 MeterName: Advanced Video Indexing Analysis Input Content Minutes
 
 ### Video Modification (face redaction / encoding)
-
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Video Indexer
 SkuName: Video Modification
