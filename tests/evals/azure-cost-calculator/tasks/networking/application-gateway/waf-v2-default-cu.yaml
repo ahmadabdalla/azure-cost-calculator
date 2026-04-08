@@ -2,10 +2,10 @@
 id: eval:networking/application-gateway/waf-v2-default-cu
 name: Application Gateway - WAF v2 Default CU
 description: >
-  Tests cost estimation for a multi-component Application Gateway WAF v2.
-  Requires two separate queries: fixed hourly cost and capacity units.
-  Validates that the agent applies the mandatory default of 10 CUs when
-  the user does not specify traffic, and produces a combined monthly total.
+  Tests monthly cost estimation for an Application Gateway WAF v2 in East US.
+  Validates that the agent states its assumptions, uses a 730-hour monthly
+  basis, and acknowledges the mandatory default of 10 capacity units when
+  the user does not specify traffic.
 tags:
   - happy-path
   - single-service
