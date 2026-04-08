@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/application-gateway/waf-v2-default-cu
+name: Application Gateway - WAF v2 Default CU
+description: >
+  Tests monthly cost estimation for an Application Gateway WAF v2 in East US.
+  Validates that the agent states its assumptions, uses a 730-hour monthly
+  basis, and acknowledges the mandatory default of 10 capacity units when
+  the user does not specify traffic.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:application-gateway
+inputs:
+  prompt: "How much would an Application Gateway WAF v2 cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Application Gateway|App Gateway"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: capacity-units-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -1,7 +1,7 @@
 ---
 serviceName: Application Gateway
 category: networking
-aliases: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy]
+aliases: [App Gateway, AGW, WAF, Azure WAF, WAF v2, Web Application Firewall, WAF Policy, AGIC, Application Gateway Ingress Controller]
 billingNeeds: [IP Addresses]
 primaryCost: "Gateway hours (fixed cost) + capacity units processed"
 privateEndpoint: true
@@ -45,6 +45,7 @@ Monthly = (fixedCost_unitPrice × 730) + (capacityUnit_unitPrice × estimatedCUs
 - WAF v2 fixed cost is ~1.8× Standard v2 fixed cost; CU price is also higher. WAF v2 also has `Standard Captcha Sessions` (per 1K) for CAPTCHA challenges
 - **Front Door WAF**: Front Door has its own WAF meters (policies, rulesets, bot protection); see `networking/front-door.md`
 - **App Gateway for Containers WAF**: Separate product (`Application Gateway for Containers WAF`) with different meters (AGC, Frontend, Association, Capacity Units)
+- **AGIC (Application Gateway Ingress Controller)**: Free AKS add-on with no separate billing meter. All costs flow through the linked Application Gateway v2 resource (Standard v2 or WAF v2 only). Estimate AGIC costs using the standard App Gateway v2 query pattern above.
 
 ## Product Names
 
