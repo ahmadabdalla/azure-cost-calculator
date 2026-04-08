@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/application-gateway-for-containers/standard-multi-meter
+name: Application Gateway for Containers - Standard Multi-Meter
+description: >
+  Tests cost estimation for Application Gateway for Containers with multiple
+  billing components. AGfC has four separate meters (AGC, Frontend, Association,
+  Capacity Units) that must all be included. Validates the agent correctly queries
+  each meter separately and sums the components.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:application-gateway-for-containers
+inputs:
+  prompt: "Estimate the monthly cost of an Application Gateway for Containers Standard deployment with 2 frontends, 1 association, and 10 capacity units in East US."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Application Gateway for Containers|AGfC"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: frontend-count-acknowledged
+    config:
+      contains:
+        - "2"
+    weight: 0.5
+  - type: text
+    name: capacity-units-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
