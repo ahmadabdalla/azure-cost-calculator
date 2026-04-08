@@ -226,7 +226,7 @@ The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enh
 | No service reference files found | PR doesn't change files under `skills/azure-cost-calculator/references/services/` | Expected; agent posts a skip message and stops                             |
 | Worktree creation fails          | Branch not fetched or conflicting worktree exists                                 | Ensure PR branch is available; remove stale worktrees                      |
 | Sub-agent not invoked            | Orchestrator's `tools` list missing `agent`                                       | Ensure `tools: ["read", "search", "edit", "execute", "agent", "web"]`      |
-| GitHub API fetch fails           | Network issue or rate limit (unlikely for public repo, no auth)                   | Retry; if rate-limited, wait and retry or pass a `GH_TOKEN` env var        |
+| GitHub API fetch fails           | Network issue or unauthenticated GitHub API rate limiting after multiple requests | Retry; if rate-limited, wait and retry, or set `GH_TOKEN` to raise limits  |
 | Tiebreaker not triggered         | No disagreements between investigators                                            | Expected; tiebreaker only runs when investigators disagree                 |
 | Review not posted after confirm  | `gh` not installed or not authenticated                                           | Run `gh auth status`; install `gh` CLI if missing                          |
 | Worktree not cleaned up          | Error in earlier phase interrupted cleanup                                        | Manually run `git worktree remove ../pr-review-{N} --force`                |

@@ -30,25 +30,25 @@ Fetch PR details from the GitHub REST API:
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}
 ```
 
-Extract: number, author login, head branch name, title, body.
+Extract: number, author login, head branch name, `head.sha`, `head.repo.full_name` (needed for fork PRs), title, body.
 
 ### 0.2 - Collect PR comments and review comments
 
-Fetch all PR comments and review comments:
+Fetch all PR comments and review comments (add `?per_page=100` and follow `Link: rel="next"` pagination until exhausted):
 
 ```
-GET https://api.github.com/repos/{owner}/{repo}/issues/{PR_NUMBER}/comments
-GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/comments
+GET https://api.github.com/repos/{owner}/{repo}/issues/{PR_NUMBER}/comments?per_page=100
+GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/comments?per_page=100
 ```
 
 Store all comments; they may contain context about design decisions, known issues, or reviewer requests that should inform your analysis.
 
 ### 0.3 - Identify changed service reference files
 
-Fetch the list of changed files:
+Fetch the list of changed files (add `?per_page=100` and follow `Link: rel="next"` pagination until exhausted):
 
 ```
-GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/files
+GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}/files?per_page=100
 ```
 
 Filter for files matching `skills/azure-cost-calculator/references/services/**/*.md`. These are the service reference files to review. Also note changes to `skills/azure-cost-calculator/references/service-routing.md` and `docs/service-catalog.md`. The review must verify routing/catalog updates are consistent.
@@ -57,9 +57,12 @@ If no service reference files are changed, display: "No service reference files 
 
 ### 0.4 - Create a dedicated worktree
 
+For fork PRs, `head.repo.full_name` will differ from the base repo; fetch the ref explicitly using `head.sha` before creating the worktree:
+
 ```bash
+git fetch origin pull/{PR_NUMBER}/head
 WORKTREE_DIR="../pr-review-$PR_NUMBER"
-git worktree add "$WORKTREE_DIR" "$PR_BRANCH"
+git worktree add "$WORKTREE_DIR" "$HEAD_SHA"
 cd "$WORKTREE_DIR"
 ```
 
@@ -88,7 +91,7 @@ Fetch the full PR diff from the GitHub REST API:
 
 ```
 GET https://api.github.com/repos/{owner}/{repo}/pulls/{PR_NUMBER}
-Accept: application/vnd.github.diff
+Accept: application/vnd.github.v3.diff
 ```
 
 Understand exactly what changed: added lines, removed lines, modified sections. This is critical for update/fix PRs where only specific sections changed.
@@ -323,12 +326,12 @@ Output the compiled review to the console in full. This is the primary output of
 
 After displaying it, ask the user: **"Do you want to post this review to the PR? (yes/no)"**
 
-If the user confirms, write the review body to a temp file and post it using the `gh` CLI:
+If the user confirms, write the review body to a unique temp file using the `edit` tool, then post it:
 
 ```bash
-# Write review body to temp file (use the file creation tool, not a heredoc)
-gh pr comment {PR_NUMBER} --body-file /tmp/pr-review-body.md
-rm -f /tmp/pr-review-body.md
+REVIEW_FILE=$(mktemp /tmp/pr-review-XXXXXX.md)
+gh pr comment {PR_NUMBER} --body-file "$REVIEW_FILE"
+rm -f "$REVIEW_FILE"
 ```
 
 If there are **blocking issues**, also submit a formal review requesting changes:
