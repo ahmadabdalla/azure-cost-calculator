@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.6.0] - 2026-04-08
+
+### Added
+
+- New service: Application Gateway for Containers (`application-gateway-for-containers.md`)
+
+### Changed
+
+- Application Gateway service reference: added AGIC (Application Gateway Ingress Controller) alias and billing note explaining AGIC costs flow through linked App Gateway v2
+- Video Indexer service reference: added `privateEndpoint: true` support and missing query patterns for Standard Audio/Video and Advanced Audio indexing
+- Service routing: updated to reflect new Application Gateway for Containers service and AGIC alias for Application Gateway
+
+### Removed
+
+- Intelligent Recommendations service reference (retired service)
+
 ## [1.5.4] - 2026-03-30
 
 ### Fixed
