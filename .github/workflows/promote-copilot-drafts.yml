@@ -1,0 +1,107 @@
+# EXPERIMENT: automated service-reference pipeline (issue #688)
+# Promotes idle Copilot coding agent draft PRs to ready-for-review.
+# Only affects draft PRs authored by copilot-swe-agent.
+# Safe to remove once the experiment concludes.
+
+name: "[Experiment] Promote Copilot Drafts"
+
+on:
+  schedule:
+    - cron: "0 */2 * * *" # every 2 hours
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: promote-copilot-drafts
+  cancel-in-progress: true
+
+jobs:
+  promote:
+    name: Promote idle Copilot drafts
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Validate token
+        env:
+          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::PIPELINE_GITHUB_TOKEN is not set. Skipping."
+            exit 0
+          fi
+
+      - name: Find and promote idle drafts
+        env:
+          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          REPO="${{ github.repository }}"
+          IDLE_MINUTES=120  # 2 hours
+
+          echo "::group::Listing Copilot draft PRs"
+          DRAFT_PRS=$(gh pr list \
+            --repo "$REPO" \
+            --author "app/copilot-swe-agent" \
+            --draft \
+            --json number,headRefName,updatedAt \
+            --jq '.')
+
+          COUNT=$(echo "$DRAFT_PRS" | jq 'length')
+          echo "Found $COUNT Copilot draft PR(s)"
+          echo "::endgroup::"
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "No Copilot draft PRs found. Nothing to do."
+            exit 0
+          fi
+
+          NOW=$(date -u +%s)
+
+          echo "$DRAFT_PRS" | jq -c '.[]' | while read -r PR; do
+            NUMBER=$(echo "$PR" | jq -r '.number')
+            BRANCH=$(echo "$PR" | jq -r '.headRefName')
+            UPDATED=$(echo "$PR" | jq -r '.updatedAt')
+
+            echo "::group::PR #$NUMBER ($BRANCH)"
+
+            # Check last commit time on the branch (more accurate than updatedAt)
+            LAST_COMMIT_DATE=$(gh api \
+              "repos/$REPO/commits?sha=$BRANCH&per_page=1" \
+              --jq '.[0].commit.committer.date' 2>/dev/null || true)
+
+            # Fall back to PR updatedAt if commit date is empty or null
+            if [ -z "$LAST_COMMIT_DATE" ] || [ "$LAST_COMMIT_DATE" = "null" ]; then
+              LAST_COMMIT_DATE="$UPDATED"
+            fi
+
+            # Ubuntu runner: GNU date with -d flag
+            LAST_EPOCH=$(date -u -d "$LAST_COMMIT_DATE" +%s)
+            IDLE_SECONDS=$(( NOW - LAST_EPOCH ))
+            IDLE_MINS=$(( IDLE_SECONDS / 60 ))
+
+            echo "Last activity: ${IDLE_MINS}m ago (threshold: ${IDLE_MINUTES}m)"
+
+            if [ "$IDLE_MINS" -lt "$IDLE_MINUTES" ]; then
+              echo "Still active. Skipping."
+              echo "::endgroup::"
+              continue
+            fi
+
+            echo "Idle for ${IDLE_MINS}m. Promoting..."
+
+            # Mark as ready for review
+            gh pr ready "$NUMBER" --repo "$REPO"
+            echo "Marked PR #$NUMBER as ready for review"
+
+            # Add experiment-pipeline label (triggers review workflow via PAT)
+            gh pr edit "$NUMBER" --repo "$REPO" --add-label "experiment-pipeline"
+            echo "Added experiment-pipeline label to PR #$NUMBER"
+
+            echo "::endgroup::"
+          done
+
+          echo "Done."
