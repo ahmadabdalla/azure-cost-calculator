@@ -57,7 +57,7 @@ Quantity: 100
 | `Evaluation Input Tokens`    | `Evaluation Input Tokens` | `1K`          | Safety evaluation input tokens  |
 | `Evaluation Ouput Tokens`    | `Evaluation Ouput Tokens` | `1K`          | Safety evaluation output tokens |
 
-> Note: The spelling `Evaluation Ouput Tokens` matches the Retail Prices API meter name exactly and is intentional; do not change it to `Output` in queries or in this table.
+> **Note**: The spelling `Evaluation Ouput Tokens` matches the Retail Prices API meter name exactly and is intentional; do not change it to `Output` in queries or in this table.
 
 > Additional Managed Model Hosting SKUs (NV-series, ND-series) are available. Query with `ProductName 'Managed Model Hosting Service'` to list all.
 
