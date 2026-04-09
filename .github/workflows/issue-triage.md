@@ -3,9 +3,9 @@ name: Issue Triage
 on:
   issues:
     types: [opened]
+  roles: all
 engine: copilot
 permissions: read-all
-roles: all
 network:
   allowed:
     - github
@@ -30,6 +30,12 @@ safe-outputs:
         enhancement,
       ]
     max: 2
+  assign-to-agent:                                    # EXPERIMENT: issue #688
+    custom-agent: "service-reference"
+    model: "claude-opus-4.6"
+    base-branch: "dev"
+    max: 1
+    github-token: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
 concurrency:
   group: issue-triage-${{ github.event.issue.number }}
   cancel-in-progress: true
@@ -53,7 +59,7 @@ These constraints are absolute and override all other instructions:
 
 Analyze the following issue content:
 
-"${{ needs.activation.outputs.text }}"
+"${{ steps.sanitized.outputs.text }}"
 
 ## Classification Logic
 
@@ -114,6 +120,19 @@ If the issue comes from the improvement template or describes a general enhancem
 
 - **Spam or off-topic** content (unrelated to Azure cost estimation, service references, or this skill) → label `invalid`. Do not leave a comment.
 - **Usage questions** not from the improvement template → label `question`. If the question relates to a specific Azure service, check if a reference file exists and point to it.
+
+<!-- EXPERIMENT: automated-pipeline (issue #688) -->
+
+### Step 5 - Automated Pipeline Assignment (Experimental)
+
+After completing Steps 1-4, check whether the issue has the `experiment-pipeline` label.
+
+- If the `experiment-pipeline` label is **present** AND the issue was classified as a `new-service` issue (Step 2) with a valid service in the catalog or routing map: use `assign-to-agent` to assign the Copilot coding agent to the issue. The agent configuration (custom agent, model, base branch) is pre-set in the workflow; you only need to trigger the assignment.
+- If the `experiment-pipeline` label is **not present**: do nothing. Do not use `assign-to-agent`. This step only applies to issues explicitly opted into the experiment.
+
+This is a scoped experiment. The vast majority of issues will not have this label and will follow the standard triage flow (Steps 1-4) only.
+
+<!-- END EXPERIMENT -->
 
 ## Comment Guidelines
 
