@@ -2,7 +2,7 @@
 name: Issue Triage
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
   roles: all
 engine: copilot
 permissions: read-all
@@ -128,10 +128,14 @@ If the issue comes from the improvement template or describes a general enhancem
 
 ### Step 5 - Automated Pipeline Assignment (Experimental)
 
-After completing Steps 1-4, check whether the issue has the `experiment-pipeline` label.
+This workflow triggers on both `opened` and `labeled` events. When triggered by a `labeled` event:
 
-- If the `experiment-pipeline` label is **present** AND the issue was classified as a `new-service` issue (Step 2) with a valid service in the catalog or routing map: use `assign-to-agent` to assign the Copilot coding agent to the issue. The agent configuration (custom agent, model, base branch) is pre-set in the workflow; you only need to trigger the assignment.
-- If the `experiment-pipeline` label is **not present**: do nothing. Do not use `assign-to-agent`. This step only applies to issues explicitly opted into the experiment.
+- If the label added is **not** `experiment-pipeline`: call `noop`. Do not re-triage or re-comment.
+- If the label added is `experiment-pipeline`: skip Steps 1-4 (the issue was already triaged on the `opened` event). Proceed directly to the assignment logic below.
+
+**Assignment logic:** Check whether the issue has the `experiment-pipeline` label AND was classified as a `new-service` issue (check for `new-service` label from the initial triage). If both conditions are met, use `assign-to-agent` to assign the Copilot coding agent to the issue. The agent configuration (custom agent, model, base branch) is pre-set in the workflow; you only need to trigger the assignment.
+
+If the `experiment-pipeline` label is **not present** (e.g., on a normal `opened` event): do nothing. Do not use `assign-to-agent`. This step only applies to issues explicitly opted into the experiment.
 
 This is a scoped experiment. The vast majority of issues will not have this label and will follow the standard triage flow (Steps 1-4) only.
 

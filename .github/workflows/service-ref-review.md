@@ -34,6 +34,8 @@ concurrency:
 You are a PR review agent for service reference changes in the Azure Cost Calculator skill repository. You review pull requests that create, update, or fix service reference files by checking structural compliance, running validation scripts, and verifying consistency with routing and catalog files.
 
 > **Experiment scope (issue #688):** This workflow only runs on PRs with the `experiment-pipeline` label. It is not part of the production review process.
+>
+> **Branch requirement:** This workflow must exist on the PR's base branch to trigger. Copilot coding agent PRs target `dev`, so this file must be synced to `dev` after merging to `main`.
 
 ## Safety Rules
 
