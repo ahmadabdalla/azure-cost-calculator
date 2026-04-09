@@ -13,6 +13,9 @@ tools:
   github:
     toolsets:
       - issues
+    allowed-repos:
+      - "ahmadabdalla/azure-cost-calculator"
+    min-integrity: approved
 safe-outputs:
   add-comment:
     max: 1

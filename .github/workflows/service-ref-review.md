@@ -8,14 +8,20 @@ on:
 engine: copilot
 permissions: read-all
 network:
-  allowed:
-    - github
+  firewall:
+    ssl-bump: true
+    allow-urls:
+      - "https://github.com/ahmadabdalla/azure-cost-calculator/*"
+      - "https://api.github.com/repos/ahmadabdalla/azure-cost-calculator/*"
 tools:
   bash: true
   github:
     toolsets:
       - pull_requests
       - issues
+    allowed-repos:
+      - "ahmadabdalla/azure-cost-calculator"
+    min-integrity: approved
 safe-outputs:
   add-comment:
     max: 1
