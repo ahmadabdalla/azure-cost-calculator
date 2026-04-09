@@ -8,11 +8,8 @@ on:
 engine: copilot
 permissions: read-all
 network:
-  firewall:
-    ssl-bump: true
-    allow-urls:
-      - "https://github.com/ahmadabdalla/azure-cost-calculator/*"
-      - "https://api.github.com/repos/ahmadabdalla/azure-cost-calculator/*"
+  allowed:
+    - github
 tools:
   bash: true
   github:
