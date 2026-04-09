@@ -6,6 +6,9 @@ __pycache__/
 prompts
 settings.local.json
 
+# Private operational notes (not for public repo)
+docs/ops/notes.md
+
 # Waza eval results and cache
 results/
 .waza-cache/
