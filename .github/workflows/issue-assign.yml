@@ -21,15 +21,14 @@ jobs:
       - name: Assign Copilot coding agent
         env:
           GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
 
-          REPO="${{ github.repository }}"
-          ISSUE="${{ github.event.issue.number }}"
-
           # Idempotency: skip if already assigned
           ALREADY=$(gh api "repos/$REPO/issues/$ISSUE" \
-            --jq '[.assignees[].login] | contains(["copilot-swe-agent[bot]"]) | not | not')
+            --jq '[.assignees[].login] | contains(["copilot-swe-agent[bot]"])')
 
           if [ "$ALREADY" = "true" ]; then
             echo "copilot-swe-agent[bot] already assigned. Skipping."
@@ -38,8 +37,8 @@ jobs:
 
           echo "Assigning Copilot to issue #$ISSUE..."
 
-          printf '{"assignees":["copilot-swe-agent[bot]"],"agent_assignment":{"target_repo":"%s","base_branch":"dev","custom_agent":"service-reference","model":"claude-opus-4.6"}}' \
-            "$REPO" \
+          jq -n --arg repo "$REPO" \
+            '{"assignees":["copilot-swe-agent[bot]"],"agent_assignment":{"target_repo":$repo,"base_branch":"dev","custom_agent":"service-reference","model":"claude-opus-4.6"}}' \
             | gh api --method POST "repos/$REPO/issues/$ISSUE/assignees" --input -
 
           echo "Copilot assigned to issue #$ISSUE."
