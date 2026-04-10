@@ -86,6 +86,7 @@ jobs:
 
             # Idempotency: skip if a review trigger comment was already posted.
             EXISTING=$(gh api "repos/$REPO/issues/$NUMBER/comments" \
+              --paginate \
               --jq "[.[] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
 
             if [ "$EXISTING" -gt 0 ]; then
