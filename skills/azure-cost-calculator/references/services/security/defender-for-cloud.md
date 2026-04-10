@@ -46,7 +46,7 @@ InstanceCount: {resourceCount} # number of protected resources
 
 ## Notes
 
-- **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types (SecurityEvent, SecurityAlert, SecurityBaseline, etc.) — pooled across all protected servers. When estimating Sentinel or Log Analytics ingestion, deduct this: `defenderFreeGB = serverCount × 0.5 × 30`. Only applies to data collected via Defender's auto-provisioned agents, not custom log sources.
+- **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types (SecurityEvent, SecurityAlert, SecurityBaseline, etc.) — pooled across all protected servers. When estimating Sentinel or Log Analytics ingestion, deduct this: `defenderFreeGB = min(security_table_GB, serverCount × 0.5 × 30)`. Only applies to data collected via Defender's auto-provisioned agents, not custom log sources.
 - **Servers P2 MDATP Benefit**: Customers with existing Microsoft Defender for Endpoint licenses get a reduced P2 rate — query with `MeterName: Standard P2 Node - MDATP Benefit`.
 - Containers has free trial tiers (Free vCore, Free Images at zero cost) — always use `Standard` SKU meters for estimation.
 - Containers vCore pricing = total vCores across all protected AKS nodes (e.g., 6× E4s_v5 @ 4 vCPU = 24 vCores).

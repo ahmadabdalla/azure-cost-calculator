@@ -91,8 +91,8 @@ For architecture-level estimates:
 
 When a multi-resource estimate includes services with `hasFreeGrant: true` that provide volume grants consumed by other services, apply deductions **after** querying each service individually but **before** computing final per-service costs:
 
-1. **Defender for Servers P2 → Sentinel / Log Analytics**: Deduct `serverCount × 0.5 × 30` GB from Sentinel billable ingestion (simplified pricing) or Log Analytics ingestion (classic pricing)
-2. **M365 E5 → Sentinel**: Deduct `userCount × 0.005 × 30` GB from Sentinel billable ingestion — tables do not overlap with P2, so both grants apply additively
+1. **Defender for Servers P2 → Sentinel / Log Analytics**: Deduct `min(security_table_GB, serverCount × 0.5 × 30)` GB from Sentinel billable ingestion (simplified pricing) or Log Analytics ingestion (classic pricing) — the grant cannot exceed actual security-table ingestion
+2. **M365 E5 → Sentinel**: Deduct `min(m365_table_GB, userCount × 0.005 × 30)` GB from Sentinel billable ingestion — tables do not overlap with P2, so both grants apply additively
 3. Apply remaining billable GB to Sentinel PAYG or commitment tier pricing
 
 These are volume deductions applied **before** tier pricing. The full formulas are in `services/security/sentinel.md` Cost Formula section — this section ensures they are applied during multi-service orchestration.
