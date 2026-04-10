@@ -3,9 +3,9 @@ name: Issue Triage
 on:
   issues:
     types: [opened]
+  roles: all
 engine: copilot
 permissions: read-all
-roles: all
 network:
   allowed:
     - github
