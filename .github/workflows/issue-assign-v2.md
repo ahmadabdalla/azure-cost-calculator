@@ -51,13 +51,14 @@ These rules are absolute.
 
 1. **If** `copilot-swe-agent[bot]` is already in the issue's assignees list: do nothing and finish. The Copilot coding agent has already been assigned by a previous run.
 2. **Else if** the issue has **both** the `experiment-pipeline` label **and** the `new-service` label: call `assign_to_agent` to assign the Copilot coding agent. Do nothing else.
-3. **Otherwise**: do nothing and finish. Produce no tool calls and no outputs.
+3. **Else if** the issue has the `automatic-existing` label: call `assign_to_agent` to assign the Copilot coding agent. Do nothing else.
+4. **Otherwise**: do nothing and finish. Produce no tool calls and no outputs.
 
 Do not classify the issue. Do not add or remove labels. Do not post comments.
 
 ## Why these rules exist
 
-- The upstream Pipeline Issue Triage workflow classifies issues and applies the `new-service` label on the `opened` event.
-- A maintainer opts an already-triaged issue into the automated pipeline by adding `experiment-pipeline`.
-- Because this workflow fires on every `labeled` event (including the `new-service` label applied by triage), we gate on the presence of both labels rather than on which specific label fired the run.
-- The idempotency guard prevents re-assigning if a maintainer re-adds a label on an already-assigned issue.
+- The upstream Pipeline Issue Triage workflow classifies issues and applies labels on the `opened` event.
+- For new services: a maintainer opts a triaged issue into the pipeline by adding `experiment-pipeline`. Both `experiment-pipeline` and `new-service` must be present because this workflow fires on every `labeled` event.
+- For existing service fixes: the triage workflow applies `automatic-existing` directly, bypassing the manual opt-in step. Rule 3 handles this path.
+- The idempotency guard prevents re-assigning if a label is re-added on an already-assigned issue.
