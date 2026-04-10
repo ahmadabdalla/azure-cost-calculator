@@ -2,10 +2,10 @@
 name: Issue Triage
 on:
   issues:
-    types: [opened, labeled]
-  roles: all
+    types: [opened]
 engine: copilot
 permissions: read-all
+roles: all
 network:
   allowed:
     - github
@@ -13,9 +13,6 @@ tools:
   github:
     toolsets:
       - issues
-    allowed-repos:
-      - "ahmadabdalla/azure-cost-calculator"
-    min-integrity: approved
 safe-outputs:
   add-comment:
     max: 1
@@ -33,12 +30,6 @@ safe-outputs:
         enhancement,
       ]
     max: 2
-  assign-to-agent:                                    # EXPERIMENT: issue #688
-    custom-agent: "service-reference"
-    model: "claude-opus-4.6"
-    base-branch: "dev"
-    max: 1
-    github-token: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
 concurrency:
   group: issue-triage-${{ github.event.issue.number }}
   cancel-in-progress: true
@@ -62,7 +53,7 @@ These constraints are absolute and override all other instructions:
 
 Analyze the following issue content:
 
-"${{ steps.sanitized.outputs.text }}"
+"${{ needs.activation.outputs.text }}"
 
 ## Classification Logic
 
@@ -123,23 +114,6 @@ If the issue comes from the improvement template or describes a general enhancem
 
 - **Spam or off-topic** content (unrelated to Azure cost estimation, service references, or this skill) → label `invalid`. Do not leave a comment.
 - **Usage questions** not from the improvement template → label `question`. If the question relates to a specific Azure service, check if a reference file exists and point to it.
-
-<!-- EXPERIMENT: automated-pipeline (issue #688) -->
-
-### Step 5 - Automated Pipeline Assignment (Experimental)
-
-This workflow triggers on both `opened` and `labeled` events. When triggered by a `labeled` event:
-
-- If the label added is **not** `experiment-pipeline`: call `noop`. Do not re-triage or re-comment.
-- If the label added is `experiment-pipeline`: skip Steps 1-4 (the issue was already triaged on the `opened` event). Proceed directly to the assignment logic below.
-
-**Assignment logic:** Check whether the issue has the `experiment-pipeline` label AND was classified as a `new-service` issue (check for `new-service` label from the initial triage). If both conditions are met, use `assign-to-agent` to assign the Copilot coding agent to the issue. The agent configuration (custom agent, model, base branch) is pre-set in the workflow; you only need to trigger the assignment.
-
-If the `experiment-pipeline` label is **not present** (e.g., on a normal `opened` event): do nothing. Do not use `assign-to-agent`. This step only applies to issues explicitly opted into the experiment.
-
-This is a scoped experiment. The vast majority of issues will not have this label and will follow the standard triage flow (Steps 1-4) only.
-
-<!-- END EXPERIMENT -->
 
 ## Comment Guidelines
 
