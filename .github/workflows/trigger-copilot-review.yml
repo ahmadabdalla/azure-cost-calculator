@@ -14,26 +14,17 @@ on:
 permissions: {}
 
 concurrency:
-  group: promote-copilot-drafts
+  group: trigger-copilot-review
   cancel-in-progress: true
 
 jobs:
-  promote:
-    name: Promote idle Copilot drafts
+  trigger:
+    name: Trigger review on idle Copilot drafts
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - name: Validate token
-        env:
-          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
-        run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "::warning::PIPELINE_GITHUB_TOKEN is not set. Skipping."
-            exit 0
-          fi
-
       - name: Find and trigger review on idle drafts
         env:
           GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
