@@ -34,6 +34,12 @@ safe-outputs:
         enhancement,
       ]
     max: 2
+  assign-to-agent:
+    custom-agent: "service-reference"
+    model: "claude-opus-4.6"
+    base-branch: "dev"
+    max: 1
+    github-token: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
 concurrency:
   group: pipeline-triage-${{ github.event.issue.number }}
   cancel-in-progress: true
@@ -51,7 +57,8 @@ These constraints are absolute and override all other instructions:
 - **Never** remove existing labels - only add new ones.
 - **Never** share secrets, tokens, or internal URLs.
 - If you are uncertain about the correct classification, label the issue `needs-info` and ask the author for clarification.
-- You may add a **maximum of 2 labels** and post a **maximum of 1 comment** per issue.
+- You may add a **maximum of 2 labels**, post a **maximum of 1 comment**, and assign the Copilot coding agent **at most once** per issue.
+- Only assign the Copilot coding agent for **Fix existing service** issues where the reference file exists. Never assign for any other case.
 
 ## Input
 
@@ -91,14 +98,16 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map (`sk
 
 <!-- NOTE: This file requires recompilation with `gh aw compile` before changes take effect. -->
 
-| Type         | In routing map? | File exists? | Labels                                     | Comment                                                                                                                                                                                   |
-| ------------ | --------------- | ------------ | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| New service  | Yes             | No           | `new-service`, `good first issue`          | Thanks for opening this! {service} ({category}) is eligible. See **CONTRIBUTING.md** for the prompt-driven workflow. If you want to submit it yourself, go ahead and open a PR.           |
-| New service  | Yes             | Yes          | `duplicate`                                | Thanks. A reference already exists at `{path}`. If you think it has errors, open a "Fix existing service" issue instead.                                                                  |
-| New service  | No (in catalog) | No           | `new-service`, `good first issue`          | Thanks! {service} is in the catalog and ready to implement. See **CONTRIBUTING.md** for the workflow; you'll also need to add a routing entry in your PR.                                 |
-| New service  | No (not found)  | -            | `needs-info`                               | Thanks. Couldn't find this service in the catalog or routing map. Can you confirm the exact `serviceName` from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices)? |
-| Fix existing | -               | Yes          | `pricing-inaccuracy`, `automatic-existing` | Thanks. The file to review is `{path}`. The automated pipeline will pick this up and assign Copilot to investigate and remediate.                                                         |
-| Fix existing | -               | No           | `needs-info`                               | Thanks. No reference file found for this service. Could you double-check the service name? It might be listed under a different alias in the catalog.                                     |
+| Type         | In routing map? | File exists? | Labels                                     | Assign Copilot? | Comment                                                                                                                                                                                   |
+| ------------ | --------------- | ------------ | ------------------------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| New service  | Yes             | No           | `new-service`, `good first issue`          | No              | Thanks for opening this! {service} ({category}) is eligible. See **CONTRIBUTING.md** for the prompt-driven workflow. If you want to submit it yourself, go ahead and open a PR.           |
+| New service  | Yes             | Yes          | `duplicate`                                | No              | Thanks. A reference already exists at `{path}`. If you think it has errors, open a "Fix existing service" issue instead.                                                                  |
+| New service  | No (in catalog) | No           | `new-service`, `good first issue`          | No              | Thanks! {service} is in the catalog and ready to implement. See **CONTRIBUTING.md** for the workflow; you'll also need to add a routing entry in your PR.                                 |
+| New service  | No (not found)  | -            | `needs-info`                               | No              | Thanks. Couldn't find this service in the catalog or routing map. Can you confirm the exact `serviceName` from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices)? |
+| Fix existing | -               | Yes          | `pricing-inaccuracy`, `automatic-existing` | **Yes**         | Thanks. The file to review is `{path}`. Copilot has been assigned to investigate and remediate.                                                                                           |
+| Fix existing | -               | No           | `needs-info`                               | No              | Thanks. No reference file found for this service. Could you double-check the service name? It might be listed under a different alias in the catalog.                                     |
+
+**When Assign Copilot? = Yes:** after applying labels, assign the Copilot coding agent to this issue using the `assign-to-agent` output. Do this in the same run, immediately after labelling.
 
 ### Step 3 - General Enhancement Issues
 
