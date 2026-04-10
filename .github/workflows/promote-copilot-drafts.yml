@@ -1,5 +1,6 @@
 # EXPERIMENT: automated service-reference pipeline (issue #688)
-# Promotes idle Copilot coding agent draft PRs to ready-for-review.
+# Triggers Copilot coding agent review on idle Copilot draft PRs by posting
+# a @copilot PR comment referencing the service-ref-pr-reviewer custom agent.
 # Only affects draft PRs authored by copilot-swe-agent.
 # Safe to remove once the experiment concludes.
 
@@ -33,17 +34,15 @@ jobs:
             exit 0
           fi
 
-      - name: Find and promote idle drafts
+      - name: Find and trigger review on idle drafts
         env:
           GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
-          # Built-in token used for markPullRequestReadyForReview: fine-grained PATs
-          # cannot call this GraphQL mutation even with pull-requests:write granted.
-          GITHUB_TOKEN_BUILTIN: ${{ github.token }}
         run: |
           set -euo pipefail
 
           REPO="${{ github.repository }}"
           IDLE_MINUTES=120  # 2 hours
+          TRIGGER_MARKER="service-ref-pr-reviewer"
 
           echo "::group::Listing Copilot draft PRs"
           DRAFT_PRS=$(gh pr list \
@@ -94,19 +93,22 @@ jobs:
               continue
             fi
 
-            echo "Idle for ${IDLE_MINS}m. Promoting..."
+            # Idempotency: skip if a review trigger comment was already posted.
+            EXISTING=$(gh api "repos/$REPO/issues/$NUMBER/comments" \
+              --jq "[.[] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
 
-            # Mark as ready for review. Fine-grained PATs cannot call
-            # markPullRequestReadyForReview even with pull-requests:write;
-            # use the built-in GITHUB_TOKEN which has the workflow-level permission.
-            GH_TOKEN="$GITHUB_TOKEN_BUILTIN" gh pr ready "$NUMBER" --repo "$REPO"
-            echo "Marked PR #$NUMBER as ready for review"
+            if [ "$EXISTING" -gt 0 ]; then
+              echo "Review already triggered (found $EXISTING existing comment(s) with marker). Skipping."
+              echo "::endgroup::"
+              continue
+            fi
 
-            # Add label via PAT so the labeled event triggers downstream workflows.
-            # GITHUB_TOKEN actions do not trigger new workflow runs.
-            gh pr edit "$NUMBER" --repo "$REPO" --add-label "experiment-pipeline"
-            echo "Added experiment-pipeline label to PR #$NUMBER"
+            echo "Idle for ${IDLE_MINS}m. Triggering review..."
 
+            gh pr comment "$NUMBER" --repo "$REPO" --body \
+              "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
+
+            echo "Posted @copilot review trigger on PR #$NUMBER"
             echo "::endgroup::"
           done
 
