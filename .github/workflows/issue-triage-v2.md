@@ -1,8 +1,8 @@
 ---
-name: Issue Triage v2
+name: "Pipeline: Issue Triage"
 on:
   issues:
-    types: [opened, labeled]
+    types: [opened]
   roles: all
 engine: copilot
 permissions: read-all
@@ -24,6 +24,7 @@ safe-outputs:
       [
         new-service,
         pricing-inaccuracy,
+        automatic-existing,
         service-update,
         needs-info,
         duplicate,
@@ -33,14 +34,8 @@ safe-outputs:
         enhancement,
       ]
     max: 2
-  assign-to-agent:
-    custom-agent: "service-reference"
-    model: "claude-opus-4.6"
-    base-branch: "dev"
-    max: 1
-    github-token: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
 concurrency:
-  group: issue-triage-${{ github.event.issue.number }}
+  group: pipeline-triage-${{ github.event.issue.number }}
   cancel-in-progress: true
 ---
 
@@ -96,14 +91,14 @@ The catalog (`docs/service-catalog.md`) lists all services. The routing map (`sk
 
 <!-- NOTE: This file requires recompilation with `gh aw compile` before changes take effect. -->
 
-| Type         | In routing map? | File exists? | Labels                            | Comment                                                                                                                                                                                                          |
-| ------------ | --------------- | ------------ | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| New service  | Yes             | No           | `new-service`, `good first issue` | Thanks for opening this! {service} ({category}) is eligible. See **CONTRIBUTING.md** for the prompt-driven workflow. If you want to submit it yourself, go ahead and open a PR.                                  |
-| New service  | Yes             | Yes          | `duplicate`                       | Thanks. A reference already exists at `{path}`. If you think it has errors, open a "Fix existing service" issue instead.                                                                                       |
-| New service  | No (in catalog) | No           | `new-service`, `good first issue` | Thanks! {service} is in the catalog and ready to implement. See **CONTRIBUTING.md** for the workflow; you'll also need to add a routing entry in your PR.                                                      |
-| New service  | No (not found)  | -            | `needs-info`                      | Thanks. Couldn't find this service in the catalog or routing map. Can you confirm the exact `serviceName` from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices)?                      |
-| Fix existing | -               | Yes          | `pricing-inaccuracy`              | Thanks. The file to review is `{path}`. Try running `Get-AzurePricing` with the `serviceName` filter to verify current rates.                                                                                  |
-| Fix existing | -               | No           | `needs-info`                      | Thanks. No reference file found for this service. Could you double-check the service name? It might be listed under a different alias in the catalog.                                                          |
+| Type         | In routing map? | File exists? | Labels                                     | Comment                                                                                                                                                                                   |
+| ------------ | --------------- | ------------ | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| New service  | Yes             | No           | `new-service`, `good first issue`          | Thanks for opening this! {service} ({category}) is eligible. See **CONTRIBUTING.md** for the prompt-driven workflow. If you want to submit it yourself, go ahead and open a PR.           |
+| New service  | Yes             | Yes          | `duplicate`                                | Thanks. A reference already exists at `{path}`. If you think it has errors, open a "Fix existing service" issue instead.                                                                  |
+| New service  | No (in catalog) | No           | `new-service`, `good first issue`          | Thanks! {service} is in the catalog and ready to implement. See **CONTRIBUTING.md** for the workflow; you'll also need to add a routing entry in your PR.                                 |
+| New service  | No (not found)  | -            | `needs-info`                               | Thanks. Couldn't find this service in the catalog or routing map. Can you confirm the exact `serviceName` from the [Azure Retail Prices API](https://prices.azure.com/api/retail/prices)? |
+| Fix existing | -               | Yes          | `pricing-inaccuracy`, `automatic-existing` | Thanks. The file to review is `{path}`. The automated pipeline will pick this up and assign Copilot to investigate and remediate.                                                         |
+| Fix existing | -               | No           | `needs-info`                               | Thanks. No reference file found for this service. Could you double-check the service name? It might be listed under a different alias in the catalog.                                     |
 
 ### Step 3 - General Enhancement Issues
 
@@ -123,17 +118,6 @@ If the issue comes from the improvement template or describes a general enhancem
 
 - **Spam or off-topic** content (unrelated to Azure cost estimation, service references, or this skill) → label `invalid`. Do not leave a comment.
 - **Usage questions** not from the improvement template → label `question`. If the question relates to a specific Azure service, check if a reference file exists and point to it.
-
-### Step 5 - Automated Pipeline Assignment
-
-This workflow triggers on both `opened` and `labeled` events. When triggered by a `labeled` event:
-
-- If the label added is **not** `experiment-pipeline`: call `noop`. Do not re-triage or re-comment.
-- If the label added is `experiment-pipeline`: skip Steps 1-4 (the issue was already triaged on the `opened` event). Proceed directly to the assignment logic below.
-
-**Assignment logic:** Check whether the issue has the `experiment-pipeline` label AND was classified as a `new-service` issue (check for `new-service` label from the initial triage). If both conditions are met, use `assign-to-agent` to assign the Copilot coding agent to the issue. The agent configuration (custom agent, model, base branch) is pre-set in the workflow; you only need to trigger the assignment.
-
-If the `experiment-pipeline` label is **not present** (e.g., on a normal `opened` event): do nothing. Do not use `assign-to-agent`. This step only applies to issues explicitly opted into the experiment.
 
 ## Comment Guidelines
 

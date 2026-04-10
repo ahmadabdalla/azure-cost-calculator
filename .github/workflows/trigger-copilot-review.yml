@@ -1,9 +1,10 @@
 # EXPERIMENT: automated service-reference pipeline (issue #688)
-# Promotes idle Copilot coding agent draft PRs to ready-for-review.
+# Triggers Copilot coding agent review on idle Copilot draft PRs by posting
+# a @copilot PR comment referencing the service-ref-pr-reviewer custom agent.
 # Only affects draft PRs authored by copilot-swe-agent.
 # Safe to remove once the experiment concludes.
 
-name: "[Experiment] Promote Copilot Drafts"
+name: "[Experiment] Trigger Copilot Review"
 
 on:
   schedule:
@@ -13,27 +14,18 @@ on:
 permissions: {}
 
 concurrency:
-  group: promote-copilot-drafts
+  group: trigger-copilot-review
   cancel-in-progress: true
 
 jobs:
-  promote:
-    name: Promote idle Copilot drafts
+  trigger:
+    name: Trigger review on idle Copilot drafts
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       pull-requests: write
     steps:
-      - name: Validate token
-        env:
-          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
-        run: |
-          if [ -z "$GH_TOKEN" ]; then
-            echo "::warning::PIPELINE_GITHUB_TOKEN is not set. Skipping."
-            exit 0
-          fi
-
-      - name: Find and promote idle drafts
+      - name: Find and trigger review on idle drafts
         env:
           GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
         run: |
@@ -41,6 +33,7 @@ jobs:
 
           REPO="${{ github.repository }}"
           IDLE_MINUTES=120  # 2 hours
+          TRIGGER_MARKER="service-ref-pr-reviewer"
 
           echo "::group::Listing Copilot draft PRs"
           DRAFT_PRS=$(gh pr list \
@@ -91,16 +84,25 @@ jobs:
               continue
             fi
 
-            echo "Idle for ${IDLE_MINS}m. Promoting..."
+            # Idempotency: skip if a review trigger comment was already posted.
+            # --paginate emits one JSON array per page; jq -s merges all pages
+            # before filtering so we get a single count, not one per page.
+            EXISTING=$(gh api "repos/$REPO/issues/$NUMBER/comments" \
+              --paginate \
+              | jq -s "[.[][] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
 
-            # Mark as ready for review
-            gh pr ready "$NUMBER" --repo "$REPO"
-            echo "Marked PR #$NUMBER as ready for review"
+            if [ "$EXISTING" -gt 0 ]; then
+              echo "Review already triggered (found $EXISTING existing comment(s) with marker). Skipping."
+              echo "::endgroup::"
+              continue
+            fi
 
-            # Add experiment-pipeline label (triggers review workflow via PAT)
-            gh pr edit "$NUMBER" --repo "$REPO" --add-label "experiment-pipeline"
-            echo "Added experiment-pipeline label to PR #$NUMBER"
+            echo "Idle for ${IDLE_MINS}m. Triggering review..."
 
+            gh pr comment "$NUMBER" --repo "$REPO" --body \
+              "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
+
+            echo "Posted @copilot review trigger on PR #$NUMBER"
             echo "::endgroup::"
           done
 

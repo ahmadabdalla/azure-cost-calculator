@@ -1,0 +1,45 @@
+name: "[Pipeline] Assign Copilot Agent"
+
+on:
+  issues:
+    types: [labeled]
+
+permissions: {}
+
+concurrency:
+  group: pipeline-assign-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  assign:
+    name: Assign Copilot to existing service fix
+    if: github.event.label.name == 'automatic-existing'
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
+    steps:
+      - name: Assign Copilot coding agent
+        env:
+          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+
+          # Idempotency: skip if already assigned
+          # any(. == ...) uses exact equality; contains() uses substring matching
+          ALREADY=$(gh api "repos/$REPO/issues/$ISSUE" \
+            --jq '[.assignees[].login] | any(. == "copilot-swe-agent[bot]")')
+
+          if [ "$ALREADY" = "true" ]; then
+            echo "copilot-swe-agent[bot] already assigned. Skipping."
+            exit 0
+          fi
+
+          echo "Assigning Copilot to issue #$ISSUE..."
+
+          jq -n --arg repo "$REPO" \
+            '{"assignees":["copilot-swe-agent[bot]"],"agent_assignment":{"target_repo":$repo,"base_branch":"dev","custom_agent":"service-reference","model":"claude-opus-4.6"}}' \
+            | gh api --method POST "repos/$REPO/issues/$ISSUE/assignees" --input -
+
+          echo "Copilot assigned to issue #$ISSUE."
