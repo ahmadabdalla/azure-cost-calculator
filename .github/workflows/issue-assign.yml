@@ -27,8 +27,9 @@ jobs:
           set -euo pipefail
 
           # Idempotency: skip if already assigned
+          # any(. == ...) uses exact equality; contains() uses substring matching
           ALREADY=$(gh api "repos/$REPO/issues/$ISSUE" \
-            --jq '[.assignees[].login] | contains(["copilot-swe-agent[bot]"])')
+            --jq '[.assignees[].login] | any(. == "copilot-swe-agent[bot]")')
 
           if [ "$ALREADY" = "true" ]; then
             echo "copilot-swe-agent[bot] already assigned. Skipping."
