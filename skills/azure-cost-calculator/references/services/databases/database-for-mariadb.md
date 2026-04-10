@@ -75,13 +75,16 @@ Total = Compute + Storage + Backup
 - Read replicas (GP/MO only): billed at full compute + storage rates
 - Private Endpoint supported for GP and MO tiers only (not Basic)
 - Gen4 hardware is deprecated; Gen5 recommended for all tiers
+- Additional storage products (Large-Scale Storage, Perf Optimized Storage) exist in some regions at different price points
 
 ## Product Names
 
 | Config | productName |
 | --- | --- |
 | Basic, Gen5 | `Azure Database for MariaDB Single Server Basic - Compute Gen5` |
+| Basic, Gen4 (deprecated) | `Azure Database for MariaDB Single Server Basic - Compute Gen4` |
 | GP, Gen5 | `Azure Database for MariaDB Single Server General Purpose - Compute Gen5` |
+| GP, Gen4 (deprecated) | `Azure Database for MariaDB Single Server General Purpose - Compute Gen4` |
 | MO, Gen5 | `Azure Database for MariaDB Single Server Memory Optimized - Compute Gen5` |
 | Basic Storage | `Azure Database for MariaDB Single Server Basic - Storage` |
 | GP/MO Storage | `Azure Database for MariaDB Single Server General Purpose - Storage` |
