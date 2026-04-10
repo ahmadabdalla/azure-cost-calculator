@@ -36,6 +36,9 @@ jobs:
       - name: Find and promote idle drafts
         env:
           GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+          # Built-in token used for markPullRequestReadyForReview: fine-grained PATs
+          # cannot call this GraphQL mutation even with pull-requests:write granted.
+          GITHUB_TOKEN_BUILTIN: ${{ github.token }}
         run: |
           set -euo pipefail
 
@@ -93,11 +96,14 @@ jobs:
 
             echo "Idle for ${IDLE_MINS}m. Promoting..."
 
-            # Mark as ready for review
-            gh pr ready "$NUMBER" --repo "$REPO"
+            # Mark as ready for review. Fine-grained PATs cannot call
+            # markPullRequestReadyForReview even with pull-requests:write;
+            # use the built-in GITHUB_TOKEN which has the workflow-level permission.
+            GH_TOKEN="$GITHUB_TOKEN_BUILTIN" gh pr ready "$NUMBER" --repo "$REPO"
             echo "Marked PR #$NUMBER as ready for review"
 
-            # Add experiment-pipeline label (triggers review workflow via PAT)
+            # Add label via PAT so the labeled event triggers downstream workflows.
+            # GITHUB_TOKEN actions do not trigger new workflow runs.
             gh pr edit "$NUMBER" --repo "$REPO" --add-label "experiment-pipeline"
             echo "Added experiment-pipeline label to PR #$NUMBER"
 
