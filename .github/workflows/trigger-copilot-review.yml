@@ -4,7 +4,7 @@
 # Only affects draft PRs authored by copilot-swe-agent.
 # Safe to remove once the experiment concludes.
 
-name: "[Experiment] Promote Copilot Drafts"
+name: "[Experiment] Trigger Copilot Review"
 
 on:
   schedule:
