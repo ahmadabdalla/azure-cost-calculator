@@ -85,9 +85,11 @@ jobs:
             fi
 
             # Idempotency: skip if a review trigger comment was already posted.
+            # --paginate emits one JSON array per page; jq -s merges all pages
+            # before filtering so we get a single count, not one per page.
             EXISTING=$(gh api "repos/$REPO/issues/$NUMBER/comments" \
               --paginate \
-              --jq "[.[] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
+              | jq -s "[.[][] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
 
             if [ "$EXISTING" -gt 0 ]; then
               echo "Review already triggered (found $EXISTING existing comment(s) with marker). Skipping."
