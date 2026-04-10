@@ -50,15 +50,14 @@ Do not call any other tools. In particular, do not call `get_issue_comments`, `l
 These rules are absolute.
 
 1. **If** `copilot-swe-agent[bot]` is already in the issue's assignees list: do nothing and finish. The Copilot coding agent has already been assigned by a previous run.
-2. **Else if** the issue has **both** the `experiment-pipeline` label **and** the `new-service` label: call `assign_to_agent` to assign the Copilot coding agent. Do nothing else.
-3. **Else if** the issue has the `automatic-existing` label: call `assign_to_agent` to assign the Copilot coding agent. Do nothing else.
-4. **Otherwise**: do nothing and finish. Produce no tool calls and no outputs.
+2. **Else if** the issue has the `automatic-existing` label: call `assign_to_agent` to assign the Copilot coding agent. Do nothing else.
+3. **Otherwise**: do nothing and finish. Produce no tool calls and no outputs.
 
 Do not classify the issue. Do not add or remove labels. Do not post comments.
 
 ## Why these rules exist
 
 - The upstream Pipeline Issue Triage workflow classifies issues and applies labels on the `opened` event.
-- For new services: a maintainer opts a triaged issue into the pipeline by adding `experiment-pipeline`. Both `experiment-pipeline` and `new-service` must be present because this workflow fires on every `labeled` event.
-- For existing service fixes: the triage workflow applies `automatic-existing` directly, bypassing the manual opt-in step. Rule 3 handles this path.
+- For existing service fixes: the triage workflow applies `automatic-existing` directly, triggering automatic assignment. Rule 2 handles this path.
+- For new services: automatic assignment is intentionally disabled. The triage workflow applies `new-service` but no assignment follows. Enable by adding a rule: if `new-service` label is present, call `assign_to_agent`.
 - The idempotency guard prevents re-assigning if a label is re-added on an already-assigned issue.
