@@ -2,13 +2,12 @@
 
 End-to-end pipeline that automates the lifecycle of service reference issues: from triage to Copilot-authored draft PR to automated pricing review.
 
-| Item                 | Detail                                             |
-| -------------------- | -------------------------------------------------- |
-| Triage workflow      | `.github/workflows/issue-triage-v2.md` (gh-aw)    |
-| Trigger workflow     | `.github/workflows/trigger-copilot-review.yml`     |
-| Authoring agent      | `.github/agents/service-reference.md`              |
-| Review agent         | `.github/agents/service-ref-pr-reviewer.md`        |
-| Tracking issue       | [#688](https://github.com/ahmadabdalla/azure-cost-calculator/issues/688) |
+| Item             | Detail                                         |
+| ---------------- | ---------------------------------------------- |
+| Triage workflow  | `.github/workflows/issue-triage-v2.md` (gh-aw) |
+| Trigger workflow | `.github/workflows/trigger-copilot-review.yml` |
+| Authoring agent  | `.github/agents/service-reference.md`          |
+| Review agent     | `.github/agents/service-ref-pr-reviewer.md`    |
 
 ---
 
@@ -47,19 +46,19 @@ The manual step exists because new service issues may be claimed by contributors
 
 ## Pipeline artifacts
 
-| Artifact | Type | Trigger | Purpose |
-| --- | --- | --- | --- |
-| `issue-triage-v2.md` | gh-aw (Copilot) | `issues: [opened]` | Classifies issues, applies labels, assigns Copilot for Fix existing |
-| `trigger-copilot-review.yml` | Standard YAML | `schedule: every 2h` + `workflow_dispatch` | Posts `@copilot` review comment on idle Copilot draft PRs |
-| `service-reference.md` | Custom agent | Copilot assigned to issue | Multi-agent consensus workflow for authoring service reference files |
-| `service-ref-pr-reviewer.md` | Custom agent | `@copilot` comment on PR | Dual-investigation review and remediation of service reference PRs |
+| Artifact                     | Type            | Trigger                                    | Purpose                                                              |
+| ---------------------------- | --------------- | ------------------------------------------ | -------------------------------------------------------------------- |
+| `issue-triage-v2.md`         | gh-aw (Copilot) | `issues: [opened]`                         | Classifies issues, applies labels, assigns Copilot for Fix existing  |
+| `trigger-copilot-review.yml` | Standard YAML   | `schedule: every 2h` + `workflow_dispatch` | Posts `@copilot` review comment on idle Copilot draft PRs            |
+| `service-reference.md`       | Custom agent    | Copilot assigned to issue                  | Multi-agent consensus workflow for authoring service reference files |
+| `service-ref-pr-reviewer.md` | Custom agent    | `@copilot` comment on PR                   | Dual-investigation review and remediation of service reference PRs   |
 
 Supporting agents (invoked by the orchestrators, not directly):
 
-| Agent | Role |
-| --- | --- |
+| Agent                     | Role                                                                        |
+| ------------------------- | --------------------------------------------------------------------------- |
 | `pricing-investigator.md` | API investigation sub-agent (x3 for authoring, x2 for review, + tiebreaker) |
-| `compliance-reviewer.md` | Rules analysis sub-agent (authoring only) |
+| `compliance-reviewer.md`  | Rules analysis sub-agent (authoring only)                                   |
 
 ---
 
@@ -67,9 +66,9 @@ Supporting agents (invoked by the orchestrators, not directly):
 
 The pipeline uses two tokens with distinct scopes:
 
-| Token | Type | Scope | Used by | Purpose |
-| --- | --- | --- | --- | --- |
-| `COPILOT_GITHUB_TOKEN` | Fine-grained PAT | Copilot Requests | gh-aw engine (all gh-aw workflows) | Powers the Copilot agent sessions |
+| Token                   | Type             | Scope                               | Used by                                               | Purpose                                                                                                                                     |
+| ----------------------- | ---------------- | ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `COPILOT_GITHUB_TOKEN`  | Fine-grained PAT | Copilot Requests                    | gh-aw engine (all gh-aw workflows)                    | Powers the Copilot agent sessions                                                                                                           |
 | `PIPELINE_GITHUB_TOKEN` | Fine-grained PAT | Issues: write, Pull Requests: write | Triage (`assign-to-agent`), Trigger (`gh pr comment`) | Assigns Copilot and posts `@copilot` review comments. Read operations work without explicit content permissions because the repo is public. |
 
 ### Why two tokens?
@@ -103,11 +102,11 @@ All three must be true. The `max: 1` cap on `assign-to-agent` is enforced at the
 
 The `assign-to-agent` safe-output passes three parameters to the Copilot coding agent:
 
-| Parameter | Value | Effect |
-| --- | --- | --- |
+| Parameter      | Value               | Effect                                      |
+| -------------- | ------------------- | ------------------------------------------- |
 | `custom-agent` | `service-reference` | Loads `.github/agents/service-reference.md` |
-| `model` | `claude-opus-4.6` | Runs Claude Opus 4.6 |
-| `base-branch` | `dev` | PR targets `dev` (not `main`) |
+| `model`        | `claude-opus-4.6`   | Runs Claude Opus 4.6                        |
+| `base-branch`  | `dev`               | PR targets `dev` (not `main`)               |
 
 ---
 
@@ -162,13 +161,13 @@ GitHub Actions scheduled workflows have known timing variability:
 
 ## Prerequisites
 
-| Requirement | Notes |
-| --- | --- |
-| `COPILOT_GITHUB_TOKEN` repo secret | Fine-grained PAT with Copilot Requests permission |
-| `PIPELINE_GITHUB_TOKEN` repo secret | Fine-grained PAT with Issues:write and Pull Requests:write, scoped to this repo |
-| Copilot coding agent enabled | Repository setting |
-| Labels | `pricing-inaccuracy`, `automatic-existing`, `new-service`, `good first issue` must exist |
-| gh-aw CLI | `gh extension install github/gh-aw` (compile-time only) |
+| Requirement                         | Notes                                                                                    |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| `COPILOT_GITHUB_TOKEN` repo secret  | Fine-grained PAT with Copilot Requests permission                                        |
+| `PIPELINE_GITHUB_TOKEN` repo secret | Fine-grained PAT with Issues:write and Pull Requests:write, scoped to this repo          |
+| Copilot coding agent enabled        | Repository setting                                                                       |
+| Labels                              | `pricing-inaccuracy`, `automatic-existing`, `new-service`, `good first issue` must exist |
+| gh-aw CLI                           | `gh extension install github/gh-aw` (compile-time only)                                  |
 
 ---
 
@@ -229,15 +228,15 @@ After Copilot is assigned to an issue, the session is visible in the GitHub UI u
 
 ### Common failure modes
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| Triage runs but Copilot not assigned | Agent verification failed (title, Type, or file check) | Check agent job logs for which condition was not met |
-| Copilot assigned but no session starts | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions | Rotate token (see above) |
-| Copilot creates PR but no review trigger | Trigger workflow schedule was skipped or delayed | Run `gh workflow run trigger-copilot-review.yml` manually |
-| Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN` |
-| Duplicate review trigger comments | Idempotency guard failed (pagination issue) | Check that `--paginate \| jq -s` pattern is intact in the workflow |
-| MCP servers blocked by policy | Copilot CLI version mismatch | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile` |
-| `markPullRequestReadyForReview` error | Known platform restriction | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts. |
+| Symptom                                             | Likely cause                                                    | Fix                                                                                                    |
+| --------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)          | Check agent job logs for which condition was not met                                                   |
+| Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions            | Rotate token (see above)                                                                               |
+| Copilot creates PR but no review trigger            | Trigger workflow schedule was skipped or delayed                | Run `gh workflow run trigger-copilot-review.yml` manually                                              |
+| Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                 |
+| Duplicate review trigger comments                   | Idempotency guard failed (pagination issue)                     | Check that `--paginate \| jq -s` pattern is intact in the workflow                                     |
+| MCP servers blocked by policy                       | Copilot CLI version mismatch                                    | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile`                      |
+| `markPullRequestReadyForReview` error               | Known platform restriction                                      | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts. |
 
 ---
 
