@@ -62,7 +62,7 @@ InstanceCount: 8 # vCore count
 Compute (per-vCore) = compute_retailPrice × 730 × vCoreCount
 Storage = storage_retailPrice × sizeGB
 Backup (excess) = backup_retailPrice × max(0, backupGB - provisionedStorageGB)
-Total = Compute + Storage + Backup
+Total = Compute + Storage + Backup (excess)
 ```
 
 ## Notes
