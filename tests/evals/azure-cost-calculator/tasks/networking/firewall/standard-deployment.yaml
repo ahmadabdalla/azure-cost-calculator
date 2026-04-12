@@ -3,9 +3,8 @@ id: eval:networking/firewall/standard-deployment
 name: Azure Firewall - Standard Deployment
 description: >
   Tests monthly cost estimation for an Azure Firewall Standard tier in East US.
-  Validates that the agent identifies the deployment hourly cost as the dominant
-  expense, queries data processing separately, and acknowledges the estimated
-  monthly data volume.
+  Validates that the response includes assumptions, uses a monthly-hours basis
+  for the estimate, and acknowledges the 100 GB data volume in the prompt.
 tags:
   - happy-path
   - single-service
