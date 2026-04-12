@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/virtual-wan/standard-hub-s2s-vpn
+name: Virtual WAN - Standard Hub with S2S VPN
+description: >
+  Tests cost estimation for a Virtual WAN Standard hub with S2S VPN gateway.
+  Virtual WAN has multiple billing components (hub hourly, data processing,
+  VPN scale units, connection units) that must be queried separately.
+  Validates the agent correctly identifies multi-component billing.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:virtual-wan
+inputs:
+  prompt: "Estimate the monthly cost of a Virtual WAN Standard hub with 2 VPN S2S scale units and 5 branch-site connections in East US."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Virtual WAN|vWAN"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: scale-units-acknowledged
+    config:
+      contains:
+        - "2"
+    weight: 0.5
+  - type: text
+    name: connections-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
