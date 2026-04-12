@@ -16,7 +16,7 @@ Automated triage of newly opened issues using [GitHub Agentic Workflows (gh-aw)]
 
 When a new issue is opened the workflow:
 
-1. **Sanitises** the issue body (strips @-mentions, URIs, prompt-injection attempts).
+1. **Sanitizes** the issue body (strips @-mentions, URIs, prompt-injection attempts).
 2. Runs the Copilot agent in **read-only** mode to classify the issue.
 3. **Applies up to 2 labels** from an allow-list.
 4. **Posts at most 1 comment** guiding the contributor.
@@ -126,13 +126,13 @@ gh run view <run-id> --log-failed
 
 The compiled lock file produces the standard gh-aw job chain:
 
-```
+```text
 pre_activation -> activation -> agent -> detection -> safe_outputs -> conclusion
 ```
 
 - **pre_activation**: Validates trigger conditions and sets up the workflow context.
-- **activation**: Sanitises issue content into `steps.sanitized.outputs.text`.
-- **agent**: Copilot reads the sanitised content (read-only, no write permissions).
+- **activation**: Sanitizes issue content into `steps.sanitized.outputs.text`.
+- **agent**: Copilot reads the sanitized content (read-only, no write permissions).
 - **detection**: Threat-scans the agent output.
 - **safe_outputs**: Writes labels, comment, and Copilot assignment to the issue (only job with write access).
 - **conclusion**: Reports final status.

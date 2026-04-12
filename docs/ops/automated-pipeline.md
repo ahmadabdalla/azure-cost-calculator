@@ -16,7 +16,7 @@ End-to-end pipeline that automates the lifecycle of service reference issues: fr
 
 ### Fix existing service (fully automatic)
 
-```
+```text
 [USER] Open [Service] issue with Type = Fix existing service
   -> [AUTO] Triage: applies pricing-inaccuracy + automatic-existing,
            assigns Copilot with service-reference agent (single run)
@@ -31,7 +31,7 @@ No manual intervention between issue creation and the finished draft PR with rev
 
 ### New service (manual assignment)
 
-```
+```text
 [USER] Open [Service] issue with Type = New service
   -> [AUTO] Triage: applies new-service + good first issue
   -> [USER] Manually assign Copilot with service-reference agent
@@ -203,13 +203,9 @@ The new-service path currently requires manual Copilot assignment. To automate i
    ```bash
    gh secret set PIPELINE_GITHUB_TOKEN
    ```
-3. Recompile the triage workflow (the token reference is embedded in the lock file):
-   ```bash
-   gh aw compile
-   ```
-4. Commit and merge the updated lock file.
+3. No workflow recompile is needed. Both the triage lock file and the trigger workflow reference the secret by name (`${{ secrets.PIPELINE_GITHUB_TOKEN }}`), so updating the secret value takes effect immediately.
 
-The trigger workflow references the secret by name at runtime, so no recompile is needed for it.
+Recompile with `gh aw compile` only if you change the secret **name** or modify the `assign-to-agent` safe-output configuration.
 
 Fine-grained PATs have a configurable expiry (max 1 year). GitHub sends email reminders before expiry. Monitor for `401 Unauthorized` failures in triage and trigger workflow runs as an additional signal.
 
