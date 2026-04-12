@@ -39,16 +39,29 @@ When the Copilot coding agent is assigned to a service-reference issue using the
 
 ### How issues flow to the agent
 
-1. **Triage**: when a new issue is opened, the [issue triage workflow](issue-triage.md) classifies it and applies labels (e.g., `new-service`, `pricing-inaccuracy`).
-2. **Maintainer review**: a maintainer reviews the triaged issue and decides whether to assign the Copilot coding agent or wait for a human contributor.
-3. **Assignment**: the maintainer assigns the Copilot coding agent to the issue by selecting the `service-reference` custom agent. The agent then runs the multi-agent workflow described below.
+There are two paths depending on issue type:
+
+**Fix existing service (fully automatic):**
+
+1. User opens a `[Service]: {name}` issue with Type = "Fix existing service".
+2. The [triage workflow](issue-triage.md) classifies the issue, applies `pricing-inaccuracy` + `automatic-existing` labels, and assigns the Copilot coding agent with the `service-reference` custom agent in a single run.
+3. No manual step required.
+
+**New service (manual assignment):**
+
+1. User opens a `[Service]: {name}` issue with Type = "New service".
+2. The [triage workflow](issue-triage.md) classifies the issue and applies `new-service` + `good first issue` labels.
+3. A maintainer reviews the triaged issue and decides whether to assign the Copilot coding agent or wait for a human contributor.
+4. The maintainer assigns the Copilot coding agent by selecting the `service-reference` custom agent.
+
+See [automated-pipeline.md](automated-pipeline.md) for the full pipeline architecture including the downstream review trigger.
 
 ### Assignment criteria
 
+- **Fix existing service** (`pricing-inaccuracy` + `automatic-existing` labels): Assigned automatically by the triage workflow when all three verification conditions are met (title pattern, Type field, file exists).
 - **New service issues** (`new-service` label): Assign the agent when:
   - The contributor did not indicate they want to submit the change themselves, OR
   - The issue has been open without a PR for an extended period
-- **Pricing inaccuracy issues** (`pricing-inaccuracy` label): Currently requires manual review; the agent workflow is optimized for new file creation, not updates to existing files.
 - **General enhancements** (`enhancement` label): Evaluate case-by-case; most enhancements are not service reference work.
 
 ### Contributor self-service
@@ -161,12 +174,12 @@ Sub-agents use restricted toolsets (principle of least privilege):
 | ---------------- | ------------------------------------------------------------------------------------------ |
 | Orchestrator     | `.github/agents/service-ref-pr-reviewer.md`                                                |
 | Sub-agent (data) | `.github/agents/pricing-investigator.md` (invoked ×2, + optional tiebreaker)               |
-| Trigger          | Human runs the agent locally in a Copilot session, passing the PR number                   |
+| Trigger          | Automated: `trigger-copilot-review.yml` posts `@copilot` comment on idle draft PRs. Manual: maintainer assigns agent on a PR. |
 | Depends on       | `CONTRIBUTING.md`, `docs/TEMPLATE.md`, `tests/Validate-ServiceReference.ps1`               |
 
 ### What it does
 
-When a human invokes the `service-ref-pr-reviewer` agent locally with a PR number, it runs a review-focused consensus workflow:
+When invoked (either automatically via `@copilot` comment or manually by a maintainer), it runs a review-focused consensus workflow:
 
 1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
@@ -214,9 +227,12 @@ service-ref-pr-reviewer (orchestrator)
   └── git worktree remove: cleanup
 ```
 
-### Trigger & assignment
+### Trigger and assignment
 
-The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. A maintainer assigns the agent by selecting the `service-ref-pr-reviewer` custom agent on the PR. It can also be triggered for PRs opened by the `service-reference` agent itself, providing an automated quality gate.
+The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. Two trigger paths:
+
+- **Automated**: The [trigger-copilot-review.yml](automated-pipeline.md#trigger-workflow) scheduled workflow posts an `@copilot` comment on idle Copilot draft PRs (idle for 2+ hours), referencing this custom agent. This is the standard path for pipeline-created PRs.
+- **Manual**: A maintainer assigns the agent directly on the PR, or posts an `@copilot` comment referencing `.github/agents/service-ref-pr-reviewer.md`.
 
 ### Troubleshooting
 
