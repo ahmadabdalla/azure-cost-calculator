@@ -130,6 +130,7 @@ The compiled lock file produces the standard gh-aw job chain:
 pre_activation -> activation -> agent -> detection -> safe_outputs -> conclusion
 ```
 
+- **pre_activation**: Validates trigger conditions and sets up the workflow context.
 - **activation**: Sanitises issue content into `steps.sanitized.outputs.text`.
 - **agent**: Copilot reads the sanitised content (read-only, no write permissions).
 - **detection**: Threat-scans the agent output.

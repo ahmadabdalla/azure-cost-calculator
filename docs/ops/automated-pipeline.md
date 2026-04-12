@@ -70,7 +70,7 @@ The pipeline uses two tokens with distinct scopes:
 | Token | Type | Scope | Used by | Purpose |
 | --- | --- | --- | --- | --- |
 | `COPILOT_GITHUB_TOKEN` | Fine-grained PAT | Copilot Requests | gh-aw engine (all gh-aw workflows) | Powers the Copilot agent sessions |
-| `PIPELINE_GITHUB_TOKEN` | Fine-grained PAT | Issues: write, Pull Requests: write | Triage (`assign-to-agent`), Trigger (`gh pr comment`) | Assigns Copilot and posts `@copilot` review comments |
+| `PIPELINE_GITHUB_TOKEN` | Fine-grained PAT | Issues: write, Pull Requests: write | Triage (`assign-to-agent`), Trigger (`gh pr comment`) | Assigns Copilot and posts `@copilot` review comments. Read operations work without explicit content permissions because the repo is public. |
 
 ### Why two tokens?
 
@@ -210,6 +210,8 @@ The new-service path currently requires manual Copilot assignment. To automate i
 4. Commit and merge the updated lock file.
 
 The trigger workflow references the secret by name at runtime, so no recompile is needed for it.
+
+Fine-grained PATs have a configurable expiry (max 1 year). GitHub sends email reminders before expiry. Monitor for `401 Unauthorized` failures in triage and trigger workflow runs as an additional signal.
 
 ---
 

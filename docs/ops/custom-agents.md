@@ -231,7 +231,7 @@ service-ref-pr-reviewer (orchestrator)
 
 The `service-ref-pr-reviewer` agent is designed for PRs that create, update, enhance, or fix service reference files. Two trigger paths:
 
-- **Automated**: The [trigger-copilot-review.yml](automated-pipeline.md#trigger-workflow) scheduled workflow posts an `@copilot` comment on idle Copilot draft PRs (idle for 2+ hours), referencing this custom agent. This is the standard path for pipeline-created PRs.
+- **Automated**: The [trigger-copilot-review.yml](automated-pipeline.md#trigger-workflow-details) scheduled workflow posts an `@copilot` comment on idle Copilot draft PRs (idle for 2+ hours), referencing this custom agent. This is the standard path for pipeline-created PRs.
 - **Manual**: A maintainer assigns the agent directly on the PR, or posts an `@copilot` comment referencing `.github/agents/service-ref-pr-reviewer.md`.
 
 ### Troubleshooting
