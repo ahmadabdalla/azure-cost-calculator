@@ -41,7 +41,6 @@ Each entry follows the pattern: `- {display name}: {alias1}, {alias2}, ...`
 ## Databases (services/databases/)
 
 - Azure Arc Enabled Databases: Arc SQL MI, Arc PostgreSQL, Arc-enabled Data Services
-- Azure Database for MariaDB: MariaDB, Azure MariaDB
 - Azure Managed Instance for Apache Cassandra: Cassandra MI, Apache Cassandra, Managed Cassandra
 - Azure SQL Edge: Edge Database, IoT SQL
 - SQL Data Warehouse: Azure Synapse SQL Pool (dedicated), DW, Data Warehouse
