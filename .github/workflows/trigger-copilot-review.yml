@@ -1,10 +1,4 @@
-# EXPERIMENT: automated service-reference pipeline (issue #688)
-# Triggers Copilot coding agent review on idle Copilot draft PRs by posting
-# a @copilot PR comment referencing the service-ref-pr-reviewer custom agent.
-# Only affects draft PRs authored by copilot-swe-agent.
-# Safe to remove once the experiment concludes.
-
-name: "[Experiment] Trigger Copilot Review"
+name: "[Pipeline] Trigger Copilot Review"
 
 on:
   schedule:
