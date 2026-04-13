@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.7.0] - 2026-04-13
+
+### Added
+
+- New service: Azure Database for MariaDB (`database-for-mariadb.md`)
+- Service routing: added Azure Database for MariaDB with aliases `MariaDB`, `Azure MariaDB`
+
 ## [1.6.0] - 2026-04-08
 
 ### Added
