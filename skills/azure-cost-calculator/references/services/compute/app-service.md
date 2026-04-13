@@ -45,13 +45,13 @@ SkuName: ASIP
 | Parameter     | How to determine       | Example values                               |
 | ------------- | ---------------------- | -------------------------------------------- |
 | `productName` | Plan tier + OS variant | See Product Names table                      |
-| `skuName`     | Plan tier + size       | `B1`, `S1`, `P1 v3`, `P1v4`, `I1 v2`, `ASIP` |
+| `skuName`     | Plan tier + size or fee | `B1`, `S1`, `P1 v3`, `P1v4`, `I1`, `I1 v2`, `Stamp`, `ASIP` |
 
 ## Cost Formula
 
 ```
 Monthly = retailPrice × 730 × instanceCount
-Isolated v2 = (ASIP_retailPrice × 730) + (instance_retailPrice × 730 × instanceCount)
+Isolated v1/v2 = (platformFee_retailPrice × 730) + (instance_retailPrice × 730 × instanceCount)
 ```
 
 ## Notes
@@ -62,7 +62,7 @@ Isolated v2 = (ASIP_retailPrice × 730) + (instance_retailPrice × 730 × instan
 - **Functions on Dedicated plans** (B1/S1/P1v3) bill through App Service; no meters under `Functions`
 - **Logic Apps Standard** creates WS-type plans but bills through `Logic Apps` meters, not App Service
 - Private endpoints require Basic tier or higher
-- RIs available for Premium v3, Premium v4, and Isolated v2 only; not Basic, Standard, or Premium v2
+- RIs are available for Premium v3, Premium v4, and Isolated v2 compute. For Isolated v1, only the `Stamp Fee` reservation is available (3-Year); Isolated v1 compute SKUs (`I1`, `I2`, `I3`) do not return reservation rows. RIs are not available for Basic, Standard, or Premium v2
 - Meter naming varies: Linux Basic uses `B1`/`B2`/`B3`; Premium v4 uses `P1v4`; other tiers append `App` (e.g., `P1 v3 App`)
 - Memory-optimized variants (`P1mv3`, `P1mv4`, `I1mv2`) offer higher memory-to-CPU ratios at a premium
 
@@ -75,6 +75,7 @@ Isolated v2 = (ASIP_retailPrice × 730) + (instance_retailPrice × 730 × instan
 | Premium v2  | `Azure App Service Premium v2 Plan - Linux`  | `Azure App Service Premium v2 Plan`  |
 | Premium v3  | `Azure App Service Premium v3 Plan - Linux`  | `Azure App Service Premium v3 Plan`  |
 | Premium v4  | `Azure App Service Premium v4 Plan - Linux`  | `Azure App Service Premium v4 Plan`  |
+| Isolated v1 | `Azure App Service Isolated Plan - Linux`    | `Azure App Service Isolated Plan`    |
 | Isolated v2 | `Azure App Service Isolated v2 Plan - Linux` | `Azure App Service Isolated v2 Plan` |
 
 ## Common SKUs
