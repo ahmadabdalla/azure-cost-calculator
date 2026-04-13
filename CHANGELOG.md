@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 - New service: Azure Database for MariaDB (`database-for-mariadb.md`)
 - Service routing: added Azure Database for MariaDB with aliases `MariaDB`, `Azure MariaDB`
 
+### Fixed
+
+- App Service reference: added Isolated v1 coverage and corrected RI availability details
+
 ## [1.6.0] - 2026-04-08
 
 ### Added
