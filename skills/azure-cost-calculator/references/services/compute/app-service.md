@@ -45,7 +45,7 @@ SkuName: ASIP
 | Parameter     | How to determine       | Example values                               |
 | ------------- | ---------------------- | -------------------------------------------- |
 | `productName` | Plan tier + OS variant | See Product Names table                      |
-| `skuName`     | Plan tier + size       | `B1`, `S1`, `P1 v3`, `P1v4`, `I1`, `I1 v2`, `Stamp`, `ASIP` |
+| `skuName`     | Plan tier + size or fee | `B1`, `S1`, `P1 v3`, `P1v4`, `I1`, `I1 v2`, `Stamp`, `ASIP` |
 
 ## Cost Formula
 
@@ -62,7 +62,7 @@ Isolated v1/v2 = (platformFee_retailPrice × 730) + (instance_retailPrice × 730
 - **Functions on Dedicated plans** (B1/S1/P1v3) bill through App Service; no meters under `Functions`
 - **Logic Apps Standard** creates WS-type plans but bills through `Logic Apps` meters, not App Service
 - Private endpoints require Basic tier or higher
-- RIs available for Premium v3, Premium v4, and Isolated v2 compute; Isolated v1 Stamp Fee only (3-Year); not Basic, Standard, or Premium v2
+- RIs are available for Premium v3, Premium v4, and Isolated v2 compute. For Isolated v1, only the `Stamp Fee` reservation is available (3-Year); Isolated v1 compute SKUs (`I1`, `I2`, `I3`) do not return reservation rows. RIs are not available for Basic, Standard, or Premium v2
 - Meter naming varies: Linux Basic uses `B1`/`B2`/`B3`; Premium v4 uses `P1v4`; other tiers append `App` (e.g., `P1 v3 App`)
 - Memory-optimized variants (`P1mv3`, `P1mv4`, `I1mv2`) offer higher memory-to-CPU ratios at a premium
 
