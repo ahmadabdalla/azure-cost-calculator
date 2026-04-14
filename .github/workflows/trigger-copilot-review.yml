@@ -107,8 +107,8 @@ jobs:
     name: Manually trigger review on a branch
     if: github.event_name == 'workflow_dispatch'
     concurrency:
-      group: trigger-copilot-review-manual-${{ inputs.branch }}
-      cancel-in-progress: false
+      group: copilot-quiet-refs/heads/${{ inputs.branch }}
+      cancel-in-progress: true
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

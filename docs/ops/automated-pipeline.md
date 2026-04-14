@@ -141,7 +141,7 @@ Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `cop
 gh workflow run trigger-copilot-review.yml --field branch=copilot/fix-storage-ref
 ```
 
-Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. Job-level concurrency serializes manual runs per branch to prevent duplicate comment races.
+Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. `manual-trigger` uses the same per-branch concurrency group as `debounce` (`copilot-quiet-refs/heads/<branch>`) with `cancel-in-progress: true`, so a manual recovery run cancels any in-flight debounce sleeper on that branch.
 
 ### Commit-message filter
 
@@ -170,7 +170,7 @@ The job scans all PR comments (paginated, `jq -s` to merge pages) for the string
 - All GitHub Actions context values (`github.repository`, `github.ref_name`) are passed through `env:` blocks and referenced as shell variables. No context values are interpolated directly into `run:` script bodies.
 - Comment body is hardcoded (not derived from PR content or branch name).
 - Workflow-level `permissions: {}` with write only scoped to the job that needs it (`pull-requests: write`).
-- No code checkout. The workflow only reads repo metadata and posts a comment. `PIPELINE_GITHUB_TOKEN` never processes user-supplied data.
+- No code checkout. The workflow only reads repo metadata and posts a comment. `workflow_dispatch.branch` is user input, but it is validated (`^copilot/.+` plus `git check-ref-format --branch`) and used as a quoted shell variable before `PIPELINE_GITHUB_TOKEN`-authorized calls.
 
 ### Custom agents
 
