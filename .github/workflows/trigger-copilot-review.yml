@@ -18,14 +18,14 @@ jobs:
   # uninterrupted minutes, meaning Copilot has gone idle.
   debounce:
     name: Wait for Copilot to go idle then trigger review
-    # Skip commits made by the reviewer agent itself (identified by the marker in
-    # the commit message body). These are zero-value triggers -- review is already
-    # done. The filter is a dependency: do not edit the commit message in a way that
-    # removes the substring 'service-ref-pr-reviewer'.
+    # Skip pushes that include reviewer-agent remediation commits (identified by
+    # the marker in commit messages). These are zero-value triggers -- review is
+    # already done. The filter is a dependency: do not edit reviewer commit
+    # messages in a way that removes the substring 'service-ref-pr-reviewer'.
     if: >
       github.event_name == 'push' &&
       github.actor == 'Copilot' &&
-      !contains(github.event.head_commit.message, 'service-ref-pr-reviewer')
+      !contains(join(github.event.commits.*.message, ' '), 'service-ref-pr-reviewer')
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     concurrency:
@@ -106,6 +106,9 @@ jobs:
   manual-trigger:
     name: Manually trigger review on a branch
     if: github.event_name == 'workflow_dispatch'
+    concurrency:
+      group: trigger-copilot-review-manual-${{ inputs.branch }}
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -120,8 +123,12 @@ jobs:
       - name: Validate branch input
         run: |
           set -euo pipefail
-          if [[ ! "$BRANCH" =~ ^copilot/ ]]; then
+          if [[ ! "$BRANCH" =~ ^copilot/.+ ]]; then
             echo "Branch '$BRANCH' does not match copilot/** pattern. Exiting."
+            exit 1
+          fi
+          if ! git check-ref-format --branch "$BRANCH" >/dev/null 2>&1; then
+            echo "Branch '$BRANCH' is not a valid git branch name. Exiting."
             exit 1
           fi
 

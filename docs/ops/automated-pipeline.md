@@ -120,7 +120,7 @@ The `assign-to-agent` safe-output passes three parameters to the Copilot coding 
 
 ### `debounce` job
 
-Triggered by `push` events to `copilot/**` branches. Only runs when the actor is `Copilot` (the GitHub Copilot coding agent) and the commit message does not contain `service-ref-pr-reviewer`.
+Triggered by `push` events to `copilot/**` branches. Only runs when the actor is `Copilot` (the GitHub Copilot coding agent) and none of the pushed commit messages contains `service-ref-pr-reviewer`.
 
 Uses `concurrency: cancel-in-progress: true` scoped to the branch ref as a debounce mechanism: each new Copilot push cancels the previous run and restarts the 15-minute quiet period. Once Copilot stops committing, the timer completes and the review comment is posted.
 
@@ -141,11 +141,11 @@ Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `cop
 gh workflow run trigger-copilot-review.yml --field branch=copilot/fix-storage-ref
 ```
 
-Steps: validate branch pattern, find PR, check idempotency, post comment. No jitter — single run, no race condition.
+Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. Job-level concurrency serializes manual runs per branch to prevent duplicate comment races.
 
 ### Commit-message filter
 
-The job `if:` condition filters out commits whose message body contains `service-ref-pr-reviewer`. The reviewer agent includes this string in its commit messages, so its remediation commits are zero-cost skips (no runner spun up, no 15-minute sleep). This is a dependency: do not edit the reviewer agent's commit messages in a way that removes this substring, or the filter will stop working and every remediation commit will spin a runner.
+The job `if:` condition filters out pushes when any pushed commit message contains `service-ref-pr-reviewer` (`join(github.event.commits.*.message, ' ')`). The reviewer agent includes this string in its commit messages, so remediation pushes are zero-cost skips (no runner spun up, no 15-minute sleep). This is a dependency: do not edit the reviewer agent's commit messages in a way that removes this substring, or the filter will stop working and remediation pushes will spin runners.
 
 ### Idempotency
 
@@ -166,7 +166,7 @@ The job scans all PR comments (paginated, `jq -s` to merge pages) for the string
 ### Trigger workflow
 
 - `push` trigger is scoped to `copilot/**` branches. Forks cannot trigger upstream workflows; the residual risk is a collaborator-created branch named `copilot/*`, mitigated by the actor gate.
-- Actor gate (`github.actor == 'Copilot'`) on the `debounce` job prevents non-Copilot pushes from running the job. The scheduled fallback has no actor gate but uses `--author "app/copilot-swe-agent"` to filter PRs.
+- Actor gate (`github.actor == 'Copilot'`) on the `debounce` job prevents non-Copilot pushes from running the job.
 - All GitHub Actions context values (`github.repository`, `github.ref_name`) are passed through `env:` blocks and referenced as shell variables. No context values are interpolated directly into `run:` script bodies.
 - Comment body is hardcoded (not derived from PR content or branch name).
 - Workflow-level `permissions: {}` with write only scoped to the job that needs it (`pull-requests: write`).
@@ -256,7 +256,7 @@ After Copilot is assigned to an issue, the session is visible in the GitHub UI u
 | --------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)                          | Check agent job logs for which condition was not met                                                                  |
 | Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                            | Rotate token (see above)                                                                                              |
-| Copilot creates PR but no review trigger            | Actor gate evaluated false; commit-message filter matched; actor string changed | Check push event actor via `gh api repos/{owner}/{repo}/events`; check commit message body for filter match           |
+| Copilot creates PR but no review trigger            | Actor gate evaluated false; commit-message filter matched; actor string changed | Check push event actor via `gh api repos/{owner}/{repo}/events`; check pushed commit messages for filter match         |
 | `debounce` job never runs despite Copilot push      | Actor is not `Copilot` or branch does not match `copilot/**`                    | Inspect the workflow run triggered by the push; check `github.actor` value in logs                                    |
 | Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account                 | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                |
 | Duplicate review trigger comments                   | Idempotency guard failed (pagination issue or comment body changed)             | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer` |
@@ -286,7 +286,7 @@ There is no scheduled fallback. `workflow_dispatch` is sufficient for manual rec
 
 ### Why the commit-message filter
 
-After the review comment is posted, the reviewer agent runs, produces findings, and commits fixes back to the branch. Each of those commits triggers a push event. Without the filter, every remediation commit would spin a runner, sleep 15 minutes, then exit (no-op, because the idempotency check would catch it). The commit-message filter eliminates the runner cost at the `if:` layer before any runner is allocated.
+After the review comment is posted, the reviewer agent runs, produces findings, and commits fixes back to the branch. Each of those commits triggers a push event. Without the filter, remediation pushes would spin a runner, sleep 15 minutes, then exit (no-op, because the idempotency check would catch it). The commit-message filter eliminates that runner cost at the `if:` layer before any runner is allocated.
 
 ### Why @copilot comment instead of a gh-aw review workflow
 
