@@ -102,13 +102,14 @@ jobs:
           echo "Posted @copilot review trigger on PR #$PR_NUMBER"
 
   # Manual recovery path: accepts a branch name input, finds the PR, and posts
-  # the review comment immediately (no debounce sleep).
+  # the review comment without debounce sleep. Manual runs for the same branch
+  # are serialized to prevent duplicate-comment races.
   manual-trigger:
     name: Manually trigger review on a branch
     if: github.event_name == 'workflow_dispatch'
     concurrency:
       group: copilot-quiet-refs/heads/${{ inputs.branch }}
-      cancel-in-progress: true
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

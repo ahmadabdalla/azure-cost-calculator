@@ -135,13 +135,13 @@ Steps:
 
 ### `manual-trigger` job
 
-Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `copilot/**`) and immediately posts the review comment without the debounce sleep. Use this for manual recovery when the push path misses a PR (runner failure, skipped push event).
+Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `copilot/**`) and posts the review comment without a debounce sleep once the run acquires its concurrency slot. Use this for manual recovery when the push path misses a PR (runner failure, skipped push event).
 
 ```bash
 gh workflow run trigger-copilot-review.yml --field branch=copilot/fix-storage-ref
 ```
 
-Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. `manual-trigger` uses the same per-branch concurrency group as `debounce` (`copilot-quiet-refs/heads/<branch>`) with `cancel-in-progress: true`, so a manual recovery run cancels any in-flight debounce sleeper on that branch.
+Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. `manual-trigger` uses the same per-branch concurrency group as `debounce` (`copilot-quiet-refs/heads/<branch>`) with `cancel-in-progress: false`, serializing runs on the same branch to avoid duplicate-comment races from cancellation timing.
 
 ### Commit-message filter
 
