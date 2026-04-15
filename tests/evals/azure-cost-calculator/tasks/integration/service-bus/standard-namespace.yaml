@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:integration/service-bus/standard-namespace
+name: Service Bus - Standard Namespace
+description: >
+  Tests cost estimation for a Standard tier Service Bus namespace with
+  messaging operations. Validates that the agent correctly identifies
+  the hourly base unit charge plus tiered operations pricing and
+  acknowledges brokered connections as a billing dimension.
+tags:
+  - happy-path
+  - single-service
+  - integration
+  - service:service-bus
+inputs:
+  prompt: "How much would an Azure Service Bus Standard namespace cost per month in East US with 50 million messaging operations?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Service Bus|ASB"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: operations-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
