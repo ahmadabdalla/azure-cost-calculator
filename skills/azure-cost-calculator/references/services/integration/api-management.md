@@ -64,8 +64,10 @@ MeterName: Secondary Unit
 | Consumption | `Consumption` | `Consumption Calls` | `10K`         | Per-call, not per-hour        |
 | Gateway     | `Gateway`     | `Gateway Unit`      | `1 Hour`      | Self-hosted gateway (classic) |
 | Isolated    | `Isolated`    | `Isolated Unit`     | `1 Hour`      | Network-isolated              |
+| WG Standard | `Workspace Gateway Standard` | `Workspace Gateway Standard Unit` | `1 Hour` | Workspace gateway |
+| WG Premium  | `Workspace Gateway Premium`  | `Workspace Gateway Premium Unit`  | `1 Hour` | Workspace gateway |
 
-> **Additional meters**: v2 tiers have `{Tier} Secondary Unit` (1 Hour each). Standard v2 and Premium v2 also have `{Tier} Self-hosted Gateway`. Premium classic has `Secondary Unit`. `Workspace Gateway Standard` and `Workspace Gateway Premium` are standalone gateway SKUs following the same `{Tier} Unit` pattern.
+> **Additional meters**: v2 tiers have `{Tier} Secondary Unit` (1 Hour each). Standard v2 and Premium v2 also have `{Tier} Self-hosted Gateway`. Premium classic has `Secondary Unit`.
 > **Workspace Packs**: Available for Developer (free), Standard, Premium, Standard v2, Premium v2, Isolated, Workspace Gateway Premium; query with `{Tier} Workspace Pack` meter (1/Hour).
 
 ## Cost Formula
