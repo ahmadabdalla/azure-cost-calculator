@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/front-door/standard-profile-500gb-egress
+name: Azure Front Door - Standard Profile 500 GB Egress
+description: >
+  Tests monthly cost estimation for an Azure Front Door Standard profile with
+  500 GB of data transfer out. Validates that the response includes assumptions,
+  uses zone-based region pricing, and acknowledges the 500 GB data volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:front-door
+inputs:
+  prompt: "How much would an Azure Front Door Standard profile cost per month with 500 GB of data transfer out?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Front Door|Front Door"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: data-volume-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
