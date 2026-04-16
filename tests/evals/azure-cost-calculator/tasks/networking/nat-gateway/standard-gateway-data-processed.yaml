@@ -37,6 +37,12 @@ graders:
       contains:
         - "500"
     weight: 0.5
+  - type: text
+    name: global-region-acknowledged
+    config:
+      contains:
+        - "Global"
+    weight: 0.5
   - type: prompt
     name: complete-estimate-quality
     config:
@@ -46,10 +52,11 @@ graders:
 
         The agent's response is in the conversation above. Check it for these criteria:
         (1) Includes an Assumptions section disclosing safe-default parameters.
-        (2) Shows a monthly total cost using the correct billing model for NAT Gateway.
-        (3) Accounts for 500 GB of data processed as specified.
+        (2) Treats NAT Gateway as a global-priced service by using/acknowledging Global region pricing.
+        (3) Shows a monthly total cost using the correct billing model for NAT Gateway.
+        (4) Accounts for 500 GB of data processed as specified.
 
-        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+        Score 1.0 if all four criteria are met. Score 0.5 if three are met. Score 0.0 if fewer than three are met.
 
         Return ONLY a decimal number between 0.0 and 1.0 with no other text.
     weight: 1.5
