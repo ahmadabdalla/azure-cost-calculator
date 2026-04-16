@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:integration/api-management/standard-v2-unit
+name: API Management - Standard v2 Unit
+description: >
+  Tests cost estimation for API Management Standard v2 tier with multiple units.
+  Validates hourly unit pricing model with instance count scaling.
+tags:
+  - happy-path
+  - single-service
+  - integration
+  - service:api-management
+inputs:
+  prompt: "How much would 2 units of Azure API Management Standard v2 cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "API Management|APIM"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      contains:
+        - "2"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
