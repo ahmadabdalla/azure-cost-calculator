@@ -69,7 +69,7 @@ InstanceCount: 3
 | `App Gateway Unit` | matching | 1 Hour | App Gateway deployed in hub |
 | `Firewall NVA Data Processing Data Processed` | `Firewall NVA Data Processing` | 1 GB | NVA load-balancer data |
 
-> **Note**: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when route maps or 3rd-party Firewall Manager policies are configured.
+> **Note**: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when 3rd-party Firewall Manager policies are configured.
 
 ## Cost Formula
 
