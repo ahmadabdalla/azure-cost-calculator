@@ -1,103 +1,182 @@
 name: "[Pipeline] Trigger Copilot Review"
 
 on:
-  schedule:
-    - cron: "0 */2 * * *" # every 2 hours
+  push:
+    branches: ["copilot/**"]
   workflow_dispatch:
+    inputs:
+      branch:
+        description: "copilot/** branch to trigger review on (e.g. copilot/fix-storage-ref)"
+        required: true
+        type: string
 
 permissions: {}
 
-concurrency:
-  group: trigger-copilot-review
-  cancel-in-progress: true
-
 jobs:
-  trigger:
-    name: Trigger review on idle Copilot drafts
+  # Fires on each Copilot push to a copilot/** branch. cancel-in-progress resets
+  # the quiet period on every new push; the comment is posted only after 15
+  # uninterrupted minutes, meaning Copilot has gone idle.
+  debounce:
+    name: Wait for Copilot to go idle then trigger review
+    # Skip pushes that include reviewer-agent remediation commits (identified by
+    # the marker in commit messages). These are zero-value triggers -- review is
+    # already done. The filter is a dependency: do not edit reviewer commit
+    # messages in a way that removes the substring 'service-ref-pr-reviewer'.
+    if: >
+      github.event_name == 'push' &&
+      github.actor == 'Copilot' &&
+      !contains(join(github.event.commits.*.message, ' '), 'service-ref-pr-reviewer')
     runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    concurrency:
+      group: copilot-quiet-${{ github.ref }}
+      cancel-in-progress: true
     permissions:
       contents: read
       pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      BRANCH: ${{ github.ref_name }}
+      TRIGGER_MARKER: "service-ref-pr-reviewer"
     steps:
-      - name: Find and trigger review on idle drafts
-        env:
-          GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+      - name: Wait for quiet period
+        # Each new Copilot push cancels the previous run via cancel-in-progress,
+        # resetting this timer. The comment is only posted after 15 uninterrupted
+        # minutes -- meaning Copilot has gone idle.
+        run: sleep 900
+
+      - name: Find Copilot draft PR for this branch
+        id: find-pr
         run: |
           set -euo pipefail
-
-          REPO="${{ github.repository }}"
-          IDLE_MINUTES=120  # 2 hours
-          TRIGGER_MARKER="service-ref-pr-reviewer"
-
-          echo "::group::Listing Copilot draft PRs"
-          DRAFT_PRS=$(gh pr list \
+          PR_NUMBER=$(gh pr list \
             --repo "$REPO" \
+            --head "$BRANCH" \
             --author "app/copilot-swe-agent" \
             --draft \
-            --json number,headRefName,updatedAt \
-            --jq '.')
-
-          COUNT=$(echo "$DRAFT_PRS" | jq 'length')
-          echo "Found $COUNT Copilot draft PR(s)"
-          echo "::endgroup::"
-
-          if [ "$COUNT" -eq 0 ]; then
-            echo "No Copilot draft PRs found. Nothing to do."
+            --json number \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No Copilot draft PR found for branch $BRANCH. Exiting."
+            echo "found=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
-          NOW=$(date -u +%s)
+      - name: Check idempotency
+        id: idempotency
+        if: steps.find-pr.outputs.found == 'true'
+        env:
+          PR_NUMBER: ${{ steps.find-pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          # --paginate emits one JSON array per page; jq -s merges all pages
+          # before filtering so we get a single count, not one per page.
+          # --arg passes TRIGGER_MARKER safely without shell interpolation into jq source.
+          EXISTING=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --paginate \
+            | jq -s --arg marker "$TRIGGER_MARKER" \
+                '[.[][] | select(.body | contains($marker))] | length')
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Review already triggered ($EXISTING existing comment(s) with marker). Skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
 
-          echo "$DRAFT_PRS" | jq -c '.[]' | while read -r PR; do
-            NUMBER=$(echo "$PR" | jq -r '.number')
-            BRANCH=$(echo "$PR" | jq -r '.headRefName')
-            UPDATED=$(echo "$PR" | jq -r '.updatedAt')
+      - name: Post review trigger comment
+        if: steps.find-pr.outputs.found == 'true' && steps.idempotency.outputs.skip == 'false'
+        env:
+          PR_NUMBER: ${{ steps.find-pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          # Random jitter (0-29s) reduces the chance of a duplicate post if two
+          # debounce runs wake up within the same second after a near-simultaneous
+          # cancellation race.
+          sleep $((RANDOM % 30))
+          gh pr comment "$PR_NUMBER" \
+            --repo "$REPO" \
+            --body "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
+          echo "Posted @copilot review trigger on PR #$PR_NUMBER"
 
-            echo "::group::PR #$NUMBER ($BRANCH)"
+  # Manual recovery path: accepts a branch name input, finds the PR, and posts
+  # the review comment without debounce sleep. Manual runs for the same branch
+  # are serialized to prevent duplicate-comment races.
+  manual-trigger:
+    name: Manually trigger review on a branch
+    if: github.event_name == 'workflow_dispatch'
+    concurrency:
+      group: copilot-quiet-refs/heads/${{ inputs.branch }}
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      BRANCH: ${{ inputs.branch }}
+      TRIGGER_MARKER: "service-ref-pr-reviewer"
+    steps:
+      - name: Validate branch input
+        run: |
+          set -euo pipefail
+          if [[ ! "$BRANCH" =~ ^copilot/.+ ]]; then
+            echo "Branch '$BRANCH' does not match copilot/** pattern. Exiting."
+            exit 1
+          fi
+          if ! git check-ref-format --branch "$BRANCH" >/dev/null 2>&1; then
+            echo "Branch '$BRANCH' is not a valid git branch name. Exiting."
+            exit 1
+          fi
 
-            # Check last commit time on the branch (more accurate than updatedAt)
-            LAST_COMMIT_DATE=$(gh api \
-              "repos/$REPO/commits?sha=$BRANCH&per_page=1" \
-              --jq '.[0].commit.committer.date' 2>/dev/null || true)
+      - name: Find Copilot draft PR for this branch
+        id: find-pr
+        run: |
+          set -euo pipefail
+          PR_NUMBER=$(gh pr list \
+            --repo "$REPO" \
+            --head "$BRANCH" \
+            --author "app/copilot-swe-agent" \
+            --draft \
+            --json number \
+            --jq '.[0].number // empty')
+          if [ -z "$PR_NUMBER" ]; then
+            echo "No Copilot draft PR found for branch $BRANCH. Exiting."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "found=true" >> "$GITHUB_OUTPUT"
+          echo "number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
 
-            # Fall back to PR updatedAt if commit date is empty or null
-            if [ -z "$LAST_COMMIT_DATE" ] || [ "$LAST_COMMIT_DATE" = "null" ]; then
-              LAST_COMMIT_DATE="$UPDATED"
-            fi
+      - name: Check idempotency
+        id: idempotency
+        if: steps.find-pr.outputs.found == 'true'
+        env:
+          PR_NUMBER: ${{ steps.find-pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          EXISTING=$(gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+            --paginate \
+            | jq -s --arg marker "$TRIGGER_MARKER" \
+                '[.[][] | select(.body | contains($marker))] | length')
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Review already triggered ($EXISTING existing comment(s) with marker). Skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
 
-            # Ubuntu runner: GNU date with -d flag
-            LAST_EPOCH=$(date -u -d "$LAST_COMMIT_DATE" +%s)
-            IDLE_SECONDS=$(( NOW - LAST_EPOCH ))
-            IDLE_MINS=$(( IDLE_SECONDS / 60 ))
-
-            echo "Last activity: ${IDLE_MINS}m ago (threshold: ${IDLE_MINUTES}m)"
-
-            if [ "$IDLE_MINS" -lt "$IDLE_MINUTES" ]; then
-              echo "Still active. Skipping."
-              echo "::endgroup::"
-              continue
-            fi
-
-            # Idempotency: skip if a review trigger comment was already posted.
-            # --paginate emits one JSON array per page; jq -s merges all pages
-            # before filtering so we get a single count, not one per page.
-            EXISTING=$(gh api "repos/$REPO/issues/$NUMBER/comments" \
-              --paginate \
-              | jq -s "[.[][] | select(.body | contains(\"$TRIGGER_MARKER\"))] | length")
-
-            if [ "$EXISTING" -gt 0 ]; then
-              echo "Review already triggered (found $EXISTING existing comment(s) with marker). Skipping."
-              echo "::endgroup::"
-              continue
-            fi
-
-            echo "Idle for ${IDLE_MINS}m. Triggering review..."
-
-            gh pr comment "$NUMBER" --repo "$REPO" --body \
-              "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
-
-            echo "Posted @copilot review trigger on PR #$NUMBER"
-            echo "::endgroup::"
-          done
-
-          echo "Done."
+      - name: Post review trigger comment
+        if: steps.find-pr.outputs.found == 'true' && steps.idempotency.outputs.skip == 'false'
+        env:
+          PR_NUMBER: ${{ steps.find-pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          gh pr comment "$PR_NUMBER" \
+            --repo "$REPO" \
+            --body "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
+          echo "Posted @copilot review trigger on PR #$PR_NUMBER"
