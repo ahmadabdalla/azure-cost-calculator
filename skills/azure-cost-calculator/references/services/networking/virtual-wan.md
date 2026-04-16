@@ -50,15 +50,6 @@ InstanceCount: 3
 
 > **Note**: ER units 6–10 use `SkuName: ExpressRoute Additional Scale Unit` at a lower rate. VPN P2S queries follow the S2S pattern; substitute `VPN P2S Scale Unit` / `VPN P2S Connection Unit`.
 
-## Key Fields
-
-| Parameter | How to determine | Example values |
-| --------- | ---------------- | -------------- |
-| `serviceName` | Always `Virtual WAN` | `Virtual WAN` |
-| `productName` | Single product for all meters | `Virtual WAN` |
-| `skuName` | Matches the meter component type | `Standard Hub`, `VPN S2S Scale Unit` |
-| `meterName` | Component-specific, often matches skuName | `Standard Hub Unit`, `VPN S2S Connection Unit` |
-
 ## Meter Names
 
 | Meter | skuName | unitOfMeasure | Notes |
@@ -78,7 +69,7 @@ InstanceCount: 3
 | `App Gateway Unit` | matching | 1 Hour | App Gateway deployed in hub |
 | `Firewall NVA Data Processing Data Processed` | `Firewall NVA Data Processing` | 1 GB | NVA load-balancer data |
 
-> Also: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when 3rd-party Firewall Manager policies are configured.
+> **Note**: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when route maps or 3rd-party Firewall Manager policies are configured.
 
 ## Cost Formula
 
