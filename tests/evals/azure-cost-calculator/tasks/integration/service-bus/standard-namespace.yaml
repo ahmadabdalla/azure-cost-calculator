@@ -17,6 +17,7 @@ expected:
   output_contains:
     - "Assumptions"
     - "730"
+    - "brokered connection"
   output_not_contains:
     - "Summary format"
 graders:
@@ -36,7 +37,7 @@ graders:
     name: operations-acknowledged
     config:
       contains:
-        - "50"
+        - "50 million"
     weight: 0.5
   - type: tool_constraint
     name: uses-pricing-script

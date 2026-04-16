@@ -2,7 +2,7 @@
 serviceName: Service Bus
 category: integration
 aliases: [ASB, Queues, Topics]
-primaryCost: "Namespace hours (Standard/Premium) + operations + brokered connections (Standard)"
+primaryCost: "Hourly base charge (Standard/Premium) + operations + brokered connections (Standard)"
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -55,7 +55,7 @@ InstanceCount: 2
 | Meter                              | SKU                  | unitOfMeasure | Purpose                                                  |
 | ---------------------------------- | -------------------- | ------------- | -------------------------------------------------------- |
 | `Basic Messaging Operations`       | `Basic`              | `1M`          | Per 1M operations                                        |
-| `Standard Base Unit`               | `Standard`           | `1/Hour`      | Namespace hourly charge (also returns `1/Month` variant) |
+| `Standard Base Unit`               | `Standard`           | `1/Hour`      | Hourly base charge, per subscription (also returns `1/Month` variant) |
 | `Standard Messaging Operations`    | `Standard`           | `1M`          | Per 1M operations; tiered (first 13M included)           |
 | `Standard Brokered Connection`     | `Standard`           | `1`           | Per connection/month; tiered (first 1,000 included)      |
 | `Hybrid Connections Listener Unit` | `Hybrid Connections` | `1 Hour`      | Per listener hourly charge                               |
