@@ -44,9 +44,11 @@ jobs:
         run: |
           set -euo pipefail
           # Look up the Copilot cloud agent workflow ID by name -- no hardcode.
+          # --paginate without --jq emits one JSON object per page; jq -s slurps
+          # all pages before filtering so the select spans the full result set.
           WORKFLOW_ID=$(gh api --paginate "repos/$REPO/actions/workflows" \
-            --jq '[.workflows[] | select(.name == "Copilot cloud agent") | .id] | first')
-          if [ -z "$WORKFLOW_ID" ]; then
+            | jq -s '[.[].workflows[] | select(.name == "Copilot cloud agent") | .id] | first')
+          if [ -z "$WORKFLOW_ID" ] || [ "$WORKFLOW_ID" = "null" ]; then
             echo "Copilot cloud agent workflow not found. Assuming no active branches."
             echo "active_branches=[]" >> "$GITHUB_OUTPUT"
             exit 0
