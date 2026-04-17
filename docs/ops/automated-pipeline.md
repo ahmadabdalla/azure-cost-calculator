@@ -118,10 +118,10 @@ The `assign-to-agent` safe-output passes three parameters to the Copilot coding 
 
 ### `scheduled-idle-check` job
 
-Triggered by `schedule` (every hour on the hour). Runs as `github-actions[bot]`, which is never subject to the first-time contributor approval gate. The gate fires when the triggering actor is classified as a first-time contributor; GitHub Apps (`app/copilot-swe-agent`) are permanently in that class regardless of merged PRs.
+Triggered by `schedule` (every hour on the hour) or by `workflow_dispatch` with `dry_run=true`. Runs as `github-actions[bot]`, which is never subject to the first-time contributor approval gate. The gate fires when the triggering actor is classified as a first-time contributor; GitHub Apps (`app/copilot-swe-agent`) are permanently in that class regardless of merged PRs.
 
 Steps:
-1. Look up the Copilot cloud agent workflow ID by name (`"Copilot cloud agent"`) via the Actions API. No hardcoded ID.
+1. Look up the Copilot cloud agent workflow ID by name (`"Copilot cloud agent"`) via the Actions API. No hardcoded ID. Fails the job if the workflow is not found rather than silently treating all branches as idle.
 2. Query `in_progress` and `queued` runs for that workflow. Merge the two into a deduplicated set of active branch names.
 3. List all Copilot (`app/copilot-swe-agent`) draft PRs.
 4. For each draft PR, skip if the branch appears in the active set (Copilot still working).
@@ -129,6 +129,12 @@ Steps:
 6. Post `@copilot` review comment via `PIPELINE_GITHUB_TOKEN`.
 
 `timeout-minutes: 10` bounds the job. A `concurrency` group with `cancel-in-progress: false` serializes overlapping runs (unlikely with a 1-hour interval, but safe).
+
+**Dry-run mode** (`dry_run=true`): runs the full idle-check logic (API calls, active-branch cross-reference, idempotency scan) but logs what it would do instead of posting comments. Use this to validate the logic after a code change without waiting for the next hourly tick and without posting real comments on open PRs.
+
+```bash
+gh workflow run trigger-copilot-review.yml --field dry_run=true
+```
 
 ### `manual-trigger` job
 
