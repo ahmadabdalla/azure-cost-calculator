@@ -49,7 +49,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          echo "=== Diagnostic: token length=${#GH_TOKEN}, GITHUB_TOKEN length=${#GITHUB_TOKEN}"
           echo "=== Diagnostic: testing workflow list endpoint..."
           gh api "repos/$REPO/actions/workflows" --jq '.total_count' 2>&1 || true
           echo "=== Diagnostic: done"
