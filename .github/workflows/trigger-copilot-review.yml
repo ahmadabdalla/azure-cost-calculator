@@ -49,6 +49,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          echo "=== Diagnostic: token length=${#GH_TOKEN}, GITHUB_TOKEN length=${#GITHUB_TOKEN}"
+          echo "=== Diagnostic: testing workflow list endpoint..."
+          gh api "repos/$REPO/actions/workflows" --jq '.total_count' 2>&1 || true
+          echo "=== Diagnostic: done"
           # Look up the Copilot cloud agent workflow ID by name -- no hardcode.
           # --paginate without --jq emits one JSON object per page; jq -s slurps
           # all pages before filtering so the select spans the full result set.
