@@ -20,9 +20,8 @@ End-to-end pipeline that automates the lifecycle of service reference issues: fr
   -> [AUTO] Triage: applies pricing-inaccuracy + automatic-existing,
            assigns Copilot with service-reference agent (single run)
   -> [AUTO] Copilot: creates draft PR on dev branch, commits work
-  -> [AUTO] Trigger (push-triggered debounce): each Copilot push resets
-           a 15-minute timer; fires @copilot review comment after
-           15 minutes of silence (Copilot idle)
+  -> [AUTO] Trigger (hourly scheduled idle-check): fires @copilot review
+           comment when no Copilot cloud agent run is active on the branch
   -> [AUTO] Copilot: runs service-ref-pr-reviewer, validates against
            live Azure Retail Prices API, remediates if needed
   -> [USER] Review + merge
@@ -37,9 +36,8 @@ No manual intervention between issue creation and the finished draft PR with rev
   -> [AUTO] Triage: applies new-service + good first issue
   -> [USER] Manually assign Copilot with service-reference agent
   -> [AUTO] Copilot: creates draft PR on dev branch, commits work
-  -> [AUTO] Trigger (push-triggered debounce): each Copilot push resets
-           a 15-minute timer; fires @copilot review comment after
-           15 minutes of silence (Copilot idle)
+  -> [AUTO] Trigger (hourly scheduled idle-check): fires @copilot review
+           comment when no Copilot cloud agent run is active on the branch
   -> [AUTO] Copilot: runs service-ref-pr-reviewer, validates, remediates
   -> [USER] Review + merge
 ```
@@ -50,12 +48,12 @@ The manual step exists because new service issues may be claimed by contributors
 
 ## Pipeline artifacts
 
-| Artifact                     | Type            | Trigger                                                      | Purpose                                                              |
-| ---------------------------- | --------------- | ------------------------------------------------------------ | -------------------------------------------------------------------- |
-| `issue-triage-v2.md`         | gh-aw (Copilot) | `issues: [opened]`                                           | Classifies issues, applies labels, assigns Copilot for Fix existing  |
-| `trigger-copilot-review.yml` | Standard YAML   | `push: copilot/**` (debounce) + `workflow_dispatch` (manual) | Posts `@copilot` review comment after Copilot goes idle              |
-| `service-reference.md`       | Custom agent    | Copilot assigned to issue                                    | Multi-agent consensus workflow for authoring service reference files |
-| `service-ref-pr-reviewer.md` | Custom agent    | `@copilot` comment on PR                                     | Dual-investigation review and remediation of service reference PRs   |
+| Artifact                     | Type            | Trigger                                           | Purpose                                                              |
+| ---------------------------- | --------------- | ------------------------------------------------- | -------------------------------------------------------------------- |
+| `issue-triage-v2.md`         | gh-aw (Copilot) | `issues: [opened]`                                | Classifies issues, applies labels, assigns Copilot for Fix existing  |
+| `trigger-copilot-review.yml` | Standard YAML   | `schedule: hourly` + `workflow_dispatch` (manual) | Posts `@copilot` review comment after Copilot goes idle              |
+| `service-reference.md`       | Custom agent    | Copilot assigned to issue                         | Multi-agent consensus workflow for authoring service reference files |
+| `service-ref-pr-reviewer.md` | Custom agent    | `@copilot` comment on PR                          | Dual-investigation review and remediation of service reference PRs   |
 
 Supporting agents (invoked by the orchestrators, not directly):
 
@@ -118,34 +116,29 @@ The `assign-to-agent` safe-output passes three parameters to the Copilot coding 
 
 `.github/workflows/trigger-copilot-review.yml` has two jobs with separate trigger paths.
 
-### `debounce` job
+### `scheduled-idle-check` job
 
-Triggered by `push` events to `copilot/**` branches. Only runs when the actor is `Copilot` (the GitHub Copilot coding agent) and none of the pushed commit messages contains `service-ref-pr-reviewer`.
-
-Uses `concurrency: cancel-in-progress: true` scoped to the branch ref as a debounce mechanism: each new Copilot push cancels the previous run and restarts the 15-minute quiet period. Once Copilot stops committing, the timer completes and the review comment is posted.
+Triggered by `schedule` (every hour on the hour). Runs as `github-actions[bot]`, which is never subject to the first-time contributor approval gate. The gate fires when the triggering actor is classified as a first-time contributor; GitHub Apps (`app/copilot-swe-agent`) are permanently in that class regardless of merged PRs.
 
 Steps:
-1. Sleep 900 seconds (15-minute quiet period; resets on each new Copilot push via cancellation).
-2. Find the Copilot draft PR for this branch.
-3. Check idempotency (paginated comment scan for `service-ref-pr-reviewer`).
-4. Apply a short random jitter (0-29s) before posting, to reduce duplicate-post risk from near-simultaneous cancellation races.
-5. Post `@copilot` review comment via `PIPELINE_GITHUB_TOKEN`.
+1. Look up the Copilot cloud agent workflow ID by name (`"Copilot cloud agent"`) via the Actions API. No hardcoded ID.
+2. Query `in_progress` and `queued` runs for that workflow. Merge the two into a deduplicated set of active branch names.
+3. List all Copilot (`app/copilot-swe-agent`) draft PRs.
+4. For each draft PR, skip if the branch appears in the active set (Copilot still working).
+5. Check idempotency (paginated comment scan for `service-ref-pr-reviewer`). Skip if already triggered.
+6. Post `@copilot` review comment via `PIPELINE_GITHUB_TOKEN`.
 
-`timeout-minutes: 25` bounds the job in case of a hung API call or runner issue.
+`timeout-minutes: 10` bounds the job. A `concurrency` group with `cancel-in-progress: false` serializes overlapping runs (unlikely with a 1-hour interval, but safe).
 
 ### `manual-trigger` job
 
-Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `copilot/**`) and posts the review comment without a debounce sleep once the run acquires its concurrency slot. Use this for manual recovery when the push path misses a PR (runner failure, skipped push event).
+Triggered by `workflow_dispatch` only. Accepts a `branch` input (must match `copilot/**`) and posts the review comment immediately. Use this for manual recovery when the scheduled path has not yet fired or was skipped.
 
 ```bash
 gh workflow run trigger-copilot-review.yml --field branch=copilot/fix-storage-ref
 ```
 
-Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. `manual-trigger` uses the same per-branch concurrency group as `debounce` (`copilot-quiet-refs/heads/<branch>`) with `cancel-in-progress: false`, serializing runs on the same branch to avoid duplicate-comment races from cancellation timing.
-
-### Commit-message filter
-
-The job `if:` condition filters out pushes when any pushed commit message contains `service-ref-pr-reviewer` (`join(github.event.commits.*.message, ' ')`). The reviewer agent includes this string in its commit messages, so remediation pushes are zero-cost skips (no runner spun up, no 15-minute sleep). This is a dependency: do not edit the reviewer agent's commit messages in a way that removes this substring, or the filter will stop working and remediation pushes will spin runners.
+Steps: validate branch pattern and git ref format, find PR, check idempotency, post comment. Uses a per-branch concurrency group with `cancel-in-progress: false`, serializing runs on the same branch to avoid duplicate-comment races.
 
 ### Idempotency
 
@@ -165,12 +158,12 @@ The job scans all PR comments (paginated, `jq -s` to merge pages) for the string
 
 ### Trigger workflow
 
-- `push` trigger is scoped to `copilot/**` branches. Forks cannot trigger upstream workflows; the residual risk is a collaborator-created branch named `copilot/*`, mitigated by the actor gate.
-- Actor gate (`github.actor == 'Copilot'`) on the `debounce` job prevents non-Copilot pushes from running the job.
-- All GitHub Actions context values (`github.repository`, `github.ref_name`) are passed through `env:` blocks and referenced as shell variables. No context values are interpolated directly into `run:` script bodies.
+- `schedule` trigger runs as `github-actions[bot]`. No actor-based approval gate applies.
+- All GitHub Actions context values (`github.repository`) are passed through `env:` blocks and referenced as shell variables. No context values are interpolated directly into `run:` script bodies.
 - Comment body is hardcoded (not derived from PR content or branch name).
 - Workflow-level `permissions: {}` with write only scoped to the job that needs it (`pull-requests: write`).
-- No code checkout. The workflow only reads repo metadata and posts a comment. `workflow_dispatch.branch` is user input, but it is validated (`^copilot/.+` plus `git check-ref-format --branch`) and used as a quoted shell variable before `PIPELINE_GITHUB_TOKEN`-authorized calls.
+- No code checkout. The workflow only reads repo metadata via the GitHub API and posts a comment.
+- `workflow_dispatch.branch` is user input, validated (`^copilot/.+` plus `git check-ref-format --branch`) and used as a quoted shell variable before any `PIPELINE_GITHUB_TOKEN`-authorized calls.
 
 ### Custom agents
 
@@ -242,8 +235,8 @@ gh run list --workflow=issue-triage-v2.lock.yml --limit 10
 # Review trigger
 gh run list --workflow=trigger-copilot-review.yml --limit 10
 
-# Review trigger push-triggered runs only
-gh run list --workflow=trigger-copilot-review.yml --event push --limit 10
+# Review trigger scheduled runs only
+gh run list --workflow=trigger-copilot-review.yml --event schedule --limit 10
 ```
 
 ### Inspecting Copilot agent sessions
@@ -252,17 +245,16 @@ After Copilot is assigned to an issue, the session is visible in the GitHub UI u
 
 ### Common failure modes
 
-| Symptom                                             | Likely cause                                                                    | Fix                                                                                                                   |
-| --------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)                          | Check agent job logs for which condition was not met                                                                  |
-| Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                            | Rotate token (see above)                                                                                              |
-| Copilot creates PR but no review trigger            | Actor gate evaluated false; commit-message filter matched; actor string changed | Check push event actor via `gh api repos/{owner}/{repo}/events`; check pushed commit messages for filter match         |
-| `debounce` job never runs despite Copilot push      | Actor is not `Copilot` or branch does not match `copilot/**`                    | Inspect the workflow run triggered by the push; check `github.actor` value in logs                                    |
-| Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account                 | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                |
-| Duplicate review trigger comments                   | Idempotency guard failed (pagination issue or comment body changed)             | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer` |
-| PR missed by push path (runner failure etc.)        | Transient runner or push event issue                                            | Run `gh workflow run trigger-copilot-review.yml --field branch=copilot/<name>` manually                               |
-| MCP servers blocked by policy                       | Copilot CLI version mismatch                                                    | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile`                                     |
-| `markPullRequestReadyForReview` error               | Known platform restriction                                                      | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts.                |
+| Symptom                                             | Likely cause                                                                                       | Fix                                                                                                                                             |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)                                             | Check agent job logs for which condition was not met                                                                                            |
+| Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                                               | Rotate token (see above)                                                                                                                        |
+| Copilot creates PR but no review trigger            | Scheduled run has not fired yet; Copilot still active on branch; idempotency guard already matched | Wait up to 1hr for the next scheduled run; check `gh run list --workflow=trigger-copilot-review.yml`; use manual trigger for immediate recovery |
+| Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account                                    | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                                          |
+| Duplicate review trigger comments                   | Idempotency guard failed (pagination issue or comment body changed)                                | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer`                           |
+| PR missed by push path (runner failure etc.)        | Transient runner or push event issue                                                               | Run `gh workflow run trigger-copilot-review.yml --field branch=copilot/<name>` manually                                                         |
+| MCP servers blocked by policy                       | Copilot CLI version mismatch                                                                       | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile`                                                               |
+| `markPullRequestReadyForReview` error               | Known platform restriction                                                                         | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts.                                          |
 
 ---
 
@@ -276,17 +268,11 @@ Labels applied by `github-actions[bot]` (via `GITHUB_TOKEN`) do not trigger down
 
 The `markPullRequestReadyForReview` GraphQL mutation is blocked for both fine-grained PATs and `GITHUB_TOKEN`. There is no REST API alternative. Only user-level OAuth tokens (classic PATs with `repo` scope, which GitHub is deprecating) can call it. The pipeline works around this by triggering review via `@copilot` comment instead of requiring ready-for-review status.
 
-### Why push-triggered debounce instead of a schedule-only trigger
+### Why scheduled idle-check instead of push-triggered debounce
 
-The original scheduled trigger (every 2 hours) had a worst-case latency of ~5 hours: Copilot works for up to 1 hour, then a 2-hour idle threshold, then up to a 2-hour poll gap (plus platform scheduling variability). The primary contributor is the poll gap, not the idle threshold.
+Push-triggered workflows with `github.actor == 'Copilot'` (i.e. `app/copilot-swe-agent` as the triggering actor) are blocked by GitHub's first-time contributor approval gate. GitHub Apps are permanently classified as first-time contributors regardless of merged PRs. Changing the trigger type (push, pull_request, workflow_run) does not help: the gate is on the actor, not the event. Only triggers whose actor is `github-actions[bot]` -- schedule and repository_dispatch -- bypass the gate.
 
-The push-triggered approach eliminates the poll gap entirely. Each Copilot push fires an event, the `concurrency: cancel-in-progress: true` group cancels any in-flight run and resets the quiet period. After 15 minutes of silence (Copilot idle), the review comment posts. Worst case is now ~75 minutes (60-min Copilot work + 15-min quiet period).
-
-There is no scheduled fallback. `workflow_dispatch` is sufficient for manual recovery; push events are reliable and observable. Fewer trigger paths means less surface area to maintain.
-
-### Why the commit-message filter
-
-After the review comment is posted, the reviewer agent runs, produces findings, and commits fixes back to the branch. Each of those commits triggers a push event. Without the filter, remediation pushes would spin a runner, sleep 15 minutes, then exit (no-op, because the idempotency check would catch it). The commit-message filter eliminates that runner cost at the `if:` layer before any runner is allocated.
+The scheduled approach queries the Copilot cloud agent workflow API directly to detect whether Copilot is still active on a branch (`in_progress` or `queued` runs). This gives an accurate idle signal without relying on a timer proxy. Worst-case latency is up to 1 hour (next scheduled tick after Copilot goes idle), which is acceptable for this pipeline.
 
 ### Why @copilot comment instead of a gh-aw review workflow
 
