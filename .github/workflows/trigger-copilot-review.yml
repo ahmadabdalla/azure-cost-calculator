@@ -61,7 +61,8 @@ jobs:
             --field per_page=100 \
             --jq '[.workflow_runs[].head_branch]')
           # Merge in_progress and queued into a single deduplicated JSON array.
-          ACTIVE_BRANCHES=$(jq -n --argjson a "$IN_PROGRESS" --argjson b "$QUEUED" '$a + $b | unique')
+          # -c produces compact single-line JSON required for $GITHUB_OUTPUT key=value form.
+          ACTIVE_BRANCHES=$(jq -cn --argjson a "$IN_PROGRESS" --argjson b "$QUEUED" '$a + $b | unique')
           echo "Active branches: $ACTIVE_BRANCHES"
           echo "active_branches=$ACTIVE_BRANCHES" >> "$GITHUB_OUTPUT"
 
