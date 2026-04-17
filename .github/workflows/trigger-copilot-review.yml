@@ -49,9 +49,8 @@ jobs:
           WORKFLOW_ID=$(gh api --paginate "repos/$REPO/actions/workflows" \
             | jq -s '[.[].workflows[] | select(.name == "Copilot cloud agent") | .id] | first')
           if [ -z "$WORKFLOW_ID" ] || [ "$WORKFLOW_ID" = "null" ]; then
-            echo "Copilot cloud agent workflow not found. Assuming no active branches."
-            echo "active_branches=[]" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "::error::Copilot cloud agent workflow not found. Cannot determine active branches -- refusing to post review triggers."
+            exit 1
           fi
           IN_PROGRESS=$(gh api "repos/$REPO/actions/workflows/$WORKFLOW_ID/runs" \
             --field status=in_progress \
