@@ -33,6 +33,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      actions: read
     env:
       GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
@@ -41,6 +42,11 @@ jobs:
     steps:
       - name: Get active Copilot branches
         id: active-branches
+        # Actions API reads require actions:read. Use github.token (which has it
+        # via the job permissions block) rather than PIPELINE_GITHUB_TOKEN (which
+        # only has Issues:write and Pull Requests:write).
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           # Look up the Copilot cloud agent workflow ID by name -- no hardcode.
