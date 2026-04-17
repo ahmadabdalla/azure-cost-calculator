@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           # Look up the Copilot cloud agent workflow ID by name -- no hardcode.
-          WORKFLOW_ID=$(gh api "repos/$REPO/actions/workflows" \
+          WORKFLOW_ID=$(gh api --paginate "repos/$REPO/actions/workflows" \
             --jq '.workflows[] | select(.name == "Copilot cloud agent") | .id')
           if [ -z "$WORKFLOW_ID" ]; then
             echo "Copilot cloud agent workflow not found. Assuming no active branches."
@@ -116,7 +116,7 @@ jobs:
     name: Manually trigger review on a branch
     if: github.event_name == 'workflow_dispatch' && inputs.dry_run != true
     concurrency:
-      group: copilot-quiet-refs/heads/${{ inputs.branch }}
+      group: copilot-manual-trigger-refs/heads/${{ inputs.branch }}
       cancel-in-progress: false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
