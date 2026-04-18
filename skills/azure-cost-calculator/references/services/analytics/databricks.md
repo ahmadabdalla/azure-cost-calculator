@@ -59,7 +59,7 @@ SkuName: Premium Serverless SQL
 | `Premium Automated Serverless Compute DBU`   | `Premium Automated Serverless Compute`   | `1 Hour`      | Serverless jobs                   |
 | `Premium Model Training DBU`                 | `Premium Model Training`                 | `1 Hour`      | Serverless ML model training      |
 | `Premium Database Serverless Compute DBU`    | `Premium Database Serverless Compute`    | `1 Hour`      | Serverless online tables / vector search |
-| `Premium Serverless Realtime Inferencing DBU`| `Premium Serverless Realtime Inferencing`| `1 Hour`      | Model serving endpoints           |
+| `Premium Serverless Realtime Inferencing DBU`| `Premium Serverless Realtime Inferencing`| `1 Hour`      | Model serving endpoints (+ per-launch fee) |
 | `Premium Enhanced Security and Compliance DBU`| `Premium Enhanced Security and Compliance`| `1 Hour`     | Add-on surcharge per DBU-hour     |
 | `Premium Databricks Storage Unit DSU`        | `Premium Databricks Storage Unit`        | `1`           | Per-unit storage (DSU, not DBU)   |
 
@@ -68,6 +68,7 @@ SkuName: Premium Serverless SQL
 ```
 Classic Monthly    = (dbu_retailPrice × 730 × dbuCount) + (vm_retailPrice × 730 × nodeCount)
 Serverless Monthly = serverless_dbu_retailPrice × 730 × dbuCount   (VM included in DBU rate)
+DSU Monthly        = dsu_retailPrice × dsuCount                    (billed per unit, not time-based)
 ```
 
 ## Notes
@@ -79,5 +80,7 @@ Serverless Monthly = serverless_dbu_retailPrice × 730 × dbuCount   (VM include
 - **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return zero cost; ignore these for cost estimation
 - **SQL warehouses**: Four variants: `Premium SQL Analytics` / `Standard SQL Analytics` (classic), `Premium SQL Compute Pro` (Pro), `Premium Serverless SQL` (serverless); classic under `Azure Databricks`, serverless under `Azure Databricks Regional`
 - **DBCU pre-purchase**: Reserved Instance queries return Databricks Commit Unit blocks (e.g., `SkuName: 100,000 DBCUs`); Global region, 1-Year and 3-Year terms; monthly cost = `unitPrice ÷ 12` or `unitPrice ÷ 36`
+- **Clean Rooms**: `Premium Clean Rooms Collaborator` billed per collaborator per day (`1/Day`), not per DBU-hour
+- **Model serving**: Realtime inferencing incurs both an hourly DBU rate and a per-launch charge (`Launch Charge Serverless Realtime Inferencing`, `unitOfMeasure: 1`)
 - **Capacity per DBU**: 1 DBU maps to a fractional VM; actual throughput depends on node VM size, workload type, and Photon enablement; Databricks auto-scales clusters within configured min/max node bounds
 - **PE sub-resources** (never-assume): `databricks_ui_api`, `browser_authentication`, Premium required
