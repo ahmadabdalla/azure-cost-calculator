@@ -82,7 +82,7 @@ Total Monthly    = Capacity + Storage + Overage
 
 - **F-SKU to CU mapping**: F2=2, F4=4, F8=8, F16=16, F32=32, F64=64, F128=128, F256=256, F512=512, F1024=1024, F2048=2048
 - **SKU is never-assume**: Always ask the user for their F-SKU size (F2–F2048); do not guess
-- **OneLake storage billed separately**: Storage is not included in the CU-hour capacity rate; query the `OneLake` product. Tiers: Hot (default), Cool, Cold. BCDR has matching Hot/Cool/Cold tiers
+- **OneLake storage billed separately**: Storage is not included in the CU-hour capacity rate; query the `OneLake` product. Tiers: Hot (default), Cool, Cold. BCDR also offers Hot/Cool/Cold (only Hot tabled above)
 - **Pause/resume**: Pausing a capacity stops CU billing; OneLake storage charges continue
 - **Free mirroring storage**: Each F-SKU includes free mirroring equal to the SKU number in TB (e.g., F64 = 64 TB); excess at the `Storage Mirroring` rate
 - **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `SQL Storage`, `SQL Backup Storage`)
