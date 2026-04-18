@@ -15,7 +15,6 @@ privateEndpoint: true
 ## Query Pattern
 
 Substitute `{Tier}` with `Standard` or `Premium`.
-
 ### {Tier} profile: base fee (Zone 1 = North America)
 
 ServiceName: Azure Front Door Service
@@ -24,7 +23,7 @@ SkuName: {Tier}
 MeterName: {Tier} Base Fees
 Region: Zone 1
 
-### {Tier}: data transfer out (use Quantity for estimated monthly GB)
+### {Tier}: data transfer (out/in; use Quantity for estimated monthly GB)
 
 ServiceName: Azure Front Door Service
 ProductName: Azure Front Door
@@ -32,6 +31,7 @@ SkuName: {Tier}
 MeterName: {Tier} Data Transfer Out
 Quantity: 500
 Region: Zone 1
+Repeat with `MeterName: {Tier} Data Transfer In` to price ingress (`estimatedInGB`).
 
 ### {Tier}: requests (per 10K)
 
