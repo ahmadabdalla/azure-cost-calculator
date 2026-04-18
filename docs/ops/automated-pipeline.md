@@ -128,6 +128,8 @@ Steps:
 5. Check idempotency (paginated comment scan for `service-ref-pr-reviewer`). Skip if already triggered.
 6. Post `@copilot` review comment via `PIPELINE_GITHUB_TOKEN`.
 
+Steps 1-2 use `github.token` (overridden at the step level), not `PIPELINE_GITHUB_TOKEN`. The Actions API requires `actions: read`; `PIPELINE_GITHUB_TOKEN` only carries Issues/PRs write. `PIPELINE_GITHUB_TOKEN` is used only in step 6, where the comment must be attributed to a user account to activate the coding agent.
+
 `timeout-minutes: 10` bounds the job. A `concurrency` group with `cancel-in-progress: false` serializes overlapping runs (unlikely with a 1-hour interval, but safe).
 
 **Dry-run mode** (`dry_run=true`): runs the full idle-check logic (API calls, active-branch cross-reference, idempotency scan) but logs what it would do instead of posting comments. Use this to validate the logic after a code change without waiting for the next hourly tick and without posting real comments on open PRs.
@@ -167,7 +169,7 @@ The job scans all PR comments (paginated, `jq -s` to merge pages) for the string
 - `schedule` trigger runs as `github-actions[bot]`. No actor-based approval gate applies.
 - All GitHub Actions context values (`github.repository`) are passed through `env:` blocks and referenced as shell variables. No context values are interpolated directly into `run:` script bodies.
 - Comment body is hardcoded (not derived from PR content or branch name).
-- Workflow-level `permissions: {}` with write only scoped to the job that needs it (`pull-requests: write`).
+- Workflow-level `permissions: {}`. `scheduled-idle-check` holds `contents: read` and `actions: read` only. `manual-trigger` holds `contents: read` only. Neither job holds `pull-requests: write` on `github.token`; all PR writes go through `PIPELINE_GITHUB_TOKEN`.
 - No code checkout. The workflow only reads repo metadata via the GitHub API and posts a comment.
 - `workflow_dispatch.branch` is user input, validated (`^copilot/.+` plus `git check-ref-format --branch`) and used as a quoted shell variable before any `PIPELINE_GITHUB_TOKEN`-authorized calls.
 
@@ -255,7 +257,7 @@ After Copilot is assigned to an issue, the session is visible in the GitHub UI u
 | --------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)                                             | Check agent job logs for which condition was not met                                                                                            |
 | Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                                               | Rotate token (see above)                                                                                                                        |
-| Copilot creates PR but no review trigger            | Scheduled run has not fired yet; Copilot still active on branch; idempotency guard already matched | Wait up to 1hr for the next scheduled run; check `gh run list --workflow=trigger-copilot-review.yml`; use manual trigger for immediate recovery |
+| Copilot creates PR but no review trigger            | Scheduled run has not fired yet; Copilot still active on branch; idempotency guard already matched | Wait up to 1hr for the next scheduled run; check `gh run list --workflow=trigger-copilot-review.yml`; use manual trigger for immediate recovery; run `gh workflow run trigger-copilot-review.yml --field dry_run=true` to validate idle-check logic without posting comments |
 | Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account                                    | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                                          |
 | Duplicate review trigger comments                   | Idempotency guard failed (pagination issue or comment body changed)                                | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer`                           |
 | PR missed by scheduled run (tick delayed or skipped) | Copilot reported active at tick time; platform scheduling delay                                   | Wait for next hourly tick; use manual trigger: `gh workflow run trigger-copilot-review.yml --field branch=copilot/<name>`                       |
@@ -279,6 +281,8 @@ The `markPullRequestReadyForReview` GraphQL mutation is blocked for both fine-gr
 Push-triggered workflows with `github.actor == 'Copilot'` (i.e. `app/copilot-swe-agent` as the triggering actor) are blocked by GitHub's first-time contributor approval gate. GitHub Apps are permanently classified as first-time contributors regardless of merged PRs. Changing the trigger type (push, pull_request, workflow_run) does not help: the gate is on the actor, not the event. Only triggers whose actor is `github-actions[bot]` -- schedule and repository_dispatch -- bypass the gate.
 
 The scheduled approach queries the Copilot cloud agent workflow API directly to detect whether Copilot is still active on a branch (`in_progress` or `queued` runs). This gives an accurate idle signal without relying on a timer proxy. Worst-case latency is up to 1 hour (next scheduled tick after Copilot goes idle), which is acceptable for this pipeline.
+
+The full discovery trail for this decision, including the push-triggered regression and intermediate attempts, is tracked in issue #732.
 
 ### Why @copilot comment instead of a gh-aw review workflow
 
