@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/databricks/premium-jobs-compute
+name: Azure Databricks - Premium Jobs Compute DBU
+description: >
+  Tests cost estimation for Azure Databricks Premium Jobs Compute DBU pricing.
+  Databricks bills DBU platform fees separately from underlying VM compute.
+  Validates that the agent correctly identifies the DBU hourly rate, scales
+  by the requested quantity, and acknowledges the separate VM billing dependency.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:databricks
+inputs:
+  prompt: "How much would 10 Azure Databricks Premium Jobs Compute DBUs cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Databricks|Databricks|DBX"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: dbu-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
