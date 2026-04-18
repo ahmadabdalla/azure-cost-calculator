@@ -32,13 +32,12 @@ jobs:
       cancel-in-progress: false
     permissions:
       contents: read
-      pull-requests: write
       actions: read
     env:
       GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       TRIGGER_MARKER: "service-ref-pr-reviewer"
-      DRY_RUN: ${{ inputs.dry_run || 'false' }}
+      DRY_RUN: ${{ inputs.dry_run }}
     steps:
       - name: Get active Copilot branches
         id: active-branches
@@ -60,10 +59,12 @@ jobs:
           fi
           # Use inline query params (not --field) -- --field sends a POST request,
           # which returns 404 on this GET-only endpoint.
-          IN_PROGRESS=$(gh api "repos/$REPO/actions/workflows/$WORKFLOW_ID/runs?status=in_progress&per_page=100" \
-            --jq '[.workflow_runs[].head_branch]')
-          QUEUED=$(gh api "repos/$REPO/actions/workflows/$WORKFLOW_ID/runs?status=queued&per_page=100" \
-            --jq '[.workflow_runs[].head_branch]')
+          # --paginate without --jq emits one JSON object per page; jq -s slurps
+          # all pages so no active runs are missed.
+          IN_PROGRESS=$(gh api --paginate "repos/$REPO/actions/workflows/$WORKFLOW_ID/runs?status=in_progress&per_page=100" \
+            | jq -s '[.[].workflow_runs[].head_branch]')
+          QUEUED=$(gh api --paginate "repos/$REPO/actions/workflows/$WORKFLOW_ID/runs?status=queued&per_page=100" \
+            | jq -s '[.[].workflow_runs[].head_branch]')
           # Merge in_progress and queued into a single deduplicated JSON array.
           # -c produces compact single-line JSON required for $GITHUB_OUTPUT key=value form.
           ACTIVE_BRANCHES=$(jq -cn --argjson a "$IN_PROGRESS" --argjson b "$QUEUED" '$a + $b | unique')
@@ -87,7 +88,10 @@ jobs:
             exit 0
           fi
           echo "Found $PR_COUNT Copilot draft PR(s)."
-          echo "$DRAFT_PRS" | jq -c '.[]' | while IFS= read -r pr; do
+          # Process substitution keeps the while loop in the parent shell so
+          # set -e applies to every command in the body and per-PR failures
+          # are not silently swallowed by a pipe subshell exit code.
+          while IFS= read -r pr; do
             PR_NUMBER=$(echo "$pr" | jq -r '.number')
             BRANCH=$(echo "$pr" | jq -r '.headRefName')
             # Skip if Copilot is still active on this branch.
@@ -114,7 +118,7 @@ jobs:
                 --body "@copilot trigger a review using the \`.github/agents/service-ref-pr-reviewer.md\` custom agent. Validate recommendations and remediate if necessary."
               echo "Posted @copilot review trigger on PR #$PR_NUMBER ($BRANCH)."
             fi
-          done
+          done < <(echo "$DRAFT_PRS" | jq -c '.[]')
 
   # Manual recovery path: accepts a branch name input, finds the PR, and posts
   # the review comment without any sleep. Manual runs for the same branch are
@@ -129,7 +133,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      pull-requests: write
     env:
       GH_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
