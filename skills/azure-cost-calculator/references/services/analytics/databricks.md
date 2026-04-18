@@ -4,7 +4,7 @@ category: analytics
 aliases: [DBX, Spark on Azure]
 billingNeeds: [Virtual Machines]
 billingConsiderations: [Reserved Instances]
-primaryCost: "DBU hourly rate by workload type and tier + underlying VM compute billed separately under Virtual Machines"
+primaryCost: "DBU rate × tier; classic adds VM compute (Virtual Machines); serverless includes compute in DBU rate"
 privateEndpoint: true
 ---
 
@@ -54,7 +54,7 @@ SkuName: Premium Serverless SQL
 | `Standard All-purpose Compute DBU`           | `Standard All-purpose Compute`           | `1 Hour`      | Interactive clusters (Standard)   |
 | `Standard Jobs Compute DBU`                  | `Standard Jobs Compute`                  | `1 Hour`      | Automated job clusters (Standard) |
 | `Premium Serverless SQL DBU`                 | `Premium Serverless SQL`                 | `1 Hour`      | Serverless SQL warehouse          |
-| `Premium SQL Compute Pro DBU`                | `Premium SQL Compute Pro`                | `1 Hour`      | Pro SQL warehouse (serverless)    |
+| `Premium SQL Compute Pro DBU`                | `Premium SQL Compute Pro`                | `1 Hour`      | Pro SQL warehouse                 |
 | `Premium Interactive Serverless Compute DBU` | `Premium Interactive Serverless Compute` | `1 Hour`      | Serverless notebooks              |
 | `Premium Automated Serverless Compute DBU`   | `Premium Automated Serverless Compute`   | `1 Hour`      | Serverless jobs                   |
 | `Premium Model Training DBU`                 | `Premium Model Training`                 | `1 Hour`      | Serverless ML model training      |
@@ -78,7 +78,7 @@ DSU Monthly        = dsu_retailPrice × dsuCount                    (billed per 
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
 - **Enhanced Security and Compliance**: Optional add-on surcharge billed per DBU-hour on top of base workload rate; query separately with `SkuName: Premium Enhanced Security and Compliance`
 - **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return zero cost; ignore these for cost estimation
-- **SQL warehouses**: Four variants: `Premium SQL Analytics` / `Standard SQL Analytics` (classic), `Premium SQL Compute Pro` (Pro), `Premium Serverless SQL` (serverless); classic under `Azure Databricks`, serverless under `Azure Databricks Regional`
+- **SQL warehouses**: `Premium SQL Analytics` / `Standard SQL Analytics` (classic, `Azure Databricks`); `Premium SQL Compute Pro` (Pro) and `Premium Serverless SQL` (serverless) both under `Azure Databricks Regional` — compute included in DBU rate
 - **DBCU pre-purchase**: Reserved Instance queries return Databricks Commit Unit blocks (e.g., `SkuName: 100,000 DBCUs`); Global region, 1-Year and 3-Year terms; monthly cost = `unitPrice ÷ 12` or `unitPrice ÷ 36`
 - **Clean Rooms**: `Premium Clean Rooms Collaborator` billed per collaborator per day (`1/Day`), not per DBU-hour
 - **Model serving**: Realtime inferencing incurs both an hourly DBU rate and a per-launch charge (`Launch Charge Serverless Realtime Inferencing`, `unitOfMeasure: 1`)
