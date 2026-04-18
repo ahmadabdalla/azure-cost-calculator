@@ -282,8 +282,6 @@ Push-triggered workflows with `github.actor == 'Copilot'` (i.e. `app/copilot-swe
 
 The scheduled approach queries the Copilot cloud agent workflow API directly to detect whether Copilot is still active on a branch (`in_progress` or `queued` runs). This gives an accurate idle signal without relying on a timer proxy. Worst-case latency is up to 1 hour (next scheduled tick after Copilot goes idle), which is acceptable for this pipeline.
 
-The full discovery trail for this decision, including the push-triggered regression and intermediate attempts, is tracked in issue #732.
-
 ### Why @copilot comment instead of a gh-aw review workflow
 
 The Copilot coding agent triggered via `@copilot` comment can both review and remediate (commit fixes to the branch). A gh-aw review workflow is read-only with writes limited to safe-outputs (comments and reviews). The `@copilot` approach provides a more complete automated loop.
