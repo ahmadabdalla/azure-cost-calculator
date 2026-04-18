@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/fabric/f64-capacity-storage
+name: Microsoft Fabric - F64 Capacity with OneLake Storage
+description: >
+  Tests cost estimation for a Fabric F64 capacity with OneLake storage.
+  Validates that the agent correctly queries CU-hour pricing and storage
+  pricing as separate components and scales by CU count.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:fabric
+inputs:
+  prompt: "How much would a Microsoft Fabric F64 capacity cost per month with 500 GB of OneLake storage in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Microsoft Fabric|Fabric"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: sku-acknowledged
+    config:
+      contains:
+        - "F64"
+    weight: 0.5
+  - type: text
+    name: storage-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would a Microsoft Fabric F64 capacity cost per month with 500 GB of OneLake storage in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Microsoft Fabric (CU-hours for capacity + per-GB for storage).
+        (3) Accounts for 64 CUs (F64 SKU) and 500 GB storage as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
