@@ -251,16 +251,16 @@ After Copilot is assigned to an issue, the session is visible in the GitHub UI u
 
 ### Common failure modes
 
-| Symptom                                             | Likely cause                                                                                       | Fix                                                                                                                                             |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Triage runs but Copilot not assigned                | Agent verification failed (title, Type, or file check)                                             | Check agent job logs for which condition was not met                                                                                            |
-| Copilot assigned but no session starts              | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                                               | Rotate token (see above)                                                                                                                        |
-| Copilot creates PR but no review trigger            | Scheduled run has not fired yet; Copilot still active on branch; idempotency guard already matched | Wait up to 1hr for the next scheduled run; check `gh run list --workflow=trigger-copilot-review.yml`; use manual trigger for immediate recovery |
-| Review trigger posts comment but Copilot ignores it | Comment posted by `github-actions[bot]` instead of user account                                    | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                                          |
-| Duplicate review trigger comments                   | Idempotency guard failed (pagination issue or comment body changed)                                | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer`                           |
-| PR missed by scheduled run (tick delayed or skipped) | Copilot reported active at tick time; platform scheduling delay                                   | Wait for next hourly tick; use manual trigger: `gh workflow run trigger-copilot-review.yml --field branch=copilot/<name>`                       |
-| MCP servers blocked by policy                       | Copilot CLI version mismatch                                                                       | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile`                                                               |
-| `markPullRequestReadyForReview` error               | Known platform restriction                                                                         | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts.                                          |
+| Symptom                                              | Likely cause                                                                                       | Fix                                                                                                                                             |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Triage runs but Copilot not assigned                 | Agent verification failed (title, Type, or file check)                                             | Check agent job logs for which condition was not met                                                                                            |
+| Copilot assigned but no session starts               | `PIPELINE_GITHUB_TOKEN` expired or lacks permissions                                               | Rotate token (see above)                                                                                                                        |
+| Copilot creates PR but no review trigger             | Scheduled run has not fired yet; Copilot still active on branch; idempotency guard already matched | Wait up to 1hr for the next scheduled run; check `gh run list --workflow=trigger-copilot-review.yml`; use manual trigger for immediate recovery |
+| Review trigger posts comment but Copilot ignores it  | Comment posted by `github-actions[bot]` instead of user account                                    | Verify `PIPELINE_GITHUB_TOKEN` is a user-owned PAT, not `GITHUB_TOKEN`                                                                          |
+| Duplicate review trigger comments                    | Idempotency guard failed (pagination issue or comment body changed)                                | Check that `--paginate \| jq -s` pattern is intact and that the comment body still contains `service-ref-pr-reviewer`                           |
+| PR missed by scheduled run (tick delayed or skipped) | Copilot reported active at tick time; platform scheduling delay                                    | Wait for next hourly tick; use manual trigger: `gh workflow run trigger-copilot-review.yml --field branch=copilot/<name>`                       |
+| MCP servers blocked by policy                        | Copilot CLI version mismatch                                                                       | Recompile with latest gh-aw: `gh extension upgrade github/gh-aw && gh aw compile`                                                               |
+| `markPullRequestReadyForReview` error                | Known platform restriction                                                                         | This mutation is blocked for all non-OAuth tokens. The pipeline does not use it; PRs remain as drafts.                                          |
 
 ---
 
@@ -283,6 +283,16 @@ The scheduled approach queries the Copilot cloud agent workflow API directly to 
 ### Why @copilot comment instead of a gh-aw review workflow
 
 The Copilot coding agent triggered via `@copilot` comment can both review and remediate (commit fixes to the branch). A gh-aw review workflow is read-only with writes limited to safe-outputs (comments and reviews). The `@copilot` approach provides a more complete automated loop.
+
+---
+
+## Experiments
+
+Historical record of research, experiments, and design decisions. Issues and PRs are linked for full context.
+
+| Issue                                                                                                                                                        | PR                                                                     | Status | Summary                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#732: Improve PR review automation: second-pass nudge and CodeRabbit trigger diagnostics](https://github.com/ahmadabdalla/azure-cost-calculator/issues/732) | [#749](https://github.com/ahmadabdalla/azure-cost-calculator/pull/749) | Merged | Investigated push-triggered debounce, hit approval-gate regression; replaced with API-backed scheduled idle-check that queries Copilot cloud agent runs directly. Validated end-to-end on #752. |
 
 ---
 

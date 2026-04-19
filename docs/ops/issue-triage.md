@@ -2,13 +2,13 @@
 
 Automated triage of newly opened issues using [GitHub Agentic Workflows (gh-aw)](https://github.com/github/gh-aw) with the **Copilot** engine. For "Fix existing service" issues, the triage workflow also assigns the Copilot coding agent automatically.
 
-| Item            | Detail                                        |
-| --------------- | --------------------------------------------- |
-| Workflow source | `.github/workflows/issue-triage-v2.md`        |
-| Compiled lock   | `.github/workflows/issue-triage-v2.lock.yml`  |
-| Action pins     | `.github/aw/actions-lock.json`                |
-| Engine          | `copilot` (GitHub Copilot)                    |
-| Trigger         | `on: issues [opened]` (default branch only)   |
+| Item            | Detail                                       |
+| --------------- | -------------------------------------------- |
+| Workflow source | `.github/workflows/issue-triage-v2.md`       |
+| Compiled lock   | `.github/workflows/issue-triage-v2.lock.yml` |
+| Action pins     | `.github/aw/actions-lock.json`               |
+| Engine          | `copilot` (GitHub Copilot)                   |
+| Trigger         | `on: issues [opened]` (default branch only)  |
 
 ---
 
@@ -28,14 +28,14 @@ The agent never closes, locks, transfers, or removes labels from issues.
 
 The catalog (`docs/service-catalog.md`) lists all services. The routing map contains implemented services. A service in the catalog but not in the routing map is pending implementation.
 
-| Type         | In routing map? | File exists? | Labels                                     | Assign Copilot? | Action                                    |
-| ------------ | --------------- | ------------ | ------------------------------------------ | ---------------- | ----------------------------------------- |
-| New service  | Yes             | No           | `new-service`, `good first issue`          | No               | Welcome; point to CONTRIBUTING.md         |
-| New service  | Yes             | Yes          | `duplicate`                                | No               | Explain file exists; suggest fix issue    |
-| New service  | No (in catalog) | No           | `new-service`, `good first issue`          | No               | Pending service; add routing entry in PR  |
-| New service  | No (not found)  | -            | `needs-info`                               | No               | Ask for exact `serviceName` from API      |
-| Fix existing | -               | Yes          | `pricing-inaccuracy`, `automatic-existing` | **Yes**          | Assign Copilot with `service-reference` agent |
-| Fix existing | -               | No           | `needs-info`                               | No               | Ask to clarify service name               |
+| Type         | In routing map? | File exists? | Labels                                     | Assign Copilot? | Action                                        |
+| ------------ | --------------- | ------------ | ------------------------------------------ | --------------- | --------------------------------------------- |
+| New service  | Yes             | No           | `new-service`, `good first issue`          | No              | Welcome; point to CONTRIBUTING.md             |
+| New service  | Yes             | Yes          | `duplicate`                                | No              | Explain file exists; suggest fix issue        |
+| New service  | No (in catalog) | No           | `new-service`, `good first issue`          | No              | Pending service; add routing entry in PR      |
+| New service  | No (not found)  | -            | `needs-info`                               | No              | Ask for exact `serviceName` from API          |
+| Fix existing | -               | Yes          | `pricing-inaccuracy`, `automatic-existing` | **Yes**         | Assign Copilot with `service-reference` agent |
+| Fix existing | -               | No           | `needs-info`                               | No              | Ask to clarify service name                   |
 
 ### Copilot assignment conditions
 
@@ -55,12 +55,12 @@ If any condition is not met, the agent skips assignment. The `max: 1` cap on `as
 
 ## Prerequisites
 
-| Requirement                                | Notes                                                                                                                                      |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`COPILOT_GITHUB_TOKEN`** repo secret     | Fine-grained PAT with the **Copilot Requests** account permission. Powers the Copilot engine.                                              |
-| **`PIPELINE_GITHUB_TOKEN`** repo secret    | Fine-grained PAT with **Issues: write** and **Pull Requests: write**. Powers the `assign-to-agent` safe-output. See [token details](automated-pipeline.md#tokens). |
-| **Labels**                                 | `new-service`, `pricing-inaccuracy`, `automatic-existing`, `service-update` must exist in the repo (others are GitHub defaults).            |
-| **gh-aw CLI**                              | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes, not at runtime.                                      |
+| Requirement                             | Notes                                                                                                                                                              |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`COPILOT_GITHUB_TOKEN`** repo secret  | Fine-grained PAT with the **Copilot Requests** account permission. Powers the Copilot engine.                                                                      |
+| **`PIPELINE_GITHUB_TOKEN`** repo secret | Fine-grained PAT with **Issues: write** and **Pull Requests: write**. Powers the `assign-to-agent` safe-output. See [token details](automated-pipeline.md#tokens). |
+| **Labels**                              | `new-service`, `pricing-inaccuracy`, `automatic-existing`, `service-update` must exist in the repo (others are GitHub defaults).                                   |
+| **gh-aw CLI**                           | Installed via `gh extension install github/gh-aw`. Only needed for compiling changes, not at runtime.                                                              |
 
 ---
 
@@ -111,15 +111,15 @@ gh run view <run-id> --log-failed
 
 ### Common failure modes
 
-| Symptom                                          | Likely cause                                                            | Fix                                                                                  |
-| ------------------------------------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Workflow never triggers                          | Edited `.md` but forgot to compile, or changes not on default branch    | Run `gh aw compile`, merge to main                                                   |
-| `401 Unauthorized` in agent job                  | `COPILOT_GITHUB_TOKEN` expired or revoked                               | Rotate the PAT (see above)                                                           |
-| Agent applies wrong labels                       | Classification prompt needs tuning                                      | Edit the Decision Matrix in `issue-triage-v2.md`, recompile                          |
-| Agent leaves no comment                          | Issue matched "spam / invalid" path, or `add-comment` limit already hit | Check the agent job logs for reasoning                                               |
-| Copilot not assigned on Fix existing issue       | Agent verification failed on one of the three conditions                | Check agent logs; verify title, Type field, and file path                            |
-| Copilot assigned but no session starts           | `PIPELINE_GITHUB_TOKEN` expired or lacks required permissions           | Rotate; needs Issues:write and Pull Requests:write                                   |
-| MCP servers blocked by policy                    | Copilot CLI version mismatch (seen with CLI v1.0.22)                    | Recompile with latest gh-aw (`gh extension upgrade github/gh-aw && gh aw compile`)   |
+| Symptom                                          | Likely cause                                                            | Fix                                                                                                                         |
+| ------------------------------------------------ | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Workflow never triggers                          | Edited `.md` but forgot to compile, or changes not on default branch    | Run `gh aw compile`, merge to main                                                                                          |
+| `401 Unauthorized` in agent job                  | `COPILOT_GITHUB_TOKEN` expired or revoked                               | Rotate the PAT (see above)                                                                                                  |
+| Agent applies wrong labels                       | Classification prompt needs tuning                                      | Edit the Decision Matrix in `issue-triage-v2.md`, recompile                                                                 |
+| Agent leaves no comment                          | Issue matched "spam / invalid" path, or `add-comment` limit already hit | Check the agent job logs for reasoning                                                                                      |
+| Copilot not assigned on Fix existing issue       | Agent verification failed on one of the three conditions                | Check agent logs; verify title, Type field, and file path                                                                   |
+| Copilot assigned but no session starts           | `PIPELINE_GITHUB_TOKEN` expired or lacks required permissions           | Rotate; needs Issues:write and Pull Requests:write                                                                          |
+| MCP servers blocked by policy                    | Copilot CLI version mismatch (seen with CLI v1.0.22)                    | Recompile with latest gh-aw (`gh extension upgrade github/gh-aw && gh aw compile`)                                          |
 | Confused `pricing-inaccuracy` / `service-update` | Both relate to existing references but have different scopes            | `pricing-inaccuracy` = wrong pricing data (Fix existing); `service-update` = structural improvements (improvement template) |
 
 ### Job architecture
@@ -147,6 +147,16 @@ gh aw compile
 ```
 
 Commit the updated lock files after upgrading.
+
+---
+
+## Experiments
+
+Historical record of research, experiments, and design decisions. Issues and PRs are linked for full context.
+
+| Issue                                                                                                                                                | PR                                                                     | Status | Summary                                                                                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#688: investigate: automated service-reference pipeline via Copilot coding agent](https://github.com/ahmadabdalla/azure-cost-calculator/issues/688) | [#711](https://github.com/ahmadabdalla/azure-cost-calculator/pull/711) | Merged | Investigated programmatic Copilot assignment, gh-aw trigger support, and PR review automation; built and shipped the end-to-end triage-assign-review pipeline. |
 
 ---
 
