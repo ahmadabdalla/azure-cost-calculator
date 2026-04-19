@@ -288,6 +288,16 @@ The Copilot coding agent triggered via `@copilot` comment can both review and re
 
 ---
 
+## Experiments
+
+Historical record of research, experiments, and design decisions. Issues and PRs are linked for full context.
+
+| Issue                                                                                                                                                        | PR                                                                     | Status | Summary                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [#732: Improve PR review automation: second-pass nudge and CodeRabbit trigger diagnostics](https://github.com/ahmadabdalla/azure-cost-calculator/issues/732) | [#749](https://github.com/ahmadabdalla/azure-cost-calculator/pull/749) | Merged | Investigated push-triggered debounce, hit approval-gate regression; replaced with API-backed scheduled idle-check that queries Copilot cloud agent runs directly. Validated end-to-end on #752. |
+
+---
+
 ## References
 
 - [issue-triage.md](issue-triage.md): triage workflow ops guide
