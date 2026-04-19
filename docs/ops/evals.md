@@ -2,15 +2,16 @@
 
 Automated evaluation of the Azure Cost Calculator skill using [Waza](https://github.com/microsoft/waza), a CLI for benchmarking AI agent skills. Validates behavior that deterministic tests (Pester, bats, YAML validation) cannot cover: prompt handling, disambiguation, service routing, and trigger specificity.
 
-| Item             | Detail                                                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Waza version     | `v0.23.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                   |
-| Workflow         | `.github/workflows/eval.yml`                                                                                           |
-| Composite action | `.github/actions/install-waza/action.yml`                                                                              |
-| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock) |
-| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml`            |
-| Project config   | `.waza.yaml`                                                                                                           |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                               |
+| Item             | Detail                                                                                                                                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Waza version     | `v0.23.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                                                                                                        |
+| Workflow         | `.github/workflows/eval.yml`                                                                                                                                                                                |
+| Composite action | `.github/actions/install-waza/action.yml`                                                                                                                                                                   |
+| Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock)                                                                                      |
+| Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml`                                                                                                 |
+| Project config   | `.waza.yaml`                                                                                                                                                                                                |
+| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                                                                                                                    |
+| External API     | [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) (public, unauthenticated; called by `get-azure-pricing.sh` during happy-path tasks) |
 
 ## Quick start
 
@@ -97,6 +98,63 @@ The mock executor is configured in `eval-mock.yaml` alongside `eval.yaml`. Both 
 ### Copilot SDK executor
 
 Runs real AI evaluations. Auth priority: `COPILOT_GITHUB_TOKEN` > `GH_TOKEN` > `GITHUB_TOKEN`. Results are uploaded as artifacts (30-day retention) and displayed in the Actions Step Summary.
+
+## Execution architecture
+
+Each `copilot-sdk` eval trial runs in two phases. Understanding both is essential for diagnosing timeouts, interpreting token costs, and reasoning about grader behavior.
+
+### Skill execution phase
+
+The Copilot SDK opens a fresh session per trial, loads the entire `skills/azure-cost-calculator/` directory as system context, sends the user prompt, and runs the agent to completion. No state carries forward between trials.
+
+The skill directory is approximately 677 KB (~170K tokens). This context is prepended to every LLM call within a trial. A clean trial (e.g., a disambiguation task where the agent asks a question and stops) makes 3 LLM calls across 3 tool-use turns. A full estimation trial (agent runs `get-azure-pricing.sh`, builds a price table) makes 6-11 tool calls, each compounding the conversation history from prior turns.
+
+The Azure Retail Prices API is called during this phase via `get-azure-pricing.sh`. It is public and requires no authentication, but it is an external network dependency. If the API is down or the CI runner restricts outbound HTTPS, happy-path tasks will fail.
+
+### Grading phase
+
+After execution completes, each grader runs in sequence. Deterministic graders (`text`, `tool_constraint`, `trigger`, `skill_invocation`) evaluate the response locally with no additional LLM calls.
+
+Prompt graders (`prompt` type) make a separate LLM call using the model specified by `judge_model` in the eval config. When `continue_session: true` is set, the judge reattaches to the existing skill session via `ResumeSessionWithOptions()` and sees the full conversation exchange, not just the final output. The judge scores by invoking one of two Waza-intercepted tools: `set_waza_grade_pass` or `set_waza_grade_fail`.
+
+Both execution and grading calls go through the same Copilot API, authenticated by the same token, and billed identically. Premium request counts in results include both phases combined. There is currently no breakdown of execution vs. grading cost in the results JSON.
+
+### Model resolution for judging
+
+Judge model priority (highest to lowest):
+
+1. Per-grader `model` field in `promptGraderConfig`
+2. Eval-level `judge_model`
+3. Fallback to `config.model`
+
+Both `model` and `judge_model` are set to `claude-sonnet-4.6` in the current eval configs.
+
+## Cost and resource budget
+
+Eval runs consume premium requests through the Copilot API. The cost is dominated by the 677 KB skill directory loaded as system context on every LLM call, not by the task prompt itself.
+
+### Per-task cost (empirical, claude-sonnet-4.6)
+
+| Scenario                                    | Premium requests | Input tokens | Notes                                 |
+| ------------------------------------------- | ---------------- | ------------ | ------------------------------------- |
+| Clean disambiguation (agent asks and stops) | ~9               | ~194K        | 3 execution turns + grading           |
+| Full estimation (agent runs pricing script) | 15-23            | 370K-600K    | Multi-turn tool use compounds history |
+
+These numbers are from controlled experiments with `trials_per_task: 3` (issue [#632](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632)). With the default `trials_per_task: 1`, divide by 3 for a rough single-trial estimate.
+
+### Full suite cost
+
+With 33 tasks at `trials_per_task: 1`, expect approximately 100-200 premium requests for a full unfiltered run. Use `--tags` filtering to scope runs to what you actually need:
+
+```bash
+# Run only the service you changed
+waza run --tags "service:virtual-machines" --output results/results.json
+
+# Run smoke tests only
+waza run --tags smoke --output results/results.json
+```
+
+The CI workflow (`evaluate-critical`) already does this automatically: it detects which files changed and maps them to tags so only relevant tasks run. Unfiltered runs should only happen via manual `workflow_dispatch` when a full suite assessment is needed.
 
 ## Graders
 
@@ -282,6 +340,40 @@ The `validate-eval-schema` job enforces this: if a PR changes a service referenc
 | `argument-hint` frontmatter diverges from agentskills.io spec                                            | Project convention; not blocking for evals                                                                                                                                                                                                                                                                                                    |
 | `waza suggest` diverges from project conventions and fails intermittently                                | Do not use `waza suggest`; author tasks directly following the task contract and exemplars in this doc                                                                                                                                                                                                                                        |
 
+## Results interpretation
+
+Eval results are saved as JSON artifacts (30-day retention in CI) and can be generated locally with `--output results.json`.
+
+### Score calculation
+
+Each task produces a score from 0.0 to 1.0. The score is the weighted average across all graders on that task. The aggregate score across the full run is the unweighted average of all task scores.
+
+A task with three graders scoring (0, 1, 1) with equal weights produces a task score of 0.67, not 0.00. This means a single critical grader scoring 0 can be masked by passing graders that test unrelated properties. When diagnosing a score, always check per-grader results, not just the aggregate.
+
+### Key fields in results JSON
+
+| Field                               | What it tells you                                                           |
+| ----------------------------------- | --------------------------------------------------------------------------- |
+| `summary.aggregate_score`           | Overall pass rate across all tasks                                          |
+| `tasks[].stats.avg_score`           | Average score for a specific task across trials                             |
+| `tasks[].stats.std_dev_score`       | Score variance across trials (zero when `trials_per_task: 1`)               |
+| `tasks[].stats.ci95_lo` / `ci95_hi` | 95% confidence interval bounds (only meaningful with `trials_per_task > 1`) |
+| `tasks[].graders[].score`           | Per-grader score for each trial                                             |
+
+### Reading per-grader results
+
+When a task score is unexpected, check which grader moved:
+
+1. Look at `tasks[].graders[]` for the task in question.
+2. Identify which grader scored 0 or below threshold.
+3. Check whether that grader is testing the behavior you care about or an unrelated property.
+
+Global graders (defined in `eval.yaml` under `graders:`) apply to every task. If a global grader tests something irrelevant to a specific task, it adds noise to that task's score. The current global grader `no-summary-format` checks that the response does not contain "Summary format"; this is unrelated to most task behaviors and can inflate scores when paired with a failing critical grader.
+
+### Comparing results
+
+`waza compare <before.json> <after.json>` shows score deltas between two runs. Limitations: it does not surface confidence interval bands, does not flag whether a delta is within noise, and exits 0 on success regardless of whether scores improved or regressed. With `trials_per_task: 1`, any score delta between two runs could be signal or LLM variance; there is no way to distinguish them from a single trial.
+
 ## Troubleshooting
 
 | Symptom                                                                 | Fix                                                                                                                                                                                                  |
@@ -308,6 +400,14 @@ The `validate-eval-schema` job enforces this: if a PR changes a service referenc
 2. If upgrading Waza, update all pinned schema URLs in eval docs and YAML files.
 3. Review `Known limitations` and remove stale mitigations.
 4. Review flaky prompt graders and convert high-value checks to deterministic graders where possible.
+
+## Experiments
+
+Historical record of research, experiments, and design decisions. Issues and PRs are linked for full context.
+
+| Issue                                                                                                                          | PR                                                                     | Status    | Summary                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [#632: Disciplined skill experimentation using waza compare](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632) | [#635](https://github.com/ahmadabdalla/azure-cost-calculator/pull/635) | Discarded | Investigated applying the Karpathy autoresearch pattern (autonomous mutate-measure-keep/revert) to iterative `SKILL.md` improvement. Built `eval-experiment.yaml` with `trials_per_task: 3` and a `compare-experiment.sh` script for ci95 band overlap comparison. |
 
 ## References
 
