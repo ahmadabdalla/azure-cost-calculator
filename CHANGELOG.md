@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.7.1] - 2026-04-20
+
+### Changed
+
+- API Management service reference: added Workspace Gateway Standard and Premium SKUs to Meter Names table and workspace packs availability note
+- NAT Gateway service reference: added Global-only region warning
+- Service Bus service reference: added brokered connections query pattern and meter table row, updated cost formula
+
+### Fixed
+
+- Azure Databricks service reference: added missing meters, DBCU reservations, serverless billing clarity, and corrected primaryCost billing boundary
+- Azure Front Door service reference: corrected zone mapping to document all 8 zones, added tiered pricing trap for data transfer and requests, added Classic routing rules meters, and added Private Link origins note
+- Microsoft Fabric service reference: updated stale OneLake meter names (renamed by API), added storage temperature tiers (Hot/Cool/Cold), added Private Endpoint support, and documented BCDR storage casing trap
+- Virtual WAN service reference: fixed blockquote format and reduced line count within budget
+
 ## [1.7.0] - 2026-04-13
 
 ### Added
