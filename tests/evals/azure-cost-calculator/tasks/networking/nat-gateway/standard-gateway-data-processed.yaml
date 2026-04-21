@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/nat-gateway/standard-gateway-data-processed
+name: NAT Gateway - Standard Gateway and Data Processed
+description: >
+  Tests cost estimation for a NAT Gateway with data processing volume.
+  Validates that the agent queries Global region, separates gateway hourly
+  and data processed meters, and accounts for the specified data volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:nat-gateway
+inputs:
+  prompt: "How much would a NAT Gateway cost per month processing 500 GB of data?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "NAT Gateway|Azure NAT"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: data-volume-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: text
+    name: global-region-acknowledged
+    config:
+      contains:
+        - "Global"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would a NAT Gateway cost per month processing 500 GB of data?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Treats NAT Gateway as a global-priced service by using/acknowledging Global region pricing.
+        (3) Shows a monthly total cost using the correct billing model for NAT Gateway.
+        (4) Accounts for 500 GB of data processed as specified.
+
+        Score 1.0 if all four criteria are met. Score 0.5 if three are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

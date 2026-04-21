@@ -9,6 +9,8 @@ pricingRegion: global
 
 # NAT Gateway
 
+> **Warning**: NAT Gateway pricing is **Global-only**. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`. Prices are USD-only.
+
 > **Trap**: Unfiltered queries return gateway (hourly), data processing (per-GB), and StandardV2 logging (monthly) meters summed. `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 
 > **Trap (always-on)**: NAT Gateway bills per-hour from resource creation, not per-use. Even with zero outbound traffic, the gateway meter charges continuously (730 hours/month).
