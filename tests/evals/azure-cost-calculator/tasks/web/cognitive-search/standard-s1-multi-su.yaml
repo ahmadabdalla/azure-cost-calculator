@@ -32,8 +32,8 @@ graders:
   - type: text
     name: search-units-acknowledged
     config:
-      contains:
-        - "3"
+      regex_match:
+        - "\\b3\\s+(search units?|SUs?)\\b|\\bInstanceCount\\s*:?\\s*3\\b"
     weight: 0.5
   - type: tool_constraint
     name: uses-pricing-script

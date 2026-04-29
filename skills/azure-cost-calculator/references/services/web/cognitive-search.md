@@ -35,7 +35,7 @@ MeterName: Semantic Ranker Unit
 ServiceName: Azure Cognitive Search
 SkuName: Agentic Retrieval {Level} Reasoning
 MeterName: Agentic Retrieval {Level} Reasoning Tokens
-Quantity: {thousandsOfTokens}
+Quantity: ({tokens} ÷ 1000)
 
 ## Key Fields
 
@@ -64,7 +64,7 @@ Quantity: {thousandsOfTokens}
 | `Agentic Retrieval Low Reasoning Tokens`    | `Agentic Retrieval Low Reasoning`  | `1K`          | Sub-cent per 1K tokens   |
 | `Agentic Retrieval Medium Reasoning Tokens` | `Agentic Retrieval Medium Reasoning` | `1K`       | Sub-cent per 1K tokens   |
 
-AI enrichment meters (Document Cracking, Custom Entity Skills) use tiered pricing per 1K and are separate from the base tier.
+AI-related add-on meters, including enrichment meters such as Document Cracking and Custom Entity Skills and token-based meters such as Agentic Retrieval, use per-1K pricing and are separate from the base tier.
 
 ## Cost Formula
 
