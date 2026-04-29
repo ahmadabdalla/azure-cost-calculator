@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:web/static-web-apps/standard-multi-app
+name: Static Web Apps - Standard Multi-App with Bandwidth
+description: >
+  Tests cost estimation for Azure Static Web Apps Standard tier with multiple
+  apps and bandwidth overage. Validates that the agent uses the correct
+  apiServiceName (Azure App Service) with ProductName filter, accounts for
+  the 100 GB free bandwidth grant, and queries eastus2 (not eastus).
+tags:
+  - happy-path
+  - single-service
+  - web
+  - service:static-web-apps
+inputs:
+  prompt: "How much would 3 Azure Static Web Apps on the Standard plan cost per month with 500 GB total bandwidth in East US 2?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Static Web Apps|SWA"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: app-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: text
+    name: bandwidth-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
