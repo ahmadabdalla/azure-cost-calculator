@@ -35,8 +35,8 @@ graders:
   - type: text
     name: instance-count-acknowledged
     config:
-      contains:
-        - "3"
+      regex_match:
+        - "\\b3\\b.*(?i:instance|app)|(?i:instance|app).*\\b3\\b|[x×]\\s*3\\b|\\b3\\s*[x×]"
     weight: 0.5
   - type: tool_constraint
     name: uses-pricing-script

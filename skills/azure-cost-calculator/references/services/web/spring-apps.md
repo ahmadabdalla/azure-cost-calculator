@@ -61,7 +61,7 @@ Repeat with MeterName: `Standard Consumption Memory Active Usage` (Quantity: {av
 | `Basic vCPU and Memory Group Duration` | `Basic` | `1 Hour` | Base: includes 2 vCPU + 4 GB |
 | `Standard vCPU and Memory Group Duration` | `Standard` | `1 Hour` | Base: includes 6 vCPU + 12 GB |
 | `Enterprise vCPU and Memory Group Duration` | `Enterprise` | `1 Hour` | Base: includes 6 vCPU + 12 GB |
-| `{Tier} Overage vCPU Duration` | `{Tier}` | `1 Hour` | Per extra vCPU; same rate all tiers |
+| `{Tier} Overage vCPU Duration` | `{Tier}` | `1 Hour` | `{Tier}` = Basic, Standard, or Enterprise; same rate all tiers |
 | `{Tier} Overage Memory Duration` | `{Tier}` | `1 GB Hour` | Per extra GB; Basic rate slightly lower |
 | `Enterprise VMware IP` | `Enterprise` | `1 Hour` | Tanzu licensing per vCPU |
 | `Standard Consumption vCPU Active Usage` | `Standard Consumption` | `1 Hour` | Serverless active vCPU |
