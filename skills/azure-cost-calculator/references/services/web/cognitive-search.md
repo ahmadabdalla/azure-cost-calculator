@@ -30,7 +30,7 @@ ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker
 MeterName: Semantic Ranker Unit
 
-### Agentic Retrieval (per 1K tokens)
+### Agentic Retrieval (per 1K tokens; Level = Minimum, Low, or Medium)
 
 ServiceName: Azure Cognitive Search
 SkuName: Agentic Retrieval {Level} Reasoning
@@ -60,6 +60,7 @@ Quantity: {thousandsOfTokens}
 | `Semantic Ranker Unit`                      | `Semantic Ranker`                  | `1/Day`       | Daily add-on charge      |
 | `Semantic Ranker queries`                   | `Semantic Ranker`                  | `1K`          | Per-query billing        |
 | `Semantic Ranker Overage Queries`           | `Semantic Ranker`                  | `1K`          | Overage per-query        |
+| `Agentic Retrieval Minimum Reasoning Tokens` | `Agentic Retrieval Minimum Reasoning` | `1K`    | Sub-cent per 1K tokens   |
 | `Agentic Retrieval Low Reasoning Tokens`    | `Agentic Retrieval Low Reasoning`  | `1K`          | Sub-cent per 1K tokens   |
 | `Agentic Retrieval Medium Reasoning Tokens` | `Agentic Retrieval Medium Reasoning` | `1K`       | Sub-cent per 1K tokens   |
 
