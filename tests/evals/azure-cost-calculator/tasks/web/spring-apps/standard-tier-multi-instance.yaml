@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:web/spring-apps/standard-tier-multi-instance
+name: Spring Apps - Standard Tier Multi-Instance
+description: >
+  Tests cost estimation for Azure Spring Apps Standard tier with multiple app
+  instances. Validates that the agent uses the correct serviceName (Azure Spring
+  Cloud) and scales by instance count using the vCPU and Memory Group Duration
+  meter.
+tags:
+  - happy-path
+  - single-service
+  - web
+  - service:spring-apps
+inputs:
+  prompt: "How much would 3 Azure Spring Apps Standard tier instances cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Spring Apps|Spring Cloud"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      regex_match:
+        - "\\b3\\b.*(?i:instance|app)|(?i:instance|app).*\\b3\\b|[x×]\\s*3\\b|\\b3\\s*[x×]"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

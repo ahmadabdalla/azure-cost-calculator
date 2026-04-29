@@ -59,20 +59,18 @@ Repeat with MeterName: `Standard Consumption Memory Active Usage` (Quantity: {av
 | Meter | skuName | unitOfMeasure | Notes |
 | ----- | ------- | ------------- | ----- |
 | `Basic vCPU and Memory Group Duration` | `Basic` | `1 Hour` | Base: includes 2 vCPU + 4 GB |
-| `Basic Overage vCPU Duration` | `Basic` | `1 Hour` | Per extra vCPU beyond 2 |
-| `Basic Overage Memory Duration` | `Basic` | `1 GB Hour` | Per extra GB beyond 4 |
 | `Standard vCPU and Memory Group Duration` | `Standard` | `1 Hour` | Base: includes 6 vCPU + 12 GB |
-| `Standard Overage vCPU Duration` | `Standard` | `1 Hour` | Per extra vCPU beyond 6 |
-| `Standard Overage Memory Duration` | `Standard` | `1 GB Hour` | Per extra GB beyond 12 |
 | `Enterprise vCPU and Memory Group Duration` | `Enterprise` | `1 Hour` | Base: includes 6 vCPU + 12 GB |
-| `Enterprise Overage vCPU Duration` | `Enterprise` | `1 Hour` | Per extra vCPU beyond 6 |
-| `Enterprise Overage Memory Duration` | `Enterprise` | `1 GB Hour` | Per extra GB beyond 12 |
+| `{Tier} Overage vCPU Duration` | `{Tier}` | `1 Hour` | `{Tier}` = Basic, Standard, or Enterprise; same rate all tiers |
+| `{Tier} Overage Memory Duration` | `{Tier}` | `1 GB Hour` | Per extra GB; Basic rate slightly lower |
 | `Enterprise VMware IP` | `Enterprise` | `1 Hour` | Tanzu licensing per vCPU |
 | `Standard Consumption vCPU Active Usage` | `Standard Consumption` | `1 Hour` | Serverless active vCPU |
 | `Standard Consumption Memory Active Usage` | `Standard Consumption` | `1 GiB Hour` | Serverless active memory |
 | `Standard Consumption Requests` | `Standard Consumption` | `1M` | Per million requests |
-
-Overage memory meters for Standard/Enterprise use same rates. Standard Consumption also has idle vCPU/memory, Eureka, and Config Server meters; query with the same pattern above.
+| `Standard Consumption vCPU Idle` | `Standard Consumption` | `1 Hour` | Reduced idle vCPU rate |
+| `Standard Consumption Memory Idle Usage` | `Standard Consumption` | `1 GiB Hour` | Idle memory (same rate as active) |
+| `Standard Consumption Config Server Management` | `Standard Consumption` | `1 Hour` | Managed component |
+| `Standard Consumption Eureka Management` | `Standard Consumption` | `1 Hour` | Managed component |
 
 ## Cost Formula
 
