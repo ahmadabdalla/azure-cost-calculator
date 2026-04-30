@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.7.2] - 2026-04-30
+
+### Fixed
+
+- Azure AI Search service reference (`cognitive-search.md`): added Agentic Retrieval and Semantic Ranker query meters
+- Azure Spring Apps service reference (`spring-apps.md`): added missing Standard Consumption tier meters
+- Azure Static Web Apps service reference (`static-web-apps.md`): removed incorrect `billingNeeds` front matter and added cross-service markers
+
 ## [1.7.1] - 2026-04-20
 
 ### Changed

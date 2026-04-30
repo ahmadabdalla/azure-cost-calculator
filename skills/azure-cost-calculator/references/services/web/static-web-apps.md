@@ -2,7 +2,6 @@
 serviceName: Azure Static Web Apps
 category: web
 aliases: [SWA, JAMstack]
-billingNeeds: [Azure App Service]
 apiServiceName: Azure App Service
 primaryCost: "Fixed monthly per-app fee (Standard) + bandwidth overage per-GB + optional Azure Front Door add-on hourly"
 hasFreeGrant: true
@@ -23,14 +22,14 @@ privateEndpoint: true
 
 ### Standard plan: per-app monthly fee (use Region eastus2; eastus has no data)
 
-ServiceName: Azure App Service
+ServiceName: Azure App Service <!-- cross-service -->
 ProductName: Static Web Apps
 MeterName: Standard App
 Region: eastus2
 
 ### Bandwidth: pass Quantity with total GB to see per-tier unit prices
 
-ServiceName: Azure App Service
+ServiceName: Azure App Service <!-- cross-service -->
 ProductName: Static Web Apps
 MeterName: Standard Bandwidth Usage
 Quantity: 500
@@ -38,7 +37,7 @@ Region: eastus2
 
 ### Azure Front Door add-on (enterprise-grade edge, hourly)
 
-ServiceName: Azure App Service
+ServiceName: Azure App Service <!-- cross-service -->
 ProductName: Static Web Apps
 MeterName: Standard Azure Front Door Add-on
 Region: eastus2
