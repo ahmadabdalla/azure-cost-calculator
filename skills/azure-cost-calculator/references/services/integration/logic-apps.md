@@ -65,9 +65,9 @@ MeterName: {Tier} Unit
 
 ## Cost Formula
 
-```text
+```
 Consumption: Monthly = (stdActions × stdPrice) + (entActions × entPrice) + max(0, builtInActions − 4000) × builtInPrice + retentionGB × retentionPrice
-Standard:    Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730)
+Standard:    Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730) + connectorActions × connectorPrice
 Hybrid:      Monthly = vCPU_price × vCPUs × 730
 Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 ```
@@ -76,7 +76,7 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 
 - **Billing unit is actions, not workflow executions**; each step counts as one action
 - Consumption: per-action, first 4,000 built-in actions/month free, auto-scales to zero
-- Standard: runs on App Service Plan (WS1–WS3) or container; billed per-second
+- Standard: vCPU + memory hourly on App Service Plan (WS1–WS3); connector calls billed per-action at Consumption rates (same meters)
 - Integration Account is a separate B2B/EDI add-on; ISE is deprecated. Use Standard with VNet instead
 - **Private Endpoints**: Require Standard tier with VNet integration
 
