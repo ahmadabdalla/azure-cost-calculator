@@ -53,7 +53,7 @@ Quantity: 1000000
 | Consumption       | `Standard Execution Time`                                       | per 1 GB-s             | 400K GB-s  |
 | Premium           | `Premium vCPU Duration`                                         | 1 Hour                 | -          |
 | Premium           | `Premium Memory Duration`                                       | 1 GiB Hour             | -          |
-| Flex Always Ready | `Always Ready Baseline` / `Execution Time` / `Total Executions` | per GB-s / per 10 exec | -          |
+| Flex Always Ready | `Always Ready Baseline` / `Always Ready Execution Time` / `Always Ready Total Executions` | per GB-s / per 10 exec | -          |
 | Flex On Demand    | `On Demand Execution Time`                                      | per 1 GB-s             | 100K GB-s  |
 | Flex On Demand    | `On Demand Total Executions`                                    | per 10 exec            | 250K exec  |
 
