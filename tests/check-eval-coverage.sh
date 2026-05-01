@@ -21,6 +21,12 @@ for f in "$@"; do
   category=$(basename "$(dirname "$f")")
   suggested_path="${TASKS_DIR}/${category}/${svc}/"
 
+  # Services with hasMeters: false have no pricing API data and are exempt from
+  # the happy-path requirement per docs/ops/evals.md exception rules.
+  if grep -qE "^hasMeters:[[:space:]]*false" "$f" 2>/dev/null; then
+    continue
+  fi
+
   # Check if any task YAML has both 'service:<svc>' and 'happy-path' tags
   found=false
   while IFS= read -r task_file; do
