@@ -64,8 +64,8 @@ MeterName: Dedicated Capacity Unit
 
 ```
 Standard monthly = TU_hourly × 730 × tuCount + (ingressEvents_per1M × millions) + [Capture_hourly × 730] + [Kafka_hourly × 730]
-Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × max(0, GB - 1024 × puCount)]
-Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × max(0, GB - 10240 × cuCount)]
+Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × max(0, GB - 1000 × puCount)]
+Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × max(0, GB - 10000 × cuCount)]
 Geo-DR monthly   = primary namespace + secondary namespace + geoReplication_perGB × transferredGB
 ```
 
@@ -73,6 +73,7 @@ Geo-DR monthly   = primary namespace + secondary namespace + geoReplication_perG
 
 - Basic tier: no Capture, no Kafka, max 1-day retention
 - Standard tier: Capture and Kafka are optional flat per-namespace charges (not per-TU); max 7-day retention
+- Capture writes to Blob Storage or Data Lake; storage costs are billed separately under Azure Storage
 - Premium/Dedicated include ingress events, Kafka, and Schema Registry at no extra charge
 - Extended retention: Premium includes 1 TB/PU, Dedicated includes 10 TB/CU before per-GB/month overage
 - Capacity: 1 TU = 1 MB/s ingress / ~1K events/s; 1 PU ≈ 5–10 MB/s; 1 CU ≈ 20 MB/s
