@@ -77,6 +77,7 @@ v2 Pipeline: Monthly = (activityRuns / 1000) × orchestration_retailPrice
                + pipelineActivityHours × pipeline_retailPrice
                + dataMovementHours × movement_retailPrice
                + inactivePipelines × inactive_retailPrice
+               + (readWriteOps / 50000) × readWrite_retailPrice
                + max(0, operations - 1,000,000) / 50000 × operations_retailPrice
 v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 ```
