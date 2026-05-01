@@ -12,7 +12,7 @@ privateEndpoint: true
 
 > **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Always query in the user's target currency first. If the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can be ~2× the direct FX conversion, e.g. AUD 0.0001 vs ~0.00005 from manual conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Always explain the free grant deduction.
 >
-> **Caveat (Flex Consumption non-USD inflation)**: For Flex Consumption On Demand Execution Time, some non-USD rates (e.g. AUD `0.0001/GB-s`) are a published floor, the lowest non-zero value the API returns, which can overstate cost by ~4× vs the USD-derived rate at high volumes. If total Flex Consumption On Demand GB-s across the estimate exceeds **1M GB-s/month** in a non-USD currency, also derive the rate from USD using [regions-and-currencies.md](../../regions-and-currencies.md). Use the API-published non-USD rate for the primary cost total; surface the USD-derived rate as an informational comparison noting the API rate may be inflated by currency rounding.
+> **Trap (Flex non-USD inflation)**: For Flex Consumption On Demand Execution Time, some non-USD rates (e.g. AUD `0.0001/GB-s`) are a published floor, the lowest non-zero value the API returns, which can overstate cost by ~4× vs the USD-derived rate at high volumes. If total Flex Consumption On Demand GB-s across the estimate exceeds **1M GB-s/month** in a non-USD currency, also derive the rate from USD using [regions-and-currencies.md](../../regions-and-currencies.md). Use the API-published non-USD rate for the primary cost total; surface the USD-derived rate as an informational comparison noting the API rate may be inflated by currency rounding.
 
 ## Query Pattern
 
@@ -69,8 +69,8 @@ Premium:
   Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730)
 
 Flex Consumption:
-  Always Ready = baseline_price × idle_gbSeconds + execTime_price × exec_gbSeconds + exec_price × (executions / 10)
-  On Demand    = max(0, on_demand_gbSeconds - 100,000) × execTime_price + max(0, executions - 250,000) / 10 × exec_price
+  Always Ready = baseline_price × idle_gbSeconds + ar_execTime_price × exec_gbSeconds + ar_exec_price × (executions / 10)
+  On Demand    = max(0, on_demand_gbSeconds - 100,000) × od_execTime_price + max(0, executions - 250,000) / 10 × od_exec_price
   Monthly      = Always Ready + On Demand
 
 Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see app-service.md)
