@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:management/migrate/no-retail-meters
+name: Azure Migrate - No Retail Meters
+description: >
+  Validates that the agent correctly identifies Azure Migrate as a free hub
+  with no retail API meters and does not fabricate direct meter pricing.
+  Costs should be attributed to dependent services (Site Recovery, DMS).
+tags:
+  - no-retail-meters
+  - management
+  - service:migrate
+inputs:
+  prompt: "How much does Azure Migrate cost per month for migrating 5 servers?"
+expected:
+  output_contains:
+    - "free"
+  output_not_contains:
+    - "retailPrice"
+graders:
+  - type: text
+    name: communicates-no-meters
+    config:
+      regex_match:
+        - "(?i)no.*(meter|pricing|charge)|free|no.*(direct|retail).*(cost|price)"
+    weight: 1.0
+  - type: text
+    name: references-dependent-services
+    config:
+      regex_match:
+        - "(?i)Site Recovery|ASR|Database Migration|DMS"
+    weight: 1.0
+  - type: text
+    name: no-fabricated-pricing
+    config:
+      not_contains:
+        - "retailPrice"
+        - "unitPrice"
+    weight: 0.5
