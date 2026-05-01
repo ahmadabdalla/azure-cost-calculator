@@ -13,7 +13,7 @@ privateEndpoint: true
 
 > **Trap (DTU billing)**: DTU tiers (Basic/Standard/Premium) use `unitOfMeasure: 1/Day`. The script auto-multiplies by 30 for these meters, so `MonthlyCost` is already the monthly cost.
 
-> **Trap (Zone Redundancy)**: GP zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `2 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**. Sum both hourly rates, then × 730. BC includes zone-redundant HA in base price (no separate ZR meter).
+> **Trap (Zone Redundancy)**: GP zone-redundant deployments have separate compute meters (`Zone Redundancy vCore`) and storage meters (`General Purpose Zone Redundancy Data Stored` at ~2× standard rate). The ZR compute meter is an **additive hourly surcharge**. BC includes zone-redundant HA in base price (no separate ZR meter).
 
 ## Query Pattern
 
@@ -57,7 +57,7 @@ Quantity: 256
 ```
 Monthly Compute = retailPrice × 730 | Monthly Storage = storage_retailPrice × sizeInGB
 Total = Compute + Storage
-Zone-Redundant GP Compute = (base_retailPrice + zr_retailPrice) × 730
+Zone-Redundant GP = (base_retailPrice + zr_retailPrice) × 730 + zr_storage_retailPrice × sizeInGB
 ```
 
 ## Notes
