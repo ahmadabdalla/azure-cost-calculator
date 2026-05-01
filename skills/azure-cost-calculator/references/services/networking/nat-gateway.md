@@ -42,12 +42,13 @@ InstanceCount: 3
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values           |
-| ------------- | ----------------------------------------- | ------------------------ |
-| `serviceName` | Always `NAT Gateway`                      | `NAT Gateway`            |
-| `productName` | Single product for all meters             | `NAT Gateway`            |
-| `skuName`     | Standard for both Standard and StandardV2 | `Standard`, `StandardV2` |
-| `meterName`   | Substitute from Meter Names table         | `Standard Gateway`       |
+| Parameter     | How to determine                                            | Example values           |
+| ------------- | ----------------------------------------------------------- | ------------------------ |
+| `serviceName` | Always `NAT Gateway`                                        | `NAT Gateway`            |
+| `productName` | Single product for all meters                               | `NAT Gateway`            |
+| `skuName`     | `Standard` for gateway/data meters; `StandardV2` for logs   | `Standard`, `StandardV2` |
+| `meterName`   | Substitute from Meter Names table                           | `Standard Gateway`       |
+| `Region`      | Always `Global` (commercial); `US Gov` for government cloud | `Global`, `US Gov`       |
 
 ## Meter Names
 
