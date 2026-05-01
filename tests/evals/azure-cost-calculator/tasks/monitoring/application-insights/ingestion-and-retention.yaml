@@ -59,9 +59,9 @@ graders:
         (3) Correctly applies the 5 GB monthly free ingestion grant, so the billed
         ingestion volume is 45 GB.
         (4) Correctly converts 50 GB/month into retention volume beyond the 90-day
-        free period for a 180-day retention setting using a steady-state monthly-to-daily
-        conversion ((50/30) GB/day × 90 days = 150 GB retained, or an equivalent
-        daily-ingestion calculation).
+        free period for a 180-day retention setting using the repo's standard
+        steady-state 30-day monthly-to-daily approximation ((50/30) GB/day × 90 days
+        = 150 GB retained, or an equivalent daily-ingestion calculation).
         (5) Shows a monthly total and component breakdown consistent with the
         current East US Log Analytics ingestion and retention query results,
         rounded to two decimal places.
