@@ -12,7 +12,7 @@ privateEndpoint: true
 
 > **Trap (serviceName)**: API `serviceName` is `Foundry Tools`, NOT `Azure Vision`. Always filter by `ProductName` to isolate Vision meters from the 300+ Foundry Tools meters.
 
-> **Trap (multiple products)**: Three products: `Azure Vision`, `Azure Vision - Face`, `Azure Vision - Disconnected`. Disconnected bills annually (`1/Year`). Exclude from standard estimates.
+> **Trap (multiple products)**: Three products: `Azure Vision`, `Azure Vision - Face`, `Azure Vision - Disconnected`. Liveness meters exist under BOTH Vision and Face products—filter by `productName` to avoid double-counting. Disconnected bills annually (`1/Year`).
 
 > **Trap (tiered pricing)**: Image Analysis and Face transaction meters return multiple rows per tier bracket. The script's `totalMonthlyCost` sums all tiers; calculate manually based on volume.
 
@@ -71,9 +71,14 @@ MeterName: Video Retrieval and Description - Ingestion Vision
 | `Spatial Analysis Video Stream Edge` | `Spatial Analysis` | `Azure Vision` | `1 Hour` | Per camera-hour |
 | `Video Retrieval and Description - Ingestion Vision` | `Video Retrieval and Description - Ingestion` | `Azure Vision` | `1 Hour` | Video ingestion |
 | `Vectorize Image Transactions` | `Vectorize Image` | `Azure Vision` | `1K` | Image embeddings |
+| `Vectorize Text Transactions` | `Vectorize Text` | `Azure Vision` | `1K` | Text embeddings; sub-cent |
+| `Image Analysis Group 1-1 Transactions` | `Image Analysis Group 1-1` | `Azure Vision` | `1K` | Tiered: same tiers as Group 1 |
 | `Custom Image Classification Training` | `Custom Image Classification` | `Azure Vision` | `1 Hour` | Custom model training |
+| `Custom Object Detection Training` | `Custom Object Detection` | `Azure Vision` | `1 Hour` | Custom model training |
+| `Video Retrieval - Summary Vision` | `Video Retrieval - Summary` | `Azure Vision` | `1 Hour` | Video summarization |
 | `P1 Unit` | `P1` | `Azure Vision` | `1/Day` | P-series daily fee; P1/P3 daily-only, P2 daily + overage |
-| `Commitment Tier Disconnected 2000K Unit` | `Commitment Tier Disconnected 2000K` | `Azure Vision - Disconnected` | `1/Year` | Annual billing, divide by 12 |
+| `P4 Overage Transactions` | `P4` | `Azure Vision` | `1K` | P4–P6 overage-only, no daily fee |
+| `Commitment Tier Azure 500K Unit` | `Commitment Tier Azure 500K` | `Azure Vision` | `1/Month` | Monthly commitment; 4 tiers: 500K–16M |
 
 ## Cost Formula
 
@@ -89,8 +94,7 @@ Annual meters (1/Year):    Monthly = retailPrice ÷ 12
 ## Notes
 
 - **Free tiers**: Image Analysis 5K txns/mo, Face 30K txns/mo, Spatial Analysis 1 camera/mo, Custom Training free hours
-- **Commitment tiers**: Azure (500K–16M txns/mo) and Connected container variants offer volume discounts with overage, not RI
-- **Disconnected containers**: `Azure Vision - Disconnected` bills annually; divide by 12 for monthly cost
-- **P-series**: Vision P1/P3 daily-only (`1/Day`); P2 has daily + overage; P4–P6 overage-only. Face P1–P3 have daily fee + tiered overage + storage
-- **Scope**: See `ai-services.md` for the full Foundry Tools umbrella (Language, Speech, Translator, etc.)
+- **Commitment tiers**: Azure (500K–16M txns/mo) and Connected container variants offer volume discounts with overage, not RI. Disconnected (`1/Year`): divide by 12
+- **P-series**: Vision P1/P3 daily-only (`1/Day`); P2 daily + overage; P4–P6 overage-only. Face P1–P3: daily fee + tiered overage + storage
+- **Scope**: See `ai-services.md` for full Foundry Tools umbrella. Additional Vision meters: Image Retrieval, Shelf Product Recognition, Video Retrieval (Query/Summary)
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; 1 Spatial Analysis unit = 1 camera-hour
