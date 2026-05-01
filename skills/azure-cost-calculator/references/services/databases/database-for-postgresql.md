@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (productName inconsistency)**: `productName` has inconsistent naming across series. Some use `General Purpose - Ddsv5` (with hyphen) while others use `General Purpose Dadsv5` (no hyphen). The Esv3 product uses `Az DB for PGSQL`, storage uses `Az DB for PostgreSQL`, all others use `Azure Database for PostgreSQL`. Always use the exact string from discovery.
 
-> **Trap (v6 meterName)**: Newer v6 and Confidential Compute series use `MeterName: 1 vCore` and `SkuName: 1 vCore` instead of `MeterName: vCore` with `SkuName: N vCore`. Queries using `MeterName: vCore` will miss v6 series. For v6, query with `SkuName: 1 vCore` and multiply the per-vCore rate by the desired vCore count.
+> **Trap (v6 skuName)**: v6 and Confidential Compute series have **two** SKU patterns: `SkuName: 1 vCore` / `MeterName: 1 vCore` and `SkuName: vCore` / `MeterName: vCore` (same per-vCore rate). Unlike v4/v5, v6 does **not** have `SkuName: N vCore` variants (e.g., `4 vCore`). Use `SkuName: vCore` with `InstanceCount` for scaling.
 
 ## Query Pattern
 
@@ -27,8 +27,8 @@ InstanceCount: 4 # vCore count
 
 ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Database for PostgreSQL Flexible Server General Purpose Ddsv6 Series Compute
-SkuName: 1 vCore
-MeterName: 1 vCore
+SkuName: vCore
+MeterName: vCore
 InstanceCount: 4 # vCore count
 
 ### Storage (100 GB)
@@ -44,15 +44,14 @@ Quantity: 100 # storage size in GB
 | Parameter     | How to determine                   | Example values                                              |
 | ------------- | ---------------------------------- | ----------------------------------------------------------- |
 | `productName` | Tier + series (exact match)        | See Product Names table below                               |
-| `skuName`     | v4/v5: `'N vCore'`; v6: `'1 vCore'` | `'4 vCore'`, `'1 vCore'`, `'vCore'`                        |
-| `meterName`   | v4/v5: `'vCore'`; v6: `'1 vCore'`  | `'vCore'`, `'1 vCore'`, `'Storage Data Stored'`             |
+| `skuName`     | v4/v5: `'N vCore'` or `'vCore'`; v6: `'vCore'` | `'4 vCore'`, `'vCore'`                                     |
+| `meterName`   | Always `'vCore'` for per-vCore compute | `'vCore'`, `'Storage Data Stored'`                          |
 
 ## Meter Names
 
 | Meter                            | skuName              | unitOfMeasure | Notes                                       |
 | -------------------------------- | -------------------- | ------------- | ------------------------------------------- |
-| `vCore`                          | `N vCore` or `vCore` | `1 Hour`      | v4/v5 series; use InstanceCount for sizing  |
-| `1 vCore`                        | `1 vCore`            | `1 Hour`      | v6/Confidential series; per-vCore rate      |
+| `vCore`                          | `N vCore` or `vCore` | `1 Hour`      | All series; use InstanceCount for sizing    |
 | `Storage Data Stored`            | `Storage`            | `1 GB/Month`  | Standard LRS storage                        |
 | `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month`  | Backup beyond free grant                    |
 | `IOPS Scaling Provisioned IOPS`  | `IOPS Scaling`       | `1/Month`     | Per additional provisioned IOP              |
@@ -94,7 +93,7 @@ Total = Compute + Storage (+ optional IOPS + Backup)
 | MO, Esv6            | `Azure Database for PostgreSQL Flexible Server Memory Optimized Esv6 Series Compute`   |
 | MO, Easv6           | `Azure Database for PostgreSQL Flexible Server Memory Optimized Easv6 Series Compute`  |
 | Mdsv2               | `Azure Database for PostgreSQL Flexible Server Mdsv2 Series Compute`                   |
-| Confidential, DC v6 | `Azure Database for PostgreSQL Flexible Server Confidential Compute DCadsv6 Series Compute` |
+| Confidential   | `Azure Database for PostgreSQL Flexible Server Confidential Compute DCadsv6 Series Compute` |
 | Burstable, BS       | `Azure Database for PostgreSQL Flexible Server Burstable BS Series Compute`            |
 | Storage             | `Az DB for PostgreSQL Flexible Server Storage`                                         |
 | Backup              | `Azure Database for PostgreSQL Flexible Server Backup Storage`                         |
