@@ -66,6 +66,7 @@ MeterName: Azure Maps Creator Map Provisioning
 | `Maps Static Map Images` | Maps | 1K | 1K free, then paid per 1K |
 | `Maps Traffic Tiles` | Maps | 1K | 5K free, then paid per 1K |
 | `Maps Weather Tiles` | Maps | 1K | 1K free, then paid per 1K |
+| `Maps Copyright` | Maps | 1K | Always free |
 | `Azure Maps Creator Map Provisioning` | Azure Maps Creator | 1/Hour | Hourly, always-on resource |
 | `Azure Maps Creator Map Render` | Azure Maps Creator | 1K | No free grant, per 1K |
 | `Azure Maps Creator Feature State` | Azure Maps Creator | 1K | No free grant, low rate per 1K |
