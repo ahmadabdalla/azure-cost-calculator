@@ -48,7 +48,7 @@ MeterName: Analytics Logs Data Retention
 ## Cost Formula
 
 ```
-Monthly Ingestion (no Sentinel or classic pricing) = paid_tier_price_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (no Sentinel or classic pricing) = applicable_tier_price_per_GB × max(0, estimatedGB_per_month - 5)
 Monthly Ingestion (Sentinel simplified pricing)    = absorbed into Sentinel; include App Insights GB in Sentinel's total_IsBillable_GB; see security/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB  (retention charges start after 90 free days)
 Total = Monthly Ingestion + Monthly Retention

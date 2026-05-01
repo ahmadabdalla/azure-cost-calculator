@@ -63,7 +63,7 @@ graders:
         or an equivalent daily-ingestion calculation).
         (5) Shows a monthly total consistent with the East US scenario (for example,
         $103.50 ingestion + $15.00 retention = $118.50 total, or an equivalent
-        correctly rounded breakdown).
+        breakdown rounded to two decimal places).
 
         Score 1.0 if all five criteria are met. Score 0.5 if four are met. Score 0.0
         if fewer than four are met.
