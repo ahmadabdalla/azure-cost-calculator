@@ -85,8 +85,9 @@ Total Monthly    = Capacity + Storage + Overage
 - **OneLake storage billed separately**: Storage is not included in the CU-hour capacity rate; query the `OneLake` product. Tiers: Hot (default), Cool, Cold. BCDR also offers Hot/Cool/Cold (only Hot tabled above)
 - **Pause/resume**: Pausing a capacity stops CU billing; OneLake storage charges continue
 - **Free mirroring storage**: Each F-SKU includes free mirroring equal to the SKU number in TB (e.g., F64 = 64 TB); excess at the `Storage Mirroring` rate
-- **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `Cosmos DB Data Restore`, `SQL Storage`, `SQL Backup Storage`)
+- **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `Cosmos DB Backup Storage`, `Cosmos DB Data Restore`, `SQL Storage`, `SQL Backup Storage`)
 - **BCDR casing inconsistency**: Hot tier uses `OneLake BCDR Storage Hot` but Cool/Cold use `Onelake` (lowercase l); queries are case-sensitive
+- **Data retrieval from Cold/Cool tiers**: `OneLake Data Retrieval Cold/Cool` CU meters charge a sub-standard rate per CU-hour for accessing archived data
 - **Private endpoints**: Supported on F64 and above SKUs; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
