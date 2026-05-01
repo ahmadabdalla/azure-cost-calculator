@@ -52,14 +52,18 @@ InstanceCount: 2
 
 ## Meter Names
 
-| Meter                              | SKU                  | unitOfMeasure | Purpose                                                  |
-| ---------------------------------- | -------------------- | ------------- | -------------------------------------------------------- |
-| `Basic Messaging Operations`       | `Basic`              | `1M`          | Per 1M operations                                        |
-| `Standard Base Unit`               | `Standard`           | `1/Hour`      | Hourly base charge, per subscription (also returns `1/Month` variant) |
-| `Standard Messaging Operations`    | `Standard`           | `1M`          | Per 1M operations; tiered (first 13M included)           |
-| `Standard Brokered Connection`     | `Standard`           | `1`           | Per connection/month; tiered (first 1,000 included)      |
-| `Hybrid Connections Listener Unit` | `Hybrid Connections` | `1 Hour`      | Per listener hourly charge                               |
-| `Premium Messaging Unit`           | `Premium`            | `1/Hour`      | Messaging Unit (hourly, operations included)             |
+| Meter                              | SKU                        | unitOfMeasure | Purpose                                                  |
+| ---------------------------------- | -------------------------- | ------------- | -------------------------------------------------------- |
+| `Basic Messaging Operations`       | `Basic`                    | `1M`          | Per 1M operations                                        |
+| `Standard Base Unit`               | `Standard`                 | `1/Hour`      | Hourly base charge, per subscription (also returns `1/Month` variant) |
+| `Standard Messaging Operations`    | `Standard`                 | `1M`          | Per 1M operations; tiered (first 13M included)           |
+| `Standard Brokered Connection`     | `Standard`                 | `1`           | Per connection/month; tiered (first 1,000 included)      |
+| `Hybrid Connections Listener Unit` | `Hybrid Connections`       | `1 Hour`      | Per listener hourly charge                               |
+| `Hybrid Connections Data Transfer` | `Hybrid Connections`       | `1 GB`        | Tiered: first 5 GB free, then per-GB overage             |
+| `Premium Messaging Unit`           | `Premium`                  | `1/Hour`      | Messaging Unit (hourly, operations included)             |
+| `Geo Replication Zone 1 Data Transfer` | `Geo Replication Zone 1` | `1 GB`    | Premium geo-DR replication (NA/Europe)                    |
+| `WCF Relay`                        | `WCF Relay`                | `100 Hours`   | Legacy relay; per 100 hours (divide by 100 for hourly)   |
+| `WCF Relay Message`               | `WCF Relay`                | `10K`         | Legacy relay; per 10K messages                           |
 
 ## Cost Formula
 
@@ -78,5 +82,6 @@ Premium:  Monthly = MU_hourly × 730 × muCount (operations + connections includ
 - Standard base charge is billed once per Azure subscription, not per namespace
 - Standard operations and brokered connections use tiered pricing; calculate each tier progressively
 - Premium tier: 1, 2, 4, 8, or 16 messaging units per namespace; provides dedicated resources
+- Geo Replication (Premium only): adds per-GB data transfer cost by zone (Zone 1/2/3 at different rates)
 - **Private Endpoints**: Require Premium tier. Not available on Basic or Standard
-- `serviceFamily eq 'Integration'` in the API; also includes Hybrid Connections, WCF Relay, and Geo Replication meters
+- WCF Relay uses non-standard units (`100 Hours`, `10K`); divide prices accordingly for per-hour/per-message rates
