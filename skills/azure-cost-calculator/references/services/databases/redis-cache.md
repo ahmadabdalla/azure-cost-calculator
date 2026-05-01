@@ -71,7 +71,7 @@ Monthly = retailPrice × 730 hours × shardCount × (1 + replicas)
 
 ## Reserved Instance Pricing
 
-RIs available for **Premium** (P1-P5), **Enterprise** (E1, E5, E10, E20, E50, E100 only — not E200/E400), **Enterprise Flash**, and **Azure Managed Redis** tiers. Returns 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
+RIs available for **Premium** (P1-P5), **Enterprise** (E1, E10, E20, E50, E100 only — not E5/E200/E400), **Enterprise Flash**, and **Azure Managed Redis** tiers. Returns 1-Year and 3-Year terms. Divide `retailPrice` by 12 (1-Year) or 36 (3-Year) for monthly cost.
 
 ### RI for Premium: substitute {Size} with P1-P5
 
@@ -92,7 +92,7 @@ PriceType: Reservation
 | Premium          | `Azure Redis Cache Premium`          | `P1`–`P5`                                               | Clustering, persistence, VNet       |
 | Enterprise       | `Azure Redis Cache Enterprise`       | `E1`, `E5`, `E10`, `E20`, `E50`, `E100`, `E200`, `E400` | Redis Stack, active geo-replication |
 | Enterprise Flash | `Azure Redis Cache Enterprise Flash` | `F300`, `F700`, `F1500`                                 | Flash-optimized, large datasets     |
-| Isolated         | `Azure Redis Cache Isolated`           | `I100`                                                  | Dedicated infrastructure            |
+| Isolated         | `Azure Redis Cache Isolated`           | `I100`                                                  | Uses `I100 VM` meter (not Cache)    |
 | Managed Balanced | `Azure Managed Redis - Balanced`       | `B0`–`B1000`                                            | Successor product, 4:1 memory:vCPU  |
 | Managed Memory   | `Azure Managed Redis - Memory Optimized` | `M10`–`M2000`                                        | 8:1 memory:vCPU ratio               |
 | Managed Compute  | `Azure Managed Redis - Compute Optimized` | `X1`–`X700`                                         | 2:1 memory:vCPU, max throughput     |
