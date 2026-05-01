@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:monitoring/application-insights/ingestion-and-retention
+name: Happy Path - Application Insights Ingestion and Retention
+description: >
+  Tests cost estimation for Application Insights with per-GB ingestion and retention.
+  Validates that the agent uses Log Analytics workspace meters, applies the 5 GB free
+  grant deduction, and calculates retention beyond the 90-day free period.
+tags:
+  - happy-path
+  - single-service
+  - monitoring
+  - service:application-insights
+inputs:
+  prompt: "What is the monthly cost for Application Insights with 50 GB/month ingestion and 180-day retention in East US?"
+expected:
+  output_contains:
+    - "Application Insights"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Application Insights|App Insights"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: ingestion-volume-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: text
+    name: retention-period-acknowledged
+    config:
+      contains:
+        - "180"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

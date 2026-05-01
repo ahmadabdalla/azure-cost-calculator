@@ -22,6 +22,7 @@ privateEndpoint: true
 ServiceName: Log Analytics
 SkuName: Analytics Logs
 MeterName: Analytics Logs Data Analyzed
+Quantity: 50 # estimated GB/month
 
 ### Application Insights data retention (via Log Analytics workspace)
 
@@ -74,17 +75,6 @@ Retained GB = 5 × 90 = 450 GB
 Monthly retention cost = retentionPrice × 450
 ```
 
-## Telemetry Volume Estimation
-
-Typical Application Insights telemetry volume per application instance:
-
-- **Minimal monitoring** (basic requests/dependencies): 0.1-0.5 GB/month per instance
-- **Standard monitoring** (requests, dependencies, exceptions, custom events): 0.5-2 GB/month per instance
-- **Verbose monitoring** (detailed traces, performance counters, custom metrics): 2-10 GB/month per instance
-- **High-frequency metrics** (1-second granularity custom metrics): 10+ GB/month per instance
-
-> **Note**: Actual volume varies significantly based on traffic volume, sampling configuration, and telemetry types enabled.
-
 ## Notes
 
 - Application Insights requires a Log Analytics workspace (workspace-based model)
@@ -92,7 +82,8 @@ Typical Application Insights telemetry volume per application instance:
 - First 5 GB/month ingestion free per billing account (PAYG only, shared with all services using the workspace); does not apply under Sentinel simplified pricing
 - First 90 days of retention included free for Application Insights data (App\* tables); other workspace tables get 31 days
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)
-- Availability tests (multi-step web tests) may have additional costs for web test runs
+- Typical telemetry volume per instance: 0.1–0.5 GB/month (minimal), 0.5–2 GB/month (standard), 2–10 GB/month (verbose); varies by traffic and sampling config
+- Standard Web Tests billed under `ServiceName: Azure Monitor`; see `monitoring/monitor.md` for query pattern and pricing
 - Maximum retention period: 730 days (2 years)
 - For commitment tier pricing (100+ GB/day), see `log-analytics.md` commitment tiers section
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
