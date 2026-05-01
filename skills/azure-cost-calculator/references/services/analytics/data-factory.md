@@ -56,16 +56,19 @@ MeterName: Self Hosted Pipeline Activity
 
 ## Meter Names
 
-| Meter                              | skuName | unitOfMeasure | Notes                                |
-| ---------------------------------- | ------- | ------------- | ------------------------------------ |
-| `Cloud Orchestration Activity Run` | `Cloud` | `1K`          | Per 1,000 activity runs (v2)         |
-| `Cloud Pipeline Activity`          | `Cloud` | `1 Hour`      | Execute pipeline activity hours (v2) |
-| `Cloud Data Movement`              | `Cloud` | `1 Hour`      | Data movement runtime hours (v2)     |
-| `Cloud Read Write Operations`      | `Cloud` | `50K`         | Entity read/write/monitoring (v2)    |
-| `Inactive Pipeline`                | `Cloud` | `1/Month`     | Per inactive pipeline/month (v2)     |
-| `vCore`                            | `vCore` | `1 Hour`      | Data Flow vCore hours (v2)           |
+| Meter                              | skuName              | unitOfMeasure | Notes                                   |
+| ---------------------------------- | -------------------- | ------------- | --------------------------------------- |
+| `Cloud Orchestration Activity Run` | `Cloud`              | `1K`          | Per 1,000 activity runs (v2)            |
+| `Cloud Pipeline Activity`          | `Cloud`              | `1 Hour`      | Execute pipeline activity hours (v2)    |
+| `Cloud External Pipeline Activity` | `Cloud`              | `1 Hour`      | External/lookup activity hours; sub-cent |
+| `Cloud Data Movement`              | `Cloud`              | `1 Hour`      | Data movement runtime hours (v2)        |
+| `Cloud Read Write Operations`      | `Cloud`              | `50K`         | Entity read/write operations (v2)       |
+| `Cloud Monitoring Operations`      | `Cloud`              | `50K`         | Monitoring operations (v2)              |
+| `Operations`                       | `Operations`         | `50K`         | Tiered: first 1M free, then per 50K    |
+| `Inactive Pipeline`                | `Cloud`              | `1/Month`     | Per inactive pipeline/month (v2)        |
+| `vCore`                            | `vCore`              | `1 Hour`      | Data Flow vCore hours (v2)              |
 
-> Self Hosted and Azure Managed VNET meters follow the same pattern with prefixed names (e.g., `Self Hosted Data Movement`). v1 meters use `Cloud High Frequency Activity` and `Cloud Low Frequency Activity` (per month).
+> Self Hosted meters mirror Cloud with prefixed names (e.g., `Self Hosted Data Movement`) at different rates; Self Hosted Orchestration costs 50% more per 1K than Cloud. Azure Managed VNET meters are significantly more expensive (Pipeline Activity ~200× Cloud rate). v1 uses `Cloud High Frequency Activity` and `Cloud Low Frequency Activity` (per month).
 
 ## Cost Formula
 
@@ -74,7 +77,7 @@ v2 Pipeline: Monthly = (activityRuns / 1000) × orchestration_retailPrice
                + pipelineActivityHours × pipeline_retailPrice
                + dataMovementHours × movement_retailPrice
                + inactivePipelines × inactive_retailPrice
-               + max(0, readWriteOps - 1,000,000) / 50000 × readWrite_retailPrice
+               + max(0, operations - 1,000,000) / 50000 × operations_retailPrice
 v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 ```
 
@@ -84,7 +87,7 @@ v2 Data Flow: Monthly = vCores × vcore_retailPrice × activeHours
 - Data Flow: General Purpose, Compute Optimized, Memory Optimized, each a separate `productName`. Min 8 vCores (GP); scale in 4-vCore increments
 - **Managed Airflow** (Workflow Orchestration Manager): separate `ProductName 'Azure Data Factory v2 - Managed Airflow'` with Small and Large SKUs billed per vCore-hour
 - SSIS Integration Runtime is billed as VMs under this service; query with `ProductName 'SSIS ...'` product names
-- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Cloud Read Write Operations` meter)
+- Orchestration billed per 1K; pipeline/external per hour; read/write and monitoring per 50K; first 1M operations/month free (tiered `Operations` meter, skuName `Operations`)
 
 ## Reserved Instance Pricing
 
@@ -93,4 +96,4 @@ ProductName: Azure Data Factory v2 Data Flow - General Purpose
 SkuName: vCore
 PriceType: Reservation
 
-> RI is also available for `Azure Data Factory v2 Data Flow - Compute Optimized` (same `SkuName: vCore`). Memory Optimized has no RI pricing.
+> RI is also available for `Azure Data Factory v2 Data Flow - Compute Optimized` and `Azure Data Factory v2 Data Flow - Memory Optimized` (same `SkuName: vCore`). Memory Optimized RI is not available in all regions (e.g., not in eastus); query other regions if needed.

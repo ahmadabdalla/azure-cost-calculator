@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/data-factory/cloud-orchestration-activity
+name: Azure Data Factory v2 - Cloud Orchestration Activity Runs
+description: >
+  Tests cost estimation for Azure Data Factory v2 orchestration activity runs.
+  ADF v2 bills orchestration per 1,000 activity runs. Validates that the agent
+  correctly identifies the per-1K rate, scales by the requested quantity, and
+  acknowledges the v2 serviceName distinction from v1.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:data-factory
+inputs:
+  prompt: "How much would 50,000 Azure Data Factory v2 orchestration activity runs per month cost in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Data Factory|ADF|Data Factory"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: activity-runs-acknowledged
+    config:
+      contains:
+        - "50,000"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
