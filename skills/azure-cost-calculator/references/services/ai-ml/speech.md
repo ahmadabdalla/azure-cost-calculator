@@ -14,7 +14,7 @@ privateEndpoint: true
 
 > **Trap (no Standard SKU)**: Azure Speech has no `Standard` SKU; PAYG tier is `S1`. Querying `SkuName: Standard` returns zero results.
 
-> **Trap (mixed units)**: Meters use 7 different `unitOfMeasure` values (`1 Hour`, `1/Hour`, `1/Day`, `1 Minute`, `1/Month`, `1K`, `1M`). The script's default `× 730` only works for `1 Hour` meters. Verify `unitOfMeasure` per meter.
+> **Trap (mixed units)**: Meters use 8 different `unitOfMeasure` values (`1 Hour`, `1/Hour`, `1/Day`, `1 Minute`, `1/Month`, `1/Year`, `1K`, `1M`). The script's default `× 730` only works for `1 Hour` meters. Verify `unitOfMeasure` per meter.
 
 ## Query Pattern
 
@@ -71,11 +71,11 @@ Quantity: 100 # audio hours
 | `Neural HD Text to Speech Characters` | `Neural HD Text to Speech` | `1M` | HD prebuilt voices |
 | `S1 Custom Neural Realtime Characters` | `S1` | `1M` | Custom neural TTS |
 | `S1 Text To Speech Characters` | `S1` | `1M` | Standard TTS (deprecated) |
-| `S1 Custom Speech Model Hosting Unit` | `S1` | `1/Hour` | Custom STT model hosting |
-| `S1 Custom Speech Model Hosting Unit` | `S1` | `1/Day` | Custom STT model hosting (daily) |
-| `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Hour` | Custom voice hosting |
-| `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Day` | Custom voice hosting (daily) |
+| `S1 Custom Speech Model Hosting Unit` | `S1` | `1/Hour`, `1/Day` | Custom STT model hosting (dual-unit) |
+| `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Hour`, `1/Day` | Custom voice hosting (dual-unit) |
 | `S1 Custom Neural Voice Model Hosting Unit` | `S1` | `1/Hour` | Custom neural voice hosting (no 1/Day variant) |
+| `TTS Standard Avatar Realtime Speech` | `TTS Standard Avatar Realtime` | `1 Minute` | Avatar; also Custom variant |
+| `CNV Neural HD Synthesis Characters` | `CNV Neural HD Synthesis` | `1M` | Custom Neural Voice HD synthesis |
 | `Commitment Tier Speech to Text Azure 2K Unit` | `Commitment Tier Speech to Text Azure 2K` | `1/Month` | Monthly flat fee (many variants) |
 
 ## Cost Formula
@@ -93,8 +93,8 @@ Hosting (1/Day):  Monthly = retailPrice × 30
 
 - **Free tier**: 5 audio hours STT, 0.5M Neural TTS characters, 5 hours Speech Translation per month
 - **Commitment tiers**: STT (2K–100K hrs/mo), Custom STT, STT AddOn, Neural TTS (80M–4000M chars/mo); each has Unit + CT Overage meters
-- **Connected containers**: Same commitment tiers at ~95% of Azure pricing; some use abbreviated `Commit Tier` prefix
-- **Disconnected containers**: `Azure Speech - Disconnected` bills annually (`1/Year`). Exclude from monthly estimates
-- **Dual-unit hosting**: `S1 Custom Speech Model Hosting Unit` and `S1 Custom Voice Font Hosting Unit` each have `1/Hour` (×730) and `1/Day` (×30) variants; see Meter Names and Cost Formula
+- **Containers**: Connected tiers at ~95% of Azure pricing (abbreviated `Commit Tier` prefix); Disconnected (`Azure Speech - Disconnected`) bills annually (`1/Year`) — exclude from monthly estimates
+- **Dual-unit hosting**: Custom Speech Model Hosting and Custom Voice Font Hosting have `1/Hour` (×730) and `1/Day` (×30) variants
 - **Voice Live API**: Token-based pricing (`1K` tokens) with sub-cent cached-token meters; 3 tiers (Lite/Std/Pro) + BYO
+- **Additional features**: Video Translation, TTS Avatar, Live Interpreter, Personal Voice, Voice Conversion — each has own SKU; per-minute or per-hour billing
 - **Scope**: For other AI Services domains (Language, Vision, Translator), see `ai-services.md`
