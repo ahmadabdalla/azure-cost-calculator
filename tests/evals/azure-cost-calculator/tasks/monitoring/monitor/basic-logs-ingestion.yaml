@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:monitoring/monitor/basic-logs-ingestion
+name: Azure Monitor - Basic Logs Ingestion
+description: >
+  Tests cost estimation for Azure Monitor Basic Logs ingestion.
+  Basic Logs is a common per-GB meter with a different price point than
+  Analytics Logs. Validates that the agent uses the correct ServiceName
+  (Azure Monitor, not Log Analytics) and scales by data volume.
+tags:
+  - happy-path
+  - single-service
+  - monitoring
+  - service:monitor
+inputs:
+  prompt: "How much would 50 GB per month of Azure Monitor Basic Logs ingestion cost in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Monitor|Basic Logs"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: volume-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
