@@ -55,8 +55,8 @@ Quantity: 500 # agent units consumed
 | ------------- | ------------------------------ | ------------------------------------------ |
 | `serviceName` | Always `Foundry Tools` (API value; see apiServiceName in frontmatter) | `Foundry Tools` |
 | `productName` | Billing dimension              | `Foundry Agents`, `Azure Agent Unit`       |
-| `skuName`     | Compute SKU or agent type      | `Hosted`, `Skills Execution`, `SRE`        |
-| `meterName`   | Specific resource being billed | `Hosted vCPU Usage`, `SRE Agent Unit`      |
+| `skuName`     | Compute SKU or agent type      | `Hosted`, `Skills Execution`, `Long Term Memory`, `SRE` |
+| `meterName`   | Specific resource being billed | `Hosted vCPU Usage`, `Skills Execution Container`, `SRE Agent Unit` |
 
 ## Meter Names
 
@@ -65,16 +65,22 @@ Quantity: 500 # agent units consumed
 | `Hosted vCPU Usage`          | `Foundry Agents`   | `1 Hour`      | Per vCPU-hour of compute         |
 | `Hosted Memory Usage`        | `Foundry Agents`   | `1 Hour`      | Per GB-hour of memory            |
 | `Skills Execution Container` | `Foundry Agents`   | `1 Hour`      | Per hour of skills container     |
+| `Long Term Memory Memories`  | `Foundry Agents`   | `1K/Month`    | Persistent memory storage        |
+| `Short Term Memory Events Stored` | `Foundry Agents` | `1K`       | Ephemeral event storage          |
+| `Memory Retrievals`          | `Foundry Agents`   | `1K`          | Per-1K memory read operations    |
 | `SRE Agent Unit`             | `Azure Agent Unit` | `1`           | Per-unit orchestration charge    |
 
 ## Cost Formula
 
 ```
-vCPU:    Monthly = vCPU_retailPrice × vCPUs × 730
-Memory:  Monthly = memory_retailPrice × GBs × 730
-Skills:  Monthly = skills_retailPrice × containerHours
-SRE:     Monthly = sre_retailPrice × agentUnits
-Total:   Monthly = vCPU + Memory + Skills + SRE
+vCPU:      Monthly = vCPU_retailPrice × vCPUs × 730
+Memory:    Monthly = memory_retailPrice × GBs × 730
+Skills:    Monthly = skills_retailPrice × containerHours
+LTM:       Monthly = ltm_retailPrice × (memories / 1000)
+STM:       Monthly = stm_retailPrice × (events / 1000)
+Retrieval: Monthly = retrieval_retailPrice × (retrievals / 1000)
+SRE:       Monthly = sre_retailPrice × agentUnits
+Total:     Monthly = vCPU + Memory + Skills + LTM + STM + Retrieval + SRE
 ```
 
 ## Notes
