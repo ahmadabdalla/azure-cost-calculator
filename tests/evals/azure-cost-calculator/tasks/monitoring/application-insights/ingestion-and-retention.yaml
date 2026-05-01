@@ -16,6 +16,7 @@ expected:
   output_contains:
     - "Application Insights"
     - "Assumptions"
+    - "Log Analytics"
   output_not_contains:
     - "Summary format"
 graders:
@@ -43,6 +44,32 @@ graders:
       contains:
         - "180"
     weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for
+        Application Insights with 50 GB/month ingestion and 180-day retention in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Uses the Log Analytics workspace billing boundary for Application Insights,
+        not a standalone Application Insights ingestion meter.
+        (3) Correctly applies the 5 GB monthly free ingestion grant, so the billed
+        ingestion volume is 45 GB.
+        (4) Correctly converts 50 GB/month into retention volume beyond the 90-day
+        free period for a 180-day retention setting (150 GB retained at steady state,
+        or an equivalent daily-ingestion calculation).
+        (5) Shows a monthly total consistent with the East US scenario (for example,
+        $103.50 ingestion + $15.00 retention = $118.50 total, or an equivalent
+        correctly rounded breakdown).
+
+        Score 1.0 if all five criteria are met. Score 0.5 if four are met. Score 0.0
+        if fewer than four are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script
     config:

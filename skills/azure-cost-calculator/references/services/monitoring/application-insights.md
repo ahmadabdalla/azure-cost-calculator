@@ -17,11 +17,11 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Application Insights data ingestion (via Log Analytics workspace)
+### Application Insights data ingestion (via Log Analytics workspace, tiered PAYG meter)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
-MeterName: Analytics Logs Data Analyzed
+MeterName: Analytics Logs Data Ingestion
 Quantity: 50 # estimated GB/month
 
 ### Application Insights data retention (via Log Analytics workspace)
@@ -36,19 +36,19 @@ MeterName: Analytics Logs Data Retention
 | ------------- | -------------------------------------------------- | --------------------------------------------------------------- |
 | `serviceName` | Fixed value - uses Log Analytics workspace pricing | `Log Analytics`                                                 |
 | `skuName`     | Fixed value for pay-as-you-go tier                 | `Analytics Logs`                                                |
-| `meterName`   | Either ingestion or retention meter                | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
+| `meterName`   | Either ingestion or retention meter                | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention` |
 
 ## Meter Names
 
 | Meter                           | skuName          | unitOfMeasure | Notes                                          |
 | ------------------------------- | ---------------- | ------------- | ---------------------------------------------- |
-| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion           |
+| `Analytics Logs Data Ingestion` | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion (tiered) |
 | `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 90 days |
 
 ## Cost Formula
 
 ```
-Monthly Ingestion (no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (no Sentinel or classic pricing) = paid_tier_price_per_GB × max(0, estimatedGB_per_month - 5)
 Monthly Ingestion (Sentinel simplified pricing)    = absorbed into Sentinel; include App Insights GB in Sentinel's total_IsBillable_GB; see security/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB  (retention charges start after 90 free days)
 Total = Monthly Ingestion + Monthly Retention
@@ -79,6 +79,7 @@ Monthly retention cost = retentionPrice × 450
 
 - Application Insights requires a Log Analytics workspace (workspace-based model)
 - Classic Application Insights (non-workspace-based) is deprecated and scheduled for retirement
+- `Analytics Logs Data Ingestion` is tiered: 0-price at tier 0, paid ingestion starts at tier 5 GB; the pricing script sums the tiers correctly
 - First 5 GB/month ingestion free per billing account (PAYG only, shared with all services using the workspace); does not apply under Sentinel simplified pricing
 - First 90 days of retention included free for Application Insights data (App\* tables); other workspace tables get 31 days
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)
