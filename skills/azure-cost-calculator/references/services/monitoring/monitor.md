@@ -70,6 +70,7 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 | `Standard Web Test Execution`                 | `Standard Web Test`              | `1`           | Availability test execution (sub-cent)                |
 | `Alerts Metric Monitored`                     | `Alerts`                         | `1/Month`     | Tiered: first 10 signals free                         |
 | `Alerts Resource Monitored at {N} Minute Frequency` | `Alerts`                   | `1/Month`     | Log search alerts: 1/5/10/15 min frequencies          |
+| `Alerts System Log Monitored at {N} Minute Frequency` | `Alerts`                 | `1/Month`     | System log alerts: 10× Resource Monitored rate        |
 | `{N} GB Commitment Tier Capacity Reservation` | `{N} GB Commitment Tier`         | `1/Day`       | Volume discounts (100–50000 GB/day)                   |
 
 > **Note**: Notification meters (Emails, SMS, Voice Calls, Webhooks, Push, ITSM) also bill under Azure Monitor with tiered pricing and free grants. Query with `SkuName: Notifications`, `SkuName: Emails`, or `SkuName: SMS Country Code {N}`.
@@ -89,8 +90,7 @@ Commitment     = retailPrice × 30 (unit is 1/Day)
 
 - **Platform metrics are free**; only custom metrics and Prometheus metrics are billable
 - **Prometheus / AMW**: Ingestion + processing are separate meters; queries are sub-cent per 10M samples
-- **Basic Logs**: Search-only (no alerts/dashboards); fixed 30-day retention
-- **Auxiliary Logs**: Cheapest ingestion; custom tables only via Logs Ingestion API
+- **Basic Logs**: Search-only (no alerts/dashboards); 30-day retention. **Auxiliary Logs**: cheapest tier; custom tables only via Logs Ingestion API
 - **Sentinel-enabled workspaces**: Basic Logs ingestion uses Sentinel meters; Auxiliary Logs remain under Azure Monitor
 - **Data Restore**: Minimum 2 TB × 12-hour duration; plan restores carefully
 - Commitment tiers (100–50000 GB/day) provide volume discounts; overage billed at effective rate
