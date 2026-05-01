@@ -52,6 +52,7 @@ MeterName: Standard Overage Operations
 | `{Tier} Overage Operations` | Dev/Std/Prem | `1K` or `10K` | Developer: `1K`; Standard/Premium: `10K` |
 | `{Tier} Replica Instance` | Std/Prem | `1/Day` | Per additional replica |
 | `{Tier} Replica Overage Operations` | Std/Prem | `10K` | Per-replica request overage |
+| `{Tier} Replica Snapshots Overage` | Std/Prem | `1 MB/Day` | Per-replica snapshot overage; sub-cent |
 | `{Tier} Snapshots Overage` | Dev/Std/Prem | `1 MB/Day` | Sub-cent; see Known Rates |
 | `{Tier} Experimentation Events` | all tiers | `1K` | Currently zero-priced |
 
@@ -65,6 +66,7 @@ Monthly = instance_retailPrice × 30 × instanceCount
         + max(0, dailyRequests − includedRequests) / unitSize × overage_retailPrice × 30
         + max(0, replicaDailyReqs − includedReplicaReqs) / unitSize × replica_overage_retailPrice × 30
         + max(0, snapshotMB − includedMB) × snapshot_retailPrice × 30
+        + max(0, replicaSnapshotMB − includedReplicaMB) × replica_snapshot_retailPrice × 30
 ```
 
 ## Notes
