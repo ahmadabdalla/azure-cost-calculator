@@ -77,8 +77,8 @@ Dynamic: Monthly = sessions × session_price × 730
 - Dedicated management fee (N in formula): base Dedicated = 1, +1 per PE, +1 per planned maintenance
 - GPU: Standard T4/A100 are additive to vCPU/memory; Dedicated GPU replaces vCPU/memory (GPU + management only)
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
-- Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 charge active rate
-- Scale to zero = zero charges; health probe and intra-environment requests are not billable
+- Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
+- Dynamic Sessions on Dedicated plan: no extra charges (billed via Dedicated meters only)
 - Private endpoints require Dedicated plan; Savings Plans shown on pricing page but not in Retail Prices API
 
 ## SKU Selection Guide
