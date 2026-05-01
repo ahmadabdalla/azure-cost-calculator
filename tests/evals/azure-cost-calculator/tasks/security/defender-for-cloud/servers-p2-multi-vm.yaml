@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:security/defender-for-cloud/servers-p2-multi-vm
+name: Defender for Cloud - Servers P2 Multi-VM
+description: >
+  Tests cost estimation for Microsoft Defender for Cloud Servers P2 plan
+  protecting multiple VMs. Validates the agent queries the correct sub-product
+  (Microsoft Defender for Servers, Standard P2) and scales by server count.
+tags:
+  - happy-path
+  - single-service
+  - security
+  - service:defender-for-cloud
+inputs:
+  prompt: "How much would Microsoft Defender for Cloud Servers Plan 2 cost per month to protect 20 VMs in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Defender for Cloud|Defender for Servers|MDC"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: server-count-acknowledged
+    config:
+      contains:
+        - "20"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would Microsoft Defender for Cloud Servers Plan 2 cost per month to protect 20 VMs in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Microsoft Defender for Cloud (hourly per-server rate × 730 hours × server count).
+        (3) Accounts for 20 VMs as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
