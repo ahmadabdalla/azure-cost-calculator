@@ -70,6 +70,8 @@ MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfM
 | `S0 Batch Layout Pages`        | `S0`    | `1K`          | Batch-only layout meter (no real-time equivalent named "Layout") |
 | `S0 Batch Read Pages`          | `S0`    | `1K`          | Batch OCR, **tiered** (2 rows) like real-time |
 | `S0 Batch Document Classifier Pages` | `S0` | `1K`     | Batch doc classification (note: title case, unlike real-time) |
+| `S0 Batch Custom Extraction Pages` | `S0` | `1K`       | Batch custom extraction (note: not `S0 Batch Custom Pages`) |
+| `S0 Batch Pages for Query Fields` | `S0` | `1K`        | Batch query fields (note: title case, unlike real-time) |
 | `S0 Training`                  | `S0`    | `1 Hour`      | Neural model training (first 10 hrs free) |
 | `Free Transactions`            | `Free`  | `1K`          | Free tier, 500 pages/month                |
 
