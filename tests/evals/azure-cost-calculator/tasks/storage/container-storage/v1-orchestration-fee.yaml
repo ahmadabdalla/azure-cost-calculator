@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:storage/container-storage/v1-orchestration-fee
+name: Happy Path - Container Storage v1 Orchestration Fee
+description: >
+  Tests cost estimation for Azure Container Storage v1 orchestration fee.
+  Container Storage is a global-only service with a free grant (5 TiB) and
+  sub-cent per-GiB pricing. Validates that the agent queries with Region: Global,
+  applies the free grant deduction, and references underlying storage costs.
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:container-storage
+inputs:
+  prompt: "How much would Azure Container Storage v1 cost per month for a 10 TiB storage pool in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Container Storage|container-native storage"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: pool-size-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would Azure Container Storage v1 cost per month for a 10 TiB storage pool in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Azure Container Storage (per-GiB orchestration fee with 5 TiB free grant deduction).
+        (3) Accounts for the 10 TiB pool size as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
