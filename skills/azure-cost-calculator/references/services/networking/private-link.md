@@ -90,4 +90,4 @@ Monthly = endpoint_retailPrice × 730 × endpointCount
 - **Private Link Service**: Provider-side PL Service resources now have an hourly meter (`Service endpoint Standard Virtual Network`). Add this when the user is exposing a service via Private Link, not just consuming one
 - Each PE consumes an IP address from the VNet subnet
 - Data processing is typically negligible compared to endpoint hours for moderate usage
-- **US Gov / edge zones**: PE meters also exist under `US Gov` and edge zone regions (e.g., `attatlanta1`, `sgxsingapore1`) at different rates. Omit `Region: Global` and use the target region when estimating for sovereign or edge deployments
+- **US Gov / edge zones**: PE meters also exist under `US Gov` (flat-rate, no volume tiers) and edge zone regions (e.g., `attatlanta1`, `sgxsingapore1`) at different rates. Omit `Region: Global` and use the target region when estimating for sovereign or edge deployments
