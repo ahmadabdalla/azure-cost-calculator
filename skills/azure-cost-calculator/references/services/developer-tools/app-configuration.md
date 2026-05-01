@@ -81,7 +81,7 @@ Monthly = instance_retailPrice × 30 × instanceCount
 
 | Meter | Unit | Published Rate (USD) | Free Grant |
 | --- | --- | --- | --- |
-| `{Tier} Snapshots Overage` | 1 MB/Day | $0.0016 | Dev: 500 MB, Std: 1 GB, Prem: 4 GB |
+| `{Tier} Snapshots Overage` / `{Tier} Replica Snapshots Overage` | 1 MB/Day | $0.0016 | Dev: 500 MB, Std: 1 GB, Prem: 4 GB |
 | `Developer Overage Operations` | 1K | $0.04 | 3,000 requests/day |
 | `Standard/Premium Overage Operations` | 10K | $0.06 | Std: 200K/day, Prem: 800K/day |
 
