@@ -62,6 +62,8 @@ InstanceCount: 2
 | `Hybrid Connections Data Transfer` | `Hybrid Connections`       | `1 GB`        | Tiered: first 5 GB free, then per-GB overage             |
 | `Premium Messaging Unit`           | `Premium`                  | `1/Hour`      | Messaging Unit (hourly, operations included)             |
 | `Geo Replication Zone 1 Data Transfer` | `Geo Replication Zone 1` | `1 GB`    | Premium geo-DR replication (NA/Europe)                    |
+| `Geo Replication Zone 2 Data Transfer` | `Geo Replication Zone 2` | `1 GB`    | Premium geo-DR replication (Asia-Pacific)                 |
+| `Geo Replication Zone 3 Data Transfer` | `Geo Replication Zone 3` | `1 GB`    | Premium geo-DR replication (Brazil/other)                 |
 | `WCF Relay`                        | `WCF Relay`                | `100 Hours`   | Legacy relay; per 100 hours (divide by 100 for hourly)   |
 | `WCF Relay Message`               | `WCF Relay`                | `10K`         | Legacy relay; per 10K messages                           |
 
