@@ -93,7 +93,7 @@ Hosting (1/Day):  Monthly = retailPrice × 30
 
 - **Free tier**: 5 audio hours STT, 0.5M Neural TTS characters, 5 hours Speech Translation per month
 - **Commitment tiers**: STT (2K–100K hrs/mo), Custom STT, STT AddOn, Neural TTS (80M–4000M chars/mo); each has Unit + CT Overage meters
-- **Containers**: Connected tiers at ~95% of Azure pricing (abbreviated `Commit Tier` prefix); Disconnected (`Azure Speech - Disconnected`) bills annually (`1/Year`) — exclude from monthly estimates
+- **Containers**: Connected tiers at ~95% of Azure pricing (`Commit Tier` or `Commitment Tier…Connected` prefix); Disconnected bills annually (`1/Year`) — exclude from monthly estimates
 - **Dual-unit hosting**: Custom Speech Model Hosting and Custom Voice Font Hosting have `1/Hour` (×730) and `1/Day` (×30) variants
 - **Voice Live API**: Token-based pricing (`1K` tokens) with sub-cent cached-token meters; 3 tiers (Lite/Std/Pro) + BYO
 - **Additional features**: Video Translation, TTS Avatar, Live Interpreter, Personal Voice, Voice Conversion — each has own SKU; per-minute or per-hour billing
