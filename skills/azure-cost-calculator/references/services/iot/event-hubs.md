@@ -64,8 +64,8 @@ MeterName: Dedicated Capacity Unit
 
 ```
 Standard monthly = TU_hourly × 730 × tuCount + (ingressEvents_per1M × millions) + [Capture_hourly × 730] + [Kafka_hourly × 730]
-Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × max(0, GB − 1024 × puCount)]
-Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × max(0, GB − 10240 × cuCount)]
+Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × max(0, GB - 1024 × puCount)]
+Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × max(0, GB - 10240 × cuCount)]
 Geo-DR monthly   = primary namespace + secondary namespace + geoReplication_perGB × transferredGB
 ```
 
