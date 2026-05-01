@@ -46,7 +46,7 @@ SkuName: Dynamic Sessions
 | Standard         | `Standard vCPU Idle Usage`      | 1 Second      | ~1/8 of active rate                          |
 | Standard         | `Standard Memory Active Usage`  | 1 GiB Second  | Free grant: 360K GiB-s/mo                    |
 | Standard         | `Standard Memory Idle Usage`    | 1 GiB Second  | Same rate as active                          |
-| Standard         | `Standard Requests`             | 1M            | Free grant: 2M requests/mo                   |
+| Standard         | `Standard Requests`             | 1M            | Free grant: 2M/mo; probes & intra-env free   |
 | Standard         | `Standard NC T4 v3 GPU Usage`   | 1 Second      | Additive to vCPU/memory                      |
 | Standard         | `Standard NC A100 v4 GPU Usage` | 1 Second      | Additive to vCPU/memory                      |
 | Dedicated        | `Dedicated vCPU Usage`          | 1 Hour        | Per vCPU per hour                            |
@@ -78,7 +78,7 @@ Dynamic: Monthly = sessions × session_price × 730
 - GPU: Standard T4/A100 are additive to vCPU/memory; Dedicated GPU replaces vCPU/memory (GPU + management only)
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
-- Dynamic Sessions on Dedicated plan: no extra charges (billed via Dedicated meters only)
+- Dynamic Sessions: code interpreter billed per session-hour; custom pools on Dedicated use Dedicated meters only
 - Private endpoints require Dedicated plan; Savings Plans shown on pricing page but not in Retail Prices API
 
 ## SKU Selection Guide
