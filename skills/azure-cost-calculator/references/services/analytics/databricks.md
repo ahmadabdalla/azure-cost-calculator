@@ -54,7 +54,7 @@ MeterName: Premium Serverless SQL DBU
 | `Premium All-purpose Compute DBU`            | `Premium All-purpose Compute`            | `1 Hour`      | Interactive clusters (Premium)    |
 | `Premium Jobs Compute DBU`                   | `Premium Jobs Compute`                   | `1 Hour`      | Automated job clusters (Premium)  |
 | `Premium Jobs Light Compute DBU`             | `Premium Jobs Light Compute`             | `1 Hour`      | Light jobs (Premium)              |
-| `Premium Anthropic Serverless Inference DBU` | `Premium Anthropic Serverless Inference` | `1 Hour`      | Global serverless inference       |
+| `Premium Anthropic Serverless Inference DBU` | `Premium Anthropic Serverless Inference` | `1 Hour`      | Global; Jio India regional        |
 | `Premium Serverless GPU Compute Capacity Block DBU` | `Premium Serverless GPU Compute Capacity Block` | `1 Hour` | Global GPU capacity block         |
 | `Standard All-purpose Compute DBU`           | `Standard All-purpose Compute`           | `1 Hour`      | Interactive clusters (Standard)   |
 | `Standard Jobs Compute DBU`                  | `Standard Jobs Compute`                  | `1 Hour`      | Automated job clusters (Standard) |
