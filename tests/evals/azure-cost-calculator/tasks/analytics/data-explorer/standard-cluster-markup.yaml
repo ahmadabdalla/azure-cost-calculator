@@ -42,7 +42,7 @@ graders:
     name: vm-dependency-acknowledged
     config:
       regex_match:
-        - "Virtual Machines|VM|compute"
+        - "Virtual Machines|VM compute"
     weight: 0.5
   - type: tool_constraint
     name: uses-pricing-script
