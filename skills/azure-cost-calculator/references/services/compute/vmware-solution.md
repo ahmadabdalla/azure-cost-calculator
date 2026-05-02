@@ -68,5 +68,5 @@ Minimum 3 hosts per cluster.
 - AV64: broadest availability (43 regions); AV52: most limited (5 regions)
 - RI terms: AV48 and AV64 support 1-Year, 3-Year, and 5-Year; AV36, AV36P, AV52 support 1-Year only
 - Max 16 hosts/cluster, 12 clusters/private cloud (up to 192 hosts)
-- SQL Server on AVS billed separately under serviceName `Virtual Machines Licenses`
+- SQL Server on AVS billed separately (skuName `SQL Server EE License for AVS`, Global region)
 - Legacy SKUs (CS28, CS36, VS20, VS36) exist under different productNames
