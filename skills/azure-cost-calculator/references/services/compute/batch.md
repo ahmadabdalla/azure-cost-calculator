@@ -11,7 +11,7 @@ privateEndpoint: true
 
 # Azure Batch
 
-> **Trap (no Batch meters)**: `serviceName eq 'Azure Batch'` returns **zero results** from the Retail Prices API. The Batch service is free; all cost comes from pool node VMs (priced as `Virtual Machines`), managed disks, and data egress. Do NOT query with `-ServiceName 'Azure Batch'`.
+> **Trap (no Batch meters)**: `serviceName eq 'Azure Batch'` returns **zero results** from the Retail Prices API. The Batch service is free; all cost comes from pool node VMs (priced as `Virtual Machines`), managed disks, and data egress. Do NOT query with `ServiceName: Azure Batch`.
 
 ## Query Pattern
 
@@ -37,7 +37,7 @@ InstanceCount: 4
 
 | Meter                      | unitOfMeasure | Notes                                                                                                                                         |
 | -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; same meter for standard, Spot, and Low Priority. Use `skuName` to select pricing tier |
+| _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; Spot adds ` Spot` suffix, Low Priority adds ` Low Priority` suffix |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
 
@@ -57,6 +57,8 @@ Job cost = VM_retailPrice × hoursPerJob × nodeCount × jobsPerMonth
 
 - **Spot nodes** offer up to 90% discount but can be evicted at any time; best for fault-tolerant HPC and rendering workloads
 - **Low Priority nodes** (classic pools) offer up to 80% discount with similar eviction risk
+- **Reserved Instances** apply only in **User Subscription** pool allocation mode; in Batch Service mode (default), VMs are in a Microsoft-managed subscription and customer RIs do not apply
 - Batch supports auto-scale pools; estimate average node count rather than peak for monthly cost
 - Common HPC VM sizes: `Standard_HB120rs_v3` (HPC), `Standard_NC24ads_A100_v4` (GPU), `Standard_D16s_v5` (general)
+- Private endpoints support two sub-resources: `batchAccount` (data plane API) and `nodeManagement` (pool node communication)
 - Capacity planning: 1 Batch node = 1 VM; node count × hours determines compute cost
