@@ -4,7 +4,6 @@ category: networking
 aliases: [DNS Load Balancer]
 primaryCost: "Per million DNS queries (tiered) + per health check endpoint per month + add-ons"
 pricingRegion: global
-hasFreeGrant: true
 ---
 
 # Traffic Manager
