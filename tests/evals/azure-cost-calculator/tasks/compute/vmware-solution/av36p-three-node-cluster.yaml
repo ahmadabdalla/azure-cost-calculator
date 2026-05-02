@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/vmware-solution/av36p-three-node-cluster
+name: VMware Solution - AV36P VCF BYOL 3-Node Cluster
+description: >
+  Tests cost estimation for a minimum Azure VMware Solution cluster with
+  AV36P VCF BYOL nodes. Validates that the agent correctly uses the
+  Specialized Compute serviceName, filters by productName, and accounts
+  for the 3-node minimum cluster size.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:vmware-solution
+inputs:
+  prompt: "How much would a 3-node Azure VMware Solution cluster with AV36P VCF BYOL hosts cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Trial"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "VMware Solution|AVS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: node-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
