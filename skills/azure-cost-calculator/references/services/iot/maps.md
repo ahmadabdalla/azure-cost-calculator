@@ -57,10 +57,20 @@ MeterName: Azure Maps Creator Map Provisioning
 | `Location Insights Weather` | Location Insights | 1K | 1K free, then paid per 1K |
 | `Location Insights Geolocation` | Location Insights | 1K | 5K free, then paid per 1K |
 | `Location Insights Elevation` | Location Insights | 1K | 1K free, higher paid rate |
+| `Location Insights Data` | Location Insights | 1K | 5K free, then paid per 1K |
+| `Location Insights Spatial Calculations` | Location Insights | 1K | 5K free, then paid per 1K |
+| `Location Insights Timezone` | Location Insights | 1K | 5K free, then paid per 1K |
+| `Location Insights Traffic` | Location Insights | 1K | 1K free, then paid per 1K |
 | `Maps Base Map Tiles` | Maps | 1K | 5K free, then paid per 1K |
 | `Maps Imagery Tiles` | Maps | 1K | 1K free, then paid per 1K |
+| `Maps Static Map Images` | Maps | 1K | 1K free, then paid per 1K |
+| `Maps Traffic Tiles` | Maps | 1K | 5K free, then paid per 1K |
+| `Maps Weather Tiles` | Maps | 1K | 1K free, then paid per 1K |
+| `Maps Copyright` | Maps | 1K | Always free |
 | `Azure Maps Creator Map Provisioning` | Azure Maps Creator | 1/Hour | Hourly, always-on resource |
-| `Azure Maps Creator Web Feature (WFS)` | Azure Maps Creator | 1K | No free grant, high rate per 1K |
+| `Azure Maps Creator Map Render` | Azure Maps Creator | 1K | No free grant, per 1K |
+| `Azure Maps Creator Feature State` | Azure Maps Creator | 1K | No free grant, low rate per 1K |
+| `Azure Maps Creator Web Feature (WFS)` | Azure Maps Creator | 1K | No free grant, highest rate per 1K |
 
 ## Cost Formula
 
@@ -73,9 +83,9 @@ Total                  = Σ(per-category transaction costs) + Creator costs (if 
 ## Notes
 
 - Gen2 SKUs (`Location Insights`, `Maps`, `Azure Maps Creator`) are current; Gen1 (`Standard`, `Standard S1`) deprecated, retiring 9/15/2026
-- Free grants vary per meter: 5K free for Search/Geolocation/Data/Timezone/Spatial/Base Map/Traffic Tiles; 1K free for Routing/Traffic/Weather/Elevation/Imagery/Static Map/Weather Tiles
+- Free grants vary per meter: 5K free for Search/Geolocation/Data/Timezone/Spatial/Base Map/Traffic Tiles; 1K free for Routing/Traffic/Weather/Elevation/Imagery/Static Map Images/Weather Tiles
 - Capacity: each API category has independent free grants and per-1K-transaction pricing
 - Creator Map Provisioning is the only hourly meter; billed at retailPrice × 730 hours/month (always-on)
-- Creator Web Feature (WFS) has the highest rate; verify expected transaction volume before provisioning
+- Creator Web Feature (WFS) has the highest rate; Map Render and Feature State are lower-cost Creator transaction meters
 - Transaction counting: tile loads may count 15 tiles = 1 transaction; batch operations count each query separately
 - Supports private endpoints; see `networking/private-link.md` for PE and DNS zone pricing
