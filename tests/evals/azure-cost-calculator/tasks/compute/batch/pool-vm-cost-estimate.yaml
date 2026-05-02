@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/batch/pool-vm-cost-estimate
+name: Azure Batch - Pool VM Cost Estimate
+description: >
+  Tests cost estimation for Azure Batch pool nodes. Azure Batch has no direct
+  meters (hasMeters: false); all cost comes from underlying Virtual Machines.
+  Validates that the agent correctly identifies Batch as a no-meter service and
+  queries Virtual Machines pricing for pool node compute cost.
+tags:
+  - single-service
+  - compute
+  - service:batch
+  - no-meters
+inputs:
+  prompt: "How much would a 4-node Azure Batch pool cost per month using Standard_D4s_v5 VMs in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Azure Batch service fee"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Batch|Batch"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: node-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: text
+    name: no-batch-meters
+    config:
+      regex_match:
+        - "Virtual Machines|VM|no.*(Batch|batch).*(meter|fee|charge)"
+    weight: 1.0
