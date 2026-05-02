@@ -9,9 +9,9 @@ privateEndpoint: true
 
 # Azure Database for MySQL Flexible Server
 
-> **Trap**: Unfiltered queries return ~80 meters across deprecated Single Server, all Flexible Server series, and storage, resulting in a wildly inflated total. Always filter by `ProductName` to target one series.
-
-> **Trap (dual vCore meters)**: Newer series (v5/v6) return two identical per-vCore meters: `SkuName: 'vCore'` and `SkuName: '1 vCore'`. Use `SkuName: vCore` with `InstanceCount` for vCore count.
+> **Trap**: Unfiltered queries return ~80+ meters across deprecated Single Server, all Flexible Server series, and storage. Always filter by `ProductName` to target one series.
+>
+> **Trap (dual vCore meters)**: Per-vCore series (v5/v6) return two identical meters: `SkuName: 'vCore'` and `SkuName: '1 vCore'`. Use `SkuName: vCore` with `InstanceCount` for vCore count.
 
 ## Query Pattern
 
@@ -55,44 +55,46 @@ MeterName: 8 vCore
 
 ## Meter Names
 
-| Meter                            | skuName              | unitOfMeasure | Notes                                                        |
-| -------------------------------- | -------------------- | ------------- | ------------------------------------------------------------ |
-| `vCore`                          | `vCore`              | `1 Hour`      | Per-vCore rate, multiply via InstanceCount (GP/BC/MO v5/v6) |
-| `B4MS`                           | `Standard_B4ms`      | `1 Hour`      | Fixed Burstable SKU, includes vCPU+RAM                      |
-| `8 vCore`                        | `Standard_E8d_v5`    | `1 Hour`      | Fixed MO Edsv5 size, includes vCPU+RAM                      |
-| `Storage Data Stored`            | `Storage`            | `1 GB/Month`  | Data storage                                                 |
-| `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month`  | Backup storage (LRS redundancy)                              |
+| Meter                            | skuName              | unitOfMeasure  | Notes                                                    |
+| -------------------------------- | -------------------- | -------------- | -------------------------------------------------------- |
+| `vCore`                          | `vCore`              | `1 Hour`       | Per-vCore rate, multiply via InstanceCount (GP/MO v5/v6) |
+| `B4MS`                           | `Standard_B4ms`      | `1 Hour`       | Fixed Burstable SKU, includes vCPU+RAM                   |
+| `8 vCore`                        | `Standard_E8d_v5`    | `1 Hour`       | Fixed MO Edsv5 size, includes vCPU+RAM                   |
+| `Storage Data Stored`            | `Storage`            | `1 GB/Month`   | Standard LRS data storage                                |
+| `Backup Storage LRS Data Stored` | `Backup Storage LRS` | `1 GB/Month`   | Backup storage (LRS); ZRS also available                 |
 
 ## Cost Formula
 
 ```
-Compute (per-vCore series) = compute_retailPrice × 730 × vCoreCount
-Compute (Burstable / Edsv5) = compute_retailPrice × 730
-Storage = storage_retailPrice × sizeGB
-Total = Compute + Storage
+Compute (per-vCore) = compute_retailPrice × 730 × vCoreCount
+Compute (Burstable/Edsv5) = compute_retailPrice × 730
+Storage = storage_retailPrice × sizeGB; Total = Compute + Storage
 ```
 
 ## Notes
 
-- Burstable: dev/test workloads, does NOT support RI, max 20 vCores
-- GP: production workloads, supports RI, per-vCore pricing with InstanceCount
-- MO Edsv5: per-size SKU pricing (Standard_E2d_v5 through Standard_E96d_v5, no RI); v6 MO series (Edsv6, Eadsv6) use per-vCore pricing with InstanceCount
-- High Availability doubles compute cost (deploys a standby replica)
-- Backup: first backup equal to provisioned storage is free; excess charged per-GB/month
-- Single Server is deprecated; all new deployments use Flexible Server
+- Burstable: dev/test, does NOT support RI, max 20 vCores
+- GP/MO per-vCore + Confidential: support RI; v6 has disk-attached (Ddsv6/Edsv6) and non-disk (Dsv6/Esv6) variants
+- MO Edsv5: per-size SKU pricing (Standard_E2d_v5 through Standard_E104id_v5), no RI
+- HA doubles compute cost; backup equal to provisioned storage is free; Single Server deprecated
 
 ## Product Names
 
-| Config        | productName                                                                       |
-| ------------- | --------------------------------------------------------------------------------- |
-| GP, Ddsv5     | `Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute`   |
-| GP, Dadsv5    | `Azure Database for MySQL Flexible Server General Purpose Dadsv5 Series Compute`  |
-| GP, Ddsv6     | `Azure Database for MySQL Flexible Server General Purpose Ddsv6 Series Compute`   |
-| GP, Dadsv6    | `Azure Database for MySQL Flexible Server General Purpose Dadsv6 Series Compute`  |
-| MO, Edsv5     | `Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute`  |
-| MO, Eadsv5    | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
-| MO, Edsv6     | `Azure Database for MySQL Flexible Server Memory Optimized Edsv6 Series Compute`  |
-| MO, Eadsv6    | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv6 Series Compute` |
-| Burstable, BS | `Azure Database for MySQL Flexible Server Burstable BS Series Compute`            |
-| Storage       | `Azure Database for MySQL Flexible Server Storage`                                |
-| Backup        | `Azure Database for MySQL Flexible Server Backup Storage`                         |
+| Config             | productName                                                                       |
+| ------------------ | --------------------------------------------------------------------------------- |
+| GP, Ddsv5          | `Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute`   |
+| GP, Dadsv5         | `Azure Database for MySQL Flexible Server General Purpose Dadsv5 Series Compute`  |
+| GP, Ddsv6          | `Azure Database for MySQL Flexible Server General Purpose Ddsv6 Series Compute`   |
+| GP, Dadsv6         | `Azure Database for MySQL Flexible Server General Purpose Dadsv6 Series Compute`  |
+| GP, Dsv6           | `Azure Database for MySQL Flexible Server General Purpose Dsv6 Series Compute`    |
+| GP, Dasv6          | `Azure Database for MySQL Flexible Server General Purpose Dasv6 Series Compute`   |
+| MO, Edsv5          | `Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute`  |
+| MO, Eadsv5         | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv5 Series Compute` |
+| MO, Edsv6          | `Azure Database for MySQL Flexible Server Memory Optimized Edsv6 Series Compute`  |
+| MO, Eadsv6         | `Azure Database for MySQL Flexible Server Memory Optimized Eadsv6 Series Compute` |
+| MO, Esv6           | `Azure Database for MySQL Flexible Server Memory Optimized Esv6 Series Compute`   |
+| MO, Easv6          | `Azure Database for MySQL Flexible Server Memory Optimized Easv6 Series Compute`  |
+| Confidential       | `Azure Database for MySQL Flexible Server Confidential Compute ECadsv6 Series`    |
+| Burstable, BS      | `Azure Database for MySQL Flexible Server Burstable BS Series Compute`            |
+| Storage            | `Azure Database for MySQL Flexible Server Storage`                                |
+| Backup             | `Azure Database for MySQL Flexible Server Backup Storage`                         |
