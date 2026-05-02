@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/functions/consumption-plan
+name: Happy Path - Functions Consumption Plan
+description: >
+  Tests cost estimation for Azure Functions on the Consumption plan with
+  execution volume exceeding the free grant. Validates that the agent correctly
+  applies the free grant deduction (1M executions, 400K GB-s) and uses
+  UnitPrice from the API rather than the script's rounded MonthlyCost.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:functions
+inputs:
+  prompt: "Estimate the monthly cost of an Azure Functions app on the Consumption plan in East US processing 5 million executions per month with 256 MB memory and 1 second average duration per execution"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "Functions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Functions|Functions"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: execution-count-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost of an Azure Functions app on the Consumption plan in East US processing 5 million executions per month with 256 MB memory and 1 second average duration per execution"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using UnitPrice from the API (not the script MonthlyCost which rounds sub-cent to zero).
+        (3) Accounts for the free grant deduction (1M executions and 400K GB-seconds).
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
