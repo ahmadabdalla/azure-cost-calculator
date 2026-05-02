@@ -10,7 +10,7 @@ primaryCost: "vCore hourly rate × 730 + storage per-GB/month + backup per-GB/mo
 
 > **Trap**: The API `serviceName` `Azure Database for PostgreSQL` is shared with Flexible Server, Cosmos DB for PostgreSQL, and other products. Always filter by `productName` to isolate HorizonDB meters. Unfiltered queries return mixed results from all product families.
 
-> **Trap (productName casing)**: Storage productName uses lowercase 's' (`Azure HorizonDB storage`) while Backup and Compute use title case. Use exact casing from the API.
+> **Trap (productName casing)**: Storage productName uses lowercase 's' (`Azure HorizonDB storage`) while Backup uses title case (`Azure HorizonDB Backup Storage`). Compute uses a different prefix pattern (`Azure Database for PostgreSQL HorizonDB Compute`). Use exact casing from the API.
 
 ## Query Pattern
 
