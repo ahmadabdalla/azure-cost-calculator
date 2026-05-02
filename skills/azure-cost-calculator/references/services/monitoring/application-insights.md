@@ -17,11 +17,12 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Application Insights data ingestion (via Log Analytics workspace)
+### Application Insights data ingestion (via Log Analytics workspace, tiered PAYG meter)
 
 ServiceName: Log Analytics
 SkuName: Analytics Logs
-MeterName: Analytics Logs Data Analyzed
+MeterName: Analytics Logs Data Ingestion
+Quantity: 50 # estimated GB/month
 
 ### Application Insights data retention (via Log Analytics workspace)
 
@@ -35,19 +36,19 @@ MeterName: Analytics Logs Data Retention
 | ------------- | -------------------------------------------------- | --------------------------------------------------------------- |
 | `serviceName` | Fixed value - uses Log Analytics workspace pricing | `Log Analytics`                                                 |
 | `skuName`     | Fixed value for pay-as-you-go tier                 | `Analytics Logs`                                                |
-| `meterName`   | Either ingestion or retention meter                | `Analytics Logs Data Analyzed`, `Analytics Logs Data Retention` |
+| `meterName`   | Either ingestion or retention meter                | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention` |
 
 ## Meter Names
 
 | Meter                           | skuName          | unitOfMeasure | Notes                                          |
 | ------------------------------- | ---------------- | ------------- | ---------------------------------------------- |
-| `Analytics Logs Data Analyzed`  | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion           |
-| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 90 days |
+| `Analytics Logs Data Ingestion` | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion (tiered) |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB/Month`  | Application telemetry retention beyond 90 days |
 
 ## Cost Formula
 
 ```
-Monthly Ingestion (no Sentinel or classic pricing) = retailPrice_per_GB × max(0, estimatedGB_per_month - 5)
+Monthly Ingestion (no Sentinel or classic pricing) = applicable_tier_price_per_GB × max(0, estimatedGB_per_month - 5)
 Monthly Ingestion (Sentinel simplified pricing)    = absorbed into Sentinel; include App Insights GB in Sentinel's total_IsBillable_GB; see security/sentinel.md
 Monthly Retention = retention_price_per_GB × retainedGB  (retention charges start after 90 free days)
 Total = Monthly Ingestion + Monthly Retention
@@ -74,25 +75,16 @@ Retained GB = 5 × 90 = 450 GB
 Monthly retention cost = retentionPrice × 450
 ```
 
-## Telemetry Volume Estimation
-
-Typical Application Insights telemetry volume per application instance:
-
-- **Minimal monitoring** (basic requests/dependencies): 0.1-0.5 GB/month per instance
-- **Standard monitoring** (requests, dependencies, exceptions, custom events): 0.5-2 GB/month per instance
-- **Verbose monitoring** (detailed traces, performance counters, custom metrics): 2-10 GB/month per instance
-- **High-frequency metrics** (1-second granularity custom metrics): 10+ GB/month per instance
-
-> **Note**: Actual volume varies significantly based on traffic volume, sampling configuration, and telemetry types enabled.
-
 ## Notes
 
 - Application Insights requires a Log Analytics workspace (workspace-based model)
 - Classic Application Insights (non-workspace-based) is deprecated and scheduled for retirement
+- `Analytics Logs Data Ingestion` is tiered: 0-price at tier 0, paid ingestion starts at tier 5 GB; do not trust the script `summary.totalMonthlyCost` for this meter—apply the 5 GB PAYG grant manually
 - First 5 GB/month ingestion free per billing account (PAYG only, shared with all services using the workspace); does not apply under Sentinel simplified pricing
 - First 90 days of retention included free for Application Insights data (App\* tables); other workspace tables get 31 days
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)
-- Availability tests (multi-step web tests) may have additional costs for web test runs
+- Typical telemetry volume per instance: 0.1–0.5 GB/month (minimal), 0.5–2 GB/month (standard), 2–10 GB/month (verbose); varies by traffic and sampling config
+- Availability tests: Standard web tests use `ServiceName: Azure Monitor`, `SkuName: Standard Web Test`, `MeterName: Standard Web Test Execution`; multi-step web tests use `ServiceName: Application Insights`, `SkuName: Basic`, `MeterName: Multi-step Web Test`
 - Maximum retention period: 730 days (2 years)
 - For commitment tier pricing (100+ GB/day), see `log-analytics.md` commitment tiers section
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)

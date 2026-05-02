@@ -40,8 +40,8 @@ MeterName: Operations
 | `Certificate Renewal Request`            | Standard/Premium | 1             | Per certificate renewal          |
 | `Secret Renewal`                         | Standard/Premium | 1             | Per secret auto-renewal          |
 | `Automated Key Rotation`                 | Standard/Premium | 1 Rotation    | Per key auto-rotation            |
-| `Premium HSM-protected RSA 2048-bit key` | Premium          | 1/Month       | Per HSM key, per month           |
-| `Premium HSM-protected Advanced Key`     | Premium          | 1/Month       | Per key, tiered, see trap below |
+| `Premium HSM-protected RSA 2048-bit key` | Premium          | 1             | Per HSM key, per month           |
+| `Premium HSM-protected Advanced Key`     | Premium          | 1             | Per key, tiered, see trap below |
 
 > **Do NOT use**: `Standard Instance` meter; that is Azure Dedicated HSM (thousands/month).
 

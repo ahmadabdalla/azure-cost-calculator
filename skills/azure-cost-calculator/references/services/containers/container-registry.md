@@ -7,7 +7,7 @@ hasFreeGrant: true
 privateEndpoint: true
 ---
 
-# Container Registry (ACR)
+# Container Registry
 
 > **Trap (daily billing)**: Registry Unit meters are priced **per day** (`1/Day` unit), NOT per hour. The script now auto-multiplies `1/Day` units by 30, so `MonthlyCost` is already the correct **monthly** cost. Do NOT manually multiply by 30 again.
 
@@ -43,14 +43,6 @@ Quantity: 50 # excess GB beyond included tier quota
 | `Premium Connected registry`                  | `1/Day`       | Per connected registry (edge)  |
 | `Task vCPU Duration`                          | `1 Second`    | ACR Tasks build compute        |
 
-## Included Storage by Tier
-
-| Tier     | Included Storage |
-| -------- | ---------------- |
-| Basic    | 10 GB            |
-| Standard | 100 GB           |
-| Premium  | 500 GB           |
-
 ## Cost Formula
 
 ```
@@ -63,3 +55,11 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 - ACR Tasks compute: first 6,000 vCPU-seconds/month free, then `retailPrice` per vCPU-second (tiered meter; ignore script's `totalMonthlyCost`)
 - Geo-replication (Premium only): each replica region adds a `Premium Registry Replication Unit` daily charge + `Premium GB Registry Replication Data Stored` per GB
 - Private endpoints require Premium tier
+
+## Included Storage by Tier
+
+| Tier     | Included Storage |
+| -------- | ---------------- |
+| Basic    | 10 GB            |
+| Standard | 100 GB           |
+| Premium  | 500 GB           |

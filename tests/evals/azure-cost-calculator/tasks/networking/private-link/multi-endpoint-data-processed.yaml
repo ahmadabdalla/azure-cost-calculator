@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/private-link/multi-endpoint-data-processed
+name: Private Link - Multi-endpoint with Data Processing
+description: >
+  Tests cost estimation for multiple private endpoints with data processing.
+  Validates that the agent queries Global region, separates endpoint hourly
+  and data processed meters, and accounts for the specified endpoint count
+  and data volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:private-link
+inputs:
+  prompt: "How much would 5 private endpoints cost per month processing 100 GB of data each?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Private Link|Private Endpoint"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: endpoint-count-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: text
+    name: global-region-acknowledged
+    config:
+      contains:
+        - "Global"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would 5 private endpoints cost per month processing 100 GB of data each?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Treats Private Link as a global-priced service by using/acknowledging Global region pricing.
+        (3) Shows a monthly total cost using the correct billing model with endpoint hourly and data processing components.
+        (4) Accounts for 5 private endpoints as specified.
+
+        Score 1.0 if all four criteria are met. Score 0.5 if three are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:monitoring/log-analytics/payg-ingestion-retention
+name: Happy Path - Log Analytics PAYG Ingestion and Retention
+description: >
+  Tests cost estimation for Log Analytics with PAYG ingestion and extended retention.
+  Validates per-GB ingestion pricing with free tier deduction and retention beyond
+  the standard 31-day free period.
+tags:
+  - happy-path
+  - single-service
+  - monitoring
+  - service:log-analytics
+inputs:
+  prompt: "What is the monthly cost for a Log Analytics workspace ingesting 50 GB per month with 90 days retention in East US?"
+expected:
+  output_contains:
+    - "Log Analytics"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Log Analytics|Azure Monitor Logs"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: ingestion-volume-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: text
+    name: retention-acknowledged
+    config:
+      contains:
+        - "90"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for a Log Analytics workspace ingesting 50 GB per month with 90 days retention in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Uses the Log Analytics PAYG ingestion meter, not the legacy Data Analyzed meter.
+        (2) Deducts the 5 GB PAYG free grant before calculating ingestion cost.
+        (3) Charges retention for the 59-day delta beyond the standard 31-day free period (90 total days - 31 free days).
+        (4) Produces a plausible East US total near $113.33/month (about $103.50 ingestion + $9.83 retention).
+
+        Score 1.0 if all four criteria are met. Score 0.5 if two or three are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

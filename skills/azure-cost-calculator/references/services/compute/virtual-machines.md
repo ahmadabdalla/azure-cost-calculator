@@ -9,7 +9,7 @@ primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
 
 # Virtual Machines
 
-> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **6 results**: Linux standard, Windows standard, Linux Spot, Windows Spot, Linux Low Priority, and Windows Low Priority. Without `ProductName`, the cheapest row (Low Priority) may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
+> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **multiple results** (up to 6 for v5: Linux/Windows × Standard/Spot/Low Priority; fewer for most v6+ series). Without `ProductName`, the cheapest row may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
 
 ## Query Pattern
 
@@ -25,7 +25,7 @@ ServiceName: Virtual Machines
 ArmSkuName: Standard_D2s_v5
 ProductName: Virtual Machines Dsv5 Series Windows
 
-> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'`. Series name drops the `Standard_` prefix, size digits, and underscores. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Fsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S**. Do not lowercase it. Common capital-S series: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
+> **Note**: Pattern is `'Virtual Machines {Series} Series'` (Linux) or `'… Series Windows'` for v4–v6. **v7 Intel uses a different pattern**: `'Virtual Machines {Series}-series Linux'` or `'…-series Windows'` (hyphen, lowercase `series`, explicit OS suffix). v7 AMD keeps the standard pattern. **Casing rule**: v4+ series use lowercase `s` (`Dsv5`, `Esv5`, `Dsv6`). Pre-v4 series where `S` meant premium SSD keep the **capital S**: `FSv2`, `FS`, `DSv2`, `DSv3`, `DS`, `ESv3`, `BS`, `GS`, `LS`, `LSv2`, `MS`, `MSv2`, `MdSv2`, `HBSv2`, `HBS`, `HCS`, `NDrSv2`. When unsure, use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to confirm exact casing before querying.
 
 ## Key Fields
 
@@ -33,7 +33,7 @@ ProductName: Virtual Machines Dsv5 Series Windows
 | ------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
 | `serviceName` | Always `Virtual Machines`                   | `Virtual Machines`                                                             |
 | `armSkuName`  | VM size from portal/Bicep `vmSize` property | `Standard_D2s_v5`, `Standard_B2ms`, `Standard_E4s_v5`                          |
-| `productName` | Contains series + OS indicator              | `Virtual Machines Dsv5 Series` (Linux), `Virtual Machines Dsv5 Series Windows` |
+| `productName` | Contains series + OS indicator              | `Virtual Machines Dsv5 Series` (Linux), `Virtual Machines Dsv5 Series Windows`, `Virtual Machines Dsv7-series Linux` (v7 Intel) |
 | `skuName`     | Size + pricing tier suffix                  | `D2s v5`, `D2s v5 Spot`, `D2s v5 Low Priority`                                 |
 
 ## Meter Names
@@ -52,7 +52,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
 - **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter; you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
-- **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) and also risk eviction
+- **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) but availability varies — most v6+ Intel series lack Low Priority (Spot only), while some AMD v6 series (e.g., Dadsv6) still offer it
 
 ## Azure Hybrid Benefit (AHUB)
 
@@ -82,6 +82,8 @@ PriceType: Reservation
 | `Standard_D2s_v5` | 2     | 8        | General purpose       |
 | `Standard_D4s_v5` | 4     | 16       | General purpose       |
 | `Standard_D8s_v5` | 8     | 32       | General purpose       |
+| `Standard_D2s_v6` | 2     | 8        | General purpose (v6)  |
+| `Standard_D4s_v6` | 4     | 16       | General purpose (v6)  |
 | `Standard_E2s_v5` | 2     | 16       | Memory optimized      |
 | `Standard_E4s_v5` | 4     | 32       | Memory optimized      |
 | `Standard_F2s_v2` | 2     | 4        | Compute optimized     |

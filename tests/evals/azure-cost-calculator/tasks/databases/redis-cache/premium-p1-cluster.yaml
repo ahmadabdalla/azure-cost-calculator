@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:databases/redis-cache/premium-p1-cluster
+name: Happy Path - Redis Cache Premium P1 Cluster
+description: >
+  Tests cost estimation for Azure Cache for Redis Premium P1 with clustering.
+  Validates that the agent uses the correct tier-specific productName and
+  accounts for shard count in the cost calculation.
+tags:
+  - happy-path
+  - single-service
+  - databases
+  - service:redis-cache
+inputs:
+  prompt: "What is the monthly cost for Azure Cache for Redis Premium P1 with 3 shards in East US?"
+expected:
+  output_contains:
+    - "Redis"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Redis Cache|Azure Cache for Redis"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: shard-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: text
+    name: tier-acknowledged
+    config:
+      contains:
+        - "Premium"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

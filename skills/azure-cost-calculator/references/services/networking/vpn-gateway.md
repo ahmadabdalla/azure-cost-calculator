@@ -4,6 +4,7 @@ category: networking
 aliases: [VPN, Site-to-Site, Point-to-Site, S2S, P2S]
 billingNeeds: [IP Addresses]
 primaryCost: "Gateway SKU hourly rate × 730 + S2S tunnels beyond 10 free + P2S beyond 128 free"
+hasFreeGrant: true
 ---
 
 # VPN Gateway

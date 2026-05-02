@@ -50,13 +50,13 @@ SkuName: RUs
 
 ## Meter Names
 
-| What           | meterName               | skuName | productName                  | Notes                                   |
-| -------------- | ----------------------- | ------- | ---------------------------- | --------------------------------------- |
-| Throughput     | `100 RU/s`              | `RUs`   | `Azure Cosmos DB`            | Use `-Quantity N` where N = RU/s ÷ 100  |
-| Multi-master   | `100 Multi-master RU/s` | `mRUs`  | `Azure Cosmos DB`            | For multi-region writes                 |
-| Storage        | `Data Stored`           | `RUs`   | `Azure Cosmos DB`            | Per GB/month (provisioned + serverless) |
-| Serverless ops | `1M RUs`                | `RUs`   | `Azure Cosmos DB serverless` | Per million RU consumed                 |
-| Autoscale      | `AP1 100 RUs`           | `AP1`   | `Azure Cosmos DB autoscale`  | 1.5× standard rate, already baked in   |
+| Meter                   | skuName | productName                  | Notes                                   |
+| ----------------------- | ------- | ---------------------------- | --------------------------------------- |
+| `100 RU/s`              | `RUs`   | `Azure Cosmos DB`            | Use `-Quantity N` where N = RU/s ÷ 100  |
+| `100 Multi-master RU/s` | `mRUs`  | `Azure Cosmos DB`            | For multi-region writes                 |
+| `Data Stored`           | `RUs`   | `Azure Cosmos DB`            | Per GB/month (provisioned + serverless) |
+| `1M RUs`                | `RUs`   | `Azure Cosmos DB serverless` | Per million RU consumed                 |
+| `AP1 100 RUs`           | `AP1`   | `Azure Cosmos DB autoscale`  | 1.5× standard rate, already baked in   |
 
 ## Cost Formula
 
@@ -87,4 +87,4 @@ MeterName: 100 RU/s
 PriceType: Reservation
 Region: Global
 
-> **Trap (RI region)**: Cosmos DB RI uses `Region: Global`; regional queries return zero results.
+> **Trap (RI region)**: RU-based Cosmos DB RI uses `Region: Global`; regional queries return zero results. MongoDB vCore RI (`productName: Azure DocumentDB Reservations`) uses standard regional pricing instead.

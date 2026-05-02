@@ -8,6 +8,8 @@ pricingRegion: global
 
 # Traffic Manager
 
+> **Trap (inflated totals)**: Querying with only `ServiceName: Traffic Manager` returns DNS Queries under all 5 SKUs (Azure Endpoint, Non-Azure Endpoint, Azure Region, Non-Azure Region, Traffic View). Always include `SkuName` to avoid 5× duplication of DNS query costs.
+
 > **Trap (sub-cent rounding)**: DNS query pricing is per million queries. Small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
 > **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
@@ -88,6 +90,7 @@ Monthly     = DNS + HealthCheck + FastInterval + TrafficView
 
 ## Notes
 
-- **Real User Measurements**: Free (retailPrice = 0)
+- **Real User Measurements**: Free (retailPrice = 0) — no cost for RUM data collection
 - **Fast Interval**: Reduces health check interval from 30s to 10s at additional per-endpoint cost
+- **Non-Azure premium**: Non-Azure endpoints cost more than Azure endpoints for both health checks and fast interval add-ons
 - **Capacity planning**: 5 Azure endpoints + 10M DNS queries/month. Use `retailPrice` from query results to calculate totals

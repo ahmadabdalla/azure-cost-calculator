@@ -86,9 +86,9 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 
 ## Notes
 
-- **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate (see `openai-service.md`)
+- **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate (`openai-service.md`); Foundry Agents (`foundry-agents.md`) and Video Indexer (`video-indexer.md`) share `apiServiceName: Foundry Tools` but have dedicated files
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day`; script auto-multiplies by 30
 - **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually. Exclude from monthly estimates
-- **Sub-service files**: Language, Vision, Speech, Translator, Document Intelligence, Content Safety, and Content Understanding each have dedicated reference files with full meter tables
+- **Sub-service files**: Language, Vision, Speech, Translator, Document Intelligence, Content Safety, Content Understanding, Video Indexer, and Foundry Agents each have dedicated reference files with full meter tables
 - **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)

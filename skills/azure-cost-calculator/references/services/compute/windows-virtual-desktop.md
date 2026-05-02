@@ -2,9 +2,10 @@
 serviceName: Windows Virtual Desktop
 category: compute
 aliases: [Azure Virtual Desktop, AVD, WVD]
-billingNeeds: [Virtual Machines, Storage]
+billingNeeds: [Virtual Machines, Managed Disks]
 billingConsiderations: [M365 / Windows per-user licensing]
 primaryCost: "Per-user access fee per month (varies by SKU) + VM compute, storage, and networking billed separately"
+privateEndpoint: true
 ---
 
 # Azure Virtual Desktop
@@ -13,18 +14,22 @@ primaryCost: "Per-user access fee per month (varies by SKU) + VM compute, storag
 
 > **Trap (HCI meter)**: Unfiltered queries return the `AVD for Azure Stack HCI` meter (hourly per-vCPU) alongside per-user monthly meters. If estimating cloud-hosted AVD, filter by `SkuName` to exclude the HCI meter.
 
+> **Trap (duplicate meters)**: Each per-user SKU has two meter names with different meterIds but identical prices (e.g., `App Hosting User` and `App Hosting App Users`). Querying by `SkuName` alone without `MeterName` returns both, causing double-counted totals. Always specify `MeterName` or use only one result per SKU.
+
 ## Query Pattern
 
 ### Desktop & App Hosting: 50 users (full desktop + remote apps)
 
 ServiceName: Windows Virtual Desktop
 SkuName: Desktop & App Hosting
+MeterName: Desktop & App Hosting User
 InstanceCount: 50
 
 ### App Hosting only: 50 users (remote apps only)
 
 ServiceName: Windows Virtual Desktop
 SkuName: App Hosting
+MeterName: App Hosting User
 InstanceCount: 50
 
 ### AVD for Azure Stack HCI: per vCPU/hour
@@ -64,4 +69,7 @@ HCI vCPU:         Monthly = retailPrice × 730 × vCPUCount
 ## Notes
 
 - Multi-session Windows 11/10 Enterprise is unique to AVD and allows multiple users per VM, reducing per-user compute cost
-- Session host VMs are charged at Linux compute rates for Windows 10/11 single-session and multi-session OS
+- Windows 10/11 Enterprise session hosts use Linux VM compute rates (Windows license included via AVD access fee or M365 entitlement); Windows Server session hosts use Windows VM rates
+- Estimate 4–6 knowledge-worker users per D4s_v5 session host; actual density depends on application load and GPU requirements
+- Session host VMs, OS disks, and networking are priced under their respective services — see `compute/virtual-machines.md` and `storage/managed-disks.md`
+- The `App to Desktop Upgrade` SKU is an incremental fee to promote app-only users to full desktop access without re-provisioning

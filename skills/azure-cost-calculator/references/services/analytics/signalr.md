@@ -50,7 +50,7 @@ Quantity: 10
 | `serviceName` | Always `SignalR`           | `SignalR`                                            |
 | `productName` | Single product             | `SignalR`                                            |
 | `skuName`     | Tier selection             | `Standard`, `Premium`                                |
-| `meterName`   | Unit (capacity) or Message | `Standard Unit`, `Standard Message`, `Premium Unit`  |
+| `meterName`   | Unit (capacity) or Message | `Standard Unit`, `Standard Message`, `Premium Unit`, `Premium Message` |
 
 ## Meter Names
 

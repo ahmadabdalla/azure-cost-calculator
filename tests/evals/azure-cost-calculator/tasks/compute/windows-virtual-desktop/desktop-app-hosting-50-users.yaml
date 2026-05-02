@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:compute/windows-virtual-desktop/desktop-app-hosting-50-users
+name: Windows Virtual Desktop - Desktop & App Hosting 50 Users
+description: >
+  Tests cost estimation for Azure Virtual Desktop per-user access fees.
+  Validates that the agent correctly identifies the Desktop & App Hosting SKU,
+  scales by user count, and notes that M365-licensed users may not incur this fee.
+tags:
+  - happy-path
+  - single-service
+  - compute
+  - service:windows-virtual-desktop
+inputs:
+  prompt: "How much would Azure Virtual Desktop cost per month for 50 users needing full desktop and app access in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "$0.00"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Windows Virtual Desktop|Azure Virtual Desktop|AVD"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: user-count-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: text
+    name: licensing-consideration
+    config:
+      regex_match:
+        - "M365|Microsoft 365|Windows E[35]|license"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -63,15 +63,16 @@ ProductName: Stream Analytics
 
 ```
 Standard (legacy): Monthly = retailPrice × 730 × suCount
-Standard V2:       Monthly = Σ(tier_retailPrice × hours_in_tier) × suCount
-Edge:              Monthly = retailPrice × deviceCount
+Standard V2:       Monthly = Σ(tier_retailPrice × hours_in_tier) per SU-job
+Edge:              Monthly = retailPrice × jobCount (jobs across all devices)
 ```
 
 ## Notes
 
 - **Capacity per SU**: 1 Streaming Unit ≈ 1 MB/s input throughput; complex queries (joins, aggregates, windowed functions) require more SUs for the same data volume
 - **Standard vs V2**: Standard (legacy) has a single flat hourly rate; Standard V2 (current) uses tiered pricing with three bands (TierMinUnits 0, 730, 5840); query the API and check each row's `unitPrice` to compare
-- **Dedicated tiers**: Same pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
-- **Edge**: Per-device monthly flat rate; runs on IoT Edge devices for local stream processing
+- **V2 minimum allocation**: Standard V2 minimum is 1/3 SU; Dedicated V2 minimum is 12 SUs
+- **Dedicated tiers**: Same per-SU-hour pricing as Standard counterparts; substitute `SkuName: Dedicated` or `Dedicated V2` in query patterns for isolated, high-throughput workloads
+- **Edge**: Per-job-per-device monthly flat rate; runs on IoT Edge devices for local stream processing; billing starts when a job is deployed regardless of job state
 - **No ArmSkuName**: All meters return empty `armSkuName`; do not filter by this field
 - Private endpoints require a Stream Analytics cluster (Dedicated tiers); Standard tier cloud jobs do not support PE

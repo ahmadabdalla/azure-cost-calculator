@@ -44,37 +44,39 @@ MeterName: Dedicated Capacity Unit
 
 ## Meter Names
 
-| Meter                                  | SKU                    | Purpose                                |
-| -------------------------------------- | ---------------------- | -------------------------------------- |
-| `Basic Throughput Unit`                | Basic                  | Throughput unit (hourly)               |
-| `Basic Ingress Events`                 | Basic                  | Ingress events (per 1M)                |
-| `Standard Throughput Unit`             | Standard               | Throughput unit (hourly)               |
-| `Standard Ingress Events`              | Standard               | Ingress events (per 1M)                |
-| `Standard Capture`                     | Standard               | Event capture to storage (hourly)      |
-| `Standard Kafka Endpoint`              | Standard               | Kafka protocol support (hourly)        |
-| `Premium Processing Unit`              | Premium                | Processing unit (hourly)               |
-| `Premium Extended Retention`           | Premium                | Extended retention (per GB/month)      |
-| `Dedicated Capacity Unit`              | Dedicated              | Capacity unit (hourly)                 |
-| `Dedicated Extended Retention`         | Dedicated              | Extended retention (per GB/month)      |
-| `Geo Replication Zone 1 Data Transfer` | Geo Replication Zone 1 | Geo-replication data transfer (per GB) |
+| Meter | SKU | unitOfMeasure | Purpose |
+| ----- | --- | ------------- | ------- |
+| `Basic Throughput Unit` | Basic | 1 Hour | Throughput unit |
+| `Basic Ingress Events` | Basic | 1M | Ingress events |
+| `Standard Throughput Unit` | Standard | 1 Hour | Throughput unit |
+| `Standard Ingress Events` | Standard | 1M | Ingress events |
+| `Standard Capture` | Standard | 1 Hour | Event capture to storage (flat per-namespace) |
+| `Standard Kafka Endpoint` | Standard | 1 Hour | Kafka protocol support (flat per-namespace) |
+| `Premium Processing Unit` | Premium | 1 Hour | Processing unit |
+| `Premium Extended Retention` | Premium | 1 GB/Month | Retention beyond 1 TB/PU included quota |
+| `Dedicated Capacity Unit` | Dedicated | 1 Hour | Capacity unit |
+| `Dedicated Extended Retention` | Dedicated | 1 GB/Month | Retention beyond 10 TB/CU included quota |
+| `Geo Replication Zone 1 Data Transfer` | Geo Replication Zone 1 | 1 GB | Geo-DR transfer (NA/Europe) |
+| `Geo Replication Zone 2 Data Transfer` | Geo Replication Zone 2 | 1 GB | Geo-DR transfer (Asia/Oceania/ME/Africa) |
+| `Geo Replication Zone 3 Data Transfer` | Geo Replication Zone 3 | 1 GB | Geo-DR transfer (South America) |
 
 ## Cost Formula
 
 ```
 Standard monthly = TU_hourly × 730 × tuCount + (ingressEvents_per1M × millions) + [Capture_hourly × 730] + [Kafka_hourly × 730]
-Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × GB]
-Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × GB]
-Geo-DR monthly   = 2 × Premium namespace cost + geoReplication_perGB × transferredGB
+Premium monthly  = PU_hourly × 730 × puCount + [ExtRetention_perGB × max(0, GB - 1000 × puCount)]
+Dedicated monthly = CU_hourly × 730 × cuCount + [ExtRetention_perGB × max(0, GB - 10000 × cuCount)]
+Geo-DR monthly   = primary namespace + secondary namespace + geoReplication_perGB × transferredGB
 ```
 
 ## Notes
 
-- Basic tier: no Capture, no Kafka endpoint, limited features
-- Standard tier: Capture and Kafka are optional per-namespace flat charges (not per-TU)
-- Standard tier: max 7-day retention; no extended retention meter available
-- Premium/Dedicated include ingress events at no extra charge
+- Basic tier: no Capture, no Kafka, max 1-day retention
+- Standard tier: Capture and Kafka are optional flat per-namespace charges (not per-TU); max 7-day retention
+- Capture writes to Blob Storage or Data Lake; storage costs are billed separately under Azure Storage
+- Premium/Dedicated include ingress events, Kafka, and Schema Registry at no extra charge
+- Extended retention: Premium includes 1 TB/PU, Dedicated includes 10 TB/CU before per-GB/month overage
 - Capacity: 1 TU = 1 MB/s ingress / ~1K events/s; 1 PU ≈ 5–10 MB/s; 1 CU ≈ 20 MB/s
-- Geo-DR requires two separate Premium/Dedicated namespaces; budget 2× namespace cost plus replication transfer
-- All throughput/processing/capacity units are billed hourly; use 730 hours/month
-- Event Hubs is under `serviceFamily eq 'Internet of Things'` in the API
+- Geo-DR needs two Premium/Dedicated namespaces billed independently + replication transfer by zone (Zone 1 NA/Europe, Zone 2 Asia/Pacific, Zone 3 South America)
+- All TU/PU/CU meters are billed hourly; use 730 hours/month
 - Private endpoints require Standard tier or higher

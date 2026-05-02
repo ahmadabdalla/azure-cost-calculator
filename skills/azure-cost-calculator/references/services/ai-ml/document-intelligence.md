@@ -67,6 +67,11 @@ MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfM
 | `S0 Query Pages`               | `S0`    | `1K`          | Premium query, most expensive PAYG meter  |
 | `S0 pages for query fields`    | `S0`    | `1K`          | Query field extraction, note lowercase    |
 | `S0 pages for doc classifier`  | `S0`    | `1K`          | Document classification, note lowercase   |
+| `S0 Batch Layout Pages`        | `S0`    | `1K`          | Batch-only layout meter (no real-time equivalent named "Layout") |
+| `S0 Batch Read Pages`          | `S0`    | `1K`          | Batch OCR, **tiered** (2 rows) like real-time |
+| `S0 Batch Document Classifier Pages` | `S0` | `1K`     | Batch doc classification (note: title case, unlike real-time) |
+| `S0 Batch Custom Extraction Pages` | `S0` | `1K`       | Batch custom extraction (note: not `S0 Batch Custom Pages`) |
+| `S0 Batch Pages for Query Fields` | `S0` | `1K`        | Batch query fields (note: title case, unlike real-time) |
 | `S0 Training`                  | `S0`    | `1 Hour`      | Neural model training (first 10 hrs free) |
 | `Free Transactions`            | `Free`  | `1K`          | Free tier, 500 pages/month                |
 
@@ -89,4 +94,4 @@ Free grant:  Billable = max(0, pages − 500) then apply PAYG formula
 - **Legacy**: `Form Recognizer` productName has higher Custom pricing; always use `Azure Document Intelligence` for current rates
 - **Scope**: For broader Foundry Tools coverage (Language, Vision, Speech, Translator), see `ai-ml/ai-services.md`
 - **Private endpoints**: Supported via Azure AI Services multi-service resource (see `networking/private-link.md`)
-- **Batch API**: Separate meters at same prices but names may differ (e.g., `S0 Batch Custom Extraction Pages` not `S0 Batch Custom Pages`); Batch Layout has its own meter (`S0 Batch Layout Pages`)
+- **Batch API**: Same prices as real-time but names differ — `S0 Batch Custom Extraction Pages` (not `Batch Custom Pages`), `S0 Batch Layout Pages` (Batch-only). Casing flips: batch uses title case (`S0 Batch Document Classifier Pages`, `S0 Batch Pages for Query Fields`) where real-time uses lowercase

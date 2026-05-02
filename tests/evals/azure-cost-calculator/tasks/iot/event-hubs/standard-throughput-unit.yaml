@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:iot/event-hubs/standard-throughput-unit
+name: Happy Path - Event Hubs Standard Throughput Unit
+description: >
+  Tests cost estimation for Event Hubs Standard tier with throughput units
+  and ingress events. Validates that the agent correctly separates TU hourly
+  cost from per-million ingress events and applies 730 hours/month.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:event-hubs
+inputs:
+  prompt: "What is the monthly cost for Azure Event Hubs Standard tier with 4 throughput units and 10 million ingress events in East US?"
+expected:
+  output_contains:
+    - "Event Hubs"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Event Hubs|event hubs"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: throughput-units-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: text
+    name: ingress-events-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
