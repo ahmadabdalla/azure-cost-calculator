@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Log Analytics
 
-> **Trap (tiered meter)**: The correct ingestion meter `'Analytics Logs Data Ingestion'` returns **two rows per region** (tiered pricing): tier 1 at `tierMinimumUnits=0` is free (first 5 GB), tier 2 at `tierMinimumUnits=5` is the charged rate. Use the tier-2 `retailPrice` for per-GB cost. The legacy meter `'Analytics Logs Data Analyzed'` returns a mostly uniform rate that does NOT reflect regional pricing variance — do NOT use it.
+> **Trap (tiered meter)**: The correct ingestion meter `'Analytics Logs Data Ingestion'` returns **two rows per region** (tiered pricing): tier 1 at `tierMinimumUnits=0` is free (first 5 GB), tier 2 at `tierMinimumUnits=5` is the charged rate. Use the tier-2 `retailPrice` for per-GB cost. The legacy meter `'Analytics Logs Data Analyzed'` returns a mostly uniform legacy rate and does not reliably reflect current regional tiered ingestion pricing — do NOT use it.
 > **Trap (ingestion free tier)**: The first **5 GB/month** is free, **PAYG only** (not commitment tiers), per **billing account** (not per workspace). Deduct from billable total: `billable_GB = max(0, total_GB - 5)`. This free tier does NOT apply when Sentinel simplified pricing is enabled (ingestion shifts to Sentinel meters; see `security/sentinel.md`).
 > **Trap (retention calculation)**: Free retention: **90 days** (Sentinel-enabled) or **31 days** (standard). Chargeable window = `retentionDays - freeDays`. Retention volume uses ALL `_IsBillable=true` data (Defender P2 grants reduce ingestion cost but NOT retention volume).
 
@@ -31,6 +31,8 @@ SkuName: Analytics Logs
 MeterName: Analytics Logs Data Retention
 
 ### Commitment tier (100+ GB/day): uses ServiceName: Azure Monitor
+
+> Commitment tiers are billed under Azure Monitor, not Log Analytics.
 
 ServiceName: Azure Monitor <!-- cross-service -->
 SkuName: 100 GB Commitment Tier

@@ -43,6 +43,23 @@ graders:
       contains:
         - "90"
     weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for a Log Analytics workspace ingesting 50 GB per month with 90 days retention in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Uses the Log Analytics PAYG ingestion meter, not the legacy Data Analyzed meter.
+        (2) Deducts the 5 GB PAYG free grant before calculating ingestion cost.
+        (3) Applies retention beyond the standard 31-day free period for 90-day retention.
+        (4) Produces a plausible East US total near $113.33/month (about $103.50 ingestion + $9.83 retention).
+
+        Score 1.0 if all four criteria are met. Score 0.5 if two or three are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script
     config:
