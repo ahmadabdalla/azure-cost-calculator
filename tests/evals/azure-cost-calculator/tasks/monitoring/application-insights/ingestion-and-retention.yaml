@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:monitoring/application-insights/ingestion-and-retention
+name: Happy Path - Application Insights Ingestion and Retention
+description: >
+  Tests cost estimation for Application Insights with per-GB ingestion and retention.
+  Validates that the agent uses Log Analytics workspace meters, applies the 5 GB free
+  grant deduction, and calculates retention beyond the 90-day free period.
+tags:
+  - happy-path
+  - single-service
+  - monitoring
+  - service:application-insights
+inputs:
+  prompt: "What is the monthly cost for Application Insights with 50 GB/month ingestion and 180-day retention in East US?"
+expected:
+  output_contains:
+    - "Application Insights"
+    - "Assumptions"
+    - "Log Analytics"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Application Insights|App Insights"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: ingestion-volume-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: text
+    name: retention-period-acknowledged
+    config:
+      contains:
+        - "180"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for
+        Application Insights with 50 GB/month ingestion and 180-day retention in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Uses the Log Analytics workspace billing boundary for Application Insights,
+        not a standalone Application Insights ingestion meter.
+        (3) Correctly applies the 5 GB monthly free ingestion grant, so the billed
+        ingestion volume is 45 GB.
+        (4) Correctly converts 50 GB/month into retention volume beyond the 90-day
+        free period for a 180-day retention setting using the repo's standard
+        steady-state 30-day monthly-to-daily approximation ((50/30) GB/day × 90 days
+        = 150 GB retained, or an equivalent daily-ingestion calculation).
+        (5) Shows a monthly total and component breakdown consistent with the
+        current East US Log Analytics ingestion and retention query results,
+        rounded to two decimal places.
+
+        Score 1.0 if all five criteria are met. Score 0.5 if four are met. Score 0.0
+        if fewer than four are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
