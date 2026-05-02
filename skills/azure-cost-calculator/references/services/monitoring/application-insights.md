@@ -84,7 +84,7 @@ Monthly retention cost = retentionPrice × 450
 - First 90 days of retention included free for Application Insights data (App\* tables); other workspace tables get 31 days
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)
 - Typical telemetry volume per instance: 0.1–0.5 GB/month (minimal), 0.5–2 GB/month (standard), 2–10 GB/month (verbose); varies by traffic and sampling config
-- Standard Web Tests billed under `ServiceName: Azure Monitor`; see `monitoring/monitor.md` for query pattern and pricing
+- Availability tests: Standard web tests use `ServiceName: Azure Monitor`, `SkuName: Standard Web Test`, `MeterName: Standard Web Test Execution`; multi-step web tests use `ServiceName: Application Insights`, `SkuName: Basic`, `MeterName: Multi-step Web Test`
 - Maximum retention period: 730 days (2 years)
 - For commitment tier pricing (100+ GB/day), see `log-analytics.md` commitment tiers section
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
