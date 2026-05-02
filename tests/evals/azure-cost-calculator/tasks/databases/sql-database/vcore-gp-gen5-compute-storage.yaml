@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:databases/sql-database/vcore-gp-gen5-compute-storage
+name: SQL Database - vCore GP Gen5 Compute and Storage
+description: >
+  Tests cost estimation for Azure SQL Database using the vCore purchasing model.
+  General Purpose Gen5 with 4 vCores and 256 GB storage. Validates that both
+  compute and storage components are present and summed correctly.
+tags:
+  - happy-path
+  - single-service
+  - databases
+  - service:sql-database
+inputs:
+  prompt: "What is the monthly cost for an Azure SQL Database Single, General Purpose, Gen5 with 4 vCores and 256 GB storage in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "SQL Database|Azure SQL"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: vcore-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: text
+    name: storage-size-acknowledged
+    config:
+      contains:
+        - "256"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
