@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:iot/event-grid/standard-operations-multi-quantity
+name: Happy Path - Event Grid Standard Operations
+description: >
+  Tests cost estimation for Event Grid operations pricing. Validates that the
+  agent correctly identifies the per-100K operations meter, applies the free
+  grant deduction, and scales by quantity.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:event-grid
+inputs:
+  prompt: "How much would 5 million Event Grid standard operations cost per month in East US?"
+expected:
+  output_contains:
+    - "Event Grid"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Event Grid|event grid"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: quantity-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: text
+    name: free-grant-acknowledged
+    config:
+      regex_match:
+        - "free|grant|included"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
