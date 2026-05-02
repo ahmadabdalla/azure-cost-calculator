@@ -3,90 +3,65 @@ serviceName: Azure Bot Service
 category: ai-ml
 aliases: [Bot Framework, Chatbot]
 billingNeeds: [Azure App Service, Functions]
-primaryCost: "Health Bot Agent Tier per-action (recommended); Standard daily ×30 + overage (legacy). Channels free."
+pricingRegion: global
+primaryCost: "S1 premium channel messages per 1K (DirectLine/Web Chat); standard channels free"
 hasFreeGrant: true
-privateEndpoint: true
 ---
 
-# Azure Bot Service (Health Bot)
+# Azure Bot Service
 
-> **Trap (channel split)**: Standard channels (Teams, Slack) are free. Premium channels (DirectLine, Web Chat) have Global-only S1 meters; most deployments use free tier. Queries below focus on **Health Bot**, the main paid product.
+> **Trap (shared API name)**: The `serviceName` "Azure Bot Service" is shared with Health Bot. Always filter by `ProductName: Azure Bot Service` to isolate channel meters. For Health Bot pricing, see `specialist/health-bot.md`.
 
-> **Trap (daily billing)**: Standard tier uses `1/Day` unit; the script auto-multiplies by 30 for monthly cost. Do not manually multiply again.
+> **Trap (global-only)**: Channel meters exist only in `armRegionName: Global`. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`.
 
-> **Trap (deprecated tier)**: Standard (S1) was deprecated in November 2025; no new instances can be created. For new deployments, use Agent Tier.
+> **Trap (free channels)**: Standard channels (Teams, Slack, Facebook) are always free with no paid meter. Only premium channels (DirectLine, Web Chat) are billable at S1 tier.
 
 ## Query Pattern
 
-### Health Bot: Standard tier (daily base fee, legacy)
+### S1 premium channel messages (DirectLine/Web Chat)
 
-ServiceName: Azure Bot Service
-ProductName: Microsoft Azure Health Bot
-SkuName: Standard
-MeterName: Standard Unit
+ServiceName: Azure Bot Service <!-- cross-service -->
+ProductName: Azure Bot Service
+SkuName: S1
+MeterName: S1 Premium Channel Messages
+Quantity: 50 # thousands of messages per month
 
-### Health Bot: Standard tier MCU overage (legacy)
+### Free tier (premium channels, 10K messages/month included)
 
-ServiceName: Azure Bot Service
-ProductName: Microsoft Azure Health Bot
-SkuName: Standard
-MeterName: Standard Overage MCU
-
-### Health Bot: Standard tier message overage (legacy)
-
-ServiceName: Azure Bot Service
-ProductName: Microsoft Azure Health Bot
-SkuName: Standard
-MeterName: Standard Overage Messages
-
-### Health Bot: Agent Tier (5K actions/month)
-
-ServiceName: Azure Bot Service
-ProductName: Microsoft Azure Health Bot
-SkuName: Agent Tier
-MeterName: Agent Tier Action
-Quantity: 5000
-
-### Health Bot: Free tier
-
-ServiceName: Azure Bot Service
-ProductName: Microsoft Azure Health Bot
+ServiceName: Azure Bot Service <!-- cross-service -->
+ProductName: Azure Bot Service
 SkuName: Free
-MeterName: Free MCU
+MeterName: Free Premium Channel Messages
 
 ## Key Fields
 
-| Parameter     | How to determine                    | Example values                                                |
-| ------------- | ----------------------------------- | ------------------------------------------------------------- |
-| `serviceName` | Always `Azure Bot Service`          | `Azure Bot Service`                                           |
-| `productName` | Always `Microsoft Azure Health Bot` | `Microsoft Azure Health Bot`                                  |
-| `skuName`     | Tier selected by user               | `Free`, `Standard`, `Agent Tier`                              |
-| `meterName`   | Meter within tier (never-assume)    | `Standard Unit`, `Standard Overage MCU`, `Agent Tier Action`  |
+| Parameter     | How to determine                   | Example values                                          |
+| ------------- | ---------------------------------- | ------------------------------------------------------- |
+| `serviceName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
+| `productName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
+| `skuName`     | Tier selected by user              | `Free`, `S1`                                            |
+| `meterName`   | Channel type + tier (never-assume) | `S1 Premium Channel Messages`, `Free Premium Channel Messages` |
 
 ## Meter Names
 
-| Meter                       | skuName      | unitOfMeasure | Notes                        |
-| --------------------------- | ------------ | ------------- | ---------------------------- |
-| `Standard Unit`             | `Standard`   | `1/Day`       | Daily base fee               |
-| `Standard Overage MCU`      | `Standard`   | `1`           | Message Compute Unit overage |
-| `Standard Overage Messages` | `Standard`   | `1K`          | Per 1K messages overage      |
-| `Agent Tier Action`         | `Agent Tier` | `1`           | Per-action billing           |
-| `Free MCU`                  | `Free`       | `1`           | Free tier, zero price        |
-| `Free Message`              | `Free`       | `1K`          | Free tier, zero price        |
+| Meter                            | skuName | unitOfMeasure | Notes                                    |
+| -------------------------------- | ------- | ------------- | ---------------------------------------- |
+| `S1 Premium Channel Messages`    | `S1`    | `1K`          | Paid: DirectLine, Web Chat               |
+| `Free Premium Channel Messages`  | `Free`  | `1K`          | Zero price; 10K messages/month cap       |
+| `Free Standard Channel Messages` | `Free`  | `1K`          | Zero price; unlimited (Teams, Slack)     |
 
 ## Cost Formula
 
 ```
-Standard Monthly = standard_retailPrice × 30 + mcu_retailPrice × mcuOverageUnits + msg_retailPrice × (messages / 1000)
-Agent Tier Monthly = action_retailPrice × numberOfActions
-Free = no charge (all meters return zero price)
+S1 Monthly = premium_retailPrice × (messages / 1000)
+Free = no charge (10K premium messages/month included; standard channels unlimited)
 ```
 
 ## Notes
 
-- **Bot Service channel pricing split**: Standard channels (Teams, Slack) are free. Premium channels (DirectLine, Web Chat) use paid Global-only S1 channel-message meters. Health Bot is the primary paid product in this reference
-- **Underlying compute**: Bot apps typically run on Azure App Service or Functions; billed separately. If secured via API Management, APIM costs also apply
-- **MCU (Message Compute Unit)**: 1 MCU = one Health Bot scenario execution; Standard tier includes daily allowance, overages billed per-unit
-- **RI check**: `PriceType: Reservation` query returns no results for Health Bot; Reserved Instances are not available
-- **Free tier**: Returns zero-price meters, included to prevent unnecessary API queries
-- **PE sub-resources** (never-assume): `Bot`, `Token`, both needed for full network isolation
+- **Standard channels are free**: Teams, Slack, Facebook, etc. have no paid meter at any tier
+- **Premium channels**: DirectLine and Web Chat; billable only on S1 tier
+- **Underlying compute**: Bot apps run on Azure App Service or Functions; billed separately under those services
+- **Free tier cap**: 10,000 premium channel messages/month (enforced service-side; API returns zero-price meters)
+- **Health Bot**: For healthcare bot pricing (Agent Tier, Standard daily fee), see `specialist/health-bot.md`
+- **RI check**: `PriceType: Reservation` returns no results; Reserved Instances not available
