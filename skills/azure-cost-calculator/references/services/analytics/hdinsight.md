@@ -89,7 +89,7 @@ Total Monthly   = Cluster Monthly + Managed Disks + ESP Surcharge + Azure Storag
 
 - **All-in pricing**: Node prices include both VM compute and HDInsight management surcharge; do not add separate Virtual Machines charges
 - **Cluster types**: Hadoop, Spark, HBase, Kafka, Interactive Query, Storm; node topology varies (Hadoop: Head + Worker only; others add Zookeeper ×3)
-- **Managed disks**: Kafka and HBase Accelerated Writes require managed disks (S30, P30, or P30 - ZRS) under `HDInsight Storage`; all clusters use external Azure Storage (Blob/ADLS) for data
+- **Managed disks**: Kafka and HBase Accelerated Writes require managed disks (S30, P30, or P30 - ZRS) under `HDInsight Storage`; disk operations billed separately at sub-cent per 10K ops; all clusters use external Azure Storage (Blob/ADLS) for data
 - **Add-on surcharges**: Product `HDInsight Add-on Software` (empty-region meters; query API directly with `armRegionName eq ''`): ESP surcharge per-core/hour, R Server surcharge per-core/hour, Kafka surcharge is zero-priced; ESP also auto-provisions an ID Broker node
 - **No stop/pause**: Clusters must be deleted to stop billing; no deallocated state
 - **Capacity**: Worker node count and VM size determine cluster throughput; minimum 1 worker for Hadoop/Spark, minimum 3 workers for Kafka
