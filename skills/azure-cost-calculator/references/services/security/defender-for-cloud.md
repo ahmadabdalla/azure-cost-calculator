@@ -27,31 +27,41 @@ InstanceCount: {resourceCount} # number of protected resources
 
 ## Meter Names
 
-| Sub-product         | productName                         | skuName           | meterName                   | unitOfMeasure | Formula               |
-| ------------------- | ----------------------------------- | ----------------- | --------------------------- | ------------- | --------------------- |
-| Servers P1          | `Microsoft Defender for Servers`    | `Standard P1`     | `Standard P1 Node`          | `1/Hour`      | × 730 × serverCount   |
-| Servers P2          | `Microsoft Defender for Servers`    | `Standard P2`     | `Standard P2 Node`          | `1/Hour`      | × 730 × serverCount   |
-| SQL                 | `Microsoft Defender for SQL`        | `Standard`        | `Standard Instance`         | `1 Hour`      | × 730 × instanceCount |
-| Key Vault           | `Microsoft Defender for Key Vault`  | `Per node Std`    | `Per node Std Node`         | `1/Hour`      | × 730 × vaultCount    |
-| Storage             | `Microsoft Defender for Storage`    | `Standard`        | `Standard Node`             | `1/Hour`      | × 730 × accountCount  |
-| Storage (txns)      | `Microsoft Defender for Storage`    | `Standard`        | `Standard Transactions`     | `1M`          | × transactionMillions |
-| Containers          | `Microsoft Defender for Containers` | `Standard vCore`  | `Standard vCore vCore Pack` | `1/Hour`      | × 730 × totalVCores   |
-| Containers (images) | `Microsoft Defender for Containers` | `Standard Images` | `Standard Images`           | `1`           | × imageScansPerMonth  |
+| Sub-product         | productName                              | skuName            | meterName                   | unitOfMeasure | Formula               |
+| ------------------- | ---------------------------------------- | ------------------ | --------------------------- | ------------- | --------------------- |
+| Servers P1          | `Microsoft Defender for Servers`         | `Standard P1`      | `Standard P1 Node`          | `1/Hour`      | × 730 × serverCount   |
+| Servers P2          | `Microsoft Defender for Servers`         | `Standard P2`      | `Standard P2 Node`          | `1/Hour`      | × 730 × serverCount   |
+| SQL (PaaS)          | `Microsoft Defender for SQL`             | `Standard`         | `Standard Instance`         | `1 Hour`      | × 730 × instanceCount |
+| SQL (Node)          | `Microsoft Defender for SQL`             | `Standard`         | `Standard Node`             | `1/Month`     | × nodeCount           |
+| SQL (vCore)         | `Microsoft Defender for SQL`             | `Standard`         | `Standard vCore`            | `1 Hour`      | × 730 × vCoreCount    |
+| App Service         | `Microsoft Defender for App Service`     | `Standard`         | `Standard Node`             | `1/Hour`      | × 730 × planCount     |
+| Key Vault           | `Microsoft Defender for Key Vault`       | `Per node Std`     | `Per node Std Node`         | `1/Hour`      | × 730 × vaultCount    |
+| Storage             | `Microsoft Defender for Storage`         | `Standard`         | `Standard Node`             | `1/Hour`      | × 730 × accountCount  |
+| Storage (txns)      | `Microsoft Defender for Storage`         | `Standard`         | `Standard Transactions`     | `1M`          | × transactionMillions |
+| Storage (malware)   | `Microsoft Defender for Storage`         | `Malware Scanning` | `Malware Scanning Data Ingested` | `1 GB`   | × scannedGB           |
+| Containers          | `Microsoft Defender for Containers`      | `Standard vCore`   | `Standard vCore vCore Pack` | `1/Hour`      | × 730 × totalVCores   |
+| Containers (images) | `Microsoft Defender for Containers`      | `Standard Images`  | `Standard Images`           | `1`           | × imageScansPerMonth  |
+| Cosmos DB           | `Microsoft Defender for Azure Cosmos DB` | `Standard`         | `Standard 100 RU/s`        | `1/Hour`      | × 730 × (RUs / 100)   |
+| DNS                 | `Microsoft Defender for DNS`             | `Standard`         | `Standard Queries`          | `1M`          | × queryMillions       |
+| Resource Manager    | `Microsoft Defender for Resource Manager`| `Per node Std`     | `Per node Std Node`         | `1/Hour`      | × 730 × subCount      |
+| MySQL               | `Microsoft Defender for MySQL`           | `Standard`         | `Standard Node`             | `1/Month`     | × serverCount         |
+| PostgreSQL          | `Microsoft Defender for PostgreSQL`      | `Standard`         | `Standard Node`             | `1/Month`     | × serverCount         |
+| MariaDB             | `Microsoft Defender for MariaDB`         | `Standard`         | `Standard Instance`         | `1 Hour`      | × 730 × instanceCount |
 
 ## Cost Formula
 
 - **Hourly meters**: `unitPrice × 730 × resourceCount`
 - **Monthly meters**: `unitPrice × resourceCount`
 - **Transaction meters**: `unitPrice × (transactions / 1,000,000)`
+- **Per-GB meters**: `unitPrice × scannedGB`
 
 ## Notes
 
-- **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types (SecurityEvent, SecurityAlert, SecurityBaseline, etc.); pooled across all protected servers. When estimating Sentinel or Log Analytics ingestion, deduct this: `defenderFreeGB = serverCount × 0.5 × 30`. Only applies to data collected via Defender's auto-provisioned agents, not custom log sources.
+- **Servers P2 free data grant**: P2 includes **500 MB/server/day** of free Log Analytics ingestion for security data types; pooled across all protected servers. Deduct: `defenderFreeGB = serverCount × 0.5 × 30`.
 - **Servers P2 MDATP Benefit**: Customers with existing Microsoft Defender for Endpoint licenses get a reduced P2 rate; query with `MeterName: Standard P2 Node - MDATP Benefit`.
 - Containers has free trial tiers (Free vCore, Free Images at zero cost); always use `Standard` SKU meters for estimation.
 - Containers vCore pricing = total vCores across all protected AKS nodes (e.g., 6× E4s_v5 @ 4 vCPU = 24 vCores).
-- **Storage** also has a `Malware Scanning` add-on meter (per-GB scanned) in addition to the node and transaction meters.
-- App Service, DNS, Resource Manager, Cosmos DB, MySQL, PostgreSQL, MariaDB, AI Services, APIs, and EASM plans also exist; use the explore script with SearchTerm Defender to discover.
+- Additional plans exist (AI Services, APIs, OSS DB NonAzure); use the explore script with SearchTerm Defender to discover.
 
 ## Defender CSPM (Cloud Security Posture Management)
 
