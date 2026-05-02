@@ -74,7 +74,7 @@ Storage = storage_retailPrice × sizeGB; Total = Compute + Storage
 ## Notes
 
 - Burstable: dev/test, does NOT support RI, max 20 vCores
-- GP/MO per-vCore series: support RI; v6 has disk-attached (Ddsv6/Edsv6) and non-disk (Dsv6/Esv6) variants
+- GP/MO per-vCore + Confidential: support RI; v6 has disk-attached (Ddsv6/Edsv6) and non-disk (Dsv6/Esv6) variants
 - MO Edsv5: per-size SKU pricing (Standard_E2d_v5 through Standard_E104id_v5), no RI
 - HA doubles compute cost; backup equal to provisioned storage is free; Single Server deprecated
 
