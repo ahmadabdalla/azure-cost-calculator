@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:iot/digital-twins/consumption-multi-meter
+name: Happy Path - Digital Twins Consumption Multi-Meter
+description: >
+  Tests cost estimation for a consumption-based IoT service with sub-cent
+  pricing across three meters (messages, operations, query units). Validates
+  that the agent performs manual calculation instead of relying on the script's
+  MonthlyCost output which rounds to $0.00 for sub-cent rates.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:digital-twins
+inputs:
+  prompt: "Estimate the monthly cost for Azure Digital Twins in East US with 100K messages, 500K operations, and 200K query units."
+expected:
+  output_contains:
+    - "Digital Twins"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Digital Twins|ADT"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: operations-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
