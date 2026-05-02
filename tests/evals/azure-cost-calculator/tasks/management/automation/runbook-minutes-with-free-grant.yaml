@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:management/automation/runbook-minutes-with-free-grant
+name: Automation - Runbook Minutes with Free Grant
+description: >
+  Tests cost estimation for Azure Automation runbook job minutes beyond the
+  free grant. Validates that the agent correctly applies the 500 free minutes
+  deduction and uses sub-cent pricing from the Known Rates table.
+tags:
+  - happy-path
+  - single-service
+  - management
+  - service:automation
+inputs:
+  prompt: "How much would Azure Automation cost per month for 1000 runbook job minutes in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "500"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Automation|Runbook"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: free-grant-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 1.0
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
