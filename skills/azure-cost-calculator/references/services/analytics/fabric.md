@@ -9,9 +9,9 @@ privateEndpoint: true
 
 # Microsoft Fabric
 
-> **Trap (inflated totals)**: Unfiltered `ServiceName 'Microsoft Fabric'` returns ~84 meters across 3 products (Fabric Capacity, OneLake, Fabric Capacity Reservation). The `totalMonthlyCost` is meaningless. Always filter by `ProductName` for the specific component.
+> **Trap (inflated totals)**: Unfiltered `ServiceName 'Microsoft Fabric'` returns ~88 meters across 3 products (Fabric Capacity, OneLake, Fabric Capacity Reservation). The `totalMonthlyCost` is meaningless. Always filter by `ProductName` for the specific component.
 
-> **Trap (uniform CU pricing)**: All 67 standard workload meters under `Fabric Capacity` share an identical per-CU-hour rate. Each meter tracks a different workload for billing attribution only; the rate does not vary. Use any single CU meter as the reference, multiply by the F-SKU's CU count.
+> **Trap (uniform CU pricing)**: All 69 standard workload meters under `Fabric Capacity` share an identical per-CU-hour rate. Each meter tracks a different workload for billing attribution only; the rate does not vary. Use any single CU meter as the reference, multiply by the F-SKU's CU count.
 
 > **Trap (Capacity Overage)**: The `Capacity Overage Capacity Usage` meter is 3× the standard CU rate and is not RI-eligible.
 
@@ -60,7 +60,7 @@ MeterName: Capacity Overage Capacity Usage CU
 
 | Meter                                | skuName                           | productName       | unitOfMeasure | Notes                                      |
 | ------------------------------------ | --------------------------------- | ----------------- | ------------- | ------------------------------------------ |
-| `Power BI Capacity Usage CU`        | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 67 identical) |
+| `Power BI Capacity Usage CU`        | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 69 identical) |
 | `Capacity Overage Capacity Usage CU`| `Capacity Overage Capacity Usage` | `Fabric Capacity` | `1 Hour`      | 3× standard rate; not RI-eligible          |
 | `OneLake Storage Hot Data Stored`   | `OneLake Storage Hot`             | `OneLake`         | `1 GB/Month`  | Default primary storage tier               |
 | `OneLake Storage Cool Data Stored`  | `OneLake Storage Cool`            | `OneLake`         | `1 GB/Month`  | Lower-cost infrequent access tier          |
@@ -85,8 +85,9 @@ Total Monthly    = Capacity + Storage + Overage
 - **OneLake storage billed separately**: Storage is not included in the CU-hour capacity rate; query the `OneLake` product. Tiers: Hot (default), Cool, Cold. BCDR also offers Hot/Cool/Cold (only Hot tabled above)
 - **Pause/resume**: Pausing a capacity stops CU billing; OneLake storage charges continue
 - **Free mirroring storage**: Each F-SKU includes free mirroring equal to the SKU number in TB (e.g., F64 = 64 TB); excess at the `Storage Mirroring` rate
-- **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `SQL Storage`, `SQL Backup Storage`)
+- **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `Cosmos DB Backup Storage`, `Cosmos DB Data Restore`, `SQL Storage`, `SQL Backup Storage`)
 - **BCDR casing inconsistency**: Hot tier uses `OneLake BCDR Storage Hot` but Cool/Cold use `Onelake` (lowercase l); queries are case-sensitive
+- **Data retrieval from Cold/Cool tiers**: `OneLake Data Retrieval Cold/Cool` CU meters charge a sub-standard rate per CU-hour for accessing archived data
 - **Private endpoints**: Supported on F64 and above SKUs; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
@@ -95,6 +96,4 @@ ServiceName: Microsoft Fabric
 ProductName: Fabric Capacity Reservation
 PriceType: Reservation
 
-> **Note (RI per-CU)**: RI `unitPrice` is per single CU; multiply by the CU count for the chosen F-SKU.
-
-> **Trap (RI 1Y ≈ 3Y)**: Both 1-Year and 3-Year terms yield nearly identical monthly rates per CU (~41% discount vs PAYG). Autoscale for Spark and Capacity Overage are not RI-eligible.
+> **Trap (RI per-CU)**: RI `unitPrice` is per single CU; multiply by CU count. Both 1-Year and 3-Year terms yield nearly identical monthly rates (~41% discount vs PAYG). Autoscale for Spark and Capacity Overage are not RI-eligible.
