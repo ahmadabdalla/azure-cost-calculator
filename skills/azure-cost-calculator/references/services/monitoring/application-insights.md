@@ -43,7 +43,7 @@ MeterName: Analytics Logs Data Retention
 | Meter                           | skuName          | unitOfMeasure | Notes                                          |
 | ------------------------------- | ---------------- | ------------- | ---------------------------------------------- |
 | `Analytics Logs Data Ingestion` | `Analytics Logs` | `1 GB`        | Application telemetry data ingestion (tiered) |
-| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB`        | Application telemetry retention beyond 90 days |
+| `Analytics Logs Data Retention` | `Analytics Logs` | `1 GB/Month`  | Application telemetry retention beyond 90 days |
 
 ## Cost Formula
 
@@ -79,7 +79,7 @@ Monthly retention cost = retentionPrice × 450
 
 - Application Insights requires a Log Analytics workspace (workspace-based model)
 - Classic Application Insights (non-workspace-based) is deprecated and scheduled for retirement
-- `Analytics Logs Data Ingestion` is tiered: 0-price at tier 0, paid ingestion starts at tier 5 GB; the pricing script sums the tiers correctly
+- `Analytics Logs Data Ingestion` is tiered: 0-price at tier 0, paid ingestion starts at tier 5 GB; do not trust the script `summary.totalMonthlyCost` for this meter—apply the 5 GB PAYG grant manually
 - First 5 GB/month ingestion free per billing account (PAYG only, shared with all services using the workspace); does not apply under Sentinel simplified pricing
 - First 90 days of retention included free for Application Insights data (App\* tables); other workspace tables get 31 days
 - Sampling can reduce telemetry volume and costs (e.g., 50% sampling = 50% less data ingested)
