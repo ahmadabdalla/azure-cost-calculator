@@ -9,7 +9,7 @@ primaryCost: "Compute hours (hourly rate × 730 × instanceCount)"
 
 # Virtual Machines
 
-> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **multiple results** (up to 6 for v5: Linux/Windows × Standard/Spot/Low Priority; fewer for v6+ which lack Low Priority). Without `ProductName`, the cheapest row may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
+> **Trap**: A query with only `ArmSkuName` and no `ProductName` filter returns **multiple results** (up to 6 for v5: Linux/Windows × Standard/Spot/Low Priority; fewer for most v6+ series). Without `ProductName`, the cheapest row may be selected, underestimating by ~5×. **Always include `ProductName`** in every VM query.
 
 ## Query Pattern
 
@@ -52,7 +52,7 @@ Monthly = retailPrice × 730 hours × instanceCount
 
 - Use the explore script with ServiceName `Virtual Machines` and SearchTerm `{series}` to discover exact `productName` values
 - **VMSS**: Scale-set instances use the same `serviceName` and VM compute meters as standalone VMs. There is no _additional_ VMSS/orchestration meter; you still calculate **compute** as `retailPrice × 730 × instanceCount`, and price managed disks and any attached resources (load balancer, public IP, etc.) separately. Flexible and Uniform orchestration modes have no pricing difference.
-- **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) but are **only available for v5 and older series** — v6+ series have Spot only
+- **Spot VMs**: market-priced, can be evicted at any time; query by picking the row where `skuName` ends with `Spot`. Low Priority VMs follow the same pattern (`Low Priority` suffix) but availability varies — most v6+ Intel series lack Low Priority (Spot only), while some AMD v6 series (e.g., Dadsv6) still offer it
 
 ## Azure Hybrid Benefit (AHUB)
 
