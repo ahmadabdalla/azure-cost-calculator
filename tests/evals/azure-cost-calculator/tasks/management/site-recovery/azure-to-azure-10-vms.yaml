@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:management/site-recovery/azure-to-azure-10-vms
+name: Site Recovery - Azure-to-Azure 10 VMs
+description: >
+  Tests cost estimation for Azure Site Recovery with 10 protected VMs
+  replicating to Azure. Validates per-instance monthly pricing model.
+tags:
+  - happy-path
+  - single-service
+  - management
+  - service:site-recovery
+inputs:
+  prompt: "How much would Azure Site Recovery cost per month to protect 10 VMs with Azure-to-Azure replication in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "10"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Site Recovery|ASR"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
