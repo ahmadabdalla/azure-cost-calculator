@@ -64,6 +64,9 @@ Region: Zone 1
 | `{Tier} Data Transfer Out` | `{Tier}` | `1 GB` | 7-tier volume pricing |
 | `{Tier} Data Transfer In` | `{Tier}` | `1 GB` | Ingress; same price Standard and Premium |
 | `{Tier} Requests` | `{Tier}` | `10K` | 4-tier volume pricing |
+| `{Tier} Edge Actions Base Fee` | `{Tier}` | `1 Month` | Edge compute flat fee |
+| `{Tier} Invocations` | `{Tier}` | `1M` | Edge compute per-million invocations |
+| `{Tier} Overage Execution Time` | `{Tier}` | `1 Second` | Edge compute; sub-cent |
 | `Premium Captcha Sessions` | `Premium` | `1K` | Premium-only CAPTCHA meter |
 | `Standard Policy` | `Standard` | `1/Month` | WAF policy (Classic) |
 | `Standard Rule` | `Standard` | `1/Month` | WAF custom rule (Classic) |
@@ -82,11 +85,9 @@ Monthly = baseFee_retailPrice × profileCount
         + Σ(dataOut_tier_retailPrice × GB_in_tier)
         + dataIn_retailPrice × estimatedInGB
         + Σ(requests_tier_retailPrice × requests_in_tier / 10,000)
-
-Classic WAF add-on (if enabled):
-        + policy_retailPrice × policyCount + rule_retailPrice × customRuleCount
+Edge Actions (if used): edgeBase_retailPrice + invocations_retailPrice × (invocations / 1M) + execTime_retailPrice × totalSeconds
+Classic WAF: policy_retailPrice × policyCount + rule_retailPrice × customRuleCount
         + ruleset_retailPrice × rulesetCount + wafRequest_retailPrice × (wafRequests / 1M)
-        + botRuleset_retailPrice × botRulesetCount + botRequest_retailPrice × (botRequests / 1M)
 Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 ```
 
@@ -95,5 +96,5 @@ Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 - **Zone mapping**: Zone 1 = North America, Zone 2 = Asia Pacific/Japan, Zone 3 = South America, Zone 4 = Australia, Zone 5 = India, Zone 6 = Europe, Zone 7 = Middle East/Africa, Zone 8 = Korea. Zone 1 and Zone 6 have identical prices
 - **Standard vs Premium**: Premium adds Private Link origins, enhanced WAF with bot protection and managed rule sets, and Microsoft Threat Intelligence. Premium WAF is included in base fee; only `Premium Captcha Sessions` billed separately. Data transfer prices are identical between tiers
 - **Data transfer out is tiered**: 7 tiers (0–10 TB, 10–50 TB, 50–150 TB, 150–500 TB, 500 TB–1 PB, 1–5 PB, 5 PB+). Requests also tiered (4 tiers)
-- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, and bot protection billed separately under productName `Azure Front Door Service`. Sub-cent per-request; use `Quantity`. Being retired in favor of Standard/Premium
+- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, and bot protection billed separately under productName `Azure Front Door Service`. Sub-cent per-request; use `Quantity`. Being retired
 - **Private Link origins**: Premium tier only; see `networking/private-link.md` for PE and DNS zone pricing
