@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/hdinsight/spark-d4a-v4-worker-nodes
+name: HDInsight - Spark Cluster D4a v4 Worker Nodes
+description: >
+  Tests cost estimation for an HDInsight Spark cluster with D4a v4 worker nodes.
+  Validates that the agent correctly filters by ProductName for the VM series,
+  accounts for multi-node topology (Head + Worker + Zookeeper), and scales
+  by worker node count.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:hdinsight
+inputs:
+  prompt: "How much would a 4-node HDInsight Spark cluster cost per month using D4a v4 worker nodes in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "HDInsight|HDI"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: node-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: text
+    name: vm-size-acknowledged
+    config:
+      regex_match:
+        - "D4a v4|D4as v4"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would a 4-node HDInsight Spark cluster cost per month using D4a v4 worker nodes in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters (e.g., head node size, Zookeeper nodes).
+        (2) Shows a monthly total cost using the correct billing model (hourly per-node × 730 × node count).
+        (3) Accounts for multiple node roles (at minimum Head nodes + Worker nodes; Zookeeper nodes for Spark).
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
