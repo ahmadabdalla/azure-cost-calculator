@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/vpn-gateway/vpngw2az-with-s2s-tunnels
+name: VPN Gateway - VpnGw2AZ with S2S Tunnels
+description: >
+  Tests cost estimation for a VPN Gateway VpnGw2AZ SKU with 15 S2S tunnels.
+  Validates that the agent correctly applies the free grant deduction (10 included)
+  and only bills for tunnels beyond the first 10.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:vpn-gateway
+inputs:
+  prompt: "Estimate the monthly cost of a VPN Gateway using VpnGw2AZ SKU with 15 site-to-site tunnels in East US."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "VPN Gateway|VpnGw"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: tunnel-count-acknowledged
+    config:
+      contains:
+        - "15"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost of a VPN Gateway using VpnGw2AZ SKU with 15 site-to-site tunnels in East US."
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for VPN Gateway (gateway hourly + S2S connection charges).
+        (3) Accounts for the free grant of 10 included S2S tunnels and only bills for 5 additional tunnels.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
