@@ -6,6 +6,67 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.7.3] - 2026-05-02
+
+### Changed
+
+- Azure AI Services (`ai-services.md`): clarified shared `apiServiceName` scope across AI services
+- Azure AI Speech (`speech.md`): reviewed and improved meter coverage and traps
+- Azure Batch (`batch.md`): reviewed and improved billing documentation
+- Azure Bot Service (`bot-service.md`): rewritten to document Bot Framework channel pricing; removed duplicated Health Bot content
+- Azure Container Apps (`container-apps.md`): documented Dynamic Sessions on Dedicated plan edge case
+- Azure Container Instances (`container-instances.md`): added `billingConsiderations` section
+- Azure Container Registry (`container-registry.md`): reviewed and improved meter coverage
+- Azure Data Explorer (`data-explorer.md`): reviewed and improved billing documentation
+- Azure Database for MySQL (`database-for-mysql.md`): reviewed and improved meter coverage
+- Azure Database for PostgreSQL (`database-for-postgresql.md`): added v6 `skuName` trap and expanded product coverage
+- Azure Databricks (`databricks.md`): improved meter coverage and documentation
+- Azure Document Intelligence (`document-intelligence.md`): added batch meters and casing trap
+- Azure Event Hubs (`event-hubs.md`): reviewed and improved billing documentation
+- Azure ExpressRoute Gateway (`expressroute-gateway.md`): reviewed and improved meter coverage
+- Azure Front Door (`front-door.md`): added Edge Actions meters
+- Azure HDInsight (`hdinsight.md`): reviewed and improved billing documentation
+- Azure Kubernetes Service (`kubernetes-service.md`): added Anyscale Global meters trap
+- Azure Maps (`maps.md`): reviewed and improved meter coverage
+- Azure Monitor (`monitor.md`): reviewed and improved billing documentation
+- Azure NAT Gateway (`nat-gateway.md`): clarified Key Fields table
+- Azure Private Link (`private-link.md`): added Service endpoint Standard meter and `skuName` filters
+- Azure Service Bus (`service-bus.md`): added missing meters and billing notes
+- Azure SignalR Service (`signalr.md`): reviewed and improved billing documentation
+- Azure Site Recovery (`site-recovery.md`): reviewed and improved meter coverage
+- Azure SQL Database (`sql-database.md`): added Zone Redundancy, Hyperscale storage, and Serverless tier documentation
+- Azure SQL Managed Instance (`sql-managed-instance.md`): reviewed and improved billing documentation
+- Azure Stream Analytics (`stream-analytics.md`): reviewed and improved meter coverage
+- Azure Traffic Manager (`traffic-manager.md`): added inflated totals trap and Non-Azure premium endpoint note
+- Azure Virtual Desktop (`windows-virtual-desktop.md`): added Private Endpoint support and duplicate meter trap
+- Azure Virtual Machines (`virtual-machines.md`): added v7 naming pattern, v6 SKUs, and Low Priority availability documentation
+- Azure Virtual WAN (`virtual-wan.md`): split P2S meters documentation and added route maps context
+- Microsoft Defender for Cloud (`defender-for-cloud.md`): reviewed and improved billing documentation
+- Microsoft Fabric (`fabric.md`): reviewed and improved meter coverage
+
+### Fixed
+
+- Azure AI Foundry Agents (`foundry-agents.md`): corrected API filter values and added missing meters
+- Azure AI Vision (`vision.md`): added missing meters and updated traps
+- Azure App Configuration (`app-configuration.md`): added missing Replica Snapshots Overage meter
+- Azure App Service (`app-service.md`): added missing SKUs and corrected meter naming documentation
+- Azure Application Insights (`application-insights.md`): corrected API filter values for Azure Retail Prices API
+- Azure Cache for Redis (`redis-cache.md`): corrected Standard tier dual meters, added missing Isolated product, and improved RI specificity
+- Azure Cosmos DB (`cosmos-db.md`): fixed table header and clarified RI region trap
+- Azure Data Factory (`data-factory.md`): corrected RI claim, free tier meter, and added missing meters
+- Azure Data Lake Storage (`data-lake-storage.md`): corrected API filter values for Azure Retail Prices API
+- Azure Databricks (`databricks.md`): added missing meters including Global-only meters
+- Azure Functions (`functions.md`): fixed cost formula ambiguity and trap format
+- Azure HorizonDB (`horizondb.md`): added compute meters and corrected inaccurate traps
+- Azure Key Vault (`key-vault.md`): corrected `unitOfMeasure` values
+- Azure Log Analytics (`log-analytics.md`): switched to correct ingestion meter and fixed traps and `unitOfMeasure` values
+- Azure Logic Apps (`logic-apps.md`): fixed Standard tier cost formula
+- Azure Migrate (`migrate.md`): corrected DMS tier terminology
+- Azure Route Server (`route-server.md`): added 4 missing API meters
+- Azure VMware Solution (`vmware-solution.md`): corrected outdated region counts, RI terms, and SQL Server billing note
+- Azure VPN Gateway (`vpn-gateway.md`): added missing `hasFreeGrant` field
+- Azure Virtual Desktop (`windows-virtual-desktop.md`): corrected `billingNeeds` front matter
+
 ## [1.7.2] - 2026-04-30
 
 ### Fixed
