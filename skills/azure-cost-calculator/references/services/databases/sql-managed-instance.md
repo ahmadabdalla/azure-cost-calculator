@@ -11,7 +11,7 @@ privateEndpoint: true
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all vCore sizes summed in `totalMonthlyCost`. Always include `SkuName` for compute queries.
 
-> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Sum both hourly rates, then × 730.
+> **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Sum both hourly rates, then × 730. For GP Premium Series and GP Premium Series Memory Optimized, the generic `vCore ZR Zone Redundancy` skuName returns an anomalous near-zero rate; always use numbered ZR SKUs (e.g., `8 vCore Zone Redundancy`) for consumption queries.
 
 > **Trap (AHUB)**: vCore compute prices are **base rates only** (infrastructure, no license). Under PAYG, Azure bills a separate SQL License meter (Global) as an add-on. For AHUB, only the compute meter applies; the compute `retailPrice` IS the AHUB price. **Do NOT subtract.** NEVER apply a percentage discount. If in batch mode, trigger a full read of this file when AHUB is requested.
 
@@ -28,6 +28,7 @@ MeterName: vCore
 
 ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - Storage
+SkuName: General Purpose
 MeterName: General Purpose Data Stored
 Quantity: 256
 
@@ -42,12 +43,14 @@ Quantity: 256
 
 ## Meter Names
 
-| Meter                           | unitOfMeasure | Notes                              |
-| ------------------------------- | ------------- | ---------------------------------- |
-| `vCore`                         | `1 Hour`      | Compute meter for all tiers/series |
-| `Zone Redundancy vCore`         | `1 Hour`      | Zone-redundancy compute surcharge  |
-| `General Purpose Data Stored`   | `1 GB/Month`  | Storage for GP tier                |
-| `Business Critical Data Stored` | `1 GB/Month`  | Storage for BC tier                |
+| Meter                                          | unitOfMeasure | Notes                              |
+| ---------------------------------------------- | ------------- | ---------------------------------- |
+| `vCore`                                        | `1 Hour`      | Compute meter for all tiers/series |
+| `Zone Redundancy vCore`                        | `1 Hour`      | Zone-redundancy compute surcharge  |
+| `General Purpose Data Stored`                  | `1 GB/Month`  | Storage for GP tier                |
+| `General Purpose Zone Redundancy Data Stored`  | `1 GB/Month`  | ZR storage for GP (2× base rate)   |
+| `Business Critical Data Stored`                | `1 GB/Month`  | Storage for BC tier                |
+| `Business Critical Zone Redundancy Data Stored`| `1 GB/Month`  | ZR storage for BC (2× base rate)   |
 
 ## Cost Formula
 
@@ -58,12 +61,10 @@ Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
 ```
 
 ## Notes
-
-- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free.
-- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series / Memory Optimized offer newer hardware.
+- **Storage**: GP and BC storage billed separately per-GB. For BC, swap productName to `...Business Critical - Storage` and meterName to `Business Critical Data Stored`. PITR backup equal to max storage is free; excess uses `SQL Managed Instance PITR Backup Storage`. LTR backup uses `SQL Managed Instance - LTR Backup Storage` (LRS/ZRS/RA-GRS/RA-GZRS). GP also has `Additional IOPS` meter for provisioned IOPS beyond baseline.
+- **Tiers & Hardware**: GP/BC 4–80 vCores. BC includes In-Memory OLTP. Gen5 default; Premium Series / Memory Optimized offer newer hardware. Gen4 exists in API but is deprecated.
 
 ## Reserved Instance Pricing
-
 ### RI compute (swap productName for BC; omit SkuName; unitPrice is per-vCore)
 
 ServiceName: SQL Managed Instance
@@ -71,7 +72,7 @@ ProductName: SQL Managed Instance General Purpose - Compute Gen5
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI skuName)**: RI `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero results. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
+> **Trap (RI skuName)**: RI uses `skuName='vCore'` (no count prefix). `-SkuName '8 vCore'` returns zero. Calculate: `unitPrice × vCoreCount ÷ 12` (1Y) or `÷ 36` (3Y).
 
 ## Azure Hybrid Benefit
 
@@ -81,7 +82,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge; Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` when querying compute for this calculation; returns a per-vCore rate, same as RI pattern. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract the license rate from compute. NEVER apply a percentage discount.
+The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge; Azure bills both under PAYG, only compute under AHUB. Omit `SkuName`; returns per-vCore rate. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract. NEVER apply a percentage discount.
 
 ## Product Names
 

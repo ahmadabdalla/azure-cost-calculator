@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:databases/sql-managed-instance/gp-gen5-8vcore
+name: SQL Managed Instance - GP Gen5 8 vCore with Storage
+description: >
+  Tests cost estimation for SQL Managed Instance General Purpose tier with
+  Gen5 hardware at 8 vCores and 256 GB storage. Validates that the agent
+  correctly separates compute and storage billing components and uses the
+  vCore hourly rate × 730 formula.
+tags:
+  - happy-path
+  - single-service
+  - databases
+  - service:sql-managed-instance
+inputs:
+  prompt: "How much would an Azure SQL Managed Instance cost per month in East US with General Purpose tier, Gen5 hardware, 8 vCores, and 256 GB storage?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "SQL Managed Instance|SQL MI"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: vcore-count-acknowledged
+    config:
+      contains:
+        - "8"
+    weight: 0.5
+  - type: text
+    name: storage-acknowledged
+    config:
+      contains:
+        - "256"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
