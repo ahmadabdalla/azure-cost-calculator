@@ -73,7 +73,7 @@ Total = Ingestion + Retention (+ Commitment Tier if applicable, replaces Ingesti
 - Non-billable tables (AzureActivity, Heartbeat, Usage, Operation) have zero ingestion and retention cost; deduct from volume estimates
 - Interactive retention maximum: 730 days (2 years); long-term retention (archive): up to 12 years via `Data Archive` meter under Azure Monitor
 - Application Insights data flows into Log Analytics workspace when using workspace-based Application Insights
-- Sentinel-enabled workspaces: all ingestion billed via Sentinel meters; do NOT add LA ingestion; only LA retention meters apply beyond 90 days (see `security/sentinel.md`)
+- Sentinel simplified pricing workspaces: all ingestion billed via Sentinel meters; do NOT add LA ingestion; only LA retention meters apply beyond 90 days (see `security/sentinel.md`)
 - Commitment tiers (100–50000 GB/day) save ~15–36% vs PAYG; overage billed at discounted effective rate
 - For Defender for Cloud free data grants, see `security/defender-for-cloud.md`
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
