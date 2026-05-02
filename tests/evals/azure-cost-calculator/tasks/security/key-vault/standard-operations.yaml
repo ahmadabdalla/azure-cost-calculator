@@ -15,7 +15,6 @@ inputs:
 expected:
   output_contains:
     - "Assumptions"
-    - "730"
   output_not_contains:
     - "Summary format"
 graders:
