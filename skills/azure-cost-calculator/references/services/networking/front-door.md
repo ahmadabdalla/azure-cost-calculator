@@ -87,7 +87,7 @@ Monthly = baseFee_retailPrice × profileCount
         + Σ(requests_tier_retailPrice × requests_in_tier / 10,000)
 Edge Actions (if used): edgeBase_retailPrice + invocations_retailPrice × (invocations / 1M) + execTime_retailPrice × totalSeconds
 Classic WAF: policy_retailPrice × policyCount + rule_retailPrice × customRuleCount
-        + ruleset_retailPrice × rulesetCount + wafRequest_retailPrice × (wafRequests / 1M)
+        + ruleset_retailPrice × rulesetCount + wafRequest_retailPrice × (wafRequests / 1M)  # per ruleset type (DRS, bot)
 Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 ```
 
