@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Databricks
 
-> **Trap (inflated totals)**: An unfiltered `ServiceName 'Azure Databricks'` query returns ~41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `SkuName` for a specific workload type.
+> **Trap (inflated totals)**: An unfiltered regional `ServiceName 'Azure Databricks'` query returns 41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `ProductName`, `SkuName`, and `MeterName`.
 
 > **Trap (VM compute split)**: Classic workloads (`productName: Azure Databricks`) charge DBU platform fees only — estimate VM cost separately via Virtual Machines. Serverless workloads (`productName: Azure Databricks Regional`) include compute in the DBU rate.
 
@@ -21,6 +21,7 @@ privateEndpoint: true
 ServiceName: Azure Databricks
 ProductName: Azure Databricks
 SkuName: Premium Jobs Compute
+MeterName: Premium Jobs Compute DBU
 Quantity: 10
 
 ### Premium All-purpose Compute: interactive clusters
@@ -28,12 +29,14 @@ Quantity: 10
 ServiceName: Azure Databricks
 ProductName: Azure Databricks
 SkuName: Premium All-purpose Compute
+MeterName: Premium All-purpose Compute DBU
 
 ### Premium Serverless SQL: serverless SQL warehouse
 
 ServiceName: Azure Databricks
 ProductName: Azure Databricks Regional
 SkuName: Premium Serverless SQL
+MeterName: Premium Serverless SQL DBU
 
 ## Key Fields
 
@@ -51,6 +54,8 @@ SkuName: Premium Serverless SQL
 | `Premium All-purpose Compute DBU`            | `Premium All-purpose Compute`            | `1 Hour`      | Interactive clusters (Premium)    |
 | `Premium Jobs Compute DBU`                   | `Premium Jobs Compute`                   | `1 Hour`      | Automated job clusters (Premium)  |
 | `Premium Jobs Light Compute DBU`             | `Premium Jobs Light Compute`             | `1 Hour`      | Light jobs (Premium)              |
+| `Premium Anthropic Serverless Inference DBU` | `Premium Anthropic Serverless Inference` | `1 Hour`      | Global serverless inference       |
+| `Premium Serverless GPU Compute Capacity Block DBU` | `Premium Serverless GPU Compute Capacity Block` | `1 Hour` | Global GPU capacity block         |
 | `Standard All-purpose Compute DBU`           | `Standard All-purpose Compute`           | `1 Hour`      | Interactive clusters (Standard)   |
 | `Standard Jobs Compute DBU`                  | `Standard Jobs Compute`                  | `1 Hour`      | Automated job clusters (Standard) |
 | `Premium Serverless SQL DBU`                 | `Premium Serverless SQL`                 | `1 Hour`      | Serverless SQL warehouse          |
@@ -62,6 +67,7 @@ SkuName: Premium Serverless SQL
 | `Premium Serverless Realtime Inferencing DBU`| `Premium Serverless Realtime Inferencing`| `1 Hour`      | Model serving endpoints (+ per-launch fee) |
 | `Premium Enhanced Security and Compliance DBU`| `Premium Enhanced Security and Compliance`| `1 Hour`     | Add-on surcharge per DBU-hour     |
 | `Premium Databricks Storage Unit DSU`        | `Premium Databricks Storage Unit`        | `1`           | Per-unit storage (DSU, not DBU)   |
+| `Premium - Free Trial POC DBU`               | `Premium - Free Trial POC`               | `1 Hour`      | Global zero-price trial meter     |
 
 ## Cost Formula
 
@@ -69,6 +75,8 @@ SkuName: Premium Serverless SQL
 Classic Monthly    = (dbu_retailPrice × 730 × dbuCount) + (vm_retailPrice × 730 × nodeCount)
 Serverless Monthly = serverless_dbu_retailPrice × 730 × dbuCount   (VM included in DBU rate)
 DSU Monthly        = dsu_retailPrice × dsuCount                    (billed per unit, not time-based)
+Clean Rooms Monthly = collaborator_retailPrice × collaborators × 30
+Launch Charge      = launch_retailPrice × launches
 ```
 
 ## Notes
@@ -77,9 +85,9 @@ DSU Monthly        = dsu_retailPrice × dsuCount                    (billed per 
 - **Photon variants**: Photon-accelerated SKUs (e.g., `Premium All-Purpose Photon`) have the same DBU rate but process data faster, reducing total DBU-hours consumed
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
 - **Enhanced Security and Compliance**: Optional add-on surcharge billed per DBU-hour on top of base workload rate; query separately with `SkuName: Premium Enhanced Security and Compliance`
-- **14-day free trial**: Free Trial SKUs (`Premium - Free Trial *`) return zero cost; ignore these for cost estimation
+- **Free trial / POC**: Free Trial and POC SKUs (`Premium - Free Trial *`, `POC Non-Billable *`) return zero cost; ignore these for production cost estimation
 - **SQL warehouses**: `Premium SQL Analytics` / `Standard SQL Analytics` (classic, `Azure Databricks`); `Premium SQL Compute Pro` (Pro) and `Premium Serverless SQL` (serverless) both under `Azure Databricks Regional` — compute included in DBU rate
-- **DBCU pre-purchase**: Reserved Instance queries return Databricks Commit Unit blocks (e.g., `SkuName: 100,000 DBCUs`); Global region, 1-Year and 3-Year terms; monthly cost = `unitPrice ÷ 12` or `unitPrice ÷ 36`
+- **DBCU pre-purchase**: Reserved Instance queries require `Region: Global` and return Databricks Commit Unit blocks (e.g., `SkuName: 100,000 DBCUs`); monthly cost = `unitPrice ÷ 12` or `unitPrice ÷ 36`
 - **Clean Rooms**: `Premium Clean Rooms Collaborator` billed per collaborator per day (`1/Day`), not per DBU-hour
 - **Model serving**: Realtime inferencing incurs both an hourly DBU rate and a per-launch charge (`Launch Charge Serverless Realtime Inferencing`, `unitOfMeasure: 1`)
 - **Capacity per DBU**: 1 DBU maps to a fractional VM; actual throughput depends on node VM size, workload type, and Photon enablement; Databricks auto-scales clusters within configured min/max node bounds
