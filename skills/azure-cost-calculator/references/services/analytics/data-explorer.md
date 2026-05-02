@@ -71,4 +71,6 @@ SkuName: Standard
 PriceType: Reservation
 Region: westus2
 
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for RI; it multiplies the term price by 730. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). This RI covers the markup only; reserve VM compute separately under Virtual Machines for full savings.
+
 > **Trap (RI region)**: RI pricing only appears in `westus2` in the API, but the reservation applies globally to all clusters per Microsoft documentation.

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/data-explorer/standard-cluster-markup
+name: Happy Path - Azure Data Explorer Standard Cluster Markup
+description: >
+  Tests cost estimation for Azure Data Explorer engine cluster markup.
+  ADX is a markup-only service where the bulk of cost is VM compute billed
+  separately. Validates that the agent queries the markup meter correctly,
+  scales by total vCores, and acknowledges the Virtual Machines billing dependency.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:data-explorer
+inputs:
+  prompt: "What is the monthly cost for Azure Data Explorer engine markup on a 3-node cluster with 8 vCores per node in East US?"
+expected:
+  output_contains:
+    - "Azure Data Explorer"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Data Explorer|ADX|Kusto"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: vcores-acknowledged
+    config:
+      contains:
+        - "24"
+    weight: 0.5
+  - type: text
+    name: vm-dependency-acknowledged
+    config:
+      regex_match:
+        - "Virtual Machines|VM|compute"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
