@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/stream-analytics/standard-v2-streaming-units
+name: Stream Analytics - Standard V2 Streaming Units
+description: >
+  Tests cost estimation for Azure Stream Analytics Standard V2 tier with
+  multiple streaming units. Validates that the agent handles tiered pricing
+  (3 bands based on SU-hours) and scales by streaming unit count.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:stream-analytics
+inputs:
+  prompt: "How much would 3 Azure Stream Analytics Standard V2 streaming units cost per month in East US?"
+expected:
+  output_contains:
+    - "Stream Analytics"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Stream Analytics|ASA"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: streaming-units-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
