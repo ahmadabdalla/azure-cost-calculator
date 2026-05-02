@@ -58,7 +58,8 @@ InstanceCount: 3
 | `Standard Hub Data Processed` | `Standard Hub` | 1 GB | Traffic through hub router |
 | `VPN S2S Scale Unit` | matching | 1 Hour | 500 Mbps per unit |
 | `VPN S2S Connection Unit` | matching | 1 Hour | Per branch-site tunnel |
-| `VPN P2S Scale Unit` / `VPN P2S Connection Unit` | matching | 1 Hour | P2S gateway + per-client connection |
+| `VPN P2S Scale Unit` | matching | 1 Hour | P2S gateway, 500 Mbps per unit |
+| `VPN P2S Connection Unit` | matching | 1 Hour | Per P2S client connection |
 | `VPN Policy Unit` | matching | 1 Hour | Per custom IPsec/IKE policy |
 | `ExpressRoute Scale Unit` | matching | 1 Hour | Units 1–5, 2 Gbps each |
 | `ExpressRoute Additional Scale Unit` | matching | 1 Hour | Units 6–10, lower rate |
@@ -69,7 +70,7 @@ InstanceCount: 3
 | `App Gateway Unit` | matching | 1 Hour | App Gateway deployed in hub |
 | `Firewall NVA Data Processing Data Processed` | `Firewall NVA Data Processing` | 1 GB | NVA load-balancer data |
 
-> **Note**: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when 3rd-party Firewall Manager policies are configured.
+> **Note**: `Standard Hub with Firewall policies for Third party security provider(s) Unit` (1 Hour) and `...Data Processed` (1 GB) replace the standard hub meters when 3rd-party Firewall Manager policies or route maps are configured.
 
 ## Cost Formula
 
