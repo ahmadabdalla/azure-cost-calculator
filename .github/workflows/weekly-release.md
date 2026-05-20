@@ -18,6 +18,20 @@ safe-outputs:
     title-prefix: "version: "
     labels: [release]
     draft: false
+    # The release workflow is explicitly designed to bump the version in
+    # `.claude-plugin/plugin.json` and append a new section to `CHANGELOG.md`.
+    # Both files are protected by gh-aw's default protected-files set
+    # (CHANGELOG.md by name; `.claude-plugin/` via the top-level dot-folder
+    # rule), so we exclude them from the protected set. All other protected
+    # files (package manifests, AGENTS.md, .github/, etc.) remain blocked,
+    # and unrecognised excluded entries fall back to creating a review issue
+    # rather than failing the run outright.
+    # Reference: https://github.github.io/gh-aw/reference/safe-outputs-pull-requests/#protected-files
+    protected-files:
+      policy: fallback-to-issue
+      exclude:
+        - CHANGELOG.md
+        - .claude-plugin/
 concurrency:
   group: weekly-release
   cancel-in-progress: true
