@@ -70,10 +70,10 @@ Quantity: 100
 | `PB vCPU Surcharge`          | `PB`                      | `1 Hour`      | ML service vCPU surcharge       |
 | `Evaluation Input Tokens`    | `Evaluation Input Tokens` | `1K`          | Safety evaluation input tokens  |
 | `Evaluation Ouput Tokens`    | `Evaluation Ouput Tokens` | `1K`          | Safety evaluation output tokens |
-| `Llama-4-Scout-17B-16E-In Tokens`  | `Llama-4-Scout-17B-16E-In Tokens`  | `1K` | Serverless model input tokens   |
-| `Llama-4-Scout-17B-16E-Out Tokens` | `Llama-4-Scout-17B-16E-Out Tokens` | `1K` | Serverless model output tokens  |
-| `Llama-4-Mvrck-17B-128E-FP8-In Tokens`  | `Llama-4-Mvrck-17B-128E-FP8-In Tokens`  | `1K` | Serverless model input tokens   |
-| `Llama-4-Mvrck-17B-128E-FP8-Out Tokens` | `Llama-4-Mvrck-17B-128E-FP8-Out Tokens` | `1K` | Serverless model output tokens  |
+| `Llama-4-Scout-17B-16E-In Tokens`  | `Llama-4-Scout-17B-16E-In`  | `1K` | Serverless model input tokens   |
+| `Llama-4-Scout-17B-16E-Out Tokens` | `Llama-4-Scout-17B-16E-Out` | `1K` | Serverless model output tokens  |
+| `Llama-4-Mvrck-17B-128E-FP8-In Tokens`  | `Llama-4-Mvrck-17B-128E-FP8-In`  | `1K` | Serverless model input tokens   |
+| `Llama-4-Mvrck-17B-128E-FP8-Out Tokens` | `Llama-4-Mvrck-17B-128E-FP8-Out` | `1K` | Serverless model output tokens  |
 | `S1 Tier`                    | `S1`                      | `1/Day`       | Model Management daily fee      |
 | `S2 Tier`                    | `S2`                      | `1/Day`       | Model Management daily fee      |
 | `S3 Tier`                    | `S3`                      | `1/Day`       | Model Management daily fee      |
@@ -96,5 +96,5 @@ Training Compute         = billed under Virtual Machines (see compute/virtual-ma
 
 - Managed online endpoints (`Managed Model Hosting Service`) are the primary billable meters; serverless token-billed models (e.g., Llama-4) also bill under this product with `1K` token UoM
 - Model Management (`Machine Learning Model Management`) provides S1/S2/S3 daily-billed tiers
-- `Machine Learning Hardware Accelerated Models / Standard vCPU` and Enterprise Inferencing (`Azure Machine Learning Enterprise *`) are legacy meters (zero cost); include only if explicitly requested
+- `Machine Learning Hardware Accelerated Models` is a legacy product with non-zero pricing; Enterprise Inferencing (`Azure Machine Learning Enterprise *`) meters are legacy and zero cost
 - Storage for ML workspaces is billed under Azure Storage (Blob/File) separately
