@@ -47,6 +47,12 @@ SkuName: ASIP
 | `productName` | Plan tier + OS variant | See Product Names table                      |
 | `skuName`     | Plan tier + size or fee | `B1`, `S1`, `P1 v3`, `P1v4`, `I1`, `I1 v2`, `Stamp`, `ASIP` |
 
+## Meter Names
+
+| Meter | unitOfMeasure | Notes |
+| --- | --- | --- |
+| _Varies by tier_ | `1 Hour` | Std/Pv2/Pv3 append ` App` (`P1 v3 App`); Basic Linux/Pv4/ASIP/IDH use bare SKU (`B1`, `P1v4`, `ASIP`) |
+
 ## Cost Formula
 
 ```
@@ -63,9 +69,6 @@ Isolated v1/v2 = (platformFee_retailPrice × 730) + (instance_retailPrice × 730
 - **Logic Apps Standard** creates WS-type plans but bills through `Logic Apps` meters, not App Service
 - Private endpoints require Basic tier or higher
 - RIs are available for Premium v3, Premium v4, and Isolated v2 compute. For Isolated v1, only the `Stamp Fee` reservation is available (3-Year); Isolated v1 compute SKUs (`I1`, `I2`, `I3`) do not return reservation rows. RIs are not available for Basic, Standard, or Premium v2
-- Meter naming varies: Linux Basic uses `B1`/`B2`/`B3`; Premium v4 uses `P0v4`/`P1v4`; ASIP/IDH meters use bare names; other tiers append `App` (e.g., `P0v3 App`, `P1 v3 App`)
-- Memory-optimized variants (`P1mv3`, `P1mv4`, `I1mv2`) offer higher memory-to-CPU ratios at a premium
-- Isolated v2 scales up to `I6 v2` and includes `IDH v2` (Dedicated Host, Windows-only); Isolated v1 includes `I12`/`I13`/`I14` large SKUs and a `Front End` per-ASE meter
 
 ## Product Names
 
@@ -85,8 +88,6 @@ Isolated v1/v2 = (platformFee_retailPrice × 730) + (instance_retailPrice × 730
 | ------- | ----- | -------- | ----------- |
 | `B1`    | 1     | 1.75     | Basic       |
 | `S1`    | 1     | 1.75     | Standard    |
-| `P1 v2` | 1     | 3.5      | Premium v2  |
-| `P0v3`  | 1     | 4        | Premium v3  |
 | `P1 v3` | 2     | 8        | Premium v3  |
 | `P1v4`  | 2     | 8        | Premium v4  |
 | `I1 v2` | 2     | 8        | Isolated v2 |
