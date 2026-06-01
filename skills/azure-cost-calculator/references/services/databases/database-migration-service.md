@@ -76,7 +76,7 @@ Total = sum of applicable tier costs
 - Capacity: 4 vCores supports ~2 parallel table migrations; scale up for larger databases
 - Storage (General Purpose Storage) is always free (zero cost)
 - Often deployed via Azure Migrate hub (see migrate.md for migration project costing)
-- Classic DMS is retiring; new experience uses Azure portal or Azure SQL Migration extension
+- Classic DMS retired March 2026; new experience uses Azure portal or Azure SQL Migration extension
 
 ## Product Names
 
