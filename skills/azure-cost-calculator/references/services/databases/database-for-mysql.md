@@ -73,7 +73,7 @@ ProductName: Azure Database for MySQL Flexible Server General Purpose Ddsv5 Seri
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI exclusions)**: Burstable and MO Edsv5 do NOT support RI. Only GP and MO per-vCore series (v5/v6) are eligible. Monthly cost: `unitPrice ÷ 12 × vCoreCount` (1-Year) or `unitPrice ÷ 36 × vCoreCount` (3-Year).
+> **Trap (RI exclusions)**: Burstable and MO Edsv5 do NOT support RI. Only GP, MO per-vCore (v5/v6), and Confidential series are eligible. Monthly cost: `unitPrice ÷ 12 × vCoreCount` (1-Year) or `unitPrice ÷ 36 × vCoreCount` (3-Year).
 
 ## Product Names
 
