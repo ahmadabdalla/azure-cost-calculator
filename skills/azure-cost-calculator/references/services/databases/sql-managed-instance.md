@@ -53,11 +53,11 @@ Quantity: 256
 | `Business Critical Zone Redundancy Data Stored`| `1 GB/Month`  | ZR storage for BC (2× base rate)   |
 
 ## Cost Formula
-
 ```
-Monthly Compute = retailPrice × 730 | Monthly Storage = storage_retailPrice × sizeInGB
-Total = Monthly Compute + Monthly Storage
-Zone-Redundant Compute = (base_retailPrice + zr_retailPrice) × 730
+compute_retailPrice = SKU-total hourly (queried with SkuName) | sql_license_retailPrice = per-vCore hourly (queried without SkuName)
+PAYG Monthly = (compute_retailPrice + sql_license_retailPrice × vCoreCount) × 730 + storage_retailPrice × sizeInGB
+AHUB Monthly = compute_retailPrice × 730 + storage_retailPrice × sizeInGB
+Zone-Redundant = substitute (compute_retailPrice + zr_retailPrice) for compute_retailPrice above
 ```
 
 ## Notes
@@ -82,7 +82,7 @@ ServiceName: SQL Managed Instance
 ProductName: SQL Managed Instance General Purpose - SQL License
 Region: Global
 
-The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge; Azure bills both under PAYG, only compute under AHUB. Omit `SkuName`; returns per-vCore rate. PAYG hourly per-vCore = compute `retailPrice` + `sql_license_retailPrice`. AHUB hourly per-vCore = compute `retailPrice` only. Monthly = hourly × vCoreCount × 730. NEVER subtract. NEVER apply a percentage discount.
+The compute meter returns the **base rate** (AHUB price). The SQL License meter is an **additive** PAYG charge; Azure bills both under PAYG, only compute under AHUB. Omit `SkuName` for the license query; it returns a per-vCore hourly rate. PAYG Monthly = `(compute_retailPrice + sql_license_retailPrice × vCoreCount) × 730 + storage`. AHUB Monthly = `compute_retailPrice × 730 + storage`. NEVER subtract. NEVER apply a percentage discount.
 
 ## Product Names
 
