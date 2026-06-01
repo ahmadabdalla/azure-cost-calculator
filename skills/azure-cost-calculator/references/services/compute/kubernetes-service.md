@@ -92,5 +92,5 @@ Automatic: Monthly = (controlPlane_retailPrice × 730 × clusterCount) + Σ(work
 - Automatic control plane rate is flat across all regions; per-vCPU rates vary ~2.4× by region
 - Standard Load Balancer auto-provisioned for outbound traffic; billed via `billingNeeds`
 - Private endpoints require Standard pricing tier (not available on Free tier)
-- NAT Gateway, Azure Monitor, and data transfer may also apply as separate services
+- Public IP addresses for outbound/ingress (see `networking/ip-addresses.md`), NAT Gateway, Azure Monitor, and data transfer may also apply as separate services
 - Anyscale (Ray on AKS) meters are Global-only under `productName: Azure Kubernetes Service` with per-resource-hour billing (GPU/Compute/Memory); query with region `Global` and the specific `Anyscale` skuName
