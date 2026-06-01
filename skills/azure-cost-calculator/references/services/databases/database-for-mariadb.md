@@ -10,7 +10,7 @@ privateEndpoint: true
 
 > **Trap**: Unfiltered queries return ~30 meters across Basic, General Purpose, and Memory Optimized tiers plus multiple storage products. Always filter by `ProductName` to target one tier and generation.
 
-> **Note**: This service is announced for retirement (September 2025). Pricing data remains active in the API. Microsoft recommends migrating to Azure Database for MySQL.
+> **Warning**: Azure Database for MariaDB is **retired** (end-of-life September 2025). Do not recommend for new workloads. Use this reference only for legacy existing-resource estimates where Retail API meters are still returned. Direct new or migration estimates to Azure Database for MySQL (`database-for-mysql.md`).
 
 ## Query Pattern
 
@@ -67,7 +67,7 @@ Total = Compute + Storage + Backup (excess)
 
 ## Notes
 
-- **Retiring**: Service end-of-life September 2025; migrate to Azure Database for MySQL
+- **Retired**: Service reached end-of-life September 2025; migrate to Azure Database for MySQL (`database-for-mysql.md`)
 - Basic: dev/test, 1–2 vCores only, no Private Endpoint support
 - GP: production workloads, Gen5 up to 64 vCores
 - MO: high-memory workloads, Gen5 up to 32 vCores
