@@ -67,6 +67,9 @@ MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfM
 | `S0 Query Pages`               | `S0`    | `1K`          | Premium query, most expensive PAYG meter  |
 | `S0 pages for query fields`    | `S0`    | `1K`          | Query field extraction, note lowercase    |
 | `S0 pages for doc classifier`  | `S0`    | `1K`          | Document classification, note lowercase   |
+| `S0 Batch Add-On Pages`        | `S0`    | `1K`          | Batch add-on (High Res, Font, Formula, Barcode) |
+| `S0 Batch Custom Generative Pages` | `S0` | `1K`       | Batch custom generative extraction          |
+| `S0 Batch Pre-built Pages`     | `S0`    | `1K`          | Batch pre-built (Invoice, Receipt, ID, W-2) |
 | `S0 Batch Layout Pages`        | `S0`    | `1K`          | Batch-only layout meter (no real-time equivalent named "Layout") |
 | `S0 Batch Read Pages`          | `S0`    | `1K`          | Batch OCR, **tiered** (2 rows) like real-time |
 | `S0 Batch Document Classifier Pages` | `S0` | `1K`     | Batch doc classification (note: title case, unlike real-time) |
@@ -94,4 +97,4 @@ Free grant:  Billable = max(0, pages − 500) then apply PAYG formula
 - **Legacy**: `Form Recognizer` productName has higher Custom pricing; always use `Azure Document Intelligence` for current rates
 - **Scope**: For broader Foundry Tools coverage (Language, Vision, Speech, Translator), see `ai-ml/ai-services.md`
 - **Private endpoints**: Supported via Azure AI Services multi-service resource (see `networking/private-link.md`)
-- **Batch API**: Same prices as real-time but names differ — `S0 Batch Custom Extraction Pages` (not `Batch Custom Pages`), `S0 Batch Layout Pages` (Batch-only). Casing flips: batch uses title case (`S0 Batch Document Classifier Pages`, `S0 Batch Pages for Query Fields`) where real-time uses lowercase
+- **Batch API**: Same prices as real-time but names differ — `S0 Batch Custom Extraction Pages` (not `Batch Custom Pages`), `S0 Batch Layout Pages` (Batch-only). Casing flips: batch uses title case (`S0 Batch Document Classifier Pages`, `S0 Batch Pages for Query Fields`) where real-time uses lowercase. Full batch parity: Add-On, Custom Generative, and Pre-built each have batch equivalents
