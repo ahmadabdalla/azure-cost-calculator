@@ -46,6 +46,7 @@ Monthly = retailPrice × userMessageCount
 
 ## Notes
 
-- Single product, single SKU, single meter: pure pay-per-user-message consumption. No tiers, no free grant, no reserved instances
+- Single product/SKU/meter in the Retail Prices API (`User Messages`): per-message consumption only, no tiers, no free grant, no reserved instances. This meter covers Discovery runtime (data-plane) usage only
+- **Billing boundary**: Discovery uses a two-component model. The `User Messages` meter is the only one in the pricing API, but the underlying Azure compute and storage resources deployed by workspaces/projects are billed separately under their own services. A total estimate must add those resource costs
 - Priced in 12 regions only: `southcentralus`, `northeurope`, `southeastasia`, `westus2`, `uksouth`, `eastus`, `swedencentral`, `eastus2`, `australiaeast`, `westeurope`, `westus3`, `japaneast`. Regional rate variance applies (per-message rate differs by region)
 - `unitOfMeasure` is `1`; the script's `MonthlyCost` reflects one message — multiply `retailPrice` by the actual message count
