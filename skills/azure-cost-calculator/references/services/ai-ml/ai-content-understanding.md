@@ -22,8 +22,8 @@ privateEndpoint: true
 
 ServiceName: Foundry Tools <!-- cross-service -->
 ProductName: Azure Content Understanding
-SkuName: Standard Doc Content Extraction
-MeterName: Standard Doc Content Extraction Pages
+SkuName: Doc Content Extraction Standard
+MeterName: Doc Content Extraction Standard Pages
 Quantity: 10 # 10 × 1K = 10,000 pages
 
 ### Audio content extraction: 50 hours
@@ -55,16 +55,16 @@ Quantity: 1000 # 1000 × 1K = 1M tokens
 | ------------- | ------------------------------------ | ------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Tools`               | `Foundry Tools`                                                     |
 | `productName` | Always `Azure Content Understanding` | `Azure Content Understanding`                                       |
-| `skuName`     | Modality + extraction tier           | `Standard Doc Content Extraction`, `Audio Content Extraction`       |
-| `meterName`   | SKU name + unit suffix               | `Standard Doc Content Extraction Pages`, `Audio Content Extraction` |
+| `skuName`     | Modality + extraction tier           | `Doc Content Extraction Standard`, `Audio Content Extraction`       |
+| `meterName`   | SKU name + unit suffix               | `Doc Content Extraction Standard Pages`, `Audio Content Extraction` |
 
 ## Meter Names
 
 | Meter | skuName | unitOfMeasure | Notes |
 | ----- | ------- | ------------- | ----- |
-| `Min. Doc Content Extraction Pages` | `Min. Doc Content Extraction` | `1K` | Minimal doc tier; 16 regions |
-| `Basic Doc Content Extraction Pages` | `Basic Doc Content Extraction` | `1K` | Basic doc extraction; 15 regions |
-| `Standard Doc Content Extraction Pages` | `Standard Doc Content Extraction` | `1K` | Standard doc extraction; 15 regions |
+| `Doc Content Extraction Min. Pages` | `Doc Content Extraction Min.` | `1K` | Minimal doc tier; 16 regions |
+| `Doc Content Extraction Basic Pages` | `Doc Content Extraction Basic` | `1K` | Basic doc extraction; 15 regions |
+| `Doc Content Extraction Standard Pages` | `Doc Content Extraction Standard` | `1K` | Standard doc extraction; 15 regions |
 | `Audio Content Extraction` | `Audio Content Extraction` | `1 Hour` | Audio processing; 15 regions |
 | `Video Content Extraction` | `Video Content Extraction` | `1 Hour` | Video processing; 15 regions |
 | `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Token-based contextualization; 15 regions |
