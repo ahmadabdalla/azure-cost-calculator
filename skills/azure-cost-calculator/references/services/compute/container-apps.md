@@ -18,9 +18,10 @@ privateEndpoint: true
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
 SkuName: {Plan}
+InstanceCount: {N}
 
 - **Consumption**: SkuName `Standard` — per-second; use `UnitPrice` directly
-- **Dedicated**: SkuName `Dedicated` — per-hour; add `InstanceCount` for profile instances
+- **Dedicated**: SkuName `Dedicated` — per-hour; `InstanceCount` = workload profile instances
 - **Hybrid**: SkuName `Hybrid` — per-hour; Arc-enabled environments
 - **Dynamic Sessions**: SkuName `Dynamic Sessions` — per-hour
 
