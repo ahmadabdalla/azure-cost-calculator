@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure Database for MySQL Flexible Server
 
-> **Trap**: Unfiltered queries return ~80+ meters across deprecated Single Server, all Flexible Server series, and storage. Always filter by `ProductName` to target one series.
+> **Trap**: Unfiltered queries return ~80+ meters including retired Single Server (still in API). Always filter by `ProductName` containing "Flexible Server" unless pricing historical Single Server workloads.
 >
 > **Trap (dual vCore meters)**: Per-vCore series (v5/v6) return two identical meters: `SkuName: 'vCore'` and `SkuName: '1 vCore'`. Use `SkuName: vCore` with `InstanceCount` for vCore count.
 
@@ -30,20 +30,6 @@ ProductName: Azure Database for MySQL Flexible Server Storage
 SkuName: Storage
 MeterName: Storage Data Stored
 Quantity: 100 # storage size in GB
-
-### Compute: Burstable (B4MS)
-
-ServiceName: Azure Database for MySQL
-ProductName: Azure Database for MySQL Flexible Server Burstable BS Series Compute
-SkuName: Standard_B4ms
-MeterName: B4MS
-
-### Compute: Memory Optimized (Edsv5, 8 vCores)
-
-ServiceName: Azure Database for MySQL
-ProductName: Azure Database for MySQL Flexible Server Memory Optimized Edsv5 Series Compute
-SkuName: Standard_E8d_v5
-MeterName: 8 vCore
 
 ## Key Fields
 
@@ -76,7 +62,18 @@ Storage = storage_retailPrice × sizeGB; Total = Compute + Storage
 - Burstable: dev/test, does NOT support RI, max 20 vCores
 - GP/MO per-vCore + Confidential: support RI; v6 has disk-attached (Ddsv6/Edsv6) and non-disk (Dsv6/Esv6) variants
 - MO Edsv5: per-size SKU pricing (Standard_E2d_v5 through Standard_E104id_v5), no RI
-- HA doubles compute cost; backup equal to provisioned storage is free; Single Server deprecated
+- HA doubles compute cost; backup equal to provisioned storage is free; Single Server is retired (meters remain in API)
+
+## Reserved Instance Pricing
+
+### RI for GP/MO Flexible Server (Ddsv5 example, per-vCore)
+
+ServiceName: Azure Database for MySQL
+ProductName: Azure Database for MySQL Flexible Server General Purpose Ddsv5 Series Compute
+MeterName: vCore
+PriceType: Reservation
+
+> **Trap (RI exclusions)**: Burstable and MO Edsv5 do NOT support RI. Only GP and MO per-vCore series (v5/v6) are eligible. Monthly cost: `unitPrice ÷ 12 × vCoreCount` (1-Year) or `unitPrice ÷ 36 × vCoreCount` (3-Year).
 
 ## Product Names
 
