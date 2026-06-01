@@ -65,7 +65,7 @@ Total = Compute + Storage + Backup
 
 ## Notes
 
-- HorizonDB is in preview; pricing may change before GA
+- Azure HorizonDB is in **limited preview** (early access); availability is constrained by region and enrollment. Confirm the user has access and verify the target region supports HorizonDB before estimating. Retail Prices API meters may change or be removed before GA.
 - Storage productName uses lowercase 's' (`Azure HorizonDB storage`); use exact casing
 - Shares `serviceName` with PostgreSQL Flexible Server (see `databases/database-for-postgresql.md`)
 - Storage and vCore count are never-assume parameters: always ask the user
