@@ -66,6 +66,14 @@ Monthly Storage    = storage_retailPrice × sizeInGB
 Total              = Throughput + Storage
 ```
 
+Free-tier confirmed (user explicitly states free-tier-eligible account):
+
+```
+Monthly Throughput = retailPrice_per_100RUs × max(0, provisionedRUs - 1000) / 100 × 730 hours
+Monthly Storage    = storage_retailPrice × max(0, sizeInGB - 25)
+Total              = Throughput + Storage
+```
+
 ## Notes
 
 - Free tier available (1000 RU/s + 25 GB free, one account per subscription)
