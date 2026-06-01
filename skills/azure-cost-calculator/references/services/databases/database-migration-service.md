@@ -12,7 +12,7 @@ hasFreeGrant: true
 
 > **Trap (Free vs Paid meters)**: Only the `1 vCore vCore - Free` meter (Basic Compute) and General Purpose Storage return zero cost. All other Basic and General Purpose meters (`1 vCore`, `2 vCore`, `4 vCore`, `8 vCore`, `16 vCore`) have nonzero hourly rates. Do not assume Basic/General Purpose tiers are free — query the API and use the returned `retailPrice`.
 
-> **Note**: Premium tier includes a 183-day free period per instance. Ask the user whether instances are still within the free period or provide the instance age to apply the grant deduction.
+> **Note**: Premium 4-vCore includes a 183-day free period per instance. Ask the user whether instances are still within the free period or provide the instance age to apply the grant deduction.
 
 ## Query Pattern
 
@@ -54,15 +54,14 @@ InstanceCount: 1
 | `4 vCore`              | `4 vCore`  | `...Premium Compute`         | `1 Hour`      | Paid (online)    |
 | `8 vCore`              | `8 vCore`  | `...Premium Compute`         | `1 Hour`      | Paid (online)    |
 | `16 vCore`             | `16 vCore` | `...Premium Compute`         | `1 Hour`      | Paid (online)    |
-
-Storage meters (General Purpose Storage): always zero cost.
+| `General Purpose Data Stored - Free` | `General Purpose` | `...General Purpose Storage` | `1 GB/Month` | Always free |
 
 ## Cost Formula
 
 ```
 Basic / General Purpose = compute_retailPrice × 730 × instanceCount
 Premium (outside free period) = compute_retailPrice × 730 × instanceCount
-Premium (within 183-day free period) = max(0, totalHours - remainingFreeGrantHours) × compute_retailPrice × instanceCount
+Premium 4-vCore (within 183-day free period) = max(0, totalHours - remainingFreeGrantHours) × compute_retailPrice × instanceCount
 Storage = free (retailPrice returns 0)
 Total = sum of applicable tier costs
 ```
@@ -72,7 +71,7 @@ Total = sum of applicable tier costs
 - Only `1 vCore vCore - Free` (Basic) and Storage meters are zero cost; all other meters have nonzero rates
 - Basic tier (1–2 vCores) and General Purpose (4, 8, 16 vCores): paid per-vCore/hour for offline migrations
 - Premium tier (4, 8, 16 vCores): paid per-vCore/hour for online (continuous-sync) migrations
-- Premium includes a 183-day free period per instance; ask for instance age or planned migration duration
+- Premium 4-vCore includes a 183-day free period per instance; ask for instance age or planned migration duration
 - Capacity: 4 vCores supports ~2 parallel table migrations; scale up for larger databases
 - Storage (General Purpose Storage) is always free (zero cost)
 - Often deployed via Azure Migrate hub (see migrate.md for migration project costing)
