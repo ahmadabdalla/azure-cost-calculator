@@ -51,7 +51,7 @@ InstanceCount: 3 # number of shards in cluster
 | Parameter     | How to determine                  | Example values                                              |
 | ------------- | --------------------------------- | ----------------------------------------------------------- |
 | `serviceName` | Always `Redis Cache`              | `Redis Cache`                                               |
-| `productName` | Tier selection                    | `Azure Redis Cache Basic`, `Standard`, `Premium`            |
+| `productName` | Tier selection                    | `Azure Redis Cache Basic/Standard/Premium`                  |
 | `skuName`     | Cache size                        | `C0`–`C6`, `P1`–`P5`, `E1`–`E400`, `F300`–`F1500`         |
 | `meterName`   | Size + meter type                 | `C1 Cache`, `P1 Cache Instance`, `E10 Cache`, `F700 Cache` |
 
@@ -60,7 +60,7 @@ InstanceCount: 3 # number of shards in cluster
 | Meter pattern        | unitOfMeasure | Tiers                        | Notes                                    |
 | -------------------- | ------------- | ---------------------------- | ---------------------------------------- |
 | `{Size} Cache`       | `1 Hour`      | Basic, Standard, Premium, Enterprise, Enterprise Flash | Total cluster cost (includes HA nodes)  |
-| `{Size} Cache Instance` | `1 Hour`  | Standard, Premium only       | Per-node cost (half of `{Size} Cache`)   |
+| `{Size} Cache Instance` | `1 Hour`  | Standard, Premium, Managed Redis | Per-node cost; half of `{Size} Cache` for Standard/Premium |
 
 ## Cost Formula
 
