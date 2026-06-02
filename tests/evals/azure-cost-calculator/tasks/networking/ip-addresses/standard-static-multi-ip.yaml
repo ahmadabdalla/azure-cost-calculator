@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/ip-addresses/standard-static-multi-ip
+name: IP Addresses - Standard Static Public IPs
+description: >
+  Tests cost estimation for multiple Standard Static Public IPv4 addresses.
+  Validates that the agent queries serviceName Virtual Network with
+  productName IP Addresses, uses the Standard IPv4 Static Public IP meter,
+  and accounts for the specified IP count.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:ip-addresses
+inputs:
+  prompt: "How much would 3 Standard Static Public IP addresses cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "IP Address|Public IP"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: ip-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would 3 Standard Static Public IP addresses cost per month in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using per-hour billing multiplied by 730 hours.
+        (3) Accounts for 3 IP addresses as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
