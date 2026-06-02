@@ -47,13 +47,16 @@ The routing file is self-contained and does not reference the catalog. Agents th
 
 Three related terms appear across documentation. Use these consistently:
 
-| Term                    | Meaning                                                                                                        | Example                         |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| **Display name**        | Human-readable name in the routing map / catalog (before the colon)                                            | `Azure VMware Solution`         |
-| **API serviceName**     | Exact case-sensitive value for the Azure Retail Prices API `serviceName` filter                                | `Specialized Compute`           |
-| **`serviceName` field** | YAML front matter field; the primary service identifier, usually equals both display name and API serviceName | `serviceName: Virtual Machines` |
+| Term                          | Meaning                                                                                                       | Example                              |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| **Display name**              | Human-readable name in the routing map / catalog (before the colon)                                           | `Azure VMware Solution`              |
+| **API serviceName**           | Exact case-sensitive value for the Azure Retail Prices API `serviceName` filter                               | `Specialized Compute`                |
+| **`serviceName` field**       | YAML front matter field; the primary service identifier, usually equals both display name and API serviceName | `serviceName: Virtual Machines`      |
+| **`queryServiceNames` field** | Extra API `serviceName` values that are valid only for query pattern blocks                                   | `queryServiceNames: [Azure Monitor]` |
 
 For most services, display name ≈ API serviceName (e.g., `Virtual Machines`). For split-product services, they differ (e.g., display name `Azure VMware Solution` → API serviceName `Specialized Compute`). The `apiServiceName` YAML field bridges this gap when they differ.
+
+Use `queryServiceNames` only when a single reference must query additional API `serviceName` values beyond its primary `serviceName`, `apiServiceName`, or `billingNeeds` entries.
 
 ---
 

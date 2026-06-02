@@ -20,7 +20,7 @@ privateEndpoint: true
 
 ### Standard document content extraction: 10K pages/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Doc Content Extraction Standard
 MeterName: Doc Content Extraction Standard Pages
@@ -28,7 +28,7 @@ Quantity: 10 # 10 × 1K = 10,000 pages
 
 ### Audio content extraction: 50 hours
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Audio Content Extraction
 MeterName: Audio Content Extraction
@@ -36,14 +36,14 @@ Quantity: 50 # total hours of audio processed per month
 
 ### Video content extraction
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Video Content Extraction
 MeterName: Video Content Extraction
 
 ### Standard field extraction: input tokens (3 regions only)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Std Field Extract Inp
 MeterName: Std Field Extract Inp Tokens

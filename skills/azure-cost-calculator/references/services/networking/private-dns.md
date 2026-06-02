@@ -29,7 +29,7 @@ Fields: meterName, unitPrice, unitOfMeasure
 
 ### Script workaround (Zone 1)
 
-ServiceName: Azure DNS  <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: Private
 MeterName: Private Zone
 Region: Zone 1

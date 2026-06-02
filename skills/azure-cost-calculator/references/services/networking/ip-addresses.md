@@ -16,7 +16,7 @@ primaryCost: "Per-hour IPv4 rate × 730 × ipCount"
 
 ### Standard Static Public IP (InstanceCount = number of IPs)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Standard
 MeterName: Standard IPv4 Static Public IP
@@ -24,14 +24,14 @@ InstanceCount: 3
 
 ### Basic Dynamic Public IP
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Basic
 MeterName: Basic IPv4 Dynamic Public IP
 
 ### Global Static Public IP (cross-region services like Front Door)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Global
 MeterName: Global IPv4 Static Public IP

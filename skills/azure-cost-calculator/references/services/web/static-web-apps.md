@@ -22,14 +22,14 @@ privateEndpoint: true
 
 ### Standard plan: per-app monthly fee (use Region eastus2; eastus has no data)
 
-ServiceName: Azure App Service <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard App
 Region: eastus2
 
 ### Bandwidth: pass Quantity with total GB to see per-tier unit prices
 
-ServiceName: Azure App Service <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard Bandwidth Usage
 Quantity: 500
@@ -37,7 +37,7 @@ Region: eastus2
 
 ### Azure Front Door add-on (enterprise-grade edge, hourly)
 
-ServiceName: Azure App Service <!-- cross-service -->
+ServiceName: Azure App Service
 ProductName: Static Web Apps
 MeterName: Standard Azure Front Door Add-on
 Region: eastus2

@@ -64,6 +64,7 @@ function Test-FrontMatter {
                         -FailMessage 'aliases field is present but empty - at least one alias is required'))
         }
 
+        # Validate category field if present: must be one of the allowed categories defined in config
         if ($FrontMatter.Fields.ContainsKey('category')) {
             $rawCategory = $FrontMatter.Fields['category'].Trim()
             $isValidCategory = $config.ValidCategories -contains $rawCategory
@@ -101,7 +102,24 @@ function Test-FrontMatter {
             if ($fieldName -in @('serviceName', 'category', 'aliases')) { continue }
             if (-not $FrontMatter.Fields.ContainsKey($fieldName)) { continue }
 
-            $rawValue = $FrontMatter.Fields[$fieldName].Trim() -replace '^[''"]', '' -replace '[''"]$', ''
+            $rawFieldValue = $FrontMatter.Fields[$fieldName].Trim()
+            $rawValue = $rawFieldValue -replace '^[''"]', '' -replace '[''"]$', ''
+
+            # Type: string vs array. String fields must not use array syntax; array fields must use it.
+            if ($fieldDef.Type -eq 'string') {
+                $isScalar = $rawFieldValue -notmatch '^\[.*\]$'
+                $checks.Add((New-ValidationCheck -Name "frontmatter_${fieldName}_type" -Pass $isScalar `
+                            -PassMessage "$fieldName is a scalar string" `
+                            -FailMessage "$fieldName must be a scalar string, got array syntax '$rawFieldValue'"))
+            }
+
+            # For array fields, check that value uses array syntax (e.g., [value1, value2])
+            if ($fieldDef.Type -eq 'array') {
+                $isArray = $rawFieldValue -match '^\[.*\]$'
+                $checks.Add((New-ValidationCheck -Name "frontmatter_${fieldName}_type" -Pass $isArray `
+                            -PassMessage "$fieldName uses array syntax" `
+                            -FailMessage "$fieldName must use array syntax like [value1, value2], got '$rawFieldValue'"))
+            }
 
             # Type: boolean. Must be 'true' or 'false'
             if ($fieldDef.Type -eq 'boolean') {

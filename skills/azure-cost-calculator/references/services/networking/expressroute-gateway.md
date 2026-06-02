@@ -17,20 +17,20 @@ primaryCost: "Gateway SKU hourly rate × 730; ErGwScale bills per scale unit"
 
 ### Zone-redundant gateway: substitute {GatewaySku} from Meter Names table
 
-ServiceName: ExpressRoute <!-- cross-service -->
+ServiceName: ExpressRoute
 ProductName: ExpressRoute Gateway
 MeterName: {GatewaySku} Gateway
 
 ### ErGwScale gateway: multiply by scale unit count
 
-ServiceName: ExpressRoute <!-- cross-service -->
+ServiceName: ExpressRoute
 ProductName: ExpressRoute Gateway
 MeterName: ErGwScale Unit
 InstanceCount: 4
 
 ### Legacy gateway: substitute {Tier} from Meter Names table
 
-ServiceName: ExpressRoute <!-- cross-service -->
+ServiceName: ExpressRoute
 ProductName: ExpressRoute {Tier} Gateway
 MeterName: {Tier} Gateway
 

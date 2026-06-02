@@ -18,7 +18,7 @@ privateEndpoint: true
 
 ### Pre-built models (Invoice, Receipt, ID, W-2): 10K pages/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Document Intelligence
 SkuName: S0
 MeterName: S0 Pre-built Pages
@@ -26,7 +26,7 @@ Quantity: 10 # 10 × 1K = 10,000 pages
 
 ### Read (OCR/layout extraction)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Document Intelligence
 SkuName: S0
 MeterName: S0 Read Pages
@@ -34,14 +34,14 @@ Quantity: 1 # 1 × 1K = 1,000 pages; tiered at 1M
 
 ### Custom extraction models
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Document Intelligence
 SkuName: S0
 MeterName: S0 Custom Pages
 
 ### Commitment tier: Pre-Built Azure 100K (monthly fee)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Document Intelligence
 SkuName: Commitment Tier Pre-Built Azure 100K
 MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfMeasure: 1/Month

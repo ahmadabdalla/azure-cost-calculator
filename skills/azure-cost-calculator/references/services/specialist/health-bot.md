@@ -20,20 +20,20 @@ privateEndpoint: true
 
 ### Health Bot: Agent Tier (per-action, recommended)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Agent Tier
 Quantity: 5000 # actions per month
 
 ### Health Bot: Standard tier (daily base + overage, legacy)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Standard
 
 ### Health Bot: Free tier
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Microsoft Azure Health Bot
 SkuName: Free
 

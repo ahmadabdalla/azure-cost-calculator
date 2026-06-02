@@ -24,7 +24,7 @@ Fields: meterName, unitPrice, unitOfMeasure
 
 ### Inbound endpoints (Quantity = number of endpoints)
 
-ServiceName: Azure DNS <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: Private Resolver
 MeterName: Private Resolver Inbound Endpoint
 Region: Zone 1
@@ -32,14 +32,14 @@ Quantity: 2
 
 ### Outbound endpoints
 
-ServiceName: Azure DNS <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: Private Resolver
 MeterName: Private Resolver Outbound Endpoint
 Region: Zone 1
 
 ### DNS forwarding rulesets
 
-ServiceName: Azure DNS <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: Private Resolver
 MeterName: Private Resolver DNS Forwarding Ruleset
 Region: Zone 1

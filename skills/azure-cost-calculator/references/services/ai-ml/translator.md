@@ -20,7 +20,7 @@ privateEndpoint: true
 
 ### S1 standard text translation: 10M characters/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Characters
@@ -28,21 +28,21 @@ Quantity: 10 # millions of characters
 
 ### S1 document translation
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Document Characters
 
 ### Commitment tier (Azure 250M chars/month)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: Commitment Tier Azure 250M
 MeterName: Commitment Tier Azure 250M Unit
 
 ### S1 standard text translation (Global product)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Translator
 SkuName: S1 Standard
 MeterName: S1 Standard Characters

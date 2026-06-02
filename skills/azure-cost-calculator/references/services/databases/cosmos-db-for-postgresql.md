@@ -19,14 +19,14 @@ privateEndpoint: true
 
 ### Coordinator node compute (e.g., 8 vCores)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Cosmos DB for PostgreSQL Compute- Coordinator Node
 SkuName: vCore
 MeterName: vCore
 
 ### Worker node compute (e.g., 4 vCores × 3 workers)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Cosmos DB for PostgreSQL Compute- Worker Node
 SkuName: vCore
 MeterName: vCore
@@ -34,7 +34,7 @@ InstanceCount: 3 # number of worker nodes
 
 ### General Purpose storage (e.g., 512 GiB)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Cosmos DB for PostgreSQL General Purpose Storage
 SkuName: General Purpose
 MeterName: General Purpose Data Stored
@@ -80,7 +80,7 @@ Total               = Coordinator Compute + Worker Compute + Storage
 
 ## Reserved Instance Pricing
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Cosmos DB for PostgreSQL Compute- Coordinator Node
 SkuName: vCore
 MeterName: vCore

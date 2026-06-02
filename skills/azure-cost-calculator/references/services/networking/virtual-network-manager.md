@@ -19,7 +19,7 @@ pricingRegion: global
 
 ### VNet-based billing: new default (InstanceCount = managed VNets)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Azure Virtual Network Manager
 SkuName: Standard
 MeterName: Standard Virtual Network
@@ -28,7 +28,7 @@ InstanceCount: 10
 
 ### Subscription-based billing: legacy (InstanceCount = managed subscriptions)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Azure Virtual Network Manager
 SkuName: Standard
 MeterName: Standard Subscription
@@ -37,7 +37,7 @@ InstanceCount: 3
 
 ### IPAM: per active managed IP address
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Azure Virtual Network Manager
 SkuName: Managed IP
 MeterName: Managed IP Management
@@ -45,7 +45,7 @@ Region: Global
 
 ### Network Verifier: per analysis run (Quantity = runs/month)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Azure Virtual Network Manager
 SkuName: Reachability Analysis
 MeterName: Reachability Analysis Diagnostic Tool API
