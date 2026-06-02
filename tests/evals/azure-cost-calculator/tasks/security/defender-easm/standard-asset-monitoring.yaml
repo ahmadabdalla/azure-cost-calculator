@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:security/defender-easm/standard-asset-monitoring
+name: Defender EASM - Standard Asset Monitoring
+description: >
+  Tests cost estimation for Azure Defender EASM with a specified number of
+  billable assets. Validates the agent uses the daily billing model (per-asset
+  per-day × 30) and filters by ProductName to isolate EASM meters from the
+  shared Microsoft Defender for Cloud serviceName.
+tags:
+  - happy-path
+  - single-service
+  - security
+  - service:defender-easm
+inputs:
+  prompt: "How much would Azure Defender EASM cost per month for 500 billable assets in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Defender EASM|External Attack Surface Management|EASM"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: asset-count-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would Azure Defender EASM cost per month for 500 billable assets in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Azure Defender EASM (daily per-asset rate × asset count × 30 days).
+        (3) Accounts for 500 billable assets as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
