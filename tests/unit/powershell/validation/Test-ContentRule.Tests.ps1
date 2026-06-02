@@ -8,7 +8,7 @@ Describe 'Test-ContentRule serviceName consistency' {
         function New-ServiceReferenceLines {
             param(
                 [string[]]$ExtraFrontMatter = @(),
-                [string[]]$QueryLines
+                [string[]]$QueryLines = @()
             )
 
             @(
@@ -36,7 +36,7 @@ Describe 'Test-ContentRule serviceName consistency' {
         function Invoke-ServiceNameConsistencyCheck {
             param(
                 [string[]]$ExtraFrontMatter = @(),
-                [string[]]$QueryLines
+                [string[]]$QueryLines = @()
             )
 
             $lines = New-ServiceReferenceLines -ExtraFrontMatter $ExtraFrontMatter -QueryLines $QueryLines
