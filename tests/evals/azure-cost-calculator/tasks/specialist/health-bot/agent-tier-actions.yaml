@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:specialist/health-bot/agent-tier-actions
+name: Happy Path - Health Bot Agent Tier Actions
+description: >
+  Tests cost estimation for Azure Health Bot using the Agent Tier (per-action billing).
+  Validates that the agent correctly identifies the shared API serviceName, filters by
+  ProductName, and calculates monthly cost based on action count.
+tags:
+  - happy-path
+  - single-service
+  - specialist
+  - service:health-bot
+inputs:
+  prompt: "What is the monthly cost for Azure Health Bot on the Agent Tier with 5000 actions per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Health Bot|Healthcare Bot"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: action-count-acknowledged
+    config:
+      contains:
+        - "5,000"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
