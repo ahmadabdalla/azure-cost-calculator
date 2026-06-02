@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Queries the Azure Retail Prices API with OData filter, handling pagination.
     Returns an array of pricing items.

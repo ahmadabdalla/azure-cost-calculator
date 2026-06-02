@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Queries the Azure Retail Prices API and calculates estimated monthly costs.
 
