@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Builds an OData $filter string from an ordered hashtable of field/value pairs.
     Supports equality filters and contains() operators.
