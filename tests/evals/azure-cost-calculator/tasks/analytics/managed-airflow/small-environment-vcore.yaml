@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:analytics/managed-airflow/small-environment-vcore
+name: Managed Airflow - Small Environment vCore Hourly
+description: >
+  Tests cost estimation for Azure Managed Airflow (Workflow Orchestration Manager)
+  in a Small environment. Validates that the agent uses the correct cross-service
+  serviceName (Azure Data Factory v2), filters by the Managed Airflow productName,
+  selects the Small SKU, and calculates monthly cost from the vCore hourly rate.
+tags:
+  - happy-path
+  - single-service
+  - analytics
+  - service:managed-airflow
+inputs:
+  prompt: "How much would a Small Azure Managed Airflow environment cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Managed Airflow|Airflow|Workflow Orchestration"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: sku-acknowledged
+    config:
+      contains:
+        - "Small"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
