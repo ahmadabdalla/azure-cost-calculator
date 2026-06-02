@@ -29,6 +29,7 @@ ServiceName: Azure Grafana Service <!-- cross-service -->
 ProductName: Azure Managed Grafana
 SkuName: Standard
 MeterName: Standard Zone Redundancy
+Quantity: 1
 
 ### Standard active users
 
