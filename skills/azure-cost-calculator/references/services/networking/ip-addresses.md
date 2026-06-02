@@ -10,7 +10,7 @@ primaryCost: "Per-hour IPv4 rate × 730 × ipCount"
 
 > **Trap (product filter)**: API `serviceName` is `Virtual Network`, which contains many products (IP Addresses, VNet Peering, Private Link, etc.). Always include `ProductName: IP Addresses` to isolate Public IP meters.
 
-> **Note (IPv6)**: IPv6 public IPs are free. No meters exist in the API. Only IPv4 addresses incur charges.
+> **Note**: IPv6 public IPs are free. No meters exist in the API. Only IPv4 addresses incur charges.
 
 ## Query Pattern
 
