@@ -20,7 +20,7 @@ privateEndpoint: true
 
 ### Text moderation: 50K records/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Standard
 MeterName: Standard Text Records
@@ -28,35 +28,35 @@ Quantity: 50 # 50 × 1K = 50,000 text records
 
 ### Image moderation: PAYG
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Standard
 MeterName: Standard Images
 
 ### Commitment tier: Text Azure 1M (base fee)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Commitment Tier Txt Azure 1M
 MeterName: Commitment Tier Txt Azure 1M Unit
 
 ### Commitment tier: Text Azure 1M (overage)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Commitment Tier Txt Azure 1M
 MeterName: Commitment Tier Txt Azure 1M CT Overage Transactions
 
 ### Commitment tier: Image Azure 250K (base fee)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Commitment Tier Image Azure 250K
 MeterName: Commitment Tier Image Azure 250K Unit
 
 ### Commitment tier: Image Azure 250K (overage)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Content Safety
 SkuName: Commitment Tier Image Azure 250K
 MeterName: Commitment Tier Image Azure 250K CT Overage Transactions

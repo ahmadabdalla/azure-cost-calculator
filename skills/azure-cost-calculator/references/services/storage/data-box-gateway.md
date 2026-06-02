@@ -17,7 +17,7 @@ primaryCost: "Standard daily service fee × 30 days/month; Azure Storage billed 
 
 ### Standard daily service fee: monthly total
 
-ServiceName: Data Box <!-- cross-service -->
+ServiceName: Data Box
 ProductName: Data Box Gateway
 SkuName: Standard
 MeterName: Standard Service Fee

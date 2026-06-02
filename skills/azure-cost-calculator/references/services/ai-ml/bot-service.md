@@ -20,7 +20,7 @@ hasFreeGrant: true
 
 ### S1 premium channel messages (DirectLine/Web Chat)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: S1
 MeterName: S1 Premium Channel Messages
@@ -28,7 +28,7 @@ Quantity: 50 # thousands of messages per month
 
 ### Free tier (premium channels, 10K messages/month included)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: Free
 MeterName: Free Premium Channel Messages

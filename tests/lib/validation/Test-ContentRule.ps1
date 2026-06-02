@@ -127,10 +127,45 @@ function Test-ContentRule {
                 -PassMessage 'No template instruction comments found' `
                 -FailMessage 'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'))
 
-    # Every ServiceName: in a query must match the YAML serviceName to avoid silent API mismatches
+    # Every ServiceName: in a query must match declared service metadata to avoid silent API mismatches
+    $parseServiceNameValues = {
+        param([AllowNull()][object]$Value)
+
+        if ($null -eq $Value) { return @() }
+
+        if ($Value -is [System.Collections.IEnumerable] -and $Value -isnot [string]) {
+            return @($Value | ForEach-Object {
+                    $_.ToString().Trim() -replace '^[''"]', '' -replace '[''"]$', ''
+                } | Where-Object { $_ })
+        }
+
+        $raw = $Value.ToString().Trim()
+        if (-not $raw) { return @() }
+
+        if ($raw -match '^\[(.*)\]$') {
+            return @($Matches[1] -split ',' | ForEach-Object {
+                    $_.Trim() -replace '^[''"]', '' -replace '[''"]$', ''
+                } | Where-Object { $_ })
+        }
+
+        @($raw -replace '^[''"]', '' -replace '[''"]$', '')
+    }
+
     $yamlValue = $null
+    $allowedServiceNames = [System.Collections.Generic.List[string]]::new()
     if ($FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('serviceName')) {
         $yamlValue = $FrontMatter.Fields['serviceName'].Trim() -replace "^'|'$", ''
+        $allowedServiceNames.Add($yamlValue)
+    }
+    if ($FrontMatter.Found) {
+        foreach ($fieldName in @('apiServiceName', 'queryServiceNames', 'billingNeeds')) {
+            if (-not $FrontMatter.Fields.ContainsKey($fieldName)) { continue }
+            foreach ($serviceName in (& $parseServiceNameValues $FrontMatter.Fields[$fieldName])) {
+                if ($allowedServiceNames -notcontains $serviceName) {
+                    $allowedServiceNames.Add($serviceName)
+                }
+            }
+        }
     }
     $hasApiLines = @($Lines | Where-Object { $_ -match '^\s*API\s*:' }).Count -gt 0
     $serviceNameLines = [System.Collections.Generic.List[object]]::new()
@@ -159,18 +194,6 @@ function Test-ContentRule {
             $effective = $effective -replace '<!--.*$', ''
         }
         if ($effective -match '^\s*ServiceName\s*:\s*(.+)$') {
-            # cross-service ServiceName lines are intentionally different from YAML
-            if ($Lines[$i] -match '<!--\s*cross-service\s*-->') {
-                continue
-            }
-            # billingNeeds lists services billed under a different serviceName
-            if ($FrontMatter.Found -and $FrontMatter.Fields.ContainsKey('billingNeeds')) {
-                $rawNeeds = $FrontMatter.Fields['billingNeeds'] -replace '^\[|\]$', ''
-                $needsList = $rawNeeds -split ',' | ForEach-Object { $_.Trim() }
-                if ($needsList -contains $Matches[1].Trim()) {
-                    continue
-                }
-            }
             $serviceNameLines.Add(@{ Value = $Matches[1].Trim(); LineNum = $i + 1 })
         }
     }
@@ -193,20 +216,21 @@ function Test-ContentRule {
         $snMismatch = $null
         foreach ($entry in $serviceNameLines) {
             $queryValue = $entry.Value -replace "^'|'$", ''
-            if ($queryValue -ne $yamlValue) {
+            if ($allowedServiceNames -notcontains $queryValue) {
                 $snMismatch = @{ QueryValue = $queryValue; LineNum = $entry.LineNum; YamlValue = $yamlValue }
                 break
             }
         }
         if ($null -eq $snMismatch) {
             $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $true `
-                        -PassMessage 'All ServiceName declarations match YAML front matter' `
+                        -PassMessage 'All ServiceName declarations match front matter service metadata' `
                         -FailMessage 'n/a'))
         }
         else {
+            $allowedDisplay = if ($allowedServiceNames.Count -gt 0) { $allowedServiceNames -join ', ' } else { 'none' }
             $checks.Add((New-ValidationCheck -Name 'servicename_consistency' -Pass $false `
                         -PassMessage 'n/a' `
-                        -FailMessage "ServiceName '$($snMismatch.QueryValue)' on line $($snMismatch.LineNum) does not match YAML serviceName '$($snMismatch.YamlValue)'"))
+                        -FailMessage "ServiceName '$($snMismatch.QueryValue)' on line $($snMismatch.LineNum) does not match allowed front matter service names: $allowedDisplay"))
         }
     }
 

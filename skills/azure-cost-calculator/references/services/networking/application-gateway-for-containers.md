@@ -18,27 +18,27 @@ Substitute `{Variant}` with `Application Gateway for Containers` (Standard) or `
 
 ### {Variant}: AGC resource (fixed hourly)
 
-ServiceName: Application Gateway <!-- cross-service -->
+ServiceName: Application Gateway
 ProductName: {Variant}
 MeterName: Standard AGC
 
 ### {Variant}: frontend (Quantity = number of frontends)
 
-ServiceName: Application Gateway <!-- cross-service -->
+ServiceName: Application Gateway
 ProductName: {Variant}
 MeterName: Standard Frontend
 Quantity: 2
 
 ### {Variant}: association (Quantity = number of associations)
 
-ServiceName: Application Gateway <!-- cross-service -->
+ServiceName: Application Gateway
 ProductName: {Variant}
 MeterName: Standard Association
 Quantity: 1
 
 ### {Variant}: capacity units (Quantity = estimated average CUs)
 
-ServiceName: Application Gateway <!-- cross-service -->
+ServiceName: Application Gateway
 ProductName: {Variant}
 MeterName: Standard Capacity Units
 Quantity: 10

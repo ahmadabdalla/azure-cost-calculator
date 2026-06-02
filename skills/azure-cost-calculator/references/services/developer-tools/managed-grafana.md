@@ -17,7 +17,7 @@ privateEndpoint: true
 
 ### Standard X1 instance: most common production config
 
-ServiceName: Azure Grafana Service <!-- cross-service -->
+ServiceName: Azure Grafana Service
 ProductName: Azure Managed Grafana
 SkuName: Standard
 MeterName: Standard Node
@@ -25,14 +25,14 @@ Quantity: 2
 
 ### Standard zone redundancy (additive to node cost)
 
-ServiceName: Azure Grafana Service <!-- cross-service -->
+ServiceName: Azure Grafana Service
 ProductName: Azure Managed Grafana
 SkuName: Standard
 MeterName: Standard Zone Redundancy
 
 ### Standard active users
 
-ServiceName: Azure Grafana Service <!-- cross-service -->
+ServiceName: Azure Grafana Service
 ProductName: Azure Managed Grafana
 SkuName: Standard
 MeterName: Standard User

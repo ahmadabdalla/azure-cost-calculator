@@ -2,6 +2,7 @@
 serviceName: Microsoft Purview
 category: security
 aliases: [Data Governance, Data Catalog, Azure Purview, Purview Data Map, Data Estate Scanning]
+queryServiceNames: [Azure Purview]
 primaryCost: "Per-asset daily rates + per-unit processing (DSPU/DGPU) + hourly capacity units (classic)"
 hasFreeGrant: true
 privateEndpoint: true
@@ -41,7 +42,7 @@ MeterName: Standard Data Security Processing Unit
 
 ### Classic Data Map: capacity units (hourly)
 
-ServiceName: Azure Purview <!-- cross-service -->
+ServiceName: Azure Purview
 ProductName: Azure Purview Data Map
 SkuName: Standard
 MeterName: Standard Capacity Unit
@@ -51,7 +52,7 @@ InstanceCount: 2
 
 ### Classic Scanning: per vCore
 
-ServiceName: Azure Purview <!-- cross-service -->
+ServiceName: Azure Purview
 ProductName: Azure Purview Scanning Ingestion and Classification
 SkuName: Standard
 MeterName: Standard vCore

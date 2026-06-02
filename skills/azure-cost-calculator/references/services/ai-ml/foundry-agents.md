@@ -19,7 +19,7 @@ primaryCost: "Hosted compute (vCPU + memory × 730 hrs/mo) + skills execution + 
 
 ### Hosted agent compute: vCPU
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Foundry Agents
 SkuName: Hosted
 MeterName: Hosted vCPU Usage
@@ -27,7 +27,7 @@ Quantity: 4 # vCPUs allocated
 
 ### Hosted agent compute: memory
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Foundry Agents
 SkuName: Hosted
 MeterName: Hosted Memory Usage
@@ -35,7 +35,7 @@ Quantity: 8 # GBs of memory
 
 ### Skills execution container
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Foundry Agents
 SkuName: Skills Execution
 MeterName: Skills Execution Container
@@ -43,7 +43,7 @@ Quantity: 2 # container-hours consumed
 
 ### SRE Agent Unit
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Agent Unit
 SkuName: SRE
 MeterName: SRE Agent Unit

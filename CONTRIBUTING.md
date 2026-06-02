@@ -128,6 +128,7 @@ The file MUST follow these critical constraints:
 - **Total file length**: under 100 lines of markdown content.
 - **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
 - **ServiceName in every query block**: Always include `ServiceName:` in each individual query pattern block. Do not rely on "All patterns below use..." preambles - batch mode parses individual blocks.
+- **Declare every query serviceName in metadata**: `ServiceName:` values must match `serviceName`, `apiServiceName`, `billingNeeds`, or `queryServiceNames`. Use `queryServiceNames: [...]` only for additional query-only API service names.
 - **Never hardcode prices** - always reference `retailPrice` from the API query results. Exception: Known Rates tables for sub-cent pricing where the script shows `$0.00` may include published USD rates.
 - **Use 730 hours/month** for hourly billing, 30 days/month for daily billing.
 - **Query patterns for every variant**: If the service has platform/OS variants or alternate `productName` values with distinct meters, include a separate query pattern for each.
@@ -192,7 +193,7 @@ When a service reference file has incorrect pricing data or missing information 
 1. **Locate the file**: Find the existing reference in `skills/azure-cost-calculator/references/services/{category}/`.
 2. **Verify current API data**: Run the exploration script to check current pricing:
    ```powershell
-   skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{apiServiceName if present, otherwise serviceName from file YAML}'
+   skills/azure-cost-calculator/scripts/Explore-AzurePricing.ps1 -ServiceName '{ServiceName value from the query block}'
    ```
 3. **Compare and update**: Compare API results against the file's query patterns, meter names, and key fields. Update any values that have changed.
 4. **Validate**: Run the validation script:

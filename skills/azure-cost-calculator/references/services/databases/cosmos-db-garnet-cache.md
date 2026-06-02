@@ -14,7 +14,7 @@ primaryCost: "vCPU-hours per tier × 730 + Premium SSD disk per GB × 730"
 
 ### Compute: General Purpose v6 (e.g., 4 vCPUs)
 
-ServiceName: Azure Cosmos DB <!-- cross-service -->
+ServiceName: Azure Cosmos DB
 ProductName: Azure Cosmos DB Garnet Cache
 SkuName: General Purpose v6
 MeterName: General Purpose v6 vCore
@@ -22,7 +22,7 @@ Quantity: 4 # number of vCPUs
 
 ### Disk storage (e.g., 128 GB)
 
-ServiceName: Azure Cosmos DB <!-- cross-service -->
+ServiceName: Azure Cosmos DB
 ProductName: Azure Cosmos DB Garnet Cache
 SkuName: Premium SSD Managed Disk
 MeterName: Premium SSD Managed Disk

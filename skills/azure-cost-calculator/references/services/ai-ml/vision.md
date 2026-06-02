@@ -20,14 +20,14 @@ privateEndpoint: true
 
 ### Image Analysis: PAYG (most common)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Vision
 SkuName: Image Analysis Group 1
 MeterName: Image Analysis Group 1 Transactions
 
 ### Face API: 50K transactions/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Vision - Face
 SkuName: Standard
 MeterName: Standard Transactions
@@ -35,7 +35,7 @@ Quantity: 50 # 50 × 1K = 50,000 transactions
 
 ### Spatial Analysis: per camera-hour
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Vision
 SkuName: Spatial Analysis
 MeterName: Spatial Analysis Video Stream Edge
@@ -43,7 +43,7 @@ InstanceCount: 3 # 3 cameras
 
 ### Video Retrieval: ingestion
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Vision
 SkuName: Video Retrieval and Description - Ingestion
 MeterName: Video Retrieval and Description - Ingestion Vision

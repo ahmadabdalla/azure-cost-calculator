@@ -29,11 +29,14 @@ This directory defines the YAML front matter schema for service reference files.
 
 ### API Identity (new)
 
-| Field            | Type   | Required | Default | Constraints | Description                                           |
-| ---------------- | ------ | :------: | ------- | ----------- | ----------------------------------------------------- |
-| `apiServiceName` | string |          | omit    | n/a         | API serviceName when it differs from the display name |
+| Field               | Type   | Required | Default | Constraints             | Description                                                     |
+| ------------------- | ------ | :------: | ------- | ----------------------- | --------------------------------------------------------------- |
+| `apiServiceName`    | string |          | omit    | n/a                     | API serviceName when it differs from the display name           |
+| `queryServiceNames` | array  |          | omit    | Free-form service names | Additional API serviceName values allowed in query pattern blocks |
 
 Use only when the Retail Prices API uses a different `serviceName` than the service's display name (e.g., VMware Solution → `Specialized Compute`, Static Web Apps → `Azure App Service`).
+
+Use `queryServiceNames` only when one service reference must include query blocks for additional Retail Prices API `ServiceName` values beyond `serviceName`, `apiServiceName`, or `billingNeeds`.
 
 ### Pricing Profile (new)
 
@@ -108,6 +111,7 @@ serviceName: Specialized Compute
 category: compute
 aliases: [Azure VMware Solution, AVS, VMware]
 apiServiceName: Specialized Compute
+queryServiceNames: [Related API Service]
 primaryCost: "Dedicated host hours (AV36P/AV48/AV52/AV64) × 730 × nodeCount"
 hasMeters: true
 pricingRegion: regional

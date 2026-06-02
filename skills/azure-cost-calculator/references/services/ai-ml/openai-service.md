@@ -30,21 +30,21 @@ Run explore with `SearchTerm: Azure OpenAI` and `Top: 20` to discover current mo
 
 ### Chat / completion model: substitute discovered values
 
-ServiceName: Foundry Models <!-- cross-service -->
+ServiceName: Foundry Models
 ProductName: {productName from discovery}
 SkuName: {model} {direction} {deployment}
 Quantity: 100 # units of unitOfMeasure; 100M tokens when UoM is 1M
 
 ### Embeddings: Global/Regional (substitute discovered embedding skuName)
 
-ServiceName: Foundry Models <!-- cross-service -->
+ServiceName: Foundry Models
 ProductName: Azure OpenAI
 SkuName: {embedding model} {deployment}
 Quantity: 500 # units of unitOfMeasure; 500K tokens when UoM is 1K
 
 ### Embeddings: Data Zone text-embedding-3 (separate product)
 
-ServiceName: Foundry Models <!-- cross-service -->
+ServiceName: Foundry Models
 ProductName: Azure OpenAI Embedding
 SkuName: {text embedding 3 model} DZ
 Quantity: 500 # units of unitOfMeasure; 500K tokens when UoM is 1K

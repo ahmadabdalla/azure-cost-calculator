@@ -18,14 +18,14 @@ primaryCost: "vCore hourly rate × 730 per Airflow environment (Small or Large S
 
 ### Small environment: per vCore-hour
 
-ServiceName: Azure Data Factory v2 <!-- cross-service -->
+ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 - Managed Airflow
 SkuName: Small
 MeterName: vCore
 
 ### Large environment: multiple Airflow environments
 
-ServiceName: Azure Data Factory v2 <!-- cross-service -->
+ServiceName: Azure Data Factory v2
 ProductName: Azure Data Factory v2 - Managed Airflow
 SkuName: Large
 MeterName: vCore
