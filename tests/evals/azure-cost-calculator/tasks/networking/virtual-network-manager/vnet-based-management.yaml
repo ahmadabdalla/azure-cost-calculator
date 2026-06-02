@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:networking/virtual-network-manager/vnet-based-management
+name: Virtual Network Manager - VNet-Based Management Fee
+description: >
+  Tests cost estimation for Azure Virtual Network Manager using VNet-based
+  billing (new default). Validates that the agent queries Global region,
+  uses the correct shared serviceName with ProductName filter, and accounts
+  for the specified number of managed VNets.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:virtual-network-manager
+inputs:
+  prompt: "Estimate the monthly cost for Azure Virtual Network Manager managing 10 VNets using VNet-based billing."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Virtual Network Manager|AVNM|VNet Manager"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: vnet-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost for Azure Virtual Network Manager managing 10 VNets using VNet-based billing."
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct VNet-based billing model for Azure Virtual Network Manager.
+        (3) Accounts for 10 managed VNets as specified.
+        (4) Uses Global region pricing (not a standard region).
+
+        Score 1.0 if all four criteria are met. Score 0.5 if three are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
