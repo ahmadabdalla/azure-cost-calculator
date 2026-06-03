@@ -70,8 +70,9 @@ Monthly = retailPrice × 730 × instanceCount
 
 ## Notes
 
+- **Cost-estimation scope**: Estimate costs only; do not create, modify, or delete managed domains, replica sets, trusts, load balancers, or public IPs without explicit user confirmation
 - **SKU tiers**: Standard (backups every 5 days, no trusts), Enterprise (every 3 days, up to 5 trusts), Premium (daily backups, 7+ trusts); SKU determines auth-load and object-count guidance
 - **Forest type** (never-assume): User Forest syncs from Entra ID; Resource Forest uses outbound trusts to on-prem AD. Standard only supports User Forest; same price within a SKU
-- **Billing dependency**: Azure auto-deploys a Standard Load Balancer and Public IP with every managed domain. Billed separately under `Load Balancer` and `IP Addresses`
+- **Billing dependency**: Each managed domain includes a Standard Load Balancer and Public IP that are billed separately under `Load Balancer` and `IP Addresses`
 - **Replica sets**: Each additional replica set (up to 5 per domain) is billed at the full SKU hourly rate
 - Related services billed separately: `Microsoft Entra ID` (identity platform), VMs that join the managed domain
