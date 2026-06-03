@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:identity/entra-domain-services/standard-user-forest
+name: Microsoft Entra Domain Services - Standard User Forest
+description: >
+  Tests cost estimation for Microsoft Entra Domain Services Standard User Forest.
+  Validates SKU and forest-type meter filtering, hourly billing, and instance
+  count scaling for managed domain estimates.
+tags:
+  - happy-path
+  - single-service
+  - identity
+  - service:entra-domain-services
+inputs:
+  prompt: "How much would 1 Microsoft Entra Domain Services Standard User Forest managed domain cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Microsoft Entra Domain Services|Azure AD DS|AAD DS|Managed AD"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: sku-and-forest-acknowledged
+    config:
+      regex_match:
+        - "Standard User Forest|Standard.*User Forest|User Forest.*Standard"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would 1 Microsoft Entra Domain Services Standard User Forest managed domain cost per month in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using per-hour billing multiplied by 730 hours.
+        (3) Filters to the Standard User Forest meter for Microsoft Entra Domain Services.
+        (4) Accounts for 1 managed domain or replica set as specified.
+        (5) Mentions separately billed dependencies, such as Load Balancer or Public IP, without adding them unless explicitly priced.
+
+        Score 1.0 if all five criteria are met. Score 0.5 if three or four are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
