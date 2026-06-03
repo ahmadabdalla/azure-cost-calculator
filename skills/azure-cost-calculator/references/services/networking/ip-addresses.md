@@ -10,13 +10,13 @@ primaryCost: "Per-hour IPv4 rate × 730 × ipCount"
 
 > **Trap (product filter)**: API `serviceName` is `Virtual Network`, which contains many products (IP Addresses, VNet Peering, Private Link, etc.). Always include `ProductName: IP Addresses` to isolate Public IP meters.
 
-> **Note (IPv6)**: IPv6 public IPs are free. No meters exist in the API. Only IPv4 addresses incur charges.
+> **Note**: IPv6 public IPs are free. No meters exist in the API. Only IPv4 addresses incur charges.
 
 ## Query Pattern
 
 ### Standard Static Public IP (InstanceCount = number of IPs)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Standard
 MeterName: Standard IPv4 Static Public IP
@@ -24,14 +24,14 @@ InstanceCount: 3
 
 ### Basic Dynamic Public IP
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Basic
 MeterName: Basic IPv4 Dynamic Public IP
 
 ### Global Static Public IP (cross-region services like Front Door)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: IP Addresses
 SkuName: Global
 MeterName: Global IPv4 Static Public IP

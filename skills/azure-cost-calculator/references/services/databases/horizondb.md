@@ -16,7 +16,7 @@ primaryCost: "vCore hourly rate × 730 + storage per-GB/month + backup per-GB/mo
 
 ### Compute (4 vCores)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure Database for PostgreSQL HorizonDB Compute
 SkuName: 1 vCore
 MeterName: 1 vCore
@@ -24,7 +24,7 @@ InstanceCount: 4 # vCore count
 
 ### Storage (100 GB)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure HorizonDB storage
 SkuName: HorizonDB storage
 MeterName: HorizonDB storage Data Stored
@@ -32,7 +32,7 @@ Quantity: 100 # storage size in GB
 
 ### Backup storage (50 GB)
 
-ServiceName: Azure Database for PostgreSQL <!-- cross-service -->
+ServiceName: Azure Database for PostgreSQL
 ProductName: Azure HorizonDB Backup Storage
 SkuName: HorizonDB Backup Storage
 MeterName: HorizonDB Backup Storage Data Stored
@@ -65,7 +65,7 @@ Total = Compute + Storage + Backup
 
 ## Notes
 
-- HorizonDB is in preview; pricing may change before GA
+- Azure HorizonDB is in **limited preview** (early access); availability is constrained by region and enrollment. Confirm the user has access and verify the target region supports HorizonDB before estimating. Retail Prices API meters may change or be removed before GA.
 - Storage productName uses lowercase 's' (`Azure HorizonDB storage`); use exact casing
 - Shares `serviceName` with PostgreSQL Flexible Server (see `databases/database-for-postgresql.md`)
 - Storage and vCore count are never-assume parameters: always ask the user

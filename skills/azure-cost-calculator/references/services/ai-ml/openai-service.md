@@ -1,5 +1,6 @@
 ---
-serviceName: Foundry Models
+serviceName: Azure OpenAI Service
+apiServiceName: Foundry Models
 category: ai-ml
 aliases: [OpenAI, GPT, Azure OpenAI, AOAI, ChatGPT, GPT-4]
 primaryCost: "Per-token billing (input + output tokens per 1M or 1K), varying by model and deployment type."
@@ -15,7 +16,7 @@ billingConsiderations: [Reserved Instances]
 
 > **Trap (sub-cent embeddings)**: Embedding prices are sub-cent. The script shows minimal cost; use `Quantity` with a large value to see meaningful costs.
 
-> **Trap (mixed units)**: `unitOfMeasure` varies across products: `1K` or `1M` for tokens, `1/Hour` for PTU, `100` for DALL-E images, `1` for Sora video seconds. Always check `unitOfMeasure` per meter.
+> **Trap (mixed units)**: `unitOfMeasure` varies across products: `1K` or `1M` for tokens, `1/Hour` for PTU, `1 Hour` (with space) for fine-tune hosting, `1 Second` for video, `1/Day` for Assistants File Search storage, `1/Month` for monthly items, `100` for DALL-E images, `1` for Sora. Watch `1/Hour` vs `1 Hour` — they are different UoMs. Always check `unitOfMeasure` per meter.
 
 > **Trap (PTU reservations)**: Provisioned Throughput reservations use a separate `productName`: `Azure AI Foundry Provisioned Throughput Reservation`. Standard RI query patterns require a `ProductName` filter; unfiltered `PriceType: Reservation` queries under `Foundry Models` return PTU and Agent pre-purchase meters.
 
@@ -52,8 +53,8 @@ Quantity: 500 # units of unitOfMeasure; 500K tokens when UoM is 1K
 
 | Parameter     | How to determine                              | Example values                                                      |
 | ------------- | --------------------------------------------- | ------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Models`                       | `Foundry Models`                                                    |
-| `productName` | Model family, use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding` |
+| `serviceName` | Always `Foundry Models` (see `apiServiceName`) | `Foundry Models`                                                    |
+| `productName` | Model family, use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding`, `Azure OpenAI PP FT GPT4s`, `Azure OpenAI OSS Models`, `Azure OpenAI Free Meter` |
 | `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl` |
 | `meterName`   | skuName + ` 1M Tokens` or ` Tokens`           | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
 
@@ -84,6 +85,6 @@ Check `unitOfMeasure` from query results: if `1M`, divide token count by 1,000,0
 - **Provisioned throughput (PTU)**: Consumption meters under `Azure OpenAI` (`Provisioned Managed Global/Data Zone/Regional`); reservations under `Azure AI Foundry Provisioned Throughput Reservation` with 1 Month and 1 Year terms
 - **Reasoning models**: o4-mini, codex-mini, o3-deep-research are under `Azure OpenAI Reasoning` productName. Query separately
 - **Media models**: Audio, TTS, Sora 2 video (per-second), and GPT-Image under `Azure OpenAI Media`. Query separately
-- **Fine-tuning**: Three billing dimensions: training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K)
-- **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `Cohere Models`, `Azure Kimi`, `Qwen models` (note: lowercase `m`), `Azure BFL Flux Models`). Each has its own `productName`. Query with discovery first
+- **Fine-tuning**: Three billing dimensions: training tokens (per 1K), model hosting (per hour, charged even when idle), and inference tokens (per 1K). Current fine-tuning meters under `Azure OpenAI PP FT GPT4s` (GPT-4.1/4o, hosting via `Deployment Hosting Unit` UoM `1 Hour`) and `Azure OpenAI OSS Models` (GPT-OSS-20b/120b)
+- **Third-party models**: `Foundry Models` also hosts non-OpenAI families (`Azure Deepseek Models`, `Azure Fireworks Models`, `Azure Grok Models`, `Azure Mistral Models`, `Azure Phi Models`, `Azure Llama Models`, `MAI Models`, `Cohere Models`, `Azure Kimi`, `Qwen models` (note: lowercase `m`), `Azure BFL Flux Models`). Each has its own `productName`. Query with discovery first
 - **Embeddings**: Data Zone text-embedding-3 models under separate `Azure OpenAI Embedding` product (see dual query patterns above)

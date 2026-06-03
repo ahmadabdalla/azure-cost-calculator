@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+id: eval:developer-tools/managed-grafana/standard-x1-instance
+name: Managed Grafana - Standard X1 Instance
+description: >
+  Tests cost estimation for Azure Managed Grafana Standard tier with X1 instance
+  and active users. Validates multi-meter composition (node + zone redundancy +
+  users), correct SU multiplier (X1 = 2 SUs), and hourly-to-monthly conversion.
+tags:
+  - happy-path
+  - single-service
+  - developer-tools
+  - service:managed-grafana
+inputs:
+  prompt: "What is the monthly cost for an Azure Managed Grafana Standard X1 instance with zone redundancy and 5 active users in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Essential"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Managed Grafana|Azure Managed Grafana"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: active-users-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

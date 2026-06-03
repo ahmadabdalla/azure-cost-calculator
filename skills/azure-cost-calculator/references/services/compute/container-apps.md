@@ -13,30 +13,26 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Consumption (Standard): per-second billing (use UnitPrice from API)
+### All plans: substitute {Plan} SKU (ServiceName and ProductName are always the same)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
-SkuName: Standard
+SkuName: {Plan}
+InstanceCount: {N}
 
-### Dedicated: per-hour billing (InstanceCount = workload profile instances)
+- **Consumption**: SkuName `Standard` — per-second; use `UnitPrice` directly
+- **Dedicated**: SkuName `Dedicated` — per-hour; `InstanceCount` = workload profile instances
+- **Hybrid**: SkuName `Hybrid` — per-hour; Arc-enabled environments
+- **Dynamic Sessions**: SkuName `Dynamic Sessions` — per-hour
 
-ServiceName: Azure Container Apps
-ProductName: Azure Container Apps
-SkuName: Dedicated
-InstanceCount: 3
+## Key Fields
 
-### Hybrid: per-hour billing (Arc-enabled environments)
-
-ServiceName: Azure Container Apps
-ProductName: Azure Container Apps
-SkuName: Hybrid
-
-### Dynamic Sessions: per-hour billing
-
-ServiceName: Azure Container Apps
-ProductName: Azure Container Apps
-SkuName: Dynamic Sessions
+| Parameter     | How to determine                           | Example values                                       |
+| ------------- | ------------------------------------------ | ---------------------------------------------------- |
+| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
+| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
+| `skuName`     | Plan type; determines billing model        | `Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions` |
+| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage` |
 
 ## Meter Names
 

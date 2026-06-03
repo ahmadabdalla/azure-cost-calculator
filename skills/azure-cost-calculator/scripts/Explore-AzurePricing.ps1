@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Discovers available Azure pricing filter values for unknown or new resource types.
 

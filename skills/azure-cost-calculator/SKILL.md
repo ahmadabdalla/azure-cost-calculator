@@ -6,7 +6,7 @@ argument-hint: "<azure-service-name>"
 compatibility: Requires curl + jq (macOS/Linux) or PowerShell 7+ (pwsh) or Windows PowerShell 5.1 (powershell.exe on Windows), and internet access to prices.azure.com. No Azure subscription needed.
 metadata:
   author: ahmadabdalla
-  version: "1.7.3"
+  version: "1.8.0"
 ---
 
 # Azure Cost Calculator
@@ -104,6 +104,7 @@ YAML front matter fields. Optional fields use default elision; omitted means the
 | `billingConsiderations` |    -     | omit       | Ask user about listed pricing factors before calculating                                |
 | `primaryCost`           |    ✔     | -          | One-line billing summary for quick cost context                                         |
 | `apiServiceName`        |    -     | omit       | Use instead of `serviceName` in API queries                                             |
+| `queryServiceNames`     |    -     | omit       | Additional allowed query pattern `ServiceName` values                                   |
 | `hasMeters`             |    -     | `true`     | `false` → skip API, use Known Rates table                                               |
 | `pricingRegion`         |    -     | `regional` | `global` → `Region: Global`; `api-unavailable` → skip API; `empty-region` → omit region |
 | `hasKnownRates`         |    -     | `false`    | `true` → file contains manual pricing table                                             |
@@ -127,6 +128,7 @@ When estimating **3 or more services**, use these rules to reduce token consumpt
    - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
    - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
    - `apiServiceName` → use instead of `serviceName` in queries
+   - `queryServiceNames` → query blocks may use these additional `ServiceName` values
    - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
 3. **Full read triggers**: no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
 4. **Parallel queries**: run independent service queries in parallel, but limit to 3–5 concurrent requests to avoid API rate limiting. If querying more than 5 services, stagger starts in batches.

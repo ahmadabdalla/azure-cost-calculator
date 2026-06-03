@@ -73,7 +73,7 @@ Total = Compute + Storage (+ optional IOPS + Backup)
 - High Availability doubles compute cost (deploys a standby replica); no separate HA meter
 - Backup storage: first backup equal to DB size is free; excess charged per-GB/month (LRS only)
 - Storage options: Standard (GB), Premium Managed Disk V2 (GiB + IOPS + throughput), Ultra Disk (GB + IOPS + throughput)
-- Single Server is deprecated; all new deployments use Flexible Server
+- Single Server was retired in 2025; all new deployments use Flexible Server. Legacy Single Server meters still appear in the API but are not supported for new estimates
 - Cosmos DB for PostgreSQL and HorizonDB meters share this serviceName; filter by productName
 
 ## Product Names

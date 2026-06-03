@@ -95,5 +95,5 @@ Workspace Monthly = (workspace_fee_retailPrice Ã— 1) + (experiment_retailPrice Ã
 
 - **Deprecated**: Machine Learning Studio (classic) is being retired. Migrate to Azure Machine Learning (`machine-learning.md`)
 - Each plan tier includes free compute hours and transactions (meters return zero price); overage is billed per 1K transactions above the included quantity
-- Meters are available in `Global` and in select regions: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`
+- Meters are available in `Global` and in select regions: `southcentralus`, `westcentralus`, `eastus2`, `westeurope`, `japaneast`, `southeastasia`, `usgovarizona`, `usgovtexas`, `usgovvirginia`
 - Standard workspace product has `Standard Experiment Compute` (hourly) and `Standard Workspace fee` (monthly) meters separate from the Production Web API plans

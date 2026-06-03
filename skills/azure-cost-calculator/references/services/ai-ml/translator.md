@@ -14,13 +14,13 @@ privateEndpoint: true
 
 > **Trap (multiple products)**: Three `productName` values: `Translator Text` (regional), `Azure Translator` (Global-only), `Azure Translator - Disconnected` (annual). Always filter by `ProductName`.
 
-> **Trap (mixed units + Global naming)**: `unitOfMeasure` varies: `1M`, `1/Day` (S2–S4, C2–C4, D3), `1/Month`, `1/Year` (disconnected); script auto-multiplies daily by 30. `Azure Translator` (Global) uses different names: `S1 Standard`/`S1 Standard Characters` vs `S1`/`S1 Characters`.
+> **Trap (mixed units + Global naming)**: `unitOfMeasure` varies: `1M`, `1/Day` (S2–S4, C2–C4, D3), `1 Hour` (Doc Translator App), `1/Month`, `1/Year` (disconnected); script auto-multiplies daily by 30. `Azure Translator` (Global) uses different names: `S1 Standard`/`S1 Standard Characters` vs `S1`/`S1 Characters`.
 
 ## Query Pattern
 
 ### S1 standard text translation: 10M characters/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Characters
@@ -28,28 +28,21 @@ Quantity: 10 # millions of characters
 
 ### S1 document translation
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Document Characters
 
-### S1 custom model translation
-
-ServiceName: Foundry Tools <!-- cross-service -->
-ProductName: Translator Text
-SkuName: S1
-MeterName: S1 Custom Translation Characters
-
 ### Commitment tier (Azure 250M chars/month)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Translator Text
 SkuName: Commitment Tier Azure 250M
 MeterName: Commitment Tier Azure 250M Unit
 
 ### S1 standard text translation (Global product)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Translator
 SkuName: S1 Standard
 MeterName: S1 Standard Characters
@@ -80,11 +73,17 @@ Region: Global
 | `S1 Standard Characters`           | `S1 Standard`                | `Azure Translator` | `1M`          | Global-only equiv of S1 regional |
 | `S1 Image Images`                  | `S1 Image`                   | `Azure Translator` | `1K`          | Image translation (Global-only)  |
 | `Commitment Tier Azure 250M Unit`  | `Commitment Tier Azure 250M` | `Translator Text`  | `1/Month`     | 250M chars included              |
+| `Standard Pay As You Go App`       | `Standard Pay As You Go`     | `Azure Translator` | `1 Hour`      | Doc Translation App PAYG         |
+| `Commitment Tier App {N} Unit`     | `Commitment Tier App {N}`    | `Azure Translator` | `1/Month`     | App commitment (20K–400K hours)  |
+| `...App Overage`                   | `Commitment Tier App {N}`    | `Azure Translator` | `1 Hour`      | App overage above commitment     |
+| `Commitment Tier Emb {N} Unit`     | `Commitment Tier Emb {N}`    | `Azure Translator` | `1/Month`     | Embeddings commitment (250M–10B) |
+| `...Emb {N} Characters`            | `Commitment Tier Emb {N}`    | `Azure Translator` | `1M`          | Embeddings overage chars         |
 
 ## Cost Formula
 
 ```
 Per-character (1M):  Monthly = retailPrice × Quantity
+Hourly (1 Hour):     Monthly = retailPrice × 730
 Daily tiers (1/Day): Script auto-multiplies by 30
 Monthly (1/Month):   Monthly = retailPrice (use directly)
 Annual (1/Year):     Monthly = retailPrice ÷ 12

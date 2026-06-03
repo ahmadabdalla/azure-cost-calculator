@@ -12,7 +12,7 @@ hasFreeGrant: true
 
 > **Trap (shared API name)**: The `serviceName` "Azure Bot Service" is shared with Health Bot. Always filter by `ProductName: Azure Bot Service` to isolate channel meters. For Health Bot pricing, see `specialist/health-bot.md`.
 
-> **Trap (global-only)**: Channel meters exist only in `armRegionName: Global`. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`.
+> **Trap (global-only)**: Channel meters exist only in Global (commercial) and US Gov sovereign regions — any standard region like `eastus` returns zero results. Use `armRegionName: Global` for commercial pricing.
 
 > **Trap (free channels)**: Standard channels (Teams, Slack, Facebook) are always free with no paid meter. Only premium channels (DirectLine, Web Chat) are billable at S1 tier.
 
@@ -20,7 +20,7 @@ hasFreeGrant: true
 
 ### S1 premium channel messages (DirectLine/Web Chat)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: S1
 MeterName: S1 Premium Channel Messages
@@ -28,7 +28,7 @@ Quantity: 50 # thousands of messages per month
 
 ### Free tier (premium channels, 10K messages/month included)
 
-ServiceName: Azure Bot Service <!-- cross-service -->
+ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: Free
 MeterName: Free Premium Channel Messages

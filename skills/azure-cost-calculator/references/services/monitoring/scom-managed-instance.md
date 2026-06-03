@@ -19,7 +19,7 @@ hasFreeGrant: true
 
 ### Paid endpoint (InstanceCount = number of non-Azure endpoints)
 
-ServiceName: Azure Monitor <!-- cross-service -->
+ServiceName: Azure Monitor
 ProductName: Azure Monitor SCOM Managed Instance
 SkuName: Basic
 MeterName: Basic Endpoint
@@ -28,7 +28,7 @@ InstanceCount: 10 # billable non-Azure endpoints
 
 ### Free Azure-benefit endpoint (zero cost)
 
-ServiceName: Azure Monitor <!-- cross-service -->
+ServiceName: Azure Monitor
 ProductName: Azure Monitor SCOM Managed Instance
 SkuName: Free Benefit- Azure
 MeterName: Free Benefit- Azure Endpoint

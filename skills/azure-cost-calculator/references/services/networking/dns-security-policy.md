@@ -18,7 +18,7 @@ primaryCost: "Per 1K managed domains/month + per million DNS security queries"
 
 ### Managed domains (1 unit = 1,000 domains)
 
-ServiceName: Azure DNS  <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: DNS Security Policy Domains
 MeterName: DNS Security Policy Domains Managed Domain
 Region: Zone 1
@@ -26,7 +26,7 @@ Quantity: 5
 
 ### DNS security queries (per million)
 
-ServiceName: Azure DNS  <!-- cross-service -->
+ServiceName: Azure DNS
 SkuName: DNS Security Policy Queries
 MeterName: DNS Security Policy Queries
 Region: Zone 1

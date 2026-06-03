@@ -58,6 +58,11 @@
             Required    = $false
             Description = 'API serviceName when it differs from display serviceName (e.g., VMware Solution uses Specialized Compute)'
         }
+        queryServiceNames     = @{
+            Type        = 'array'
+            Required    = $false
+            Description = 'Additional API serviceName values allowed in query pattern ServiceName declarations'
+        }
 
         # ── Pricing Profile (new) ────────────────────────────────────────
         primaryCost           = @{
@@ -105,7 +110,7 @@
     FieldGroups        = @(
         @{ Name = 'Identity'; Fields = @('serviceName'; 'category'; 'aliases') }
         @{ Name = 'Billing Graph'; Fields = @('billingNeeds'; 'billingConsiderations') }
-        @{ Name = 'API Identity'; Fields = @('apiServiceName') }
+        @{ Name = 'API Identity'; Fields = @('apiServiceName'; 'queryServiceNames') }
         @{ Name = 'Pricing Profile'; Fields = @('primaryCost'; 'hasMeters'; 'pricingRegion'; 'hasKnownRates') }
         @{ Name = 'Service Capabilities'; Fields = @('hasFreeGrant'; 'privateEndpoint') }
     )

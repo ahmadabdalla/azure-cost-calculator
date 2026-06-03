@@ -17,7 +17,7 @@ primaryCost: "Per-host hourly rate × node count × 730 hours/month"
 
 ### Host Node
 
-ServiceName: Specialized Compute <!-- cross-service -->
+ServiceName: Specialized Compute
 ProductName: Specialized Compute Azure VMware Solution
 SkuName: AV36P VCF BYOL
 MeterName: AV36P VCF BYOL Node
@@ -25,7 +25,7 @@ InstanceCount: 3
 
 ### Reservation
 
-ServiceName: Specialized Compute <!-- cross-service -->
+ServiceName: Specialized Compute
 ProductName: Specialized Compute Azure VMware Solution
 SkuName: AV36P VCF BYOL
 PriceType: Reservation

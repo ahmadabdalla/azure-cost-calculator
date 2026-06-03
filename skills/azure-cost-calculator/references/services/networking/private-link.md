@@ -21,7 +21,7 @@ pricingRegion: global
 
 ### Endpoint hourly cost
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Virtual Network Private Link
 SkuName: Standard
 MeterName: Standard Private Endpoint
@@ -29,7 +29,7 @@ Region: Global
 
 ### Multi-endpoint deployment (InstanceCount = number of private endpoints)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Virtual Network Private Link
 SkuName: Standard
 MeterName: Standard Private Endpoint
@@ -38,7 +38,7 @@ InstanceCount: 5
 
 ### Data processed: substitute {direction} with Ingress or Egress
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Virtual Network Private Link
 SkuName: Standard
 MeterName: Standard Data Processed - {direction}
@@ -46,7 +46,7 @@ Region: Global
 
 ### Private Link Service (provider-side hourly cost)
 
-ServiceName: Virtual Network <!-- cross-service -->
+ServiceName: Virtual Network
 ProductName: Virtual Network Private Link
 SkuName: Service endpoint Standard
 MeterName: Service endpoint Standard Virtual Network

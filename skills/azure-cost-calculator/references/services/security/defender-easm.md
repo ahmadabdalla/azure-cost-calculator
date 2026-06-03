@@ -16,7 +16,7 @@ primaryCost: "Per-asset daily rate × assetCount × 30 days/month"
 
 ### Standard: per billable asset per day
 
-ServiceName: Microsoft Defender for Cloud  <!-- cross-service -->
+ServiceName: Microsoft Defender for Cloud
 ProductName: Defender External Attack Surface Management
 SkuName: Defender EASM Standard
 MeterName: Defender EASM Standard Asset

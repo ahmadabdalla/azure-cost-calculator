@@ -48,6 +48,7 @@ billingConsiderations:
 # ── API Identity (optional) ──────────────────────────────
 # apiServiceName: { only when API serviceName ≠ display serviceName,
 #   e.g., VMware Solution → "Specialized Compute", Static Web Apps → "Azure App Service" }
+# queryServiceNames: [{ only when query blocks need additional ServiceName values }]
 
 # ── Pricing Profile ──────────────────────────────────────
 primaryCost:
@@ -103,6 +104,7 @@ primaryCost:
      - billingConsiderations (optional): Reserved Instances, Spot Pricing, Azure Hybrid Benefit,
        M365 / Windows per-user licensing. Omit if standard PAYG only.
      - apiServiceName (optional): Only when API serviceName differs from display name. Omit if identical.
+     - queryServiceNames (optional): Additional Retail Prices API ServiceName values used by query blocks. Omit unless a block must query a serviceName outside `serviceName`, `apiServiceName`, or `billingNeeds`.
      - primaryCost (required): One-line billing summary, max 120 chars.
      - hasMeters (optional, default: true): Set false for API-unavailable services. Omit when true.
      - pricingRegion (optional, default: regional): regional | global | empty-region | api-unavailable. Omit when regional.

@@ -8,7 +8,7 @@ primaryCost: "Per-user access fee per month (varies by SKU) + VM compute, storag
 privateEndpoint: true
 ---
 
-# Azure Virtual Desktop
+# Windows Virtual Desktop
 
 > **Trap**: The per-user access fees under this service apply only to users **without** eligible Microsoft 365 or Windows per-user licenses. M365 E3/E5/A3/A5/Business Premium or Windows E3/E5 users have no separate AVD access fee; their cost is entirely VM compute, storage, and networking (priced under Virtual Machines, Managed Disks, etc.). Always confirm license entitlements before including access fees.
 
@@ -72,4 +72,7 @@ HCI vCPU:         Monthly = retailPrice × 730 × vCPUCount
 - Windows 10/11 Enterprise session hosts use Linux VM compute rates (Windows license included via AVD access fee or M365 entitlement); Windows Server session hosts use Windows VM rates
 - Estimate 4–6 knowledge-worker users per D4s_v5 session host; actual density depends on application load and GPU requirements
 - Session host VMs, OS disks, and networking are priced under their respective services — see `compute/virtual-machines.md` and `storage/managed-disks.md`
+- FSLogix profile containers (required for multi-session) add per-user storage cost — see `storage/storage.md` (Azure Files) or `storage/netapp-files.md` (Azure NetApp Files) depending on profile backend
+- Outbound data transfer from session hosts to remote users incurs egress charges — see `networking/bandwidth.md`
+- OS disk storage profile (Standard SSD vs Premium SSD) for session hosts affects per-user steady-state cost; Premium reduces login storms but costs more per GiB
 - The `App to Desktop Upgrade` SKU is an incremental fee to promote app-only users to full desktop access without re-provisioning

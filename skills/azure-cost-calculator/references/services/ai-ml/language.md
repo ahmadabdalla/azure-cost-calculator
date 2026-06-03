@@ -23,7 +23,7 @@ privateEndpoint: true
 
 ### Standard text analytics (NER, Sentiment, PII): 100K records
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Language
 SkuName: Standard
 MeterName: Standard Text Records
@@ -31,21 +31,21 @@ Quantity: 100 # 100 × 1K = 100K records
 
 ### CLU inference
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Language
 SkuName: Standard
 MeterName: Standard CLU Text Records
 
 ### CLU / custom model training
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Language
 SkuName: Standard
 MeterName: Standard CLU Advanced Training Unit
 
 ### LUIS (legacy)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Language Understanding
 SkuName: S1
 MeterName: S1 Transactions

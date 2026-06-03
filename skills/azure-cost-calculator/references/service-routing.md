@@ -145,6 +145,7 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...`. Display name may diff
 - Foundry Agents: AI Agents, Agent Orchestration, HOBO Agents, SRE Agent
 - Foundry Tools: Azure AI Foundry Tools, AI Studio, AI Foundry Workspace, Azure AI Services, Cognitive Services, Language, Decision
 - Machine Learning Studio: ML Studio (classic), Classic ML
+- Microsoft Discovery: Discovery Platform, Scientific Discovery
 - Microsoft Genomics: Genomics Workspace
 
 ## IoT (services/iot/)

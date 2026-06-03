@@ -20,7 +20,7 @@ privateEndpoint: true
 
 ### Speech to Text: standard PAYG
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Speech
 SkuName: S1
 MeterName: S1 Speech To Text
@@ -28,7 +28,7 @@ Quantity: 100 # audio hours
 
 ### Neural Text to Speech: standard PAYG
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Speech
 SkuName: S1
 MeterName: S1 Neural Text To Speech Characters
@@ -36,14 +36,14 @@ Quantity: 10 # units of 1M characters
 
 ### Commitment tier: STT Azure 2K (base fee)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Speech
 SkuName: Commitment Tier Speech to Text Azure 2K
 MeterName: Commitment Tier Speech to Text Azure 2K Unit
 
 ### Fast Transcription
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Speech
 SkuName: Fast Transcription
 MeterName: Fast Transcription Speech To Text

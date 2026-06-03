@@ -34,16 +34,24 @@ ServiceName: Functions
 SkuName: Always Ready
 ProductName: Flex Consumption
 
-### Flex Consumption: On Demand meters (use Quantity for monthly volume)
+### Flex Consumption: On Demand meters
 
 ServiceName: Functions
 SkuName: On Demand
 ProductName: Flex Consumption
-Quantity: 1000000
 
 ### Dedicated (App Service Plan)
 
-> **Agent instruction**: Functions on a Dedicated plan (B1/S1/P1v3) have **NO** `Functions` meters; billing flows entirely through `Azure App Service`. Use app-service.md query patterns.
+> Functions on a Dedicated plan have **NO** `Functions` meters; billing flows through `Azure App Service`. Use app-service.md.
+
+## Key Fields
+
+| Parameter     | How to determine                          | Example values                                            |
+| ------------- | ----------------------------------------- | --------------------------------------------------------- |
+| `serviceName` | Always `Functions`                        | `Functions`                                               |
+| `productName` | Plan type                                 | `Functions`, `Premium Functions`, `Flex Consumption`      |
+| `skuName`     | Plan tier within product                  | `Standard`, `Premium`, `Always Ready`, `On Demand`        |
+| `meterName`   | Billing dimension (executions / duration) | `Standard Total Executions`, `On Demand Execution Time`   |
 
 ## Meter Names
 
@@ -64,36 +72,29 @@ Consumption:
   Executions = (max(0, totalExecutions - 1,000,000) / 10) × execUnitPrice
   Duration   = max(0, gbSeconds - 400,000) × pricePerGBSecond
   Monthly    = Executions + Duration
-
 Premium:
   Monthly = (vCPU_price × vCPUs × 730) + (memory_price × memoryGiB × 730)
-
 Flex Consumption:
   Always Ready = baseline_price × idle_gbSeconds + ar_execTime_price × exec_gbSeconds + ar_exec_price × (executions / 10)
   On Demand    = max(0, on_demand_gbSeconds - 100,000) × od_execTime_price + max(0, executions - 250,000) / 10 × od_exec_price
   Monthly      = Always Ready + On Demand
-
 Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see app-service.md)
 ```
 
 ## Notes
 
-- Consumption: generous free grant (1M executions, 400K GB-s) is per subscription, shared across all Function Apps; do not deduct per app
+- Consumption free grant (1M executions, 400K GB-s) is per subscription, shared across all Function Apps; do not deduct per app
 - Convert user-specified memory to GiB by dividing MiB by 1,024 (e.g. 256 MiB = 0.25 GiB)
 - Premium: billed per-second with a minimum of one instance
 - Flex Consumption: free grant of 250K executions + 100K GB-s/month; Always Ready baseline charges apply even with no traffic
-- **Dedicated (App Service Plan)**: no `Functions` meters exist; cost is the App Service Plan itself, billed under `Azure App Service`; use app-service.md
-- `MonthlyCost` rounds sub-cent prices to zero. Pass an explicit `Quantity` or read `UnitPrice` from JSON output
-- Private endpoints require Flex Consumption, Premium, or Dedicated plan
+- **Dedicated**: no `Functions` meters exist; cost is the App Service Plan itself under `Azure App Service`; use app-service.md
+- `MonthlyCost` rounds sub-cent prices to zero. Pass an explicit `Quantity` or read `UnitPrice` from JSON; private endpoints require Flex Consumption, Premium, or Dedicated plan
 
 ## Premium Plan Sizes (Elastic Premium)
 
-The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` meters; NO EP1/EP2/EP3-specific meter. Multiply by plan specs below.
-
-| Plan | vCPUs | Memory (GiB) | Monthly Formula                                     |
-| ---- | ----- | ------------ | --------------------------------------------------- |
-| EP1  | 1     | 3.5          | (vCPU_price × 1 × 730) + (memory_price × 3.5 × 730) |
-| EP2  | 2     | 7            | (vCPU_price × 2 × 730) + (memory_price × 7 × 730)   |
-| EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
-
-> **Agent instruction**: When the user says "Functions Premium EP2", query `Premium Functions` for the generic per-vCPU and per-GiB hourly rates, then multiply by the EP2 specs (2 vCPU, 7 GiB) from the table above.
+| Plan | vCPUs | Memory (GiB) | Notes                                                                          |
+| ---- | ----- | ------------ | ------------------------------------------------------------------------------ |
+| EP1  | 1     | 3.5          | (vCPU_price × 1 × 730) + (memory_price × 3.5 × 730)                           |
+| EP2  | 2     | 7            | (vCPU_price × 2 × 730) + (memory_price × 7 × 730)                             |
+| EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)                            |
+> **Agent instruction**: The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` meters with no EP1/EP2/EP3-specific meter. When the user says "Functions Premium EP2", query `Premium Functions` for the per-vCPU and per-GiB hourly rates, then multiply by EP2 specs above.

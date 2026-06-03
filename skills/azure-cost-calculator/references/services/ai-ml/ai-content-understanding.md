@@ -20,15 +20,15 @@ privateEndpoint: true
 
 ### Standard document content extraction: 10K pages/month
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
-SkuName: Standard Doc Content Extraction
-MeterName: Standard Doc Content Extraction Pages
+SkuName: Doc Content Extraction Standard
+MeterName: Doc Content Extraction Standard Pages
 Quantity: 10 # 10 × 1K = 10,000 pages
 
 ### Audio content extraction: 50 hours
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Audio Content Extraction
 MeterName: Audio Content Extraction
@@ -36,14 +36,14 @@ Quantity: 50 # total hours of audio processed per month
 
 ### Video content extraction
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Video Content Extraction
 MeterName: Video Content Extraction
 
 ### Standard field extraction: input tokens (3 regions only)
 
-ServiceName: Foundry Tools <!-- cross-service -->
+ServiceName: Foundry Tools
 ProductName: Azure Content Understanding
 SkuName: Std Field Extract Inp
 MeterName: Std Field Extract Inp Tokens
@@ -55,20 +55,20 @@ Quantity: 1000 # 1000 × 1K = 1M tokens
 | ------------- | ------------------------------------ | ------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Tools`               | `Foundry Tools`                                                     |
 | `productName` | Always `Azure Content Understanding` | `Azure Content Understanding`                                       |
-| `skuName`     | Modality + extraction tier           | `Standard Doc Content Extraction`, `Audio Content Extraction`       |
-| `meterName`   | SKU name + unit suffix               | `Standard Doc Content Extraction Pages`, `Audio Content Extraction` |
+| `skuName`     | Modality + extraction tier           | `Doc Content Extraction Standard`, `Audio Content Extraction`       |
+| `meterName`   | SKU name + unit suffix               | `Doc Content Extraction Standard Pages`, `Audio Content Extraction` |
 
 ## Meter Names
 
 | Meter | skuName | unitOfMeasure | Notes |
 | ----- | ------- | ------------- | ----- |
-| `Min. Doc Content Extraction Pages` | `Min. Doc Content Extraction` | `1K` | Minimal doc tier; 16 regions |
-| `Basic Doc Content Extraction Pages` | `Basic Doc Content Extraction` | `1K` | Basic doc extraction; 15 regions |
-| `Standard Doc Content Extraction Pages` | `Standard Doc Content Extraction` | `1K` | Standard doc extraction; 15 regions |
-| `Audio Content Extraction` | `Audio Content Extraction` | `1 Hour` | Audio processing; 15 regions |
-| `Video Content Extraction` | `Video Content Extraction` | `1 Hour` | Video processing; 15 regions |
-| `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Token-based contextualization; 15 regions |
-| `Add-On Layout Pages` | `Add-On Layout` | `1K` | Layout extraction add-on; 15 regions |
+| `Doc Content Extraction Min Pages` | `Doc Content Extraction Min` | `1K` | Minimal doc tier; 17 regions |
+| `Doc Content Extraction Basic Pages` | `Doc Content Extraction Basic` | `1K` | Basic doc extraction; 16 regions |
+| `Doc Content Extraction Standard Pages` | `Doc Content Extraction Standard` | `1K` | Standard doc extraction; 16 regions |
+| `Audio Content Extraction` | `Audio Content Extraction` | `1 Hour` | Audio processing; 16 regions |
+| `Video Content Extraction` | `Video Content Extraction` | `1 Hour` | Video processing; 16 regions |
+| `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Token-based contextualization; 16 regions |
+| `Add-On Layout Pages` | `Add-On Layout` | `1K` | Layout extraction add-on; 16 regions |
 | `Std Field Extract Inp Tokens` | `Std Field Extract Inp` | `1K` | Standard field input; 3 regions |
 | `Std Field Extract Outp Tokens` | `Std Field Extract Outp` | `1K` | Standard field output; 3 regions |
 | `Document Field Extraction Pages` | `Document Field Extraction` | `1K` | Doc field extraction; 3 regions |
@@ -90,7 +90,7 @@ Composite:              Monthly = ContentExtraction + Contextualization + FieldE
 - **No free tier**: Unlike sibling AI services, Content Understanding has no free tier or monthly grant
 - **Azure OpenAI dependency**: Field extraction incurs separate Azure OpenAI model charges (see `openai-service.md` for model pricing)
 - **Extraction tiers** (never-assume): Documents offer Minimal/Basic/Standard tiers; contextualization and field extraction also have **Pro** variants. Ask user which tier
-- **Regional availability**: GA content extraction in 15–16 regions; Field Extraction/Classification/Face only in westus, swedencentral, australiaeast
+- **Regional availability**: GA content extraction in 16–17 regions; Field Extraction/Classification/Face only in westus, swedencentral, australiaeast
 - **Two-phase billing**: Content extraction + field extraction are separate meters for all modalities (doc/audio/video); field extraction rates are significantly higher
 - **Capacity planning**: `Quantity: 1` = 1K pages/tokens/images when `unitOfMeasure` is `1K`; `1 Hour` meters bill per hour of media processed
 - **Supports private endpoints** via AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
