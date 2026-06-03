@@ -6,6 +6,58 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.8.0] - 2026-06-03
+
+### Added
+
+- Microsoft Discovery (`discovery.md`): new service reference for the Microsoft Discovery scientific platform
+- `SKILL.md`: new optional front matter field `queryServiceNames` for declaring additional allowed `ServiceName` values in query patterns
+- `service-routing.md`: routing entry and aliases for Microsoft Discovery
+- `pitfalls.md`: documented unsupported OData `not()` negation in the Retail Prices API (returns HTTP 400)
+- Azure AI Translator (`translator.md`): undocumented Translator (Global) meters and hourly billing formula
+- Azure Document Intelligence (`document-intelligence.md`): missing S0 batch meters
+- Azure App Service (`app-service.md`): Meter Names section
+- Azure Functions (`functions.md`): Key Fields section
+- Azure Container Apps (`container-apps.md`): Key Fields section
+- Azure Cosmos DB (`cosmos-db.md`): free-tier formula branch
+- Azure Cosmos DB Garnet Cache (`cosmos-db-garnet-cache.md`): missing General Purpose Burstable meter
+- Azure Kubernetes Service (`kubernetes-service.md`): Public IP billing dependency note
+
+### Changed
+
+- Azure AI Content Understanding (`ai-content-understanding.md`): meter name word-order fix, YAML cleanup, audited for happy-path eval
+- Azure AI Foundry Agents (`foundry-agents.md`): metadata refactor replacing cross-service markers
+- Azure Bot Service (`bot-service.md`): global-only trap expanded to include US Gov sovereign regions
+- Azure Machine Learning (`machine-learning.md`): trap wording refreshed, missing meters added, `primaryCost` shortened
+- Azure Machine Learning Studio (`machine-learning-studio.md`): stale regions list refreshed
+- Azure OpenAI Service (`openai-service.md`): YAML convention fix, undocumented products added, mixed-units trap clarified
+- Azure Managed Grafana (`managed-grafana.md`): audited and aligned with happy-path eval
+- Azure Managed Airflow (`managed-airflow.md`): audited and aligned with happy-path eval
+- Azure DNS Private Resolver (`dns-private-resolver.md`): audited for happy-path eval
+- Azure DNS Security Policy (`dns-security-policy.md`): audited for happy-path eval
+- Azure Private DNS (`private-dns.md`): audited for happy-path eval
+- Azure Virtual Network Manager (`virtual-network-manager.md`): audited for happy-path eval
+- Azure Public IP Addresses (`ip-addresses.md`): audited for happy-path eval
+- Microsoft Purview (`purview.md`): audited for happy-path eval
+- Microsoft Defender EASM (`defender-easm.md`): audited for happy-path eval
+- Azure Data Box Gateway (`data-box-gateway.md`): audited for happy-path eval
+- Azure Health Bot (`health-bot.md`): audited for happy-path eval
+- Azure Monitor SCOM Managed Instance (`scom-managed-instance.md`): audited for happy-path eval
+- Microsoft Entra Domain Services (`entra-domain-services.md`): clarified agency boundary
+- Service reference files across `ai-ml/`, `compute/`, `databases/`, `monitoring/`, `networking/`, `storage/`, `web/`: replaced cross-service comment markers with front matter metadata for consistency
+
+### Fixed
+
+- Azure Virtual Desktop (`windows-virtual-desktop.md`): H1 aligned with `serviceName`, missing billing caveats added
+- Azure Database for PostgreSQL (`database-for-postgresql.md`): stale Single Server status corrected
+- Azure Database for MySQL (`database-for-mysql.md`): retired Single Server wording removed, RI query guidance added
+- Azure Database for MariaDB (`database-for-mariadb.md`): updated to reflect retired status
+- Azure Redis Cache (`redis-cache.md`): title, Key Fields, Meter Names, and Cost Formula corrected
+- Azure SQL Managed Instance (`sql-managed-instance.md`): PAYG/AHUB formula double-counting fixed
+- Azure Database Migration Service (`database-migration-service.md`): clarified paid vs free meters and Premium free-period model
+- HorizonDB (`horizondb.md`): replaced underspecified limited-preview guidance
+- PowerShell scripts (`Get-AzurePricing.ps1`, `Explore-AzurePricing.ps1`, `lib/Build-ODataFilter.ps1`, `lib/Get-MonthlyMultiplier.ps1`, `lib/Invoke-RetailPricesQuery.ps1`): stripped UTF-8 BOM that broke `pwsh` execution on some platforms
+
 ## [1.7.3] - 2026-05-02
 
 ### Changed
