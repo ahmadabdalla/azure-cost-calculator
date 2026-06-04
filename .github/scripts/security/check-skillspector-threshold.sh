@@ -87,6 +87,18 @@ severity_rank() {
   esac
 }
 
+# Inverse of severity_rank: turn a numeric rank back into its severity name so
+# the log can show the effective gate, not just the configured FAIL_ON list.
+rank_severity() {
+  case "$1" in
+    1) printf 'LOW' ;;
+    2) printf 'MEDIUM' ;;
+    3) printf 'HIGH' ;;
+    4) printf 'CRITICAL' ;;
+    *) printf 'UNKNOWN' ;;
+  esac
+}
+
 SEVERITY_RANK="$(severity_rank "$SEVERITY_UPPER")"
 if [ "$SEVERITY_RANK" -eq 0 ]; then
   echo "::error::Unrecognized severity '${SEVERITY_UPPER}' in $REPORT_PATH"
@@ -114,6 +126,10 @@ if [ "$THRESHOLD_RANK" -eq 0 ]; then
   exit 2
 fi
 
+# Effective threshold severity (lowest-ranked entry in FAIL_ON). The gate fails
+# at this severity or higher, regardless of how FAIL_ON was written.
+THRESHOLD_LABEL="$(rank_severity "$THRESHOLD_RANK")"
+
 # Fail when the report severity is at or above the threshold.
 FAIL=0
 if [ "$SEVERITY_RANK" -ge "$THRESHOLD_RANK" ]; then
@@ -126,7 +142,7 @@ echo "  Score:          ${SCORE:-unknown}/100"
 echo "  Severity:       ${SEVERITY_UPPER}"
 echo "  Recommendation: ${RECOMMENDATION:-unknown}"
 echo "  Issues:         ${ISSUE_COUNT}"
-echo "  Fail threshold: ${FAIL_ON_UPPER}"
+echo "  Fail threshold: ${THRESHOLD_LABEL} or higher (configured: ${FAIL_ON_UPPER})"
 
 # Write the same summary to the GitHub Actions step summary when available.
 if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
@@ -139,12 +155,12 @@ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
     echo "| Severity | ${SEVERITY_UPPER} |"
     echo "| Recommendation | ${RECOMMENDATION:-unknown} |"
     echo "| Issues | ${ISSUE_COUNT} |"
-    echo "| Fail threshold | ${FAIL_ON_UPPER} |"
+    echo "| Fail threshold | ${THRESHOLD_LABEL} or higher (configured: ${FAIL_ON_UPPER}) |"
   } >> "$GITHUB_STEP_SUMMARY"
 fi
 
 if [ "$FAIL" -eq 1 ]; then
-  echo "::error::SkillSpector severity ${SEVERITY_UPPER} meets fail threshold (${FAIL_ON_UPPER}). Blocking merge."
+  echo "::error::SkillSpector severity ${SEVERITY_UPPER} meets fail threshold ${THRESHOLD_LABEL} or higher (configured: ${FAIL_ON_UPPER}). Blocking merge."
   exit 1
 fi
 

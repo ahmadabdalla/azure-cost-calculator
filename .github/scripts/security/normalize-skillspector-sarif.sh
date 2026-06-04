@@ -75,7 +75,7 @@ PREFIX="${PREFIX%/}"
 # satisfies this character class and carries no "..", so idempotent re-runs
 # stay safe, while a hostile prefixed uri carrying ".." is still rejected.
 # Everything else is hostile.
-UNSAFE="$(jq -r --arg p "$PREFIX" '
+UNSAFE="$(jq -r '
   [ .runs[]?.results[]?.locations[]?.physicalLocation.artifactLocation.uri
     | select(. != null and . != "")
     | select(
