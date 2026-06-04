@@ -157,6 +157,32 @@ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
     echo "| Issues | ${ISSUE_COUNT} |"
     echo "| Fail threshold | ${THRESHOLD_LABEL} or higher (configured: ${FAIL_ON_UPPER}) |"
   } >> "$GITHUB_STEP_SUMMARY"
+
+  # Enumerate the individual findings so the run page is self-contained:
+  # an author can read what tripped the gate without opening the Security
+  # tab or downloading the JSON report. Finding text derives from the
+  # scanned (untrusted) skill, so each field is sanitised before it is
+  # written: table-breaking pipes are escaped, newlines/tabs are collapsed,
+  # and the detail is truncated to keep one finding per row.
+  if [ "${ISSUE_COUNT}" -gt 0 ]; then
+    {
+      echo
+      echo "#### Findings (${ISSUE_COUNT})"
+      echo
+      echo "| Severity | Rule | Location | Detail |"
+      echo "|---|---|---|---|"
+      jq -r '
+        def san: (. // "-") | tostring | gsub("\\\\"; "\\\\") | gsub("\\|"; "\\|") | gsub("[\r\n\t]+"; " ");
+        def trunc($n): if (length > $n) then (.[0:$n] + "...") else . end;
+        .issues[]
+        | "| " + (.severity | san)
+        + " | " + (.id | san)
+        + " | " + ((.location.file | san) + ":" + ((.location.start_line // 0) | tostring))
+        + " | " + (((.explanation // .message) | san) | trunc(160))
+        + " |"
+      ' "$REPORT_PATH"
+    } >> "$GITHUB_STEP_SUMMARY"
+  fi
 fi
 
 if [ "$FAIL" -eq 1 ]; then

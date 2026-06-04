@@ -28,7 +28,7 @@ write_report() {
     if [ "$issue_count" -gt 0 ]; then
         issues="["
         for ((i=1; i<=issue_count; i++)); do
-            issues+='{"rule_id":"X1","severity":"'"$severity"'","message":"x"}'
+            issues+='{"id":"RULE'"$i"'","category":"secrets","severity":"'"$severity"'","confidence":0.9,"location":{"file":"scripts/x.py","start_line":'"$i"'},"explanation":"finding '"$i"'"}'
             [ "$i" -lt "$issue_count" ] && issues+=","
         done
         issues+="]"
@@ -216,5 +216,96 @@ JSON
     summary="$(cat "$GITHUB_STEP_SUMMARY")"
     [[ "$summary" == *"SkillSpector security gate"* ]]
     [[ "$summary" == *"| Severity | LOW |"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "enumerates individual findings in the step summary" {
+    write_report "HIGH" 70 "DO_NOT_INSTALL" 2
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    [[ "$summary" == *"#### Findings (2)"* ]]
+    [[ "$summary" == *"| Severity | Rule | Location | Detail |"* ]]
+    [[ "$summary" == *"| HIGH | RULE1 | scripts/x.py:1 | finding 1 |"* ]]
+    [[ "$summary" == *"| HIGH | RULE2 | scripts/x.py:2 | finding 2 |"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "omits the findings table when there are no issues" {
+    write_report "LOW" 5 "SAFE" 0
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 0 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    [[ "$summary" != *"#### Findings"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "sanitises pipe and newline characters in finding text" {
+    cat > "$REPORT" <<'JSON'
+{
+  "skill": {"name": "test"},
+  "risk_assessment": {"score": 80, "severity": "HIGH", "recommendation": "DO_NOT_INSTALL"},
+  "issues": [
+    {"id": "PIPE", "severity": "HIGH", "location": {"file": "a|b.py", "start_line": 3},
+     "explanation": "line one\nline two | piped"}
+  ]
+}
+JSON
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    # Raw newline must not leak into the table, and pipes are escaped.
+    [[ "$summary" == *"line one line two \| piped"* ]]
+    [[ "$summary" == *"a\|b.py:3"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "escapes backslash-pipe so it cannot inject a table column" {
+    # An attacker-crafted finding containing the two characters backslash
+    # then pipe must not survive as a live column delimiter. The escaped
+    # form is a literal backslash (\\) followed by an escaped pipe (\|),
+    # i.e. three backslashes then a pipe in the rendered markdown source.
+    printf '%s' '{
+  "skill": {"name": "test"},
+  "risk_assessment": {"score": 80, "severity": "HIGH", "recommendation": "DO_NOT_INSTALL"},
+  "issues": [
+    {"id": "BS", "severity": "HIGH", "location": {"file": "x.py", "start_line": 1},
+     "explanation": "evil\\|injected"}
+  ]
+}' > "$REPORT"
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    [[ "$summary" == *'evil\\\|injected'* ]]
+    # The raw (unescaped) backslash-pipe must not appear as a bare delimiter.
+    [[ "$summary" != *'evil\|injected'* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "falls back to .message when .explanation is absent" {
+    cat > "$REPORT" <<'JSON'
+{
+  "skill": {"name": "test"},
+  "risk_assessment": {"score": 80, "severity": "HIGH", "recommendation": "DO_NOT_INSTALL"},
+  "issues": [
+    {"id": "MSG", "severity": "HIGH", "location": {"file": "x.py", "start_line": 1},
+     "message": "from message field"}
+  ]
+}
+JSON
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    [[ "$summary" == *"from message field"* ]]
     rm -f "$GITHUB_STEP_SUMMARY"
 }
