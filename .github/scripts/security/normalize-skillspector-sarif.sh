@@ -66,20 +66,21 @@ fi
 # Strip any trailing slash so we control the single separator we add.
 PREFIX="${PREFIX%/}"
 
-# A uri is acceptable when it is EITHER already prefixed (idempotent
-# re-runs) OR a plain in-tree relative path: the safe character class
-# below excludes ":" (schemes), "\" (Windows separators), "%" (encoded
-# traversal) and leading "/" (absolute), and the second test rejects any
-# ".." path segment. Everything else is hostile.
+# A uri is acceptable only when it is a plain in-tree relative path: the
+# safe character class below excludes ":" (schemes), "\" (Windows
+# separators), "%" (encoded traversal) and leading "/" (absolute), and the
+# second test rejects any ".." path segment. We deliberately do NOT let an
+# existing prefix short-circuit the traversal check: a legitimate
+# already-prefixed uri (e.g. skills/azure-cost-calculator/SKILL.md) still
+# satisfies this character class and carries no "..", so idempotent re-runs
+# stay safe, while a hostile prefixed uri carrying ".." is still rejected.
+# Everything else is hostile.
 UNSAFE="$(jq -r --arg p "$PREFIX" '
   [ .runs[]?.results[]?.locations[]?.physicalLocation.artifactLocation.uri
     | select(. != null and . != "")
     | select(
-        ( startswith($p + "/") )
-        or (
-          test("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$")
-          and ( test("(^|/)\\.\\.(/|$)") | not )
-        )
+        ( test("^[A-Za-z0-9._-][A-Za-z0-9._/-]*$")
+          and ( test("(^|/)\\.\\.(/|$)") | not ) )
         | not
       )
   ] | unique | .[]

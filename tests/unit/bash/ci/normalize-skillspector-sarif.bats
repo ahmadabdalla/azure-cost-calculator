@@ -69,6 +69,13 @@ read_uris() {
     [ "$(read_uris)" = '["skills/azure-cost-calculator/SKILL.md"]' ]
 }
 
+@test "is idempotent on an already-prefixed nested uri" {
+    write_sarif "skills/azure-cost-calculator/scripts/lib/pricing.sh"
+    run bash "$SCRIPT" "$SARIF" "$PREFIX"
+    [ "$status" -eq 0 ]
+    [ "$(read_uris)" = '["skills/azure-cost-calculator/scripts/lib/pricing.sh"]' ]
+}
+
 @test "tolerates a trailing slash on the prefix" {
     write_sarif "SKILL.md"
     run bash "$SCRIPT" "$SARIF" "$PREFIX/"
@@ -105,6 +112,19 @@ JSON
 
 @test "rejects mid-path traversal" {
     write_sarif "scripts/../../secret"
+    run bash "$SCRIPT" "$SARIF" "$PREFIX"
+    [ "$status" -eq 3 ]
+}
+
+@test "rejects traversal in an already-prefixed uri" {
+    write_sarif "skills/azure-cost-calculator/../../.github/workflows/ci.yml"
+    run bash "$SCRIPT" "$SARIF" "$PREFIX"
+    [ "$status" -eq 3 ]
+    [[ "$output" == *"unsafe artifact uri"* ]]
+}
+
+@test "rejects mid-path traversal in an already-prefixed uri" {
+    write_sarif "skills/azure-cost-calculator/scripts/../../../secret"
     run bash "$SCRIPT" "$SARIF" "$PREFIX"
     [ "$status" -eq 3 ]
 }
