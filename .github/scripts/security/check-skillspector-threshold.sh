@@ -157,6 +157,40 @@ if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
     echo "| Issues | ${ISSUE_COUNT} |"
     echo "| Fail threshold | ${THRESHOLD_LABEL} or higher (configured: ${FAIL_ON_UPPER}) |"
   } >> "$GITHUB_STEP_SUMMARY"
+
+  # Enumerate the individual findings so the run page is self-contained:
+  # an author can read what tripped the gate without opening the Security
+  # tab or downloading the JSON report. Finding text derives from the
+  # scanned (untrusted) skill, so each field is sanitised before it is
+  # written: table-breaking pipes and backslashes are escaped, newlines/
+  # tabs are collapsed, and the detail is truncated to keep one finding per
+  # row. The table is capped (see MAX_SUMMARY_ROWS) so a report with very
+  # many findings cannot blow past GitHub's step-summary size limit; the
+  # full set always remains in the uploaded JSON artifact.
+  if [ "${ISSUE_COUNT}" -gt 0 ]; then
+    MAX_SUMMARY_ROWS=50
+    {
+      echo
+      echo "#### Findings (${ISSUE_COUNT})"
+      echo
+      echo "| Severity | Rule | Location | Detail |"
+      echo "|---|---|---|---|"
+      jq -r --argjson max "$MAX_SUMMARY_ROWS" '
+        def san: (. // "-") | tostring | gsub("\\\\"; "\\\\") | gsub("\\|"; "\\|") | gsub("[\r\n\t]+"; " ");
+        def trunc($n): if (length > $n) then (.[0:$n] + "...") else . end;
+        .issues[0:$max][]
+        | "| " + (.severity | san)
+        + " | " + (.id | san)
+        + " | " + ((.location.file | san) + ":" + ((.location.start_line // 0) | san))
+        + " | " + (((.explanation // .message) | san) | trunc(160))
+        + " |"
+      ' "$REPORT_PATH"
+      if [ "${ISSUE_COUNT}" -gt "${MAX_SUMMARY_ROWS}" ]; then
+        echo
+        echo "_Showing first ${MAX_SUMMARY_ROWS} of ${ISSUE_COUNT} findings; see the uploaded report artifact for the full list._"
+      fi
+    } >> "$GITHUB_STEP_SUMMARY"
+  fi
 fi
 
 if [ "$FAIL" -eq 1 ]; then
