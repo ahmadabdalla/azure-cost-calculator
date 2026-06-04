@@ -4,6 +4,9 @@ description: Helps estimate and calculate Azure resource costs. Use this skill w
 license: MIT
 argument-hint: "<azure-service-name>"
 compatibility: Requires curl + jq (macOS/Linux) or PowerShell 7+ (pwsh) or Windows PowerShell 5.1 (powershell.exe on Windows), and internet access to prices.azure.com. No Azure subscription needed.
+allowed-tools:
+  - Bash
+  - PowerShell
 metadata:
   author: ahmadabdalla
   version: "1.8.0"

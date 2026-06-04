@@ -1,0 +1,146 @@
+# ---------------------------------------------------------
+# Skill Security Scan Upload (trusted SARIF publisher)
+# ---------------------------------------------------------
+# SECOND half of the two-workflow split. The scan workflow
+# (skill-security-scan.yml) runs in the untrusted PR context
+# and produces a normalised SARIF artifact. This workflow runs
+# in the TRUSTED base-repository context via workflow_run, so it
+# is the only place that holds security-events: write. It takes
+# the artifact and uploads it to code scanning.
+#
+# WHY A SEPARATE WORKFLOW
+# On pull_request from a fork, GITHUB_TOKEN is read-only and
+# security-events: write cannot be granted, so the scan workflow
+# cannot upload SARIF itself. workflow_run always runs with the
+# base repo's permissions regardless of the PR origin, which is
+# how fork PRs still get inline code scanning annotations.
+#
+# THREAT MODEL
+# This workflow has write scope and could be attacked via the
+# artifact it consumes. Mitigations:
+#   - It NEVER checks out or executes PR/fork code.
+#   - The PR head sha is taken from the authoritative workflow_run
+#     event (github.event.workflow_run.head_sha), never from the
+#     artifact, so it cannot be spoofed.
+#   - The PR number is resolved from the commit->PRs API and
+#     strictly filtered (open, head sha, head repo, base repo,
+#     base branch); ambiguous matches are skipped, never guessed.
+#   - The scan workflow only publishes the SARIF artifact after
+#     its normaliser has validated every uri, so a poisoned SARIF
+#     is never produced for this workflow to upload.
+#
+# OPERATIONAL DOCS: docs/ops/skill-security-scan.md
+# ---------------------------------------------------------
+
+name: Skill Security Scan Upload
+
+on:
+  workflow_run:
+    workflows: ["Skill Security Scan"]
+    types: [completed]
+
+# --- Security: write scope lives only here, in the trusted context ---
+permissions:
+  contents: read
+  actions: read # download the artifact from the triggering run
+  pull-requests: read # resolve the PR number from the head sha
+  security-events: write # upload SARIF to code scanning
+
+jobs:
+  upload-sarif:
+    name: Publish SkillSpector SARIF
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Only act on PR-triggered runs that actually finished a scan.
+    # success = gate passed; failure = gate blocked but we still want
+    # the findings visible. Other conclusions (cancelled/skipped/
+    # timed_out) have no SARIF worth publishing.
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      contains(fromJSON('["success","failure"]'), github.event.workflow_run.conclusion)
+
+    env:
+      ARTIFACT_NAME: skillspector-sarif
+      SARIF_CATEGORY: skillspector
+
+    steps:
+      # --- Step 1: Resolve the PR and confirm the artifact exists ---
+      - name: Resolve PR and verify artifact
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          HEAD_REPO: ${{ github.event.workflow_run.head_repository.full_name }}
+        run: |
+          set -euo pipefail
+
+          # The SARIF artifact is absent when the scan was path-skipped or
+          # blocked before publishing. That is a clean no-op, not an error.
+          artifacts="$(gh api "repos/${REPO}/actions/runs/${RUN_ID}/artifacts")"
+          have="$(printf '%s' "$artifacts" | jq --arg n "$ARTIFACT_NAME" '[.artifacts[] | select(.name == $n)] | length')"
+          if [ "$have" -eq 0 ]; then
+            echo "No ${ARTIFACT_NAME} artifact on run ${RUN_ID}; nothing to publish."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Resolve the PR number from the authoritative head sha. Strictly
+          # filter so a shared sha or a closed/cross-base PR can never select
+          # the wrong target; refuse to guess on zero or multiple matches.
+          # A non-zero exit here is a transport/permission failure, not a
+          # "no PR" signal (that endpoint returns an empty array with HTTP
+          # 200). Fail loud rather than fail open, consistent with line 82.
+          if ! pulls="$(gh api "repos/${REPO}/commits/${HEAD_SHA}/pulls")"; then
+            echo "::error::Failed to resolve pull requests for ${HEAD_SHA}."
+            exit 1
+          fi
+          numbers="$(printf '%s' "$pulls" | jq -r \
+            --arg sha "$HEAD_SHA" --arg repo "$REPO" --arg head "$HEAD_REPO" '
+              [ .[]
+                | select(.state == "open")
+                | select(.head.sha == $sha)
+                | select(.head.repo.full_name == $head)
+                | select(.base.repo.full_name == $repo)
+                | select(.base.ref == "dev" or .base.ref == "main")
+                | .number ] | unique | .[]')"
+
+          count="$(printf '%s\n' "$numbers" | grep -c . || true)"
+          if [ "$count" -ne 1 ]; then
+            echo "::warning::Could not unambiguously resolve an open PR for ${HEAD_SHA} (matches: ${count}); skipping SARIF upload."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo "skip=false"
+            echo "pr_number=${numbers}"
+            echo "head_sha=${HEAD_SHA}"
+          } >> "$GITHUB_OUTPUT"
+          echo "Resolved PR #${numbers} at ${HEAD_SHA}."
+
+      # --- Step 2: Download the SARIF artifact from the triggering run ---
+      - name: Download SARIF artifact
+        if: steps.resolve.outputs.skip == 'false'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: skillspector-sarif
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          path: sarif
+
+      # --- Step 3: Publish to code scanning against the PR head ---
+      # ref + sha are an explicit, consistent pairing: head_sha is the tip
+      # of refs/pull/<n>/head and matches the commit the scan workflow
+      # checked out. No checkout here, so no fork code runs; uris are
+      # already repo-relative from the scan workflow's normaliser.
+      - name: Upload SARIF to code scanning
+        if: steps.resolve.outputs.skip == 'false'
+        uses: github/codeql-action/upload-sarif@fee9466b8957867761f2d78f922ab084e3e2dd17 # v3
+        with:
+          sarif_file: sarif/skillspector.sarif
+          category: ${{ env.SARIF_CATEGORY }}
+          ref: refs/pull/${{ steps.resolve.outputs.pr_number }}/head
+          sha: ${{ steps.resolve.outputs.head_sha }}
