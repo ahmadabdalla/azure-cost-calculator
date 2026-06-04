@@ -14,14 +14,19 @@ setup() {
     SCRIPT="$CI_SCRIPTS_DIR/security/run-skillspector-scan.sh"
     setup_mock_path
 
-    OUT="$(mktemp -u)"
-    export OUT
+    # OUT must be a path that does not exist yet so the "no output file"
+    # case is exercised, but allocating it with `mktemp -u` is race-prone.
+    # Use a private dir and a fixed child name instead: the child does not
+    # exist until the stub writes it.
+    OUT_DIR="$(mktemp -d)"
+    OUT="$OUT_DIR/report.out"
+    export OUT OUT_DIR
 }
 
 teardown() {
     teardown_mock_path
-    if [[ -n "${OUT:-}" && -f "$OUT" ]]; then
-        rm -f "$OUT"
+    if [[ -n "${OUT_DIR:-}" && -d "$OUT_DIR" ]]; then
+        rm -rf "$OUT_DIR"
     fi
 }
 
@@ -69,9 +74,28 @@ SCRIPT
 }
 
 @test "exit 1 with valid SARIF output passes" {
-    stub_skillspector 1 '{"version":"2.1.0","runs":[]}'
+    stub_skillspector 1 '{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"skillspector"}},"results":[]}]}'
     run bash "$SCRIPT" skills/azure-cost-calculator sarif "$OUT"
     [ "$status" -eq 0 ]
+}
+
+# ---------------------------------------------------------
+# Fail closed: valid JSON but structurally empty (a stub or a
+# truncated write could parse yet carry no usable report)
+# ---------------------------------------------------------
+
+@test "SARIF output with empty runs[] fails closed" {
+    stub_skillspector 0 '{"version":"2.1.0","runs":[]}'
+    run bash "$SCRIPT" skills/azure-cost-calculator sarif "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no runs"* ]]
+}
+
+@test "JSON output with no risk_assessment fails closed" {
+    stub_skillspector 0 '{"issues":[]}'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no risk_assessment"* ]]
 }
 
 # ---------------------------------------------------------
@@ -99,6 +123,26 @@ SCRIPT
     [[ "$output" == *"not valid JSON"* ]]
 }
 
+@test "JSON output with risk_assessment but no severity fails closed" {
+    stub_skillspector 0 '{"risk_assessment":{}}'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no risk_assessment.severity"* ]]
+}
+
+# ---------------------------------------------------------
+# Fail closed: a stale/planted output file must not be trusted
+# when the scanner produces nothing on this run
+# ---------------------------------------------------------
+
+@test "pre-existing output is cleared so a stale report is not trusted" {
+    printf '%s' '{"risk_assessment":{"severity":"LOW"}}' > "$OUT"
+    stub_skillspector 1 'NO_OUTPUT'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"wrote no json output"* ]]
+}
+
 # ---------------------------------------------------------
 # Input errors (exit 2)
 # ---------------------------------------------------------
@@ -107,4 +151,10 @@ SCRIPT
     run bash "$SCRIPT" skills/azure-cost-calculator json
     [ "$status" -eq 2 ]
     [[ "$output" == *"Usage"* ]]
+}
+
+@test "unsupported format exit 2" {
+    run bash "$SCRIPT" skills/azure-cost-calculator xml "$OUT"
+    [ "$status" -eq 2 ]
+    [[ "$output" == *"Unsupported format"* ]]
 }
