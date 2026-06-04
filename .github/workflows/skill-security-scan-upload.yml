@@ -90,7 +90,13 @@ jobs:
           # Resolve the PR number from the authoritative head sha. Strictly
           # filter so a shared sha or a closed/cross-base PR can never select
           # the wrong target; refuse to guess on zero or multiple matches.
-          pulls="$(gh api "repos/${REPO}/commits/${HEAD_SHA}/pulls" 2>/dev/null || echo '[]')"
+          # A non-zero exit here is a transport/permission failure, not a
+          # "no PR" signal (that endpoint returns an empty array with HTTP
+          # 200). Fail loud rather than fail open, consistent with line 82.
+          if ! pulls="$(gh api "repos/${REPO}/commits/${HEAD_SHA}/pulls")"; then
+            echo "::error::Failed to resolve pull requests for ${HEAD_SHA}."
+            exit 1
+          fi
           numbers="$(printf '%s' "$pulls" | jq -r \
             --arg sha "$HEAD_SHA" --arg repo "$REPO" --arg head "$HEAD_REPO" '
               [ .[]
