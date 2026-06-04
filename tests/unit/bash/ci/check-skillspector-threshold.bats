@@ -125,6 +125,49 @@ JSON
 }
 
 # ---------------------------------------------------------
+# Threshold ordering (not exact-match membership)
+# ---------------------------------------------------------
+
+@test "threshold HIGH also fails CRITICAL (ordering, not exact match)" {
+    write_report "CRITICAL" 90 "DO_NOT_INSTALL" 1
+    SKILLSPECTOR_FAIL_ON="HIGH" run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"meets fail threshold"* ]]
+}
+
+@test "threshold HIGH fails HIGH" {
+    write_report "HIGH" 60 "DO_NOT_INSTALL" 1
+    SKILLSPECTOR_FAIL_ON="HIGH" run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+}
+
+@test "threshold HIGH lets MEDIUM pass" {
+    write_report "MEDIUM" 30 "CAUTION" 1
+    SKILLSPECTOR_FAIL_ON="HIGH" run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 0 ]
+}
+
+@test "list threshold uses lowest rank (MEDIUM,CRITICAL fails HIGH)" {
+    write_report "HIGH" 60 "DO_NOT_INSTALL" 1
+    SKILLSPECTOR_FAIL_ON="MEDIUM,CRITICAL" run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+}
+
+@test "unrecognized report severity exits 2" {
+    write_report "BOGUS" 50 "CAUTION" 0
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 2 ]
+    [[ "$output" == *"Unrecognized severity"* ]]
+}
+
+@test "unrecognized SKILLSPECTOR_FAIL_ON token exits 2" {
+    write_report "HIGH" 60 "DO_NOT_INSTALL" 1
+    SKILLSPECTOR_FAIL_ON="NONSENSE" run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 2 ]
+    [[ "$output" == *"Unrecognized severity"* ]]
+}
+
+# ---------------------------------------------------------
 # Input error cases (exit 2)
 # ---------------------------------------------------------
 

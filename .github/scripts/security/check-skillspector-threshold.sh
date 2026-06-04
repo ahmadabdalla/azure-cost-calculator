@@ -13,14 +13,20 @@
 #   check-skillspector-threshold.sh <path-to-skillspector.json>
 #
 # Optional env vars:
-#   SKILLSPECTOR_FAIL_ON  Comma-separated severities that cause exit 1.
-#                         Default: "HIGH,CRITICAL". Severities are matched
-#                         case-insensitively against risk_assessment.severity.
+#   SKILLSPECTOR_FAIL_ON  Failure threshold (not an exact-match list). The gate
+#                         fails when the report severity rank is at or above the
+#                         lowest-ranked severity listed here. Accepts a single
+#                         severity ("HIGH") or a comma-separated list kept for
+#                         backward compatibility ("HIGH,CRITICAL"); the minimum
+#                         rank in the list is used as the threshold. Matched
+#                         case-insensitively. Default: "HIGH,CRITICAL".
+#                         Rank order: LOW < MEDIUM < HIGH < CRITICAL.
 #
 # Exit codes:
 #   0  severity is below the failure threshold (gate passes)
 #   1  severity meets or exceeds the failure threshold (gate fails)
-#   2  input error: missing file, invalid JSON, or missing field
+#   2  input error: missing file, invalid JSON, missing field, or an
+#      unrecognized severity in the report or in SKILLSPECTOR_FAIL_ON
 #
 # SkillSpector JSON schema (relevant fields):
 #   .risk_assessment.score          integer 0-100
@@ -69,16 +75,50 @@ fi
 SEVERITY_UPPER="$(printf '%s' "$SEVERITY" | tr '[:lower:]' '[:upper:]')"
 FAIL_ON_UPPER="$(printf '%s' "$FAIL_ON" | tr '[:lower:]' '[:upper:]')"
 
-# Match SEVERITY_UPPER against the comma-separated FAIL_ON list.
-FAIL=0
+# Rank severities so the threshold is an ordering, not exact membership.
+# Unknown severities return rank 0 and are treated as input errors.
+severity_rank() {
+  case "$1" in
+    LOW) printf '1' ;;
+    MEDIUM) printf '2' ;;
+    HIGH) printf '3' ;;
+    CRITICAL) printf '4' ;;
+    *) printf '0' ;;
+  esac
+}
+
+SEVERITY_RANK="$(severity_rank "$SEVERITY_UPPER")"
+if [ "$SEVERITY_RANK" -eq 0 ]; then
+  echo "::error::Unrecognized severity '${SEVERITY_UPPER}' in $REPORT_PATH"
+  exit 2
+fi
+
+# Threshold = lowest rank among the configured FAIL_ON severities.
+THRESHOLD_RANK=0
 IFS=',' read -r -a FAIL_LIST <<< "$FAIL_ON_UPPER"
 for entry in "${FAIL_LIST[@]}"; do
   trimmed="$(printf '%s' "$entry" | tr -d '[:space:]')"
-  if [ "$SEVERITY_UPPER" = "$trimmed" ]; then
-    FAIL=1
-    break
+  [ -z "$trimmed" ] && continue
+  rank="$(severity_rank "$trimmed")"
+  if [ "$rank" -eq 0 ]; then
+    echo "::error::Unrecognized severity '${trimmed}' in SKILLSPECTOR_FAIL_ON"
+    exit 2
+  fi
+  if [ "$THRESHOLD_RANK" -eq 0 ] || [ "$rank" -lt "$THRESHOLD_RANK" ]; then
+    THRESHOLD_RANK="$rank"
   fi
 done
+
+if [ "$THRESHOLD_RANK" -eq 0 ]; then
+  echo "::error::SKILLSPECTOR_FAIL_ON contains no recognized severity."
+  exit 2
+fi
+
+# Fail when the report severity is at or above the threshold.
+FAIL=0
+if [ "$SEVERITY_RANK" -ge "$THRESHOLD_RANK" ]; then
+  FAIL=1
+fi
 
 # Always print a human-readable summary so the job log is self-explanatory.
 echo "SkillSpector report: $REPORT_PATH"
