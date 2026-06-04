@@ -19,11 +19,13 @@
 # The exit CODE is not trusted as a pass/fail signal (future
 # SkillSpector versions may use other non-zero codes). Instead,
 # OUTPUT VALIDITY controls continuation:
-#   - output file exists, is non-empty, and parses as JSON
-#     (SkillSpector SARIF is JSON too) -> succeed (exit 0), so the
-#     gate downstream becomes the single decision authority.
-#   - missing, empty, or unparseable output -> a genuine tooling
-#     failure; exit 1 so the caller fails closed.
+#   - output file exists, is non-empty, parses as JSON (SkillSpector
+#     SARIF is JSON too), AND carries the minimal shape its consumer
+#     needs (SARIF: a non-empty runs[]; JSON: a risk_assessment
+#     object) -> succeed (exit 0), so the gate downstream becomes the
+#     single decision authority.
+#   - missing, empty, unparseable, or structurally empty output -> a
+#     genuine tooling failure; exit 1 so the caller fails closed.
 #
 # Usage:
 #   run-skillspector-scan.sh <skill-path> <format> <output-file>
@@ -40,7 +42,7 @@
 #   2  input error: missing arguments or jq not installed
 # ---------------------------------------------------------
 
-set -uo pipefail
+set -euo pipefail
 
 SKILL_PATH="${1:-}"
 FORMAT="${2:-}"
@@ -75,6 +77,25 @@ if ! jq empty "$OUTPUT" >/dev/null 2>&1; then
   echo "::error::SkillSpector ${FORMAT} output ${OUTPUT} is not valid JSON (exit ${rc}); failing closed."
   exit 1
 fi
+
+# Valid JSON is necessary but not sufficient: a stub or a partially written
+# file could be "{}" and still parse. Require the minimal shape the
+# downstream consumer needs so an empty-but-valid document fails closed here
+# rather than silently producing no gate decision / no code-scanning alert.
+case "$FORMAT" in
+  sarif)
+    if ! jq -e '(.runs | type) == "array" and (.runs | length) > 0' "$OUTPUT" >/dev/null 2>&1; then
+      echo "::error::SkillSpector SARIF output ${OUTPUT} has no runs[] (exit ${rc}); failing closed."
+      exit 1
+    fi
+    ;;
+  json)
+    if ! jq -e 'has("risk_assessment")' "$OUTPUT" >/dev/null 2>&1; then
+      echo "::error::SkillSpector JSON output ${OUTPUT} has no risk_assessment (exit ${rc}); failing closed."
+      exit 1
+    fi
+    ;;
+esac
 
 echo "SkillSpector ${FORMAT} scan completed (exit ${rc}); ${OUTPUT} is present and parses."
 exit 0

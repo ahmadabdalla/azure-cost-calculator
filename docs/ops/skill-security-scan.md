@@ -35,7 +35,7 @@ A separate JSON pass is required because SARIF does not carry SkillSpector's `ri
 
 ### Why the scans run through a wrapper
 
-`skillspector scan` writes its output file and then **exits non-zero when it finds HIGH or CRITICAL issues**. Under the workflow's `set -e` shell, that non-zero exit would abort the job at the scan step, before the gate ever ran, so SkillSpector's raw exit code (not the configurable gate) would block merge, and no SARIF would be published for the worst skills (issue #984). Both passes therefore go through `run-skillspector-scan.sh`, which tolerates a non-zero exit **only when the scanner produced valid output** (file exists, is non-empty, and parses as JSON) and otherwise fails closed. This keeps `check-skillspector-threshold.sh` the single decision authority. Running the gate before the SARIF normaliser also means a normalisation failure can never suppress the merge decision.
+`skillspector scan` writes its output file and then **exits non-zero when it finds HIGH or CRITICAL issues**. Under the workflow's `set -e` shell, that non-zero exit would abort the job at the scan step, before the gate ever ran, so SkillSpector's raw exit code (not the configurable gate) would block merge, and no SARIF would be published for the worst skills (issue #984). Both passes therefore go through `run-skillspector-scan.sh`, which tolerates a non-zero exit **only when the scanner produced valid output** (file exists, is non-empty, parses as JSON, and carries the minimal shape its consumer needs: a non-empty `runs[]` for SARIF or a `risk_assessment` object for JSON) and otherwise fails closed. This keeps `check-skillspector-threshold.sh` the single decision authority. Running the gate before the SARIF normaliser also means a normalisation failure can never suppress the merge decision.
 
 ### Two-workflow architecture
 
@@ -53,7 +53,7 @@ The gate stays in the scan workflow, so it remains the required, blocking check 
 - It **never checks out or executes** PR/fork code; it only downloads the artifact and calls `upload-sarif`.
 - The PR head sha comes from the authoritative `github.event.workflow_run.head_sha` (set by GitHub), never from the artifact, so it cannot be spoofed.
 - The PR number is resolved from the commit-to-PRs API and strictly filtered (open, matching head sha, head repo, base repo, base branch). Ambiguous matches are skipped, never guessed, so a shared sha cannot redirect alerts onto another PR.
-- The scan workflow publishes the SARIF artifact **only after** `normalize-skillspector-sarif.sh` validates every uri, so a poisoned SARIF is never produced for the upload workflow to consume.
+- The scan workflow publishes the SARIF artifact **only after** `normalize-skillspector-sarif.sh` validates the artifact uri, so a poisoned SARIF is never produced for the upload workflow to consume.
 
 ### Why the SARIF needs normalising
 
@@ -154,6 +154,7 @@ skillspector scan ./skills/azure-cost-calculator/ \
 
 ```bash
 bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/check-skillspector-threshold.bats
+bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/run-skillspector-scan.bats
 bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/normalize-skillspector-sarif.bats
 ```
 

@@ -309,3 +309,53 @@ JSON
     [[ "$summary" == *"from message field"* ]]
     rm -f "$GITHUB_STEP_SUMMARY"
 }
+
+@test "sanitises a non-numeric start_line so it cannot break the table" {
+    # start_line is normally an integer, but a malformed/hostile report
+    # could carry a string containing a pipe or newline. The "// 0" guard
+    # only fires on null, so the value must still pass through san.
+    cat > "$REPORT" <<'JSON'
+{
+  "skill": {"name": "test"},
+  "risk_assessment": {"score": 90, "severity": "CRITICAL", "recommendation": "DO_NOT_INSTALL"},
+  "issues": [
+    {"id": "LINE", "severity": "CRITICAL", "location": {"file": "x.py", "start_line": "1|evil"},
+     "explanation": "detail"}
+  ]
+}
+JSON
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    # The raw pipe from start_line must be escaped, not a live delimiter.
+    [[ "$summary" == *"x.py:1\|evil"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "caps the findings table and notes the omitted findings" {
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    write_report "CRITICAL" 95 DO_NOT_INSTALL 60
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    # The header reflects the true total, but the table is capped at 50 rows.
+    [[ "$summary" == *"#### Findings (60)"* ]]
+    [[ "$summary" == *"RULE50"* ]]
+    [[ "$summary" != *"RULE51"* ]]
+    [[ "$summary" == *"Showing first 50 of 60 findings"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}
+
+@test "does not show the cap note when findings fit under the limit" {
+    GITHUB_STEP_SUMMARY="$(mktemp)"
+    export GITHUB_STEP_SUMMARY
+    write_report "CRITICAL" 95 DO_NOT_INSTALL 3
+    run bash "$SCRIPT" "$REPORT"
+    [ "$status" -eq 1 ]
+    summary="$(cat "$GITHUB_STEP_SUMMARY")"
+    [[ "$summary" != *"Showing first"* ]]
+    rm -f "$GITHUB_STEP_SUMMARY"
+}

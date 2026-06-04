@@ -14,14 +14,19 @@ setup() {
     SCRIPT="$CI_SCRIPTS_DIR/security/run-skillspector-scan.sh"
     setup_mock_path
 
-    OUT="$(mktemp -u)"
-    export OUT
+    # OUT must be a path that does not exist yet so the "no output file"
+    # case is exercised, but allocating it with `mktemp -u` is race-prone.
+    # Use a private dir and a fixed child name instead: the child does not
+    # exist until the stub writes it.
+    OUT_DIR="$(mktemp -d)"
+    OUT="$OUT_DIR/report.out"
+    export OUT OUT_DIR
 }
 
 teardown() {
     teardown_mock_path
-    if [[ -n "${OUT:-}" && -f "$OUT" ]]; then
-        rm -f "$OUT"
+    if [[ -n "${OUT_DIR:-}" && -d "$OUT_DIR" ]]; then
+        rm -rf "$OUT_DIR"
     fi
 }
 
@@ -69,9 +74,28 @@ SCRIPT
 }
 
 @test "exit 1 with valid SARIF output passes" {
-    stub_skillspector 1 '{"version":"2.1.0","runs":[]}'
+    stub_skillspector 1 '{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"skillspector"}},"results":[]}]}'
     run bash "$SCRIPT" skills/azure-cost-calculator sarif "$OUT"
     [ "$status" -eq 0 ]
+}
+
+# ---------------------------------------------------------
+# Fail closed: valid JSON but structurally empty (a stub or a
+# truncated write could parse yet carry no usable report)
+# ---------------------------------------------------------
+
+@test "SARIF output with empty runs[] fails closed" {
+    stub_skillspector 0 '{"version":"2.1.0","runs":[]}'
+    run bash "$SCRIPT" skills/azure-cost-calculator sarif "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no runs"* ]]
+}
+
+@test "JSON output with no risk_assessment fails closed" {
+    stub_skillspector 0 '{"issues":[]}'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no risk_assessment"* ]]
 }
 
 # ---------------------------------------------------------
