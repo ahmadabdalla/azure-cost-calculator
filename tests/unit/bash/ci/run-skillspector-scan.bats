@@ -123,6 +123,26 @@ SCRIPT
     [[ "$output" == *"not valid JSON"* ]]
 }
 
+@test "JSON output with risk_assessment but no severity fails closed" {
+    stub_skillspector 0 '{"risk_assessment":{}}'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"no risk_assessment.severity"* ]]
+}
+
+# ---------------------------------------------------------
+# Fail closed: a stale/planted output file must not be trusted
+# when the scanner produces nothing on this run
+# ---------------------------------------------------------
+
+@test "pre-existing output is cleared so a stale report is not trusted" {
+    printf '%s' '{"risk_assessment":{"severity":"LOW"}}' > "$OUT"
+    stub_skillspector 1 'NO_OUTPUT'
+    run bash "$SCRIPT" skills/azure-cost-calculator json "$OUT"
+    [ "$status" -eq 1 ]
+    [[ "$output" == *"wrote no json output"* ]]
+}
+
 # ---------------------------------------------------------
 # Input errors (exit 2)
 # ---------------------------------------------------------
@@ -131,4 +151,10 @@ SCRIPT
     run bash "$SCRIPT" skills/azure-cost-calculator json
     [ "$status" -eq 2 ]
     [[ "$output" == *"Usage"* ]]
+}
+
+@test "unsupported format exit 2" {
+    run bash "$SCRIPT" skills/azure-cost-calculator xml "$OUT"
+    [ "$status" -eq 2 ]
+    [[ "$output" == *"Unsupported format"* ]]
 }

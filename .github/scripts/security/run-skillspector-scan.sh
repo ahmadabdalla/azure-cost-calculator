@@ -21,9 +21,10 @@
 # OUTPUT VALIDITY controls continuation:
 #   - output file exists, is non-empty, parses as JSON (SkillSpector
 #     SARIF is JSON too), AND carries the minimal shape its consumer
-#     needs (SARIF: a non-empty runs[]; JSON: a risk_assessment
-#     object) -> succeed (exit 0), so the gate downstream becomes the
-#     single decision authority.
+#     needs (SARIF: a non-empty runs[]; JSON: a string
+#     risk_assessment.severity, the one field the gate reads) ->
+#     succeed (exit 0), so the gate downstream becomes the single
+#     decision authority.
 #   - missing, empty, unparseable, or structurally empty output -> a
 #     genuine tooling failure; exit 1 so the caller fails closed.
 #
@@ -39,7 +40,8 @@
 # Exit codes:
 #   0  scan produced valid output (regardless of SkillSpector's code)
 #   1  scan produced no usable output (missing/empty/unparseable)
-#   2  input error: missing arguments or jq not installed
+#   2  input error: missing arguments, unsupported format, or jq not
+#      installed
 # ---------------------------------------------------------
 
 set -euo pipefail
@@ -53,10 +55,26 @@ if [ -z "$SKILL_PATH" ] || [ -z "$FORMAT" ] || [ -z "$OUTPUT" ]; then
   exit 2
 fi
 
+# Validate FORMAT once, up front, so the downstream shape check is provably
+# exhaustive: an unsupported value must not slip past structural validation
+# and return a false success.
+case "$FORMAT" in
+  json|sarif) ;;
+  *)
+    echo "::error::Unsupported format '${FORMAT}'; expected 'json' or 'sarif'."
+    exit 2
+    ;;
+esac
+
 if ! command -v jq >/dev/null 2>&1; then
   echo "::error::jq is required but not installed."
   exit 2
 fi
+
+# Remove any pre-existing output so a stale or planted file cannot be trusted
+# if the scanner fails to write. The workflow uses fixed repo-root filenames in
+# an untrusted pull_request checkout, so the path is attacker-influenceable.
+rm -f -- "$OUTPUT"
 
 # Tolerate SkillSpector's non-zero "findings present" exit; the output
 # file, not the exit code, is the source of truth (see CONTRACT above).
@@ -82,6 +100,7 @@ fi
 # file could be "{}" and still parse. Require the minimal shape the
 # downstream consumer needs so an empty-but-valid document fails closed here
 # rather than silently producing no gate decision / no code-scanning alert.
+# FORMAT was validated above, so this case is exhaustive by construction.
 case "$FORMAT" in
   sarif)
     if ! jq -e '(.runs | type) == "array" and (.runs | length) > 0' "$OUTPUT" >/dev/null 2>&1; then
@@ -90,8 +109,8 @@ case "$FORMAT" in
     fi
     ;;
   json)
-    if ! jq -e 'has("risk_assessment")' "$OUTPUT" >/dev/null 2>&1; then
-      echo "::error::SkillSpector JSON output ${OUTPUT} has no risk_assessment (exit ${rc}); failing closed."
+    if ! jq -e '(.risk_assessment.severity | type) == "string"' "$OUTPUT" >/dev/null 2>&1; then
+      echo "::error::SkillSpector JSON output ${OUTPUT} has no risk_assessment.severity (exit ${rc}); failing closed."
       exit 1
     fi
     ;;
