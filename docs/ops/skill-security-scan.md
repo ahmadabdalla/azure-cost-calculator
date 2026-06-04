@@ -159,10 +159,9 @@ bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/normalize-skillspector-sari
 The pin is a commit SHA, not a tag. Bump only when there is a reason (new rule you want, false positive fix, security advisory). The pin lives only in the scan workflow.
 
 1. Choose the new SHA from [NVIDIA/skillspector commits](https://github.com/NVIDIA/skillspector/commits/main).
-2. Update three places in `.github/workflows/skill-security-scan.yml`:
-   - `SKILLSPECTOR_REF` in the job `env:` block
-   - `SKILLSPECTOR_REF_DATE` in the job `env:` block
-   - The pinned SHA in the `Install SkillSpector` step (sourced from `SKILLSPECTOR_REF`)
+2. Update two values in the job `env:` block of `.github/workflows/skill-security-scan.yml`:
+   - `SKILLSPECTOR_REF` (the `Install SkillSpector` step reads `${SKILLSPECTOR_REF}`, so no other edit is needed)
+   - `SKILLSPECTOR_REF_DATE`
 3. Update the summary table at the top of this doc.
 4. Open a PR. The first PR after a bump may surface new findings; triage before merging.
 
@@ -170,14 +169,15 @@ The pin is a commit SHA, not a tag. Bump only when there is a reason (new rule y
 
 ## Tuning the threshold
 
-The gate fails on `HIGH` and `CRITICAL` by default. To change it, edit `SKILLSPECTOR_FAIL_ON` in the workflow `env:` block:
+The gate fails on `HIGH` and `CRITICAL` by default. `SKILLSPECTOR_FAIL_ON` is a threshold, not an exact-match list: the gate fails when the report severity is at or above the lowest-ranked severity you list (rank order `LOW < MEDIUM < HIGH < CRITICAL`). To change it, edit `SKILLSPECTOR_FAIL_ON` in the workflow `env:` block:
 
 ```yaml
-SKILLSPECTOR_FAIL_ON: "CRITICAL"            # CRITICAL only; HIGH becomes advisory
-SKILLSPECTOR_FAIL_ON: "MEDIUM,HIGH,CRITICAL" # strict; blocks on MEDIUM
+SKILLSPECTOR_FAIL_ON: "CRITICAL"             # CRITICAL only; HIGH and below advisory
+SKILLSPECTOR_FAIL_ON: "MEDIUM"               # blocks on MEDIUM, HIGH, and CRITICAL
+SKILLSPECTOR_FAIL_ON: "MEDIUM,HIGH,CRITICAL" # equivalent to "MEDIUM" (lowest rank wins)
 ```
 
-The script normalises case and tolerates whitespace, so `"high , critical"` is equivalent to `"HIGH,CRITICAL"`.
+The script normalises case and tolerates whitespace, so `"high , critical"` is equivalent to `"HIGH,CRITICAL"`. A threshold with no recognized severity, or a report whose severity is unrecognized, exits 2.
 
 Severity bands and recommendations come from SkillSpector's risk scoring (see upstream README):
 
