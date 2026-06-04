@@ -24,15 +24,19 @@
 #    associate the results with.
 # 3. Installs SkillSpector pinned to a commit SHA so the gate
 #    cannot silently change behaviour under us.
-# 4. Scans twice (both --no-llm for reproducibility): SARIF for
-#    code scanning, JSON for the threshold gate.
-# 5. Normalises SARIF uris to be repo-relative and fails closed
-#    on any hostile (traversing/absolute/url) uri.
-# 6. The threshold gate (check-skillspector-threshold.sh) is the
-#    REQUIRED, blocking check.
-# 7. Publishes the normalised SARIF and the JSON as artifacts
-#    (always(), so reviewers and the upload workflow still get
-#    them when the gate fails).
+# 4. Runs the gate FIRST (the decision): a JSON scan feeds
+#    check-skillspector-threshold.sh, the REQUIRED blocking check,
+#    which also writes the consumable job summary (verdict + the
+#    per-finding enumeration).
+# 5. Then runs the surfacing path (always(), so a blocked gate still
+#    surfaces findings): a SARIF scan, normalised to repo-relative
+#    uris (fails closed on hostile uris), published as an artifact for
+#    the trusted upload workflow to send to code scanning. Ordering it
+#    after the gate means a normalisation failure can never suppress
+#    the merge decision.
+# 6. Both scans go through run-skillspector-scan.sh, which tolerates
+#    SkillSpector's non-zero "findings present" exit but fails closed
+#    when no usable output is produced (issue #984).
 #
 # OPERATIONAL DOCS: docs/ops/skill-security-scan.md
 # ---------------------------------------------------------
@@ -120,45 +124,49 @@ jobs:
           python -m pip install "git+https://github.com/NVIDIA/skillspector@${SKILLSPECTOR_REF}"
           skillspector --help >/dev/null
 
-      # --- Step 5: Scan, SARIF output (for code scanning UI) ---
-      - name: Run SkillSpector (SARIF)
-        if: steps.filter.outputs.relevant == 'true'
-        run: |
-          skillspector scan "./${SKILL_PATH}/" \
-            --no-llm \
-            --format sarif \
-            --output "${SARIF_OUTPUT}"
-
-      # --- Step 6: Normalise SARIF uris (fail closed on hostile uris) ---
-      # SkillSpector emits skill-dir-relative uris; rewrite them to be
-      # repo-relative so code scanning annotates the right files. The
-      # script rejects traversing/absolute/url uris (exit 3), which fails
-      # this job and prevents a poisoned SARIF from ever being published.
-      - name: Normalise SARIF paths
-        id: normalize
-        if: steps.filter.outputs.relevant == 'true'
-        run: .github/scripts/security/normalize-skillspector-sarif.sh "${SARIF_OUTPUT}" "${SKILL_PATH}"
-
-      # --- Step 7: Scan, JSON output (for threshold gate) ---
-      # SARIF does not carry SkillSpector's risk_assessment block,
-      # so a second pass produces the JSON the gate parses.
+      # --- Step 5: Scan for the gate (JSON) ---
+      # The threshold gate is the merge-blocking decision, so it runs
+      # first and depends on nothing else. The wrapper tolerates
+      # SkillSpector's non-zero "findings present" exit (issue #984) and
+      # fails closed only when no usable JSON is produced.
       - name: Run SkillSpector (JSON)
+        id: json_scan
         if: steps.filter.outputs.relevant == 'true'
-        run: |
-          skillspector scan "./${SKILL_PATH}/" \
-            --no-llm \
-            --format json \
-            --output "${JSON_OUTPUT}"
+        run: .github/scripts/security/run-skillspector-scan.sh "${SKILL_PATH}" json "${JSON_OUTPUT}"
 
-      # --- Step 8: Gate on severity threshold (required check) ---
+      # --- Step 6: Gate on severity threshold (required check) ---
+      # SkillSpector has no --fail-on flag, so this script is the single
+      # authority that blocks merge. It also writes the consumable job
+      # summary (verdict table + per-finding enumeration).
       - name: Check severity threshold
         if: steps.filter.outputs.relevant == 'true'
         run: .github/scripts/security/check-skillspector-threshold.sh "${JSON_OUTPUT}"
 
+      # --- Step 7: Scan for code scanning (SARIF) ---
+      # Surfacing path. Runs even when the gate above blocked (always()),
+      # so a flagged skill still produces an inline code-scanning finding.
+      # SARIF carries no risk_assessment block, hence the separate pass.
+      - name: Run SkillSpector (SARIF)
+        id: sarif_scan
+        if: always() && steps.filter.outputs.relevant == 'true'
+        run: .github/scripts/security/run-skillspector-scan.sh "${SKILL_PATH}" sarif "${SARIF_OUTPUT}"
+
+      # --- Step 8: Normalise SARIF uris (fail closed on hostile uris) ---
+      # SkillSpector emits skill-dir-relative uris; rewrite them to be
+      # repo-relative so code scanning annotates the right files. The
+      # script rejects traversing/absolute/url uris (exit 3), which fails
+      # this job and prevents a poisoned SARIF from ever being published.
+      # Placed after the gate so a normalisation failure can never
+      # suppress the merge decision.
+      - name: Normalise SARIF paths
+        id: normalize
+        if: always() && steps.filter.outputs.relevant == 'true' && steps.sarif_scan.outcome == 'success'
+        run: .github/scripts/security/normalize-skillspector-sarif.sh "${SARIF_OUTPUT}" "${SKILL_PATH}"
+
       # --- Step 9: Publish normalised SARIF for the upload workflow ---
       # Only when normalisation succeeded, so the companion workflow can
       # trust the artifact and upload it without re-validating. always()
-      # so a failed gate still surfaces findings.
+      # so a blocked gate still surfaces findings in code scanning.
       - name: Upload SARIF artifact
         if: always() && steps.filter.outputs.relevant == 'true' && steps.normalize.outcome == 'success' && hashFiles(env.SARIF_OUTPUT) != ''
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

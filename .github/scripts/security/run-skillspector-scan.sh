@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------
+# run-skillspector-scan.sh
+# ---------------------------------------------------------
+# Runs `skillspector scan` and tolerates a non-zero exit code
+# WHEN the scanner still produced usable output.
+#
+# WHY THIS EXISTS
+# SkillSpector writes its output file and then exits non-zero
+# (1) when it finds HIGH/CRITICAL issues. Under the workflow's
+# default `set -e` shell, that non-zero exit would abort the job
+# at the scan step, before the threshold gate and the SARIF
+# upload ever run. The result was that the documented gate
+# (check-skillspector-threshold.sh) never decided anything for
+# exactly the dangerous skills, and no code-scanning finding was
+# produced. See issue #984.
+#
+# CONTRACT
+# The exit CODE is not trusted as a pass/fail signal (future
+# SkillSpector versions may use other non-zero codes). Instead,
+# OUTPUT VALIDITY controls continuation:
+#   - output file exists, is non-empty, and parses as JSON
+#     (SkillSpector SARIF is JSON too) -> succeed (exit 0), so the
+#     gate downstream becomes the single decision authority.
+#   - missing, empty, or unparseable output -> a genuine tooling
+#     failure; exit 1 so the caller fails closed.
+#
+# Usage:
+#   run-skillspector-scan.sh <skill-path> <format> <output-file>
+#
+# Arguments:
+#   <skill-path>   Repo-relative skill directory, no trailing slash
+#                  (e.g. skills/azure-cost-calculator).
+#   <format>       SkillSpector --format value (json or sarif).
+#   <output-file>  Path SkillSpector writes the report to.
+#
+# Exit codes:
+#   0  scan produced valid output (regardless of SkillSpector's code)
+#   1  scan produced no usable output (missing/empty/unparseable)
+#   2  input error: missing arguments or jq not installed
+# ---------------------------------------------------------
+
+set -uo pipefail
+
+SKILL_PATH="${1:-}"
+FORMAT="${2:-}"
+OUTPUT="${3:-}"
+
+if [ -z "$SKILL_PATH" ] || [ -z "$FORMAT" ] || [ -z "$OUTPUT" ]; then
+  echo "::error::Usage: run-skillspector-scan.sh <skill-path> <format> <output-file>"
+  exit 2
+fi
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "::error::jq is required but not installed."
+  exit 2
+fi
+
+# Tolerate SkillSpector's non-zero "findings present" exit; the output
+# file, not the exit code, is the source of truth (see CONTRACT above).
+set +e
+skillspector scan "./${SKILL_PATH}/" \
+  --no-llm \
+  --format "$FORMAT" \
+  --output "$OUTPUT"
+rc=$?
+set -e
+
+if [ ! -s "$OUTPUT" ]; then
+  echo "::error::SkillSpector wrote no ${FORMAT} output to ${OUTPUT} (exit ${rc}); failing closed."
+  exit 1
+fi
+
+if ! jq empty "$OUTPUT" >/dev/null 2>&1; then
+  echo "::error::SkillSpector ${FORMAT} output ${OUTPUT} is not valid JSON (exit ${rc}); failing closed."
+  exit 1
+fi
+
+echo "SkillSpector ${FORMAT} scan completed (exit ${rc}); ${OUTPUT} is present and parses."
+exit 0
