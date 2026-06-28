@@ -88,7 +88,7 @@ Dynamic: Monthly = sessions × session_price × 730
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
 - Dynamic Sessions: code interpreter billed per session-hour; custom pools on Dedicated use Dedicated meters only
-- Private endpoints incur `Dedicated Plan Management` fee on any plan type; Savings Plans shown on pricing page but not in Retail Prices API
+- Private endpoints incur `Dedicated Plan Management` fee on any plan type; Savings Plan data available as `savingsPlan[]` arrays in API (~15–17% off PAYG; 1-Year/3-Year); no Reservation pricing
 
 ## Manual Calculation Example
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
