@@ -17,12 +17,16 @@
 # uri so alerts annotate the correct file on the PR diff.
 #
 # FAIL-CLOSED SANITISATION
-# The uri is the only fork-influenced value uploaded to code
+# The artifact uri is the only fork-influenced value uploaded to code
 # scanning. A crafted uri (absolute path, URL scheme, backslash, or
 # ".." traversal) could mislocate an alert onto an unrelated victim
-# file. Any uri that is not a plain, in-tree relative path is
-# treated as hostile and the script exits non-zero (exit 3) so the
-# caller blocks rather than uploads a poisoned report.
+# file. The pinned SkillSpector build emits findings only at
+# results[].locations[].physicalLocation.artifactLocation.uri, which is
+# the single path validated and rewritten here. Any uri that is not a
+# plain, in-tree relative path is treated as hostile and the script
+# exits non-zero (exit 3) so the caller blocks rather than uploads a
+# poisoned report. (If a future SkillSpector version emits file uris in
+# other SARIF fields, extend both checks below to cover them.)
 #
 # Usage:
 #   normalize-skillspector-sarif.sh <path-to.sarif> <path-prefix>

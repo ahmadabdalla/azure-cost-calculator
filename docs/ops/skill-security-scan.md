@@ -9,8 +9,9 @@ This runs as **two workflows**. The scan workflow runs in the untrusted PR conte
 | Scan workflow     | `.github/workflows/skill-security-scan.yml` (PR context: scan + gate, no write scopes)                         |
 | Upload workflow   | `.github/workflows/skill-security-scan-upload.yml` (trusted `workflow_run`: publishes SARIF)                   |
 | Gate script       | `.github/scripts/security/check-skillspector-threshold.sh`                                                      |
+| Scan wrapper      | `.github/scripts/security/run-skillspector-scan.sh`                                                             |
 | SARIF normaliser  | `.github/scripts/security/normalize-skillspector-sarif.sh`                                                      |
-| Tests             | `tests/unit/bash/ci/check-skillspector-threshold.bats`, `tests/unit/bash/ci/normalize-skillspector-sarif.bats` |
+| Tests             | `tests/unit/bash/ci/check-skillspector-threshold.bats`, `tests/unit/bash/ci/run-skillspector-scan.bats`, `tests/unit/bash/ci/normalize-skillspector-sarif.bats` |
 | Scan target       | `skills/azure-cost-calculator/`                                                                                 |
 | Trigger           | All pull requests to `dev` and `main`; scan only runs when files under `skills/azure-cost-calculator/**` change |
 | Fail threshold    | `HIGH` or `CRITICAL` (configurable via `SKILLSPECTOR_FAIL_ON`)                                                  |
@@ -23,14 +24,18 @@ This runs as **two workflows**. The scan workflow runs in the untrusted PR conte
 
 SkillSpector is a static analyzer for AI agent skills. It scans `SKILL.md`, scripts, manifests, and reference data for 64 vulnerability patterns across 16 categories (prompt injection, data exfiltration, supply chain, excessive agency, MCP tool poisoning, dangerous AST patterns, taint flows, YARA signatures, and more). The README in the upstream repo lists every rule.
 
-The scan workflow runs two passes per PR, both with LLM analysis disabled for reproducibility:
+The scan workflow runs two passes per PR, both with LLM analysis disabled for reproducibility. The gate runs **first** (the merge decision); the SARIF surfacing path runs **after** it under `always()`, so a blocked gate still produces a code-scanning finding:
 
-| Pass       | Format | Purpose                                                                       |
-| ---------- | ------ | ----------------------------------------------------------------------------- |
-| SARIF pass | SARIF  | Normalised, published as an artifact, then uploaded to code scanning by the upload workflow |
-| JSON pass  | JSON   | Parsed by `check-skillspector-threshold.sh` to decide pass/fail (the required gate)         |
+| Order | Pass       | Format | Purpose                                                                       |
+| ----- | ---------- | ------ | ----------------------------------------------------------------------------- |
+| 1     | JSON pass  | JSON   | Parsed by `check-skillspector-threshold.sh` to decide pass/fail (the required gate) and to write the job summary |
+| 2     | SARIF pass | SARIF  | Normalised, published as an artifact, then uploaded to code scanning by the upload workflow |
 
 A separate JSON pass is required because SARIF does not carry SkillSpector's `risk_assessment` block, which is the source of truth for the gate.
+
+### Why the scans run through a wrapper
+
+`skillspector scan` writes its output file and then **exits non-zero when it finds HIGH or CRITICAL issues**. Under the workflow's `set -e` shell, that non-zero exit would abort the job at the scan step, before the gate ever ran, so SkillSpector's raw exit code (not the configurable gate) would block merge, and no SARIF would be published for the worst skills (issue #984). Both passes therefore go through `run-skillspector-scan.sh`, which tolerates a non-zero exit **only when the scanner produced valid output** (file exists, is non-empty, parses as JSON, and carries the minimal shape its consumer needs: a non-empty `runs[]` for SARIF or a string `risk_assessment.severity` (the one field the gate reads) for JSON) and otherwise fails closed. This keeps `check-skillspector-threshold.sh` the single decision authority. Running the gate before the SARIF normaliser also means a normalisation failure can never suppress the merge decision.
 
 ### Two-workflow architecture
 
@@ -48,7 +53,7 @@ The gate stays in the scan workflow, so it remains the required, blocking check 
 - It **never checks out or executes** PR/fork code; it only downloads the artifact and calls `upload-sarif`.
 - The PR head sha comes from the authoritative `github.event.workflow_run.head_sha` (set by GitHub), never from the artifact, so it cannot be spoofed.
 - The PR number is resolved from the commit-to-PRs API and strictly filtered (open, matching head sha, head repo, base repo, base branch). Ambiguous matches are skipped, never guessed, so a shared sha cannot redirect alerts onto another PR.
-- The scan workflow publishes the SARIF artifact **only after** `normalize-skillspector-sarif.sh` validates every uri, so a poisoned SARIF is never produced for the upload workflow to consume.
+- The scan workflow publishes the SARIF artifact **only after** `normalize-skillspector-sarif.sh` validates the artifact uri, so a poisoned SARIF is never produced for the upload workflow to consume.
 
 ### Why the SARIF needs normalising
 
@@ -149,6 +154,7 @@ skillspector scan ./skills/azure-cost-calculator/ \
 
 ```bash
 bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/check-skillspector-threshold.bats
+bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/run-skillspector-scan.bats
 bash tests/unit/run-bats-tests.sh tests/unit/bash/ci/normalize-skillspector-sarif.bats
 ```
 
@@ -197,7 +203,7 @@ Severity bands and recommendations come from SkillSpector's risk scoring (see up
 | Inline annotations on PR | "Files changed" tab; appear once `Skill Security Scan Upload` finishes (shortly after the scan check), for both same-repo and fork PRs |
 | Aggregated view          | Repo → Security → Code scanning → filter by tool `SkillSpector`              |
 | Raw JSON for scripting   | PR → Checks → `Skill Security Scan` → Artifacts → `skillspector-report`      |
-| Pass/fail summary        | PR → Checks → `Skill Security Scan` → step summary panel (this is the blocking check) |
+| Pass/fail summary        | PR → Checks → `Skill Security Scan` → step summary panel: a verdict table (score, severity, recommendation, threshold) plus a per-finding table (severity, rule, `file:line`, detail). This is the blocking check and is self-contained, so an author can see what tripped the gate without opening the Security tab |
 
 ---
 
