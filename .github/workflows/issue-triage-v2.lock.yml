@@ -436,7 +436,7 @@ jobs:
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
           cat > "${RUNNER_TEMP}/gh-aw/safeoutputs/config.json" << GH_AW_SAFE_OUTPUTS_CONFIG_6acf72421b8084e1_EOF
-          {"add_comment":{"max":1},"add_labels":{"allowed":["new-service","pricing-inaccuracy","automatic-existing","service-update","needs-info","duplicate","good first issue","question","invalid","enhancement"],"max":2},"assign_to_agent":{"base-branch":"dev","custom-agent":"service-reference","github-token":"${PIPELINE_GITHUB_TOKEN}","max":1,"model":"claude-opus-4.6"},"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"report_incomplete":{}}
+          {"add_comment":{"max":1},"add_labels":{"allowed":["new-service","pricing-inaccuracy","automatic-existing","service-update","needs-info","duplicate","good first issue","question","invalid","enhancement"],"max":2},"assign_to_agent":{"base-branch":"dev","custom-agent":"service-reference","github-token":"${PIPELINE_GITHUB_TOKEN}","max":1,"model":"claude-sonnet-4.6"},"create_report_incomplete_issue":{},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"report_incomplete":{}}
           GH_AW_SAFE_OUTPUTS_CONFIG_6acf72421b8084e1_EOF
       - name: Generate Safe Outputs Tools
         env:
@@ -1353,7 +1353,7 @@ jobs:
           GH_AW_ALLOWED_DOMAINS: "*.githubusercontent.com,api.business.githubcopilot.com,api.enterprise.githubcopilot.com,api.github.com,api.githubcopilot.com,api.individual.githubcopilot.com,codeload.github.com,docs.github.com,github-cloud.githubusercontent.com,github-cloud.s3.amazonaws.com,github.blog,github.com,github.githubassets.com,host.docker.internal,lfs.github.com,objects.githubusercontent.com,raw.githubusercontent.com,registry.npmjs.org,telemetry.enterprise.githubcopilot.com"
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_API_URL: ${{ github.api_url }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"add_labels\":{\"allowed\":[\"new-service\",\"pricing-inaccuracy\",\"automatic-existing\",\"service-update\",\"needs-info\",\"duplicate\",\"good first issue\",\"question\",\"invalid\",\"enhancement\"],\"max\":2},\"assign_to_agent\":{\"base-branch\":\"dev\",\"custom-agent\":\"service-reference\",\"github-token\":\"${{ secrets.PIPELINE_GITHUB_TOKEN }}\",\"max\":1,\"model\":\"claude-opus-4.6\"},\"create_report_incomplete_issue\":{},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":1,\"report-as-issue\":\"true\"},\"report_incomplete\":{}}"
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"add_labels\":{\"allowed\":[\"new-service\",\"pricing-inaccuracy\",\"automatic-existing\",\"service-update\",\"needs-info\",\"duplicate\",\"good first issue\",\"question\",\"invalid\",\"enhancement\"],\"max\":2},\"assign_to_agent\":{\"base-branch\":\"dev\",\"custom-agent\":\"service-reference\",\"github-token\":\"${{ secrets.PIPELINE_GITHUB_TOKEN }}\",\"max\":1,\"model\":\"claude-sonnet-4.6\"},\"create_report_incomplete_issue\":{},\"missing_data\":{},\"missing_tool\":{},\"noop\":{\"max\":1,\"report-as-issue\":\"true\"},\"report_incomplete\":{}}"
           GH_AW_ASSIGN_TO_AGENT_TOKEN: ${{ secrets.PIPELINE_GITHUB_TOKEN }}
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
