@@ -36,7 +36,7 @@ safe-outputs:
     max: 2
   assign-to-agent:
     custom-agent: "service-reference"
-    model: "claude-opus-4.6"
+    model: "claude-sonnet-4.6"
     base-branch: "dev"
     max: 1
     github-token: ${{ secrets.PIPELINE_GITHUB_TOKEN }}

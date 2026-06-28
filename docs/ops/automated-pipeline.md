@@ -107,7 +107,7 @@ The `assign-to-agent` safe-output passes three parameters to the Copilot coding 
 | Parameter      | Value               | Effect                                      |
 | -------------- | ------------------- | ------------------------------------------- |
 | `custom-agent` | `service-reference` | Loads `.github/agents/service-reference.md` |
-| `model`        | `claude-opus-4.6`   | Runs Claude Opus 4.6                        |
+| `model`        | `claude-sonnet-4.6` | Runs Claude Sonnet 4.6                      |
 | `base-branch`  | `dev`               | PR targets `dev` (not `main`)               |
 
 ---
