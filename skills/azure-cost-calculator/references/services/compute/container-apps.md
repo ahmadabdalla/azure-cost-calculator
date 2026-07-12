@@ -2,14 +2,14 @@
 serviceName: Azure Container Apps
 category: compute
 aliases: [ACA, Container Apps]
-primaryCost: "Consumption: vCPU-s + GiB-s + requests (free grants apply); Dedicated: vCPU-h + memory-h + management fee"
+primaryCost: "Consumption: vCPU-s + GiB-s + requests (free grants apply); Dedicated: vCPU-h + GiB-h + management fee"
 hasFreeGrant: true
 privateEndpoint: true
 ---
 
 # Azure Container Apps
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Always query in the user's target currency first; if the API returns a non-zero `unitPrice`, use it directly. If it returns zero, fall back to USD and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Do NOT report zero to the user. If workload type is unspecified, default to Consumption.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Always query in the user's target currency first; if the API returns a non-zero `UnitPrice`, use it directly. If it returns zero, fall back to USD and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Do NOT report zero to the user. If workload type is unspecified, default to Consumption.
 
 ## Query Pattern
 
@@ -88,7 +88,7 @@ Dynamic: Monthly = sessions × session_price × 730
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
 - Dynamic Sessions: code interpreter billed per session-hour; custom pools on Dedicated use Dedicated meters only
-- Private endpoints incur `Dedicated Plan Management` fee on any plan type; Savings Plan data available as `savingsPlan[]` arrays in API (~15–17% off PAYG; 1-Year/3-Year); no Reservation pricing
+- Private endpoints incur `Dedicated Plan Management` fee on any plan type (Consumption+PE: add a separate `SkuName: Dedicated`, `meterName: Dedicated Plan Management` query — it is not returned by the Standard SKU query); Savings Plan data available as `savingsPlan[]` arrays in API (~15–17% off PAYG; 1-Year/3-Year); no Reservation pricing
 
 ## Manual Calculation Example
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
