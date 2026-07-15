@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:networking/application-gateway/waf-v2-default-cu
 name: Application Gateway - WAF v2 Default CU
 description: >

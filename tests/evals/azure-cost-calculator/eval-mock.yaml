@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/eval.schema.json
+# Waza eval suite: see docs/ops/evals.md
 name: azure-cost-calculator-eval
 description: >
   Evaluation suite for the Azure Cost Calculator skill. Validates cost
