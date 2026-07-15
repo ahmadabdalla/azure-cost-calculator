@@ -154,6 +154,8 @@ Create the file at the path specified by the routing map:
 skills/azure-cost-calculator/references/services/{category}/{filename}.md
 ```
 
+Keep updates token-efficient: prefer removing or replacing text over adding it, and add only what is required for accurate cost estimation.
+
 ### 4.1 - Use the Compliance Contract as your checklist
 
 The contract specifies:
