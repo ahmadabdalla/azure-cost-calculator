@@ -11,11 +11,11 @@ privateEndpoint: true
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Services` or `Cognitive Services`. Old names return zero results.
 
-> **Trap (inflated totals)**: Broad `eastus` queries return 500+ meters across 28 product families. Always filter by `ProductName`.
+> **Trap (inflated totals)**: Broad `eastus` queries return 560+ meters across 28 product families. Always filter by `ProductName`.
 
 > **Trap (mixed regions)**: Default regional queries miss Global-only products such as `Azure Health Insights`. Check `Global` when a product seems missing.
 
-> **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
+> **Trap (sub-cent pricing)**: Some meters (e.g., `Voice Live API Lite - LLM Text Cached Tokens`, `Std Contextualization Tokens`) have sub-cent `retailPrice` and round down for small `Quantity` values. Use large `Quantity`.
 
 > **Agent instruction**: Tiered meters (e.g., `Standard Text Records`) return multiple rows with different `tierMinimumUnits`. Use the tier matching the user's volume; do not sum all tiers.
 
@@ -70,12 +70,13 @@ Quantity: 10
 | `Standard Transactions` | `Azure Vision - Face`         | `1K`          | Tiered; see `vision.md` |
 | `S1 Characters`         | `Translator Text`             | `1M`          | Text translation; see `translator.md` |
 | `S1 Speech To Text`     | `Azure Speech`                | `1 Hour`      | Core STT; see `speech.md` |
+| `Voice Live API Lite - LLM Text Cached Tokens` | `Azure Speech` | `1K` | Sub-cent; Lite/Std/Pro tiers; see `speech.md` |
 | `Standard Text Records` | `Content Safety`              | `1K`          | Text moderation; see `content-safety.md` |
 | `Standard Univariate Transactions` | `Anomaly Detector`   | `1K`          | Anomaly detection PAYG |
 | `S0 Transactions`       | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training`, `S0 Image Storage` |
 | `Doc Content Extraction Standard Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
 | `Evaluations input tokens Tokens` | `Observability`       | `1K`          | Foundry eval; also Output variant |
-| `Model Routers GL 1M Tokens` | `Model Tools`        | `1M`          | Model router prompt charge; also DZ variant |
+| `Model Routers GL 1M Tokens` | `Model Tools`        | `1M`          | Model router prompt charge; eastus2/swedencentral/westus2 only; also DZ variant |
 | `Radiology Insights Language Detection Text Records` | `Azure Health Insights` | `1K` | Global-only; verify availability |
 
 ## Cost Formula
@@ -86,11 +87,10 @@ Daily meters (1/Day):  Script auto-multiplies by 30
 Hourly meters (1 Hour): Script auto-multiplies by 730
 ```
 
-`Quantity` = billable units (e.g., 100 = 100K records when `unitOfMeasure` is `1K`).
-
 ## Notes
 
 - **Scope**: Covers umbrella and unrouted `Foundry Tools` products; dedicated sub-service files remain authoritative. Azure OpenAI is separate (`openai-service.md`)
+- **Capacity planning**: `Quantity: 1` means one billing unit of the meter `unitOfMeasure` (for example `1K` records or `1M` characters)
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day`; script auto-multiplies by 30
 - **Health Insights caution**: The API exposes one Global meter, but Learn docs remain archived/preview-oriented. Verify availability before estimating
