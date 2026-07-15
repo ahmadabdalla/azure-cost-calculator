@@ -46,6 +46,13 @@ ProductName: Azure Document Intelligence
 SkuName: Commitment Tier Pre-Built Azure 100K
 MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfMeasure: 1/Month
 
+### Commitment tier: Pre-Built Azure 100K (overage)
+
+ServiceName: Foundry Tools
+ProductName: Azure Document Intelligence
+SkuName: Commitment Tier Pre-Built Azure 100K
+MeterName: Commitment Tier Pre-Built Azure 100K CT Overage Transactions
+
 ## Key Fields
 
 | Parameter     | How to determine                        | Example values                                                              |
@@ -77,6 +84,7 @@ MeterName: Commitment Tier Pre-Built Azure 100K Unit # flat monthly fee, unitOfM
 | `S0 Batch Pages for Query Fields` | `S0` | `1K`        | Batch query fields (note: title case, unlike real-time) |
 | `S0 Training`                  | `S0`    | `1 Hour`      | Neural model training (first 10 hrs free) |
 | `Free Transactions`            | `Free`  | `1K`          | Free tier, 500 pages/month                |
+| `Commitment Tier Pre-Built Azure 100K CT Overage Transactions` | `Commitment Tier Pre-Built Azure 100K` | `1K` | Overage beyond the included 100K pages |
 
 ## Cost Formula
 
@@ -90,9 +98,10 @@ Free grant:  Billable = max(0, pages − 500) then apply PAYG formula
 
 ## Notes
 
-- **Free tier**: F0 SKU includes 500 pages/month; S0 Training: first 10 hours free for neural models, template training always free
+- **Free tier**: `Free` SKU includes 500 pages/month; `S0 Training` includes the first 10 neural training hours, template training always free
 - **Model types** (never-assume): Read (OCR), Pre-built (Invoice/Receipt/ID/W-2/Layout), Custom (extraction/generative), Add-on. Ask user which model
-- **Commitment tiers**: Pre-built/Custom 20K–1M pages/month, Read 500K–16M pages/month; Connected Container tiers are ~10–20% cheaper (varies by model type)
+- **Commitment tiers**: Pre-built/Custom 20K–1M pages/month, Read 500K–16M pages/month; `Connected` tiers are ~10–20% cheaper (varies by model type)
+- **Capacity planning**: `Quantity: 1` = 1,000 pages for all `1K` meters; monthly cost scales linearly except tiered Read meters
 - **Disconnected containers**: Separate product (`Azure Document Intelligence - Disconnected`), annual billing (`1/Year`), no overage. Divide `retailPrice` by 12 for monthly equivalent
 - **Legacy**: `Form Recognizer` productName has higher Custom pricing; always use `Azure Document Intelligence` for current rates
 - **Scope**: For broader Foundry Tools coverage (Language, Vision, Speech, Translator), see `ai-ml/ai-services.md`
