@@ -89,6 +89,57 @@ The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. 
 
 **To extend:** add a filter in the `Detect critical file changes` step and map it to tags in `Build eval scope`. New tasks are picked up automatically if their tags match.
 
+### Manual dispatch (workflow_dispatch)
+
+The `run-evals` job triggers a real-model eval on any branch without opening a PR. Useful for:
+
+- Verifying a scoped subset before merging (see "Scoping recipe" below).
+- Comparing behavior across models: `claude-sonnet-4.6`, `claude-sonnet-4.5`, `claude-opus-4.6`, `gpt-5.3-codex`.
+- Full-suite assessments not tied to a code change.
+
+**Dispatch from the CLI:**
+
+```bash
+# Scoped: 4 smoke tasks + 1 cosmos-db happy path. ~90s wall clock, ~15-30 premium requests.
+gh workflow run eval.yml \
+  --ref my-branch \
+  -f model=claude-sonnet-4.6 \
+  -f tag="smoke,service:cosmos-db"
+
+# Full suite: all 92 tasks. Multi-model comparisons should scope down first.
+gh workflow run eval.yml -f model=claude-sonnet-4.6
+```
+
+Inputs (`.github/workflows/eval.yml`):
+
+| Input   | Type   | Default             | Meaning                                                                                  |
+| ------- | ------ | ------------------- | ---------------------------------------------------------------------------------------- |
+| `model` | choice | `claude-sonnet-4.6` | One of `claude-sonnet-4.6`, `claude-sonnet-4.5`, `claude-opus-4.6`, `gpt-5.3-codex`      |
+| `tag`   | string | (empty runs all)    | Comma-separated tag filter, e.g. `smoke,service:cosmos-db`. Tags are OR'd, not AND'd     |
+
+**Retrieve and inspect results:**
+
+```bash
+# Find the run ID (most recent first)
+gh run list --workflow=eval.yml --limit 5
+
+# Download artifacts
+gh run download <run-id> --dir ./eval-out
+# results.json lands at ./eval-out/eval-results-<model>/results.json
+
+# Quick summary
+python3 -c "
+import json, glob
+r = json.load(open(glob.glob('./eval-out/*/results.json')[0]))
+s = r['summary']
+print(f\"aggregate={s['aggregate_score']:.3f}  passed={s['succeeded']}/{s['total_tests']}\")
+for t in r['tasks']:
+    print(f\"  {t['test_id']:60s} status={t['status']:10s} avg={t['stats']['avg_score']:.3f}\")
+"
+```
+
+**Scoping recipe for verification runs.** Use `tag="smoke,service:<one-service>"` to run the 4 smoke tests plus one service happy path. This exercises trigger behavior, disambiguation, alias routing, and the pricing script path in ~90 seconds and ~15-30 premium requests. It is the minimum footprint that surfaces most regressions; use it to verify skill/config changes before requesting review.
+
 ### Mock executor
 
 Runs only `--tags negative` tasks. Negative tests pass deterministically under mock because the mock executor never activates skills. Positive tests are excluded: they require real AI output and always fail under mock, producing no actionable signal. `waza check` (run in `validate-eval-schema`) already covers schema and grader config validation.
