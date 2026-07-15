@@ -80,10 +80,9 @@ primaryCost:
      1–45. Do not rely on exact line ranges for YAML front matter, titles, or
      trap warnings; their length may vary.
 
-  0b. 100-LINE LIMIT: The total file length must not exceed 100 lines of markdown
-      content. This budget covers YAML, title, traps, query patterns,
-      tables, formulas, and notes. Optimize for density; every line costs tokens
-      at runtime.
+  0b. CONFIGURED LINE LIMIT: Total file length must not exceed MaxLineCount in
+      tests/lib/validation/ValidationConfig.psd1. This covers all content;
+      optimize for density because every line costs tokens at runtime.
 
   0c. SECTION ORDER (enforced by validation): Sections must appear in this order:
         YAML front matter → Title (H1) → Trap(s) → Query Pattern →

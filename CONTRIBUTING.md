@@ -125,7 +125,7 @@ Create the file at: `skills/azure-cost-calculator/references/services/{category}
 
 The file MUST follow these critical constraints:
 - **First query pattern must appear within lines 1–45** of the file. This is the most critical layout constraint. Keep the YAML, title, and trap concise to ensure this.
-- **Total file length**: under 100 lines of markdown content.
+- **Total file length**: must not exceed `MaxLineCount` in `tests/lib/validation/ValidationConfig.psd1`.
 - **Use declarative `Key: Value` format** for query patterns (no code fences, no script names). Agents translate parameters to the detected runtime's syntax.
 - **ServiceName in every query block**: Always include `ServiceName:` in each individual query pattern block. Do not rely on "All patterns below use..." preambles - batch mode parses individual blocks.
 - **Declare every query serviceName in metadata**: `ServiceName:` values must match `serviceName`, `apiServiceName`, `billingNeeds`, or `queryServiceNames`. Use `queryServiceNames: [...]` only for additional query-only API service names.

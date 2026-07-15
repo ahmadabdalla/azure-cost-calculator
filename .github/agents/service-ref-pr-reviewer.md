@@ -103,6 +103,7 @@ Read these files to understand conventions and known issues:
 
 - `CONTRIBUTING.md`: contributor guide, "The Prompt" workflow, hard rules
 - `docs/TEMPLATE.md`: canonical file structure and formatting rules
+- `tests/lib/validation/ValidationConfig.psd1`: configured service-reference line limit
 - `skills/azure-cost-calculator/references/pitfalls.md`: known API traps
 - `skills/azure-cost-calculator/references/shared.md`: category index, constants
 - `skills/azure-cost-calculator/references/service-routing.md`: implemented services
@@ -201,7 +202,7 @@ Record pass/fail status and any failure messages.
 Manually verify against key rules from `CONTRIBUTING.md`:
 
 - First query pattern starts within lines 1–45
-- Total file length < 100 lines
+- Total file length does not exceed `MaxLineCount` from `tests/lib/validation/ValidationConfig.psd1`
 - No hardcoded dollar amounts outside Known Rates tables
 - No "verified" dates
 - At least one query uses `InstanceCount` or `Quantity` for scaling
@@ -298,7 +299,7 @@ Organize findings into this format:
 ### Validation Results
 
 - Script: {pass/fail + details}
-- Line count: {N}/100
+- Line count: {N}/{MaxLineCount}
 - First query line: {N}/45
 - Routing/catalog: {consistent/issues found}
 - Eval coverage: {covered/missing — path where task should be added if missing}

@@ -35,7 +35,6 @@ Releases are handled by `create-release.yml` when a PR with a `release: ` prefix
 
 - Service reference files live in `skills/azure-cost-calculator/references/services/`.
 - Follow the template at `docs/TEMPLATE.md`.
-- Each service file must stay under 100 lines.
 - Run the validation script before submitting:
   ```
   pwsh tests/Validate-ServiceReference.ps1 -Path <file> -CheckAliasUniqueness -CheckRoutingFileSync
