@@ -9,9 +9,9 @@ privateEndpoint: true
 
 # Microsoft Fabric
 
-> **Trap (inflated totals)**: Unfiltered `ServiceName 'Microsoft Fabric'` returns ~88 meters across 3 products (Fabric Capacity, OneLake, Fabric Capacity Reservation). The `totalMonthlyCost` is meaningless. Always filter by `ProductName` for the specific component.
+> **Trap (inflated totals)**: Unfiltered `ServiceName 'Microsoft Fabric'` returns 89 meters across 3 products (Fabric Capacity, OneLake, Fabric Capacity Reservation). The `totalMonthlyCost` is meaningless. Always filter by `ProductName` for the specific component.
 
-> **Trap (uniform CU pricing)**: All 69 standard workload meters under `Fabric Capacity` share an identical per-CU-hour rate. Each meter tracks a different workload for billing attribution only; the rate does not vary. Use any single CU meter as the reference, multiply by the F-SKU's CU count.
+> **Trap (uniform CU pricing)**: All 72 standard workload meters under `Fabric Capacity` share an identical per-CU-hour rate. Each meter tracks a different workload for billing attribution only; the rate does not vary. Use any single CU meter as the reference, multiply by the F-SKU's CU count.
 
 > **Trap (Capacity Overage)**: The `Capacity Overage Capacity Usage` meter is 3× the standard CU rate and is not RI-eligible.
 
@@ -60,7 +60,7 @@ MeterName: Capacity Overage Capacity Usage CU
 
 | Meter                                | skuName                           | productName       | unitOfMeasure | Notes                                      |
 | ------------------------------------ | --------------------------------- | ----------------- | ------------- | ------------------------------------------ |
-| `Power BI Capacity Usage CU`        | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 69 identical) |
+| `Power BI Capacity Usage CU`        | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 72 identical) |
 | `Capacity Overage Capacity Usage CU`| `Capacity Overage Capacity Usage` | `Fabric Capacity` | `1 Hour`      | 3× standard rate; not RI-eligible          |
 | `OneLake Storage Hot Data Stored`   | `OneLake Storage Hot`             | `OneLake`         | `1 GB/Month`  | Default primary storage tier               |
 | `OneLake Storage Cool Data Stored`  | `OneLake Storage Cool`            | `OneLake`         | `1 GB/Month`  | Lower-cost infrequent access tier          |
@@ -87,7 +87,7 @@ Total Monthly    = Capacity + Storage + Overage
 - **Free mirroring storage**: Each F-SKU includes free mirroring equal to the SKU number in TB (e.g., F64 = 64 TB); excess at the `Storage Mirroring` rate
 - **Cosmos DB / SQL in Fabric**: Dedicated OneLake storage meters exist at higher per-GB rates; query `ProductName: OneLake` with specific `SkuName` (e.g., `Cosmos DB Storage`, `Cosmos DB Backup Storage`, `Cosmos DB Data Restore`, `SQL Storage`, `SQL Backup Storage`)
 - **BCDR casing inconsistency**: Hot tier uses `OneLake BCDR Storage Hot` but Cool/Cold use `Onelake` (lowercase l); queries are case-sensitive
-- **Data retrieval from Cold/Cool tiers**: `OneLake Data Retrieval Cold/Cool` CU meters charge a sub-standard rate per CU-hour for accessing archived data
+- **Data retrieval from Cold/Cool tiers**: `OneLake Data Retrieval Cold/Cool` CU meters charge the standard per-CU-hour rate for accessing archived data
 - **Private endpoints**: Supported on F64 and above SKUs; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Reserved Instance Pricing
