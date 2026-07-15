@@ -60,7 +60,7 @@ Quantity: 100
 | ------------- | --------------------------------------------------- | ----------------------------------------------------------- |
 | `serviceName` | Always `Azure Machine Learning`                     | `Azure Machine Learning`                                    |
 | `productName` | Component type                                      | `Managed Model Hosting Service`, `Machine Learning service`, `Machine Learning Model Management` |
-| `region`      | Use `eastus2` for Llama-4 tokens and Model Management | `eastus2`, `swedencentral`                                  |
+| `region`      | Use `eastus2` or `swedencentral` for Llama-4 tokens; `eastus2` for Model Management | `eastus2`, `swedencentral`                                  |
 | `skuName`     | VM size for endpoints; tier for surcharges/mgmt     | `NC4asT4 v3`, `NCadsA100v4`, `Standard`, `PB`, `S1`         |
 | `meterName`   | Matches skuName + "Capacity Unit" or surcharge type | `NC4asT4 v3 Capacity Unit`, `Standard GPU Surcharge`, `Llama-4-Scout-17B-16E-In Tokens` |
 
