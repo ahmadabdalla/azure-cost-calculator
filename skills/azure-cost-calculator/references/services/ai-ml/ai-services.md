@@ -11,7 +11,9 @@ privateEndpoint: true
 
 > **Trap (serviceName rebrand)**: API `serviceName` is `Foundry Tools`, NOT `Azure AI Services` or `Cognitive Services`. Old names return zero results.
 
-> **Trap (inflated totals)**: Unfiltered queries return 500+ meters across 28+ product families. Always filter by `ProductName`.
+> **Trap (inflated totals)**: Broad `eastus` queries return 500+ meters across 28 product families. Always filter by `ProductName`.
+
+> **Trap (mixed regions)**: Default regional queries miss Global-only products such as `Azure Health Insights`. Check `Global` when a product seems missing.
 
 > **Trap (sub-cent pricing)**: Some meters (e.g., Face Storage) have sub-cent `retailPrice` and display as minimal cost. Use large `Quantity`.
 
@@ -73,6 +75,8 @@ Quantity: 10
 | `S0 Transactions`       | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training`, `S0 Image Storage` |
 | `Doc Content Extraction Standard Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
 | `Evaluations input tokens Tokens` | `Observability`       | `1K`          | Foundry eval; also Output variant |
+| `Model Routers GL 1M Tokens` | `Model Tools`        | `1M`          | Model router prompt charge; also DZ variant |
+| `Radiology Insights Language Detection Text Records` | `Azure Health Insights` | `1K` | Global-only; verify availability |
 
 ## Cost Formula
 
@@ -86,9 +90,10 @@ Hourly meters (1 Hour): Script auto-multiplies by 730
 
 ## Notes
 
-- **Scope**: Covers AI Services (formerly Cognitive Services). Azure OpenAI is separate (`openai-service.md`); Foundry Agents (`foundry-agents.md`) and Video Indexer (`video-indexer.md`) share `apiServiceName: Foundry Tools` but have dedicated files
+- **Scope**: Covers umbrella and unrouted `Foundry Tools` products; dedicated sub-service files remain authoritative. Azure OpenAI is separate (`openai-service.md`)
 - **Free tiers**: Most sub-services offer Free SKU with limited quota (Language: 5K records, Vision: 20/min)
 - **Daily billing**: Translator S2–S4 and C2–C4 use `1/Day`; script auto-multiplies by 30
-- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. `- Disconnected` products bill annually. Exclude from monthly estimates
+- **Health Insights caution**: The API exposes one Global meter, but Learn docs remain archived/preview-oriented. Verify availability before estimating
+- **Legacy/Disconnected**: `Form Recognizer` → Azure Document Intelligence, `Content Moderator` → Content Safety. Azure Custom Vision is planned for retirement on 9/25/2028. `- Disconnected` products bill annually; exclude them from monthly estimates
 - **Sub-service files**: Language, Vision, Speech, Translator, Document Intelligence, Content Safety, Content Understanding, Video Indexer, and Foundry Agents each have dedicated reference files with full meter tables
 - **Supports private endpoints** via the AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
