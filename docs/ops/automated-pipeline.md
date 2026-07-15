@@ -59,7 +59,7 @@ Supporting agents (invoked by the orchestrators, not directly):
 
 | Agent                     | Role                                                                        |
 | ------------------------- | --------------------------------------------------------------------------- |
-| `pricing-investigator.md` | API investigation sub-agent (x3 for authoring, x2 for review, + tiebreaker) |
+| `pricing-investigator.md` | API investigation sub-agent (x2 for authoring, x2 for review, + tiebreaker) |
 | `compliance-reviewer.md`  | Rules analysis sub-agent (authoring only)                                   |
 
 ---
