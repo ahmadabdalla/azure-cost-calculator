@@ -93,9 +93,9 @@ For each unresolved disagreement, dispatch a fresh `pricing-investigator` instan
 
 - Provide the disputed meter names, SKU values, or billing model interpretations
 - Ask it to run the specific queries needed to verify the disputed items
-- Include the conflicting conclusions from the initial reports so it knows what to arbitrate
+- Include the conflicting conclusions and ask whether either is supported
 
-After the tiebreaker returns, use the resulting 2/3 majority to add verified items to the high-confidence data set. Document which initial report was confirmed and which was overridden.
+If the tiebreaker confirms one initial conclusion, use the resulting 2/3 majority and document the result. If it supports neither, exclude the item from the high-confidence data set and document it as unresolved.
 
 ---
 

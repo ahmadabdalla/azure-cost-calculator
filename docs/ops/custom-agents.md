@@ -29,10 +29,10 @@ When the Copilot coding agent is assigned to a service-reference issue using the
 ### Why multi-agent?
 
 - **Independent views prevent blind spots**: two investigators may explore different search terms and find different meters; disagreement reveals areas needing closer investigation.
-- **Consensus over speculation**: the orchestrator accepts 2/2 agreement directly. Disagreements trigger a scoped tiebreaker, then require a 2/3 majority.
+- **Consensus over speculation**: the orchestrator accepts 2/2 agreement directly. A tiebreaker must confirm one initial conclusion; otherwise the item remains unresolved and is excluded.
 - **Separation of concerns**: data discovery (shell + web) vs rule interpretation (read-only) vs file authoring.
 
-> **Model uniformity note**: all four agents pin `model: claude-sonnet-4.6` in their frontmatter, and the tiebreaker runs on the same model as the initial investigators. The independence signal comes from a fresh context and narrowly-scoped disputed inputs, not from model diversity. Correlated model-specific blind spots will not be caught by the tiebreaker; treat unanimous 2/2 initial agreement as strong evidence and 2/1 splits after tiebreaker investigation as adequate, but do not treat consensus as protection against systematic model bias.
+> **Model uniformity note**: all four agents pin `model: claude-sonnet-4.6` in their frontmatter, and the tiebreaker runs on the same model as the initial investigators. The independence signal comes from a fresh context and narrowly-scoped disputed inputs, not from model diversity. Correlated model-specific blind spots will not be caught by the tiebreaker; treat unanimous 2/2 initial agreement as strong evidence and confirmed 2/1 outcomes as adequate, but exclude 1/1/1 outcomes.
 
 ---
 
@@ -119,7 +119,7 @@ service-reference (orchestrator)
 | ------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
 | `.github/agents/service-reference.md`       | Orchestrator: dispatches, aggregates, writes                                           | read, search, edit, execute, agent, web |
 | `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator: verifies, reviews                                              | read, search, edit, execute, agent, web |
-| `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×2 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
+| `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×2 for authoring, ×2 for PR review, + optional scoped tiebreaker) | read, search, execute, web              |
 | `.github/agents/compliance-reviewer.md`     | Rules analysis sub-agent                                                               | read, search                            |
 
 1. Edit the agent file directly.
