@@ -39,25 +39,25 @@ Region: Global
 
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-| --- | --- | --- |
-| `serviceName` | Always `Power BI Embedded` | `Power BI Embedded` |
+| Parameter     | How to determine                           | Example values                                       |
+| ------------- | ------------------------------------------ | ---------------------------------------------------- |
+| `serviceName` | Always `Power BI Embedded`                 | `Power BI Embedded`                                  |
 | `productName` | A-SKU nodes vs legacy Workspace Collection | `Power BI Embedded`, `Power BI Workspace Collection` |
-| `skuName` | Node size selected by user (never-assume) | `A1`, `A2`, `A3`, `A4`, `A5`, `A6`, `A7`, `A8` |
-| `meterName` | Matches SKU: `{SKU} Node` | `A1 Node`, `A4 Node`, `A8 Node` |
+| `skuName`     | Node size selected by user (never-assume)  | `A1`, `A2`, `A3`, `A4`, `A5`, `A6`, `A7`, `A8`       |
+| `meterName`   | Matches SKU: `{SKU} Node`                  | `A1 Node`, `A4 Node`, `A8 Node`                      |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `A1 Node` | `A1` | `1 Hour` | 1 vCore, 3 GB RAM |
-| `A2 Node` | `A2` | `1 Hour` | 2 vCores, 5 GB RAM |
-| `A3 Node` | `A3` | `1 Hour` | 4 vCores, 10 GB RAM |
-| `A4 Node` | `A4` | `1 Hour` | 8 vCores, 25 GB RAM |
-| `A5 Node` | `A5` | `1 Hour` | 16 vCores, 50 GB RAM |
-| `A6 Node` | `A6` | `1 Hour` | 32 vCores, 100 GB RAM |
-| `A7 Node` | `A7` | `1 Hour` | 64 vCores, 200 GB RAM; limited regions |
-| `A8 Node` | `A8` | `1 Hour` | 128 vCores, 400 GB RAM; limited regions |
+| Meter     | skuName | unitOfMeasure | Notes                                   |
+| --------- | ------- | ------------- | --------------------------------------- |
+| `A1 Node` | `A1`    | `1 Hour`      | 1 vCore, 3 GB RAM                       |
+| `A2 Node` | `A2`    | `1 Hour`      | 2 vCores, 5 GB RAM                      |
+| `A3 Node` | `A3`    | `1 Hour`      | 4 vCores, 10 GB RAM                     |
+| `A4 Node` | `A4`    | `1 Hour`      | 8 vCores, 25 GB RAM                     |
+| `A5 Node` | `A5`    | `1 Hour`      | 16 vCores, 50 GB RAM                    |
+| `A6 Node` | `A6`    | `1 Hour`      | 32 vCores, 100 GB RAM                   |
+| `A7 Node` | `A7`    | `1 Hour`      | 64 vCores, 200 GB RAM; limited regions  |
+| `A8 Node` | `A8`    | `1 Hour`      | 128 vCores, 400 GB RAM; limited regions |
 
 ## Cost Formula
 
@@ -72,3 +72,4 @@ Monthly = retailPrice × 730 × nodeCount
 - **No reserved instances**: RI is not available; consider Microsoft Fabric F-SKUs (which support RI) for long-term commitments
 - **Workspace Collection (legacy)**: `Power BI Workspace Collection` uses per-session tiered pricing and is deprecated; use A-SKU nodes for new deployments
 - **Power BI Premium distinction**: EM/P-SKUs under serviceName `Power BI` are M365-licensed (API returns zero price); do not mix with A-SKU queries
+- **Private endpoints**: Power BI Private Link is configured at the tenant level (not per A-SKU capacity); see `networking/private-link.md` for PE and DNS zone pricing

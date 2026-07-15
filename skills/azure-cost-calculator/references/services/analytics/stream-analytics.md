@@ -42,22 +42,22 @@ ProductName: Stream Analytics
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                                     |
-| ------------- | --------------------------------------- | -------------------------------------------------- |
-| `serviceName` | Always `Stream Analytics`               | `Stream Analytics`                                 |
-| `productName` | Cloud vs Edge deployment                | `Stream Analytics`, `Stream Analytics on Edge`     |
-| `skuName`     | Tier selection                          | `Standard`, `Standard V2`, `Dedicated`, `Dedicated V2` |
-| `meterName`   | Billing meter for the tier              | `Standard Streaming Unit`, `Standard V2 Streaming Unit/Job` |
+| Parameter     | How to determine           | Example values                                              |
+| ------------- | -------------------------- | ----------------------------------------------------------- |
+| `serviceName` | Always `Stream Analytics`  | `Stream Analytics`                                          |
+| `productName` | Cloud vs Edge deployment   | `Stream Analytics`, `Stream Analytics on Edge`              |
+| `skuName`     | Tier selection             | `Standard`, `Standard V2`, `Dedicated`, `Dedicated V2`      |
+| `meterName`   | Billing meter for the tier | `Standard Streaming Unit`, `Standard V2 Streaming Unit/Job` |
 
 ## Meter Names
 
-| Meter                               | skuName        | unitOfMeasure | Notes                              |
-| ----------------------------------- | -------------- | ------------- | ---------------------------------- |
-| `Standard Streaming Unit`           | `Standard`     | `1 Hour`      | Legacy flat rate per SU            |
-| `Standard V2 Streaming Unit/Job`    | `Standard V2`  | `1 Hour`      | Current tier, tiered pricing       |
-| `Dedicated Streaming Unit`          | `Dedicated`    | `1 Hour`      | Legacy dedicated flat rate         |
-| `Dedicated V2 Streaming Unit/Job`   | `Dedicated V2` | `1 Hour`      | Current dedicated, tiered pricing  |
-| `S1 Device`                         | `S1`           | `1/Month`     | Edge deployment per device         |
+| Meter                             | skuName        | unitOfMeasure | Notes                             |
+| --------------------------------- | -------------- | ------------- | --------------------------------- |
+| `Standard Streaming Unit`         | `Standard`     | `1 Hour`      | Legacy flat rate per SU           |
+| `Standard V2 Streaming Unit/Job`  | `Standard V2`  | `1 Hour`      | Current tier, tiered pricing      |
+| `Dedicated Streaming Unit`        | `Dedicated`    | `1 Hour`      | Legacy dedicated flat rate        |
+| `Dedicated V2 Streaming Unit/Job` | `Dedicated V2` | `1 Hour`      | Current dedicated, tiered pricing |
+| `S1 Device`                       | `S1`           | `1/Month`     | Edge deployment per device        |
 
 ## Cost Formula
 
