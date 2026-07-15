@@ -33,7 +33,14 @@ ProductName: Translator Text
 SkuName: S1
 MeterName: S1 Document Characters
 
-### Commitment tier overage: Azure 250M (regional)
+### Commitment tier: Azure 250M (regional base fee)
+
+ServiceName: Foundry Tools
+ProductName: Translator Text
+SkuName: Commitment Tier Azure 250M
+MeterName: Commitment Tier Azure 250M Unit
+
+### Commitment tier: Azure 250M (regional overage)
 
 ServiceName: Foundry Tools
 ProductName: Translator Text
@@ -91,7 +98,7 @@ Region: Global
 Per-character (1M):  Monthly = retailPrice × Quantity
 Daily tiers (1/Day): Monthly = retailPrice × 30
 Hourly app (1 Hour): Monthly = retailPrice × 730
-Monthly commitments (1/Month): Monthly = basePrice + max(0, billableUsage) × overagePrice
+Monthly commitments (1/Month): Monthly = max(0, actualUsage - includedQuantity) × overageRate + commitmentFee
 Annual disconnected (1/Year): Monthly = retailPrice ÷ 12
 Free grant:          BillableChars = max(0, totalChars - 2M)
 ```
@@ -102,4 +109,3 @@ Free grant:          BillableChars = max(0, totalChars - 2M)
 - `Translator Text` covers regional `S1`, `S2`, `S3`, `S4`, `C2`, `C3`, `C4`, and `D3`; Global `Azure Translator` also exposes parallel `S2`, `S3`, `S4`, `C2`, `C3`, `C4`, and `D3` families plus `S1 Standard`, `S1 Image`, App, Emb, and product-specific hosting SKUs.
 - Daily tiers still appear in the API as exact base meters (`S2 Unit`, `S3 Unit`, `S4 Unit`, `C2 Unit`, `C3 Unit`, `C4 Unit`, `D3 Unit`) plus matching character overage meters.
 - Commitment families currently present are Azure 250M/1000M/4000M, Connected 250M/1000M/4000M, App 20K/50K/150K/400K hours, Emb 250M/1000M/4000M/10000M, and Disconnected 4000M/10000M.
-- Supports private endpoints through the Azure AI Services resource; see `ai-services.md` and `networking/private-link.md`.
