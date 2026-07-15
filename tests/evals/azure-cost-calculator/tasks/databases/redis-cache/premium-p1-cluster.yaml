@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
 id: eval:databases/redis-cache/premium-p1-cluster
 name: Happy Path - Redis Cache Premium P1 Cluster
 description: >

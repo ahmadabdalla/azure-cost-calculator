@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
 id: eval:analytics/fabric/f64-capacity-storage
 name: Microsoft Fabric - F64 Capacity with OneLake Storage
 description: >

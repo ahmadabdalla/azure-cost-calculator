@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
 id: eval:web/spring-apps/standard-tier-multi-instance
 name: Spring Apps - Standard Tier Multi-Instance
 description: >

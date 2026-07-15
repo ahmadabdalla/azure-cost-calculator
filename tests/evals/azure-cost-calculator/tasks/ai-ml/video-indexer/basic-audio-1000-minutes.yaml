@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
 id: eval:ai-ml/video-indexer/basic-audio-1000-minutes
 name: Happy Path - Video Indexer Basic Audio 1000 Minutes
 description: >

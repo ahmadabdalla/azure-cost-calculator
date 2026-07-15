@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
 id: eval:developer-tools/managed-grafana/standard-x1-instance
 name: Managed Grafana - Standard X1 Instance
 description: >

@@ -9,5 +9,5 @@ RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://github.com/microsoft/waza/releases/download/v0.23.0/waza-linux-amd64 \
+RUN curl -fsSL https://github.com/microsoft/waza/releases/download/v0.38.0/waza-linux-amd64 \
     -o /usr/local/bin/waza && chmod +x /usr/local/bin/waza

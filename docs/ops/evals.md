@@ -4,7 +4,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 
 | Item             | Detail                                                                                                                                                                                                      |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Waza version     | `v0.23.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                                                                                                        |
+| Waza version     | `v0.38.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                                                                                                        |
 | Workflow         | `.github/workflows/eval.yml`                                                                                                                                                                                |
 | Composite action | `.github/actions/install-waza/action.yml`                                                                                                                                                                   |
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock)                                                                                      |
@@ -18,7 +18,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 Install Waza for your platform, then run evaluations locally.
 
 ```bash
-WAZA_VERSION="v0.23.0"
+WAZA_VERSION="v0.38.0"
 mkdir -p ~/bin
 
 # macOS (Apple Silicon)
@@ -333,7 +333,7 @@ The `validate-eval-schema` job enforces this: if a PR changes a service referenc
 | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Prompt grader (judge LLM) may time out on long responses                                                 | Override the session timeout per task with the top-level `timeout_seconds` field if a specific task consistently times out                                                                                                                                                                                                                    |
 | Prompt grader variance on borderline values                                                              | Use `code` grader for numeric checks                                                                                                                                                                                                                                                                                                          |
-| `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                  | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                                                                                                                                                                          |
+| `**` glob not supported recursively as of waza v0.38.0: tasks at depth 2+ silently skipped              | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                                                                                                                                                                          |
 | Upgrading Waza: the version is pinned in multiple files; a partial update breaks schema validation or CI | Update all of these together: `.github/actions/install-waza/action.yml` (version + checksum), `.devcontainer/Dockerfile` (curl URL), `.waza.yaml` ($schema URL), `eval.yaml` and `eval-mock.yaml` ($schema URL), all task YAML files ($schema URL), `docs/ops/evals.md` (version row + schema links), `docs/ops/dev-container.md` (table row) |
 | `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                           | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                                                                                                                                                               |
 | SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                             | Intentional; skill carries domain reference architecture                                                                                                                                                                                                                                                                                      |
@@ -415,5 +415,5 @@ Historical record of research, experiments, and design decisions. Issues and PRs
 - [Getting started guide](https://github.com/microsoft/waza/blob/main/docs/GETTING-STARTED.md)
 - [CI/CD integration guide](https://github.com/microsoft/waza/blob/main/docs/SKILLS_CI_INTEGRATION.md)
 - [Integration testing (Copilot SDK)](https://github.com/microsoft/waza/blob/main/docs/INTEGRATION-TESTING.md)
-- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/eval.schema.json)
-- [Task schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json)
+- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/eval.schema.json)
+- [Task schema](https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json)

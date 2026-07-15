@@ -46,7 +46,7 @@ Provides a reproducible Ubuntu Linux environment for running and validating the 
 | bats version       | `1.11.1` (matches CI; see `.github/scripts/test/install-bats.sh`)                                            |
 | Pester version     | `5.7.1` (matches CI; see `.github/scripts/test/Install-Pester.ps1`)                                          |
 | PSScriptAnalyzer   | `1.24.0` (matches CI; see `.github/scripts/test/Install-Pester.ps1`)                                         |
-| waza version       | `v0.23.0` (matches CI; see `.github/actions/install-waza/action.yml`)                                        |
+| waza version       | `v0.38.0` (matches CI; see `.github/actions/install-waza/action.yml`)                                        |
 | Workspace          | `/workspace` (bind-mounted from `localWorkspaceFolder`)                                                      |
 | User               | `ubuntu` (UID/GID 1000; built into `ubuntu:24.04`; auto-remapped to host UID/GID on Linux by Dev Containers) |
 | VS Code extensions | `shellcheck`, `shell-format`                                                                                 |
