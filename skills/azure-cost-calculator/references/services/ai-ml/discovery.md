@@ -19,6 +19,7 @@ ServiceName: Microsoft Discovery
 ProductName: Microsoft Discovery
 SkuName: User Messages
 MeterName: User Messages
+Region: <user region>
 Quantity: 10000 # number of user messages
 
 ## Key Fields
