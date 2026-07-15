@@ -35,6 +35,30 @@ SkuName: Hosted
 MeterName: Hosted Memory Usage
 Quantity: 8 # GBs of memory
 
+### Long-term memory
+ServiceName: Foundry Tools
+ProductName: Foundry Agents
+SkuName: Long Term Memory
+MeterName: Long Term Memory Memories
+Region: eastus2
+Quantity: 100 # thousands of memories
+
+### Short-term memory
+ServiceName: Foundry Tools
+ProductName: Foundry Agents
+SkuName: Short Term Memory
+MeterName: Short Term Memory Events Stored
+Region: eastus2
+Quantity: 100 # thousands of stored events
+
+### Memory retrieval
+ServiceName: Foundry Tools
+ProductName: Foundry Agents
+SkuName: Memory Retrieval
+MeterName: Memory Retrievals
+Region: eastus2
+Quantity: 100 # thousands of retrievals
+
 ### Skills execution container
 
 ServiceName: Foundry Tools
