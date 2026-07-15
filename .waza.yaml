@@ -19,7 +19,7 @@ server:
   port: 3000
   resultsDir: results/
 dev:
-  model: claude-sonnet-4-20250514
+  model: claude-sonnet-4.6
   target: medium-high
   maxIterations: 5
 tokens:
