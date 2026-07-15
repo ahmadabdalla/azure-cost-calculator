@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:networking/ip-addresses/standard-static-multi-ip
 name: IP Addresses - Standard Static Public IPs
 description: >

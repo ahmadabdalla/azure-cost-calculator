@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:compute/app-service/linux-p1-v3
 name: Happy Path - App Service Linux P1 v3
 description: >

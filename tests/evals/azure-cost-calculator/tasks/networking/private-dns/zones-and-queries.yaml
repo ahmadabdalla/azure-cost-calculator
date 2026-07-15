@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:networking/private-dns/zones-and-queries
 name: Private DNS - Zones and Query Volume
 description: >

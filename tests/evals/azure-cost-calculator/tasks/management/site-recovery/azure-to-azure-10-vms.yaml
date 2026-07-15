@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:management/site-recovery/azure-to-azure-10-vms
 name: Site Recovery - Azure-to-Azure 10 VMs
 description: >

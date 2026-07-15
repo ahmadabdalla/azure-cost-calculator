@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:monitoring/application-insights/ingestion-and-retention
 name: Happy Path - Application Insights Ingestion and Retention
 description: >
