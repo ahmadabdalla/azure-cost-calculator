@@ -1,9 +1,11 @@
-Describe 'Test-ContentRule serviceName consistency' {
+Describe 'Test-ContentRule' {
 
     BeforeAll {
         $validationRoot = Join-Path $PSScriptRoot '../../../lib/validation'
         . (Join-Path $validationRoot 'Get-FrontMatter.ps1')
         . (Join-Path $validationRoot 'Test-ContentRule.ps1')
+        $validationConfig = Import-PowerShellDataFile -Path (Join-Path $validationRoot 'ValidationConfig.psd1')
+        $emptyFrontMatter = @{ Found = $false; Fields = @{} }
 
         function New-ServiceReferenceLines {
             param(
@@ -49,6 +51,7 @@ Describe 'Test-ContentRule serviceName consistency' {
                 }
             }
         }
+
     }
 
     It 'passes when ServiceName matches serviceName' {
@@ -94,5 +97,19 @@ Describe 'Test-ContentRule serviceName consistency' {
 
         $check.Pass | Should -BeFalse
         $check.Message | Should -Match 'Unknown Service'
+    }
+
+    It 'allows a file at the configured line-count limit' {
+        $checks = Test-ContentRule -Lines (@('') * $validationConfig.MaxLineCount) -FrontMatter $emptyFrontMatter
+        $check = $checks | Where-Object Name -eq 'line_count_limit'
+
+        $check.Pass | Should -BeTrue
+    }
+
+    It 'rejects a file above the configured line-count limit' {
+        $checks = Test-ContentRule -Lines (@('') * ($validationConfig.MaxLineCount + 1)) -FrontMatter $emptyFrontMatter
+        $check = $checks | Where-Object Name -eq 'line_count_limit'
+
+        $check.Pass | Should -BeFalse
     }
 }

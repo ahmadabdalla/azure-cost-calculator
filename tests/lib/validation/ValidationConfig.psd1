@@ -12,7 +12,7 @@
         'Reserved Instance Pricing', 'Manual Calculation Example',
         'Known Rates', 'Common SKUs', 'Product Names', 'SKU Selection Guide'
     )
-    MaxLineCount = 100
+    MaxLineCount = 120
     QueryPatternDeadline = 45
     ServicesFolderPattern = 'references/services/([^/]+)/'
 }

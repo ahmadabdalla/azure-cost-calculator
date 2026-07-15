@@ -37,6 +37,7 @@ These characteristics determine which conditional fields, sections, traps, and n
 ## Step 1: Read All Rule Sources
 
 Read each of the following files **completely** - do not skim. Extract every rule, constraint, format requirement, and convention.
+Read `MaxLineCount` from `tests/lib/validation/ValidationConfig.psd1` and derive all line budgets and reported limits from it.
 
 ### 1.1 - `CONTRIBUTING.md`
 
@@ -123,7 +124,7 @@ For each exemplar, measure and record:
 7. **Optional sections present** - which optional sections are included and why they're relevant
 8. **Private endpoint handling** - whether and how PE support is documented in Notes
 9. **Billing considerations** - how billing notes are structured
-10. **Total line count** - the file's total length (must be < 100)
+10. **Total line count** - the file's total length (must not exceed `MaxLineCount`)
 11. **Tone and depth** - technical density, explanation style, how much context is given
 
 Use these measurements to derive the line budget for the compliance contract:
@@ -131,7 +132,7 @@ Use these measurements to derive the line budget for the compliance contract:
 - **YAML budget** = median of exemplar YAML line counts. Add 2 lines if the service needs `billingNeeds` or `billingConsiderations`.
 - **Trap budget** = max trap count from exemplars if the service has similar characteristics, otherwise median.
 - **Per-section budget** = median of each exemplar's section line count.
-- **Total budget** = sum of section medians, capped at 95 lines (5-line buffer under the 100-line hard limit).
+- **Total budget** = sum of section medians, capped at `MaxLineCount - 5`.
 - **First query deadline** = minimum first-query-line from exemplars (must be ≤ 45).
 
 ---
@@ -188,7 +189,7 @@ Based on exemplar analysis:
 - Meter Names table: ~{N} lines
 - Cost Formula: ~{N} lines
 - Notes: ~{N} lines
-- **Total: ~{N} lines** (must be < 100)
+- **Total: ~{N} lines** (must not exceed {MaxLineCount})
 - **First query pattern must start by line 45**
 
 ### Required Sections (in exact order)
@@ -242,7 +243,7 @@ Every item below is a pass/fail gate. The file must satisfy all of them:
 7. [ ] No verified dates
 8. [ ] All YAML fields pass schema validation (types, lengths, allowed values)
 9. [ ] Elision rule followed - no fields set to their default values
-10. [ ] Total file length < 100 lines
+10. [ ] Total file length does not exceed {MaxLineCount}
 11. [ ] Validation script passes: `pwsh tests/Validate-ServiceReference.ps1 -Path {filepath} -CheckAliasUniqueness`
 12. [ ] Happy-path eval task exists at `tests/evals/azure-cost-calculator/tasks/{category}/{service-name}/` tagged `happy-path` and `service:<service-name>`, and `waza check` passes
 

@@ -13,7 +13,7 @@ You are an orchestrator agent that creates Azure service reference files for the
 
 ## Phase 0: Orientation
 
-Before dispatching sub-agents, read these files yourself to build baseline understanding:
+Before dispatching sub-agents, read `MaxLineCount` from `tests/lib/validation/ValidationConfig.psd1` and these files:
 
 1. `CONTRIBUTING.md` - contributor guide with "The Prompt" workflow
 2. `docs/service-catalog.md` - pending services only. Read this to find the service's name, aliases, and category. Also check for alias collisions when updating existing services.
@@ -138,7 +138,7 @@ If the agreed data and compliance contract disagree, follow this authority hiera
 
 Specific conflict patterns:
 
-- **Budget conflicts** (e.g., investigation found 50 meters but compliance says file must be under 100 lines): Select the meters needed for a standard cost estimate (compute, storage, backup). Omit niche variants and note them below the Meter Names table.
+- **Budget conflicts** (e.g., investigation found more meters than fit within `MaxLineCount`): Select the meters needed for a standard cost estimate (compute, storage, backup). Omit niche variants and note them below the Meter Names table.
 - **Documentation conflicts** (e.g., docs say RI is available but API returns no RI meters): Trust the API for pricing data. Note the discrepancy as a trap.
 
 ### 3.3 - Determine characteristics
