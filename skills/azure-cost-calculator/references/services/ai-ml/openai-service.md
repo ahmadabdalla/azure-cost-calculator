@@ -56,6 +56,8 @@ ProductName: Azure AI Foundry Provisioned Throughput Reservation
 SkuName: Provisioned Managed {Global|Data Zone|Regional}
 PriceType: Reservation
 
+> **Trap (reservation term)**: This query returns both `1 Month` and `1 Year` reservationTerm rows and the scripts have no term filter; select the term from the `ReservationTerm` output field. `1 Year` MonthlyCost is correct (prepaid ÷ 12). For `1 Month` the uom is `1/Hour`, so the scripts multiply by 730 and overcount ~730×; read `UnitPrice` as the monthly price instead.
+
 ## Key Fields
 
 | Parameter     | How to determine                              | Example values                                                      |
