@@ -20,20 +20,19 @@ Multi-agent system that gives the Copilot coding agent research-first, consensus
 
 When the Copilot coding agent is assigned to a service-reference issue using the `service-reference` custom agent, it runs a multi-agent consensus workflow:
 
-1. **Orchestrator** (`service-reference`) reads the routing map and dispatches four sub-agent invocations independently.
+1. **Orchestrator** (`service-reference`) reads the routing map and dispatches three sub-agent invocations independently.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) explores the Azure Retail Prices API, cross-checks Microsoft Learn documentation, and returns a structured **Pricing Investigation Report**.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently explores the same API; may discover different meters or interpret results differently.
-4. **Pricing Investigator C** (`pricing-investigator`, third instance, identical prompt) provides a third independent view for majority-based consensus.
-5. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
-6. **Orchestrator** compares Reports A, B, and C for majority agreement, dispatches a scoped tiebreaker investigator on unresolved disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
+4. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
+5. **Orchestrator** compares Reports A and B for agreement, dispatches a scoped tiebreaker investigator on disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
 
 ### Why multi-agent?
 
-- **Independent views prevent blind spots**: three investigators may explore different search terms and find different meters; disagreement reveals areas needing closer investigation.
-- **Majority consensus over speculation**: the orchestrator only writes what a majority (2/3 or 3/3) of investigators agree on. Unresolved disputes trigger a scoped tiebreaker round on the disputed items only.
+- **Independent views prevent blind spots**: two investigators may explore different search terms and find different meters; disagreement reveals areas needing closer investigation.
+- **Consensus over speculation**: the orchestrator accepts 2/2 agreement directly. A tiebreaker must confirm one initial conclusion; otherwise the item remains unresolved and is excluded.
 - **Separation of concerns**: data discovery (shell + web) vs rule interpretation (read-only) vs file authoring.
 
-> **Model uniformity note**: all four agents pin `model: claude-sonnet-4.6` in their frontmatter, and the tiebreaker runs on the same model as the initial investigators. The independence signal comes from a fresh context and narrowly-scoped disputed inputs, not from model diversity. Correlated model-specific blind spots will not be caught by the tiebreaker; treat unanimous 3/3 agreement as strong evidence and 2/1 splits with tiebreaker confirmation as adequate, but do not treat consensus as protection against systematic model bias.
+> **Model uniformity note**: all four agents pin `model: claude-sonnet-4.6` in their frontmatter, and the tiebreaker runs on the same model as the initial investigators. The independence signal comes from a fresh context and narrowly-scoped disputed inputs, not from model diversity. Correlated model-specific blind spots will not be caught by the tiebreaker; treat unanimous 2/2 initial agreement as strong evidence and confirmed 2/1 outcomes as adequate, but exclude 1/1/1 outcomes.
 
 ---
 
@@ -84,16 +83,12 @@ service-reference (orchestrator)
   │     Tools: read, search, execute, web
   │     Output: Pricing Investigation Report B
   │
-  ├── invokes: pricing-investigator (instance C)  ← identical prompt
-  │     Tools: read, search, execute, web
-  │     Output: Pricing Investigation Report C
-  │
   ├── invokes: compliance-reviewer
   │     Tools: read, search (no shell, no edit, no web)
   │     Output: Compliance Contract
   │
-  ├── orchestrator: compares A vs B vs C → majority agreement
-  │     If unresolved disagreements remain:
+  ├── orchestrator: compares A vs B → agreement
+  │     If disagreements exist:
   │     └── invokes: pricing-investigator (tiebreaker, scoped to disputed items)
   │           Fresh context, narrowly scoped inputs
   │           Output: Tiebreaker Report
@@ -124,7 +119,7 @@ service-reference (orchestrator)
 | ------------------------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
 | `.github/agents/service-reference.md`       | Orchestrator: dispatches, aggregates, writes                                           | read, search, edit, execute, agent, web |
 | `.github/agents/service-ref-pr-reviewer.md` | PR review orchestrator: verifies, reviews                                              | read, search, edit, execute, agent, web |
-| `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×3 for authoring, ×2 for PR review, + tiebreaker) | read, search, execute, web              |
+| `.github/agents/pricing-investigator.md`    | API investigation sub-agent (invoked ×2 for authoring, ×2 for PR review, + optional scoped tiebreaker) | read, search, execute, web              |
 | `.github/agents/compliance-reviewer.md`     | Rules analysis sub-agent                                                               | read, search                            |
 
 1. Edit the agent file directly.
@@ -139,7 +134,7 @@ service-reference (orchestrator)
 
 Sub-agents use restricted toolsets (principle of least privilege):
 
-- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional scoped tiebreaker round on unresolved disputes.
+- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked twice with identical inputs for authoring, twice for PR review, plus an optional scoped tiebreaker round on disagreements.
 - `compliance-reviewer` has only `read` and `search`: no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
 - Only the orchestrators (`service-reference` and `service-ref-pr-reviewer`) have `edit` and `agent` tools
 

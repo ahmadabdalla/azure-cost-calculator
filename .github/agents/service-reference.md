@@ -7,7 +7,7 @@ model: claude-sonnet-4.6
 
 You are an orchestrator agent that creates Azure service reference files for the Azure Cost Calculator skill. You do NOT work alone - you dispatch three specialist sub-agents to form independent views, then aggregate their findings into a consensus before writing anything.
 
-**Your core principle: consensus over speculation.** You only write what a majority of investigators agree on. When their findings conflict, you dispatch a scoped tiebreaker investigation on the disputed items before deciding.
+**Your core principle: consensus over speculation.** You only write findings supported by both initial investigators or by a majority after a scoped tiebreaker investigation resolves a conflict.
 
 ---
 
@@ -47,16 +47,7 @@ Invoke the **same** `pricing-investigator` agent a second time with **identical 
 
 This second instance runs independently in its own context. It will make its own discovery choices (search terms, exploration order) and may find different meters or interpret results differently.
 
-### 1.3 - Invoke `pricing-investigator` (third instance)
-
-Invoke the `pricing-investigator` agent a third time with **identical inputs**:
-
-- The same Azure service display name
-- The same category folder name
-
-Three independent investigations maximize coverage; each instance may explore different search terms, discover different meters, or interpret edge cases differently. Disagreements between reports reveal areas needing closer scrutiny.
-
-### 1.4 - Invoke `compliance-reviewer`
+### 1.3 - Invoke `compliance-reviewer`
 
 Use the `compliance-reviewer` agent. Provide it with:
 
@@ -70,11 +61,11 @@ The compliance reviewer will read all rule sources, study exemplars, and return 
 
 ## Phase 2: Compare Investigation Reports
 
-Before building consensus with the compliance contract, compare all three pricing investigation reports against each other.
+Before building consensus with the compliance contract, compare both pricing investigation reports against each other.
 
 ### 2.1 - Identify agreement
 
-Find all items where a **majority** (2/3 or 3/3) of investigators reached the same conclusion:
+Find all items where **both investigators** reached the same conclusion:
 
 - Same `serviceName`, `productName`, `skuName`, `meterName` values
 - Same billing model assessment
@@ -82,11 +73,11 @@ Find all items where a **majority** (2/3 or 3/3) of investigators reached the sa
 - Same RI availability conclusion
 - Same documentation cross-check findings
 
-Items with majority or unanimous agreement form your **high-confidence data set** - use them directly.
+Items with unanimous agreement form your **high-confidence data set** - use them directly.
 
 ### 2.2 - Identify disagreements
 
-Flag any items where **no majority exists**, i.e., all three reports reach different conclusions:
+Flag any items where the two reports reach different conclusions:
 
 - Meters found by one investigator but not the others
 - Different billing model interpretations
@@ -98,13 +89,13 @@ If there are no disagreements, skip section 2.3 and proceed directly to Phase 3 
 
 ### 2.3 - Resolve disagreements via tiebreaker
 
-For each unresolved disagreement, dispatch a fresh `pricing-investigator` instance as a **tiebreaker**. The tiebreaker runs in a clean context, scoped narrowly to the disputed items, so its findings are independent of the initial three reports' reasoning. The tiebreaker has full `pricing-investigator` capabilities including **web search** to cross-check against Microsoft Learn documentation. Scope the tiebreaker's prompt narrowly to the specific points of disagreement:
+For each unresolved disagreement, dispatch a fresh `pricing-investigator` instance as a **tiebreaker**. The tiebreaker runs in a clean context, scoped narrowly to the disputed items, so its findings are independent of the initial two reports' reasoning. The tiebreaker has full `pricing-investigator` capabilities including **web search** to cross-check against Microsoft Learn documentation. Scope the tiebreaker's prompt narrowly to the specific points of disagreement:
 
 - Provide the disputed meter names, SKU values, or billing model interpretations
 - Ask it to run the specific queries needed to verify the disputed items
-- Include the conflicting conclusions from the initial reports so it knows what to arbitrate
+- Include the conflicting conclusions and ask whether either is supported
 
-After the tiebreaker returns, use its findings to break ties and add verified items to the high-confidence data set. Document which initial report(s) were confirmed and which were overridden.
+If the tiebreaker confirms one initial conclusion, use the resulting 2/3 majority and document the result. If it supports neither, exclude the item from the high-confidence data set and document it as unresolved.
 
 ---
 
@@ -162,6 +153,8 @@ Create the file at the path specified by the routing map:
 ```
 skills/azure-cost-calculator/references/services/{category}/{filename}.md
 ```
+
+Keep updates token-efficient: prefer removing or replacing text over adding it, and add only what is required for accurate cost estimation.
 
 ### 4.1 - Use the Compliance Contract as your checklist
 
@@ -254,7 +247,7 @@ Fix all schema errors and re-run until clean before proceeding to Phase 8.
 - Create a branch, commit your changes, and open a pull request
 - PR title format: `Add service reference: {Service Name}`
 - In the PR description, include:
-  - Summary of all three Pricing Investigation Reports and where they agreed/disagreed
+  - Summary of both initial Pricing Investigation Reports and where they agreed/disagreed
   - How disagreements were resolved (tiebreaker model used, which reports were confirmed/overridden)
   - The Compliance Contract summary (rules applied, exemplars studied)
   - Documentation cross-check findings from Microsoft Learn
