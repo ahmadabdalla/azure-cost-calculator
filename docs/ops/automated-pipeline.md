@@ -249,7 +249,7 @@ gh run list --workflow=trigger-copilot-review.yml --event schedule --limit 10
 
 ### Inspecting Copilot agent sessions
 
-After Copilot is assigned to an issue, the session is visible in the GitHub UI under the issue's activity. Look for the Copilot session link showing model, custom agent, duration, and premium request count.
+After Copilot is assigned to an issue, the session is visible in the GitHub UI under the issue's activity. Look for the Copilot session link showing model, custom agent, and duration.
 
 ### Common failure modes
 

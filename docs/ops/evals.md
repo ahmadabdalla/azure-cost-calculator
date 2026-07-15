@@ -100,7 +100,7 @@ The `run-evals` job triggers a real-model eval on any branch without opening a P
 **Dispatch from the CLI:**
 
 ```bash
-# Scoped: 4 smoke tasks + 1 cosmos-db happy path. ~90s wall clock, ~15-30 premium requests.
+# Scoped: 4 smoke tasks + 1 cosmos-db happy path. ~90s wall clock.
 gh workflow run eval.yml \
   --ref my-branch \
   -f model=claude-sonnet-4.6 \
@@ -138,7 +138,7 @@ for t in r['tasks']:
 "
 ```
 
-**Scoping recipe for verification runs.** Use `tag="smoke,service:<one-service>"` to run the 4 smoke tests plus one service happy path. This exercises trigger behavior, disambiguation, alias routing, and the pricing script path in ~90 seconds and ~15-30 premium requests. It is the minimum footprint that surfaces most regressions; use it to verify skill/config changes before requesting review.
+**Scoping recipe for verification runs.** Use `tag="smoke,service:<one-service>"` to run the 4 smoke tests plus one service happy path. This exercises trigger behavior, disambiguation, alias routing, and the pricing script path in ~90 seconds. It is the minimum footprint that surfaces most regressions; use it to verify skill/config changes before requesting review.
 
 ### Mock executor
 
@@ -182,7 +182,7 @@ Both `model` and `judge_model` are set to `claude-sonnet-4.6` in the current eva
 
 ## Cost and resource budget
 
-Eval runs consume premium requests through the Copilot API. The cost is dominated by the 677 KB skill directory loaded as system context on every LLM call, not by the task prompt itself.
+Runs consume [AI Credits (AIC)](https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-organizations-and-enterprises), billed per token (input, output, and cached). The token footprint is dominated by the 677 KB skill directory loaded as system context on every LLM call, not by the task prompt itself.
 
 ### Per-task cost (empirical, claude-sonnet-4.6)
 
@@ -191,11 +191,11 @@ Eval runs consume premium requests through the Copilot API. The cost is dominate
 | Clean disambiguation (agent asks and stops) | ~9               | ~194K        | 3 execution turns + grading           |
 | Full estimation (agent runs pricing script) | 15-23            | 370K-600K    | Multi-turn tool use compounds history |
 
-These numbers are from controlled experiments with `trials_per_task: 3` (issue [#632](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632)). With the default `trials_per_task: 1`, divide by 3 for a rough single-trial estimate.
+These numbers are from controlled experiments with `trials_per_task: 3` (issue [#632](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632)), taken before GitHub Copilot's June 2026 transition to AI Credits; the "Premium requests" unit is retained as historical footprint data. Divide by 3 for a rough single-trial estimate at `trials_per_task: 1`.
 
-### Full suite cost
+### Scoping runs
 
-With 33 tasks at `trials_per_task: 1`, expect approximately 100-200 premium requests for a full unfiltered run. Use `--tags` filtering to scope runs to what you actually need:
+Use `--tags` filtering to scope runs to what you actually need:
 
 ```bash
 # Run only the service you changed
