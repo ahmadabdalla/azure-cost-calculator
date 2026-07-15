@@ -86,12 +86,12 @@ MeterName: Commitment Tier Azure 500K Unit
 | `S0 Training` | `S0` | `Azure Custom Vision` | `1 Hour` | Custom Vision training |
 | `S0 Image Storage` | `S0` | `Azure Custom Vision` | `1K` | Custom Vision image storage |
 | `Video Retrieval - Summary Vision` | `Video Retrieval - Summary` | `Azure Vision` | `1 Hour` | Video summarization |
-| `P{1|2|3} Unit` | `P{1|2|3}` | `Azure Vision` | `1/Day` | Vision P1/P3 daily-only; P2 adds overage |
-| `P{4|5|6} Overage Transactions` | `P{4|5|6}` | `Azure Vision` | `1K` | Vision overage-only tiers |
-| `P{1|2|3} Unit` | `P{1|2|3}` | `Azure Vision - Face` | `1/Day` | Face daily fee; storage billed separately |
-| `Overage Transactions` | `P{1|2|3}` | `Azure Vision - Face` | `1K` | Face tiered overage |
-| `Commitment Tier Azure {500K|2000K|8000K|16000K} Unit` | `Commitment Tier Azure {500K|2000K|8000K|16000K}` | `Azure Vision` | `1/Month` | Monthly base fee |
-| `Commitment Tier Azure {500K|2000K|8000K|16000K} CT Overage Transactions` | `Commitment Tier Azure {500K|2000K|8000K|16000K}` | `Azure Vision` | `1K` | Overage beyond included usage |
+| `P{1/2/3} Unit` | `P{1/2/3}` | `Azure Vision` | `1/Day` | Vision P1/P3 daily-only; P2 adds overage |
+| `P{4/5/6} Overage Transactions` | `P{4/5/6}` | `Azure Vision` | `1K` | Vision overage-only tiers |
+| `P{1/2/3} Unit` | `P{1/2/3}` | `Azure Vision - Face` | `1/Day` | Face daily fee; storage billed separately |
+| `Overage Transactions` | `P{1/2/3}` | `Azure Vision - Face` | `1K` | Face tiered overage |
+| `Commitment Tier Azure {500K/2000K/8000K/16000K} Unit` | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision` | `1/Month` | Monthly base fee |
+| `Commitment Tier Azure {500K/2000K/8000K/16000K} CT Overage Transactions` | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision` | `1K` | Overage beyond included usage |
 
 ## Cost Formula
 
@@ -110,7 +110,7 @@ Free grant:                Billable = max(0, totalUsage − includedFreeUsage)
 
 - **Free tiers**: Image Analysis 5K txns/mo, Face 30K txns/mo, Spatial Analysis 1 camera/mo, Azure Custom Vision free transactions/training
 - **Tier breakpoints**: Image Analysis Group 1 and 1-1 use 0/1K/10K/100K; Face Standard uses 0/1K/5K/100K; choose the matching tier row
-- **Commitment tiers**: Azure `500K|2000K|8000K|16000K` and Connected variants use monthly base fee + `CT Overage Transactions`; disconnected tiers bill annually (`1/Year`)
+- **Commitment tiers**: Azure `500K/2000K/8000K/16000K` and Connected variants use monthly base fee + `CT Overage Transactions`; disconnected tiers bill annually (`1/Year`)
 - **P-series**: Vision P1/P3 daily-only (`1/Day`); P2 daily + overage; P4–P6 overage-only. Face P1–P3: daily fee + tiered overage + storage
 - **Scope**: See `ai-services.md` for full Foundry Tools umbrella. Additional active meters include Image Retrieval, Shelf Product Recognition, and Video Retrieval Query
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; 1 Spatial Analysis unit = 1 camera-hour
