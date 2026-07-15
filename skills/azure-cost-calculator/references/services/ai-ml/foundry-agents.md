@@ -77,24 +77,24 @@ Quantity: 500 # agent units consumed
 
 ## Key Fields
 
-| Parameter     | How to determine               | Example values                             |
-| ------------- | ------------------------------ | ------------------------------------------ |
-| `serviceName` | Always `Foundry Tools` (API value; see apiServiceName in frontmatter) | `Foundry Tools` |
-| `productName` | Billing dimension              | `Foundry Agents`, `Azure Agent Unit`       |
-| `skuName`     | Compute SKU or agent type      | `Hosted`, `Skills Execution`, `Long Term Memory`, `SRE` |
-| `meterName`   | Specific resource being billed | `Hosted vCPU Usage`, `Skills Execution Container`, `SRE Agent Unit` |
+| Parameter     | How to determine                                                      | Example values                                                      |
+| ------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools` (API value; see apiServiceName in frontmatter) | `Foundry Tools`                                                     |
+| `productName` | Billing dimension                                                     | `Foundry Agents`, `Azure Agent Unit`                                |
+| `skuName`     | Compute SKU or agent type                                             | `Hosted`, `Skills Execution`, `Long Term Memory`, `SRE`             |
+| `meterName`   | Specific resource being billed                                        | `Hosted vCPU Usage`, `Skills Execution Container`, `SRE Agent Unit` |
 
 ## Meter Names
 
-| Meter                        | skuName             | productName        | unitOfMeasure | Notes                         |
-| ---------------------------- | ------------------- | ------------------ | ------------- | ----------------------------- |
-| `Hosted vCPU Usage`          | `Hosted`            | `Foundry Agents`   | `1 Hour`      | Per vCPU-hour of compute      |
-| `Hosted Memory Usage`        | `Hosted`            | `Foundry Agents`   | `1 Hour`      | Per GB-hour of memory         |
-| `Skills Execution Container` | `Skills Execution`  | `Foundry Agents`   | `1 Hour`      | Per hour of skills container  |
-| `Long Term Memory Memories`  | `Long Term Memory`  | `Foundry Agents`   | `1K/Month`    | Persistent memory storage     |
-| `Short Term Memory Events Stored` | `Short Term Memory` | `Foundry Agents` | `1K`       | Ephemeral event storage       |
-| `Memory Retrievals`          | `Memory Retrieval`  | `Foundry Agents`   | `1K`          | Per-1K memory read operations |
-| `SRE Agent Unit`             | `SRE`               | `Azure Agent Unit` | `1`           | Per-unit orchestration charge |
+| Meter                             | skuName             | productName        | unitOfMeasure | Notes                         |
+| --------------------------------- | ------------------- | ------------------ | ------------- | ----------------------------- |
+| `Hosted vCPU Usage`               | `Hosted`            | `Foundry Agents`   | `1 Hour`      | Per vCPU-hour of compute      |
+| `Hosted Memory Usage`             | `Hosted`            | `Foundry Agents`   | `1 Hour`      | Per GB-hour of memory         |
+| `Skills Execution Container`      | `Skills Execution`  | `Foundry Agents`   | `1 Hour`      | Per hour of skills container  |
+| `Long Term Memory Memories`       | `Long Term Memory`  | `Foundry Agents`   | `1K/Month`    | Persistent memory storage     |
+| `Short Term Memory Events Stored` | `Short Term Memory` | `Foundry Agents`   | `1K`          | Ephemeral event storage       |
+| `Memory Retrievals`               | `Memory Retrieval`  | `Foundry Agents`   | `1K`          | Per-1K memory read operations |
+| `SRE Agent Unit`                  | `SRE`               | `Azure Agent Unit` | `1`           | Per-unit orchestration charge |
 
 ## Cost Formula
 

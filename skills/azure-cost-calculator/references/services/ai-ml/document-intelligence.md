@@ -55,36 +55,36 @@ MeterName: Commitment Tier Pre-Built Azure 100K CT Overage Transactions
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                                                              |
-| ------------- | --------------------------------------- | --------------------------------------------------------------------------- |
+| Parameter     | How to determine                                           | Example values                                                              |
+| ------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
 | `serviceName` | Always `Foundry Tools` (API filter; YAML `apiServiceName`) | `Foundry Tools`                                                             |
-| `productName` | Deployment model                        | `Azure Document Intelligence`, `Azure Document Intelligence - Disconnected` |
-| `skuName`     | Tier + model type + deployment + volume | `S0`, `Free`, `Commitment Tier Pre-Built Azure 100K`                        |
-| `meterName`   | Billing dimension                       | `S0 Read Pages`, `S0 Pre-built Pages`, `S0 Custom Pages`                   |
+| `productName` | Deployment model                                           | `Azure Document Intelligence`, `Azure Document Intelligence - Disconnected` |
+| `skuName`     | Tier + model type + deployment + volume                    | `S0`, `Free`, `Commitment Tier Pre-Built Azure 100K`                        |
+| `meterName`   | Billing dimension                                          | `S0 Read Pages`, `S0 Pre-built Pages`, `S0 Custom Pages`                    |
 
 ## Meter Names
 
-| Meter                          | skuName | unitOfMeasure | Notes                                     |
-| ------------------------------ | ------- | ------------- | ----------------------------------------- |
-| `S0 Read Pages`                | `S0`    | `1K`          | OCR/text extraction, **tiered** (2 rows)  |
-| `S0 Pre-built Pages`           | `S0`    | `1K`          | Invoice, Receipt, ID, W-2, Layout         |
-| `S0 Custom Pages`              | `S0`    | `1K`          | Custom extraction models                  |
-| `S0 Custom Generative Pages`   | `S0`    | `1K`          | Custom generative extraction              |
-| `S0 Add-on for Pages`          | `S0`    | `1K`          | High Res, Font, Formula, Barcode          |
-| `S0 Query Pages`               | `S0`    | `1K`          | Premium query, most expensive PAYG meter  |
-| `S0 pages for query fields`    | `S0`    | `1K`          | Query field extraction, note lowercase    |
-| `S0 pages for doc classifier`  | `S0`    | `1K`          | Document classification, note lowercase   |
-| `S0 Batch Add-On Pages`        | `S0`    | `1K`          | Batch add-on (High Res, Font, Formula, Barcode) |
-| `S0 Batch Custom Generative Pages` | `S0` | `1K`       | Batch custom generative extraction          |
-| `S0 Batch Pre-built Pages`     | `S0`    | `1K`          | Batch pre-built (Invoice, Receipt, ID, W-2) |
-| `S0 Batch Layout Pages`        | `S0`    | `1K`          | Batch-only layout meter (no real-time equivalent named "Layout") |
-| `S0 Batch Read Pages`          | `S0`    | `1K`          | Batch OCR, **tiered** (2 rows) like real-time |
-| `S0 Batch Document Classifier Pages` | `S0` | `1K`     | Batch doc classification (note: title case, unlike real-time) |
-| `S0 Batch Custom Extraction Pages` | `S0` | `1K`       | Batch custom extraction (note: not `S0 Batch Custom Pages`) |
-| `S0 Batch Pages for Query Fields` | `S0` | `1K`        | Batch query fields (note: title case, unlike real-time) |
-| `S0 Training`                  | `S0`    | `1 Hour`      | Neural model training (first 10 hrs free) |
-| `Free Transactions`            | `Free`  | `1K`          | Free tier, 500 pages/month                |
-| `Commitment Tier Pre-Built Azure 100K CT Overage Transactions` | `Commitment Tier Pre-Built Azure 100K` | `1K` | Overage beyond the included 100K pages |
+| Meter                                                          | skuName                                | unitOfMeasure | Notes                                                            |
+| -------------------------------------------------------------- | -------------------------------------- | ------------- | ---------------------------------------------------------------- |
+| `S0 Read Pages`                                                | `S0`                                   | `1K`          | OCR/text extraction, **tiered** (2 rows)                         |
+| `S0 Pre-built Pages`                                           | `S0`                                   | `1K`          | Invoice, Receipt, ID, W-2, Layout                                |
+| `S0 Custom Pages`                                              | `S0`                                   | `1K`          | Custom extraction models                                         |
+| `S0 Custom Generative Pages`                                   | `S0`                                   | `1K`          | Custom generative extraction                                     |
+| `S0 Add-on for Pages`                                          | `S0`                                   | `1K`          | High Res, Font, Formula, Barcode                                 |
+| `S0 Query Pages`                                               | `S0`                                   | `1K`          | Premium query, most expensive PAYG meter                         |
+| `S0 pages for query fields`                                    | `S0`                                   | `1K`          | Query field extraction, note lowercase                           |
+| `S0 pages for doc classifier`                                  | `S0`                                   | `1K`          | Document classification, note lowercase                          |
+| `S0 Batch Add-On Pages`                                        | `S0`                                   | `1K`          | Batch add-on (High Res, Font, Formula, Barcode)                  |
+| `S0 Batch Custom Generative Pages`                             | `S0`                                   | `1K`          | Batch custom generative extraction                               |
+| `S0 Batch Pre-built Pages`                                     | `S0`                                   | `1K`          | Batch pre-built (Invoice, Receipt, ID, W-2)                      |
+| `S0 Batch Layout Pages`                                        | `S0`                                   | `1K`          | Batch-only layout meter (no real-time equivalent named "Layout") |
+| `S0 Batch Read Pages`                                          | `S0`                                   | `1K`          | Batch OCR, **tiered** (2 rows) like real-time                    |
+| `S0 Batch Document Classifier Pages`                           | `S0`                                   | `1K`          | Batch doc classification (note: title case, unlike real-time)    |
+| `S0 Batch Custom Extraction Pages`                             | `S0`                                   | `1K`          | Batch custom extraction (note: not `S0 Batch Custom Pages`)      |
+| `S0 Batch Pages for Query Fields`                              | `S0`                                   | `1K`          | Batch query fields (note: title case, unlike real-time)          |
+| `S0 Training`                                                  | `S0`                                   | `1 Hour`      | Neural model training (first 10 hrs free)                        |
+| `Free Transactions`                                            | `Free`                                 | `1K`          | Free tier, 500 pages/month                                       |
+| `Commitment Tier Pre-Built Azure 100K CT Overage Transactions` | `Commitment Tier Pre-Built Azure 100K` | `1K`          | Overage beyond the included 100K pages                           |
 
 ## Cost Formula
 

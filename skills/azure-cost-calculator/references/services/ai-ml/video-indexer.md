@@ -57,27 +57,27 @@ MeterName: Video Modification Input Content Minutes
 
 ## Key Fields
 
-| Parameter     | How to determine                 | Example values                                                     |
-| ------------- | -------------------------------- | ------------------------------------------------------------------ |
-| `serviceName` | Always `Foundry Tools`           | `Foundry Tools`                                                    |
-| `productName` | Always `Azure Video Indexer`     | `Azure Video Indexer`                                              |
+| Parameter     | How to determine                 | Example values                                                      |
+| ------------- | -------------------------------- | ------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`           | `Foundry Tools`                                                     |
+| `productName` | Always `Azure Video Indexer`     | `Azure Video Indexer`                                               |
 | `skuName`     | Preset tier, matches meter name  | `Basic Audio Indexing Analysis`, `Advanced Video Indexing Analysis` |
 | `meterName`   | Preset + "Input Content Minutes" | `Basic Audio Indexing Analysis Input Content Minutes`               |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Basic Audio Indexing Analysis Input Content Minutes` | `Basic Audio Indexing Analysis` | `1` | Transcription, translation, captions |
-| `Standard Audio Indexing Analysis Input Content Minutes` | `Standard Audio Indexing Analysis` | `1` | Basic + speakers, sentiment, NER |
-| `Advanced Audio Indexing Analysis Input Content Minutes` | `Advanced Audio Indexing Analysis` | `1` | All audio AI models |
-| `Basic Video Indexing Analysis Input Content Minutes` | `Basic Video Indexing Analysis` | `1` | Objects, labels, OCR, keyframes |
-| `Standard Video Indexing Analysis Input Content Minutes` | `Standard Video Indexing Analysis` | `1` | Basic + face recognition, celebrities |
-| `Advanced Video Indexing Analysis Input Content Minutes` | `Advanced Video Indexing Analysis` | `1` | All video AI models |
-| `Video Modification Input Content Minutes` | `Video Modification` | `1` | Face redaction + encoding |
-| `Basic Audio Analysis Input Content Minutes` | `Basic Audio Analysis` | `1` | Legacy, use Basic Audio Indexing |
-| `Standard Audio Analysis Input Content Minutes` | `Standard Audio Analysis` | `1` | Legacy, use Advanced Audio Indexing |
-| `Standard Video Analysis Input Content Minutes` | `Standard Video Analysis` | `1` | Legacy, use Advanced Video Indexing |
+| Meter                                                    | skuName                            | unitOfMeasure | Notes                                 |
+| -------------------------------------------------------- | ---------------------------------- | ------------- | ------------------------------------- |
+| `Basic Audio Indexing Analysis Input Content Minutes`    | `Basic Audio Indexing Analysis`    | `1`           | Transcription, translation, captions  |
+| `Standard Audio Indexing Analysis Input Content Minutes` | `Standard Audio Indexing Analysis` | `1`           | Basic + speakers, sentiment, NER      |
+| `Advanced Audio Indexing Analysis Input Content Minutes` | `Advanced Audio Indexing Analysis` | `1`           | All audio AI models                   |
+| `Basic Video Indexing Analysis Input Content Minutes`    | `Basic Video Indexing Analysis`    | `1`           | Objects, labels, OCR, keyframes       |
+| `Standard Video Indexing Analysis Input Content Minutes` | `Standard Video Indexing Analysis` | `1`           | Basic + face recognition, celebrities |
+| `Advanced Video Indexing Analysis Input Content Minutes` | `Advanced Video Indexing Analysis` | `1`           | All video AI models                   |
+| `Video Modification Input Content Minutes`               | `Video Modification`               | `1`           | Face redaction + encoding             |
+| `Basic Audio Analysis Input Content Minutes`             | `Basic Audio Analysis`             | `1`           | Legacy, use Basic Audio Indexing      |
+| `Standard Audio Analysis Input Content Minutes`          | `Standard Audio Analysis`          | `1`           | Legacy, use Advanced Audio Indexing   |
+| `Standard Video Analysis Input Content Minutes`          | `Standard Video Analysis`          | `1`           | Legacy, use Advanced Video Indexing   |
 
 ## Cost Formula
 

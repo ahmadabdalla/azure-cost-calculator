@@ -56,40 +56,40 @@ Quantity: 100
 
 ## Key Fields
 
-| Parameter     | How to determine                                    | Example values                                              |
-| ------------- | --------------------------------------------------- | ----------------------------------------------------------- |
-| `serviceName` | Always `Azure Machine Learning`                     | `Azure Machine Learning`                                    |
-| `productName` | Component type                                      | `Managed Model Hosting Service`, `Machine Learning service`, `Machine Learning Model Management` |
-| `region`      | Use `eastus2` or `swedencentral` for Llama-4 tokens; `eastus2` for Model Management | `eastus2`, `swedencentral`                                  |
-| `skuName`     | VM size for endpoints; tier for surcharges/mgmt     | `NC4asT4 v3`, `NCadsA100v4`, `Standard`, `PB`, `S1`         |
-| `meterName`   | Matches skuName + "Capacity Unit" or surcharge type | `NC4asT4 v3 Capacity Unit`, `Standard GPU Surcharge`, `Llama-4-Scout-17B-16E-In Tokens` |
+| Parameter     | How to determine                                                                    | Example values                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `serviceName` | Always `Azure Machine Learning`                                                     | `Azure Machine Learning`                                                                         |
+| `productName` | Component type                                                                      | `Managed Model Hosting Service`, `Machine Learning service`, `Machine Learning Model Management` |
+| `region`      | Use `eastus2` or `swedencentral` for Llama-4 tokens; `eastus2` for Model Management | `eastus2`, `swedencentral`                                                                       |
+| `skuName`     | VM size for endpoints; tier for surcharges/mgmt                                     | `NC4asT4 v3`, `NCadsA100v4`, `Standard`, `PB`, `S1`                                              |
+| `meterName`   | Matches skuName + "Capacity Unit" or surcharge type                                 | `NC4asT4 v3 Capacity Unit`, `Standard GPU Surcharge`, `Llama-4-Scout-17B-16E-In Tokens`          |
 
 ## Meter Names
 
-| Meter | skuName | productName | unitOfMeasure | Notes |
-| ----- | ------- | ----------- | ------------- | ----- |
-| `NC4asT4 v3 Capacity Unit` | `NC4asT4 v3` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, T4 GPU |
-| `NCadsA10v4 Capacity Unit` | `NCadsA10v4` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, A10 GPU |
-| `NCadsA100v4 Capacity Unit` | `NCadsA100v4` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, A100 GPU |
-| `NCadsH100 v5 Capacity Unit` | `NCadsH100 v5` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, H100 GPU |
-| `NCadisH100v5 Capacity Unit` | `NCadisH100v5` | `Managed Model Hosting Service` | `1 Hour` | Distinct H100 SKU |
-| `NDasrA100v4 Capacity Unit` | `NDasrA100v4` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, A100 GPU |
-| `NDamsrA100v4 Capacity Unit` | `NDamsrA100v4` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, A100 multi |
-| `NDisrH100v5 Capacity Unit` | `NDisrH100v5` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, H100 multi |
-| `NDisrMI300Xv5 Capacity Unit` | `NDisrMI300Xv5` | `Managed Model Hosting Service` | `1 Hour` | Managed endpoint, MI300X |
-| `NDsrH200v5 Capacity Unit` | `NDsrH200v5` | `Managed Model Hosting Service` | `1 Hour` | Regional H200 SKU |
-| `Standard GPU Surcharge` | `Standard` | `Machine Learning service` | `1 Hour` | ML service GPU surcharge |
-| `PB vCPU Surcharge` | `PB` | `Machine Learning service` | `1 Hour` | ML service vCPU surcharge |
-| `Evaluation Input Tokens` | `Evaluation Input Tokens` | `Machine Learning service` | `1K` | Safety evaluation input tokens |
-| `Evaluation Ouput Tokens` | `Evaluation Ouput Tokens` | `Machine Learning service` | `1K` | Safety evaluation output tokens |
-| `Llama-4-Scout-17B-16E-In Tokens` | `Llama-4-Scout-17B-16E-In` | `Managed Model Hosting Service` | `1K` | Serverless model input tokens |
-| `Llama-4-Scout-17B-16E-Out Tokens` | `Llama-4-Scout-17B-16E-Out` | `Managed Model Hosting Service` | `1K` | Serverless model output tokens |
-| `Llama-4-Mvrck-17B-128E-FP8-In Tokens` | `Llama-4-Mvrck-17B-128E-FP8-In` | `Managed Model Hosting Service` | `1K` | Serverless model input tokens |
-| `Llama-4-Mvrck-17B-128E-FP8-Out Tokens` | `Llama-4-Mvrck-17B-128E-FP8-Out` | `Managed Model Hosting Service` | `1K` | Serverless model output tokens |
-| `Free Tier` | `Free` | `Machine Learning Model Management` | `1/Day` | Model Management free tier |
-| `S1 Tier` | `S1` | `Machine Learning Model Management` | `1/Day` | Model Management daily fee |
-| `S2 Tier` | `S2` | `Machine Learning Model Management` | `1/Day` | Model Management daily fee |
-| `S3 Tier` | `S3` | `Machine Learning Model Management` | `1/Day` | Model Management daily fee |
+| Meter                                   | skuName                          | productName                         | unitOfMeasure | Notes                           |
+| --------------------------------------- | -------------------------------- | ----------------------------------- | ------------- | ------------------------------- |
+| `NC4asT4 v3 Capacity Unit`              | `NC4asT4 v3`                     | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, T4 GPU        |
+| `NCadsA10v4 Capacity Unit`              | `NCadsA10v4`                     | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, A10 GPU       |
+| `NCadsA100v4 Capacity Unit`             | `NCadsA100v4`                    | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, A100 GPU      |
+| `NCadsH100 v5 Capacity Unit`            | `NCadsH100 v5`                   | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, H100 GPU      |
+| `NCadisH100v5 Capacity Unit`            | `NCadisH100v5`                   | `Managed Model Hosting Service`     | `1 Hour`      | Distinct H100 SKU               |
+| `NDasrA100v4 Capacity Unit`             | `NDasrA100v4`                    | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, A100 GPU      |
+| `NDamsrA100v4 Capacity Unit`            | `NDamsrA100v4`                   | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, A100 multi    |
+| `NDisrH100v5 Capacity Unit`             | `NDisrH100v5`                    | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, H100 multi    |
+| `NDisrMI300Xv5 Capacity Unit`           | `NDisrMI300Xv5`                  | `Managed Model Hosting Service`     | `1 Hour`      | Managed endpoint, MI300X        |
+| `NDsrH200v5 Capacity Unit`              | `NDsrH200v5`                     | `Managed Model Hosting Service`     | `1 Hour`      | Regional H200 SKU               |
+| `Standard GPU Surcharge`                | `Standard`                       | `Machine Learning service`          | `1 Hour`      | ML service GPU surcharge        |
+| `PB vCPU Surcharge`                     | `PB`                             | `Machine Learning service`          | `1 Hour`      | ML service vCPU surcharge       |
+| `Evaluation Input Tokens`               | `Evaluation Input Tokens`        | `Machine Learning service`          | `1K`          | Safety evaluation input tokens  |
+| `Evaluation Ouput Tokens`               | `Evaluation Ouput Tokens`        | `Machine Learning service`          | `1K`          | Safety evaluation output tokens |
+| `Llama-4-Scout-17B-16E-In Tokens`       | `Llama-4-Scout-17B-16E-In`       | `Managed Model Hosting Service`     | `1K`          | Serverless model input tokens   |
+| `Llama-4-Scout-17B-16E-Out Tokens`      | `Llama-4-Scout-17B-16E-Out`      | `Managed Model Hosting Service`     | `1K`          | Serverless model output tokens  |
+| `Llama-4-Mvrck-17B-128E-FP8-In Tokens`  | `Llama-4-Mvrck-17B-128E-FP8-In`  | `Managed Model Hosting Service`     | `1K`          | Serverless model input tokens   |
+| `Llama-4-Mvrck-17B-128E-FP8-Out Tokens` | `Llama-4-Mvrck-17B-128E-FP8-Out` | `Managed Model Hosting Service`     | `1K`          | Serverless model output tokens  |
+| `Free Tier`                             | `Free`                           | `Machine Learning Model Management` | `1/Day`       | Model Management free tier      |
+| `S1 Tier`                               | `S1`                             | `Machine Learning Model Management` | `1/Day`       | Model Management daily fee      |
+| `S2 Tier`                               | `S2`                             | `Machine Learning Model Management` | `1/Day`       | Model Management daily fee      |
+| `S3 Tier`                               | `S3`                             | `Machine Learning Model Management` | `1/Day`       | Model Management daily fee      |
 
 > **Note**: The spelling `Evaluation Ouput Tokens` matches the Retail Prices API meter name exactly and is intentional; do not change it to `Output` in queries or in this table.
 

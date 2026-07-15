@@ -63,31 +63,31 @@ MeterName: Commitment Tier Image Azure 250K CT Overage Transactions
 
 ## Key Fields
 
-| Parameter     | How to determine         | Example values                                            |
-| ------------- | ------------------------ | --------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools`   | `Foundry Tools`                                           |
-| `productName` | Deployment model         | `Content Safety`, `Content Safety - Disconnected`         |
-| `skuName`     | Tier or commitment level | `Standard`, `Free`, `Commitment Tier Txt Azure 1M`       |
-| `meterName`   | Billing dimension        | `Standard Text Records`, `Standard Images`                |
+| Parameter     | How to determine         | Example values                                     |
+| ------------- | ------------------------ | -------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`   | `Foundry Tools`                                    |
+| `productName` | Deployment model         | `Content Safety`, `Content Safety - Disconnected`  |
+| `skuName`     | Tier or commitment level | `Standard`, `Free`, `Commitment Tier Txt Azure 1M` |
+| `meterName`   | Billing dimension        | `Standard Text Records`, `Standard Images`         |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Text Records` | `Standard` | `1K` | PAYG text moderation |
-| `Standard Images` | `Standard` | `1K` | PAYG image moderation |
-| `Free Text Records` | `Free` | `1K` | 5K/month limit (hard stop) |
-| `Free Images` | `Free` | `1K` | 5K/month limit (hard stop) |
-| `Commitment Tier Txt Azure 1M Unit` | `Commitment Tier Txt Azure 1M` | `1/Month` | Flat fee, includes 1M text records |
-| `Commitment Tier Txt Azure 1M CT Overage Transactions` | `Commitment Tier Txt Azure 1M` | `1K` | Overage beyond 1M included |
-| `Commitment Tier Txt Conn 1M Unit` | `Commitment Tier Txt Conn 1M` | `1/Month` | Connected flat fee, includes 1M text records |
-| `Commitment Tier Txt Conn 1M CT Overage Transactions` | `Commitment Tier Txt Conn 1M` | `1K` | Connected overage beyond 1M included |
-| `Commitment Tier Image Azure 250K Unit` | `Commitment Tier Image Azure 250K` | `1/Month` | Flat fee, includes 250K images |
-| `Commitment Tier Image Azure 250K CT Overage Transactions` | `Commitment Tier Image Azure 250K` | `1K` | Overage beyond 250K included |
-| `Commitment Tier Image Conn 250K Unit` | `Commitment Tier Image Conn 250K` | `1/Month` | Connected flat fee, includes 250K images |
-| `Commitment Tier Image Conn 250K CT Overage Transactions` | `Commitment Tier Image Conn 250K` | `1K` | Connected overage beyond 250K included |
-| `Commitment Tier Txt DC 60M Unit` | `Commitment Tier Txt DC 60M Unit` | `1/Year` | Disconnected annual text commitment, Global only |
-| `Commitment Tier Image DC 15M Unit` | `Commitment Tier Image DC 15M Unit` | `1/Year` | Disconnected annual image commitment, Global only |
+| Meter                                                      | skuName                             | unitOfMeasure | Notes                                             |
+| ---------------------------------------------------------- | ----------------------------------- | ------------- | ------------------------------------------------- |
+| `Standard Text Records`                                    | `Standard`                          | `1K`          | PAYG text moderation                              |
+| `Standard Images`                                          | `Standard`                          | `1K`          | PAYG image moderation                             |
+| `Free Text Records`                                        | `Free`                              | `1K`          | 5K/month limit (hard stop)                        |
+| `Free Images`                                              | `Free`                              | `1K`          | 5K/month limit (hard stop)                        |
+| `Commitment Tier Txt Azure 1M Unit`                        | `Commitment Tier Txt Azure 1M`      | `1/Month`     | Flat fee, includes 1M text records                |
+| `Commitment Tier Txt Azure 1M CT Overage Transactions`     | `Commitment Tier Txt Azure 1M`      | `1K`          | Overage beyond 1M included                        |
+| `Commitment Tier Txt Conn 1M Unit`                         | `Commitment Tier Txt Conn 1M`       | `1/Month`     | Connected flat fee, includes 1M text records      |
+| `Commitment Tier Txt Conn 1M CT Overage Transactions`      | `Commitment Tier Txt Conn 1M`       | `1K`          | Connected overage beyond 1M included              |
+| `Commitment Tier Image Azure 250K Unit`                    | `Commitment Tier Image Azure 250K`  | `1/Month`     | Flat fee, includes 250K images                    |
+| `Commitment Tier Image Azure 250K CT Overage Transactions` | `Commitment Tier Image Azure 250K`  | `1K`          | Overage beyond 250K included                      |
+| `Commitment Tier Image Conn 250K Unit`                     | `Commitment Tier Image Conn 250K`   | `1/Month`     | Connected flat fee, includes 250K images          |
+| `Commitment Tier Image Conn 250K CT Overage Transactions`  | `Commitment Tier Image Conn 250K`   | `1K`          | Connected overage beyond 250K included            |
+| `Commitment Tier Txt DC 60M Unit`                          | `Commitment Tier Txt DC 60M Unit`   | `1/Year`      | Disconnected annual text commitment, Global only  |
+| `Commitment Tier Image DC 15M Unit`                        | `Commitment Tier Image DC 15M Unit` | `1/Year`      | Disconnected annual image commitment, Global only |
 
 ## Cost Formula
 

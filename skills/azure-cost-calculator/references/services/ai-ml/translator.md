@@ -57,40 +57,40 @@ Region: Global
 
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-| --- | --- | --- |
-| `serviceName` | Always use the API identity | `Foundry Tools` |
-| `productName` | Pick the billing family first | `Translator Text`, `Azure Translator`, `Azure Translator - Disconnected` |
-| `skuName` | Match tier or commitment family | `S1`, `D3`, `Commitment Tier Azure 250M`, `Commitment Tier App 20K hours` |
-| `meterName` | Match the exact billing dimension for that product | `S1 Characters`, `D3 Overage Characters`, `Commitment Tier Azure 250M Characters` |
+| Parameter     | How to determine                                   | Example values                                                                    |
+| ------------- | -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `serviceName` | Always use the API identity                        | `Foundry Tools`                                                                   |
+| `productName` | Pick the billing family first                      | `Translator Text`, `Azure Translator`, `Azure Translator - Disconnected`          |
+| `skuName`     | Match tier or commitment family                    | `S1`, `D3`, `Commitment Tier Azure 250M`, `Commitment Tier App 20K hours`         |
+| `meterName`   | Match the exact billing dimension for that product | `S1 Characters`, `D3 Overage Characters`, `Commitment Tier Azure 250M Characters` |
 
 ## Meter Names
 
-| Meter | skuName | productName | unitOfMeasure | Notes |
-| --- | --- | --- | --- | --- |
-| `S1 Characters` | `S1` | `Translator Text` | `1M` | Standard text translation |
-| `S1 Document Characters` | `S1` | `Translator Text` | `1M` | Document translation |
-| `S1 Custom Translation Characters` | `S1` | `Translator Text` | `1M` | Custom model inference |
-| `S1 Custom Training Characters` | `S1` | `Translator Text` | `1M` | Custom model training |
-| `Custom Model Hosting Unit` | `S1` | `Translator Text` | `1/Month` | Also appears under `Free`, `S2`, `S3`, `S4`, `C2`, `C3`, and `C4` |
-| `S2 Unit` | `S2` | `Translator Text` | `1/Day` | Legacy daily tier base charge |
-| `S2 Overage Characters` | `S2` | `Translator Text` | `1M` | Regional S2 overage |
-| `C2 Unit` | `C2` | `Translator Text` | `1/Day` | Connected container base charge |
-| `C2 Overage Characters` | `C2` | `Translator Text` | `1M` | Connected container overage |
-| `C2 Custom Training Characters` | `C2` | `Translator Text` | `1M` | Connected container training |
-| `D3 Unit` | `D3` | `Translator Text` | `1/Day` | Disconnected daily tier base charge |
-| `D3 Overage Characters` | `D3` | `Translator Text` | `1M` | Disconnected daily tier overage |
-| `S1 Standard Characters` | `S1 Standard` | `Azure Translator` | `1M` | Global S1 standard text |
-| `S1 Image Images` | `S1 Image` | `Azure Translator` | `1K` | Global image translation |
-| `Commitment Tier Azure 250M Unit` | `Commitment Tier Azure 250M` | `Translator Text` | `1/Month` | Regional commitment base charge |
-| `Commitment Tier Azure 250M CT Overage Characters` | `Commitment Tier Azure 250M` | `Translator Text` | `1M` | Regional commitment overage |
-| `Commitment Tier Azure 250M Characters` | `Commitment Tier Azure 250M` | `Azure Translator` | `1M` | Global commitment overage name |
-| `Standard Pay As You Go App` | `Standard Pay As You Go` | `Azure Translator` | `1 Hour` | Document Translation App PAYG |
-| `Commitment Tier App 20K hours Unit` | `Commitment Tier App 20K hours` | `Azure Translator` | `1/Month` | App commitment base charge |
-| `Commitment Tier App 20K hours App Overage` | `Commitment Tier App 20K hours` | `Azure Translator` | `1 Hour` | App commitment overage |
-| `Commitment Tier Emb 250M Unit` | `Commitment Tier Emb 250M` | `Azure Translator` | `1/Month` | Embeddings commitment base charge |
-| `Commitment Tier Emb 250M Characters` | `Commitment Tier Emb 250M` | `Azure Translator` | `1M` | Embeddings commitment overage |
-| `Commitment Tier Disconnected 4000M Unit` | `Commitment Tier Disconnected 4000M` | `Azure Translator - Disconnected` | `1/Year` | Annual disconnected commitment |
+| Meter                                              | skuName                              | productName                       | unitOfMeasure | Notes                                                             |
+| -------------------------------------------------- | ------------------------------------ | --------------------------------- | ------------- | ----------------------------------------------------------------- |
+| `S1 Characters`                                    | `S1`                                 | `Translator Text`                 | `1M`          | Standard text translation                                         |
+| `S1 Document Characters`                           | `S1`                                 | `Translator Text`                 | `1M`          | Document translation                                              |
+| `S1 Custom Translation Characters`                 | `S1`                                 | `Translator Text`                 | `1M`          | Custom model inference                                            |
+| `S1 Custom Training Characters`                    | `S1`                                 | `Translator Text`                 | `1M`          | Custom model training                                             |
+| `Custom Model Hosting Unit`                        | `S1`                                 | `Translator Text`                 | `1/Month`     | Also appears under `Free`, `S2`, `S3`, `S4`, `C2`, `C3`, and `C4` |
+| `S2 Unit`                                          | `S2`                                 | `Translator Text`                 | `1/Day`       | Legacy daily tier base charge                                     |
+| `S2 Overage Characters`                            | `S2`                                 | `Translator Text`                 | `1M`          | Regional S2 overage                                               |
+| `C2 Unit`                                          | `C2`                                 | `Translator Text`                 | `1/Day`       | Connected container base charge                                   |
+| `C2 Overage Characters`                            | `C2`                                 | `Translator Text`                 | `1M`          | Connected container overage                                       |
+| `C2 Custom Training Characters`                    | `C2`                                 | `Translator Text`                 | `1M`          | Connected container training                                      |
+| `D3 Unit`                                          | `D3`                                 | `Translator Text`                 | `1/Day`       | Disconnected daily tier base charge                               |
+| `D3 Overage Characters`                            | `D3`                                 | `Translator Text`                 | `1M`          | Disconnected daily tier overage                                   |
+| `S1 Standard Characters`                           | `S1 Standard`                        | `Azure Translator`                | `1M`          | Global S1 standard text                                           |
+| `S1 Image Images`                                  | `S1 Image`                           | `Azure Translator`                | `1K`          | Global image translation                                          |
+| `Commitment Tier Azure 250M Unit`                  | `Commitment Tier Azure 250M`         | `Translator Text`                 | `1/Month`     | Regional commitment base charge                                   |
+| `Commitment Tier Azure 250M CT Overage Characters` | `Commitment Tier Azure 250M`         | `Translator Text`                 | `1M`          | Regional commitment overage                                       |
+| `Commitment Tier Azure 250M Characters`            | `Commitment Tier Azure 250M`         | `Azure Translator`                | `1M`          | Global commitment overage name                                    |
+| `Standard Pay As You Go App`                       | `Standard Pay As You Go`             | `Azure Translator`                | `1 Hour`      | Document Translation App PAYG                                     |
+| `Commitment Tier App 20K hours Unit`               | `Commitment Tier App 20K hours`      | `Azure Translator`                | `1/Month`     | App commitment base charge                                        |
+| `Commitment Tier App 20K hours App Overage`        | `Commitment Tier App 20K hours`      | `Azure Translator`                | `1 Hour`      | App commitment overage                                            |
+| `Commitment Tier Emb 250M Unit`                    | `Commitment Tier Emb 250M`           | `Azure Translator`                | `1/Month`     | Embeddings commitment base charge                                 |
+| `Commitment Tier Emb 250M Characters`              | `Commitment Tier Emb 250M`           | `Azure Translator`                | `1M`          | Embeddings commitment overage                                     |
+| `Commitment Tier Disconnected 4000M Unit`          | `Commitment Tier Disconnected 4000M` | `Azure Translator - Disconnected` | `1/Year`      | Annual disconnected commitment                                    |
 
 ## Cost Formula
 

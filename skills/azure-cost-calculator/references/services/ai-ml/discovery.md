@@ -24,18 +24,18 @@ Quantity: 10000 # number of user messages
 
 ## Key Fields
 
-| Parameter     | How to determine             | Example values     |
-| ------------- | ---------------------------- | ------------------ |
+| Parameter     | How to determine             | Example values        |
+| ------------- | ---------------------------- | --------------------- |
 | `serviceName` | Always `Microsoft Discovery` | `Microsoft Discovery` |
 | `productName` | Always `Microsoft Discovery` | `Microsoft Discovery` |
-| `skuName`     | Always `User Messages`       | `User Messages`    |
-| `meterName`   | Always `User Messages`       | `User Messages`    |
+| `skuName`     | Always `User Messages`       | `User Messages`       |
+| `meterName`   | Always `User Messages`       | `User Messages`       |
 
 ## Meter Names
 
-| Meter           | unitOfMeasure | Notes                              |
-| --------------- | ------------- | ---------------------------------- |
-| `User Messages` | `1`           | Flat rate per user message (PAYG)  |
+| Meter           | unitOfMeasure | Notes                             |
+| --------------- | ------------- | --------------------------------- |
+| `User Messages` | `1`           | Flat rate per user message (PAYG) |
 
 ## Cost Formula
 

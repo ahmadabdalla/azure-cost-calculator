@@ -59,26 +59,26 @@ Region: Global
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values                                                                    |
-| ------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| `serviceName` | Always `Machine Learning Studio`          | `Machine Learning Studio`                                                         |
+| Parameter     | How to determine                          | Example values                                                                      |
+| ------------- | ----------------------------------------- | ----------------------------------------------------------------------------------- |
+| `serviceName` | Always `Machine Learning Studio`          | `Machine Learning Studio`                                                           |
 | `productName` | Workspace, Standard API, or Classic       | `Machine Learning Studio`, `...Production Web API`, `...Production Web API Classic` |
-| `skuName`     | Plan tier or Classic                      | `S1`, `S2`, `S3`, `Classic`                                                       |
-| `meterName`   | Plan, overage, or included quantity meter | `S1 Plan`, `S1 Overage Transactions`, `Standard Workspace fee`, `Classic`         |
+| `skuName`     | Plan tier or Classic                      | `S1`, `S2`, `S3`, `Classic`                                                         |
+| `meterName`   | Plan, overage, or included quantity meter | `S1 Plan`, `S1 Overage Transactions`, `Standard Workspace fee`, `Classic`           |
 
 ## Meter Names
 
-| Meter                              | skuName    | unitOfMeasure | Notes                              |
-| ---------------------------------- | ---------- | ------------- | ---------------------------------- |
-| `S1 Plan`                          | `S1`       | `1/Day`       | Daily plan fee                     |
-| `S1 Overage Transactions`          | `S1`       | `1K`          | Per 1K transactions above included |
-| `S1 Overage Compute`               | `S1`       | `1 Hour`      | Per hour above included compute    |
-| `Included Quantity API Compute`    | `S1`       | `1 Hour`      | Included compute hours, free       |
-| `Included Quantity API Transactions` | `S1`     | `1K`          | Included transactions, free        |
-| `Classic`                          | `Classic`  | `1 Hour`      | Hourly compute, Classic tier       |
-| `Classic Transactions`             | `Classic`  | `1K`          | Per 1K transactions, Classic tier  |
-| `Standard Experiment Compute`      | `Standard` | `1 Hour`      | Workspace experiment compute       |
-| `Standard Workspace fee`           | `Standard` | `1/Month`     | Monthly workspace subscription     |
+| Meter                                | skuName    | unitOfMeasure | Notes                              |
+| ------------------------------------ | ---------- | ------------- | ---------------------------------- |
+| `S1 Plan`                            | `S1`       | `1/Day`       | Daily plan fee                     |
+| `S1 Overage Transactions`            | `S1`       | `1K`          | Per 1K transactions above included |
+| `S1 Overage Compute`                 | `S1`       | `1 Hour`      | Per hour above included compute    |
+| `Included Quantity API Compute`      | `S1`       | `1 Hour`      | Included compute hours, free       |
+| `Included Quantity API Transactions` | `S1`       | `1K`          | Included transactions, free        |
+| `Classic`                            | `Classic`  | `1 Hour`      | Hourly compute, Classic tier       |
+| `Classic Transactions`               | `Classic`  | `1K`          | Per 1K transactions, Classic tier  |
+| `Standard Experiment Compute`        | `Standard` | `1 Hour`      | Workspace experiment compute       |
+| `Standard Workspace fee`             | `Standard` | `1/Month`     | Monthly workspace subscription     |
 
 > S2 and S3 tiers have equivalent Plan, Overage Transactions, Overage Compute, and Included Quantity meters; shown above for S1 only.
 

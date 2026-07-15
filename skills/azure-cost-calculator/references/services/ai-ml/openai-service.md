@@ -60,24 +60,24 @@ PriceType: Reservation
 
 ## Key Fields
 
-| Parameter     | How to determine                              | Example values                                                      |
-| ------------- | --------------------------------------------- | ------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Models` (see `apiServiceName`) | `Foundry Models`                                                    |
-| `productName` | Model family, use exact value from discovery | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding`, `Azure OpenAI PP FT GPT4s`, `Azure OpenAI OSS Models`, `Azure OpenAI Free Meter` |
-| `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl` |
-| `meterName`   | skuName + ` 1M Tokens` or ` Tokens`           | Unit varies: `1M` (large models) or `1K` (small/embedding)          |
+| Parameter     | How to determine                               | Example values                                                                                                                                                                                  |
+| ------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Models` (see `apiServiceName`) | `Foundry Models`                                                                                                                                                                                |
+| `productName` | Model family, use exact value from discovery   | `Azure OpenAI`, `Azure OpenAI GPT5`, `Azure OpenAI Reasoning`, `Azure OpenAI Media`, `Azure OpenAI Embedding`, `Azure OpenAI PP FT GPT4s`, `Azure OpenAI OSS Models`, `Azure OpenAI Free Meter` |
+| `skuName`     | `{model} {direction} {deployment}`             | Deployment: `glbl`/`Gl`/`global`, `DZone`/`Dz`/`Data Zone`, `regnl`/`rgnl`                                                                                                                      |
+| `meterName`   | skuName + ` 1M Tokens` or ` Tokens`            | Unit varies: `1M` (large models) or `1K` (small/embedding)                                                                                                                                      |
 
 ## Meter Names
 
-| Meter | productName | unitOfMeasure | Notes |
-| ----- | ----------- | ------------- | ----- |
-| `5.4 inp Gl 1M Tokens` | `Azure OpenAI GPT5` | `1M` | Direction: inp/Inp/in=input, opt/Opt/out=output |
-| `gpt-5-codex-inp-glbl Tokens` | `Azure OpenAI GPT5` | `1K` | GPT5 also has `1K` meters; do not assume all GPT5 is `1M` |
-| `o4-mini 0416 Inp glbl Tokens` | `Azure OpenAI Reasoning` | `1K` | Reasoning; deploy: glbl/Gl, DZone/Dz, regnl |
-| `text-embedding-3-large-regional Tokens` | `Azure OpenAI` | `1K` | Embeddings `1K`; DZ: separate `Azure OpenAI Embedding` |
-| `Provisioned Managed Global Unit` | `Azure OpenAI` | `1/Hour` | PTU hourly; also Regional, Data Zone variants |
-| `Image-Dall-E-3 Std LowRes-regnl EP Images` | `Azure OpenAI` | `100` | Per 100 images |
-| `Sora 2 dzone Second` | `Azure OpenAI Media` | `1` | Video generation per-second |
+| Meter                                       | productName              | unitOfMeasure | Notes                                                     |
+| ------------------------------------------- | ------------------------ | ------------- | --------------------------------------------------------- |
+| `5.4 inp Gl 1M Tokens`                      | `Azure OpenAI GPT5`      | `1M`          | Direction: inp/Inp/in=input, opt/Opt/out=output           |
+| `gpt-5-codex-inp-glbl Tokens`               | `Azure OpenAI GPT5`      | `1K`          | GPT5 also has `1K` meters; do not assume all GPT5 is `1M` |
+| `o4-mini 0416 Inp glbl Tokens`              | `Azure OpenAI Reasoning` | `1K`          | Reasoning; deploy: glbl/Gl, DZone/Dz, regnl               |
+| `text-embedding-3-large-regional Tokens`    | `Azure OpenAI`           | `1K`          | Embeddings `1K`; DZ: separate `Azure OpenAI Embedding`    |
+| `Provisioned Managed Global Unit`           | `Azure OpenAI`           | `1/Hour`      | PTU hourly; also Regional, Data Zone variants             |
+| `Image-Dall-E-3 Std LowRes-regnl EP Images` | `Azure OpenAI`           | `100`         | Per 100 images                                            |
+| `Sora 2 dzone Second`                       | `Azure OpenAI Media`     | `1`           | Video generation per-second                               |
 
 ## Cost Formula
 

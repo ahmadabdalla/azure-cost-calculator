@@ -54,30 +54,30 @@ Quantity: 10
 
 ## Key Fields
 
-| Parameter     | How to determine               | Example values                                             |
-| ------------- | ------------------------------ | ---------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools`         | `Foundry Tools`                                            |
-| `productName` | Cognitive domain (sub-service) | `Azure Language`, `Azure Vision - Face`, `Translator Text` |
-| `skuName`     | Tier, varies by sub-service    | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
-| `meterName`   | Billing dimension, varies by product | `Standard Text Records`, `S0 Read Pages`, `S1 Characters` |
+| Parameter     | How to determine                     | Example values                                             |
+| ------------- | ------------------------------------ | ---------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`               | `Foundry Tools`                                            |
+| `productName` | Cognitive domain (sub-service)       | `Azure Language`, `Azure Vision - Face`, `Translator Text` |
+| `skuName`     | Tier, varies by sub-service          | `Standard`, `S0`, `S1`, `Free`, `Commitment Tier ...`      |
+| `meterName`   | Billing dimension, varies by product | `Standard Text Records`, `S0 Read Pages`, `S1 Characters`  |
 
 ## Meter Names
 
-| Meter                   | productName                   | unitOfMeasure | Notes                   |
-| ----------------------- | ----------------------------- | ------------- | ----------------------- |
-| `Standard Text Records` | `Azure Language`              | `1K`          | Tiered; see `language.md` |
-| `S0 Read Pages`         | `Azure Document Intelligence` | `1K`          | Tiered; OCR/layout; see `document-intelligence.md` |
-| `Standard Transactions` | `Azure Vision - Face`         | `1K`          | Tiered; see `vision.md` |
-| `S1 Characters`         | `Translator Text`             | `1M`          | Text translation; see `translator.md` |
-| `S1 Speech To Text`     | `Azure Speech`                | `1 Hour`      | Core STT; see `speech.md` |
-| `Voice Live API Lite - LLM Text Cached Tokens` | `Azure Speech` | `1K` | Sub-cent; Lite/Std/Pro tiers; see `speech.md` |
-| `Standard Text Records` | `Content Safety`              | `1K`          | Text moderation; see `content-safety.md` |
-| `Standard Univariate Transactions` | `Anomaly Detector`   | `1K`          | Anomaly detection PAYG |
-| `S0 Transactions`       | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training`, `S0 Image Storage` |
-| `Doc Content Extraction Standard Pages` | `Azure Content Understanding` | `1K` | See `ai-content-understanding.md` |
-| `Evaluations input tokens Tokens` | `Observability`       | `1K`          | Foundry eval; also Output variant |
-| `Model Routers GL 1M Tokens` | `Model Tools`        | `1M`          | Model router prompt charge; eastus2/swedencentral/westus2 only; also DZ variant |
-| `Radiology Insights Language Detection Text Records` | `Azure Health Insights` | `1K` | Global-only; verify availability |
+| Meter                                                | productName                   | unitOfMeasure | Notes                                                                           |
+| ---------------------------------------------------- | ----------------------------- | ------------- | ------------------------------------------------------------------------------- |
+| `Standard Text Records`                              | `Azure Language`              | `1K`          | Tiered; see `language.md`                                                       |
+| `S0 Read Pages`                                      | `Azure Document Intelligence` | `1K`          | Tiered; OCR/layout; see `document-intelligence.md`                              |
+| `Standard Transactions`                              | `Azure Vision - Face`         | `1K`          | Tiered; see `vision.md`                                                         |
+| `S1 Characters`                                      | `Translator Text`             | `1M`          | Text translation; see `translator.md`                                           |
+| `S1 Speech To Text`                                  | `Azure Speech`                | `1 Hour`      | Core STT; see `speech.md`                                                       |
+| `Voice Live API Lite - LLM Text Cached Tokens`       | `Azure Speech`                | `1K`          | Sub-cent; Lite/Std/Pro tiers; see `speech.md`                                   |
+| `Standard Text Records`                              | `Content Safety`              | `1K`          | Text moderation; see `content-safety.md`                                        |
+| `Standard Univariate Transactions`                   | `Anomaly Detector`            | `1K`          | Anomaly detection PAYG                                                          |
+| `S0 Transactions`                                    | `Azure Custom Vision`         | `1K`          | Custom image inference; also `S0 Training`, `S0 Image Storage`                  |
+| `Doc Content Extraction Standard Pages`              | `Azure Content Understanding` | `1K`          | See `ai-content-understanding.md`                                               |
+| `Evaluations input tokens Tokens`                    | `Observability`               | `1K`          | Foundry eval; also Output variant                                               |
+| `Model Routers GL 1M Tokens`                         | `Model Tools`                 | `1M`          | Model router prompt charge; eastus2/swedencentral/westus2 only; also DZ variant |
+| `Radiology Insights Language Detection Text Records` | `Azure Health Insights`       | `1K`          | Global-only; verify availability                                                |
 
 ## Cost Formula
 

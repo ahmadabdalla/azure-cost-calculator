@@ -37,20 +37,20 @@ Region: Global
 
 ## Key Fields
 
-| Parameter     | How to determine                   | Example values                                          |
-| ------------- | ---------------------------------- | ------------------------------------------------------- |
-| `serviceName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
-| `productName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
-| `skuName`     | Tier selected by user              | `Free`, `S1`                                            |
+| Parameter     | How to determine                   | Example values                                                 |
+| ------------- | ---------------------------------- | -------------------------------------------------------------- |
+| `serviceName` | Always `Azure Bot Service`         | `Azure Bot Service`                                            |
+| `productName` | Always `Azure Bot Service`         | `Azure Bot Service`                                            |
+| `skuName`     | Tier selected by user              | `Free`, `S1`                                                   |
 | `meterName`   | Channel type + tier (never-assume) | `S1 Premium Channel Messages`, `Free Premium Channel Messages` |
 
 ## Meter Names
 
-| Meter                            | skuName | unitOfMeasure | Notes                                    |
-| -------------------------------- | ------- | ------------- | ---------------------------------------- |
-| `S1 Premium Channel Messages`    | `S1`    | `1K`          | Paid: DirectLine, Web Chat               |
-| `Free Premium Channel Messages`  | `Free`  | `1K`          | Zero price; 10K messages/month cap       |
-| `Free Standard Channel Messages` | `Free`  | `1K`          | Zero price; unlimited (Teams, Slack)     |
+| Meter                            | skuName | unitOfMeasure | Notes                                |
+| -------------------------------- | ------- | ------------- | ------------------------------------ |
+| `S1 Premium Channel Messages`    | `S1`    | `1K`          | Paid: DirectLine, Web Chat           |
+| `Free Premium Channel Messages`  | `Free`  | `1K`          | Zero price; 10K messages/month cap   |
+| `Free Standard Channel Messages` | `Free`  | `1K`          | Zero price; unlimited (Teams, Slack) |
 
 ## Cost Formula
 

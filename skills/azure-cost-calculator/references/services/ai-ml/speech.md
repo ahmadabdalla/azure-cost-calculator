@@ -69,28 +69,28 @@ Quantity: 100 # audio hours
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `S1 Speech To Text` | `S1` | `1 Hour` | Core STT |
-| `S1 Neural Text To Speech Characters` | `S1` | `1M` | Core Neural TTS |
-| `S1 Speech Translation` | `S1` | `1 Hour` | Realtime translation |
-| `S1 Speech to Text Batch` | `S1` | `1 Hour` | Batch transcription |
-| `S1 Custom Speech to Text Batch` | `S1` | `1 Hour` | Custom batch transcription |
-| `Fast Transcription Speech To Text` | `Fast Transcription` | `1 Hour` | Fast/LLM transcription; also `Custom - Fast Transcription` SKU |
-| `Custom - Fast Transcription Speech To Text` | `Custom - Fast Transcription` | `1 Hour` | Custom model fast transcription (higher rate) |
-| `S1 Speaker Identification Transactions` | `S1` | `1K` | Speaker recognition identification |
-| `S1 Speaker Verification Transactions` | `S1` | `1K` | Speaker recognition verification |
-| `Neural HD Text to Speech Characters` | `Neural HD Text to Speech` | `1M` | HD prebuilt voices |
-| `S1 Custom Neural Realtime Characters` | `S1` | `1M` | Custom neural TTS |
-| `S1 Text To Speech Characters` | `S1` | `1M` | Standard non-neural TTS |
-| `S1 Custom Speech Model Hosting Unit` | `S1` | `1/Hour`, `1/Day` | Custom STT model hosting (dual-unit) |
-| `S1 Custom Voice Font Hosting Unit` | `S1` | `1/Hour`, `1/Day` | Custom voice hosting (dual-unit) |
-| `S1 Custom Neural Voice Model Hosting Unit` | `S1` | `1/Hour` | Custom neural voice hosting (no 1/Day variant) |
-| `TTS Standard Avatar Realtime Speech` | `TTS Standard Avatar Realtime` | `1 Minute` | Avatar; also Custom variant |
-| `Voice Live API Std - Standard Speech Audio Input Tokens` | `Voice Live API Std` | `1K` | Voice Live API; docs may call this tier Basic |
-| `CNV Neural HD Synthesis Characters` | `CNV Neural HD Synthesis` | `1M` | Custom Neural Voice HD synthesis |
-| `Commitment Tier Speech to Text Azure 2K Unit` | `Commitment Tier Speech to Text Azure 2K` | `1/Month` | Monthly flat fee (many variants) |
-| `Commitment Tier Speech to Text Azure 2K Speech To Text CT Overage` | `Commitment Tier Speech to Text Azure 2K` | `1 Hour` | Overage beyond included STT hours |
+| Meter                                                               | skuName                                   | unitOfMeasure     | Notes                                                          |
+| ------------------------------------------------------------------- | ----------------------------------------- | ----------------- | -------------------------------------------------------------- |
+| `S1 Speech To Text`                                                 | `S1`                                      | `1 Hour`          | Core STT                                                       |
+| `S1 Neural Text To Speech Characters`                               | `S1`                                      | `1M`              | Core Neural TTS                                                |
+| `S1 Speech Translation`                                             | `S1`                                      | `1 Hour`          | Realtime translation                                           |
+| `S1 Speech to Text Batch`                                           | `S1`                                      | `1 Hour`          | Batch transcription                                            |
+| `S1 Custom Speech to Text Batch`                                    | `S1`                                      | `1 Hour`          | Custom batch transcription                                     |
+| `Fast Transcription Speech To Text`                                 | `Fast Transcription`                      | `1 Hour`          | Fast/LLM transcription; also `Custom - Fast Transcription` SKU |
+| `Custom - Fast Transcription Speech To Text`                        | `Custom - Fast Transcription`             | `1 Hour`          | Custom model fast transcription (higher rate)                  |
+| `S1 Speaker Identification Transactions`                            | `S1`                                      | `1K`              | Speaker recognition identification                             |
+| `S1 Speaker Verification Transactions`                              | `S1`                                      | `1K`              | Speaker recognition verification                               |
+| `Neural HD Text to Speech Characters`                               | `Neural HD Text to Speech`                | `1M`              | HD prebuilt voices                                             |
+| `S1 Custom Neural Realtime Characters`                              | `S1`                                      | `1M`              | Custom neural TTS                                              |
+| `S1 Text To Speech Characters`                                      | `S1`                                      | `1M`              | Standard non-neural TTS                                        |
+| `S1 Custom Speech Model Hosting Unit`                               | `S1`                                      | `1/Hour`, `1/Day` | Custom STT model hosting (dual-unit)                           |
+| `S1 Custom Voice Font Hosting Unit`                                 | `S1`                                      | `1/Hour`, `1/Day` | Custom voice hosting (dual-unit)                               |
+| `S1 Custom Neural Voice Model Hosting Unit`                         | `S1`                                      | `1/Hour`          | Custom neural voice hosting (no 1/Day variant)                 |
+| `TTS Standard Avatar Realtime Speech`                               | `TTS Standard Avatar Realtime`            | `1 Minute`        | Avatar; also Custom variant                                    |
+| `Voice Live API Std - Standard Speech Audio Input Tokens`           | `Voice Live API Std`                      | `1K`              | Voice Live API; docs may call this tier Basic                  |
+| `CNV Neural HD Synthesis Characters`                                | `CNV Neural HD Synthesis`                 | `1M`              | Custom Neural Voice HD synthesis                               |
+| `Commitment Tier Speech to Text Azure 2K Unit`                      | `Commitment Tier Speech to Text Azure 2K` | `1/Month`         | Monthly flat fee (many variants)                               |
+| `Commitment Tier Speech to Text Azure 2K Speech To Text CT Overage` | `Commitment Tier Speech to Text Azure 2K` | `1 Hour`          | Overage beyond included STT hours                              |
 
 ## Cost Formula
 

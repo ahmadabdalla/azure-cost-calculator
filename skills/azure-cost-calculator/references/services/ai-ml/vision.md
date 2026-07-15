@@ -57,41 +57,41 @@ MeterName: Commitment Tier Azure 500K Unit
 
 ## Key Fields
 
-| Parameter     | How to determine                    | Example values                                                            |
-| ------------- | ----------------------------------- | ------------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools`              | `Foundry Tools`                                                           |
+| Parameter     | How to determine                    | Example values                                                                              |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`              | `Foundry Tools`                                                                             |
 | `productName` | Vision sub-product or legacy family | `Azure Vision`, `Azure Vision - Face`, `Azure Vision - Disconnected`, `Azure Custom Vision` |
-| `skuName`     | Tier or feature, varies by product  | `Image Analysis Group 1`, `Standard`, `P1`, `Commitment Tier Azure 500K` |
-| `meterName`   | Specific operation being billed     | `Image Analysis Group 1 Transactions`, `Standard Transactions`            |
+| `skuName`     | Tier or feature, varies by product  | `Image Analysis Group 1`, `Standard`, `P1`, `Commitment Tier Azure 500K`                    |
+| `meterName`   | Specific operation being billed     | `Image Analysis Group 1 Transactions`, `Standard Transactions`                              |
 
 ## Meter Names
 
-| Meter | skuName | productName | unitOfMeasure | Notes |
-| ----- | ------- | ----------- | ------------- | ----- |
-| `Image Analysis Group 1 Transactions` | `Image Analysis Group 1` | `Azure Vision` | `1K` | Tiered: Tag, Face detect, Thumbnail |
-| `Image Analysis Group 2 Transactions` | `Image Analysis Group 2` | `Azure Vision` | `1K` | Tiered: Describe |
-| `Standard Transactions` | `Standard` | `Azure Vision - Face` | `1K` | Tiered: Face detection/identify |
-| `Face Storage` | `Standard` | `Azure Vision - Face` | `1K` | Per 1K faces stored |
-| `Standard Faces` | `Standard` | `Azure Vision - Face` | `1M` | Face IDs stored for training |
-| `Liveness Transactions` | `Liveness` | `Azure Vision - Face` | `1K` | Face liveness detection |
-| `Liveness and Verification Transactions` | `Liveness and Verification` | `Azure Vision - Face` | `1K` | Liveness + face verification |
-| `Spatial Analysis Video Stream Edge` | `Spatial Analysis` | `Azure Vision` | `1 Hour` | Per camera-hour |
-| `Video Retrieval and Description - Ingestion Vision` | `Video Retrieval and Description - Ingestion` | `Azure Vision` | `1 Hour` | Video ingestion |
-| `Vectorize Image Transactions` | `Vectorize Image` | `Azure Vision` | `1K` | Image embeddings |
-| `Vectorize Text Transactions` | `Vectorize Text` | `Azure Vision` | `1K` | Text embeddings |
-| `Image Analysis Group 1-1 Transactions` | `Image Analysis Group 1-1` | `Azure Vision` | `1K` | Tiered: same tiers as Group 1 |
-| `Custom Image Classification Training` | `Custom Image Classification` | `Azure Vision` | `1 Hour` | Custom model training |
-| `Custom Object Detection Training` | `Custom Object Detection` | `Azure Vision` | `1 Hour` | Custom model training |
-| `S0 Transactions` | `S0` | `Azure Custom Vision` | `1K` | Custom Vision inference |
-| `S0 Training` | `S0` | `Azure Custom Vision` | `1 Hour` | Custom Vision training |
-| `S0 Image Storage` | `S0` | `Azure Custom Vision` | `1K` | Custom Vision image storage |
-| `Video Retrieval - Summary Vision` | `Video Retrieval - Summary` | `Azure Vision` | `1 Hour` | Video summarization |
-| `P{1/2/3} Unit` | `P{1/2/3}` | `Azure Vision` | `1/Day` | Vision P1/P3 daily-only; P2 adds overage |
-| `P{4/5/6} Overage Transactions` | `P{4/5/6}` | `Azure Vision` | `1K` | Vision overage-only tiers |
-| `P{1/2/3} Unit` | `P{1/2/3}` | `Azure Vision - Face` | `1/Day` | Face daily fee; storage billed separately |
-| `Overage Transactions` | `P{1/2/3}` | `Azure Vision - Face` | `1K` | Face tiered overage |
-| `Commitment Tier Azure {500K/2000K/8000K/16000K} Unit` | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision` | `1/Month` | Monthly base fee |
-| `Commitment Tier Azure {500K/2000K/8000K/16000K} CT Overage Transactions` | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision` | `1K` | Overage beyond included usage |
+| Meter                                                                     | skuName                                           | productName           | unitOfMeasure | Notes                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------------- | --------------------- | ------------- | ----------------------------------------- |
+| `Image Analysis Group 1 Transactions`                                     | `Image Analysis Group 1`                          | `Azure Vision`        | `1K`          | Tiered: Tag, Face detect, Thumbnail       |
+| `Image Analysis Group 2 Transactions`                                     | `Image Analysis Group 2`                          | `Azure Vision`        | `1K`          | Tiered: Describe                          |
+| `Standard Transactions`                                                   | `Standard`                                        | `Azure Vision - Face` | `1K`          | Tiered: Face detection/identify           |
+| `Face Storage`                                                            | `Standard`                                        | `Azure Vision - Face` | `1K`          | Per 1K faces stored                       |
+| `Standard Faces`                                                          | `Standard`                                        | `Azure Vision - Face` | `1M`          | Face IDs stored for training              |
+| `Liveness Transactions`                                                   | `Liveness`                                        | `Azure Vision - Face` | `1K`          | Face liveness detection                   |
+| `Liveness and Verification Transactions`                                  | `Liveness and Verification`                       | `Azure Vision - Face` | `1K`          | Liveness + face verification              |
+| `Spatial Analysis Video Stream Edge`                                      | `Spatial Analysis`                                | `Azure Vision`        | `1 Hour`      | Per camera-hour                           |
+| `Video Retrieval and Description - Ingestion Vision`                      | `Video Retrieval and Description - Ingestion`     | `Azure Vision`        | `1 Hour`      | Video ingestion                           |
+| `Vectorize Image Transactions`                                            | `Vectorize Image`                                 | `Azure Vision`        | `1K`          | Image embeddings                          |
+| `Vectorize Text Transactions`                                             | `Vectorize Text`                                  | `Azure Vision`        | `1K`          | Text embeddings                           |
+| `Image Analysis Group 1-1 Transactions`                                   | `Image Analysis Group 1-1`                        | `Azure Vision`        | `1K`          | Tiered: same tiers as Group 1             |
+| `Custom Image Classification Training`                                    | `Custom Image Classification`                     | `Azure Vision`        | `1 Hour`      | Custom model training                     |
+| `Custom Object Detection Training`                                        | `Custom Object Detection`                         | `Azure Vision`        | `1 Hour`      | Custom model training                     |
+| `S0 Transactions`                                                         | `S0`                                              | `Azure Custom Vision` | `1K`          | Custom Vision inference                   |
+| `S0 Training`                                                             | `S0`                                              | `Azure Custom Vision` | `1 Hour`      | Custom Vision training                    |
+| `S0 Image Storage`                                                        | `S0`                                              | `Azure Custom Vision` | `1K`          | Custom Vision image storage               |
+| `Video Retrieval - Summary Vision`                                        | `Video Retrieval - Summary`                       | `Azure Vision`        | `1 Hour`      | Video summarization                       |
+| `P{1/2/3} Unit`                                                           | `P{1/2/3}`                                        | `Azure Vision`        | `1/Day`       | Vision P1/P3 daily-only; P2 adds overage  |
+| `P{4/5/6} Overage Transactions`                                           | `P{4/5/6}`                                        | `Azure Vision`        | `1K`          | Vision overage-only tiers                 |
+| `P{1/2/3} Unit`                                                           | `P{1/2/3}`                                        | `Azure Vision - Face` | `1/Day`       | Face daily fee; storage billed separately |
+| `Overage Transactions`                                                    | `P{1/2/3}`                                        | `Azure Vision - Face` | `1K`          | Face tiered overage                       |
+| `Commitment Tier Azure {500K/2000K/8000K/16000K} Unit`                    | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision`        | `1/Month`     | Monthly base fee                          |
+| `Commitment Tier Azure {500K/2000K/8000K/16000K} CT Overage Transactions` | `Commitment Tier Azure {500K/2000K/8000K/16000K}` | `Azure Vision`        | `1K`          | Overage beyond included usage             |
 
 ## Cost Formula
 
