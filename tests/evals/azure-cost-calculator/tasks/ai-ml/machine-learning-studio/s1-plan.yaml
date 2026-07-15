@@ -33,8 +33,8 @@ graders:
   - type: text
     name: endpoint-count-acknowledged
     config:
-      contains:
-        - "3"
+      regex_match:
+        - "\\b3\\b"
     weight: 0.5
   - type: prompt
     name: complete-estimate-quality
