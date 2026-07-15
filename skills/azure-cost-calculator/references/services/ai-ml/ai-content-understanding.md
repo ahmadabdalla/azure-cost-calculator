@@ -16,6 +16,8 @@ privateEndpoint: true
 
 > **Trap (regional gaps)**: Only 3 regions (westus, swedencentral, australiaeast) have all 22 meters. Default region eastus has only 7 GA content extraction meters. Field Extraction, Classification, and Face meters return empty in other regions.
 
+> **Trap (regional prices)**: Within the 3-region narrow tier, `swedencentral` prices differ from `westus`/`australiaeast` by ~9–10%; the direction inverts by meter type. Per-page and per-hour narrow-tier meters are cheaper in swedencentral; token-based narrow-tier meters are more expensive. `westus` and `australiaeast` are always price-identical. Specify region explicitly for narrow-tier meter queries.
+
 ## Query Pattern
 
 ### Standard document content extraction: 10K pages/month
@@ -49,15 +51,6 @@ SkuName: Std Field Extract Inp
 MeterName: Std Field Extract Inp Tokens
 Quantity: 1000 # 1000 × 1K = 1M tokens
 
-## Key Fields
-
-| Parameter     | How to determine                     | Example values                                                      |
-| ------------- | ------------------------------------ | ------------------------------------------------------------------- |
-| `serviceName` | Always `Foundry Tools`               | `Foundry Tools`                                                     |
-| `productName` | Always `Azure Content Understanding` | `Azure Content Understanding`                                       |
-| `skuName`     | Modality + extraction tier           | `Doc Content Extraction Standard`, `Audio Content Extraction`       |
-| `meterName`   | SKU name + unit suffix               | `Doc Content Extraction Standard Pages`, `Audio Content Extraction` |
-
 ## Meter Names
 
 | Meter | skuName | unitOfMeasure | Notes |
@@ -67,13 +60,23 @@ Quantity: 1000 # 1000 × 1K = 1M tokens
 | `Doc Content Extraction Standard Pages` | `Doc Content Extraction Standard` | `1K` | Standard doc extraction; 16 regions |
 | `Audio Content Extraction` | `Audio Content Extraction` | `1 Hour` | Audio processing; 16 regions |
 | `Video Content Extraction` | `Video Content Extraction` | `1 Hour` | Video processing; 16 regions |
-| `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Token-based contextualization; 16 regions |
-| `Add-On Layout Pages` | `Add-On Layout` | `1K` | Layout extraction add-on; 16 regions |
-| `Std Field Extract Inp Tokens` | `Std Field Extract Inp` | `1K` | Standard field input; 3 regions |
-| `Std Field Extract Outp Tokens` | `Std Field Extract Outp` | `1K` | Standard field output; 3 regions |
-| `Document Field Extraction Pages` | `Document Field Extraction` | `1K` | Doc field extraction; 3 regions |
-| `Image Field Extraction Images` | `Image Field Extraction` | `1K` | Image field extraction; 3 regions |
+| `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Sub-cent; 16 regions |
+| `Add-On Layout Pages` | `Add-On Layout` | `1K` | Layout add-on; 16 regions |
+| `Std Field Extract Inp Tokens` | `Std Field Extract Inp` | `1K` | Sub-cent; 3 regions |
+| `Std Field Extract Outp Tokens` | `Std Field Extract Outp` | `1K` | 3 regions |
+| `Document Field Extraction Pages` | `Document Field Extraction` | `1K` | 3 regions |
+| `Image Field Extraction Images` | `Image Field Extraction` | `1K` | 3 regions |
 | `Face Storage Faces` | `Face Storage` | `1K/Month` | Monthly face storage; 3 regions |
+| `Add-On Face Grouping Video` | `Add-On Face Grouping` | `1 Hour` | Face grouping add-on; 3 regions |
+| `Add-On Formula Pages` | `Add-On Formula` | `1K` | Formula extraction add-on; 3 regions |
+| `Audio Field Extraction` | `Audio Field Extraction` | `1 Hour` | Audio field extraction; 3 regions |
+| `Classification Input Tokens` | `Classification Input` | `1K` | Sub-cent; 3 regions |
+| `Classification Output Tokens` | `Classification Output` | `1K` | 3 regions |
+| `Face Transaction Transactions` | `Face Transaction` | `1K` | 3 regions |
+| `Pro Contextualization Tokens` | `Pro Contextualization` | `1K` | Sub-cent; 3 regions |
+| `Pro Field Extract Inp Tokens` | `Pro Field Extract Inp` | `1K` | Sub-cent; 3 regions |
+| `Pro Field Extract Outp Tokens` | `Pro Field Extract Outp` | `1K` | Sub-cent; 3 regions |
+| `Video Field Extraction` | `Video Field Extraction` | `1 Hour` | Video field extraction; 3 regions |
 
 ## Cost Formula
 
@@ -94,5 +97,3 @@ Composite:              Monthly = ContentExtraction + Contextualization + FieldE
 - **Two-phase billing**: Content extraction + field extraction are separate meters for all modalities (doc/audio/video); field extraction rates are significantly higher
 - **Capacity planning**: `Quantity: 1` = 1K pages/tokens/images when `unitOfMeasure` is `1K`; `1 Hour` meters bill per hour of media processed
 - **Supports private endpoints** via AI Services multi-service resource (see `networking/private-link.md` for PE pricing)
-- **10 additional meters** in 3-region tier: Classification In/Out, Pro Contextualization, Pro Field Extract In/Out, Audio/Video Field Extraction, Add-On Formula/Face Grouping, Face Transaction. Query `ProductName: Azure Content Understanding` in westus
-- **Scope**: For broader Foundry Tools coverage, see `ai-services.md`
