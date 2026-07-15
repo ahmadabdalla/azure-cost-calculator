@@ -1,0 +1,61 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:ai-ml/machine-learning-studio/s1-plan
+name: Happy Path - Machine Learning Studio classic S1 plan
+description: >
+  Tests monthly cost estimation for Machine Learning Studio (classic) S1 Production Web API.
+  Validates daily plan billing is normalized to a monthly estimate and the agent returns a currency-formatted total.
+tags:
+  - happy-path
+  - single-service
+  - ai-ml
+  - service:machine-learning-studio
+inputs:
+  prompt: "What is the monthly cost for Machine Learning Studio classic S1 Production Web API with 3 endpoints in South Central US and no overage?"
+expected:
+  output_contains:
+    - "Machine Learning Studio"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Machine Learning Studio( \\(classic\\))?|ML Studio"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: endpoint-count-acknowledged
+    config:
+      regex_match:
+        - "\\b3\\b"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Machine Learning Studio classic S1 Production Web API with 3 endpoints in South Central US and no overage?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct daily plan billing model for Machine Learning Studio (classic).
+        (3) Accounts for 3 endpoints as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

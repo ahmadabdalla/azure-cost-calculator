@@ -13,7 +13,7 @@ privateEndpoint: true
 
 > **Trap (unitOfMeasure)**: All meters use `unitOfMeasure: "1"`, which the pricing scripts treat as unitless (monthly multiplier `1`, not `730`). Always set `Quantity` to the number of content-minutes processed.
 
-> **Trap (legacy meters)**: The API returns 3 legacy meters (without "Indexing" in the name) alongside 7 current meters. Always filter by `SkuName` or `MeterName` to avoid mixing legacy and current presets.
+> **Trap (legacy meters)**: The API returns 3 legacy meters: `Basic Audio Analysis`, `Standard Audio Analysis`, and `Standard Video Analysis`; alongside 7 current meters. Always filter by `SkuName` or `MeterName` to avoid mixing legacy and current presets.
 
 ## Query Pattern
 
@@ -57,27 +57,27 @@ MeterName: Video Modification Input Content Minutes
 
 ## Key Fields
 
-| Parameter     | How to determine                 | Example values                                                     |
-| ------------- | -------------------------------- | ------------------------------------------------------------------ |
-| `serviceName` | Always `Foundry Tools`           | `Foundry Tools`                                                    |
-| `productName` | Always `Azure Video Indexer`     | `Azure Video Indexer`                                              |
+| Parameter     | How to determine                 | Example values                                                      |
+| ------------- | -------------------------------- | ------------------------------------------------------------------- |
+| `serviceName` | Always `Foundry Tools`           | `Foundry Tools`                                                     |
+| `productName` | Always `Azure Video Indexer`     | `Azure Video Indexer`                                               |
 | `skuName`     | Preset tier, matches meter name  | `Basic Audio Indexing Analysis`, `Advanced Video Indexing Analysis` |
 | `meterName`   | Preset + "Input Content Minutes" | `Basic Audio Indexing Analysis Input Content Minutes`               |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Basic Audio Indexing Analysis Input Content Minutes` | `Basic Audio Indexing Analysis` | `1` | Transcription, translation, captions |
-| `Standard Audio Indexing Analysis Input Content Minutes` | `Standard Audio Indexing Analysis` | `1` | Basic + speakers, sentiment, NER |
-| `Advanced Audio Indexing Analysis Input Content Minutes` | `Advanced Audio Indexing Analysis` | `1` | All audio AI models |
-| `Basic Video Indexing Analysis Input Content Minutes` | `Basic Video Indexing Analysis` | `1` | Objects, labels, OCR, keyframes |
-| `Standard Video Indexing Analysis Input Content Minutes` | `Standard Video Indexing Analysis` | `1` | Basic + face recognition, celebrities |
-| `Advanced Video Indexing Analysis Input Content Minutes` | `Advanced Video Indexing Analysis` | `1` | All video AI models |
-| `Video Modification Input Content Minutes` | `Video Modification` | `1` | Face redaction + encoding |
-| `Basic Audio Analysis Input Content Minutes` | `Basic Audio Analysis` | `1` | Legacy, use Basic Audio Indexing  |
-| `Standard Audio Analysis Input Content Minutes` | `Standard Audio Analysis` | `1` | Legacy, use Advanced Audio Indexing |
-| `Standard Video Analysis Input Content Minutes` | `Standard Video Analysis` | `1` | Legacy, use Advanced Video Indexing |
+| Meter                                                    | skuName                            | unitOfMeasure | Notes                                 |
+| -------------------------------------------------------- | ---------------------------------- | ------------- | ------------------------------------- |
+| `Basic Audio Indexing Analysis Input Content Minutes`    | `Basic Audio Indexing Analysis`    | `1`           | Transcription, translation, captions  |
+| `Standard Audio Indexing Analysis Input Content Minutes` | `Standard Audio Indexing Analysis` | `1`           | Basic + speakers, sentiment, NER      |
+| `Advanced Audio Indexing Analysis Input Content Minutes` | `Advanced Audio Indexing Analysis` | `1`           | All audio AI models                   |
+| `Basic Video Indexing Analysis Input Content Minutes`    | `Basic Video Indexing Analysis`    | `1`           | Objects, labels, OCR, keyframes       |
+| `Standard Video Indexing Analysis Input Content Minutes` | `Standard Video Indexing Analysis` | `1`           | Basic + face recognition, celebrities |
+| `Advanced Video Indexing Analysis Input Content Minutes` | `Advanced Video Indexing Analysis` | `1`           | All video AI models                   |
+| `Video Modification Input Content Minutes`               | `Video Modification`               | `1`           | Face redaction + encoding             |
+| `Basic Audio Analysis Input Content Minutes`             | `Basic Audio Analysis`             | `1`           | Legacy, use Basic Audio Indexing      |
+| `Standard Audio Analysis Input Content Minutes`          | `Standard Audio Analysis`          | `1`           | Legacy, use Advanced Audio Indexing   |
+| `Standard Video Analysis Input Content Minutes`          | `Standard Video Analysis`          | `1`           | Legacy, use Advanced Video Indexing   |
 
 ## Cost Formula
 
@@ -93,7 +93,9 @@ With modification: Total = audio + video + (modification_retailPrice × modified
 - **No commitment tiers**: Unlike other Foundry Tools sub-services, Video Indexer has no volume commitments or RI
 - **Audio + Video billed separately**: Indexing a video with both audio and video analysis incurs two charges; query each preset and sum
 - **Legacy meters**: 3 legacy presets (Basic Audio Analysis, Standard Audio Analysis, Standard Video Analysis) remain in the API but are absent from the pricing page. Use current "Indexing" equivalents for new estimates
-- **Regional availability**: Basic Video Indexing Analysis is unavailable in 6 regions (brazilsoutheast, jioindiawest, koreasouth, and 3 US Gov regions)
+- **Regional pricing**: Prices vary by region; always query the user's target region instead of assuming East US rates
+- **Regional availability**: Basic Video Indexing Analysis is unavailable in 6 regions (brazilsoutheast, jioindiawest, koreasouth, usgovarizona, usgovtexas, usgovvirginia)
+- **DoD regions**: usdodcentral and usdodeast return no Azure Video Indexer meters for any preset
 - **Arc-enabled**: Same pricing as cloud; only Basic Audio and Basic Video Indexing presets are supported on Arc
 - **Capacity planning**: `Quantity: 1` = 1 minute of content processed; typical media library: estimate total content-minutes across all files
 - **Scope**: Part of Foundry Tools (AI Services). See `ai-services.md` for umbrella patterns and other sub-services

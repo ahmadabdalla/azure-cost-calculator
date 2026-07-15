@@ -60,21 +60,21 @@ Quantity: 1000 # 1000 × 1K = 1M tokens
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Doc Content Extraction Min Pages` | `Doc Content Extraction Min` | `1K` | Minimal doc tier; 17 regions |
-| `Doc Content Extraction Basic Pages` | `Doc Content Extraction Basic` | `1K` | Basic doc extraction; 16 regions |
-| `Doc Content Extraction Standard Pages` | `Doc Content Extraction Standard` | `1K` | Standard doc extraction; 16 regions |
-| `Audio Content Extraction` | `Audio Content Extraction` | `1 Hour` | Audio processing; 16 regions |
-| `Video Content Extraction` | `Video Content Extraction` | `1 Hour` | Video processing; 16 regions |
-| `Std Contextualization Tokens` | `Std Contextualization` | `1K` | Token-based contextualization; 16 regions |
-| `Add-On Layout Pages` | `Add-On Layout` | `1K` | Layout extraction add-on; 16 regions |
-| `Std Field Extract Inp Tokens` | `Std Field Extract Inp` | `1K` | Standard field input; 3 regions |
-| `Std Field Extract Outp Tokens` | `Std Field Extract Outp` | `1K` | Standard field output; 3 regions |
-| `Document Field Extraction Pages` | `Document Field Extraction` | `1K` | Doc field extraction; 3 regions |
-| `Image Field Extraction Images` | `Image Field Extraction` | `1K` | Image field extraction; 3 regions |
-| `Face Storage Faces` | `Face Storage` | `1K/Month` | Monthly face storage; 3 regions |
-| `Face Transaction Transactions` | `Face Transaction` | `1K` | Face transactions; 3 regions |
+| Meter                                   | skuName                           | unitOfMeasure | Notes                                     |
+| --------------------------------------- | --------------------------------- | ------------- | ----------------------------------------- |
+| `Doc Content Extraction Min Pages`      | `Doc Content Extraction Min`      | `1K`          | Minimal doc tier; 17 regions              |
+| `Doc Content Extraction Basic Pages`    | `Doc Content Extraction Basic`    | `1K`          | Basic doc extraction; 16 regions          |
+| `Doc Content Extraction Standard Pages` | `Doc Content Extraction Standard` | `1K`          | Standard doc extraction; 16 regions       |
+| `Audio Content Extraction`              | `Audio Content Extraction`        | `1 Hour`      | Audio processing; 16 regions              |
+| `Video Content Extraction`              | `Video Content Extraction`        | `1 Hour`      | Video processing; 16 regions              |
+| `Std Contextualization Tokens`          | `Std Contextualization`           | `1K`          | Token-based contextualization; 16 regions |
+| `Add-On Layout Pages`                   | `Add-On Layout`                   | `1K`          | Layout extraction add-on; 16 regions      |
+| `Std Field Extract Inp Tokens`          | `Std Field Extract Inp`           | `1K`          | Standard field input; 3 regions           |
+| `Std Field Extract Outp Tokens`         | `Std Field Extract Outp`          | `1K`          | Standard field output; 3 regions          |
+| `Document Field Extraction Pages`       | `Document Field Extraction`       | `1K`          | Doc field extraction; 3 regions           |
+| `Image Field Extraction Images`         | `Image Field Extraction`          | `1K`          | Image field extraction; 3 regions         |
+| `Face Storage Faces`                    | `Face Storage`                    | `1K/Month`    | Monthly face storage; 3 regions           |
+| `Face Transaction Transactions`         | `Face Transaction`                | `1K`          | Face transactions; 3 regions              |
 
 ## Cost Formula
 
