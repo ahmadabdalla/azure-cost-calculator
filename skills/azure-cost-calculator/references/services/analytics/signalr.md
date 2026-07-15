@@ -45,23 +45,23 @@ Quantity: 10
 
 ## Key Fields
 
-| Parameter     | How to determine           | Example values                                       |
-| ------------- | -------------------------- | ---------------------------------------------------- |
-| `serviceName` | Always `SignalR`           | `SignalR`                                            |
-| `productName` | Single product             | `SignalR`                                            |
-| `skuName`     | Tier selection             | `Standard`, `Premium`                                |
+| Parameter     | How to determine           | Example values                                                         |
+| ------------- | -------------------------- | ---------------------------------------------------------------------- |
+| `serviceName` | Always `SignalR`           | `SignalR`                                                              |
+| `productName` | Single product             | `SignalR`                                                              |
+| `skuName`     | Tier selection             | `Standard`, `Premium`                                                  |
 | `meterName`   | Unit (capacity) or Message | `Standard Unit`, `Standard Message`, `Premium Unit`, `Premium Message` |
 
 ## Meter Names
 
-| Meter                  | skuName    | unitOfMeasure | Notes                          |
-| ---------------------- | ---------- | ------------- | ------------------------------ |
-| `Standard Unit`        | `Standard` | `1/Day`       | Per-unit daily capacity charge |
-| `Standard Message`     | `Standard` | `1M`          | Per 1M messages overage        |
-| `Premium Unit`         | `Premium`  | `1/Day`       | Per-unit daily capacity charge |
-| `Premium Message`      | `Premium`  | `1M`          | Per 1M messages overage        |
-| `Premium Large Instance Add-on` | `Premium` | `1/Day` | Per-unit add-on for large-instance (100K+ connections) mode |
-| `Standard Unit - Free` | `Standard` | `1/Day`       | Free tier, zero cost          |
+| Meter                           | skuName    | unitOfMeasure | Notes                                                       |
+| ------------------------------- | ---------- | ------------- | ----------------------------------------------------------- |
+| `Standard Unit`                 | `Standard` | `1/Day`       | Per-unit daily capacity charge                              |
+| `Standard Message`              | `Standard` | `1M`          | Per 1M messages overage                                     |
+| `Premium Unit`                  | `Premium`  | `1/Day`       | Per-unit daily capacity charge                              |
+| `Premium Message`               | `Premium`  | `1M`          | Per 1M messages overage                                     |
+| `Premium Large Instance Add-on` | `Premium`  | `1/Day`       | Per-unit add-on for large-instance (100K+ connections) mode |
+| `Standard Unit - Free`          | `Standard` | `1/Day`       | Free tier, zero cost                                        |
 
 ## Cost Formula
 

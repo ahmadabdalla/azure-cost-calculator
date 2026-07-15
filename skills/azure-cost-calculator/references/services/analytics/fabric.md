@@ -49,25 +49,25 @@ MeterName: Capacity Overage Capacity Usage CU
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                                              |
-| ------------- | --------------------------------------- | ----------------------------------------------------------- |
-| `serviceName` | Always `Microsoft Fabric`               | `Microsoft Fabric`                                          |
-| `productName` | Component: compute vs storage           | `Fabric Capacity`, `OneLake`, `Fabric Capacity Reservation` |
+| Parameter     | How to determine                        | Example values                                                               |
+| ------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
+| `serviceName` | Always `Microsoft Fabric`               | `Microsoft Fabric`                                                           |
+| `productName` | Component: compute vs storage           | `Fabric Capacity`, `OneLake`, `Fabric Capacity Reservation`                  |
 | `skuName`     | Workload type (compute) or storage tier | `Power BI Capacity Usage`, `OneLake Storage Hot`, `OneLake BCDR Storage Hot` |
-| `meterName`   | CU meter or storage data meter          | `Power BI Capacity Usage CU`, `OneLake Storage Hot Data Stored` |
+| `meterName`   | CU meter or storage data meter          | `Power BI Capacity Usage CU`, `OneLake Storage Hot Data Stored`              |
 
 ## Meter Names
 
-| Meter                                | skuName                           | productName       | unitOfMeasure | Notes                                      |
-| ------------------------------------ | --------------------------------- | ----------------- | ------------- | ------------------------------------------ |
-| `Power BI Capacity Usage CU`        | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 72 identical) |
-| `Capacity Overage Capacity Usage CU`| `Capacity Overage Capacity Usage` | `Fabric Capacity` | `1 Hour`      | 3× standard rate; not RI-eligible          |
-| `OneLake Storage Hot Data Stored`   | `OneLake Storage Hot`             | `OneLake`         | `1 GB/Month`  | Default primary storage tier               |
-| `OneLake Storage Cool Data Stored`  | `OneLake Storage Cool`            | `OneLake`         | `1 GB/Month`  | Lower-cost infrequent access tier          |
-| `OneLake Storage Cold Data Stored`  | `OneLake Storage Cold`            | `OneLake`         | `1 GB/Month`  | Lowest-cost archival tier (sub-cent)       |
-| `OneLake Cache Data Stored`         | `OneLake Cache`                   | `OneLake`         | `1 GB/Month`  | KQL cache / Data Activator retained data   |
-| `OneLake BCDR Storage Hot Data Stored` | `OneLake BCDR Storage Hot`     | `OneLake`         | `1 GB/Month`  | Disaster recovery storage (default tier)   |
-| `Storage Mirroring Data Stored`     | `Storage Mirroring`               | `OneLake`         | `1 GB/Month`  | Beyond free SKU-based allowance            |
+| Meter                                  | skuName                           | productName       | unitOfMeasure | Notes                                      |
+| -------------------------------------- | --------------------------------- | ----------------- | ------------- | ------------------------------------------ |
+| `Power BI Capacity Usage CU`           | `Power BI Capacity Usage`         | `Fabric Capacity` | `1 Hour`      | Representative CU meter (all 72 identical) |
+| `Capacity Overage Capacity Usage CU`   | `Capacity Overage Capacity Usage` | `Fabric Capacity` | `1 Hour`      | 3× standard rate; not RI-eligible          |
+| `OneLake Storage Hot Data Stored`      | `OneLake Storage Hot`             | `OneLake`         | `1 GB/Month`  | Default primary storage tier               |
+| `OneLake Storage Cool Data Stored`     | `OneLake Storage Cool`            | `OneLake`         | `1 GB/Month`  | Lower-cost infrequent access tier          |
+| `OneLake Storage Cold Data Stored`     | `OneLake Storage Cold`            | `OneLake`         | `1 GB/Month`  | Lowest-cost archival tier (sub-cent)       |
+| `OneLake Cache Data Stored`            | `OneLake Cache`                   | `OneLake`         | `1 GB/Month`  | KQL cache / Data Activator retained data   |
+| `OneLake BCDR Storage Hot Data Stored` | `OneLake BCDR Storage Hot`        | `OneLake`         | `1 GB/Month`  | Disaster recovery storage (default tier)   |
+| `Storage Mirroring Data Stored`        | `Storage Mirroring`               | `OneLake`         | `1 GB/Month`  | Beyond free SKU-based allowance            |
 
 ## Cost Formula
 

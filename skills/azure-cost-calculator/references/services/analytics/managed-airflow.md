@@ -33,19 +33,19 @@ InstanceCount: 2 # number of Airflow environments
 
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-| --- | --- | --- |
-| `serviceName` | Always `Azure Data Factory v2` | `Azure Data Factory v2` |
-| `productName` | Always the Managed Airflow product | `Azure Data Factory v2 - Managed Airflow` |
-| `skuName` | Environment size selected by user (never-assume) | `Small`, `Large` |
-| `meterName` | Always `vCore` | `vCore` |
+| Parameter     | How to determine                                 | Example values                            |
+| ------------- | ------------------------------------------------ | ----------------------------------------- |
+| `serviceName` | Always `Azure Data Factory v2`                   | `Azure Data Factory v2`                   |
+| `productName` | Always the Managed Airflow product               | `Azure Data Factory v2 - Managed Airflow` |
+| `skuName`     | Environment size selected by user (never-assume) | `Small`, `Large`                          |
+| `meterName`   | Always `vCore`                                   | `vCore`                                   |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `vCore` | `Small` | `1 Hour` | Per vCore-hour for Small environment |
-| `vCore` | `Large` | `1 Hour` | Per vCore-hour for Large environment |
+| Meter   | skuName | unitOfMeasure | Notes                                |
+| ------- | ------- | ------------- | ------------------------------------ |
+| `vCore` | `Small` | `1 Hour`      | Per vCore-hour for Small environment |
+| `vCore` | `Large` | `1 Hour`      | Per vCore-hour for Large environment |
 
 ## Cost Formula
 
