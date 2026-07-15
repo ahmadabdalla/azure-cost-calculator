@@ -60,6 +60,7 @@ Quantity: 10
 | `Standard Message`     | `Standard` | `1M`          | Per 1M messages overage        |
 | `Premium Unit`         | `Premium`  | `1/Day`       | Per-unit daily capacity charge |
 | `Premium Message`      | `Premium`  | `1M`          | Per 1M messages overage        |
+| `Premium Large Instance Add-on` | `Premium` | `1/Day` | Per-unit add-on for large-instance (100K+ connections) mode |
 | `Standard Unit - Free` | `Standard` | `1/Day`       | Free tier, zero cost          |
 
 ## Cost Formula
@@ -75,5 +76,6 @@ Total monthly      = Unit monthly + Message monthly
 - **Free tier**: 1 free Standard unit; 20 concurrent connections and 20K messages/day; no SLA
 - **Standard tier**: Each unit provides 1K concurrent connections and 1M messages/day; auto-scale up to 100 units
 - **Premium tier**: Same connection/message capacity as Standard plus availability zones and higher SLA
+- **Premium large instance**: `Premium Large Instance Add-on` (`1/Day`) is charged per unit on top of `Premium Unit` when running large-instance mode for 100K+ concurrent connections
 - Private endpoints require Standard tier or higher
 - Messages included per unit per day scale with unit count; overage charged per 1M messages above the daily included amount
