@@ -73,10 +73,10 @@ MeterName: S1 Transactions
 | `Standard Custom Training Unit` | `Standard` | `Azure Language` | `1 Hour` | Custom model training |
 | `Standard Custom Hosting Unit` | `Standard` | `Azure Language` | `1/Month` | Hosted custom model |
 | `Doc-PII Redaction Pages` | `Doc-PII Redaction Pages` | `Azure Language` | `1K` | Document PII redaction |
-| `Commitment Tier Azure {1M|3M|10M|25M} Unit` | `Commitment Tier Azure {1M|3M|10M|25M}` | `Azure Language` | `1/Month` | Standard included usage; overage uses `...CT Overage Transactions` |
-| `Commitment Tier CLU Azure {1M|3M|10M|25M} Unit` | `Commitment Tier CLU Azure {1M|3M|10M|25M}` | `Azure Language` | `1/Month` | CLU commitment tiers |
-| `Commitment Tier Summarization Azure {3M|10M} Unit` | `Commitment Tier Summarization Azure {3M|10M}` | `Azure Language` | `1/Month` | Summarization commitment tiers |
-| `Commitment Tier TA4H {1M|3M|10M} Unit` | `Commitment Tier TA4H {1M|3M|10M}` | `Azure Language` | `1/Month` | Health commitment tiers |
+| `Commitment Tier Azure {1M/3M/10M/25M} Unit` | `Commitment Tier Azure {1M/3M/10M/25M}` | `Azure Language` | `1/Month` | Standard included usage; overage uses `...CT Overage Transactions` |
+| `Commitment Tier CLU Azure {1M/3M/10M/25M} Unit` | `Commitment Tier CLU Azure {1M/3M/10M/25M}` | `Azure Language` | `1/Month` | CLU commitment tiers |
+| `Commitment Tier Summarization Azure {3M/10M} Unit` | `Commitment Tier Summarization Azure {3M/10M}` | `Azure Language` | `1/Month` | Summarization commitment tiers |
+| `Commitment Tier TA4H {1M/3M/10M} Unit` | `Commitment Tier TA4H {1M/3M/10M}` | `Azure Language` | `1/Month` | Health commitment tiers |
 | `P1 Transactions` | `P1` | `Language Understanding` | `1K` | Legacy LUIS inference |
 | `S1 Transactions` | `S1` | `Language Understanding` | `1K` | Legacy LUIS inference |
 | `S1 Speech To Intent - Understanding Transactions` | `S1` | `Language Understanding` | `1K` | Legacy speech-to-intent |
@@ -87,6 +87,7 @@ MeterName: S1 Transactions
 ```
 Text records (1K):   Monthly = retailPrice × Quantity
 Training (1 Hour):   Monthly = retailPrice × trainingHours
+Direct monthly meters: Monthly = retailPrice × quantity
 Monthly CTs:         Monthly = commitmentFee + (overage_retailPrice × excessQuantity)
 Annual CTs:          Monthly = retailPrice ÷ 12
 Free grant:          Billable = max(0, totalRecords − includedFreeRecords)
@@ -99,4 +100,4 @@ Free grant:          Billable = max(0, totalRecords − includedFreeRecords)
 - **Disconnected products**: `Azure Language - Disconnected` and `Language Understanding - Disconnected` bill annually (`1/Year`); exclude unless the user asks for disconnected containers
 - **Container product split**: `Text Analytics Container` is the connected PAYG product, but connected commitment SKUs still live under `Azure Language`
 - **Legacy scope**: `Language Understanding` still contains LUIS meters, including `P1 Transactions`, `S1 Transactions`, and daily S0-S4 tiers
-- **QA dependency**: Question Answering requires a separate Azure AI Search resource; Azure Language also supports private endpoints through the Azure AI Services resource
+- **QA dependency**: Question Answering requires a separate Azure AI Search resource
