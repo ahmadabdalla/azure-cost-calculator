@@ -25,13 +25,15 @@ When the Copilot coding agent is assigned to a service-reference issue using the
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently explores the same API; may discover different meters or interpret results differently.
 4. **Pricing Investigator C** (`pricing-investigator`, third instance, identical prompt) provides a third independent view for majority-based consensus.
 5. **Compliance Reviewer** (`compliance-reviewer`) reads all rule sources (CONTRIBUTING.md, TEMPLATE.md, schema, shared.md, pitfalls.md), studies category exemplars, and returns a structured **Compliance Contract**.
-6. **Orchestrator** compares Reports A, B, and C for majority agreement, dispatches a tiebreaker investigator (using a different coding model) for unresolved disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
+6. **Orchestrator** compares Reports A, B, and C for majority agreement, dispatches a scoped tiebreaker investigator on unresolved disagreements, cross-references the consensus data against the Compliance Contract, writes the service reference file, and runs validation.
 
 ### Why multi-agent?
 
 - **Independent views prevent blind spots**: three investigators may explore different search terms and find different meters; disagreement reveals areas needing closer investigation.
-- **Majority consensus over speculation**: the orchestrator only writes what a majority (2/3 or 3/3) of investigators agree on. Unresolved disputes trigger a tiebreaker round with a different coding model.
+- **Majority consensus over speculation**: the orchestrator only writes what a majority (2/3 or 3/3) of investigators agree on. Unresolved disputes trigger a scoped tiebreaker round on the disputed items only.
 - **Separation of concerns**: data discovery (shell + web) vs rule interpretation (read-only) vs file authoring.
+
+> **Model uniformity note**: all four agents pin `model: claude-sonnet-4.6` in their frontmatter, and the tiebreaker runs on the same model as the initial investigators. The independence signal comes from a fresh context and narrowly-scoped disputed inputs, not from model diversity. Correlated model-specific blind spots will not be caught by the tiebreaker; treat unanimous 3/3 agreement as strong evidence and 2/1 splits with tiebreaker confirmation as adequate, but do not treat consensus as protection against systematic model bias.
 
 ---
 
@@ -92,8 +94,8 @@ service-reference (orchestrator)
   │
   ├── orchestrator: compares A vs B vs C → majority agreement
   │     If unresolved disagreements remain:
-  │     └── invokes: pricing-investigator (tiebreaker, different coding model)
-  │           Scoped to disputed items only
+  │     └── invokes: pricing-investigator (tiebreaker, scoped to disputed items)
+  │           Fresh context, narrowly scoped inputs
   │           Output: Tiebreaker Report
   │
   └── orchestrator: cross-references consensus against contract →
@@ -137,7 +139,7 @@ service-reference (orchestrator)
 
 Sub-agents use restricted toolsets (principle of least privilege):
 
-- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional tiebreaker round with a different coding model for unresolved disputes.
+- `pricing-investigator` has `execute` for running scripts and `web` for Microsoft Learn cross-checks, but cannot `edit` files. Invoked three times with identical inputs for authoring (majority-based consensus), twice for PR review, plus an optional scoped tiebreaker round on unresolved disputes.
 - `compliance-reviewer` has only `read` and `search`: no shell, no editing, no web. All documentation cross-checks come from the pricing investigation reports.
 - Only the orchestrators (`service-reference` and `service-ref-pr-reviewer`) have `edit` and `agent` tools
 
@@ -184,14 +186,14 @@ When invoked (either automatically via `@copilot` comment or manually by a maint
 1. **Orchestrator** (`service-ref-pr-reviewer`) gathers PR metadata (diff, comments, author), creates a dedicated worktree for the PR branch, and identifies changed service reference files.
 2. **Pricing Investigator A** (`pricing-investigator`, first instance) independently investigates the Azure Retail Prices API and compares findings against the PR's file content.
 3. **Pricing Investigator B** (`pricing-investigator`, second instance, identical prompt) independently performs the same investigation; may discover different discrepancies.
-4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a tiebreaker investigator using a different coding model, scoped to the disputed items only.
+4. **Orchestrator** compares Reports A and B for agreement. If disagreements exist, dispatches a scoped tiebreaker investigator on the disputed items only.
 5. **Orchestrator** runs the validation script, compiles a structured review (blocking issues, warnings, informational), displays it in the console, optionally posts it to the PR via `gh` CLI if the user confirms, and cleans up the worktree.
 
 ### Why dual investigation?
 
 - **Independent verification**: two investigators may explore different search terms and find different discrepancies; disagreement reveals areas needing closer scrutiny.
 - **Consensus over false positives**: only report findings that a majority agrees on, reducing noise in PR reviews.
-- **Tiebreaker for disputes**: unresolved disagreements trigger a third investigation with a different coding model, ensuring no contested finding ships without arbitration.
+- **Tiebreaker for disputes**: unresolved disagreements trigger a third scoped investigation on the disputed items only, ensuring no contested finding ships without arbitration.
 
 ### Architecture
 
@@ -211,8 +213,8 @@ service-ref-pr-reviewer (orchestrator)
   │
   ├── orchestrator: compares A vs B → agreement/disagreements
   │     If disagreements exist:
-  │     └── invokes: pricing-investigator (tiebreaker, different coding model)
-  │           Scoped to disputed items only
+  │     └── invokes: pricing-investigator (tiebreaker, scoped to disputed items)
+  │           Fresh context, narrowly scoped inputs
   │           Output: Tiebreaker Report
   │
   ├── orchestrator: runs validation script on changed files

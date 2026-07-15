@@ -58,7 +58,7 @@ Other design goals:
 
 - **Multi-currency, all regions** - supports USD, AUD, EUR, GBP, JPY, CAD, INR, etc. Works with any Azure region.
 
-> **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Opus 4.6** and **Gemini Pro 3**. Results with other models may vary.
+> **Note:** Targets measured via A/B testing with clean-context sessions against complex Azure architectures. Tested with **Claude Sonnet 4.6**. Results with other models may vary.
 
 <p align="center">
   <img src="docs/images/design.png" alt="How the Azure Cost Calculator skill works: from natural language query through service reference lookup and live API execution to a structured cost estimate" width="100%">
