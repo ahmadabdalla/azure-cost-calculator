@@ -43,6 +43,13 @@ SkuName: Premium
 MeterName: Premium Message
 Quantity: 10
 
+### Premium large-instance add-on: per unit (100K+ connections; script auto-multiplies daily rate × 30)
+
+ServiceName: SignalR
+SkuName: Premium
+MeterName: Premium Large Instance Add-on
+InstanceCount: 1
+
 ## Key Fields
 
 | Parameter     | How to determine           | Example values                                                         |
@@ -67,8 +74,9 @@ Quantity: 10
 
 ```
 Unit monthly       = unit_retailPrice × 30 × unitCount
+Add-on monthly     = addon_retailPrice × 30 × unitCount   (Premium large-instance only)
 Message monthly    = (messages / 1M) × message_retailPrice
-Total monthly      = Unit monthly + Message monthly
+Total monthly      = Unit monthly + Add-on monthly + Message monthly
 ```
 
 ## Notes
