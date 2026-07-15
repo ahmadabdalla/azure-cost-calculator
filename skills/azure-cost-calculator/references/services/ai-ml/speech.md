@@ -43,6 +43,13 @@ ProductName: Azure Speech
 SkuName: Commitment Tier Speech to Text Azure 2K
 MeterName: Commitment Tier Speech to Text Azure 2K Unit
 
+### Commitment tier: STT Azure 2K (overage)
+
+ServiceName: Foundry Tools
+ProductName: Azure Speech
+SkuName: Commitment Tier Speech to Text Azure 2K
+MeterName: Commitment Tier Speech to Text Azure 2K Speech To Text CT Overage
+
 ### Fast Transcription
 
 ServiceName: Foundry Tools
@@ -83,6 +90,7 @@ Quantity: 100 # audio hours
 | `Voice Live API Std - Standard Speech Audio Input Tokens` | `Voice Live API Std` | `1K` | Voice Live API; docs may call this tier Basic |
 | `CNV Neural HD Synthesis Characters` | `CNV Neural HD Synthesis` | `1M` | Custom Neural Voice HD synthesis |
 | `Commitment Tier Speech to Text Azure 2K Unit` | `Commitment Tier Speech to Text Azure 2K` | `1/Month` | Monthly flat fee (many variants) |
+| `Commitment Tier Speech to Text Azure 2K Speech To Text CT Overage` | `Commitment Tier Speech to Text Azure 2K` | `1 Hour` | Overage beyond included STT hours |
 
 ## Cost Formula
 
