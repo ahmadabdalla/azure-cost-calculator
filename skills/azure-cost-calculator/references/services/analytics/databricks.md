@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Databricks
 
-> **Trap (inflated totals)**: An unfiltered regional `ServiceName 'Azure Databricks'` query returns 41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `ProductName`, `SkuName`, and `MeterName`.
+> **Trap (inflated totals)**: An unfiltered regional `ServiceName 'Azure Databricks'` query returns 43 meters (East US) across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `ProductName`, `SkuName`, and `MeterName`.
 
 > **Trap (VM compute split)**: Classic workloads (`productName: Azure Databricks`) charge DBU platform fees only — estimate VM cost separately via Virtual Machines. Serverless workloads (`productName: Azure Databricks Regional`) include compute in the DBU rate.
 
@@ -81,7 +81,7 @@ Launch Charge      = launch_retailPrice × launches
 
 ## Notes
 
-- **Two tiers**: Standard (data engineering, retiring Oct 2026) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher; all new workloads should use Premium
+- **Two tiers**: Standard (data engineering; no new workspaces after Apr 2026, auto-upgraded to Premium Oct 2026) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher; all new workloads should use Premium
 - **Photon variants**: Photon-accelerated SKUs (e.g., `Premium All-Purpose Photon`) have the same DBU rate but process data faster, reducing total DBU-hours consumed
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
 - **Enhanced Security and Compliance**: Optional add-on surcharge billed per DBU-hour on top of base workload rate; query separately with `SkuName: Premium Enhanced Security and Compliance`
