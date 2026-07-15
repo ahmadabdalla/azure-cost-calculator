@@ -80,8 +80,14 @@ MeterName: Commitment Tier Image Azure 250K CT Overage Transactions
 | `Free Images` | `Free` | `1K` | 5K/month limit (hard stop) |
 | `Commitment Tier Txt Azure 1M Unit` | `Commitment Tier Txt Azure 1M` | `1/Month` | Flat fee, includes 1M text records |
 | `Commitment Tier Txt Azure 1M CT Overage Transactions` | `Commitment Tier Txt Azure 1M` | `1K` | Overage beyond 1M included |
+| `Commitment Tier Txt Conn 1M Unit` | `Commitment Tier Txt Conn 1M` | `1/Month` | Connected flat fee, includes 1M text records |
+| `Commitment Tier Txt Conn 1M CT Overage Transactions` | `Commitment Tier Txt Conn 1M` | `1K` | Connected overage beyond 1M included |
 | `Commitment Tier Image Azure 250K Unit` | `Commitment Tier Image Azure 250K` | `1/Month` | Flat fee, includes 250K images |
 | `Commitment Tier Image Azure 250K CT Overage Transactions` | `Commitment Tier Image Azure 250K` | `1K` | Overage beyond 250K included |
+| `Commitment Tier Image Conn 250K Unit` | `Commitment Tier Image Conn 250K` | `1/Month` | Connected flat fee, includes 250K images |
+| `Commitment Tier Image Conn 250K CT Overage Transactions` | `Commitment Tier Image Conn 250K` | `1K` | Connected overage beyond 250K included |
+| `Commitment Tier Txt DC 60M Unit` | `Commitment Tier Txt DC 60M Unit` | `1/Year` | Disconnected annual text commitment, Global only |
+| `Commitment Tier Image DC 15M Unit` | `Commitment Tier Image DC 15M Unit` | `1/Year` | Disconnected annual image commitment, Global only |
 
 ## Cost Formula
 
@@ -96,5 +102,6 @@ Free grant:        Billable text = max(0, records − 5000); Billable images = m
 
 - **Free tier**: 5K text records + 5K images/month; hard stop at limit (no overages on Free tier)
 - **Commitment tiers**: Text Azure 1M + Image Azure 250K per modality; Connected (`Conn`) variants are ~5% cheaper (same query structure, substitute `Conn` for `Azure` in skuName/meterName)
-- **Legacy/Disconnected**: `Content Moderator` → `Content Safety` (different tiered pricing; do NOT query). Disconnected product bills annually (`1/Year`), Global-only; divide by 12 for monthly
+- **Legacy/Disconnected**: `Content Moderator` → `Content Safety` (different tiered pricing; do NOT query). Disconnected uses `Commitment Tier Txt DC 60M Unit` or `Commitment Tier Image DC 15M Unit`; divide `1/Year` price by 12
+- **Regional pricing**: Standard PAYG has higher `Standard Text Records` and `Standard Images` rates in `usgovarizona` and `usgovvirginia` than in commercial regions
 - **Capacity planning**: `Quantity: 1` = 1,000 transactions when `unitOfMeasure` is `1K`; text record = up to 1,000 Unicode characters
