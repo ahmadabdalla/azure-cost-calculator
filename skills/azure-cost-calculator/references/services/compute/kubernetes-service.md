@@ -19,7 +19,7 @@ privateEndpoint: true
 
 > **Trap (Automatic mixed units)**: Automatic meters all report `1 Hour`, but control plane is per **cluster**-hour while workload meters are per **vCPU**-hour.
 
-> **Trap (Anyscale Global meters)**: Unfiltered queries include 15 Global-only Anyscale meters (per-GPU-model, Compute, Memory) under `productName: Azure Kubernetes Service`. Filter with `-ProductName` or exclude the Global region to avoid contamination.
+> **Trap (Anyscale Global meters)**: Unfiltered queries include 15 Global-only Anyscale meters (per-GPU-model, Compute, Memory) that share `productName: Azure Kubernetes Service` with `Standard`, so `-ProductName` will not exclude them. Filter to a specific region for standard estimates; query the `Global` region with the target Anyscale `skuName` for Anyscale pricing.
 
 ## Query Pattern
 
