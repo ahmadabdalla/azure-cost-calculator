@@ -59,7 +59,7 @@ SkuName: RUs
 | `AP1 100 RUs`                 | `AP1`   | `Azure Cosmos DB autoscale`         | `1/Hour`      | Autoscale RU unit                      |
 | `Standard Data Stored`        | `Standard` | `Azure Cosmos DB Analytics Storage` | `1 GB/Month` | Analytical store                       |
 | `Backup Data Stored`          | `Standard` | `Azure Cosmos DB Snapshot`       | `1 GB/Month`  | Periodic backup storage                |
-| `Cont 30D Bckp Continuous Backup` | `Backup` | `Azure Cosmos DB - PITR`       | `1 GB`        | Native continuous backup               |
+| `Cont 30D Bckp Continuous Backup` | `Backup` | `Azure Cosmos DB - PITR`       | `1 GB`        | Continuous backup; `1 GB` bills per GB-month |
 
 ## Cost Formula
 
