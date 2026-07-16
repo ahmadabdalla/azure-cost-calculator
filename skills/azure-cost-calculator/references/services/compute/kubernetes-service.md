@@ -19,7 +19,7 @@ privateEndpoint: true
 
 > **Trap (Automatic mixed units)**: Automatic meters all report `1 Hour`, but control plane is per **cluster**-hour while workload meters are per **vCPU**-hour.
 
-> **Trap (Anyscale Global meters)**: Unfiltered queries include ~15 Global-only Anyscale meters (GPU/Compute/Memory). Each has a duplicate row at minimal price with `effectiveEndDate` (time-limited preview pricing). Filter with `-ProductName` or exclude Global region to avoid contamination.
+> **Trap (Anyscale Global meters)**: Unfiltered queries include 15 Global-only Anyscale meters (per-GPU-model, Compute, Memory) under `productName: Azure Kubernetes Service`. Filter with `-ProductName` or exclude the Global region to avoid contamination.
 
 ## Query Pattern
 
@@ -91,6 +91,6 @@ Automatic: Monthly = (controlPlane_retailPrice × 730 × clusterCount) + Σ(work
 - `billingConsiderations: [Reserved Instances, Spot Pricing]` applies to underlying VMs only, not AKS meters
 - Automatic control plane rate is flat across all regions; per-vCPU rates vary ~2.4× by region
 - Standard Load Balancer auto-provisioned for outbound traffic; billed via `billingNeeds`
-- Private endpoints require Standard pricing tier (not available on Free tier)
+- Private clusters (API server private endpoint) are supported on all pricing tiers, including Free; tiers differ only by uptime SLA (Standard) and Long Term Support (Premium)
 - Public IP addresses for outbound/ingress (see `networking/ip-addresses.md`), NAT Gateway, Azure Monitor, and data transfer may also apply as separate services
 - Anyscale (Ray on AKS) meters are Global-only under `productName: Azure Kubernetes Service` with per-resource-hour billing (GPU/Compute/Memory); query with region `Global` and the specific `Anyscale` skuName
