@@ -74,6 +74,8 @@ Region: Zone 1
 | `Standard Default Request` | `Standard` | `1M/Month` | DRS evaluation (Classic) |
 | `Standard Bot Protection Ruleset` | `Standard` | `1/Month` | Bot protection add-on (Classic) |
 | `Standard Bot Protection Request` | `Standard` | `1M/Month` | Bot protection requests (Classic) |
+| `Standard Data Transfer Out` | `Standard` | `1 GB` | Classic egress; 3-tier volume pricing (Zones 1-5 only) |
+| `Standard Data Transfer In` | `Standard` | `1 GB` | Classic ingress; flat rate (Zones 1-5 only) |
 | `Standard Custom Domain` | `Standard` | `1/Month` | Per custom domain (Classic) |
 
 > Classic also has `Standard Included Routing Rules` (first 5 free, then per-hour) and `Standard Overage Routing Rules`. Classic `Standard Requests` uses `1M/Month` unit (vs `10K` for Standard/Premium).
@@ -88,6 +90,7 @@ Monthly = baseFee_retailPrice × profileCount
 Edge Actions (if used): edgeBase_retailPrice + invocations_retailPrice × (invocations / 1M) + execTime_retailPrice × totalSeconds
 Classic WAF: policy_retailPrice × policyCount + rule_retailPrice × customRuleCount
         + ruleset_retailPrice × rulesetCount + wafRequest_retailPrice × (wafRequests / 1M)  # per ruleset type (DRS, bot)
+        + Σ(classicDataOut_tier_retailPrice × GB_in_tier) + classicDataIn_retailPrice × estimatedInGB
 Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 ```
 
@@ -96,5 +99,5 @@ Premium CAPTCHA: captcha_retailPrice × (captchaSessions / 1K)
 - **Zone mapping**: Zone 1 = North America, Zone 2 = Asia Pacific/Japan, Zone 3 = South America, Zone 4 = Australia, Zone 5 = India, Zone 6 = Europe, Zone 7 = Middle East/Africa, Zone 8 = Korea. Zone 1 and Zone 6 have identical prices
 - **Standard vs Premium**: Premium adds Private Link origins, enhanced WAF with bot protection and managed rule sets, and Microsoft Threat Intelligence. Premium WAF is included in base fee; only `Premium Captcha Sessions` billed separately. Data transfer prices are identical between tiers
 - **Data transfer out is tiered**: 7 tiers (0–10 TB, 10–50 TB, 50–150 TB, 150–500 TB, 500 TB–1 PB, 1–5 PB, 5 PB+). Requests also tiered (4 tiers)
-- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, and bot protection billed separately under productName `Azure Front Door Service`. Sub-cent per-request; use `Quantity`. Being retired
+- **Classic WAF / Classic Front Door**: Custom rules, managed rulesets, bot protection, and its own data transfer (3-tier egress, flat ingress) billed separately under productName `Azure Front Door Service`. Classic exists only in Zones 1-5; Zone 6-8 queries return nothing. Retires **2027-03-31**; migrate to Standard/Premium before then
 - **Private Link origins**: Premium tier only; see `networking/private-link.md` for PE and DNS zone pricing
