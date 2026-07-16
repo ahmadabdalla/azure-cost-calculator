@@ -23,7 +23,7 @@ Quantity: 100
 | Parameter     | How to determine                  | Example values         |
 | ------------- | --------------------------------- | ---------------------- |
 | `serviceName` | Always `Network Traversal`        | `Network Traversal`    |
-| `productName` | Single product (encoding issue)   | `TURN * Regional`      |
+| `productName` | Single product (encoding issue)   | `TURN \ufffd Regional`   |
 | `skuName`     | Always `Standard`                 | `Standard`             |
 | `meterName`   | Always `Standard Media Relayed`   | `Standard Media Relayed` |
 
