@@ -51,8 +51,8 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 ACR Tasks (add if used):
   + taskVcpuPrice × max(0, vCPUSeconds - 6000)   # first 6,000 vCPU-sec/month free
 
-Geo-replication (Premium only, per additional replica region):
-  + replicaUnitPrice × 30 + replicaStoragePrice × replicaGB
+Geo-replication (Premium only; replicaGB = storage per replica region):
+  + (replicaUnitPrice × 30 + replicaStoragePrice × replicaGB) × additionalReplicaRegions
 ```
 
 ## Notes
