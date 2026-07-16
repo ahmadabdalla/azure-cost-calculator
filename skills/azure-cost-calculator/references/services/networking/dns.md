@@ -8,7 +8,7 @@ pricingRegion: empty-region
 
 # Azure DNS
 
-> **Trap (mixed SKUs)**: Unfiltered queries return Public, Private, Private Resolver, and DNS Security Policy meters. Always filter with `SkuName: Public` for public DNS zones.
+> **Trap (mixed SKUs)**: Unfiltered queries return Public, Public Record Set, Private, Private Resolver, and DNS Security Policy meters. Always filter with `SkuName: Public` for public DNS zone hosting and queries; `Public Record Set` is a separate skuName (see Notes).
 >
 > **Trap (tiered pricing)**: Zone and query meters each return two rows (one per tier). For zones: apply tier 1 rate to the first 25, tier 2 rate to the remainder. For queries: apply tier 1 rate to the first 1B, tier 2 to the remainder. Do NOT use a single tier's rate for all units.
 
@@ -79,5 +79,6 @@ Monthly = Zones + Queries
 - First 25 zones are at the higher rate; zones 26+ at a lower rate
 - First 1 billion queries at higher rate; queries beyond 1B at lower rate
 - Query volume is typically low. Zone hosting fee dominates most deployments
+- **Record sets**: The first 10,000 record sets per public zone are free (the default per-zone limit). Beyond that (requires a support-granted limit increase), each additional record set bills a small per-record monthly fee via `skuName: Public Record Set`. Rarely affects estimates
 - See `private-dns.md` for Private DNS zone pricing and `dns-private-resolver.md` for Private Resolver pricing
 - See `dns-security-policy.md` for DNS Security Policy pricing

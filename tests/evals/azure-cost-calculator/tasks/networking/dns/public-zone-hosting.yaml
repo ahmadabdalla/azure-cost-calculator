@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/dns/public-zone-hosting
+name: Happy Path - Azure DNS Public Zone Hosting
+description: >
+  Tests monthly cost estimation for hosting public DNS zones on Azure DNS.
+  Validates that the agent states assumptions, uses zone-based (not ARM-region)
+  pricing, and combines per-zone hosting with per-million query pricing for the
+  specified zone count.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:dns
+inputs:
+  prompt: "What is the monthly cost to host 10 public DNS zones on Azure DNS?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure DNS|DNS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: zone-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
