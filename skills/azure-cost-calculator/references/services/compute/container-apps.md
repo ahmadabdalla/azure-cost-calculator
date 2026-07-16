@@ -40,12 +40,12 @@ SkuName: Dynamic Sessions
 
 ## Key Fields
 
-| Parameter     | How to determine                           | Example values                                       |
-| ------------- | ------------------------------------------ | ---------------------------------------------------- |
-| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
-| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
+| Parameter     | How to determine                           | Example values                                        |
+| ------------- | ------------------------------------------ | ----------------------------------------------------- |
+| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
+| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
 | `skuName`     | Plan type; determines billing model        | `Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions` |
-| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage` |
+| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage`  |
 
 ## Meter Names
 
@@ -88,7 +88,7 @@ Dynamic: Monthly = sessions × session_price × 730
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
 - Dynamic Sessions: code interpreter billed per session-hour; custom pools on Dedicated use Dedicated meters only
-- Private endpoints incur `Dedicated Plan Management` fee on any plan type (Consumption+PE: add a separate `SkuName: Dedicated`, `meterName: Dedicated Plan Management` query — it is not returned by the Standard SKU query); Savings Plan data available as `savingsPlan[]` arrays in API (~15–17% off PAYG; 1-Year/3-Year); no Reservation pricing
+- Private endpoints incur `Dedicated Plan Management` fee on any plan type (Consumption+PE: add a separate `SkuName: Dedicated`, `meterName: Dedicated Plan Management` query — it is not returned by the Standard SKU query); no Reservation or Savings Plan pricing (API returns `savingsPlan: null` for all meters)
 
 ## Manual Calculation Example
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
