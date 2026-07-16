@@ -80,6 +80,6 @@ Total monthly      = Gateway + S2S + P2S
 - **128 P2S connections included free** in base price for all SKUs; only connections 129+ are billed. Basic max 128 (all included).
 - **Max S2S tunnels**: Basic 10, VpnGw1–3 30, VpnGw4–5 100 (same limits for AZ variants)
 - **AZ variants** provide zone redundancy at higher cost; VpnGw2AZ/VpnGw3AZ have higher throughput than non-AZ
-- **Basic SKU** is legacy with limited features (no BGP, no IKEv2, no P2S OpenVPN). Use VpnGw1+ for production
+- **Basic SKU** is legacy with limited features (no BGP, no IKEv2, no P2S OpenVPN). Non-AZ VpnGw1-VpnGw5 are slated for migration and should not be used for new gateways; use the AZ variants (VpnGw1AZ-VpnGw5AZ) for production
 - **Data transfer**: Outbound data egress is billed separately under the Bandwidth service, not VPN Gateway
 - **VpnGw4AZ/VpnGw5AZ**: API lacks P2S/S2S connection meters for these SKUs; use non-AZ variant meters (same rates)
