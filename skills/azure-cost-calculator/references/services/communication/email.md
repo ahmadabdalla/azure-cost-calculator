@@ -20,7 +20,7 @@ SkuName: Basic
 MeterName: Basic Sent Email
 Quantity: 50000
 
-### Data transferred (per-MB, Quantity = monthly MB of attachments)
+### Data transferred (per-MB, Quantity = monthly MB of email data)
 
 ServiceName: Email
 ProductName: Email
@@ -42,7 +42,7 @@ Quantity: 1000
 | Meter                    | unitOfMeasure | Notes                    |
 | ------------------------ | ------------- | ------------------------ |
 | `Basic Sent Email`       | `1`           | Per email sent           |
-| `Basic Data Transferred` | `1 MB`        | Email attachment data    |
+| `Basic Data Transferred` | `1 MB`        | Total email size (body + attachments) |
 
 ## Cost Formula
 
