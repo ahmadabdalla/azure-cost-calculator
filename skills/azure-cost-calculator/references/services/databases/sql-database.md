@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure SQL Database
 
-> **Trap (inflated totals)**: Omitting `SkuName` returns all vCore sizes summed. Always filter by `ProductName`, `SkuName`, and `MeterName`; the service has 39 products spanning vCore, DTU, Serverless, Elastic Pool, storage, backup, and add-ons.
+> **Trap (inflated totals)**: Omitting `SkuName` returns all vCore sizes summed. Filter `ProductName` always, plus `SkuName`/`MeterName` for multi-meter products; single-meter products like SQL License need only `ProductName`. The service has 39 products spanning vCore, DTU, Serverless, Elastic Pool, storage, backup, and add-ons.
 
 > **Trap (DTU billing)**: DTU tiers (Basic/Standard/Premium) use `unitOfMeasure: 1/Day`. The script auto-multiplies by 30 for these meters, so `MonthlyCost` is already the monthly cost.
 
