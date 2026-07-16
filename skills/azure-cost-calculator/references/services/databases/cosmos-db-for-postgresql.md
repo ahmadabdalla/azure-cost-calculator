@@ -11,9 +11,9 @@ privateEndpoint: true
 
 # Azure Cosmos DB for PostgreSQL
 
-> **Warning**: This service is on a retirement path. Microsoft recommends migrating to Azure Database for PostgreSQL Flexible Server with Elastic Clusters (Citus extension).
+> **Warning**: This service is on a retirement path. Microsoft recommends migrating to the Elastic Clusters feature of Azure Database for PostgreSQL (Citus extension).
 
-> **Trap (shared serviceName)**: The API `serviceName` is `Azure Database for PostgreSQL`, shared with Flexible Server. Always filter by `productName` containing `Cosmos DB for PostgreSQL` to isolate this service's meters.
+> **Trap (shared serviceName)**: The API `serviceName` is `Azure Database for PostgreSQL`, shared with Flexible Server, Single Server, and HorizonDB. Always filter by `productName` containing `Cosmos DB for PostgreSQL` to isolate this service's meters.
 
 ## Query Pattern
 
@@ -46,35 +46,37 @@ Quantity: 512 # storage size in GiB per node
 | ------------- | --------------------------------- | ----------------------------------------------------------- |
 | `serviceName` | Always the shared API name        | `Azure Database for PostgreSQL`                             |
 | `productName` | Node role or storage type         | See Product Names table below                               |
-| `skuName`     | `vCore` for compute, tier for storage | `vCore`, `1 vCore`, `General Purpose`                   |
+| `skuName`     | `vCore` for compute, fixed SKU for Burstable, tier for storage | `vCore`, `1 vCore`, `2m vCore`, `General Purpose` |
 | `meterName`   | `vCore` for compute, named for storage | `vCore`, `General Purpose Data Stored`                 |
 
 ## Meter Names
 
 | Meter                        | skuName           | productName (suffix)     | unitOfMeasure | Notes                        |
 | ---------------------------- | ----------------- | ------------------------ | ------------- | ---------------------------- |
-| `vCore`                      | `vCore`           | `Compute- Coordinator Node` | `1 Hour`   | Per-vCore rate; multiply by count |
-| `vCore`                      | `vCore`           | `Compute- Worker Node`   | `1 Hour`      | Per-vCore rate; multiply by count |
-| `vCore`                      | `1 vCore` – `8m vCore` | `Compute- Burstable` | `1 Hour`  | Fixed SKU; single-node only  |
+| `vCore`                      | `vCore`           | `Compute- Coordinator Node` | `1 Hour`   | Per-vCore rate; `1 vCore` PAYG alias has no RI |
+| `vCore`                      | `vCore`           | `Compute- Worker Node`   | `1 Hour`      | Per-vCore rate; `1 vCore` PAYG alias has no RI |
+| `vCore`                      | `1 vCore` – `8m vCore` | `Compute- Burstable` | `1 Hour`  | Fixed total hourly rate; do not multiply by vCores |
 | `General Purpose Data Stored`| `General Purpose` | `General Purpose Storage`| `1 GiB/Month` | GP SSD storage per node      |
-| `Backup LRS/GRS Data Stored` | `Backup LRS/GRS`  | `Backup Storage`         | `1 GiB/Month` | Currently free               |
+| `Backup LRS/GRS Data Stored` | `Backup LRS/GRS`  | `Backup Storage`         | `1 GiB/Month` | API currently returns zero price |
 
 ## Cost Formula
 
 ```
 Coordinator Compute = coordinator_retailPrice × coordinatorVCores × 730
 Worker Compute      = worker_retailPrice × workerVCores × workerNodeCount × 730
+Burstable Compute   = burstable_retailPrice × 730
 Storage             = storage_retailPrice × storageGiB × nodeCount
-Total               = Coordinator Compute + Worker Compute + Storage
+Multi-node Total    = Coordinator Compute + Worker Compute + Storage
+Burstable Total     = Burstable Compute + Storage
 ```
 
 ## Notes
 
-- Free tier: single-node cluster at no cost (`skuName: Free`). Only deduct when user confirms free-tier usage
+- Free tier: single-node cluster at no cost (`skuName: Free`). Ignore nonzero Free-row anomalies; only deduct when user confirms free-tier usage
 - Burstable: dev/test single-node only (1–2 vCores, plus memory-optimized 2m–8m vCores), does NOT support RI
 - Multi-node: 1 coordinator (query routing) + N workers (sharding/scale-out, min 2). Scale horizontally by adding workers
 - Worker vCores: 4, 8, 16, 32, 64, 96, 104; Coordinator vCores: 4, 8, 16, 32, 64, 96
-- Backup storage is currently free (up to 100% of provisioned storage)
+- Backup storage API meters still return zero price. Microsoft Learn says excess backup above 100% of provisioned storage is chargeable
 - High Availability doubles compute cost. No separate meter; multiply compute by 2
 - Shares `serviceName` with Azure Database for PostgreSQL Flexible Server (see `database-for-postgresql.md`)
 
@@ -86,7 +88,7 @@ SkuName: vCore
 MeterName: vCore
 PriceType: Reservation
 
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for RI; it multiplies by 730. Calculate: `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year). RI is per-vCore; multiply by total vCore count (double if HA enabled).
+> **Trap (RI unitPrice)**: RI `unitPrice` is the total prepaid term price, not hourly despite `unitOfMeasure: 1 Hour`. The script's `MonthlyCost` divides by term months. RI is per-vCore; multiply by total vCore count (double if HA enabled).
 > For Worker node RI, use the same filters but set `ProductName` to `Azure Cosmos DB for PostgreSQL Compute- Worker Node`.
 
 ## Product Names
