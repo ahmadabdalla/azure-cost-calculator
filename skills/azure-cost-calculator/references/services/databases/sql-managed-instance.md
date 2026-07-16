@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure SQL Managed Instance
 
-> **Trap (Inflated totals)**: Omitting `ProductName`, `SkuName`, or `MeterName` can sum every compute size, storage, backup, and add-on meter. Always filter all three for estimates.
+> **Trap (Inflated totals)**: Omitting `ProductName`, `SkuName`, or `MeterName` can sum every compute size, storage, backup, and add-on meter. Filter `ProductName` always, plus `SkuName`/`MeterName` for multi-meter products (compute, storage, backup, add-ons); single-meter products like SQL License need only `ProductName`.
 
 > **Trap (Zone Redundancy)**: Zone-redundant deployments have separate meters (`Zone Redundancy vCore`) with skuNames like `8 vCore Zone Redundancy`. The ZR meter is an **additive hourly surcharge**, NOT a multiplier. Sum both hourly rates, then × 730. For GP Premium Series and GP Premium Series Memory Optimized, the generic `vCore ZR Zone Redundancy` skuName returns an anomalous near-zero rate; always use numbered ZR SKUs (e.g., `8 vCore Zone Redundancy`) for consumption queries.
 
@@ -70,7 +70,7 @@ Quantity: 100
 
 ## Cost Formula
 ```
-compute_retailPrice = SKU-total hourly (queried with SkuName) | sql_license_retailPrice = per-vCore hourly (queried without SkuName)
+compute_retailPrice = SKU-total hourly (queried with SkuName) | sql_license_retailPrice = per-vCore hourly (queried with SkuName: vCore)
 PAYG Monthly = (compute_retailPrice + sql_license_retailPrice × vCoreCount) × 730 + storage_retailPrice × sizeInGB
 AHUB Monthly = compute_retailPrice × 730 + storage_retailPrice × sizeInGB
 Monthly Backup = backup_retailPrice × billableBackupGB
