@@ -3,7 +3,7 @@ serviceName: Azure Database for MySQL
 category: databases
 aliases: [MySQL, Azure MySQL, MySQL Flexible Server]
 billingConsiderations: [Reserved Instances]
-primaryCost: "vCore hours × 730 + storage/IOPS/backup usage"
+primaryCost: "vCore hourly rate × vCore count × 730 + storage/IOPS/backup usage"
 privateEndpoint: true
 ---
 
@@ -73,7 +73,8 @@ Compute (Burstable/Edsv5) = compute_retailPrice × 730
 Storage = storage_retailPrice × sizeGBOrGiB
 Provisioned IOPS/throughput = meter_retailPrice × quantity
 Autoscale I/O = io_retailPrice × (operations / 1,000,000)
-Backup = backup_retailPrice × max(0, backupGB - provisionedStorageGB)
+Billable Backup GB = max(0, totalBackupGB - provisionedStorageGB)  # free grant = provisioned storage, applied once
+Backup = backup_retailPrice × billableBackupGB
 Total = Compute + Storage + optional IOPS/throughput + optional Backup
 ```
 
