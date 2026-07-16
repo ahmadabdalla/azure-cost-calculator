@@ -1,0 +1,45 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/network-watcher/nsg-flow-logs
+name: Happy Path - Network Watcher NSG Flow Log Collection
+description: >
+  Tests monthly cost estimation for Network Watcher NSG flow log collection.
+  Validates that the agent states assumptions, applies the 5 GB per-month free
+  grant before charging per-GB, and prices only the billable log volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:network-watcher
+inputs:
+  prompt: "What is the monthly cost of Network Watcher collecting 50 GB of NSG flow logs per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Network Watcher|NSG Flow Logs|Connection Monitor"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: log-volume-acknowledged
+    config:
+      contains:
+        - "50"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -81,5 +81,5 @@ Monthly          = NSGFlowLogs + VNetFlowLogs + TrafficAnalytics + ConnMonitor +
 - **Storage billed separately**: Flow log data is stored in Azure Storage accounts. Storage charges are not included in Network Watcher meters
 - **Log Analytics billed separately**: Traffic Analytics and Network Analytics results are stored in Log Analytics. Data ingestion charges apply separately
 - **Packet Capture**: Counts as a diagnostic check under `Standard Diagnostic Tool API`; captured data stored in Storage at additional cost
-- **Two flow log types**: NSG flow logs (older, retiring Sep 2027) and VNet flow logs (newer) have identical pricing. Migrate to VNet flow logs for new deployments
+- **Two flow log types**: NSG flow logs (older) can no longer be created as of 2025-06-30 and fully retire 2027-09-30; VNet flow logs (newer) have identical pricing. Migrate to VNet flow logs
 - **Traffic Analytics intervals**: 10-minute processing costs more per-GB than 60-minute. Choose interval based on latency requirements
