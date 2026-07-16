@@ -37,7 +37,7 @@ ServiceName: Azure Database for PostgreSQL
 ProductName: Azure HorizonDB Backup Storage
 SkuName: HorizonDB Backup Storage
 MeterName: HorizonDB Backup Storage Data Stored
-Quantity: 50 # backup GB beyond included grant
+Quantity: 50 # billable backup GB (total − cluster size)
 
 ## Key Fields
 
@@ -62,7 +62,7 @@ Quantity: 50 # backup GB beyond included grant
 ```
 Monthly Compute = compute_retailPrice × 730 × vCoreCount
 Monthly Storage = storage_retailPrice × sizeGB
-Billable Backup GB = max(0, backupGB - clusterSizeGB)
+Billable Backup GB = max(0, totalBackupGB - clusterSizeGB)  # free grant = cluster size, applied once
 Monthly Backup  = backup_retailPrice × billableBackupGB
 Total = Compute + Storage + Backup
 ```
