@@ -3,7 +3,7 @@ serviceName: Cosmos DB Garnet Cache
 category: databases
 aliases: [Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache]
 apiServiceName: Azure Cosmos DB
-primaryCost: "vCPU-hours per tier × 730 + Premium SSD disk per GB × 730"
+primaryCost: "Total vCPU-hours × 730 + Premium SSD GB-hours when persistence is enabled"
 ---
 
 # Cosmos DB Garnet Cache
@@ -18,15 +18,15 @@ ServiceName: Azure Cosmos DB
 ProductName: Azure Cosmos DB Garnet Cache
 SkuName: General Purpose v6
 MeterName: General Purpose v6 vCore
-Quantity: 4 # number of vCPUs
+Quantity: 4 # total vCPUs across all nodes
 
-### Disk storage (e.g., 128 GB)
+### Disk storage with persistence (e.g., 128 GB)
 
 ServiceName: Azure Cosmos DB
 ProductName: Azure Cosmos DB Garnet Cache
 SkuName: Premium SSD Managed Disk
 MeterName: Premium SSD Managed Disk
-Quantity: 128 # disk size in GB
+Quantity: 128 # total disk GB across all nodes
 
 ## Key Fields
 
@@ -49,13 +49,13 @@ Quantity: 128 # disk size in GB
 | `Memory Optimized vCore` | `Memory Optimized` | `1 Hour` | High-memory workloads |
 | `Memory Optimized v6 vCore` | `Memory Optimized v6` | `1 Hour` | v6 generation |
 | `Storage Optimized vCore` | `Storage Optimized` | `1 Hour` | Most expensive; no v6 variant |
-| `Premium SSD Managed Disk` | `Premium SSD Managed Disk` | `1/Hour` | Per-GB disk; sub-cent hourly rate |
+| `Premium SSD Managed Disk` | `Premium SSD Managed Disk` | `1/Hour` | Per-GB disk; persistence only |
 
 ## Cost Formula
 
 ```
-Compute  = compute_retailPrice × vCPUCount × 730
-Storage  = disk_retailPrice × diskSizeGB × 730
+Compute  = compute_retailPrice × totalVCPUCount × 730
+Storage  = disk_retailPrice × totalDiskSizeGB × 730 # if persistence is enabled
 Monthly  = Compute + Storage
 ```
 
@@ -63,8 +63,8 @@ Monthly  = Compute + Storage
 
 - Redis-compatible caching layer in Azure Cosmos DB; uses the same `serviceName` as parent Cosmos DB
 - Five vCore tiers: General Purpose - Burstable, General Purpose, Compute Optimized, Memory Optimized, Storage Optimized. Tier is a never-assume parameter
-- Three tiers have v5 (no suffix) and v6 generations; Storage Optimized has v5 only
-- The disk meter (`Premium SSD Managed Disk`) has a sub-cent hourly rate; multiply by GB × 730 for meaningful monthly cost
-- Scale compute by adjusting vCPU count; each tier targets different workload profiles
+- General Purpose, Compute Optimized, and Memory Optimized have v6 variants; Burstable and Storage Optimized do not
+- The disk meter (`Premium SSD Managed Disk`) applies when persistence is enabled; multiply by total GB × 730
+- Scale by total nodes: shards × replication factor. Use total vCPUs and disk GB across all nodes
 - No Reserved Instances, Spot, or DevTest pricing available for this product
 - Parent service reference: see `databases/cosmos-db.md` for base Cosmos DB provisioned throughput and storage pricing
