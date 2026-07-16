@@ -42,16 +42,16 @@ SkuName: ASIP
 
 ## Key Fields
 
-| Parameter     | How to determine       | Example values                               |
-| ------------- | ---------------------- | -------------------------------------------- |
-| `productName` | Plan tier + OS variant | See Product Names table                      |
+| Parameter     | How to determine        | Example values                                                      |
+| ------------- | ----------------------- | ------------------------------------------------------------------- |
+| `productName` | Plan tier + OS variant  | See Product Names table                                             |
 | `skuName`     | Plan tier + size or fee | `B1`, `S1`, `P1 v3`, `P1v4`, `I1`, `I1 v2`, `I1v4`, `Stamp`, `ASIP` |
 
 ## Meter Names
 
-| Meter | unitOfMeasure | Notes |
-| --- | --- | --- |
-| _Varies by tier_ | `1 Hour` | Most meters append an `App` suffix (`P1 v3 App`, `I1 v2 App`). Bare-SKU exceptions: Basic Linux (`B1`), Pv4 (`P1v4`), Iv4 (`I1v4`), ASIP, IDH v2 |
+| Meter            | unitOfMeasure | Notes                                                                                                                                            |
+| ---------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| _Varies by tier_ | `1 Hour`      | Most meters append an `App` suffix (`P1 v3 App`, `I1 v2 App`). Bare-SKU exceptions: Basic Linux (`B1`), Pv4 (`P1v4`), Iv4 (`I1v4`), ASIP, IDH v2 |
 
 ## Cost Formula
 

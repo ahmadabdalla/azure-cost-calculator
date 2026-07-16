@@ -53,26 +53,26 @@ InstanceCount: 3
 
 ## Key Fields
 
-| Parameter     | How to determine                           | Example values                                       |
-| ------------- | ------------------------------------------ | ---------------------------------------------------- |
+| Parameter     | How to determine                          | Example values                                                     |
+| ------------- | ----------------------------------------- | ------------------------------------------------------------------ |
 | `productName` | Differs by SKU, must include to avoid mix | `Azure Kubernetes Service`, `Azure Kubernetes Service - Automatic` |
-| `skuName`     | Cluster SKU type                           | `Standard`, `Automatic`                              |
-| `meterName`   | Tier-prefixed; see Meter Names table       | `Standard Uptime SLA`, `Automatic General Purpose`   |
+| `skuName`     | Cluster SKU type                          | `Standard`, `Automatic`                                            |
+| `meterName`   | Tier-prefixed; see Meter Names table      | `Standard Uptime SLA`, `Automatic General Purpose`                 |
 
 ## Meter Names
 
-| SKU       | Meter                                | unitOfMeasure | Notes                                                    |
-| --------- | ------------------------------------ | ------------- | -------------------------------------------------------- |
-| Standard  | `Standard Uptime SLA`                | `1 Hour`      | Per cluster-hour; management fee with uptime SLA         |
-| Standard  | `Standard Long Term Support`         | `1 Hour`      | Per cluster-hour; Premium tier (replaces Standard fee)   |
-| Automatic | `Automatic Hosted Control Plane`     | `1 Hour`      | Per cluster-hour; flat-rate cluster management           |
-| Automatic | `Automatic General Purpose`          | `1 Hour`      | Per vCPU-hour; standard workloads                        |
-| Automatic | `Automatic Compute Optimized`        | `1 Hour`      | Per vCPU-hour; CPU-intensive workloads                   |
-| Automatic | `Automatic Memory Optimized`         | `1 Hour`      | Per vCPU-hour; memory-intensive workloads                |
-| Automatic | `Automatic Storage Optimized`        | `1 Hour`      | Per vCPU-hour; storage-intensive workloads               |
-| Automatic | `Automatic GPU Accelerated`          | `1 Hour`      | Per vCPU-hour; GPU workloads (highest rate)              |
-| Automatic | `Automatic Confidential Compute`     | `1 Hour`      | Per vCPU-hour; confidential computing                    |
-| Automatic | `Automatic High Performance Compute` | `1 Hour`      | Per vCPU-hour; HPC workloads                             |
+| SKU       | Meter                                | unitOfMeasure | Notes                                                  |
+| --------- | ------------------------------------ | ------------- | ------------------------------------------------------ |
+| Standard  | `Standard Uptime SLA`                | `1 Hour`      | Per cluster-hour; management fee with uptime SLA       |
+| Standard  | `Standard Long Term Support`         | `1 Hour`      | Per cluster-hour; Premium tier (replaces Standard fee) |
+| Automatic | `Automatic Hosted Control Plane`     | `1 Hour`      | Per cluster-hour; flat-rate cluster management         |
+| Automatic | `Automatic General Purpose`          | `1 Hour`      | Per vCPU-hour; standard workloads                      |
+| Automatic | `Automatic Compute Optimized`        | `1 Hour`      | Per vCPU-hour; CPU-intensive workloads                 |
+| Automatic | `Automatic Memory Optimized`         | `1 Hour`      | Per vCPU-hour; memory-intensive workloads              |
+| Automatic | `Automatic Storage Optimized`        | `1 Hour`      | Per vCPU-hour; storage-intensive workloads             |
+| Automatic | `Automatic GPU Accelerated`          | `1 Hour`      | Per vCPU-hour; GPU workloads (highest rate)            |
+| Automatic | `Automatic Confidential Compute`     | `1 Hour`      | Per vCPU-hour; confidential computing                  |
+| Automatic | `Automatic High Performance Compute` | `1 Hour`      | Per vCPU-hour; HPC workloads                           |
 
 ## Cost Formula
 

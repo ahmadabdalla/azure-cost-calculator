@@ -40,12 +40,12 @@ SkuName: Dynamic Sessions
 
 ## Key Fields
 
-| Parameter     | How to determine                           | Example values                                       |
-| ------------- | ------------------------------------------ | ---------------------------------------------------- |
-| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
-| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
+| Parameter     | How to determine                           | Example values                                        |
+| ------------- | ------------------------------------------ | ----------------------------------------------------- |
+| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
+| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
 | `skuName`     | Plan type; determines billing model        | `Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions` |
-| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage` |
+| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage`  |
 
 ## Meter Names
 

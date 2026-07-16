@@ -35,8 +35,8 @@ InstanceCount: 4
 
 ## Meter Names
 
-| Meter                      | unitOfMeasure | Notes                                                                                                                                         |
-| -------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Meter                      | unitOfMeasure | Notes                                                                                                                     |
+| -------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | _(VM size, e.g. `D4s v5`)_ | `1 Hour`      | Meter name mirrors ARM SKU without `Standard_` prefix; Spot adds ` Spot` suffix, Low Priority adds ` Low Priority` suffix |
 
 > Additional costs: OS disk (Managed Disks), data egress (Bandwidth), and any mounted storage (Azure Files, Blob). Query each service separately.
