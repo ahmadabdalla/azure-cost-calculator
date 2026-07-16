@@ -7,7 +7,7 @@ primaryCost: "Per-GB media relayed through TURN servers"
 
 # Azure Communication Services: Network Traversal
 
-> **Trap (productName encoding)**: The API returns the productName with a broken Unicode character (`TURN \ufffd Regional`). Omit `ProductName` from queries; `ServiceName` alone is sufficient for this single-meter service.
+> **Trap (productName encoding)**: The API returns the productName with a literal U+FFFD replacement character (`TURN � Regional`). Omit `ProductName` from queries; `ServiceName` alone is sufficient for this single-meter service.
 
 ## Query Pattern
 
@@ -20,12 +20,12 @@ Quantity: 100
 
 ## Key Fields
 
-| Parameter     | How to determine                  | Example values         |
-| ------------- | --------------------------------- | ---------------------- |
-| `serviceName` | Always `Network Traversal`        | `Network Traversal`    |
-| `productName` | Single product (encoding issue)   | `TURN * Regional`      |
-| `skuName`     | Always `Standard`                 | `Standard`             |
-| `meterName`   | Always `Standard Media Relayed`   | `Standard Media Relayed` |
+| Parameter     | How to determine                | Example values           |
+| ------------- | ------------------------------- | ------------------------ |
+| `serviceName` | Always `Network Traversal`      | `Network Traversal`      |
+| `productName` | Single product (encoding issue) | `TURN � Regional`        |
+| `skuName`     | Always `Standard`               | `Standard`               |
+| `meterName`   | Always `Standard Media Relayed` | `Standard Media Relayed` |
 
 ## Meter Names
 

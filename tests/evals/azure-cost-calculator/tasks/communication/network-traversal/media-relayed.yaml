@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:communication/network-traversal/media-relayed
+name: Happy Path - ACS Network Traversal Media Relayed
+description: >
+  Tests cost estimation for Azure Communication Services Network Traversal
+  (TURN relay), a single-meter per-GB service with regional price tiers.
+  Validates the per-GB relay volume produces a monthly total.
+tags:
+  - happy-path
+  - single-service
+  - communication
+  - service:network-traversal
+inputs:
+  prompt: "What is the monthly cost for Azure Communication Services Network Traversal (TURN relay) with 500 GB of media relayed in East US?"
+expected:
+  output_contains:
+    - "Network Traversal"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Network Traversal|ACS TURN|TURN Relay|TURN"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: data-volume-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

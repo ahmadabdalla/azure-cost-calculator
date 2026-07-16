@@ -37,22 +37,22 @@ MeterName: ROW Consumption Unit - Inbound
 
 ## Key Fields
 
-| Parameter     | How to determine             | Example values                                        |
-| ------------- | ---------------------------- | ----------------------------------------------------- |
-| `serviceName` | Always `SMS`                 | `SMS`                                                 |
-| `productName` | Message type and direction   | `Toll Free SMS - Outbound`, `Short Codes - Leasing - Standard Number - I` |
-| `skuName`     | Country or tier              | `ROW`, `US`, `Standard`, `CA`, `UK`                  |
-| `meterName`   | Billing dimension            | `ROW Consumption Unit - Outbound`, `US Lease`        |
+| Parameter     | How to determine           | Example values                                                            |
+| ------------- | -------------------------- | ------------------------------------------------------------------------- |
+| `serviceName` | Always `SMS`               | `SMS`                                                                     |
+| `productName` | Message type and direction | `Toll Free SMS - Outbound`, `Short Codes - Leasing - Standard Number - I` |
+| `skuName`     | Country or tier            | `ROW`, `US`, `Standard`, `CA`, `UK`                                       |
+| `meterName`   | Billing dimension          | `ROW Consumption Unit - Outbound`, `US Lease`                             |
 
 ## Meter Names
 
-| Meter                              | productName                              | unitOfMeasure | Notes                   |
-| ---------------------------------- | ---------------------------------------- | ------------- | ----------------------- |
-| `ROW Consumption Unit - Outbound`  | `Toll Free SMS - Outbound`               | `1`           | Outbound consumption    |
-| `ROW Consumption Unit - Inbound`   | `Toll Free SMS - Inbound`                | `1`           | Inbound consumption     |
-| `Standard Consumption Unit`        | `Short Codes - Outbound - I`             | `1`           | Short code messaging    |
-| `US Lease`                         | `Short Codes - Leasing - Standard Number - I` | `1/Month` | Short code monthly fee  |
-| `US Provisioning Fee`              | `Short Codes - Provisioning - I`         | `1`           | One-time setup fee      |
+| Meter                             | productName                                   | unitOfMeasure | Notes                  |
+| --------------------------------- | --------------------------------------------- | ------------- | ---------------------- |
+| `ROW Consumption Unit - Outbound` | `Toll Free SMS - Outbound`                    | `1`           | Outbound consumption   |
+| `ROW Consumption Unit - Inbound`  | `Toll Free SMS - Inbound`                     | `1`           | Inbound consumption    |
+| `Standard Consumption Unit`       | `Short Codes - Outbound - I`                  | `1`           | Short code messaging   |
+| `US Lease`                        | `Short Codes - Leasing - Standard Number - I` | `1/Month`     | Short code monthly fee |
+| `US Provisioning Fee`             | `Short Codes - Provisioning - I`              | `1`           | One-time setup fee     |
 
 ## Cost Formula
 

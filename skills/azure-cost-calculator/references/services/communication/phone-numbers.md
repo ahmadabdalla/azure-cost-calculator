@@ -35,21 +35,21 @@ MeterName: UK Leased Number
 
 ## Key Fields
 
-| Parameter     | How to determine                    | Example values                               |
-| ------------- | ----------------------------------- | -------------------------------------------- |
-| `serviceName` | Always `Phone Numbers`              | `Phone Numbers`                              |
-| `productName` | Number type                         | `Geographic Numbers - I`, `Toll Free Numbers - I`, `Mobile` |
-| `skuName`     | Country code (2-letter)             | `US`, `UK`, `CA`, `DE`, `AU`, `FR`          |
-| `meterName`   | Country + Leased Number             | `US Leased Number`, `UK Leased Number`       |
+| Parameter     | How to determine        | Example values                                              |
+| ------------- | ----------------------- | ----------------------------------------------------------- |
+| `serviceName` | Always `Phone Numbers`  | `Phone Numbers`                                             |
+| `productName` | Number type             | `Geographic Numbers - I`, `Toll Free Numbers - I`, `Mobile` |
+| `skuName`     | Country code (2-letter) | `US`, `UK`, `CA`, `DE`, `AU`, `FR`                          |
+| `meterName`   | Country + Leased Number | `US Leased Number`, `UK Leased Number`                      |
 
 ## Meter Names
 
-| Meter               | productName               | unitOfMeasure | Notes                              |
-| ------------------- | ------------------------- | ------------- | ---------------------------------- |
-| `US Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | US geographic number lease         |
-| `US Leased Number`  | `Toll Free Numbers - I`   | `1/Month`     | US toll-free number lease          |
-| `UK Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | UK geographic number lease         |
-| `CA Leased Number`  | `Geographic Numbers - I`  | `1/Month`     | Canada geographic number lease     |
+| Meter              | productName              | unitOfMeasure | Notes                          |
+| ------------------ | ------------------------ | ------------- | ------------------------------ |
+| `US Leased Number` | `Geographic Numbers - I` | `1/Month`     | US geographic number lease     |
+| `US Leased Number` | `Toll Free Numbers - I`  | `1/Month`     | US toll-free number lease      |
+| `UK Leased Number` | `Geographic Numbers - I` | `1/Month`     | UK geographic number lease     |
+| `CA Leased Number` | `Geographic Numbers - I` | `1/Month`     | Canada geographic number lease |
 
 > Additional country-specific meters follow the pattern `{CC} Leased Number` where CC is the country code used by the API (e.g., `UK` not `GB`).
 
@@ -68,4 +68,4 @@ Monthly = retailPrice × numberOfPhoneNumbers
 - Toll-free numbers are generally more expensive than geographic numbers
 - **Mobile numbers** (`ProductName: Mobile`): Available in 10 countries (AU, BE, DK, FI, IE, LV, NL, PL, SE, UK); Global region only
 - **Number Lookup** (`ProductName: Number Lookup`): Line Type query at sub-cent rates; Global region only
-- **10DLC registration** (US only): Brand Registration, Brand Vetting (one-time), and Campaign Registration (monthly) fees. Global region only; required for US geographic numbers used for SMS
+- **Registration fees** (US A2P/10DLC, `Region: Global`): API productNames are `Local Numbers - Brand Registration` (one-time), `Local Numbers - Brand Vetting` (one-time), and `Local Numbers - Campaign Registration` (monthly); "10DLC" is not an API value. Required for US geographic numbers used for SMS

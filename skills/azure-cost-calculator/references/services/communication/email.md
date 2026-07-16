@@ -20,7 +20,7 @@ SkuName: Basic
 MeterName: Basic Sent Email
 Quantity: 50000
 
-### Data transferred (per-MB, Quantity = monthly MB of attachments)
+### Data transferred (per-MB, Quantity = monthly MB of email data)
 
 ServiceName: Email
 ProductName: Email
@@ -30,19 +30,19 @@ Quantity: 1000
 
 ## Key Fields
 
-| Parameter     | How to determine        | Example values            |
-| ------------- | ----------------------- | ------------------------- |
-| `serviceName` | Always `Email`          | `Email`                   |
-| `productName` | Always `Email`          | `Email`                   |
-| `skuName`     | Always `Basic`          | `Basic`                   |
-| `meterName`   | Billing dimension       | `Basic Sent Email`, `Basic Data Transferred` |
+| Parameter     | How to determine  | Example values                               |
+| ------------- | ----------------- | -------------------------------------------- |
+| `serviceName` | Always `Email`    | `Email`                                      |
+| `productName` | Always `Email`    | `Email`                                      |
+| `skuName`     | Always `Basic`    | `Basic`                                      |
+| `meterName`   | Billing dimension | `Basic Sent Email`, `Basic Data Transferred` |
 
 ## Meter Names
 
-| Meter                    | unitOfMeasure | Notes                    |
-| ------------------------ | ------------- | ------------------------ |
-| `Basic Sent Email`       | `1`           | Per email sent           |
-| `Basic Data Transferred` | `1 MB`        | Email attachment data    |
+| Meter                    | unitOfMeasure | Notes                                 |
+| ------------------------ | ------------- | ------------------------------------- |
+| `Basic Sent Email`       | `1`           | Per email sent                        |
+| `Basic Data Transferred` | `1 MB`        | Total email size (body + attachments) |
 
 ## Cost Formula
 

@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:communication/sms/short-code-leasing
+name: Happy Path - ACS SMS Short Code Leasing
+description: >
+  Tests cost estimation for Azure Communication Services SMS short code
+  leasing, a per-month lease meter with real (non-placeholder) rates.
+  Validates the short code count drives a monthly lease total.
+tags:
+  - happy-path
+  - single-service
+  - communication
+  - service:sms
+inputs:
+  prompt: "What is the monthly cost to lease 4 US standard short codes in Azure Communication Services SMS?"
+expected:
+  output_contains:
+    - "SMS"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Communication Services|ACS SMS|Text Messaging|SMS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: short-code-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
