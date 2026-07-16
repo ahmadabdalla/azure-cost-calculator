@@ -20,12 +20,12 @@ Quantity: 100
 
 ## Key Fields
 
-| Parameter     | How to determine                  | Example values         |
-| ------------- | --------------------------------- | ---------------------- |
-| `serviceName` | Always `Network Traversal`        | `Network Traversal`    |
-| `productName` | Single product (encoding issue)   | `TURN � Regional`      |
-| `skuName`     | Always `Standard`                 | `Standard`             |
-| `meterName`   | Always `Standard Media Relayed`   | `Standard Media Relayed` |
+| Parameter     | How to determine                | Example values           |
+| ------------- | ------------------------------- | ------------------------ |
+| `serviceName` | Always `Network Traversal`      | `Network Traversal`      |
+| `productName` | Single product (encoding issue) | `TURN � Regional`        |
+| `skuName`     | Always `Standard`               | `Standard`               |
+| `meterName`   | Always `Standard Media Relayed` | `Standard Media Relayed` |
 
 ## Meter Names
 

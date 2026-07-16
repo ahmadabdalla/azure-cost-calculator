@@ -30,18 +30,18 @@ Quantity: 1000
 
 ## Key Fields
 
-| Parameter     | How to determine        | Example values            |
-| ------------- | ----------------------- | ------------------------- |
-| `serviceName` | Always `Email`          | `Email`                   |
-| `productName` | Always `Email`          | `Email`                   |
-| `skuName`     | Always `Basic`          | `Basic`                   |
-| `meterName`   | Billing dimension       | `Basic Sent Email`, `Basic Data Transferred` |
+| Parameter     | How to determine  | Example values                               |
+| ------------- | ----------------- | -------------------------------------------- |
+| `serviceName` | Always `Email`    | `Email`                                      |
+| `productName` | Always `Email`    | `Email`                                      |
+| `skuName`     | Always `Basic`    | `Basic`                                      |
+| `meterName`   | Billing dimension | `Basic Sent Email`, `Basic Data Transferred` |
 
 ## Meter Names
 
-| Meter                    | unitOfMeasure | Notes                    |
-| ------------------------ | ------------- | ------------------------ |
-| `Basic Sent Email`       | `1`           | Per email sent           |
+| Meter                    | unitOfMeasure | Notes                                 |
+| ------------------------ | ------------- | ------------------------------------- |
+| `Basic Sent Email`       | `1`           | Per email sent                        |
 | `Basic Data Transferred` | `1 MB`        | Total email size (body + attachments) |
 
 ## Cost Formula

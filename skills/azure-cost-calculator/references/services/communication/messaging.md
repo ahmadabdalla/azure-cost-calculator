@@ -32,19 +32,19 @@ Quantity: 10000
 
 ## Key Fields
 
-| Parameter     | How to determine        | Example values                                    |
-| ------------- | ----------------------- | ------------------------------------------------- |
-| `serviceName` | Always `Messaging`      | `Messaging`                                       |
-| `productName` | Always `Chat`           | `Chat`                                            |
-| `skuName`     | Always `Basic`          | `Basic`                                           |
-| `meterName`   | Message type            | `Basic Sent Message`, `Basic Sent InterOp Azure Message` |
+| Parameter     | How to determine   | Example values                                           |
+| ------------- | ------------------ | -------------------------------------------------------- |
+| `serviceName` | Always `Messaging` | `Messaging`                                              |
+| `productName` | Always `Chat`      | `Chat`                                                   |
+| `skuName`     | Always `Basic`     | `Basic`                                                  |
+| `meterName`   | Message type       | `Basic Sent Message`, `Basic Sent InterOp Azure Message` |
 
 ## Meter Names
 
-| Meter                              | unitOfMeasure | Notes               |
-| ---------------------------------- | ------------- | ------------------- |
-| `Basic Sent Message`               | `1`           | Per chat message    |
-| `Basic Sent InterOp Azure Message` | `1`           | Teams interop chat  |
+| Meter                              | unitOfMeasure | Notes              |
+| ---------------------------------- | ------------- | ------------------ |
+| `Basic Sent Message`               | `1`           | Per chat message   |
+| `Basic Sent InterOp Azure Message` | `1`           | Teams interop chat |
 
 ## Cost Formula
 
