@@ -47,6 +47,12 @@ Quantity: 50 # excess GB beyond included tier quota
 
 ```
 Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
+
+ACR Tasks (add if used):
+  + taskVcpuPrice × max(0, vCPUSeconds - 6000)   # first 6,000 vCPU-sec/month free
+
+Geo-replication (Premium only, per additional replica region):
+  + replicaUnitPrice × 30 + replicaStoragePrice × replicaGB
 ```
 
 ## Notes
@@ -54,7 +60,7 @@ Monthly = registryUnitPrice × 30 + storagePrice × max(0, totalGB - includedGB)
 - Premium tier is required for geo-replication, content trust, and private endpoints
 - ACR Tasks compute: first 6,000 vCPU-seconds/month free, then `retailPrice` per vCPU-second (tiered meter; ignore script's `totalMonthlyCost`)
 - Geo-replication (Premium only): each replica region adds a `Premium Registry Replication Unit` daily charge + `Premium GB Registry Replication Data Stored` per GB
-- Private endpoints require Premium tier
+- Private endpoints require Premium tier; see `networking/private-link.md` for Private Endpoint and DNS zone pricing
 
 ## Included Storage by Tier
 
