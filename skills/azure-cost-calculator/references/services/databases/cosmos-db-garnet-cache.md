@@ -3,7 +3,7 @@ serviceName: Cosmos DB Garnet Cache
 category: databases
 aliases: [Garnet Cache, Redis-compatible Cache, Cosmos DB Cache, vCore Cache]
 apiServiceName: Azure Cosmos DB
-primaryCost: "Total vCPU-hours × 730 + Premium SSD GB-hours when persistence is enabled"
+primaryCost: "vCPU hourly rate × total vCPU count × 730 + Premium SSD GB-hours when persistence is enabled"
 ---
 
 # Cosmos DB Garnet Cache
