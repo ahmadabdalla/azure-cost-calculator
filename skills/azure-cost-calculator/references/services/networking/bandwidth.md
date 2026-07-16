@@ -10,9 +10,9 @@ hasFreeGrant: true
 
 > **Trap (tiered pricing)**: Egress meters use **volume-based tiers**. The API returns multiple rows per meter with different `tierMinimumUnits`. Each row's `retailPrice` applies only to GB within that tier. Do NOT sum retailPrices; calculate each tier's cost separately. First 100 GB/month is free.
 
-> **Trap (two products)**: `serviceName: Bandwidth` contains two products: `Rtn Preference: MGN` (Microsoft Global Network, the default) and `Bandwidth - Routing Preference: Internet` (cheaper, uses ISP network). Always filter by `ProductName` to isolate the routing preference. Most deployments use MGN (default).
+> **Trap (multiple products)**: `serviceName: Bandwidth` spans several products. The two primary routing preferences are `Rtn Preference: MGN` (Microsoft Global Network, the default) and `Bandwidth - Routing Preference: Internet` (cheaper, uses ISP network); specialized products also exist (`Bandwidth Alliance`, `Bandwidth Inter-Region`, `Bandwidth Peering Service`). Always filter by `ProductName`. Most deployments use MGN (default).
 
-> **Trap (ingress free)**: Inbound data transfer (`Standard Data Transfer In`) is free (zero price). Only outbound (egress) and inter-region/inter-AZ transfers incur charges.
+> **Trap (ingress free)**: Inbound data transfer (`Standard Data Transfer In`) is free (zero price), except China-origin inbound (`Standard Data Transfer In - from China`), which is charged per-GB. Otherwise only outbound (egress) and inter-region/inter-AZ transfers incur charges.
 
 ## Query Pattern
 
@@ -60,7 +60,8 @@ Quantity: 500
 | Meter | productName | unitOfMeasure | Notes |
 | ----- | ----------- | ------------- | ----- |
 | `Standard Data Transfer Out` | `Rtn Preference: MGN` | `1 GB` | Internet egress; tiered by volume |
-| `Standard Data Transfer In` | `Rtn Preference: MGN` | `1 GB` | Always zero, ingress is free |
+| `Standard Data Transfer In` | `Rtn Preference: MGN` | `1 GB` | Ingress free (except China-origin inbound) |
+| `Standard Data Transfer In - from China` | `Rtn Preference: MGN` | `1 GB` | China-origin inbound; charged per-GB |
 | `Standard Inter-Region Data Transfer` | `Rtn Preference: MGN` | `1 GB` | Between Azure regions; flat per-GB |
 | `Standard Inter-Availability Zone Data Transfer In` | `Rtn Preference: MGN` | `1 GB` | Within region, cross-AZ inbound |
 | `Standard Inter-Availability Zone Data Transfer Out` | `Rtn Preference: MGN` | `1 GB` | Within region, cross-AZ outbound |
