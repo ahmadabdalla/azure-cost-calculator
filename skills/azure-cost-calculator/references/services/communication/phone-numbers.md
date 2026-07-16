@@ -68,4 +68,4 @@ Monthly = retailPrice × numberOfPhoneNumbers
 - Toll-free numbers are generally more expensive than geographic numbers
 - **Mobile numbers** (`ProductName: Mobile`): Available in 10 countries (AU, BE, DK, FI, IE, LV, NL, PL, SE, UK); Global region only
 - **Number Lookup** (`ProductName: Number Lookup`): Line Type query at sub-cent rates; Global region only
-- **10DLC registration** (US only): Brand Registration, Brand Vetting (one-time), and Campaign Registration (monthly) fees. Global region only; required for US geographic numbers used for SMS
+- **Registration fees** (US A2P/10DLC, `Region: Global`): API productNames are `Local Numbers - Brand Registration`, `Local Numbers - Brand Vetting` (one-time), and `Local Numbers - Campaign Registration` (monthly); "10DLC" is not an API value. Required for US geographic numbers used for SMS
