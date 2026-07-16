@@ -1,0 +1,52 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:databases/database-migration-service/premium-online-migration
+name: Happy Path - Database Migration Service Premium Online Migration
+description: >
+  Tests cost estimation for Azure Database Migration Service Premium tier used
+  for an online migration. Validates that the agent filters by productName to
+  select the Premium Compute meter and returns a monthly compute cost past the
+  introductory free period.
+tags:
+  - happy-path
+  - single-service
+  - databases
+  - service:database-migration-service
+inputs:
+  prompt: "What is the monthly cost for Azure Database Migration Service Premium tier with 4 vCores for an online migration in East US, running continuously for a full month after the introductory free period has been used?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Database Migration Service|DMS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: vcore-count-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: text
+    name: premium-tier-acknowledged
+    config:
+      contains:
+        - "Premium"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
