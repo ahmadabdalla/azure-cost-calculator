@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:communication/messaging/chat-volume
+name: Happy Path - ACS Chat Messaging Volume
+description: >
+  Tests cost estimation for Azure Communication Services Chat, a sub-cent
+  multi-meter service. Requires separate standard-chat and Teams-interop
+  per-message calculations. Validates both components are present and summed.
+tags:
+  - happy-path
+  - single-service
+  - communication
+  - service:messaging
+inputs:
+  prompt: "What is the monthly cost for Azure Communication Services Chat with 1,000,000 chat messages and 100,000 Teams interop messages in East US?"
+expected:
+  output_contains:
+    - "Chat"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Communication Services|ACS Chat|Messaging|Chat"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: message-count-acknowledged
+    config:
+      contains:
+        - "1,000,000"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -56,7 +56,7 @@ Monthly = chat_retailPrice × messages + interop_retailPrice × interopMessages
 
 - **Part of ACS family**: Related services use separate API serviceNames: `Voice`, `SMS`, `Email`, `Phone Numbers`, `Network Traversal`, `Routing`
 - Chat has 2 meters: standard chat and Teams interop chat; use `productName: Chat`, `skuName: Basic`
-- **Advanced Messaging (Global-only)**: WhatsApp user messages and connect fees also exist under this serviceName; use `ProductName: Advanced Messaging` or `ProductName: Channel Fee` with `Region: Global`
+- **Advanced Messaging (Global-only)**: WhatsApp billing spans `ProductName: Advanced Messaging` (SKUs `Message` and `Connect Fee`, the latter added 2025-06) and `ProductName: Channel Fee` (WhatsApp pass-through); query with `Region: Global`
 
 ## Known Rates
 
