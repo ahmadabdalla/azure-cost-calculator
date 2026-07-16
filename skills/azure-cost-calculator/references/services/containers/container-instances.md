@@ -41,6 +41,24 @@ MeterName: Standard Windows Software Duration
 ServiceName: Container Instances
 ProductName: Container Instances
 SkuName: Standard Spot
+MeterName: Standard Spot vCPU Duration
+
+ServiceName: Container Instances
+ProductName: Container Instances
+SkuName: Standard Spot
+MeterName: Standard Spot Memory Duration
+
+### Confidential containers (hardware-based TEE isolation)
+
+ServiceName: Container Instances
+ProductName: Container Instances
+SkuName: Confidential containers ACI
+MeterName: Confidential containers ACI vCPU Duration
+
+ServiceName: Container Instances
+ProductName: Container Instances
+SkuName: Confidential containers ACI
+MeterName: Confidential containers ACI Memory Duration
 
 ### GPU containers: substitute {gpu}: K80, P100, V100
 
@@ -70,6 +88,9 @@ SkuName: {gpu}
 ```
 Linux Standard:
   Monthly = (vCPU_price × vCPUs × 730) + (memory_price × GiB × 730)
+
+Spot / Confidential:
+  Same as Linux Standard, using the matching SKU's vCPU and memory meter prices
 
 Windows Standard:
   Monthly = Linux cost + (windows_per_second × vCPUs × 730 × 3600)
