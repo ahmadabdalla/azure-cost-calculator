@@ -1,0 +1,65 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:identity/entra-external-id/external-id-mau-tiered
+name: Microsoft Entra External ID - CIAM MAU billing
+description: >
+  Tests cost estimation for Microsoft Entra External ID (CIAM) Core plan with
+  200,000 monthly active users. Validates the 50K free grant deduction,
+  sub-cent MAU rate handling, and the display-name vs API-name trap
+  (serviceName Microsoft Entra, productName Microsoft Entra External ID).
+tags:
+  - happy-path
+  - single-service
+  - identity
+  - service:entra-external-id
+inputs:
+  prompt: "Estimate the monthly cost for a Microsoft Entra External ID tenant on the Core plan with 200,000 monthly active users."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "50,000"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Microsoft Entra External ID|Entra External ID|External ID"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: mau-count-acknowledged
+    config:
+      contains:
+        - "200,000"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost for a Microsoft Entra External ID tenant on the Core plan with 200,000 monthly active users."
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the External ID Core Monthly Active Users billing model.
+        (3) Applies the 50,000 free MAU grant deduction before calculating billable MAUs.
+        (4) Accounts for 200,000 monthly active users as specified.
+        (5) Does not report zero cost for the billable MAU tier despite the sub-cent rate.
+
+        Score 1.0 if all five criteria are met. Score 0.5 if three or four are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

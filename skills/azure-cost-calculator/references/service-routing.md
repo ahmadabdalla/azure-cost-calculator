@@ -166,8 +166,8 @@ Entry format: `- {display name}: {alias1}, {alias2}, ...`. Display name may diff
 
 ## Identity (services/identity/)
 
-- Azure Active Directory B2C: AAD B2C, Azure AD B2C, External Identities B2C, Entra External ID
 - Microsoft Entra Domain Services: AAD DS, Azure AD DS, Managed AD
+- Microsoft Entra External ID: Entra External ID, CIAM, Microsoft Entra CIAM, AAD B2C, Azure AD B2C, External Identities B2C
 - Microsoft Entra ID: Azure AD, Azure Active Directory, AAD, Directory
 
 ## Web (services/web/)

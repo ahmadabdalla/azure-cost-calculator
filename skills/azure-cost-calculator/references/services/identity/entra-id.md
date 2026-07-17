@@ -56,7 +56,7 @@ Free: Monthly(Free) = per_user_rate(Free) × userCount
 | Tier | Per-User/Month (USD) | Included With             | Key Features                                                     |
 | ---- | -------------------- | ------------------------- | ---------------------------------------------------------------- |
 | Free | $0.00                | All Azure subscriptions   | SSO, basic MFA, security defaults                                |
-| P1   | $6.00                | M365 E3, Business Premium | Conditional Access, SSPR, dynamic groups, hybrid identity        |
-| P2   | $9.00                | M365 E5                   | Identity Protection, PIM, access reviews, entitlement management |
+| P1   | $7.00                | M365 E3, Business Premium | Conditional Access, SSPR, dynamic groups, hybrid identity        |
+| P2   | $10.00               | M365 E5                   | Identity Protection, PIM, access reviews, entitlement management |
 
 > These rates are from the [Microsoft Entra pricing page](https://www.microsoft.com/en-us/security/business/microsoft-entra-pricing). For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
