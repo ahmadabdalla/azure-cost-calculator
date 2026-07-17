@@ -45,22 +45,22 @@ MeterName: Premium User Forest
 
 ## Key Fields
 
-| Parameter | How to determine | Example values |
-| --- | --- | --- |
-| `serviceName` | Always `Microsoft Entra Domain Services` | `Microsoft Entra Domain Services` |
-| `productName` | Single product, same as serviceName | `Microsoft Entra Domain Services` |
-| `skuName` | SKU tier selected at deployment | `Standard`, `Enterprise`, `Premium` |
-| `meterName` | SKU + forest type combination | `Standard User Forest`, `Enterprise Resource Forest` |
+| Parameter     | How to determine                         | Example values                                       |
+| ------------- | ---------------------------------------- | ---------------------------------------------------- |
+| `serviceName` | Always `Microsoft Entra Domain Services` | `Microsoft Entra Domain Services`                    |
+| `productName` | Single product, same as serviceName      | `Microsoft Entra Domain Services`                    |
+| `skuName`     | SKU tier selected at deployment          | `Standard`, `Enterprise`, `Premium`                  |
+| `meterName`   | SKU + forest type combination            | `Standard User Forest`, `Enterprise Resource Forest` |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `Standard User Forest` | `Standard` | `1/Hour` | Standard only supports User Forest |
-| `Enterprise User Forest` | `Enterprise` | `1/Hour` | Default forest, syncs from Entra ID |
-| `Enterprise Resource Forest` | `Enterprise` | `1/Hour` | Uses outbound trusts to on-prem AD |
-| `Premium User Forest` | `Premium` | `1/Hour` | Default forest, syncs from Entra ID |
-| `Premium Resource Forest` | `Premium` | `1/Hour` | Uses outbound trusts to on-prem AD |
+| Meter                        | skuName      | unitOfMeasure | Notes                               |
+| ---------------------------- | ------------ | ------------- | ----------------------------------- |
+| `Standard User Forest`       | `Standard`   | `1/Hour`      | Standard only supports User Forest  |
+| `Enterprise User Forest`     | `Enterprise` | `1/Hour`      | Default forest, syncs from Entra ID |
+| `Enterprise Resource Forest` | `Enterprise` | `1/Hour`      | Uses outbound trusts to on-prem AD  |
+| `Premium User Forest`        | `Premium`    | `1/Hour`      | Default forest, syncs from Entra ID |
+| `Premium Resource Forest`    | `Premium`    | `1/Hour`      | Uses outbound trusts to on-prem AD  |
 
 ## Cost Formula
 
