@@ -57,13 +57,13 @@ Quantity: 50
 | ------------------------------ | ------------------------------ | ------------- | ------------------------------------ |
 | `Basic Gateway`                | `Basic`                        | 1 Hour        | Legacy SKU, 100 Mbps                 |
 | `VpnGw1` / `VpnGw1AZ`          | matching                       | 1 Hour        | 650 Mbps, max 30 S2S tunnels         |
-| `VpnGw2` / `VpnGw2AZ`          | matching                       | 1 Hour        | 1 / 1.25 Gbps (AZ), max 30 S2S      |
-| `VpnGw3` / `VpnGw3AZ`          | matching                       | 1 Hour        | 1.25 / 2.5 Gbps (AZ), max 30 S2S    |
+| `VpnGw2` / `VpnGw2AZ`          | matching                       | 1 Hour        | 1 / 1.25 Gbps (AZ), max 30 S2S       |
+| `VpnGw3` / `VpnGw3AZ`          | matching                       | 1 Hour        | 1.25 / 2.5 Gbps (AZ), max 30 S2S     |
 | `VpnGw4` / `VpnGw4AZ`          | matching                       | 1 Hour        | 5 Gbps, max 100 S2S tunnels          |
 | `VpnGw5` / `VpnGw5AZ`          | matching                       | 1 Hour        | 10 Gbps, max 100 S2S tunnels         |
 | `S2S Connection`               | per SKU                        | 1 Hour        | Only for tunnels beyond 10 included  |
 | `P2S Connection`               | per SKU                        | 1 Hour        | Only beyond 128 included connections |
-| `Advanced Connectivity Add-On` | `Advanced Connectivity Add-On` | 1 Hour        | VpnGw5AZ only; boosts to 20 Gbps    |
+| `Advanced Connectivity Add-On` | `Advanced Connectivity Add-On` | 1 Hour        | VpnGw5AZ only; boosts to 20 Gbps     |
 
 ## Cost Formula
 

@@ -44,12 +44,12 @@ Quantity: 1000
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `Network Protection Plan` | `Network Protection` | `1 Hour` | Base plan, includes 100 public IPs |
-| `Network Protection Resource` | `Network Protection` | `1 Hour` | Per additional IP beyond 100 included |
-| `Network Protection Data Processed` | `Network Protection` | `1 GB` | 4 tiers: 0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+ |
-| `IP Protection Resource` | `Azure DDoS Protection IP Protection` | `1 Hour` | Per-IP plan, one charge per protected IP |
+| Meter                               | skuName                               | unitOfMeasure | Notes                                             |
+| ----------------------------------- | ------------------------------------- | ------------- | ------------------------------------------------- |
+| `Network Protection Plan`           | `Network Protection`                  | `1 Hour`      | Base plan, includes 100 public IPs                |
+| `Network Protection Resource`       | `Network Protection`                  | `1 Hour`      | Per additional IP beyond 100 included             |
+| `Network Protection Data Processed` | `Network Protection`                  | `1 GB`        | 4 tiers: 0–100 TB, 100–500 TB, 500 TB–1 PB, 1 PB+ |
+| `IP Protection Resource`            | `Azure DDoS Protection IP Protection` | `1 Hour`      | Per-IP plan, one charge per protected IP          |
 
 ## Cost Formula
 

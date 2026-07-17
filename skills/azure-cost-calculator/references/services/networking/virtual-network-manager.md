@@ -54,21 +54,21 @@ Quantity: 50
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values                                  |
-| ------------- | ----------------------------------------- | ----------------------------------------------- |
-| `serviceName` | Always `Virtual Network`                  | `Virtual Network`                               |
-| `productName` | Always `Azure Virtual Network Manager`    | `Azure Virtual Network Manager`                 |
-| `skuName`     | Billing model or add-on feature           | `Standard`, `Managed IP`, `Reachability Analysis` |
-| `meterName`   | Specific meter, see table                | `Standard Virtual Network`, `Standard Subscription` |
+| Parameter     | How to determine                       | Example values                                      |
+| ------------- | -------------------------------------- | --------------------------------------------------- |
+| `serviceName` | Always `Virtual Network`               | `Virtual Network`                                   |
+| `productName` | Always `Azure Virtual Network Manager` | `Azure Virtual Network Manager`                     |
+| `skuName`     | Billing model or add-on feature        | `Standard`, `Managed IP`, `Reachability Analysis`   |
+| `meterName`   | Specific meter, see table              | `Standard Virtual Network`, `Standard Subscription` |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Virtual Network` | `Standard` | `1 Hour` | VNet-based billing (new default), per managed VNet |
-| `Standard Subscription` | `Standard` | `1 Hour` | Subscription-based billing (legacy, retiring 2028-02-06) |
-| `Managed IP Management` | `Managed IP` | `1 Hour` | IPAM add-on, sub-cent per active IP per hour |
-| `Reachability Analysis Diagnostic Tool API` | `Reachability Analysis` | `1` | Network Verifier, per analysis run, not hourly |
+| Meter                                       | skuName                 | unitOfMeasure | Notes                                                    |
+| ------------------------------------------- | ----------------------- | ------------- | -------------------------------------------------------- |
+| `Standard Virtual Network`                  | `Standard`              | `1 Hour`      | VNet-based billing (new default), per managed VNet       |
+| `Standard Subscription`                     | `Standard`              | `1 Hour`      | Subscription-based billing (legacy, retiring 2028-02-06) |
+| `Managed IP Management`                     | `Managed IP`            | `1 Hour`      | IPAM add-on, sub-cent per active IP per hour             |
+| `Reachability Analysis Diagnostic Tool API` | `Reachability Analysis` | `1`           | Network Verifier, per analysis run, not hourly           |
 
 ## Cost Formula
 

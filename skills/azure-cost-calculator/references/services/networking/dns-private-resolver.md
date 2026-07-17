@@ -51,7 +51,7 @@ Region: Zone 1
 | `serviceName`   | Always `Azure DNS` (shared with public/private DNS) | `Azure DNS`                         |
 | `productName`   | Single product                                      | `Azure DNS`                         |
 | `skuName`       | `Private Resolver` for this service                 | `Private Resolver`                  |
-| `armRegionName` | Empty string or delivery zone, not ARM regions     | `''`, `Zone 1`, `Zone 2`            |
+| `armRegionName` | Empty string or delivery zone, not ARM regions      | `''`, `Zone 1`, `Zone 2`            |
 | `meterName`     | Endpoint type or ruleset                            | `Private Resolver Inbound Endpoint` |
 
 ## Meter Names

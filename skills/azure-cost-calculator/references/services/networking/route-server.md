@@ -61,23 +61,23 @@ InstanceCount: 3
 
 ## Key Fields
 
-| Parameter     | How to determine                                                              | Example values                                                           |
-| ------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `serviceName` | Always `Azure Route Server`                                                   | `Azure Route Server`                                                     |
-| `productName` | Single product for all meters                                                 | `Azure Route Server`                                                     |
-| `skuName`     | Matches the billing component (see Meter Names)                               | `Basic`, `Routing Infrastructure Unit`, `VPN S2S Connection Unit`        |
-| `meterName`   | Matches the billing component                                                 | `Basic Gateway`, `Routing Infrastructure Unit`, `VPN S2S Connection Unit`|
+| Parameter     | How to determine                                | Example values                                                            |
+| ------------- | ----------------------------------------------- | ------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure Route Server`                     | `Azure Route Server`                                                      |
+| `productName` | Single product for all meters                   | `Azure Route Server`                                                      |
+| `skuName`     | Matches the billing component (see Meter Names) | `Basic`, `Routing Infrastructure Unit`, `VPN S2S Connection Unit`         |
+| `meterName`   | Matches the billing component                   | `Basic Gateway`, `Routing Infrastructure Unit`, `VPN S2S Connection Unit` |
 
 ## Meter Names
 
-| Meter                                  | skuName                          | unitOfMeasure | Notes                                          |
-| -------------------------------------- | -------------------------------- | ------------- | ---------------------------------------------- |
-| `Basic Gateway`                        | `Basic`                          | 1 Hour        | Always-on base deployment fee                  |
-| `Routing Infrastructure Unit`          | `Routing Infrastructure Unit`    | 1 Hour        | Per additional unit beyond default 2           |
-| `Basic Gateway with Route Maps Unit`   | `Basic Gateway with Route Maps`  | 1 Hour        | Add-on when Route Maps feature is enabled      |
-| `ExpressRoute Connection Unit`         | `ExpressRoute Connection Unit`   | 1 Hour        | Per ER circuit connected (upgraded SW only)    |
-| `NVA Connection with Route Maps Unit`  | `NVA Connection with Route Maps` | 1 Hour        | Per NVA connection with Route Maps applied     |
-| `VPN S2S Connection Unit`              | `VPN S2S Connection Unit`        | 1 Hour        | Per VPN branch site connected (upgraded SW only)|
+| Meter                                 | skuName                          | unitOfMeasure | Notes                                            |
+| ------------------------------------- | -------------------------------- | ------------- | ------------------------------------------------ |
+| `Basic Gateway`                       | `Basic`                          | 1 Hour        | Always-on base deployment fee                    |
+| `Routing Infrastructure Unit`         | `Routing Infrastructure Unit`    | 1 Hour        | Per additional unit beyond default 2             |
+| `Basic Gateway with Route Maps Unit`  | `Basic Gateway with Route Maps`  | 1 Hour        | Add-on when Route Maps feature is enabled        |
+| `ExpressRoute Connection Unit`        | `ExpressRoute Connection Unit`   | 1 Hour        | Per ER circuit connected (upgraded SW only)      |
+| `NVA Connection with Route Maps Unit` | `NVA Connection with Route Maps` | 1 Hour        | Per NVA connection with Route Maps applied       |
+| `VPN S2S Connection Unit`             | `VPN S2S Connection Unit`        | 1 Hour        | Per VPN branch site connected (upgraded SW only) |
 
 ## Cost Formula
 

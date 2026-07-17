@@ -37,13 +37,13 @@ Quantity: 10
 
 ## Key Fields
 
-| Parameter       | How to determine                                    | Example values                    |
-| --------------- | --------------------------------------------------- | --------------------------------- |
-| `serviceName`   | Always `Azure DNS` (shared with public DNS)         | `Azure DNS`                       |
-| `productName`   | Single product                                      | `Azure DNS`                       |
-| `skuName`       | `Private` for Private DNS zones                     | `Private`, `Public`               |
-| `armRegionName` | Empty string or delivery zone, **not** ARM regions | `''`, `Zone 1`, `Zone 2`         |
-| `meterName`     | Zone hosting or query volume                        | `Private Zone`, `Private Queries` |
+| Parameter       | How to determine                                   | Example values                    |
+| --------------- | -------------------------------------------------- | --------------------------------- |
+| `serviceName`   | Always `Azure DNS` (shared with public DNS)        | `Azure DNS`                       |
+| `productName`   | Single product                                     | `Azure DNS`                       |
+| `skuName`       | `Private` for Private DNS zones                    | `Private`, `Public`               |
+| `armRegionName` | Empty string or delivery zone, **not** ARM regions | `''`, `Zone 1`, `Zone 2`          |
+| `meterName`     | Zone hosting or query volume                       | `Private Zone`, `Private Queries` |
 
 ## Meter Names
 

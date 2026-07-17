@@ -58,25 +58,25 @@ Region: Zone 1
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `{Tier} Base Fees` | `{Tier}` | `1/Month` | Flat monthly per profile |
-| `{Tier} Data Transfer Out` | `{Tier}` | `1 GB` | 7-tier volume pricing |
-| `{Tier} Data Transfer In` | `{Tier}` | `1 GB` | Ingress; same price Standard and Premium |
-| `{Tier} Requests` | `{Tier}` | `10K` | 4-tier volume pricing |
-| `{Tier} Edge Actions Base Fee` | `{Tier}` | `1 Month` | Edge compute flat fee |
-| `{Tier} Invocations` | `{Tier}` | `1M` | Edge compute per-million invocations |
-| `{Tier} Overage Execution Time` | `{Tier}` | `1 Second` | Edge compute; sub-cent |
-| `Premium Captcha Sessions` | `Premium` | `1K` | Premium-only CAPTCHA meter |
-| `Standard Policy` | `Standard` | `1/Month` | WAF policy (Classic) |
-| `Standard Rule` | `Standard` | `1/Month` | WAF custom rule (Classic) |
-| `Standard Default Ruleset` | `Standard` | `1/Month` | Managed ruleset DRS (Classic) |
-| `Standard Default Request` | `Standard` | `1M/Month` | DRS evaluation (Classic) |
-| `Standard Bot Protection Ruleset` | `Standard` | `1/Month` | Bot protection add-on (Classic) |
-| `Standard Bot Protection Request` | `Standard` | `1M/Month` | Bot protection requests (Classic) |
-| `Standard Data Transfer Out` | `Standard` | `1 GB` | Classic egress; 3-tier volume pricing (Zones 1-5 only) |
-| `Standard Data Transfer In` | `Standard` | `1 GB` | Classic ingress; flat rate (Zones 1-5 only) |
-| `Standard Custom Domain` | `Standard` | `1/Month` | Per custom domain (Classic) |
+| Meter                             | skuName    | unitOfMeasure | Notes                                                  |
+| --------------------------------- | ---------- | ------------- | ------------------------------------------------------ |
+| `{Tier} Base Fees`                | `{Tier}`   | `1/Month`     | Flat monthly per profile                               |
+| `{Tier} Data Transfer Out`        | `{Tier}`   | `1 GB`        | 7-tier volume pricing                                  |
+| `{Tier} Data Transfer In`         | `{Tier}`   | `1 GB`        | Ingress; same price Standard and Premium               |
+| `{Tier} Requests`                 | `{Tier}`   | `10K`         | 4-tier volume pricing                                  |
+| `{Tier} Edge Actions Base Fee`    | `{Tier}`   | `1 Month`     | Edge compute flat fee                                  |
+| `{Tier} Invocations`              | `{Tier}`   | `1M`          | Edge compute per-million invocations                   |
+| `{Tier} Overage Execution Time`   | `{Tier}`   | `1 Second`    | Edge compute; sub-cent                                 |
+| `Premium Captcha Sessions`        | `Premium`  | `1K`          | Premium-only CAPTCHA meter                             |
+| `Standard Policy`                 | `Standard` | `1/Month`     | WAF policy (Classic)                                   |
+| `Standard Rule`                   | `Standard` | `1/Month`     | WAF custom rule (Classic)                              |
+| `Standard Default Ruleset`        | `Standard` | `1/Month`     | Managed ruleset DRS (Classic)                          |
+| `Standard Default Request`        | `Standard` | `1M/Month`    | DRS evaluation (Classic)                               |
+| `Standard Bot Protection Ruleset` | `Standard` | `1/Month`     | Bot protection add-on (Classic)                        |
+| `Standard Bot Protection Request` | `Standard` | `1M/Month`    | Bot protection requests (Classic)                      |
+| `Standard Data Transfer Out`      | `Standard` | `1 GB`        | Classic egress; 3-tier volume pricing (Zones 1-5 only) |
+| `Standard Data Transfer In`       | `Standard` | `1 GB`        | Classic ingress; flat rate (Zones 1-5 only)            |
+| `Standard Custom Domain`          | `Standard` | `1/Month`     | Per custom domain (Classic)                            |
 
 > Classic also has `Standard Included Routing Rules` (first 5 free, then per-hour) and `Standard Overage Routing Rules`. Classic `Standard Requests` uses `1M/Month` unit (vs `10K` for Standard/Premium).
 

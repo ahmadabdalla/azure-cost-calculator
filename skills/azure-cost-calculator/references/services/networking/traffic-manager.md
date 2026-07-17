@@ -63,19 +63,19 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Meter Names
 
-| Meter                                                   | skuName              | unitOfMeasure | Notes                                  |
-| ------------------------------------------------------- | -------------------- | ------------- | -------------------------------------- |
-| `DNS Queries`                                           | `Azure Endpoint`     | `1M`          | Tiered: 0–1B at higher rate, 1B+ lower |
-| `Azure Endpoint Health Checks`                          | `Azure Endpoint`     | `1`           | Per endpoint per month                 |
-| `Azure Endpoint Fast Interval Health Check Add-ons`     | `Azure Endpoint`     | `1`           | 10s interval add-on per endpoint       |
-| `Azure Endpoint HTTPS Health Check Add-On`              | `Azure Endpoint`     | `1`           | HTTPS probe add-on per endpoint (2026-07-01) |
-| `Non-Azure Endpoint Health Checks`                      | `Non-Azure Endpoint` | `1`           | Per endpoint per month                 |
-| `Non-Azure Endpoint Fast Interval Health Check Add-ons` | `Non-Azure Endpoint` | `1`           | 10s interval add-on per endpoint       |
-| `Non-Azure Endpoint HTTPS Health Check Add-On`          | `Non-Azure Endpoint` | `1`           | HTTPS probe add-on per endpoint (2026-07-01) |
+| Meter                                                   | skuName              | unitOfMeasure | Notes                                                                      |
+| ------------------------------------------------------- | -------------------- | ------------- | -------------------------------------------------------------------------- |
+| `DNS Queries`                                           | `Azure Endpoint`     | `1M`          | Tiered: 0–1B at higher rate, 1B+ lower                                     |
+| `Azure Endpoint Health Checks`                          | `Azure Endpoint`     | `1`           | Per endpoint per month                                                     |
+| `Azure Endpoint Fast Interval Health Check Add-ons`     | `Azure Endpoint`     | `1`           | 10s interval add-on per endpoint                                           |
+| `Azure Endpoint HTTPS Health Check Add-On`              | `Azure Endpoint`     | `1`           | HTTPS probe add-on per endpoint (2026-07-01)                               |
+| `Non-Azure Endpoint Health Checks`                      | `Non-Azure Endpoint` | `1`           | Per endpoint per month                                                     |
+| `Non-Azure Endpoint Fast Interval Health Check Add-ons` | `Non-Azure Endpoint` | `1`           | 10s interval add-on per endpoint                                           |
+| `Non-Azure Endpoint HTTPS Health Check Add-On`          | `Non-Azure Endpoint` | `1`           | HTTPS probe add-on per endpoint (2026-07-01)                               |
 | `Nested Endpoint Nested Endpoint`                       | `Nested Endpoint`    | `1`           | Nested endpoint health check; meter name is literally doubled (2026-07-01) |
-| `Azure Region Real User Measurements`                   | `Azure Region`       | `1M`          | Free (retailPrice = 0)                 |
-| `Non-Azure Region Real User Measurements`               | `Non-Azure Region`   | `1M`          | Free (retailPrice = 0)                 |
-| `Traffic View Data Points Processed`                    | `Traffic View`       | `1M`          | Per million data points                |
+| `Azure Region Real User Measurements`                   | `Azure Region`       | `1M`          | Free (retailPrice = 0)                                                     |
+| `Non-Azure Region Real User Measurements`               | `Non-Azure Region`   | `1M`          | Free (retailPrice = 0)                                                     |
+| `Traffic View Data Points Processed`                    | `Traffic View`       | `1M`          | Per million data points                                                    |
 
 > **Trap (tiered DNS)**: DNS query pricing returns two rows with different `tierMinimumUnits` (0 and 1000, i.e. 0–1B and >1B queries). The script sums both tiers. Ignore `totalMonthlyCost` and manually calculate using tier boundaries.
 

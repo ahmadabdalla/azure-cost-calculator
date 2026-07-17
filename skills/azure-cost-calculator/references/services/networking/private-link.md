@@ -54,22 +54,22 @@ Region: Global
 
 ## Key Fields
 
-| Parameter       | How to determine                                                             | Example values                              |
-| --------------- | ---------------------------------------------------------------------------- | ------------------------------------------- |
-| `serviceName`   | Always `Virtual Network`                                                     | `Virtual Network`                           |
-| `productName`   | Single product for all PE meters                                             | `Virtual Network Private Link`              |
-| `skuName`       | `Standard` for PE meters; `Standard Service Endpoint` for PL Service meters  | `Standard`, `Standard Service Endpoint`     |
-| `meterName`     | Substitute from Meter Names table                                            | `Standard Private Endpoint`                 |
-| `armRegionName` | `Global` for public cloud; US Gov and edge zones have region-specific meters | `Global`, `US Gov`                          |
+| Parameter       | How to determine                                                             | Example values                          |
+| --------------- | ---------------------------------------------------------------------------- | --------------------------------------- |
+| `serviceName`   | Always `Virtual Network`                                                     | `Virtual Network`                       |
+| `productName`   | Single product for all PE meters                                             | `Virtual Network Private Link`          |
+| `skuName`       | `Standard` for PE meters; `Standard Service Endpoint` for PL Service meters  | `Standard`, `Standard Service Endpoint` |
+| `meterName`     | Substitute from Meter Names table                                            | `Standard Private Endpoint`             |
+| `armRegionName` | `Global` for public cloud; US Gov and edge zones have region-specific meters | `Global`, `US Gov`                      |
 
 ## Meter Names
 
-| Meter                                          | unitOfMeasure | Notes                                    |
-| ---------------------------------------------- | ------------- | ---------------------------------------- |
-| `Standard Private Endpoint`                    | `1 Hour`      | Per endpoint, per hour                   |
-| `Standard Data Processed - Ingress`            | `1 GB`        | Inbound data (3 volume tiers via API)    |
-| `Standard Data Processed - Egress`             | `1 GB`        | Outbound data (3 volume tiers via API)   |
-| `Standard Service Endpoint Virtual Network`    | `1 Hour`      | Private Link Service (provider-side fee) |
+| Meter                                       | unitOfMeasure | Notes                                    |
+| ------------------------------------------- | ------------- | ---------------------------------------- |
+| `Standard Private Endpoint`                 | `1 Hour`      | Per endpoint, per hour                   |
+| `Standard Data Processed - Ingress`         | `1 GB`        | Inbound data (3 volume tiers via API)    |
+| `Standard Data Processed - Egress`          | `1 GB`        | Outbound data (3 volume tiers via API)   |
+| `Standard Service Endpoint Virtual Network` | `1 Hour`      | Private Link Service (provider-side fee) |
 
 ## Cost Formula
 

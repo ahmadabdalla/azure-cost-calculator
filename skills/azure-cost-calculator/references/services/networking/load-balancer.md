@@ -42,17 +42,17 @@ InstanceCount: 3
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Included LB Rules and Outbound Rules` | `Standard` | `1 Hour` | Base hourly fee, first 5 rules included |
-| `Standard Overage LB Rules and Outbound Rules` | `Standard` | `1/Hour` | Per additional rule beyond 5 |
-| `Standard Data Processed` | `Standard` | `1 GB` | Per-GB processed (sub-cent) |
-| `Gateway` | `Gateway` | `1 Hour` | Gateway LB base fee (NVA chaining) |
-| `Gateway Chain` | `Gateway` | `1 Hour` | Per chained LB per hour |
-| `Gateway Data Processed` | `Gateway` | `1 GB` | Gateway per-GB (sub-cent) |
-| `Global Included LB Rules and Outbound Rules` | `Global` | `1 Hour` | Cross-region base fee, first 5 rules included |
-| `Global Overage LB Rules and Outbound Rules` | `Global` | `1/Hour` | Per additional rule beyond 5 |
-| `Global Data Processed` | `Global` | `1 GB` | Cross-region data, genuinely free |
+| Meter                                           | skuName    | unitOfMeasure | Notes                                         |
+| ----------------------------------------------- | ---------- | ------------- | --------------------------------------------- |
+| `Standard Included LB Rules and Outbound Rules` | `Standard` | `1 Hour`      | Base hourly fee, first 5 rules included       |
+| `Standard Overage LB Rules and Outbound Rules`  | `Standard` | `1/Hour`      | Per additional rule beyond 5                  |
+| `Standard Data Processed`                       | `Standard` | `1 GB`        | Per-GB processed (sub-cent)                   |
+| `Gateway`                                       | `Gateway`  | `1 Hour`      | Gateway LB base fee (NVA chaining)            |
+| `Gateway Chain`                                 | `Gateway`  | `1 Hour`      | Per chained LB per hour                       |
+| `Gateway Data Processed`                        | `Gateway`  | `1 GB`        | Gateway per-GB (sub-cent)                     |
+| `Global Included LB Rules and Outbound Rules`   | `Global`   | `1 Hour`      | Cross-region base fee, first 5 rules included |
+| `Global Overage LB Rules and Outbound Rules`    | `Global`   | `1/Hour`      | Per additional rule beyond 5                  |
+| `Global Data Processed`                         | `Global`   | `1 GB`        | Cross-region data, genuinely free             |
 
 ## Cost Formula
 

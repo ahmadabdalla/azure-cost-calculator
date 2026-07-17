@@ -48,24 +48,24 @@ Quantity: 500
 
 ## Key Fields
 
-| Parameter     | How to determine                        | Example values                               |
-| ------------- | --------------------------------------- | -------------------------------------------- |
-| `serviceName` | Always `Bandwidth`                      | `Bandwidth`                                  |
-| `productName` | Routing preference                      | `Rtn Preference: MGN`, `Bandwidth - Routing Preference: Internet` |
-| `skuName`     | Always `Standard` for common meters     | `Standard`                                   |
-| `meterName`   | Transfer type and direction             | `Standard Data Transfer Out`                 |
+| Parameter     | How to determine                    | Example values                                                    |
+| ------------- | ----------------------------------- | ----------------------------------------------------------------- |
+| `serviceName` | Always `Bandwidth`                  | `Bandwidth`                                                       |
+| `productName` | Routing preference                  | `Rtn Preference: MGN`, `Bandwidth - Routing Preference: Internet` |
+| `skuName`     | Always `Standard` for common meters | `Standard`                                                        |
+| `meterName`   | Transfer type and direction         | `Standard Data Transfer Out`                                      |
 
 ## Meter Names
 
-| Meter | productName | unitOfMeasure | Notes |
-| ----- | ----------- | ------------- | ----- |
-| `Standard Data Transfer Out` | `Rtn Preference: MGN` | `1 GB` | Internet egress; tiered by volume |
-| `Standard Data Transfer In` | `Rtn Preference: MGN` | `1 GB` | Ingress free (except China-origin inbound) |
-| `Standard Data Transfer In - from China` | `Rtn Preference: MGN` | `1 GB` | China-origin inbound; charged per-GB |
-| `Standard Inter-Region Data Transfer` | `Rtn Preference: MGN` | `1 GB` | Between Azure regions; flat per-GB |
-| `Standard Inter-Availability Zone Data Transfer In` | `Rtn Preference: MGN` | `1 GB` | Within region, cross-AZ inbound |
-| `Standard Inter-Availability Zone Data Transfer Out` | `Rtn Preference: MGN` | `1 GB` | Within region, cross-AZ outbound |
-| `Standard Data Transfer Out` | `Bandwidth - Routing Preference: Internet` | `1 GB` | Internet routing; tiered, lower rates |
+| Meter                                                | productName                                | unitOfMeasure | Notes                                      |
+| ---------------------------------------------------- | ------------------------------------------ | ------------- | ------------------------------------------ |
+| `Standard Data Transfer Out`                         | `Rtn Preference: MGN`                      | `1 GB`        | Internet egress; tiered by volume          |
+| `Standard Data Transfer In`                          | `Rtn Preference: MGN`                      | `1 GB`        | Ingress free (except China-origin inbound) |
+| `Standard Data Transfer In - from China`             | `Rtn Preference: MGN`                      | `1 GB`        | China-origin inbound; charged per-GB       |
+| `Standard Inter-Region Data Transfer`                | `Rtn Preference: MGN`                      | `1 GB`        | Between Azure regions; flat per-GB         |
+| `Standard Inter-Availability Zone Data Transfer In`  | `Rtn Preference: MGN`                      | `1 GB`        | Within region, cross-AZ inbound            |
+| `Standard Inter-Availability Zone Data Transfer Out` | `Rtn Preference: MGN`                      | `1 GB`        | Within region, cross-AZ outbound           |
+| `Standard Data Transfer Out`                         | `Bandwidth - Routing Preference: Internet` | `1 GB`        | Internet routing; tiered, lower rates      |
 
 ## Cost Formula
 

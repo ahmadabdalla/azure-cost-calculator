@@ -38,13 +38,13 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure
 
 ## Key Fields
 
-| Parameter     | How to determine                                    | Example values                                                              |
-| ------------- | --------------------------------------------------- | --------------------------------------------------------------------------- |
-| `serviceName` | Always `Azure DNS` (shared with public/private DNS) | `Azure DNS`                                                                 |
-| `productName` | Single product                                      | `Azure DNS`                                                                 |
-| `skuName`     | Meter family for DNS Security Policy                | `DNS Security Policy Domains`, `DNS Security Policy Queries`                |
+| Parameter     | How to determine                                      | Example values                                                              |
+| ------------- | ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure DNS` (shared with public/private DNS)   | `Azure DNS`                                                                 |
+| `productName` | Single product                                        | `Azure DNS`                                                                 |
+| `skuName`     | Meter family for DNS Security Policy                  | `DNS Security Policy Domains`, `DNS Security Policy Queries`                |
 | `Region`      | Delivery zone (Zone 1–4, US Gov), **not** ARM regions | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `US Gov Zone 1`                     |
-| `meterName`   | Domains or queries dimension                        | `DNS Security Policy Domains Managed Domain`, `DNS Security Policy Queries` |
+| `meterName`   | Domains or queries dimension                          | `DNS Security Policy Domains Managed Domain`, `DNS Security Policy Queries` |
 
 ## Meter Names
 

@@ -38,8 +38,8 @@ MeterName: {Tier} Gateway
 
 ## Meter Names
 
-| Meter                            | productName                                   | unitOfMeasure | Notes                         |
-| -------------------------------- | --------------------------------------------- | ------------- | ----------------------------- |
+| Meter                            | productName                                   | unitOfMeasure | Notes                        |
+| -------------------------------- | --------------------------------------------- | ------------- | ---------------------------- |
 | `Standard Gateway`               | `ExpressRoute Standard Gateway`               | 1 Hour        | Legacy non-AZ, ~1 Gbps       |
 | `High Performance Gateway`       | `ExpressRoute High Performance Gateway`       | 1 Hour        | Legacy non-AZ, ~2 Gbps       |
 | `Ultra High Performance Gateway` | `ExpressRoute Ultra High Performance Gateway` | 1 Hour        | Legacy non-AZ, ~10 Gbps      |

@@ -38,22 +38,22 @@ Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields
 
-| Parameter     | How to determine                                        | Example values                                    |
-| ------------- | ------------------------------------------------------- | ------------------------------------------------- |
-| `serviceName` | Always `Azure DNS`                                      | `Azure DNS`                                       |
-| `productName` | Single product                                          | `Azure DNS`                                       |
-| `skuName`     | `Public` for public DNS zones                           | `Public`, `Private`                               |
-| `Region`      | Delivery zone (Zone 1–4 / US Gov), **not** ARM regions  | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `US Gov Zone 1` |
-| `meterName`   | Zone hosting or query volume                            | `Public Zone`, `Public Queries`                   |
+| Parameter     | How to determine                                       | Example values                                          |
+| ------------- | ------------------------------------------------------ | ------------------------------------------------------- |
+| `serviceName` | Always `Azure DNS`                                     | `Azure DNS`                                             |
+| `productName` | Single product                                         | `Azure DNS`                                             |
+| `skuName`     | `Public` for public DNS zones                          | `Public`, `Private`                                     |
+| `Region`      | Delivery zone (Zone 1–4 / US Gov), **not** ARM regions | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `US Gov Zone 1` |
+| `meterName`   | Zone hosting or query volume                           | `Public Zone`, `Public Queries`                         |
 
 ## Meter Names
 
-| Meter            | unitOfMeasure | Tier         | Notes                          |
-| ---------------- | ------------- | ------------ | ------------------------------ |
-| `Public Zone`    | `1`           | First 25     | Per zone per month             |
-| `Public Zone`    | `1`           | 26+          | Lower rate for additional zones |
-| `Public Queries` | `1M`          | First 1B     | Per million queries            |
-| `Public Queries` | `1M`          | 1B+          | Lower rate for high volume     |
+| Meter            | unitOfMeasure | Tier     | Notes                           |
+| ---------------- | ------------- | -------- | ------------------------------- |
+| `Public Zone`    | `1`           | First 25 | Per zone per month              |
+| `Public Zone`    | `1`           | 26+      | Lower rate for additional zones |
+| `Public Queries` | `1M`          | First 1B | Per million queries             |
+| `Public Queries` | `1M`          | 1B+      | Lower rate for high volume      |
 
 > **Note**: Private DNS, Private Resolver, and DNS Security Policy meters share the same serviceName. See `private-dns.md` for Private DNS pricing, `dns-private-resolver.md` for Private Resolver pricing, and `dns-security-policy.md` for DNS Security Policy pricing.
 
