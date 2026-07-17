@@ -19,12 +19,12 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Basic tier: operations only (per 1M; use Quantity for operation volume)
+### Basic tier: operations only (Quantity in 1M units: operations ÷ 1,000,000)
 
 ServiceName: Service Bus
 SkuName: Basic
 MeterName: Basic Messaging Operations
-Quantity: 10000000
+Quantity: (operations ÷ 1000000)
 
 ### Standard tier: namespace base unit (hourly)
 

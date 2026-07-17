@@ -34,6 +34,14 @@ ProductName: Logic Apps
 SkuName: Standard
 InstanceCount: 2
 
+### Standard: managed connector actions (billed under Connectors SkuName; substitute Standard/Enterprise)
+
+ServiceName: Logic Apps
+ProductName: Logic Apps
+SkuName: Connectors
+MeterName: Connectors {ConnectorType} Connector Actions
+Quantity: 10000
+
 ### Hybrid: on-premises vCPU hours
 
 ServiceName: Logic Apps
@@ -53,6 +61,8 @@ MeterName: {Tier} Unit
 | ------------------------------------------ | ------------- | ------------- | ------------------------- |
 | `Consumption Standard Connector Actions`   | `Consumption` | `1`           | Per-action                |
 | `Consumption Enterprise Connector Actions` | `Consumption` | `1`           | Per-action                |
+| `Connectors Standard Connector Actions`    | `Connectors`  | `1`           | Standard plan managed connector |
+| `Connectors Enterprise Connector Actions`  | `Connectors`  | `1`           | Standard plan managed connector |
 | `Consumption Built-in Actions`             | `Consumption` | `1`           | Tiered, first 4,000 free |
 | `Consumption Data Retention`               | `Consumption` | `1 GB/Month`  | Run history storage       |
 | `Standard vCPU Duration`                   | `Standard`    | `1 Hour`      | Per vCPU                  |
@@ -76,7 +86,7 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 
 - **Billing unit is actions, not workflow executions**; each step counts as one action
 - Consumption: per-action, first 4,000 built-in actions/month free per subscription, auto-scales to zero
-- Standard: vCPU + memory hourly on App Service Plan (WS1–WS3); managed connector calls billed per-action under the `Connectors` SkuName (`Connectors Standard/Enterprise Connector Actions`, same rates as Consumption)
+- Standard: vCPU + memory hourly on App Service Plan (WS1–WS3); managed connector actions billed under the `Connectors` SkuName (same rates as Consumption)
 - Integration Account is a separate B2B/EDI add-on; ISE was retired Aug 31, 2024 (no new deployments), use Standard with VNet instead
 - **Private Endpoints**: Require Standard tier with VNet integration
 
