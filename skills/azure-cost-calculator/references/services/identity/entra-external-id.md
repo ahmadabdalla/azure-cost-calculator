@@ -17,7 +17,7 @@ hasFreeGrant: true
 > **Trap (display name vs API name)**: The API `serviceName` is `Microsoft Entra`, not `Microsoft Entra External ID` (that is the `productName`). Querying `serviceName eq 'Microsoft Entra External ID'` returns zero. Legacy B2C meters live under `serviceName` `Azure Active Directory B2C`.
 > **Agent instruction**: Filter External ID queries by `serviceName eq 'Microsoft Entra' and productName eq 'Microsoft Entra External ID'`.
 
-> **Trap (sub-cent tiered pricing, Global-only)**: All meters return at `Region: Global`; region-filtered queries return zero. MAU tiers and the M2M/SCIM rates are sub-cent, so the script shows zero and its `totalMonthlyCost` sums free and paid tiers. Use the Known Rates table and calculate billable units per tier. Do NOT report zero cost.
+> **Trap (Global-only region, tiered free grant)**: All meters return at `Region: Global`; region-filtered queries return zero. Each MAU meter returns a free row (up to 50K) and a paid row, so `totalMonthlyCost` sums both: deduct the 50K grant and price only billable units. The M2M, SCIM, and legacy B2C rates are sub-cent, and the script rounds `MonthlyCost` to cents, so low volumes can total zero even though `UnitPrice` is non-zero. Use `UnitPrice` with the Known Rates table; do NOT report zero cost.
 
 ## Query Pattern
 
@@ -58,7 +58,7 @@ Region: Global
 
 | Meter                                  | skuName                  | unitOfMeasure | Notes                                                  |
 | -------------------------------------- | ------------------------ | ------------- | ------------------------------------------------------ |
-| `Core Monthly Active Users`            | `Core`                   | `1/Month`     | External ID CIAM, 50K free, sub-cent above             |
+| `Core Monthly Active Users`            | `Core`                   | `1/Month`     | External ID CIAM, 50K free, flat rate above            |
 | `Basic Monthly Active Users`           | `Basic`                  | `1/Month`     | External ID CIAM, 50K free, higher rate above          |
 | `Go-Local Add-on Monthly Active Users` | `Go-Local Add-on`        | `1/Month`     | Data residency add-on, no free grant                   |
 | `M2M Authentication Token`             | `M2M Authentication`     | `1`           | Per client-credentials token; not a MAU                |
@@ -88,23 +88,23 @@ Total:            Sum of the applicable components above
 
 ## Known Rates
 
-| Meter                                     | Tier       | Unit Rate (USD) | Free Grant  |
-| ----------------------------------------- | ---------- | --------------- | ----------- |
-| `Core Monthly Active Users`               | 0–50K      | $0.0000         | 50,000 MAUs |
-| `Core Monthly Active Users`               | 50K+       | $0.01625        | -           |
-| `Basic Monthly Active Users`              | 0–50K      | $0.0000         | 50,000 MAUs |
-| `Basic Monthly Active Users`              | 50K+       | $0.0300         | -           |
-| `Go-Local Add-on Monthly Active Users`    | Flat       | $0.0200         | None        |
-| `M2M Authentication Token`                | Flat       | $0.0010         | None        |
-| `Phone Authentication Low Cost`           | Flat       | $0.0300         | None        |
-| `Phone Authentication Mid Low Cost`       | Flat       | $0.0700         | None        |
-| `Phone Authentication Mid High Cost`      | Flat       | $0.1500         | None        |
-| `Phone Authentication High Cost`          | Flat       | $0.3500         | None        |
-| `SCIM Standard Transaction`               | Flat       | $0.0020         | None        |
-| `Standard Monthly Active Users` (B2C)     | 50K–100K   | $0.0055         | 50,000 MAUs |
-| `Standard Monthly Active Users` (B2C)     | 100K–950K  | $0.0046         | -           |
-| `Standard Monthly Active Users` (B2C)     | 950K–9.95M | $0.00325        | -           |
-| `Standard Monthly Active Users` (B2C)     | 9.95M+     | $0.0025         | -           |
-| `Basic Multi-Factor Authentication` (B2C) | Flat       | $0.0300         | None        |
+| Meter                                            | Tier       | Unit Rate (USD) | Free Grant  |
+| ------------------------------------------------ | ---------- | --------------- | ----------- |
+| `Core Monthly Active Users`                      | 0–50K      | $0.0000         | 50,000 MAUs |
+| `Core Monthly Active Users`                      | 50K+       | $0.01625        | -           |
+| `Basic Monthly Active Users`                     | 0–50K      | $0.0000         | 50,000 MAUs |
+| `Basic Monthly Active Users`                     | 50K+       | $0.0300         | -           |
+| `Go-Local Add-on Monthly Active Users`           | Flat       | $0.0200         | None        |
+| `M2M Authentication Token`                       | Flat       | $0.0010         | None        |
+| `Phone Authentication Low Cost Transaction`      | Flat       | $0.0300         | None        |
+| `Phone Authentication Mid Low Cost Transaction`  | Flat       | $0.0700         | None        |
+| `Phone Authentication Mid High Cost Transaction` | Flat       | $0.1500         | None        |
+| `Phone Authentication High Cost Transaction`     | Flat       | $0.3500         | None        |
+| `Standard Transaction` (SCIM)                    | Flat       | $0.0020         | None        |
+| `Standard Monthly Active Users` (B2C)            | 50K–100K   | $0.0055         | 50,000 MAUs |
+| `Standard Monthly Active Users` (B2C)            | 100K–950K  | $0.0046         | -           |
+| `Standard Monthly Active Users` (B2C)            | 950K–9.95M | $0.00325        | -           |
+| `Standard Monthly Active Users` (B2C)            | 9.95M+     | $0.0025         | -           |
+| `Basic Multi-Factor Authentication` (B2C)        | Flat       | $0.0300         | None        |
 
-> These rates are from the Azure Retail Prices API at `Global` region. The script shows zero for sub-cent rates. For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> These rates are from the Azure Retail Prices API at `Global` region. The script rounds `MonthlyCost` to cents, so sub-cent meters can total zero at low volumes; use `UnitPrice`. For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
