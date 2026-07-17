@@ -1,0 +1,66 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:iot/iot-central/st1-device-fleet
+name: Happy Path - IoT Central Standard Tier 1 Device Fleet
+description: >
+  Tests cost estimation for IoT Central Standard Tier 1 (ST1) scaled across a
+  device fleet. IoT Central bills per active device per hour (unitOfMeasure
+  1/Hour), so the monthly cost is retailPrice x 730 x billable devices, with the
+  first two devices per application free. The tier is selected by MeterName
+  (Standard Tier 1), since all Standard tiers share skuName Standard. Validates
+  that the agent isolates the correct tier meter and applies the 730-hour
+  conversion and device-count scaling.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:iot-central
+inputs:
+  prompt: "What is the monthly cost for Azure IoT Central with 100 Standard Tier 1 devices in East US?"
+expected:
+  output_contains:
+    - "IoT Central"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "IoT Central|iot central"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: device-count-acknowledged
+    config:
+      contains:
+        - "100"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Azure IoT Central with 100 Standard Tier 1 devices in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for IoT Central (per-device hourly rate multiplied by 730 hours, first two devices free).
+        (3) Accounts for 100 Standard Tier 1 devices as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
