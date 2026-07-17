@@ -9,7 +9,7 @@ pricingRegion: global
 
 # Virtual Network Manager
 
-> **Warning**: Virtual Network Manager pricing is **Global-only**. Querying any standard region (e.g., `eastus`) returns zero results. Use `Region: Global`.
+> **Warning**: Virtual Network Manager commercial pricing is Global: standard regions (e.g., `eastus`) return zero results, so use `Region: Global`. The `Standard Virtual Network` meter also has a `US Gov` variant; the other three meters are Global-only.
 
 > **Trap (shared serviceName)**: API `serviceName` is `Virtual Network`, shared with IP Addresses, VNet Peering, Private Link, and others. Always include `ProductName: Azure Virtual Network Manager` to isolate AVNM meters.
 
@@ -54,21 +54,21 @@ Quantity: 50
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values                                  |
-| ------------- | ----------------------------------------- | ----------------------------------------------- |
-| `serviceName` | Always `Virtual Network`                  | `Virtual Network`                               |
-| `productName` | Always `Azure Virtual Network Manager`    | `Azure Virtual Network Manager`                 |
-| `skuName`     | Billing model or add-on feature           | `Standard`, `Managed IP`, `Reachability Analysis` |
-| `meterName`   | Specific meter, see table                | `Standard Virtual Network`, `Standard Subscription` |
+| Parameter     | How to determine                       | Example values                                      |
+| ------------- | -------------------------------------- | --------------------------------------------------- |
+| `serviceName` | Always `Virtual Network`               | `Virtual Network`                                   |
+| `productName` | Always `Azure Virtual Network Manager` | `Azure Virtual Network Manager`                     |
+| `skuName`     | Billing model or add-on feature        | `Standard`, `Managed IP`, `Reachability Analysis`   |
+| `meterName`   | Specific meter, see table              | `Standard Virtual Network`, `Standard Subscription` |
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Virtual Network` | `Standard` | `1 Hour` | VNet-based billing (new default), per managed VNet |
-| `Standard Subscription` | `Standard` | `1 Hour` | Subscription-based billing (legacy, retiring Feb 2028) |
-| `Managed IP Management` | `Managed IP` | `1 Hour` | IPAM add-on, sub-cent per active IP per hour |
-| `Reachability Analysis Diagnostic Tool API` | `Reachability Analysis` | `1` | Network Verifier, per analysis run, not hourly |
+| Meter                                       | skuName                 | unitOfMeasure | Notes                                                    |
+| ------------------------------------------- | ----------------------- | ------------- | -------------------------------------------------------- |
+| `Standard Virtual Network`                  | `Standard`              | `1 Hour`      | VNet-based billing (new default), per managed VNet       |
+| `Standard Subscription`                     | `Standard`              | `1 Hour`      | Subscription-based billing (legacy, retiring 2028-02-06) |
+| `Managed IP Management`                     | `Managed IP`            | `1 Hour`      | IPAM add-on, sub-cent per active IP per hour             |
+| `Reachability Analysis Diagnostic Tool API` | `Reachability Analysis` | `1`           | Network Verifier, per analysis run, not hourly           |
 
 ## Cost Formula
 
@@ -85,7 +85,7 @@ Monthly      = Base + IPAM + Verifier
 
 ## Notes
 
-- **Billing model choice is never-assume**. Subscription-based vs VNet-based are mutually exclusive; new instances default to VNet-based; subscription-based retires Feb 2028
+- **Billing model choice is never-assume**. Subscription-based vs VNet-based are mutually exclusive; new instances default to VNet-based; subscription-based retires 2028-02-06
 - **VNet peering billed separately**. Connectivity configurations (mesh/hub-spoke) create peerings charged under `Virtual Network Peering`; see `networking/virtual-network.md`
 - **Reachability Analysis is per-call**. Set `Quantity` to runs/month; the script returns `retailPrice × Quantity` correctly, but defaults to a single call when `Quantity` is omitted
 - **IPAM is independently billable**. IPAM does not require connectivity or security configurations; customers using only IPAM pay `Managed IP Management` charges without VNet/subscription management fees. Rate is sub-cent per managed IP per hour; use `retailPrice` directly

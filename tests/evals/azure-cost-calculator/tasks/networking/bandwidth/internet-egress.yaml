@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/bandwidth/internet-egress
+name: Bandwidth - Internet Egress
+description: >
+  Tests monthly cost estimation for outbound internet data transfer (egress)
+  using the default Microsoft Global Network routing. Validates that the agent
+  states assumptions, applies the first-100-GB free grant, and uses tiered
+  per-GB egress pricing for the specified volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:bandwidth
+inputs:
+  prompt: "What is the monthly cost for 500 GB of outbound internet data transfer (egress) from East US using the default Microsoft Global Network routing?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Bandwidth|Data Transfer|egress"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: egress-volume-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

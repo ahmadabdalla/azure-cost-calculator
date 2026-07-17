@@ -1,0 +1,47 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/ddos-protection/network-protection-plan
+name: Azure DDoS Protection - Network Protection Plan
+description: >
+  Tests monthly cost estimation for the always-on Azure DDoS Network
+  Protection plan. Validates that the agent states assumptions, uses a
+  730-hour monthly basis for the hourly plan meter, and notes that the plan
+  includes 100 public IPs before overage charges apply.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:ddos-protection
+inputs:
+  prompt: "How much does Azure DDoS Network Protection cost per month in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+    - "730"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "DDoS|DDOS"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: plan-acknowledged
+    config:
+      contains:
+        - "Network Protection"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
