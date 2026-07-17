@@ -17,6 +17,10 @@ TASKS_DIR="${REPO_ROOT}/tests/evals/azure-cost-calculator/tasks"
 uncovered=()
 
 for f in "$@"; do
+  # Skip paths that no longer exist (e.g. a file deleted or renamed in this
+  # change set); coverage only applies to service files present on disk.
+  [ -f "$f" ] || continue
+
   svc=$(basename "$f" .md)
   category=$(basename "$(dirname "$f")")
   suggested_path="${TASKS_DIR}/${category}/${svc}/"
