@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/network-watcher/nsg-flow-logs
-name: Happy Path - Network Watcher NSG Flow Log Collection
+name: Network Watcher - NSG Flow Log Collection
 description: >
   Tests monthly cost estimation for Network Watcher NSG flow log collection.
   Validates that the agent states assumptions, applies the 5 GB per-month free

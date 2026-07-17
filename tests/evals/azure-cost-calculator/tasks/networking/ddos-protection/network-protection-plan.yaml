@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/ddos-protection/network-protection-plan
-name: Happy Path - DDoS Network Protection Plan
+name: Azure DDoS Protection - Network Protection Plan
 description: >
   Tests monthly cost estimation for the always-on Azure DDoS Network
   Protection plan. Validates that the agent states assumptions, uses a

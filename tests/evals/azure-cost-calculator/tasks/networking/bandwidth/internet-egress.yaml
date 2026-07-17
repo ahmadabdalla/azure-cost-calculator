@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/bandwidth/internet-egress
-name: Happy Path - Bandwidth Internet Egress
+name: Bandwidth - Internet Egress
 description: >
   Tests monthly cost estimation for outbound internet data transfer (egress)
   using the default Microsoft Global Network routing. Validates that the agent

@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/bastion/standard-tier
-name: Happy Path - Azure Bastion Standard Tier
+name: Azure Bastion - Standard Tier
 description: >
   Tests monthly cost estimation for an always-on Azure Bastion Standard tier
   host. Validates that the agent states assumptions, uses a 730-hour monthly

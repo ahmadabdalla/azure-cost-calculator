@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/content-delivery-network/microsoft-standard-egress
-name: Happy Path - Azure CDN from Microsoft Data Transfer
+name: Content Delivery Network - Microsoft Standard Egress
 description: >
   Tests monthly cost estimation for outbound data transfer on an existing
   Azure CDN Standard from Microsoft profile in delivery Zone 1. Validates that

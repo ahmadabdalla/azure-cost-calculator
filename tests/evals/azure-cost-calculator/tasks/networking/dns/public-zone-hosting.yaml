@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/dns/public-zone-hosting
-name: Happy Path - Azure DNS Public Zone Hosting
+name: Azure DNS - Public Zone Hosting
 description: >
   Tests monthly cost estimation for hosting public DNS zones on Azure DNS.
   Validates that the agent states assumptions, uses zone-based (not ARM-region)

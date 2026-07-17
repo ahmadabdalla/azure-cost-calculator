@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/load-balancer/standard-base-plus-data
-name: Happy Path - Standard Load Balancer Base Plus Data Processed
+name: Load Balancer - Standard Base Plus Data Processed
 description: >
   Tests monthly cost estimation for a Standard Load Balancer with default rules
   plus processed data. Validates that the agent states assumptions, queries the

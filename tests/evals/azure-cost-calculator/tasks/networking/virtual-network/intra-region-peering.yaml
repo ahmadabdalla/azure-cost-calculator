@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/virtual-network/intra-region-peering
-name: Happy Path - VNet Intra-Region Peering Data Transfer
+name: Virtual Network - Intra-Region Peering Data Transfer
 description: >
   Tests monthly cost estimation for intra-region VNet peering data transfer.
   Validates that the agent states assumptions, queries the Global-only

@@ -1,6 +1,6 @@
 # Waza eval task: see docs/ops/evals.md
 id: eval:networking/express-route/metered-circuit-egress
-name: Happy Path - ExpressRoute Metered Circuit Plus Egress
+name: ExpressRoute - Metered Circuit Plus Egress
 description: >
   Tests monthly cost estimation for a Standard Metered ExpressRoute circuit plus
   outbound data transfer. Validates that the agent states assumptions, queries
