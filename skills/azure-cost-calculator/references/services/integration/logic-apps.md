@@ -75,9 +75,9 @@ Integration Account (add-on): Monthly = retailPrice (flat monthly per tier)
 ## Notes
 
 - **Billing unit is actions, not workflow executions**; each step counts as one action
-- Consumption: per-action, first 4,000 built-in actions/month free, auto-scales to zero
-- Standard: vCPU + memory hourly on App Service Plan (WS1–WS3); connector calls billed per-action at Consumption rates (same meters)
-- Integration Account is a separate B2B/EDI add-on; ISE is deprecated. Use Standard with VNet instead
+- Consumption: per-action, first 4,000 built-in actions/month free per subscription, auto-scales to zero
+- Standard: vCPU + memory hourly on App Service Plan (WS1–WS3); managed connector calls billed per-action under the `Connectors` SkuName (`Connectors Standard/Enterprise Connector Actions`, same rates as Consumption)
+- Integration Account is a separate B2B/EDI add-on; ISE was retired Aug 31, 2024 (no new deployments), use Standard with VNet instead
 - **Private Endpoints**: Require Standard tier with VNet integration
 
 ## Standard Plan Sizes (WS)
