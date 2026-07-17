@@ -19,11 +19,12 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### Basic tier: operations only (per 1M)
+### Basic tier: operations only (per 1M operations)
 
 ServiceName: Service Bus
 SkuName: Basic
 MeterName: Basic Messaging Operations
+Quantity: 10 # 10 × 1M = 10M operations/month
 
 ### Standard tier: namespace base unit (hourly)
 
@@ -50,6 +51,13 @@ SkuName: Premium
 MeterName: Premium Messaging Unit
 InstanceCount: 2
 
+### Premium: geo-DR replication data transfer (substitute Zone 1/2/3 per destination region)
+
+ServiceName: Service Bus
+SkuName: Geo Replication Zone 1
+MeterName: Geo Replication Zone 1 Data Transfer
+Quantity: 100
+
 ## Meter Names
 
 | Meter                              | SKU                        | unitOfMeasure | Purpose                                                  |
@@ -75,6 +83,7 @@ Standard: Monthly = baseUnit_hourly × 730
          + max(0, operations − 13M) / 1M × tiered_ops_price
          + max(0, connections − 1,000) × tiered_connection_price
 Premium:  Monthly = MU_hourly × 730 × muCount (operations + connections included)
+Geo-DR:   Monthly += replicatedGB × zone_transfer_price (Premium add-on; Zone 1/2/3 by destination)
 ```
 
 ## Notes
