@@ -42,12 +42,12 @@ ServiceName: API Management
 SkuName: Secondary
 MeterName: Secondary Unit
 
-### Consumption tier: per-call (Quantity in 10K units: billable calls ÷ 10,000; first 1M free; no InstanceCount)
+### Consumption tier: per-call (first 1M calls free; no InstanceCount)
 
 ServiceName: API Management
 SkuName: Consumption
 MeterName: Consumption Calls
-Quantity: (billableCalls ÷ 10000)
+Quantity: 100  # 100 × 10K = 1M billable calls (beyond 1M free grant)
 
 ## Key Fields
 
