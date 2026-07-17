@@ -1,0 +1,63 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:developer-tools/devops/basic-users-parallel-jobs
+name: Azure DevOps - Basic Users and Parallel Jobs
+description: >
+  Tests cost estimation for Azure DevOps combining per-user Basic licenses with
+  Microsoft-hosted parallel jobs. The counts are given as totals so the agent
+  must apply the free-grant deductions (first 5 Basic users, 1 free parallel
+  job). Validates the per-user/month and per-job/month billing models and
+  Global-only meter pricing.
+tags:
+  - happy-path
+  - single-service
+  - developer-tools
+  - service:devops
+inputs:
+  prompt: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "730"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure DevOps|ADO"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: user-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Azure DevOps (per-user/month licenses plus per-job/month parallel jobs, not hourly).
+        (3) Applies the free grants (first 5 Basic users free, 1 Microsoft-hosted parallel job free) to the totals of 10 Basic users and 4 parallel jobs.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

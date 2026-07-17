@@ -68,7 +68,7 @@ Essential Monthly = user_retailPrice × active_users
 
 ## Notes
 
-- **Essential tier (Preview, being deprecated)**: No instance charge; user-only billing. Limited to 1 workspace/subscription, 20 dashboards, 5 data sources. Being replaced by Standard tier and Azure Monitor dashboards
+- **Essential tier (deprecated)**: No new Essential workspaces can be created; retiring March 31, 2027. Existing instances still bill via the `Essential User` meter (no instance charge; user-only). Use Standard for new deployments
 - **Instance sizes**: Standard X1 (default) = 2 SUs, Standard X2 = 4 SUs. Instance size determines SU/ZRU quantity multiplier (never-assume)
 - **Active users**: Counted per Azure subscription, not per instance; includes users, service accounts, and API keys
 - **30-day free trial**: First instance free for 30 days (one per subscription). Not reflected in API pricing
