@@ -17,7 +17,7 @@ privateEndpoint: true
 
 ## Query Pattern
 
-### All tiers: substitute {Tier} from Meter Names table (InstanceCount for multi-unit)
+### Hourly tiers (Developer/Basic/Standard/Premium/Isolated/v2): substitute {Tier}, not Consumption (InstanceCount for multi-unit)
 
 ServiceName: API Management
 SkuName: {Tier}
@@ -41,6 +41,13 @@ MeterName: {Tier} Self-hosted Gateway
 ServiceName: API Management
 SkuName: Secondary
 MeterName: Secondary Unit
+
+### Consumption tier: per-call, use Quantity for call volume (do NOT use InstanceCount)
+
+ServiceName: API Management
+SkuName: Consumption
+MeterName: Consumption Calls
+Quantity: 50000
 
 ## Key Fields
 
