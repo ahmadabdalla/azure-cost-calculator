@@ -1,0 +1,64 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:identity/aad-b2c/standard-mau-tiered
+name: Azure Active Directory B2C - Standard MAU Tiered Pricing
+description: >
+  Tests cost estimation for Azure Active Directory B2C Standard tier with
+  150,000 monthly active users. Validates tiered MAU billing, 50K free grant
+  deduction, sub-cent rate handling, and progressive tier calculation.
+tags:
+  - happy-path
+  - single-service
+  - identity
+  - service:aad-b2c
+inputs:
+  prompt: "Estimate the monthly cost for an Azure AD B2C tenant in Standard tier with 150,000 monthly active users in East US."
+expected:
+  output_contains:
+    - "Assumptions"
+    - "50,000"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Active Directory B2C|Azure AD B2C|AAD B2C"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: mau-count-acknowledged
+    config:
+      contains:
+        - "150,000"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "Estimate the monthly cost for an Azure AD B2C tenant in Standard tier with 150,000 monthly active users in East US."
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the Standard MAU billing model with progressive tier rates.
+        (3) Applies the 50,000 free MAU grant deduction before calculating billable MAUs.
+        (4) Accounts for 150,000 monthly active users as specified.
+        (5) Does not report zero cost for the billable MAU tiers.
+
+        Score 1.0 if all five criteria are met. Score 0.5 if three or four are met. Score 0.0 if fewer than three are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

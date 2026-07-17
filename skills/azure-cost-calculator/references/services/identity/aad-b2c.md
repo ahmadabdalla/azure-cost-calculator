@@ -72,7 +72,7 @@ Total:         Monthly = MAU_or_Auth_cost + MFA_cost
 
 - **Free grant**: First 50,000 MAUs/month (Standard) or 50,000 authentications/month (Basic) are free. Does not apply to free trial, credit-based, or sponsorship subscriptions
 - **Two billing models**: Standard (per-MAU, current default) and Basic (per-authentication, legacy pre-Nov 2019); switch to MAU is irreversible
-- **P1 vs P2**: The API has a single `Standard` SKU; P1 and P2 differ in features (P2 adds Identity Protection, PIM), not per-MAU pricing
+- **P1 vs P2**: The API has a single `Standard` SKU; per-MAU pricing is identical. P2 features (Identity Protection, PIM) were retired from B2C tenants on March 15, 2026
 - **MFA is per-attempt**: Each SMS/Voice MFA challenge incurs a charge whether sign-in succeeds or fails
 - **End-of-sale**: As of May 2025, not available for new customers; new implementations should use Microsoft Entra External ID
 - Related services billed separately: `identity/entra-id.md` (Microsoft Entra ID), `Azure Active Directory for External Identities` (B2B)
@@ -86,6 +86,11 @@ Total:         Monthly = MAU_or_Auth_cost + MFA_cost
 | `Standard Monthly Active Users`     | 100K–950K  | $0.0046         | -           |
 | `Standard Monthly Active Users`     | 950K–9.95M | $0.00325        | -           |
 | `Standard Monthly Active Users`     | 9.95M+     | $0.0025         | -           |
+| `Basic Authentication`              | 0–50K      | $0.0000         | 50,000 auth |
+| `Basic Authentication`              | 50K–1M     | $0.0028         | -           |
+| `Basic Authentication`              | 1M–10M     | $0.0021         | -           |
+| `Basic Authentication`              | 10M–50M    | $0.0014         | -           |
+| `Basic Authentication`              | 50M+       | $0.0007         | -           |
 | `Basic Multi-Factor Authentication` | Flat       | $0.0300         | None        |
 
 > These rates are from the Azure Retail Prices API at `Global` region. The script shows zero for sub-cent rates. For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
