@@ -47,7 +47,6 @@ function Test-FileNaming {
 
         # Known exceptions where the algorithmic conversion does not match
         $exceptions = @{
-            'Azure Active Directory B2C'                     = 'aad-b2c.md'
             'Azure Active Directory for External Identities' = 'aad-external-identities.md'
             'Azure Front Door Service'                       = 'front-door.md'
             'Azure Managed Instance for Apache Cassandra'    = 'cassandra-managed-instance.md'
