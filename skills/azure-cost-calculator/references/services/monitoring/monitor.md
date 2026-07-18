@@ -83,14 +83,14 @@ All listed meters use `ServiceName: Azure Monitor` and `ProductName: Azure Monit
 | `Standard Web Test Execution`                              | `Standard Web Test`                         | `1`           | Availability test execution (sub-cent)              |
 | `Alerts Metric Monitored`                                  | `Alerts`                                    | `1/Month`     | Tiered: first 10 signals free                       |
 | `Alerts Dynamic Threshold`                                 | `Alerts`                                    | `1/Month`     | Dynamic threshold metric alert signal               |
-| `Dynamic Threshold Log Alerts`                             | `Dynamic Threshold Log Alerts`              | `1/Month`     | Dynamic threshold log alert meter                   |
+| `Dynamic Threshold Log Alerts`                             | `Dynamic Threshold Log Alerts`              | `1/Month`     | Returns zero price in all regions (no paid tier)    |
 | `Alerts Resource Monitored at {N} Minute Frequency`        | `Alerts`                                    | `1/Month`     | Log search alerts: 1/5/10/15 min frequencies        |
 | `Alerts System Log Monitored at {N} Minute Frequency`      | `Alerts`                                    | `1/Month`     | System log alerts: 10× Resource Monitored rate      |
 | `Emails`                                                   | `Emails`                                    | `1`           | Tiered: first 1K emails free                        |
 | `Notifications ITSM Connector Create/Update Event`         | `Notifications`                             | `1`           | Tiered: first 1K events free                        |
 | `Notifications Push Notification`                          | `Notifications`                             | `1`           | Tiered: first 1K notifications free                 |
-| `Notifications Secure web hook`                            | `Notifications`                             | `10`          | Tiered: first 100 notifications free                |
-| `Notifications Web hook`                                   | `Notifications`                             | `10`          | Tiered: first 10K notifications free                |
+| `Notifications Secure web hook`                            | `Notifications`                             | `10`          | Tiered: first 1K notifications free (100 units)     |
+| `Notifications Web hook`                                   | `Notifications`                             | `10`          | Tiered: first 100K notifications free (10K units)   |
 | `{N} GB Commitment Tier Capacity Reservation`              | `{N} GB Commitment Tier`                    | `1/Day`       | Volume discounts (100–50000 GB/day)                 |
 
 > **Note**: SMS and voice also bill under Azure Monitor. Query `SMS Country Code {N} Notification` or `Voice Calls Voice Call Country Code {N}` for country-specific rates.
@@ -100,10 +100,11 @@ All listed meters use `ServiceName: Azure Monitor` and `ProductName: Azure Monit
 ```
 Metrics        = samples / 10M × retailPrice (per metric SKU)
 Log Ingestion  = ingestedGB × retailPrice (per log tier: Basic, Auxiliary, Cloud Pipeline)
-Archive        = archiveGB × retailPrice (per GB/month)
-Search         = scannedGB × retailPrice (per query/job)
-Restore        = max(restoredGB × days, 2048 × 0.5) × retailPrice
-Alerts         = max(0, metricSignals - 10) × retailPrice + logAlertRules × frequency_retailPrice
+Archive/Search = GB × retailPrice (per GB/month, or per query/job scanned)
+Restore        = max(restoredGB × restoreDays, 2048 × 0.5) × retailPrice  # min 2 TB × 0.5 day (12 h)
+API Calls      = max(0, calls - 1M) / unitSize × retailPrice  # Native Metric Queries & API Calls: first 1M free
+Metric Alerts  = max(0, metricSignals - 10) × retailPrice  # static or dynamic threshold, per signal
+Log Alerts     = logAlertRules × frequency_retailPrice  # Resource/System Log at 1/5/10/15 min; System Log ≈ 10× Resource
 Notifications  = max(0, events - freeGrant) / unitSize × retailPrice
 Commitment     = retailPrice × 30 (unit is 1/Day)
 ```
@@ -113,8 +114,6 @@ Commitment     = retailPrice × 30 (unit is 1/Day)
 - **Prometheus / AMW**: Ingestion and query meters are billable; `Metric Samples Processed` no longer appears in the live API
 - **Basic Logs**: Search-only (no alerts/dashboards); 30-day retention. **Auxiliary Logs**: cheapest tier; custom tables only via Logs Ingestion API
 - **Sentinel-enabled workspaces**: Basic Logs ingestion uses Sentinel meters; Auxiliary Logs remain under Azure Monitor
-- **Data Restore**: Minimum 2 TB × 12-hour duration; plan restores carefully
 - Commitment tiers (100–50000 GB/day) provide volume discounts; overage billed at effective rate
-- Alerts: metric alerts (first 10 signals free), log search alerts priced by evaluation frequency, dynamic thresholds priced per signal
 - Notifications/API calls: tiered free grants and sub-cent paid tiers require `tierMinimumUnits` handling
 - Private endpoints require AMPLS (Azure Monitor Private Link Scope)
