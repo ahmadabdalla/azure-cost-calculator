@@ -24,10 +24,10 @@ Quantity: 500  # billable assets
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| --- | --- | --- | --- |
-| `Defender EASM Standard Asset` | `Defender EASM Standard` | `1` | Per billable asset per day |
-| `Defender EASM 30 Day Trial Asset` | `Defender EASM 30 Day Trial` | `1` | Free trial (30 days) |
+| Meter                              | skuName                      | unitOfMeasure | Notes                      |
+| ---------------------------------- | ---------------------------- | ------------- | -------------------------- |
+| `Defender EASM Standard Asset`     | `Defender EASM Standard`     | `1`           | Per billable asset per day |
+| `Defender EASM 30 Day Trial Asset` | `Defender EASM 30 Day Trial` | `1`           | Free trial (30 days)       |
 
 ## Cost Formula
 
