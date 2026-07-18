@@ -16,7 +16,7 @@ privateEndpoint: true
 
 > **Trap (Semantic Ranker MonthlyCost)**: The `Semantic Ranker Unit` meter uses `1/Day` units. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30`; that would overcount by 30x. The per-query meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`) use `1K` units and default to ×1; compute them as `queriesPerMonth ÷ 1000 × retailPrice`.
 
-> **Trap (Agentic Retrieval sub-cent)**: The three Agentic Retrieval reasoning meters (`1K` unit) have sub-cent per-token rates, so the script rounds `MonthlyCost` to zero. Do not report zero to the user; use the Known Rates table and multiply `retailPrice × (tokens ÷ 1000)`.
+> **Trap (Agentic Retrieval sub-cent)**: The three Agentic Retrieval reasoning meters (`1K` unit) have sub-cent per-token rates, so the script rounds `MonthlyCost` to zero. Do not report zero to the user; use the Known Rates table and multiply `retailPrice × (max(0, tokens − freeGrant) ÷ 1000)`. The free grant is level-specific (see Known Rates).
 
 ## Query Pattern
 
@@ -32,6 +32,13 @@ InstanceCount: {searchUnits}
 ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker
 MeterName: Semantic Ranker Unit
+
+### Semantic Ranker per-query (bills per 1K queries; use for queriesPerMonth)
+
+ServiceName: Azure Cognitive Search
+SkuName: Semantic Ranker
+MeterName: Semantic Ranker queries
+Quantity: ({queriesPerMonth} ÷ 1000)
 
 ### Agentic Retrieval (per 1K tokens; Level = Minimum, Low, or Medium)
 
