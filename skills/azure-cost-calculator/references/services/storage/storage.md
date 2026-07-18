@@ -48,22 +48,22 @@ Quantity: 50
 | Parameter     | How to determine         | Example values                               |
 | ------------- | ------------------------ | -------------------------------------------- |
 | `serviceName` | Always `Storage`         | `Storage`                                    |
-| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Hot RA-GZRS`        |
+| `skuName`     | Access tier + redundancy | `Hot LRS`, `Cool ZRS`, `Hot RA-GZRS`         |
 | `productName` | See Product Names table  | `Blob Storage`, `General Block Blob v2`      |
 | `meterName`   | See Meter Names table    | `Hot LRS Data Stored`, `Hot Read Operations` |
 
 ## Meter Names
 
-| Meter                       | skuName       | productName             | unitOfMeasure | Notes                            |
-| --------------------------- | ------------- | ----------------------- | ------------- | -------------------------------- |
-| `Hot LRS Data Stored`       | `Hot LRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered                           |
-| `Hot ZRS Data Stored`       | `Hot ZRS`     | `General Block Blob v2` | `1 GB/Month`  | Tiered                           |
-| `Hot GRS Data Stored`       | `Hot GRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered                           |
-| `Hot GZRS Data Stored`      | `Hot GZRS`    | `General Block Blob v2` | `1 GB/Month`  | Tiered                           |
-| `Hot RA-GZRS Data Stored`   | `Hot RA-GZRS` | `General Block Blob v2` | `1 GB/Month`  | ~25% more than GZRS              |
-| `Hot Read Operations`       | _(any Hot)_   | _(varies)_              | `10K`         | Generic, not redundancy-specific |
-| `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | Redundancy-specific              |
-| `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS        |
+| Meter                       | skuName       | productName             | unitOfMeasure | Notes                             |
+| --------------------------- | ------------- | ----------------------- | ------------- | --------------------------------- |
+| `Hot LRS Data Stored`       | `Hot LRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered                            |
+| `Hot ZRS Data Stored`       | `Hot ZRS`     | `General Block Blob v2` | `1 GB/Month`  | Tiered                            |
+| `Hot GRS Data Stored`       | `Hot GRS`     | `Blob Storage`          | `1 GB/Month`  | Tiered                            |
+| `Hot GZRS Data Stored`      | `Hot GZRS`    | `General Block Blob v2` | `1 GB/Month`  | Tiered                            |
+| `Hot RA-GZRS Data Stored`   | `Hot RA-GZRS` | `General Block Blob v2` | `1 GB/Month`  | ~25% more than GZRS               |
+| `Hot Read Operations`       | _(any Hot)_   | _(varies)_              | `10K`         | Generic, not redundancy-specific  |
+| `Hot LRS Write Operations`  | `Hot LRS`     | `Blob Storage`          | `10K`         | Redundancy-specific               |
+| `Hot GZRS Write Operations` | `Hot GZRS`    | `General Block Blob v2` | `10K`         | Shared by GZRS & RA-GZRS          |
 | `Cool Data Retrieval`       | _(any Cool)_  | _(varies)_              | `1 GB`        | Also: Cold/Archive Data Retrieval |
 
 Meter pattern: `{Tier} {Redundancy} Data Stored`, `{Tier} Read Operations` or `{Tier} ZRS Read Operations`, `{Tier} {Redundancy} Write Operations` (RA-* reuses non-RA write meter name, e.g., RA-GZRS → `Hot GZRS Write Operations`, RA-GRS → `Hot GRS Write Operations`)
@@ -102,12 +102,12 @@ PriceType: Reservation
 
 ## Product Names
 
-| Sub-product / Redundancy    | productName             | Default skuName | Data Stored meter       |
-| --------------------------- | ----------------------- | --------------- | ----------------------- |
-| Blob LRS, GRS, RA-GRS       | `Blob Storage`          | `Hot LRS`       | `Hot LRS Data Stored`   |
-| Blob ZRS, GZRS, RA-GZRS     | `General Block Blob v2` | `Hot ZRS`       | `Hot ZRS Data Stored`   |
+| Sub-product / Redundancy    | productName             | Default skuName | Data Stored meter         |
+| --------------------------- | ----------------------- | --------------- | ------------------------- |
+| Blob LRS, GRS, RA-GRS       | `Blob Storage`          | `Hot LRS`       | `Hot LRS Data Stored`     |
+| Blob ZRS, GZRS, RA-GZRS     | `General Block Blob v2` | `Hot ZRS`       | `Hot ZRS Data Stored`     |
 | Blob Premium LRS/ZRS        | `Premium Block Blob`    | `Premium LRS`   | `Premium LRS Data Stored` |
-| Azure Files (pay-as-you-go) | `Files v2`              | `Standard LRS`  | `LRS Data Stored`       |
+| Azure Files (pay-as-you-go) | `Files v2`              | `Standard LRS`  | `LRS Data Stored`         |
 | Azure Files (provisioned)   | `Premium Files`         | `Premium LRS`   | `Premium LRS Provisioned` |
-| Table Storage               | `Tables`                | `Standard LRS`  | `LRS Data Stored`       |
-| Queue Storage               | `Queues v2`             | `Standard LRS`  | `LRS Data Stored`       |
+| Table Storage               | `Tables`                | `Standard LRS`  | `LRS Data Stored`         |
+| Queue Storage               | `Queues v2`             | `Standard LRS`  | `LRS Data Stored`         |

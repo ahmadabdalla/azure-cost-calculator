@@ -41,21 +41,21 @@ Quantity: 2 # millions of operations invoked per month
 
 ## Key Fields
 
-| Parameter     | How to determine                           | Example values                                |
-| ------------- | ------------------------------------------ | --------------------------------------------- |
-| `serviceName` | Always `Storage` (shared serviceName)      | `Storage`                                     |
-| `productName` | Always `Storage Actions`                   | `Storage Actions`                             |
-| `skuName`     | Always `Azure Storage Tasks`               | `Azure Storage Tasks`                         |
-| `meterName`   | Billing dimension, see Meter Names        | `Azure Storage Tasks Task Execution`          |
+| Parameter     | How to determine                      | Example values                       |
+| ------------- | ------------------------------------- | ------------------------------------ |
+| `serviceName` | Always `Storage` (shared serviceName) | `Storage`                            |
+| `productName` | Always `Storage Actions`              | `Storage Actions`                    |
+| `skuName`     | Always `Azure Storage Tasks`          | `Azure Storage Tasks`                |
+| `meterName`   | Billing dimension, see Meter Names    | `Azure Storage Tasks Task Execution` |
 
 ## Meter Names
 
-| Meter                                       | unitOfMeasure | Notes                          |
-| ------------------------------------------- | ------------- | ------------------------------ |
-| `Azure Storage Tasks Task Execution`        | `1`           | Per task execution instance    |
-| `Azure Storage Tasks Objects Targeted`      | `1M`          | Per million objects evaluated  |
-| `Azure Storage Tasks Operations Invoked`    | `1M`          | Per million operations on objects |
-| `Azure Storage Tasks Objects Operated On`   | `1M`          | API-only; not on pricing page — exclude |
+| Meter                                     | unitOfMeasure | Notes                                   |
+| ----------------------------------------- | ------------- | --------------------------------------- |
+| `Azure Storage Tasks Task Execution`      | `1`           | Per task execution instance             |
+| `Azure Storage Tasks Objects Targeted`    | `1M`          | Per million objects evaluated           |
+| `Azure Storage Tasks Operations Invoked`  | `1M`          | Per million operations on objects       |
+| `Azure Storage Tasks Objects Operated On` | `1M`          | API-only; not on pricing page — exclude |
 
 ## Cost Formula
 

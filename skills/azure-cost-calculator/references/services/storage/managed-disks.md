@@ -52,22 +52,22 @@ ProductName: Standard HDD Managed Disks
 
 ## Key Fields
 
-| Parameter     | How to determine            | Example values                                                                                                                  |
-| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `serviceName` | Always `Storage`            | `Storage`                                                                                                                       |
+| Parameter     | How to determine            | Example values                                                                                                                 |
+| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `serviceName` | Always `Storage`            | `Storage`                                                                                                                      |
 | `productName` | Disk type                   | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Standard HDD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
-| `skuName`     | {Prefix}{Size} {Redundancy} | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                                                        |
+| `skuName`     | {Prefix}{Size} {Redundancy} | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                                                         |
 | `meterName`   | Meter type per disk         | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                                                |
 
 ## Meter Names
 
-| Disk Type      |                          Meters                          | Mount | Operations    |
+| Disk Type      |                          Meters                          | Mount |  Operations   |
 | -------------- | :------------------------------------------------------: | :---: | :-----------: |
 | Premium SSD    |                    Disk + Disk Mount                     |  YES  |      NO       |
-| Standard SSD   | Disk + Disk Mount + Disk Operations (E4+; E1–E3 no Ops) |  YES  | YES (per 10K) |
+| Standard SSD   | Disk + Disk Mount + Disk Operations (E4+; E1–E3 no Ops)  |  YES  | YES (per 10K) |
 | Standard HDD   |                  Disk + Disk Operations                  |  NO   | YES (per 10K) |
-| Ultra Disk     |  Provisioned Capacity, IOPS, Throughput, vCPU Reservation |  -   |       -       |
-| Premium SSD v2 |        Provisioned Capacity, IOPS, Throughput            |   -   |       -       |
+| Ultra Disk     | Provisioned Capacity, IOPS, Throughput, vCPU Reservation |   -   |       -       |
+| Premium SSD v2 |          Provisioned Capacity, IOPS, Throughput          |   -   |       -       |
 
 ## Cost Formula
 

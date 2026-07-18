@@ -25,12 +25,12 @@ Quantity: 30 # 30 days/month for monthly cost
 
 ## Key Fields
 
-| Parameter     | How to determine                               | Example values           |
-| ------------- | ---------------------------------------------- | ------------------------ |
-| `serviceName` | Always `Data Box` (shared)                     | `Data Box`               |
-| `productName` | Always `Data Box Gateway` for this sub-product | `Data Box Gateway`       |
-| `skuName`     | Always `Standard`                              | `Standard`               |
-| `meterName`   | Daily appliance fee                            | `Standard Service Fee`   |
+| Parameter     | How to determine                               | Example values         |
+| ------------- | ---------------------------------------------- | ---------------------- |
+| `serviceName` | Always `Data Box` (shared)                     | `Data Box`             |
+| `productName` | Always `Data Box Gateway` for this sub-product | `Data Box Gateway`     |
+| `skuName`     | Always `Standard`                              | `Standard`             |
+| `meterName`   | Daily appliance fee                            | `Standard Service Fee` |
 
 ## Meter Names
 

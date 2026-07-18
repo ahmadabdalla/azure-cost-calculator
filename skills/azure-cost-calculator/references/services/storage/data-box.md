@@ -42,28 +42,28 @@ Region: Global # retired product; service + extra day fees are Global-only
 
 ## Key Fields
 
-| Parameter     | How to determine                | Example values                                                             |
-| ------------- | ------------------------------- | -------------------------------------------------------------------------- |
-| `serviceName` | Always `Data Box`               | `Data Box`                                                                 |
-| `productName` | Device variant                  | `Data Box`, `Data Box V2`, `Data Box Disk`, `Data Box Heavy`               |
-| `skuName`     | Capacity tier                   | `100 TB`, `120 TB`, `525 TB`, `Standard`                                   |
+| Parameter     | How to determine               | Example values                                                             |
+| ------------- | ------------------------------ | -------------------------------------------------------------------------- |
+| `serviceName` | Always `Data Box`              | `Data Box`                                                                 |
+| `productName` | Device variant                 | `Data Box`, `Data Box V2`, `Data Box Disk`, `Data Box Heavy`               |
+| `skuName`     | Capacity tier                  | `100 TB`, `120 TB`, `525 TB`, `Standard`                                   |
 | `meterName`   | Fee component, see Meter Names | `Standard Service Fee`, `100 TB Extra Day Fee`, `Device Standard Shipping` |
 
 ## Meter Names
 
-| Meter                             | productName      | unitOfMeasure | Notes                                |
-| --------------------------------- | ---------------- | ------------- | ------------------------------------ |
-| `Standard Service Fee`            | `Data Box Disk`  | `1`           | Per order                            |
-| `Standard Daily Use Fee`          | `Data Box Disk`  | `1`           | Per disk/day; 3 included days        |
-| `Device Standard Shipping`        | `Data Box Disk`  | `1`           | Per package round-trip               |
-| `100 TB Import Service Fee`       | `Data Box`       | `1`           | Per order; 10 included days          |
-| `100 TB Extra Day Fee`            | `Data Box`       | `1/Day`       | After included days                  |
-| `100 TB Device Standard Shipping` | `Data Box`       | `1`           | Round-trip                           |
+| Meter                             | productName      | unitOfMeasure | Notes                                                  |
+| --------------------------------- | ---------------- | ------------- | ------------------------------------------------------ |
+| `Standard Service Fee`            | `Data Box Disk`  | `1`           | Per order                                              |
+| `Standard Daily Use Fee`          | `Data Box Disk`  | `1`           | Per disk/day; 3 included days                          |
+| `Device Standard Shipping`        | `Data Box Disk`  | `1`           | Per package round-trip                                 |
+| `100 TB Import Service Fee`       | `Data Box`       | `1`           | Per order; 10 included days                            |
+| `100 TB Extra Day Fee`            | `Data Box`       | `1/Day`       | After included days                                    |
+| `100 TB Device Standard Shipping` | `Data Box`       | `1`           | Round-trip                                             |
 | `120 TB Service Fee`              | `Data Box V2`    | `1`           | Absent/zero in most regions; also `525 TB Service Fee` |
-| `120 TB Extra Day Fee`            | `Data Box V2`    | `1/Day`       | Also `525 TB Extra Day Fee`          |
-| `Standard Import Service Fee`     | `Data Box Heavy` | `1`           | Per order; 20 included days          |
-| `Standard Extra Day Fee`          | `Data Box Heavy` | `1/Day`       | After included days                  |
-| `Device Standard Shipping`        | `Data Box Heavy` | `1`           | Freight round-trip                   |
+| `120 TB Extra Day Fee`            | `Data Box V2`    | `1/Day`       | Also `525 TB Extra Day Fee`                            |
+| `Standard Import Service Fee`     | `Data Box Heavy` | `1`           | Per order; 20 included days                            |
+| `Standard Extra Day Fee`          | `Data Box Heavy` | `1/Day`       | After included days                                    |
+| `Device Standard Shipping`        | `Data Box Heavy` | `1`           | Freight round-trip                                     |
 
 > **Note**: Data Box V2 has no shipping meter and no service fee in most regions (Microsoft-managed shipping is free); estimate V2 orders from the extra day fee only.
 

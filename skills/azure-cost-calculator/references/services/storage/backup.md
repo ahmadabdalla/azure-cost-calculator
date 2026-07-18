@@ -49,17 +49,17 @@ MeterName: SQL Server in Azure VM Protected Instance
 
 ## Meter Names
 
-| Meter                                       | skuName                  | unitOfMeasure | Notes                         |
-| ------------------------------------------- | ------------------------ | ------------- | ----------------------------- |
-| `Azure VM Protected Instance`               | `Azure VM`               | `1/Month`     | Per VM                        |
-| `SQL Server in Azure VM Protected Instance` | `SQL Server in Azure VM` | `1/Month`     | Per SQL instance              |
-| `SAP HANA on Azure VM Protected Instance`   | `SAP HANA on Azure VM`   | `1/Month`     | Per SAP HANA instance         |
+| Meter                                       | skuName                  | unitOfMeasure | Notes                          |
+| ------------------------------------------- | ------------------------ | ------------- | ------------------------------ |
+| `Azure VM Protected Instance`               | `Azure VM`               | `1/Month`     | Per VM                         |
+| `SQL Server in Azure VM Protected Instance` | `SQL Server in Azure VM` | `1/Month`     | Per SQL instance               |
+| `SAP HANA on Azure VM Protected Instance`   | `SAP HANA on Azure VM`   | `1/Month`     | Per SAP HANA instance          |
 | `Cosmos DB Protected Instance`              | `Cosmos DB`              | `1/Month`     | Vault backup (not native PITR) |
-| `Azure Files Vaulted Protected Instance`    | `Azure Files Vaulted`    | `1/Month`     | Vaulted Files backup          |
-| `On Premises Server Protected Instance`     | `On Premises Server`     | `1/Month`     | MARS/DPM/MABS agents          |
-| `Standard LRS Data Stored`                  | `Standard`               | `1 GB/Month`  | Standard vault storage (LRS)  |
-| `Standard GRS Data Stored`                  | `Standard`               | `1 GB/Month`  | Geo-redundant vault storage   |
-| `Azure Files Vaulted LRS Data Stored`       | `Azure Files Vaulted`    | `1 GB/Month`  | Vaulted Files storage         |
+| `Azure Files Vaulted Protected Instance`    | `Azure Files Vaulted`    | `1/Month`     | Vaulted Files backup           |
+| `On Premises Server Protected Instance`     | `On Premises Server`     | `1/Month`     | MARS/DPM/MABS agents           |
+| `Standard LRS Data Stored`                  | `Standard`               | `1 GB/Month`  | Standard vault storage (LRS)   |
+| `Standard GRS Data Stored`                  | `Standard`               | `1 GB/Month`  | Geo-redundant vault storage    |
+| `Azure Files Vaulted LRS Data Stored`       | `Azure Files Vaulted`    | `1 GB/Month`  | Vaulted Files storage          |
 
 Other workload SKUs: `Azure Files` (snapshot, no vault storage), `Azure Kubernetes` and `AKS` (per-namespace, unit `1 Count`), `PostgreSQL`, `SAP ASE on Azure VM`, `Azure Blob`, `ADLS Gen2 Vaulted`, `Cross region for ADLS and Blobs`. `Standard` storage also exposes `ZRS`/`RA-GRS` meters; `Archive` (LRS/GRS only) offers sub-cent long-term storage with early-delete fees. `Azure Blob`/`ADLS Gen2 Vaulted` bill per-10K write operations by redundancy. Enhanced-policy workloads (SQL Server, SAP HANA) add a matching `... Snapshot Instance` meter.
 

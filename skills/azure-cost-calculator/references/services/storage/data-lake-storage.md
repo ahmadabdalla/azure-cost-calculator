@@ -66,8 +66,8 @@ MeterName: Cold LRS Data Stored
 | Meter                            | skuName         | unitOfMeasure | Notes                                         |
 | -------------------------------- | --------------- | ------------- | --------------------------------------------- |
 | `Hot LRS Data Stored`            | `Hot LRS`       | `1 GB/Month`  | Tiered (0-50 TB / 50-500 TB / 500+ TB)        |
-| `Hot LRS Index`                  | `Hot LRS`       | `1 GB/Month`  | HNS only, directory metadata cost            |
-| `Hot Write Operations`           | `Hot LRS`       | `10K`         | LRS only: no suffix; ZRS/GRS/GZRS use suffix   |
+| `Hot LRS Index`                  | `Hot LRS`       | `1 GB/Month`  | HNS only, directory metadata cost             |
+| `Hot Write Operations`           | `Hot LRS`       | `10K`         | LRS only: no suffix; ZRS/GRS/GZRS use suffix  |
 | `Hot GRS Write Operations`       | `Hot GRS`       | `10K`         | GRS/RA-GRS shared                             |
 | `Hot Read Operations`            | _(any Hot)_     | `10K`         | Generic, not redundancy-specific              |
 | `Hot Other Operations`           | _(any Hot)_     | `10K`         | Metadata ops (GetProperties, SetMetadata)     |

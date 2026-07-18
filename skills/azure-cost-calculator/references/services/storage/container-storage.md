@@ -40,9 +40,9 @@ Quantity: 10240 # provisioned GiB (e.g., 10 TiB pool)
 
 ## Meter Names
 
-| Meter                       | unitOfMeasure  | Notes                          |
-| --------------------------- | -------------- | ------------------------------ |
-| `Provisioned Capacity Unit` | `1 GiB/Month`  | Orchestration fee; v1.x.x only |
+| Meter                       | unitOfMeasure | Notes                          |
+| --------------------------- | ------------- | ------------------------------ |
+| `Provisioned Capacity Unit` | `1 GiB/Month` | Orchestration fee; v1.x.x only |
 
 ## Cost Formula
 

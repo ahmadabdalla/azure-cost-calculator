@@ -58,18 +58,18 @@ MeterName: Backup Capacity
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Capacity` | `Standard` | `1 GiB/Hour` | × 730 for monthly |
-| `Premium Capacity` | `Premium` | `1 GiB/Hour` | × 730 for monthly |
-| `Ultra Capacity` | `Ultra` | `1 GiB/Hour` | × 730 for monthly |
-| `Backup Capacity` | `Backup` | `1 GiB/Month` | No × 730 needed |
-| `Volume Restore Capacity` | `Volume Restore` | `1 GiB` | One-time per restore |
-| `Elastic Zone Redundant Storage Capacity` | `Elastic Zone Redundant Storage` | `1 GiB/Hour` | Preview; × 730 for monthly |
-| `Standard Storage with Cool Access Capacity` | `Standard Storage with Cool Access` | `1 GiB/Hour` | Cool tier at-rest |
-| `Standard Storage with Cool Access Data Transfer` | `Standard Storage with Cool Access` | `1 GiB` | Per-transfer to/from cool |
-| `Flexible Service Level Capacity` | `Flexible Service Level` | `1 GiB/Hour` | Capacity component |
-| `Flexible Service Level Throughput MiBps` | `Flexible Service Level` | `1/Hour` | Beyond 128 MiBps free |
+| Meter                                             | skuName                             | unitOfMeasure | Notes                      |
+| ------------------------------------------------- | ----------------------------------- | ------------- | -------------------------- |
+| `Standard Capacity`                               | `Standard`                          | `1 GiB/Hour`  | × 730 for monthly          |
+| `Premium Capacity`                                | `Premium`                           | `1 GiB/Hour`  | × 730 for monthly          |
+| `Ultra Capacity`                                  | `Ultra`                             | `1 GiB/Hour`  | × 730 for monthly          |
+| `Backup Capacity`                                 | `Backup`                            | `1 GiB/Month` | No × 730 needed            |
+| `Volume Restore Capacity`                         | `Volume Restore`                    | `1 GiB`       | One-time per restore       |
+| `Elastic Zone Redundant Storage Capacity`         | `Elastic Zone Redundant Storage`    | `1 GiB/Hour`  | Preview; × 730 for monthly |
+| `Standard Storage with Cool Access Capacity`      | `Standard Storage with Cool Access` | `1 GiB/Hour`  | Cool tier at-rest          |
+| `Standard Storage with Cool Access Data Transfer` | `Standard Storage with Cool Access` | `1 GiB`       | Per-transfer to/from cool  |
+| `Flexible Service Level Capacity`                 | `Flexible Service Level`            | `1 GiB/Hour`  | Capacity component         |
+| `Flexible Service Level Throughput MiBps`         | `Flexible Service Level`            | `1/Hour`      | Beyond 128 MiBps free      |
 
 ## Cost Formula
 
@@ -91,12 +91,12 @@ CRR:      Monthly = crr_retailPrice × replicatedGiB   (per GiB replicated; NOT 
 
 ## Known Rates
 
-| Meter | Unit | Published Rate (USD) | Monthly per GiB |
-| ----- | ---- | -------------------- | --------------- |
-| `Standard Capacity` | 1 GiB/Hour | $0.000202 | ~$0.15 |
-| `Premium Capacity` | 1 GiB/Hour | $0.000403 | ~$0.29 |
-| `Ultra Capacity` | 1 GiB/Hour | $0.000538 | ~$0.39 |
-| `Backup Capacity` | 1 GiB/Month | $0.05 | $0.05 |
+| Meter               | Unit        | Published Rate (USD) | Monthly per GiB |
+| ------------------- | ----------- | -------------------- | --------------- |
+| `Standard Capacity` | 1 GiB/Hour  | $0.000202            | ~$0.15          |
+| `Premium Capacity`  | 1 GiB/Hour  | $0.000403            | ~$0.29          |
+| `Ultra Capacity`    | 1 GiB/Hour  | $0.000538            | ~$0.39          |
+| `Backup Capacity`   | 1 GiB/Month | $0.05                | $0.05           |
 
 > These rates are from the Azure Retail Prices API (eastus). The script shows `$0.00` for capacity meters because `1 GiB/Hour` is not recognized as hourly. Multiply `retailPrice × GiB × 730` manually. For non-USD currencies, see [regions-and-currencies.md](../../regions-and-currencies.md).
 
