@@ -8,6 +8,8 @@ hasFreeGrant: true
 
 # IoT Central
 
+> **Warning**: Microsoft has announced plans to retire IoT Central; Azure IoT Hub is the recommended migration path. All pricing meters below remain live in the Retail Prices API.
+
 > **Trap (tier selection)**: All Standard tiers share `skuName: Standard`; tier is determined solely by `MeterName` (`Standard Tier 0`, `Standard Tier 1`, `Standard Tier 2`). Always filter by `MeterName` to select a specific tier.
 
 > **Trap (overage meter mismatch)**: ST0 uses `Standard Overage Messages ST0` at a higher per-1K rate, while ST1 and ST2 share `Standard Overage Messages` at a lower rate. Match the overage meter to the device tier.
