@@ -1,0 +1,64 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/storage-actions/multi-meter-estimate
+name: Happy Path - Storage Actions Multi-Meter Estimate
+description: >
+  Tests cost estimation for a serverless service with three independent billing
+  dimensions under the shared serviceName: Storage umbrella. Storage Actions
+  requires separate per-execution, per-million-objects, and per-million-operations
+  queries filtered by ProductName: Storage Actions. Validates all three components
+  are present and summed.
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:storage-actions
+inputs:
+  prompt: "What is the monthly cost of Azure Storage Actions in East US for 50 task executions, 10 million objects targeted, and 3 million operations invoked?"
+expected:
+  output_contains:
+    - "Storage Actions"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Storage Actions|Storage Task"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: operations-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost of Azure Storage Actions in East US for 50 task executions, 10 million objects targeted, and 3 million operations invoked?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct multi-component billing model for Storage Actions (per task execution + per million objects targeted + per million operations invoked).
+        (3) Accounts for all three quantities as specified (50 executions, 10 million objects targeted, 3 million operations invoked).
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
