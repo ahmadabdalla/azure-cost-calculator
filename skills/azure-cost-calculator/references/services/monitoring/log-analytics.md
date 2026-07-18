@@ -45,20 +45,20 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 
 ## Key Fields
 
-| Parameter     | How to determine                                | Example values                                                   |
-| ------------- | ----------------------------------------------- | ---------------------------------------------------------------- |
-| `serviceName` | Billing surface for workspace pricing           | `Log Analytics`, `Azure Monitor`                                 |
-| `productName` | Match the service billing surface               | `Log Analytics`, `Azure Monitor`                                 |
-| `skuName`     | Fixed for PAYG; tier-specific for commitments   | `Analytics Logs`, `100 GB Commitment Tier`                       |
-| `meterName`   | Ingestion, retention, or commitment tier meter  | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention` |
+| Parameter     | How to determine                               | Example values                                                   |
+| ------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| `serviceName` | Billing surface for workspace pricing          | `Log Analytics`, `Azure Monitor`                                 |
+| `productName` | Match the service billing surface              | `Log Analytics`, `Azure Monitor`                                 |
+| `skuName`     | Fixed for PAYG; tier-specific for commitments  | `Analytics Logs`, `100 GB Commitment Tier`                       |
+| `meterName`   | Ingestion, retention, or commitment tier meter | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention` |
 
 ## Meter Names
 
-| Meter                                         | productName     | skuName                    | unitOfMeasure | Notes                                                              |
-| --------------------------------------------- | --------------- | -------------------------- | ------------- | ------------------------------------------------------------------ |
-| `Analytics Logs Data Ingestion`               | `Log Analytics` | `Analytics Logs`           | `1 GB`        | PAYG ingestion (tiered: 0–5 GB free, >5 GB charged)                |
-| `Analytics Logs Data Retention`               | `Log Analytics` | `Analytics Logs`           | `1 GB/Month`  | Retention beyond free period (90 days Sentinel / 31 days standard) |
-| `{N} GB Commitment Tier Capacity Reservation` | `Azure Monitor` | `{N} GB Commitment Tier`   | `1/Day`       | Volume discounts for 100–50000 GB/day commitments                  |
+| Meter                                         | productName     | skuName                  | unitOfMeasure | Notes                                                              |
+| --------------------------------------------- | --------------- | ------------------------ | ------------- | ------------------------------------------------------------------ |
+| `Analytics Logs Data Ingestion`               | `Log Analytics` | `Analytics Logs`         | `1 GB`        | PAYG ingestion (tiered: 0–5 GB free, >5 GB charged)                |
+| `Analytics Logs Data Retention`               | `Log Analytics` | `Analytics Logs`         | `1 GB/Month`  | Retention beyond free period (90 days Sentinel / 31 days standard) |
+| `{N} GB Commitment Tier Capacity Reservation` | `Azure Monitor` | `{N} GB Commitment Tier` | `1/Day`       | Volume discounts for 100–50000 GB/day commitments                  |
 
 ## Cost Formula
 

@@ -61,37 +61,37 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 
 All listed meters use `ServiceName: Azure Monitor` and `ProductName: Azure Monitor`.
 
-| Meter                                         | skuName                          | unitOfMeasure | Notes                                                 |
-| --------------------------------------------- | -------------------------------- | ------------- | ----------------------------------------------------- |
-| `Metrics ingestion Metric samples`            | `Metrics ingestion`              | `10M`         | Custom / Prometheus workspace metrics ingestion       |
-| `Advanced Platform Metric Samples Ingested Metric samples` | `Advanced Platform Metric Samples Ingested` | `10M` | Advanced platform metrics ingestion                   |
-| `Prometheus Metrics Queries Metric samples`   | `Prometheus Metrics Queries`     | `10M`         | PromQL query cost (sub-cent)                          |
-| `Metrics Export Metric Samples Exported`      | `Metrics Export`                 | `1K`          | Metric data export via DCE (sub-cent)                 |
-| `Native Metric Queries API Calls`             | `Native Metric Queries`          | `1K`          | Tiered: first 1M calls free                           |
-| `API Calls Standard API Call`                 | `API Calls`                      | `1`           | Tiered: first 1M calls free; paid tier is sub-cent    |
-| `Basic Logs Data Ingestion`                   | `Basic Logs`                     | `1 GB`        | ~78% cheaper than Analytics; 30-day fixed retention   |
-| `Auxiliary Logs Data Ingestion`               | `Auxiliary Logs`                 | `1 GB`        | Cheapest tier; custom tables only                     |
-| `Logs Emitted From Cloud Pipeline Data Emitted` | `Logs Emitted From Cloud Pipeline` | `1 GB`     | Cloud pipeline log emission                           |
-| `Data Archive`                                | `Data Archive`                   | `1 GB/Month`  | Long-term archive (up to 12 years)                    |
-| `Search Queries Scanned`                      | `Search Queries`                 | `1 GB`        | Query cost for Basic/Auxiliary tables                 |
-| `Search Jobs Scanned`                         | `Search Jobs`                    | `1 GB`        | Archive search job cost                               |
-| `Data Restore`                                | `Data Restore`                   | `1 GB/Day`    | Archive restore, minimum 2 TB × 12 hours              |
-| `Log Analytics data export Data Exported`     | `Log Analytics data export`      | `1 GB`        | Continuous data export                                |
-| `Platform Logs Data Processed`                | `Platform Logs`                  | `1 GB`        | Diagnostic settings → Storage/Event Hub               |
-| `Logs Processed GB`                           | `Logs Processed`                 | `1`           | DCR transformation processing                         |
-| `Data Replication Data Replicated`            | `Data Replication`               | `1 GB`        | Cross-workspace replication                           |
-| `Standard Web Test Execution`                 | `Standard Web Test`              | `1`           | Availability test execution (sub-cent)                |
-| `Alerts Metric Monitored`                     | `Alerts`                         | `1/Month`     | Tiered: first 10 signals free                         |
-| `Alerts Dynamic Threshold`                    | `Alerts`                         | `1/Month`     | Dynamic threshold metric alert signal                 |
-| `Dynamic Threshold Log Alerts`                | `Dynamic Threshold Log Alerts`   | `1/Month`     | Dynamic threshold log alert meter                     |
-| `Alerts Resource Monitored at {N} Minute Frequency` | `Alerts`                   | `1/Month`     | Log search alerts: 1/5/10/15 min frequencies          |
-| `Alerts System Log Monitored at {N} Minute Frequency` | `Alerts`                 | `1/Month`     | System log alerts: 10× Resource Monitored rate        |
-| `Emails`                                      | `Emails`                         | `1`           | Tiered: first 1K emails free                          |
-| `Notifications ITSM Connector Create/Update Event` | `Notifications`             | `1`           | Tiered: first 1K events free                          |
-| `Notifications Push Notification`             | `Notifications`                  | `1`           | Tiered: first 1K notifications free                   |
-| `Notifications Secure web hook`               | `Notifications`                  | `10`          | Tiered: first 100 notifications free                  |
-| `Notifications Web hook`                      | `Notifications`                  | `10`          | Tiered: first 10K notifications free                  |
-| `{N} GB Commitment Tier Capacity Reservation` | `{N} GB Commitment Tier`         | `1/Day`       | Volume discounts (100–50000 GB/day)                   |
+| Meter                                                      | skuName                                     | unitOfMeasure | Notes                                               |
+| ---------------------------------------------------------- | ------------------------------------------- | ------------- | --------------------------------------------------- |
+| `Metrics ingestion Metric samples`                         | `Metrics ingestion`                         | `10M`         | Custom / Prometheus workspace metrics ingestion     |
+| `Advanced Platform Metric Samples Ingested Metric samples` | `Advanced Platform Metric Samples Ingested` | `10M`         | Advanced platform metrics ingestion                 |
+| `Prometheus Metrics Queries Metric samples`                | `Prometheus Metrics Queries`                | `10M`         | PromQL query cost (sub-cent)                        |
+| `Metrics Export Metric Samples Exported`                   | `Metrics Export`                            | `1K`          | Metric data export via DCE (sub-cent)               |
+| `Native Metric Queries API Calls`                          | `Native Metric Queries`                     | `1K`          | Tiered: first 1M calls free                         |
+| `API Calls Standard API Call`                              | `API Calls`                                 | `1`           | Tiered: first 1M calls free; paid tier is sub-cent  |
+| `Basic Logs Data Ingestion`                                | `Basic Logs`                                | `1 GB`        | ~78% cheaper than Analytics; 30-day fixed retention |
+| `Auxiliary Logs Data Ingestion`                            | `Auxiliary Logs`                            | `1 GB`        | Cheapest tier; custom tables only                   |
+| `Logs Emitted From Cloud Pipeline Data Emitted`            | `Logs Emitted From Cloud Pipeline`          | `1 GB`        | Cloud pipeline log emission                         |
+| `Data Archive`                                             | `Data Archive`                              | `1 GB/Month`  | Long-term archive (up to 12 years)                  |
+| `Search Queries Scanned`                                   | `Search Queries`                            | `1 GB`        | Query cost for Basic/Auxiliary tables               |
+| `Search Jobs Scanned`                                      | `Search Jobs`                               | `1 GB`        | Archive search job cost                             |
+| `Data Restore`                                             | `Data Restore`                              | `1 GB/Day`    | Archive restore, minimum 2 TB × 12 hours            |
+| `Log Analytics data export Data Exported`                  | `Log Analytics data export`                 | `1 GB`        | Continuous data export                              |
+| `Platform Logs Data Processed`                             | `Platform Logs`                             | `1 GB`        | Diagnostic settings → Storage/Event Hub             |
+| `Logs Processed GB`                                        | `Logs Processed`                            | `1`           | DCR transformation processing                       |
+| `Data Replication Data Replicated`                         | `Data Replication`                          | `1 GB`        | Cross-workspace replication                         |
+| `Standard Web Test Execution`                              | `Standard Web Test`                         | `1`           | Availability test execution (sub-cent)              |
+| `Alerts Metric Monitored`                                  | `Alerts`                                    | `1/Month`     | Tiered: first 10 signals free                       |
+| `Alerts Dynamic Threshold`                                 | `Alerts`                                    | `1/Month`     | Dynamic threshold metric alert signal               |
+| `Dynamic Threshold Log Alerts`                             | `Dynamic Threshold Log Alerts`              | `1/Month`     | Dynamic threshold log alert meter                   |
+| `Alerts Resource Monitored at {N} Minute Frequency`        | `Alerts`                                    | `1/Month`     | Log search alerts: 1/5/10/15 min frequencies        |
+| `Alerts System Log Monitored at {N} Minute Frequency`      | `Alerts`                                    | `1/Month`     | System log alerts: 10× Resource Monitored rate      |
+| `Emails`                                                   | `Emails`                                    | `1`           | Tiered: first 1K emails free                        |
+| `Notifications ITSM Connector Create/Update Event`         | `Notifications`                             | `1`           | Tiered: first 1K events free                        |
+| `Notifications Push Notification`                          | `Notifications`                             | `1`           | Tiered: first 1K notifications free                 |
+| `Notifications Secure web hook`                            | `Notifications`                             | `10`          | Tiered: first 100 notifications free                |
+| `Notifications Web hook`                                   | `Notifications`                             | `10`          | Tiered: first 10K notifications free                |
+| `{N} GB Commitment Tier Capacity Reservation`              | `{N} GB Commitment Tier`                    | `1/Day`       | Volume discounts (100–50000 GB/day)                 |
 
 > **Note**: SMS and voice also bill under Azure Monitor. Query `SMS Country Code {N} Notification` or `Voice Calls Voice Call Country Code {N}` for country-specific rates.
 

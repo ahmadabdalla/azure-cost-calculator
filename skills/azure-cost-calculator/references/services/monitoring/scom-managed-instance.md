@@ -36,19 +36,19 @@ Region: Global
 
 ## Key Fields
 
-| Parameter     | How to determine                     | Example values                                        |
-| ------------- | ------------------------------------ | ----------------------------------------------------- |
-| `serviceName` | Always `Azure Monitor`               | `Azure Monitor`                                       |
-| `productName` | Fixed, single product               | `Azure Monitor SCOM Managed Instance`                 |
-| `skuName`     | Tier: `Basic` (paid) or free benefit | `Basic`, `Free Benefit- Azure`                        |
-| `meterName`   | Matches the endpoint billing meter   | `Basic Endpoint`, `Free Benefit- Azure Endpoint`      |
+| Parameter     | How to determine                     | Example values                                   |
+| ------------- | ------------------------------------ | ------------------------------------------------ |
+| `serviceName` | Always `Azure Monitor`               | `Azure Monitor`                                  |
+| `productName` | Fixed, single product                | `Azure Monitor SCOM Managed Instance`            |
+| `skuName`     | Tier: `Basic` (paid) or free benefit | `Basic`, `Free Benefit- Azure`                   |
+| `meterName`   | Matches the endpoint billing meter   | `Basic Endpoint`, `Free Benefit- Azure Endpoint` |
 
 ## Meter Names
 
-| Meter                          | skuName                | unitOfMeasure | Notes                            |
-| ------------------------------ | ---------------------- | ------------- | -------------------------------- |
-| `Basic Endpoint`               | `Basic`                | `1/Month`     | Per monitored non-Azure endpoint |
-| `Free Benefit- Azure Endpoint` | `Free Benefit- Azure`  | `1/Month`     | Azure-native endpoints, free    |
+| Meter                          | skuName               | unitOfMeasure | Notes                            |
+| ------------------------------ | --------------------- | ------------- | -------------------------------- |
+| `Basic Endpoint`               | `Basic`               | `1/Month`     | Per monitored non-Azure endpoint |
+| `Free Benefit- Azure Endpoint` | `Free Benefit- Azure` | `1/Month`     | Azure-native endpoints, free     |
 
 ## Cost Formula
 

@@ -43,20 +43,20 @@ Quantity: 43800 # 1 test every 5 minutes from 5 locations for 730 hours
 
 ## Key Fields
 
-| Parameter     | How to determine                                       | Example values                                                                            |
-| ------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| `serviceName` | Billing surface for telemetry or availability tests    | `Log Analytics`, `Azure Monitor`                                                          |
-| `productName` | Match the service billing surface                      | `Log Analytics`, `Azure Monitor`                                                          |
-| `skuName`     | PAYG logs or Standard Web Test                         | `Analytics Logs`, `Standard Web Test`                                                      |
-| `meterName`   | Ingestion, retention, or web test execution meter      | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention`, `Standard Web Test Execution` |
+| Parameter     | How to determine                                    | Example values                                                                                  |
+| ------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `serviceName` | Billing surface for telemetry or availability tests | `Log Analytics`, `Azure Monitor`                                                                |
+| `productName` | Match the service billing surface                   | `Log Analytics`, `Azure Monitor`                                                                |
+| `skuName`     | PAYG logs or Standard Web Test                      | `Analytics Logs`, `Standard Web Test`                                                           |
+| `meterName`   | Ingestion, retention, or web test execution meter   | `Analytics Logs Data Ingestion`, `Analytics Logs Data Retention`, `Standard Web Test Execution` |
 
 ## Meter Names
 
 | Meter                           | productName     | skuName             | unitOfMeasure | Notes                                          |
 | ------------------------------- | --------------- | ------------------- | ------------- | ---------------------------------------------- |
-| `Analytics Logs Data Ingestion` | `Log Analytics` | `Analytics Logs`    | `1 GB`        | Application telemetry data ingestion (tiered) |
+| `Analytics Logs Data Ingestion` | `Log Analytics` | `Analytics Logs`    | `1 GB`        | Application telemetry data ingestion (tiered)  |
 | `Analytics Logs Data Retention` | `Log Analytics` | `Analytics Logs`    | `1 GB/Month`  | Application telemetry retention beyond 90 days |
-| `Standard Web Test Execution`   | `Azure Monitor` | `Standard Web Test` | `1`           | Availability test execution (sub-cent)        |
+| `Standard Web Test Execution`   | `Azure Monitor` | `Standard Web Test` | `1`           | Availability test execution (sub-cent)         |
 
 ## Cost Formula
 
