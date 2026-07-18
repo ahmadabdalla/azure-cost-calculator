@@ -49,7 +49,7 @@ Quantity: 10
 | `serviceName` | Always `Automation`      | `Automation`                                                          |
 | `productName` | Billing dimension        | `Process Automation`, `Configuration Management`, `Update Management` |
 | `skuName`     | SKU tier or node type    | `Basic`, `Free`, `Azure`, `Non-Azure`                                 |
-| `meterName`   | Matches the billing unit | `Basic Runtime`, `Watcher`, `Azure Node`, `Non-Azure Node`            |
+| `meterName`   | Matches the billing unit | `Basic Runtime`, `Watcher`, `Azure Node`, `Non-Azure Node`, `Basic Node` |
 
 ## Meter Names
 
@@ -77,9 +77,10 @@ Monthly = Runbooks + Watchers + DSC Nodes
 
 - Free grants per subscription per month: 500 runbook minutes, 744 watcher hours, 5 non-Azure DSC nodes, unlimited Azure DSC nodes
 - Free grants are NOT available to subscribers with flat-discount or fixed-monthly-credit rate plans
-- Update Management meter is always zero cost; actual cost is Log Analytics data ingestion (see `monitoring/log-analytics.md`)
+- Government regions use higher API rates; usgovvirginia paid tiers start at `tierMinimumUnits=0`
+- Update Management meter is always zero cost, retired, and sparse by API region; query `Global` to confirm it. Actual cost is Log Analytics data ingestion (see `monitoring/log-analytics.md`)
 - Capacity planning: 1 runbook minute = 60 seconds of job execution; typical short jobs consume 1–5 minutes each
-- Free SKU (`Free Runtime`, `Watcher`) mirrors Basic with identical or zero rates; use Basic SKU for cost estimation
+- `Free Runtime` has no paid overage tier; `Free Watcher` has a paid tier after 744 hours like `Basic Watcher`. Use Basic SKU for cost estimation
 - **PE sub-resources** (never-assume): `DSCAndHybridWorker`, `Webhook`; see `networking/private-link.md` for PE and DNS zone pricing
 
 ## Known Rates

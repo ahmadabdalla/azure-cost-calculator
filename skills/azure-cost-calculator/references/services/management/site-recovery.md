@@ -11,7 +11,7 @@ privateEndpoint: true
 
 # Azure Site Recovery
 
-> **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns both Azure and System Center SKUs, inflating costs by summing charges for both SKUs. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
+> **Trap**: Unfiltered `ServiceName: Azure Site Recovery` returns Azure, System Center, and On-premise SKUs, inflating costs by summing charges for multiple scenarios. Always filter with `SkuName: Azure` for Azure-to-Azure DR (most common scenario).
 
 > **Trap (hidden costs)**: The per-instance fee covers orchestration only. Compute at the DR site during failover is billed separately (AHUB can apply to those VMs).
 
@@ -29,6 +29,13 @@ InstanceCount: 10
 ServiceName: Azure Site Recovery
 SkuName: System Center
 MeterName: VM Replicated to System Center
+InstanceCount: 5
+
+### On-premises fallback where System Center SKU is unavailable
+
+ServiceName: Azure Site Recovery
+SkuName: On-premise
+MeterName: VM Replicated between On-premise sites
 InstanceCount: 5
 
 ## Key Fields
@@ -55,6 +62,7 @@ Monthly = retailPrice × protectedVMCount
 
 Azure target:          retailPrice (Azure SKU) × VM count
 System Center target:  retailPrice (System Center SKU) × VM count
+On-premise target:     retailPrice (On-premise SKU) × VM count
 ```
 
 > Capacity planning: count each VM with replication enabled. A single VM = 1 protected instance regardless of disk count or VM size.
@@ -62,7 +70,8 @@ System Center target:  retailPrice (System Center SKU) × VM count
 ## Notes
 
 - First 31 days of protection for each new instance are free (not reflected in API). When ASR is used via Azure Migrate for server migration, a longer **180-day** free period applies; see the Azure Migrate reference
-- The ASR license fee is per-instance; VM size and disk count do not affect the rate
+- The ASR license fee is per-instance; VM size and disk count do not affect the rate. For partial months, billing uses the average daily protected instance count
 - `Azure` SKU covers both Azure-to-Azure and on-premises-to-Azure scenarios
 - `System Center` SKU is for on-premises-to-on-premises replication via VMM
-- Some regions use `On-premise` SKU instead of `System Center` (same price); if `System Center` returns empty, query with `SkuName: On-premise`
+- `On-premise` SKU appears in limited regions where `System Center` is usually absent; do not assume price parity. If `System Center` returns empty, query with `SkuName: On-premise`
+- Regional pricing varies; query the target region rather than relying on `Global`
