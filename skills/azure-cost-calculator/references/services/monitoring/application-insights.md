@@ -4,6 +4,7 @@ category: monitoring
 aliases: [App Insights, APM, Application Performance Monitoring, Application Performance, AppInsights, Azure Application Insights]
 billingNeeds: [Log Analytics, Azure Monitor]
 apiServiceName: Log Analytics
+queryServiceNames: [Azure Monitor]
 primaryCost: "Data ingestion, retention, and optional web test executions"
 hasFreeGrant: true
 privateEndpoint: true
