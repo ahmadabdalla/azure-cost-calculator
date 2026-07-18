@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.9.0] - 2026-07-19
+
+### Added
+
+- Microsoft Entra External ID (`entra-external-id.md`): new service reference replacing Azure AD B2C
+- `service-routing.md`: routing entry and aliases for Microsoft Entra External ID
+
+### Changed
+
+- Refreshed service references against the live Azure Retail Prices API across service groups: ai-ml, analytics, communication, compute, containers, databases, developer-tools, identity, integration, iot, management, monitoring, networking, security, specialist, storage, and web
+- Azure Health Bot (`health-bot.md`): updated service reference against current API data
+
+### Fixed
+
+- Azure Container Apps (`container-apps.md`): audit corrections
+- Azure AI Content Understanding (`ai-content-understanding.md`): corrected service reference data
+
+### Removed
+
+- Azure AD B2C (`aad-b2c.md`): removed; capability uplifted to Microsoft Entra External ID
+
 ## [1.8.0] - 2026-06-03
 
 ### Added
