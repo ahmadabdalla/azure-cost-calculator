@@ -63,7 +63,7 @@ Quantity: 500
 | `Data lake ingestion Data Processed`          | `Data lake ingestion`          | `1 GB`        | Ingestion into data lake            |
 | `Free Benefit - M365 Defender Analysis`       | `Free Benefit - M365 Defender` | `1 GB`        | Zero cost, free M365 data          |
 
-> Other SKUs (query individually): `Data lake query` (1 GB, sub-cent), `Advanced Data Insights` (1 Hour), `Data processing` (1 GB), `Solution for SAP Applications` (1/Hour), `Classic Auxiliary Logs Analysis` (1 GB), `Free Trial` (1 GB).
+> Other SKUs (query individually): `Data lake query` (1 GB, sub-cent), `Advanced Data Insights` (1 Hour), `Graph` (1 Hour, per compute-hour), `Data processing` (1 GB), `Solution for SAP Applications` (1/Hour), `Classic Auxiliary Logs Analysis` (1 GB), `Free Trial` (1 GB).
 
 ## Cost Formula
 
