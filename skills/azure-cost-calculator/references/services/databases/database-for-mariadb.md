@@ -8,9 +8,11 @@ privateEndpoint: true
 
 # Azure Database for MariaDB
 
-> **Trap**: Unfiltered queries return ~30 meters across Basic, General Purpose, and Memory Optimized tiers plus multiple storage products. Always filter by `ProductName` to target one tier and generation.
+> **Trap**: Queries without a region filter return paginated rows across all regions; a single-region query returns ~30 rows covering all unique meter types. Always filter by `ProductName` to target one tier and generation.
 
-> **Warning**: Azure Database for MariaDB is **retired** (end-of-life September 2025). Do not recommend for new workloads. Use this reference only for legacy existing-resource estimates where Retail API meters are still returned. Direct new or migration estimates to Azure Database for MySQL (`database-for-mysql.md`).
+> **Trap**: `Azure Database for MariaDB Compute Reservation` is a zero-price `Consumption` artifact with empty `armRegionName`; it is not usable reservation pricing. Exclude it with explicit real `ProductName` filters.
+
+> **Warning**: Azure Database for MariaDB was **retired on 19 September 2025**. Do not recommend for new workloads. Use this reference only for legacy existing-resource estimates where Retail API meters are still returned. Direct new or migration estimates to Azure Database for MySQL (`database-for-mysql.md`).
 
 ## Query Pattern
 
@@ -44,14 +46,16 @@ InstanceCount: 8 # vCore count
 | --- | --- | --- |
 | `productName` | Tier + generation (exact match) | See Product Names below |
 | `skuName` | Per-vCore: `'vCore'`; Basic: `'1 vCore'`, `'2 vCore'` | `'vCore'`, `'2 vCore'` |
-| `meterName` | Always `'vCore'` for compute; tier-specific for storage | `'vCore'`, `'General Purpose Data Stored'` |
+| `meterName` | Usually `'vCore'` for compute; Basic 2-vCore uses `'2 vCore'`; tier-specific for storage | `'vCore'`, `'2 vCore'` |
 
 ## Meter Names
 
 | Meter | skuName | unitOfMeasure | Notes |
 | --- | --- | --- | --- |
 | `vCore` | `vCore` | `1 Hour` | Per-vCore rate for GP/MO Gen5; use InstanceCount |
-| `vCore` | `N vCore` | `1 Hour` | Total rate for N vCores (Basic, GP Gen4/Gen5) |
+| `vCore` | `N vCore` | `1 Hour` | Total rate for N vCores in GP Gen4/Gen5 and MO Gen5 |
+| `2 vCore` | `2 vCore` | `1 Hour` | Total rate for Basic Gen4/Gen5 2-vCore SKU only |
+| `Basic Data Stored` | `Basic` | `1 GB/Month` | Basic tier data storage |
 | `General Purpose Data Stored` | `General Purpose` | `1 GB/Month` | GP/MO data storage |
 | `Backup LRS Data Stored` | `Backup LRS` | `1 GB/Month` | Locally-redundant backup storage |
 | `Backup GRS Data Stored` | `Backup GRS` | `1 GB/Month` | Geo-redundant backup storage |
@@ -60,6 +64,7 @@ InstanceCount: 8 # vCore count
 
 ```
 Compute (per-vCore) = compute_retailPrice × 730 × vCoreCount
+Compute (fixed N-vCore SKU) = compute_retailPrice × 730
 Storage = storage_retailPrice × sizeGB
 Backup (excess) = backup_retailPrice × max(0, backupGB - provisionedStorageGB)
 Total = Compute + Storage + Backup (excess)
@@ -67,10 +72,13 @@ Total = Compute + Storage + Backup (excess)
 
 ## Notes
 
-- **Retired**: Service reached end-of-life September 2025; migrate to Azure Database for MySQL (`database-for-mysql.md`)
+- **Retired**: Service reached end-of-life on 19 September 2025; migrate to Azure Database for MySQL (`database-for-mysql.md`)
 - Basic: dev/test, 1–2 vCores only, no Private Endpoint support
 - GP: production workloads, Gen5 up to 64 vCores
 - MO: high-memory workloads, Gen5 up to 32 vCores
+- Reserved Instances: not available; `priceType=Reservation` returns no meters
+- GP/MO Gen5 `skuName='vCore'` is per-vCore for `InstanceCount`; `N vCore` SKUs are fixed total rates
+- Basic tier storage uses `Basic Data Stored`, not the General Purpose storage product
 - Backup: first backup equal to provisioned storage is free; excess charged per-GB/month (LRS or GRS)
 - Read replicas (GP/MO only): billed at full compute + storage rates
 - Private Endpoint supported for GP and MO tiers only (not Basic)
@@ -88,4 +96,6 @@ Total = Compute + Storage + Backup (excess)
 | MO, Gen5 | `Azure Database for MariaDB Single Server Memory Optimized - Compute Gen5` |
 | Basic Storage | `Azure Database for MariaDB Single Server Basic - Storage` |
 | GP/MO Storage | `Azure Database for MariaDB Single Server General Purpose - Storage` |
+| GP Large-Scale Storage | `Azure Database for MariaDB General Purpose - Large-Scale Storage` |
+| Perf Optimized Storage | `Azure Database for MariaDB Perf Optimized - Storage` |
 | Backup | `Azure Database for MariaDB Single Server - Backup Storage` |

@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/content-delivery-network/microsoft-standard-egress
+name: Content Delivery Network - Microsoft Standard Egress
+description: >
+  Tests monthly cost estimation for outbound data transfer on an existing
+  Azure CDN Standard from Microsoft profile in delivery Zone 1. Validates that
+  the agent states assumptions, uses zone-based (not ARM-region) pricing, and
+  applies tiered per-GB data-transfer rates for the specified volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:content-delivery-network
+inputs:
+  prompt: "What is the monthly cost for 10 TB of outbound data transfer on Azure CDN Standard from Microsoft in North America (Zone 1)?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Content Delivery Network|Azure CDN|CDN"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: volume-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

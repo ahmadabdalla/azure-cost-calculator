@@ -56,17 +56,17 @@ MeterName: Self Hosted Pipeline Activity
 
 ## Meter Names
 
-| Meter                              | skuName              | unitOfMeasure | Notes                                   |
-| ---------------------------------- | -------------------- | ------------- | --------------------------------------- |
-| `Cloud Orchestration Activity Run` | `Cloud`              | `1K`          | Per 1,000 activity runs (v2)            |
-| `Cloud Pipeline Activity`          | `Cloud`              | `1 Hour`      | Execute pipeline activity hours (v2)    |
-| `Cloud External Pipeline Activity` | `Cloud`              | `1 Hour`      | External/lookup activity hours; sub-cent |
-| `Cloud Data Movement`              | `Cloud`              | `1 Hour`      | Data movement runtime hours (v2)        |
-| `Cloud Read Write Operations`      | `Cloud`              | `50K`         | Entity read/write operations (v2)       |
-| `Cloud Monitoring Operations`      | `Cloud`              | `50K`         | Monitoring operations (v2)              |
-| `Operations`                       | `Operations`         | `50K`         | Tiered: first 1M free, then per 50K    |
-| `Inactive Pipeline`                | `Cloud`              | `1/Month`     | Per inactive pipeline/month (v2)        |
-| `vCore`                            | `vCore`              | `1 Hour`      | Data Flow vCore hours (v2)              |
+| Meter                              | skuName      | unitOfMeasure | Notes                                    |
+| ---------------------------------- | ------------ | ------------- | ---------------------------------------- |
+| `Cloud Orchestration Activity Run` | `Cloud`      | `1K`          | Per 1,000 activity runs (v2)             |
+| `Cloud Pipeline Activity`          | `Cloud`      | `1 Hour`      | Execute pipeline activity hours (v2)     |
+| `Cloud External Pipeline Activity` | `Cloud`      | `1 Hour`      | External/lookup activity hours; sub-cent |
+| `Cloud Data Movement`              | `Cloud`      | `1 Hour`      | Data movement runtime hours (v2)         |
+| `Cloud Read Write Operations`      | `Cloud`      | `50K`         | Entity read/write operations (v2)        |
+| `Cloud Monitoring Operations`      | `Cloud`      | `50K`         | Monitoring operations (v2)               |
+| `Operations`                       | `Operations` | `50K`         | Tiered: first 1M free, then per 50K      |
+| `Inactive Pipeline`                | `Cloud`      | `1/Month`     | Per inactive pipeline/month (v2)         |
+| `vCore`                            | `vCore`      | `1 Hour`      | Data Flow vCore hours (v2)               |
 
 > Self Hosted meters mirror Cloud with prefixed names (e.g., `Self Hosted Data Movement`) at different rates; Self Hosted Orchestration costs 50% more per 1K than Cloud. Azure Managed VNET meters are significantly more expensive (Pipeline Activity ~200× Cloud rate). v1 uses `Cloud High Frequency Activity` and `Cloud Low Frequency Activity` (per month).
 

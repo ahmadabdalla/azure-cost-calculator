@@ -29,12 +29,12 @@ ProductName: Virtual Machines Dsv5 Series Windows
 
 ## Key Fields
 
-| Parameter     | How to determine                            | Example values                                                                 |
-| ------------- | ------------------------------------------- | ------------------------------------------------------------------------------ |
-| `serviceName` | Always `Virtual Machines`                   | `Virtual Machines`                                                             |
-| `armSkuName`  | VM size from portal/Bicep `vmSize` property | `Standard_D2s_v5`, `Standard_B2ms`, `Standard_E4s_v5`                          |
+| Parameter     | How to determine                            | Example values                                                                                                                  |
+| ------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Virtual Machines`                   | `Virtual Machines`                                                                                                              |
+| `armSkuName`  | VM size from portal/Bicep `vmSize` property | `Standard_D2s_v5`, `Standard_B2ms`, `Standard_E4s_v5`                                                                           |
 | `productName` | Contains series + OS indicator              | `Virtual Machines Dsv5 Series` (Linux), `Virtual Machines Dsv5 Series Windows`, `Virtual Machines Dsv7-series Linux` (v7 Intel) |
-| `skuName`     | Size + pricing tier suffix                  | `D2s v5`, `D2s v5 Spot`, `D2s v5 Low Priority`                                 |
+| `skuName`     | Size + pricing tier suffix                  | `D2s v5`, `D2s v5 Spot`, `D2s v5 Low Priority`                                                                                  |
 
 ## Meter Names
 

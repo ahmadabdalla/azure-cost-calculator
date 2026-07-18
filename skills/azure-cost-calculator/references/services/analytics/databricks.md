@@ -10,7 +10,7 @@ privateEndpoint: true
 
 # Azure Databricks
 
-> **Trap (inflated totals)**: An unfiltered regional `ServiceName 'Azure Databricks'` query returns 41 meters across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `ProductName`, `SkuName`, and `MeterName`.
+> **Trap (inflated totals)**: An unfiltered regional `ServiceName 'Azure Databricks'` query returns 43 meters (East US) across classic and serverless workloads, POC, and free-trial SKUs. The `totalMonthlyCost` sums all of them which is meaningless. Always filter by `ProductName`, `SkuName`, and `MeterName`.
 
 > **Trap (VM compute split)**: Classic workloads (`productName: Azure Databricks`) charge DBU platform fees only — estimate VM cost separately via Virtual Machines. Serverless workloads (`productName: Azure Databricks Regional`) include compute in the DBU rate.
 
@@ -49,25 +49,25 @@ MeterName: Premium Serverless SQL DBU
 
 ## Meter Names
 
-| Meter                                        | skuName                                  | unitOfMeasure | Notes                             |
-| -------------------------------------------- | ---------------------------------------- | ------------- | --------------------------------- |
-| `Premium All-purpose Compute DBU`            | `Premium All-purpose Compute`            | `1 Hour`      | Interactive clusters (Premium)    |
-| `Premium Jobs Compute DBU`                   | `Premium Jobs Compute`                   | `1 Hour`      | Automated job clusters (Premium)  |
-| `Premium Jobs Light Compute DBU`             | `Premium Jobs Light Compute`             | `1 Hour`      | Light jobs (Premium)              |
-| `Premium Anthropic Serverless Inference DBU` | `Premium Anthropic Serverless Inference` | `1 Hour`      | Global; Jio India regional        |
-| `Premium Serverless GPU Compute Capacity Block DBU` | `Premium Serverless GPU Compute Capacity Block` | `1 Hour` | Global GPU capacity block         |
-| `Standard All-purpose Compute DBU`           | `Standard All-purpose Compute`           | `1 Hour`      | Interactive clusters (Standard)   |
-| `Standard Jobs Compute DBU`                  | `Standard Jobs Compute`                  | `1 Hour`      | Automated job clusters (Standard) |
-| `Premium Serverless SQL DBU`                 | `Premium Serverless SQL`                 | `1 Hour`      | Serverless SQL warehouse          |
-| `Premium SQL Compute Pro DBU`                | `Premium SQL Compute Pro`                | `1 Hour`      | Pro SQL warehouse                 |
-| `Premium Interactive Serverless Compute DBU` | `Premium Interactive Serverless Compute` | `1 Hour`      | Serverless notebooks              |
-| `Premium Automated Serverless Compute DBU`   | `Premium Automated Serverless Compute`   | `1 Hour`      | Serverless jobs                   |
-| `Premium Model Training DBU`                 | `Premium Model Training`                 | `1 Hour`      | Serverless ML model training      |
-| `Premium Database Serverless Compute DBU`    | `Premium Database Serverless Compute`    | `1 Hour`      | Serverless online tables / vector search |
-| `Premium Serverless Realtime Inferencing DBU`| `Premium Serverless Realtime Inferencing`| `1 Hour`      | Model serving endpoints (+ per-launch fee) |
-| `Premium Enhanced Security and Compliance DBU`| `Premium Enhanced Security and Compliance`| `1 Hour`     | Add-on surcharge per DBU-hour     |
-| `Premium Databricks Storage Unit DSU`        | `Premium Databricks Storage Unit`        | `1`           | Per-unit storage (DSU, not DBU)   |
-| `Premium - Free Trial POC DBU`               | `Premium - Free Trial POC`               | `1 Hour`      | Global zero-price trial meter     |
+| Meter                                               | skuName                                         | unitOfMeasure | Notes                                      |
+| --------------------------------------------------- | ----------------------------------------------- | ------------- | ------------------------------------------ |
+| `Premium All-purpose Compute DBU`                   | `Premium All-purpose Compute`                   | `1 Hour`      | Interactive clusters (Premium)             |
+| `Premium Jobs Compute DBU`                          | `Premium Jobs Compute`                          | `1 Hour`      | Automated job clusters (Premium)           |
+| `Premium Jobs Light Compute DBU`                    | `Premium Jobs Light Compute`                    | `1 Hour`      | Light jobs (Premium)                       |
+| `Premium Anthropic Serverless Inference DBU`        | `Premium Anthropic Serverless Inference`        | `1 Hour`      | Global; Jio India regional                 |
+| `Premium Serverless GPU Compute Capacity Block DBU` | `Premium Serverless GPU Compute Capacity Block` | `1 Hour`      | Global GPU capacity block                  |
+| `Standard All-purpose Compute DBU`                  | `Standard All-purpose Compute`                  | `1 Hour`      | Interactive clusters (Standard)            |
+| `Standard Jobs Compute DBU`                         | `Standard Jobs Compute`                         | `1 Hour`      | Automated job clusters (Standard)          |
+| `Premium Serverless SQL DBU`                        | `Premium Serverless SQL`                        | `1 Hour`      | Serverless SQL warehouse                   |
+| `Premium SQL Compute Pro DBU`                       | `Premium SQL Compute Pro`                       | `1 Hour`      | Pro SQL warehouse                          |
+| `Premium Interactive Serverless Compute DBU`        | `Premium Interactive Serverless Compute`        | `1 Hour`      | Serverless notebooks                       |
+| `Premium Automated Serverless Compute DBU`          | `Premium Automated Serverless Compute`          | `1 Hour`      | Serverless jobs                            |
+| `Premium Model Training DBU`                        | `Premium Model Training`                        | `1 Hour`      | Serverless ML model training               |
+| `Premium Database Serverless Compute DBU`           | `Premium Database Serverless Compute`           | `1 Hour`      | Serverless online tables / vector search   |
+| `Premium Serverless Realtime Inferencing DBU`       | `Premium Serverless Realtime Inferencing`       | `1 Hour`      | Model serving endpoints (+ per-launch fee) |
+| `Premium Enhanced Security and Compliance DBU`      | `Premium Enhanced Security and Compliance`      | `1 Hour`      | Add-on surcharge per DBU-hour              |
+| `Premium Databricks Storage Unit DSU`               | `Premium Databricks Storage Unit`               | `1`           | Per-unit storage (DSU, not DBU)            |
+| `Premium - Free Trial POC DBU`                      | `Premium - Free Trial POC`                      | `1 Hour`      | Global zero-price trial meter              |
 
 ## Cost Formula
 
@@ -81,7 +81,7 @@ Launch Charge      = launch_retailPrice × launches
 
 ## Notes
 
-- **Two tiers**: Standard (data engineering, retiring Oct 2026) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher; all new workloads should use Premium
+- **Two tiers**: Standard (data engineering; no new workspaces after Apr 2026, auto-upgraded to Premium Oct 2026) and Premium (adds RBAC, audit logs, Unity Catalog). Premium DBU rates are higher; all new workloads should use Premium
 - **Photon variants**: Photon-accelerated SKUs (e.g., `Premium All-Purpose Photon`) have the same DBU rate but process data faster, reducing total DBU-hours consumed
 - **Delta Live Tables**: Separate DLT meters at Core, Pro, and Advanced levels (e.g., `Premium Pro Compute Delta Live Tables`)
 - **Enhanced Security and Compliance**: Optional add-on surcharge billed per DBU-hour on top of base workload rate; query separately with `SkuName: Premium Enhanced Security and Compliance`

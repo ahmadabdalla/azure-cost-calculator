@@ -3,6 +3,7 @@ serviceName: Azure Cognitive Search
 category: web
 aliases: [Azure AI Search, Search Service, Full-text Search]
 primaryCost: "Fixed hourly rate per search unit (SU) × 730, varies by tier"
+hasKnownRates: true
 hasFreeGrant: true
 privateEndpoint: true
 ---
@@ -13,7 +14,9 @@ privateEndpoint: true
 
 > **Trap (CC variants)**: Each tier has a customer-controlled encryption variant (e.g., `Standard S1 CC`). These are separate SKUs with ~10% higher prices; do not confuse with the standard tier.
 
-> **Trap (Semantic Ranker MonthlyCost)**: The Semantic Ranker meter uses `1/Day` units. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30`; that would overcount by 30x.
+> **Trap (Semantic Ranker MonthlyCost)**: The `Semantic Ranker Unit` meter uses `1/Day` units. The script auto-multiplies by 30, so `MonthlyCost` is already the **monthly** cost. Do NOT pass `Quantity: 30`; that would overcount by 30x. The per-query meters (`Semantic Ranker queries`, `Semantic Ranker Overage Queries`) use `1K` units and default to ×1; compute them as `queriesPerMonth ÷ 1000 × retailPrice`.
+
+> **Trap (Agentic Retrieval sub-cent)**: The three Agentic Retrieval reasoning meters (`1K` unit) have sub-cent per-token rates, so the script rounds `MonthlyCost` to zero. Do not report zero to the user; use the Known Rates table and multiply `retailPrice × (max(0, tokens − freeGrant) ÷ 1000)`. The free grant is level-specific (see Known Rates).
 
 ## Query Pattern
 
@@ -29,6 +32,13 @@ InstanceCount: {searchUnits}
 ServiceName: Azure Cognitive Search
 SkuName: Semantic Ranker
 MeterName: Semantic Ranker Unit
+
+### Semantic Ranker per-query (bills per 1K queries; use for queriesPerMonth)
+
+ServiceName: Azure Cognitive Search
+SkuName: Semantic Ranker
+MeterName: Semantic Ranker queries
+Quantity: ({queriesPerMonth} ÷ 1000)
 
 ### Agentic Retrieval (per 1K tokens; Level = Minimum, Low, or Medium)
 
@@ -70,9 +80,10 @@ AI-related add-on meters, including enrichment meters such as Document Cracking 
 
 ```
 Monthly Base  = retailPrice × 730 × searchUnits
-Semantic (if enabled) = semantic_retailPrice × 30
-Agentic (if enabled) = agentic_retailPrice × (tokens ÷ 1000)
-Total = Monthly Base + Semantic + Agentic
+Semantic daily (if enabled)   = semantic_daily_retailPrice × 30
+Semantic queries (if enabled) = semantic_query_retailPrice × (queriesPerMonth ÷ 1000)
+Agentic (if enabled)          = agentic_retailPrice × (max(0, tokens − freeGrant) ÷ 1000)
+Total = Monthly Base + Semantic daily + Semantic queries + Agentic
 ```
 
 ## Notes
@@ -84,3 +95,13 @@ Total = Monthly Base + Semantic + Agentic
 - **Semantic Ranker**: Billed daily, not hourly. Script auto-multiplies `1/Day` by 30. Also has per-query meters (`Semantic Ranker queries` at per-1K, `Semantic Ranker Overage Queries` at higher per-1K rate).
 - **Agentic Retrieval**: Three reasoning levels (Minimum, Low, Medium) billed per 1K tokens at sub-cent rates. Free grants available.
 - **Private Endpoints**: Supported on Basic tier and above. Not available on the Free tier.
+
+## Known Rates
+
+Sub-cent Agentic Retrieval rates the script rounds to `$0.00`. Free monthly grants apply per level (see `Free Agentic Retrieval {Level} Reasoning` SKUs); confirm current allotment on the pricing page.
+
+| Meter                                        | Unit | Published Rate (USD) |
+| -------------------------------------------- | ---- | -------------------- |
+| `Agentic Retrieval Minimum Reasoning Tokens` | 1K   | $0.000022            |
+| `Agentic Retrieval Low Reasoning Tokens`     | 1K   | $0.000022            |
+| `Agentic Retrieval Medium Reasoning Tokens`  | 1K   | $0.0001              |

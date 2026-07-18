@@ -46,20 +46,20 @@ Quantity: 5000
 | `serviceName` | Always `Network Watcher`      | `Network Watcher`                 |
 | `productName` | Single product for all meters | `Network Watcher`                 |
 | `skuName`     | Always `Standard`             | `Standard`                        |
-| `meterName`   | Feature-specific, see table  | `Standard Network Logs Collected` |
+| `meterName`   | Feature-specific, see table   | `Standard Network Logs Collected` |
 
 ## Meter Names
 
-| Meter                                                        | unitOfMeasure | Notes                                            |
-| ------------------------------------------------------------ | ------------- | ------------------------------------------------ |
-| `Standard Network Logs Collected`                            | `1 GB`        | NSG flow logs, 5 GB/month free                  |
-| `Standard VNet Flow Logs Collected`                          | `1 GB`        | VNet flow logs, 5 GB/month free                 |
-| `Standard Traffic Analytics Processing`                      | `1 GB`        | 60-min processing interval                       |
+| Meter                                                         | unitOfMeasure | Notes                                            |
+| ------------------------------------------------------------- | ------------- | ------------------------------------------------ |
+| `Standard Network Logs Collected`                             | `1 GB`        | NSG flow logs, 5 GB/month free                   |
+| `Standard VNet Flow Logs Collected`                           | `1 GB`        | VNet flow logs, 5 GB/month free                  |
+| `Standard Traffic Analytics Processing`                       | `1 GB`        | 60-min processing interval                       |
 | `Standard Traffic Analytics Processing at 10-Minute Interval` | `1 GB`        | 10-min interval (premium rate)                   |
-| `Standard Connection Monitor Test`                           | `1`           | Per test, 10 tests/month free; 5 price tiers    |
-| `Standard Connection Monitoring`                             | `1`           | Legacy NPM, per connection/month, flat rate     |
-| `Standard Diagnostic Tool API`                               | `1`           | Per check, 1,000 checks/month free; sub-cent    |
-| `Standard Perf Monitor Connection Metric`                    | `1`           | Legacy NPM, 10 metrics/month free; 5 price tiers |
+| `Standard Connection Monitor Test`                            | `1`           | Per test, 10 tests/month free; 5 price tiers     |
+| `Standard Connection Monitoring`                              | `1`           | Legacy NPM, per connection/month, flat rate      |
+| `Standard Diagnostic Tool API`                                | `1`           | Per check, 1,000 checks/month free; sub-cent     |
+| `Standard Perf Monitor Connection Metric`                     | `1`           | Legacy NPM, 10 metrics/month free; 5 price tiers |
 
 ## Cost Formula
 
@@ -81,5 +81,5 @@ Monthly          = NSGFlowLogs + VNetFlowLogs + TrafficAnalytics + ConnMonitor +
 - **Storage billed separately**: Flow log data is stored in Azure Storage accounts. Storage charges are not included in Network Watcher meters
 - **Log Analytics billed separately**: Traffic Analytics and Network Analytics results are stored in Log Analytics. Data ingestion charges apply separately
 - **Packet Capture**: Counts as a diagnostic check under `Standard Diagnostic Tool API`; captured data stored in Storage at additional cost
-- **Two flow log types**: NSG flow logs (older, retiring Sep 2027) and VNet flow logs (newer) have identical pricing. Migrate to VNet flow logs for new deployments
+- **Two flow log types**: NSG flow logs (older) can no longer be created as of 2025-06-30 and fully retire 2027-09-30; VNet flow logs (newer) have identical pricing. Migrate to VNet flow logs
 - **Traffic Analytics intervals**: 10-minute processing costs more per-GB than 60-minute. Choose interval based on latency requirements

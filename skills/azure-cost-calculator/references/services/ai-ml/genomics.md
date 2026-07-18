@@ -18,7 +18,7 @@ ServiceName: Microsoft Genomics
 ProductName: Microsoft Genomics
 SkuName: Alignment and Variant Calling
 MeterName: Alignment and Variant Calling Genome
-Quantity: 5
+Quantity: 5 # genomes processed this month
 
 ### Alignment and Variant Calling: per incremental gigabase
 
@@ -26,15 +26,15 @@ ServiceName: Microsoft Genomics
 ProductName: Microsoft Genomics
 SkuName: Alignment and Variant Calling
 MeterName: Alignment and Variant Calling Incremental Gigabase
-Quantity: 10
+Quantity: 10 # incremental gigabases above the included 10 per genome
 
 ## Key Fields
 
-| Parameter     | How to determine                                    | Example values                                                                               |
-| ------------- | --------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `serviceName` | Always `Microsoft Genomics`                         | `Microsoft Genomics`                                                                         |
-| `productName` | Always `Microsoft Genomics`                         | `Microsoft Genomics`                                                                         |
-| `skuName`     | Always `Alignment and Variant Calling`              | `Alignment and Variant Calling`                                                              |
+| Parameter     | How to determine                                   | Example values                                                                               |
+| ------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Microsoft Genomics`                        | `Microsoft Genomics`                                                                         |
+| `productName` | Always `Microsoft Genomics`                        | `Microsoft Genomics`                                                                         |
+| `skuName`     | Always `Alignment and Variant Calling`             | `Alignment and Variant Calling`                                                              |
 | `meterName`   | Processing model, per genome or per incremental GB | `Alignment and Variant Calling Genome`, `Alignment and Variant Calling Incremental Gigabase` |
 
 ## Meter Names
@@ -51,11 +51,10 @@ incrementalGB = max(totalGigabases - (10 × genomeCount), 0)
 Monthly = (genome_retailPrice × genomeCount) + (gigabase_retailPrice × incrementalGB)
 ```
 
-`Quantity` maps directly to number of genomes or gigabases (`unitOfMeasure` is `1`).
-
 ## Notes
 
 - Single product with only 2 meters. No tiers, no reserved instances, no savings plans
+- Prices are identical across all returned Genomics regions; a standard regional query returns the same two meters
 - `unitOfMeasure` is `1` for both meters; Quantity parameter equals the actual count of genomes or gigabases
 - Billing model: genome rate covers first 10 gigabases per workflow; incremental rate applies to each additional gigabase
 - Input/output data stored in Azure Blob Storage; billed separately under Storage

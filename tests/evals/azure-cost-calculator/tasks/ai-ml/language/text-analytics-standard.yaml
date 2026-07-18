@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:ai-ml/language/text-analytics-standard
 name: Happy Path - Language Text Analytics Standard
 description: >

@@ -8,7 +8,7 @@ pricingRegion: empty-region
 
 # ExpressRoute
 
-> **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone). The default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE.
+> **Trap (Circuit regions)**: Circuit pricing uses **peering location zones** (`Zone 1`, `Zone 2`, etc.), not ARM regions. Circuit queries MUST use `-Region 'Zone 1'` (or the appropriate zone). The default `eastus` returns zero results. Zone mapping: Zone 1 = US/Europe, Zone 2 = Asia Pacific/Australia/Japan, Zone 3 = Brazil/South Africa/UAE, Zone 4 = India.
 
 > **Trap (skuName collision)**: Standard and Premium circuits share the same `skuName` (e.g., `1 Gbps Metered Data`). The only differentiator is `meterName`. Always filter by `meterName`, not `skuName`.
 
@@ -29,7 +29,9 @@ MeterName: Metered Data - Data Transfer Out
 Region: {Zone}
 Quantity: 500
 
-> **Circuit placeholders**: `{Plan}` = Standard / Premium / Local. `{DataModel}` = Metered Data / Unlimited Data. `{Bandwidth}` = 50 Mbps, 100 Mbps, 200 Mbps, 500 Mbps, 1 Gbps, 2 Gbps, 5 Gbps, 10 Gbps. `{Zone}` = Zone 1 (US/Europe), Zone 2 (APAC/Australia/Japan), Zone 3 (Brazil/South Africa/UAE).
+> **Circuit placeholders**: `{Plan}` = Standard / Premium / Standard MSFT Peering / Local. `{DataModel}` = Metered Data / Unlimited Data. `{Bandwidth}` = 50 Mbps, 100 Mbps, 200 Mbps, 500 Mbps, 1 Gbps, 2 Gbps, 5 Gbps, 10 Gbps. `{Zone}` = Zone 1 (US/Europe), Zone 2 (APAC/Australia/Japan), Zone 3 (Brazil/South Africa/UAE), Zone 4 (India).
+
+> **Trap (MSFT Peering plan)**: Circuits with Microsoft Peering enabled (Office 365 / Azure public routing) bill under a distinct `Standard MSFT Peering {DataModel} {Bandwidth} Circuit` meter with skuName `{Bandwidth} MSFT Peering {Metered|Unlimited} Data`. Standard-only (no Premium MSFT Peering), and its skuNames are unique, so the skuName-collision trap above does not apply to it.
 
 ## Meter Names
 
@@ -57,3 +59,5 @@ Total monthly    = Circuit + Egress
 - **Metered vs Unlimited**: Metered circuits have a lower base fee but charge per-GB for outbound data; Unlimited circuits include all data transfer
 - **Standard vs Premium**: Premium adds global routing across all geopolitical regions; Standard is limited to one geopolitical region
 - **Local circuits**: Available at select peering locations only (1/2/5/10 Gbps, Unlimited Data only). Flat monthly at reduced cost
+- **Traffic Collector (ERTC)**: Optional flow-log add-on billed separately under `ExpressRoute` with `ERTC` / `Standard_ERTC` meters (per-hour) plus a `Data Transfer In` meter (per-GB). Add these only if ExpressRoute Traffic Collector is enabled
+- **Direct / Global Reach**: ExpressRoute Direct and Global Reach are separate products (`ExpressRoute Direct`, `ExpressRoute Global Reach`) billed independently; query those product names directly if in scope

@@ -52,28 +52,28 @@ MeterName: S30 Disk
 
 ## Key Fields
 
-| Parameter     | How to determine          | Example values                                                    |
-| ------------- | ------------------------- | ----------------------------------------------------------------- |
-| `serviceName` | Always `HDInsight`        | `HDInsight`                                                       |
+| Parameter     | How to determine          | Example values                                                                 |
+| ------------- | ------------------------- | ------------------------------------------------------------------------------ |
+| `serviceName` | Always `HDInsight`        | `HDInsight`                                                                    |
 | `productName` | VM series family          | `HDInsight D Series`, `HDInsight Dadsv5 Series`, `HDInsight Eav4/Easv4 Series` |
-| `skuName`     | VM size within the series | `D4a v4/D4as v4`, `D4ads v5`, `E8a v4/E8as v4`                   |
-| `meterName`   | Usually matches `skuName` | `D4a v4/D4as v4`, `D4ads v5`, `S30 Disk`                         |
+| `skuName`     | VM size within the series | `D4a v4/D4as v4`, `D4ads v5`, `E8a v4/E8as v4`                                 |
+| `meterName`   | Usually matches `skuName` | `D4a v4/D4as v4`, `D4ads v5`, `S30 Disk`                                       |
 
 ## Meter Names
 
-| Meter              | skuName            | productName                    | unitOfMeasure | Notes                     |
-| ------------------ | ------------------ | ------------------------------ | ------------- | ------------------------- |
-| `D4a v4/D4as v4`  | `D4a v4/D4as v4`  | `HDInsight D Series`           | `1 Hour`      | General-purpose           |
-| `D4ads v5`         | `D4ads v5`         | `HDInsight Dadsv5 Series`      | `1 Hour`      | General-purpose v5        |
-| `E8a v4/E8as v4`  | `E8a v4/E8as v4`  | `HDInsight Eav4/Easv4 Series`  | `1 Hour`      | Memory-optimized          |
-| `E8ads v5`         | `E8ads v5`         | `HDInsight Eadsv5 Series`      | `1 Hour`      | Memory-optimized v5       |
-| `F8s v2`           | `F8s v2`           | `HDInsight FSv2 Series`        | `1 Hour`      | Compute-optimized         |
-| `L8as v3`          | `L8as v3`          | `HDInsight Lasv3 Series`       | `1 Hour`      | Storage-optimized (NVMe)  |
-| `NC6`              | `NC6`              | `HDInsight NC Series`          | `1 Hour`      | GPU (Tesla K80)           |
-| `S30 Disk`         | `S30`              | `HDInsight Storage`            | `1/Month`     | Standard HDD managed disk |
-| `P30 Disk`         | `P30`              | `HDInsight Storage`            | `1/Month`     | Premium SSD managed disk  |
-| `P30 - ZRS Disk`   | `P30 - ZRS`        | `HDInsight Storage`            | `1/Month`     | Premium SSD zone-redundant |
-| `A2 v2`            | `A2 v2`            | `HDInsight ID Broker`          | `1 Hour`      | Auto-added for ESP        |
+| Meter            | skuName          | productName                   | unitOfMeasure | Notes                      |
+| ---------------- | ---------------- | ----------------------------- | ------------- | -------------------------- |
+| `D4a v4/D4as v4` | `D4a v4/D4as v4` | `HDInsight D Series`          | `1 Hour`      | General-purpose            |
+| `D4ads v5`       | `D4ads v5`       | `HDInsight Dadsv5 Series`     | `1 Hour`      | General-purpose v5         |
+| `E8a v4/E8as v4` | `E8a v4/E8as v4` | `HDInsight Eav4/Easv4 Series` | `1 Hour`      | Memory-optimized           |
+| `E8ads v5`       | `E8ads v5`       | `HDInsight Eadsv5 Series`     | `1 Hour`      | Memory-optimized v5        |
+| `F8s v2`         | `F8s v2`         | `HDInsight FSv2 Series`       | `1 Hour`      | Compute-optimized          |
+| `L8as v3`        | `L8as v3`        | `HDInsight Lasv3 Series`      | `1 Hour`      | Storage-optimized (NVMe)   |
+| `NC6`            | `NC6`            | `HDInsight NC Series`         | `1 Hour`      | GPU (Tesla K80)            |
+| `S30 Disk`       | `S30`            | `HDInsight Storage`           | `1/Month`     | Standard HDD managed disk  |
+| `P30 Disk`       | `P30`            | `HDInsight Storage`           | `1/Month`     | Premium SSD managed disk   |
+| `P30 - ZRS Disk` | `P30 - ZRS`      | `HDInsight Storage`           | `1/Month`     | Premium SSD zone-redundant |
+| `A2 v2`          | `A2 v2`          | `HDInsight ID Broker`         | `1 Hour`      | Auto-added for ESP         |
 
 ## Cost Formula
 

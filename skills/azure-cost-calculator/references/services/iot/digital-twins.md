@@ -9,9 +9,9 @@ privateEndpoint: true
 
 # Digital Twins
 
-> **Trap (sub-cent pricing)**: All three meters return sub-cent `retailPrice` values (per 1K units). The script displays zero `MonthlyCost` for every meter; this is a rounding artifact, not the actual price. Use the Known Rates table below and calculate manually: `(quantity / 1000) × retailPrice`.
+> **Trap (sub-cent pricing)**: All three meters return sub-cent `retailPrice` values (per 1K units). Queried without `Quantity`, the script rounds `MonthlyCost` to zero; this is a rounding artifact, not the actual price. Supply `Quantity` in 1K units, or use the Known Rates table below and calculate manually: `(quantity / 1000) × retailPrice`.
 
-> **Trap (non-hourly units)**: `unitOfMeasure` is `1K` (per 1,000), not `1/Hour`. The script's `MonthlyCost` (which multiplies by 730) is meaningless. Operations are metered in 1 KB increments of response body; messages in 1 KB increments of payload; a 3 KB response counts as 3 operations.
+> **Trap (non-hourly units)**: `unitOfMeasure` is `1K` (per 1,000), not `1/Hour`. The script maps `1K` to a ×1 multiplier (not the ×730 hourly rate), so supplying `Quantity` in 1K units (e.g. `50` = 50K messages) yields the correct volume-adjusted cost with no hourly inflation. Operations are metered in 1 KB increments of response body; messages in 1 KB increments of payload; a 3 KB response counts as 3 operations.
 
 ## Query Pattern
 

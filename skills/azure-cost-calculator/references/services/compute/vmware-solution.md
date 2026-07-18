@@ -66,7 +66,7 @@ Minimum 3 hosts per cluster.
 - Broadcom VCF subscription required separately (not in API)
 - Trial nodes exist for all SKUs at zero cost. Exclude from estimates
 - AV64: broadest availability (43 regions); AV52: most limited (5 regions)
-- RI terms: AV48 and AV64 support 1-Year, 3-Year, and 5-Year; AV36, AV36P, AV52 support 1-Year only
+- RI terms: AV48 supports 1-Year, 3-Year, and 5-Year; AV36P, AV52, AV64 support 1-Year and 3-Year; AV36 has no reservation pricing (Consumption only)
 - Max 16 hosts/cluster, 12 clusters/private cloud (up to 192 hosts)
 - SQL Server on AVS billed separately (skuName `SQL Server EE License for AVS`, Global region)
 - Legacy SKUs (CS28, CS36, VS20, VS36) exist under different productNames

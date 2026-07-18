@@ -46,24 +46,24 @@ ProductName: Flex Consumption
 
 ## Key Fields
 
-| Parameter     | How to determine                          | Example values                                            |
-| ------------- | ----------------------------------------- | --------------------------------------------------------- |
-| `serviceName` | Always `Functions`                        | `Functions`                                               |
-| `productName` | Plan type                                 | `Functions`, `Premium Functions`, `Flex Consumption`      |
-| `skuName`     | Plan tier within product                  | `Standard`, `Premium`, `Always Ready`, `On Demand`        |
-| `meterName`   | Billing dimension (executions / duration) | `Standard Total Executions`, `On Demand Execution Time`   |
+| Parameter     | How to determine                          | Example values                                          |
+| ------------- | ----------------------------------------- | ------------------------------------------------------- |
+| `serviceName` | Always `Functions`                        | `Functions`                                             |
+| `productName` | Plan type                                 | `Functions`, `Premium Functions`, `Flex Consumption`    |
+| `skuName`     | Plan tier within product                  | `Standard`, `Premium`, `Always Ready`, `On Demand`      |
+| `meterName`   | Billing dimension (executions / duration) | `Standard Total Executions`, `On Demand Execution Time` |
 
 ## Meter Names
 
-| Plan              | Meter                                                           | Unit                   | Free Grant |
-| ----------------- | --------------------------------------------------------------- | ---------------------- | ---------- |
-| Consumption       | `Standard Total Executions`                                     | per 10 exec            | 1M exec    |
-| Consumption       | `Standard Execution Time`                                       | per 1 GB-s             | 400K GB-s  |
-| Premium           | `Premium vCPU Duration`                                         | 1 Hour                 | -          |
-| Premium           | `Premium Memory Duration`                                       | 1 GiB Hour             | -          |
+| Plan              | Meter                                                                                     | Unit                   | Free Grant |
+| ----------------- | ----------------------------------------------------------------------------------------- | ---------------------- | ---------- |
+| Consumption       | `Standard Total Executions`                                                               | per 10 exec            | 1M exec    |
+| Consumption       | `Standard Execution Time`                                                                 | per 1 GB-s             | 400K GB-s  |
+| Premium           | `Premium vCPU Duration`                                                                   | 1 Hour                 | -          |
+| Premium           | `Premium Memory Duration`                                                                 | 1 GiB Hour             | -          |
 | Flex Always Ready | `Always Ready Baseline` / `Always Ready Execution Time` / `Always Ready Total Executions` | per GB-s / per 10 exec | -          |
-| Flex On Demand    | `On Demand Execution Time`                                      | per 1 GB-s             | 100K GB-s  |
-| Flex On Demand    | `On Demand Total Executions`                                    | per 10 exec            | 250K exec  |
+| Flex On Demand    | `On Demand Execution Time`                                                                | per 1 GB-s             | 100K GB-s  |
+| Flex On Demand    | `On Demand Total Executions`                                                              | per 10 exec            | 250K exec  |
 
 ## Cost Formula
 
@@ -92,9 +92,9 @@ Dedicated: Monthly = App Service Plan retailPrice × 730 × instanceCount (see a
 
 ## Premium Plan Sizes (Elastic Premium)
 
-| Plan | vCPUs | Memory (GiB) | Notes                                                                          |
-| ---- | ----- | ------------ | ------------------------------------------------------------------------------ |
-| EP1  | 1     | 3.5          | (vCPU_price × 1 × 730) + (memory_price × 3.5 × 730)                           |
-| EP2  | 2     | 7            | (vCPU_price × 2 × 730) + (memory_price × 7 × 730)                             |
-| EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)                            |
+| Plan | vCPUs | Memory (GiB) | Notes                                               |
+| ---- | ----- | ------------ | --------------------------------------------------- |
+| EP1  | 1     | 3.5          | (vCPU_price × 1 × 730) + (memory_price × 3.5 × 730) |
+| EP2  | 2     | 7            | (vCPU_price × 2 × 730) + (memory_price × 7 × 730)   |
+| EP3  | 4     | 14           | (vCPU_price × 4 × 730) + (memory_price × 14 × 730)  |
 > **Agent instruction**: The API returns generic `Premium vCPU Duration` and `Premium Memory Duration` meters with no EP1/EP2/EP3-specific meter. When the user says "Functions Premium EP2", query `Premium Functions` for the per-vCPU and per-GiB hourly rates, then multiply by EP2 specs above.

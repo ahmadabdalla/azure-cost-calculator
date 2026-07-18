@@ -38,26 +38,26 @@ SkuName: ROW
 
 ## Key Fields
 
-| Parameter     | How to determine              | Example values                                          |
-| ------------- | ----------------------------- | ------------------------------------------------------- |
-| `serviceName` | Always `Voice`                | `Voice`                                                 |
+| Parameter     | How to determine              | Example values                                                        |
+| ------------- | ----------------------------- | --------------------------------------------------------------------- |
+| `serviceName` | Always `Voice`                | `Voice`                                                               |
 | `productName` | Calling type                  | `Direct Routing`, `Voice and Video Calling`, `Local Calls - Outbound` |
-| `skuName`     | Tier or country               | `Standard`, `A2AGroupCalling`, `ROW`, `US`, `Trial`    |
-| `meterName`   | Direction + billing dimension | `Standard Outbound`, `A2AGroupCalling User Minute`     |
+| `skuName`     | Tier or country               | `Standard`, `A2AGroupCalling`, `ROW`, `US`, `Trial`                   |
+| `meterName`   | Direction + billing dimension | `Standard Outbound`, `A2AGroupCalling User Minute`                    |
 
 ## Meter Names
 
-| Meter                                    | productName              | unitOfMeasure | Notes                         |
-| ---------------------------------------- | ------------------------ | ------------- | ----------------------------- |
-| `Standard Outbound`                      | `Direct Routing`         | `1 Minute`    | Per-minute outbound           |
-| `Standard Inbound`                       | `Direct Routing`         | `1 Minute`    | Per-minute inbound            |
-| `Standard Refer Unit`                    | `Direct Routing`         | `1`           | Call transfer/refer           |
-| `Standard Transfer Unit`                 | `Direct Routing`         | `1`           | Call transfer (free)          |
-| `A2AGroupCalling User Minute`            | `Voice and Video Calling`| `1`           | Video/group per-participant   |
-| `A2AGroupCalling User InterOp Azure Minute` | `Voice and Video Calling` | `1`       | Azure interop per-participant |
-| `A2AGroupCalling User InterOp M365 Minute` | `Voice and Video Calling` | `1`        | Teams interop per-participant |
-| `A2AGroupCalling User CCaaS Minute`      | `Voice and Video Calling`| `1`           | Contact Center per-participant|
-| `ROW Consumption Unit - Outbound`        | `Local Calls - Outbound` | `1`           | Abstract consumption unit     |
+| Meter                                       | productName               | unitOfMeasure | Notes                          |
+| ------------------------------------------- | ------------------------- | ------------- | ------------------------------ |
+| `Standard Outbound`                         | `Direct Routing`          | `1 Minute`    | Per-minute outbound            |
+| `Standard Inbound`                          | `Direct Routing`          | `1 Minute`    | Per-minute inbound             |
+| `Standard Refer Unit`                       | `Direct Routing`          | `1`           | Call transfer/refer            |
+| `Standard Transfer Unit`                    | `Direct Routing`          | `1`           | Call transfer (free)           |
+| `A2AGroupCalling User Minute`               | `Voice and Video Calling` | `1`           | Video/group per-participant    |
+| `A2AGroupCalling User InterOp Azure Minute` | `Voice and Video Calling` | `1`           | Azure interop per-participant  |
+| `A2AGroupCalling User InterOp M365 Minute`  | `Voice and Video Calling` | `1`           | Teams interop per-participant  |
+| `A2AGroupCalling User CCaaS Minute`         | `Voice and Video Calling` | `1`           | Contact Center per-participant |
+| `ROW Consumption Unit - Outbound`           | `Local Calls - Outbound`  | `1`           | Abstract consumption unit      |
 
 ## Cost Formula
 
@@ -76,9 +76,9 @@ Total Monthly          = Direct Routing + Group Calling (sum active components)
 
 ## Known Rates
 
-| Meter                         | Unit       | Published Rate (USD) |
-| ----------------------------- | ---------- | -------------------- |
-| `Standard Outbound`           | Per minute | $0.004               |
-| `Standard Inbound`            | Per minute | $0.004               |
-| `A2AGroupCalling User Minute` | Per unit   | $0.004               |
-| `A2AGroupCalling User CCaaS Minute` | Per unit | $0.004              |
+| Meter                               | Unit       | Published Rate (USD) |
+| ----------------------------------- | ---------- | -------------------- |
+| `Standard Outbound`                 | Per minute | $0.004               |
+| `Standard Inbound`                  | Per minute | $0.004               |
+| `A2AGroupCalling User Minute`       | Per unit   | $0.004               |
+| `A2AGroupCalling User CCaaS Minute` | Per unit   | $0.004               |

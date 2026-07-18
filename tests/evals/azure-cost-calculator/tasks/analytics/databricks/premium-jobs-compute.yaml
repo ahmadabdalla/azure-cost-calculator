@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json
+# Waza eval task: see docs/ops/evals.md
 id: eval:analytics/databricks/premium-jobs-compute
 name: Azure Databricks - Premium Jobs Compute DBU
 description: >

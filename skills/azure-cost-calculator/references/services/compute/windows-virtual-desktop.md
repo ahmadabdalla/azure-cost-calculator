@@ -40,11 +40,11 @@ InstanceCount: 8
 
 ## Key Fields
 
-| Parameter     | How to determine                                        | Example values                                                                              |
-| ------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `serviceName` | Always `Windows Virtual Desktop`                        | `Windows Virtual Desktop`                                                                   |
-| `productName` | Always `Azure Virtual Desktop`                          | `Azure Virtual Desktop`                                                                     |
-| `skuName`     | Access tier: full desktop, app-only, upgrade, or HCI    | `Desktop & App Hosting`, `App Hosting`, `App to Desktop Upgrade`, `AVD for Azure Stack HCI` |
+| Parameter     | How to determine                                       | Example values                                                                              |
+| ------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `serviceName` | Always `Windows Virtual Desktop`                       | `Windows Virtual Desktop`                                                                   |
+| `productName` | Always `Azure Virtual Desktop`                         | `Azure Virtual Desktop`                                                                     |
+| `skuName`     | Access tier: full desktop, app-only, upgrade, or HCI   | `Desktop & App Hosting`, `App Hosting`, `App to Desktop Upgrade`, `AVD for Azure Stack HCI` |
 | `meterName`   | Varies by SKU, multiple meter name variants per region | See Meter Names table                                                                       |
 
 ## Meter Names

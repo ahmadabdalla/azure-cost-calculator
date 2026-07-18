@@ -3,16 +3,17 @@ serviceName: Azure Bot Service
 category: ai-ml
 aliases: [Bot Framework, Chatbot]
 billingNeeds: [Azure App Service, Functions]
-pricingRegion: global
 primaryCost: "S1 premium channel messages per 1K (DirectLine/Web Chat); standard channels free"
+pricingRegion: global
 hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Bot Service
 
 > **Trap (shared API name)**: The `serviceName` "Azure Bot Service" is shared with Health Bot. Always filter by `ProductName: Azure Bot Service` to isolate channel meters. For Health Bot pricing, see `specialist/health-bot.md`.
 
-> **Trap (global-only)**: Channel meters exist only in Global (commercial) and US Gov sovereign regions — any standard region like `eastus` returns zero results. Use `armRegionName: Global` for commercial pricing.
+> **Trap (global-only)**: Channel meters exist only in Global (commercial) and US Gov sovereign regions — any standard region like `eastus` returns zero results. Use `Region: Global` for commercial pricing or `Region: US Gov` for sovereign pricing.
 
 > **Trap (free channels)**: Standard channels (Teams, Slack, Facebook) are always free with no paid meter. Only premium channels (DirectLine, Web Chat) are billable at S1 tier.
 
@@ -24,6 +25,7 @@ ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: S1
 MeterName: S1 Premium Channel Messages
+Region: Global
 Quantity: 50 # thousands of messages per month
 
 ### Free tier (premium channels, 10K messages/month included)
@@ -32,23 +34,24 @@ ServiceName: Azure Bot Service
 ProductName: Azure Bot Service
 SkuName: Free
 MeterName: Free Premium Channel Messages
+Region: Global
 
 ## Key Fields
 
-| Parameter     | How to determine                   | Example values                                          |
-| ------------- | ---------------------------------- | ------------------------------------------------------- |
-| `serviceName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
-| `productName` | Always `Azure Bot Service`         | `Azure Bot Service`                                     |
-| `skuName`     | Tier selected by user              | `Free`, `S1`                                            |
+| Parameter     | How to determine                   | Example values                                                 |
+| ------------- | ---------------------------------- | -------------------------------------------------------------- |
+| `serviceName` | Always `Azure Bot Service`         | `Azure Bot Service`                                            |
+| `productName` | Always `Azure Bot Service`         | `Azure Bot Service`                                            |
+| `skuName`     | Tier selected by user              | `Free`, `S1`                                                   |
 | `meterName`   | Channel type + tier (never-assume) | `S1 Premium Channel Messages`, `Free Premium Channel Messages` |
 
 ## Meter Names
 
-| Meter                            | skuName | unitOfMeasure | Notes                                    |
-| -------------------------------- | ------- | ------------- | ---------------------------------------- |
-| `S1 Premium Channel Messages`    | `S1`    | `1K`          | Paid: DirectLine, Web Chat               |
-| `Free Premium Channel Messages`  | `Free`  | `1K`          | Zero price; 10K messages/month cap       |
-| `Free Standard Channel Messages` | `Free`  | `1K`          | Zero price; unlimited (Teams, Slack)     |
+| Meter                            | skuName | unitOfMeasure | Notes                                |
+| -------------------------------- | ------- | ------------- | ------------------------------------ |
+| `S1 Premium Channel Messages`    | `S1`    | `1K`          | Paid: DirectLine, Web Chat           |
+| `Free Premium Channel Messages`  | `Free`  | `1K`          | Zero price; 10K messages/month cap   |
+| `Free Standard Channel Messages` | `Free`  | `1K`          | Zero price; unlimited (Teams, Slack) |
 
 ## Cost Formula
 
@@ -62,6 +65,8 @@ Free = no charge (10K premium messages/month included; standard channels unlimit
 - **Standard channels are free**: Teams, Slack, Facebook, etc. have no paid meter at any tier
 - **Premium channels**: DirectLine and Web Chat; billable only on S1 tier
 - **Underlying compute**: Bot apps run on Azure App Service or Functions; billed separately under those services
+- **PE sub-resources** (never-assume): `Bot` (Direct Line) and `Token`; supported only via the Direct Line App Service extension (DL-ASE), not the base bot resource; see `networking/private-link.md` for PE and DNS zone pricing
 - **Free tier cap**: 10,000 premium channel messages/month (enforced service-side; API returns zero-price meters)
+- **Sovereign cloud**: US Gov uses separate `S1 Premium Channel Messages` and `Free Standard Channel Messages` meters; `Free Premium Channel Messages` is absent
 - **Health Bot**: For healthcare bot pricing (Agent Tier, Standard daily fee), see `specialist/health-bot.md`
 - **RI check**: `PriceType: Reservation` returns no results; Reserved Instances not available

@@ -1,0 +1,48 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:iot/iot-hub/s1-multi-unit
+name: Happy Path - IoT Hub S1 Multi-Unit
+description: >
+  Tests cost estimation for IoT Hub Standard S1 tier scaled across multiple
+  units. IoT Hub bills a per-unit monthly flat rate (unitOfMeasure 1/Month),
+  so the monthly cost is retailPrice x unit count with no 730-hour conversion.
+  Validates that the agent isolates the IoT Hub product (not Device Update or
+  DPS meters) and scales by unit count.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:iot-hub
+inputs:
+  prompt: "What is the monthly cost for Azure IoT Hub with 3 S1 tier units in East US?"
+expected:
+  output_contains:
+    - "IoT Hub"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "IoT Hub|iot hub"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: unit-count-acknowledged
+    config:
+      contains:
+        - "3"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

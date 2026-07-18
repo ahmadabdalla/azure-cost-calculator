@@ -1,0 +1,65 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:iot/notification-hubs/standard-multi-namespace
+name: Happy Path - Notification Hubs Standard Multi-Namespace
+description: >
+  Tests cost estimation for Notification Hubs Standard tier scaled across
+  multiple namespaces. Notification Hubs bills a per-namespace monthly flat
+  rate (unitOfMeasure 1/Month), so the base monthly cost is retailPrice x
+  namespace count with no 730-hour conversion. Validates that the agent
+  isolates the Standard Unit base meter (not the tiered Standard Pushes overage
+  rows, which would inflate the total) and scales by namespace count.
+tags:
+  - happy-path
+  - single-service
+  - iot
+  - service:notification-hubs
+inputs:
+  prompt: "What is the monthly cost for Azure Notification Hubs with 2 Standard tier namespaces in East US?"
+expected:
+  output_contains:
+    - "Notification Hubs"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Notification Hubs|Push Notifications"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: namespace-count-acknowledged
+    config:
+      contains:
+        - "2"
+    weight: 0.5
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for Azure Notification Hubs with 2 Standard tier namespaces in East US?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Notification Hubs (per-namespace Standard tier monthly flat rate, not summed overage tiers).
+        (3) Accounts for 2 Standard tier namespaces as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

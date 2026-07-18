@@ -12,7 +12,7 @@ primaryCost: "Per 1K managed domains/month + per million DNS security queries"
 >
 > **Trap (domain unit)**: The domains meter `unitOfMeasure` is `1` but each unit represents 1,000 domain entries per the pricing page. Use `Quantity = ceil(totalDomains / 1000)` to avoid overcharging by 1,000×.
 
-> **Warning**: **Zone-based regions**: standard ARM regions (e.g., `eastus`) return nothing. Use `Region: Zone 1` with scripts or `armRegionName eq 'Zone 1'` with the API. Prices are uniform across all zones.
+> **Warning**: **Zone-based regions**: standard ARM regions (e.g., `eastus`) return nothing. Use `Region: Zone 1` with scripts or `armRegionName eq 'Zone 1'` with the API. Prices are uniform across commercial zones (Zone 1–4); Azure Government zones (`US Gov Zone 1`/`2`) carry a premium.
 
 ## Query Pattern
 
@@ -38,13 +38,13 @@ Fields: meterName, skuName, unitPrice, unitOfMeasure
 
 ## Key Fields
 
-| Parameter     | How to determine                                    | Example values                                                              |
-| ------------- | --------------------------------------------------- | --------------------------------------------------------------------------- |
-| `serviceName` | Always `Azure DNS` (shared with public/private DNS) | `Azure DNS`                                                                 |
-| `productName` | Single product                                      | `Azure DNS`                                                                 |
-| `skuName`     | Meter family for DNS Security Policy                | `DNS Security Policy Domains`, `DNS Security Policy Queries`                |
-| `Region`      | Delivery zone (Zone 1–4), **not** ARM regions       | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`                                     |
-| `meterName`   | Domains or queries dimension                        | `DNS Security Policy Domains Managed Domain`, `DNS Security Policy Queries` |
+| Parameter     | How to determine                                      | Example values                                                              |
+| ------------- | ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `serviceName` | Always `Azure DNS` (shared with public/private DNS)   | `Azure DNS`                                                                 |
+| `productName` | Single product                                        | `Azure DNS`                                                                 |
+| `skuName`     | Meter family for DNS Security Policy                  | `DNS Security Policy Domains`, `DNS Security Policy Queries`                |
+| `Region`      | Delivery zone (Zone 1–4, US Gov), **not** ARM regions | `Zone 1`, `Zone 2`, `Zone 3`, `Zone 4`, `US Gov Zone 1`                     |
+| `meterName`   | Domains or queries dimension                          | `DNS Security Policy Domains Managed Domain`, `DNS Security Policy Queries` |
 
 ## Meter Names
 

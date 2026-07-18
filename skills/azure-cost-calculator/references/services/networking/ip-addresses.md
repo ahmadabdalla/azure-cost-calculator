@@ -49,10 +49,10 @@ MeterName: Global IPv4 Static Public IP
 
 | Meter                            | skuName    | unitOfMeasure | Notes                                         |
 | -------------------------------- | ---------- | ------------- | --------------------------------------------- |
-| `Standard IPv4 Static Public IP` | `Standard` | `1 Hour`      | Production default; zone-redundant             |
-| `Basic IPv4 Static Public IP`    | `Basic`    | `1 Hour`      | Legacy; no zone redundancy                     |
-| `Basic IPv4 Dynamic Public IP`   | `Basic`    | `1 Hour`      | Free when attached to running VM               |
-| `Global IPv4 Static Public IP`   | `Global`   | `1 Hour`      | Cross-region services (Front Door, Global LB)  |
+| `Standard IPv4 Static Public IP` | `Standard` | `1 Hour`      | Production default; zone-redundant            |
+| `Basic IPv4 Static Public IP`    | `Basic`    | `1 Hour`      | Legacy; no zone redundancy                    |
+| `Basic IPv4 Dynamic Public IP`   | `Basic`    | `1 Hour`      | Free when attached to running VM              |
+| `Global IPv4 Static Public IP`   | `Global`   | `1 Hour`      | Cross-region services (Front Door, Global LB) |
 
 > Public IP Prefix meters also exist under `productName: Public IP Prefix`, billed per IP in the prefix at a higher hourly rate.
 

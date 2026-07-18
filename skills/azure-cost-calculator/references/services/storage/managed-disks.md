@@ -12,6 +12,7 @@ privateEndpoint: true
 > **Trap (two-meter)**: Premium SSD returns **both** "Disk" and "Disk Mount" meters; you MUST sum both. Mount fee alone is ~5% of cost; using only mount fee = ~20× underestimate. Standard SSD returns 3 meters (Disk + Disk Mount + Operations per 10K). Standard HDD returns 2 (Disk + Operations, no mount fee). Query each meter by `MeterName` and sum with correct scaling; do not rely on `summary.totalMonthlyCost`.
 
 > **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput; one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
+
 > **Trap (Ultra vCPU)**: Ultra Disk has a 4th meter `Ultra LRS Reservation per vCPU Provisioned`; per vCPU on the attached VM.
 
 ## Query Pattern
@@ -41,26 +42,32 @@ ServiceName: Storage
 SkuName: Premium LRS
 ProductName: Azure Premium SSD v2
 
-> **Note**: For ZRS, replace `LRS` with `ZRS` in SkuName (Premium/Standard SSD only). Standard HDD uses `ProductName: Standard HDD Managed Disks`, `SkuName: S{Size} LRS`.
+### Standard HDD (e.g., S30 LRS): LRS only, no mount fee (Disk + Operations)
+
+ServiceName: Storage
+SkuName: S30 LRS
+ProductName: Standard HDD Managed Disks
+
+> **Note**: For ZRS, replace `LRS` with `ZRS` in SkuName (Premium/Standard SSD only; Standard HDD and Ultra disk tiers are LRS-only).
 
 ## Key Fields
 
-| Parameter     | How to determine            | Example values                                                                                                                  |
-| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `serviceName` | Always `Storage`            | `Storage`                                                                                                                       |
+| Parameter     | How to determine            | Example values                                                                                                                 |
+| ------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `serviceName` | Always `Storage`            | `Storage`                                                                                                                      |
 | `productName` | Disk type                   | `Premium SSD Managed Disks`, `Standard SSD Managed Disks`, `Standard HDD Managed Disks`, `Ultra Disks`, `Azure Premium SSD v2` |
-| `skuName`     | {Prefix}{Size} {Redundancy} | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                                                        |
+| `skuName`     | {Prefix}{Size} {Redundancy} | `P30 LRS`, `P30 ZRS`, `E30 LRS`, `S30 LRS`, `Ultra LRS`, `Premium LRS`                                                         |
 | `meterName`   | Meter type per disk         | `P30 LRS Disk`, `P30 LRS Disk Mount`, `E30 LRS Disk Operations`                                                                |
 
 ## Meter Names
 
-| Disk Type      |                          Meters                          | Mount | Operations    |
+| Disk Type      |                          Meters                          | Mount |  Operations   |
 | -------------- | :------------------------------------------------------: | :---: | :-----------: |
 | Premium SSD    |                    Disk + Disk Mount                     |  YES  |      NO       |
-| Standard SSD   | Disk + Disk Mount + Disk Operations (E4+; E1–E3 no Ops) |  YES  | YES (per 10K) |
+| Standard SSD   | Disk + Disk Mount + Disk Operations (E4+; E1–E3 no Ops)  |  YES  | YES (per 10K) |
 | Standard HDD   |                  Disk + Disk Operations                  |  NO   | YES (per 10K) |
-| Ultra Disk     |  Provisioned Capacity, IOPS, Throughput, vCPU Reservation |  -   |       -       |
-| Premium SSD v2 |        Provisioned Capacity, IOPS, Throughput            |   -   |       -       |
+| Ultra Disk     | Provisioned Capacity, IOPS, Throughput, vCPU Reservation |   -   |       -       |
+| Premium SSD v2 |          Provisioned Capacity, IOPS, Throughput          |   -   |       -       |
 
 ## Cost Formula
 

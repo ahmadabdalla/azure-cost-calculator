@@ -10,6 +10,8 @@ hasFreeGrant: true
 
 # Azure Container Storage
 
+> **Trap (shared serviceName)**: `serviceName: Storage` is shared across Blob, Files, Managed Disks, File Sync, and Container Storage. Unfiltered queries return hundreds of unrelated meters. Always filter by `ProductName: Azure Container Storage`.
+
 > **Trap (version billing)**: v2.0.0+ has no orchestration fee; the API meter applies only to v1.x.x. For v2+, only the underlying storage costs (Managed Disks, Elastic SAN) apply.
 
 > **Trap (free tier)**: v1 includes 5 TiB free per storage pool. The API returns a flat rate with no tier structure; manually deduct: `max(0, provisionedGiB - 5120) × retailPrice`.
@@ -38,9 +40,9 @@ Quantity: 10240 # provisioned GiB (e.g., 10 TiB pool)
 
 ## Meter Names
 
-| Meter                       | unitOfMeasure  | Notes                          |
-| --------------------------- | -------------- | ------------------------------ |
-| `Provisioned Capacity Unit` | `1 GiB/Month`  | Orchestration fee; v1.x.x only |
+| Meter                       | unitOfMeasure | Notes                          |
+| --------------------------- | ------------- | ------------------------------ |
+| `Provisioned Capacity Unit` | `1 GiB/Month` | Orchestration fee; v1.x.x only |
 
 ## Cost Formula
 
@@ -56,4 +58,6 @@ Total = orchestration + underlying disk cost (see managed-disks.md)
 - v1.x.x backing storage: Azure Disks, Ephemeral (NVMe/temp SSD), Elastic SAN
 - v2.0.0+ backing storage: Local NVMe, Elastic SAN only (Azure Disks not supported)
 - Orchestration meter covers management only; all data storage, IOPS, and throughput costs are billed through the underlying storage service
+- Provisioned pool size (GiB) is a never-assume parameter; confirm the intended pool size with the user before estimating
+- Global-region USD-only pricing; for non-USD currencies see [regions-and-currencies.md](../../regions-and-currencies.md)
 - Network isolation is handled through AKS cluster networking

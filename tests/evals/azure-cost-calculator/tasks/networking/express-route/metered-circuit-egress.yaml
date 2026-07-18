@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/express-route/metered-circuit-egress
+name: ExpressRoute - Metered Circuit Plus Egress
+description: >
+  Tests monthly cost estimation for a Standard Metered ExpressRoute circuit plus
+  outbound data transfer. Validates that the agent states assumptions, queries
+  circuit pricing by peering-location zone (not an ARM region), and combines the
+  flat monthly circuit fee with per-GB metered egress.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:express-route
+inputs:
+  prompt: "What is the monthly cost of a Standard 1 Gbps metered ExpressRoute circuit in Zone 1 with 500 GB of outbound data?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "ExpressRoute|ER|Dedicated Circuit"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: bandwidth-acknowledged
+    config:
+      contains:
+        - "1 Gbps"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

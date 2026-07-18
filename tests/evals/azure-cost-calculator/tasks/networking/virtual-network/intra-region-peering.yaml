@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:networking/virtual-network/intra-region-peering
+name: Virtual Network - Intra-Region Peering Data Transfer
+description: >
+  Tests monthly cost estimation for intra-region VNet peering data transfer.
+  Validates that the agent states assumptions, queries the Global-only
+  intra-region peering meters, and charges both directions (ingress and egress)
+  for the transferred volume.
+tags:
+  - happy-path
+  - single-service
+  - networking
+  - service:virtual-network
+inputs:
+  prompt: "What is the monthly cost of 500 GB transferred between two peered VNets in the same region?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Virtual Network|VNet|Peering"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: transfer-volume-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

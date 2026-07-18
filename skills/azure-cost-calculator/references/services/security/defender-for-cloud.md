@@ -27,26 +27,26 @@ InstanceCount: {resourceCount} # number of protected resources
 
 ## Meter Names
 
-| Sub-product         | productName                              | skuName            | meterName                   | unitOfMeasure | Formula               |
-| ------------------- | ---------------------------------------- | ------------------ | --------------------------- | ------------- | --------------------- |
-| Servers P1          | `Microsoft Defender for Servers`         | `Standard P1`      | `Standard P1 Node`          | `1/Hour`      | × 730 × serverCount   |
-| Servers P2          | `Microsoft Defender for Servers`         | `Standard P2`      | `Standard P2 Node`          | `1/Hour`      | × 730 × serverCount   |
-| SQL (PaaS)          | `Microsoft Defender for SQL`             | `Standard`         | `Standard Instance`         | `1 Hour`      | × 730 × instanceCount |
-| SQL (Node)          | `Microsoft Defender for SQL`             | `Standard`         | `Standard Node`             | `1/Month`     | × nodeCount           |
-| SQL (vCore)         | `Microsoft Defender for SQL`             | `Standard`         | `Standard vCore`            | `1 Hour`      | × 730 × vCoreCount    |
-| App Service         | `Microsoft Defender for App Service`     | `Standard`         | `Standard Node`             | `1/Hour`      | × 730 × planCount     |
-| Key Vault           | `Microsoft Defender for Key Vault`       | `Per node Std`     | `Per node Std Node`         | `1/Hour`      | × 730 × vaultCount    |
-| Storage             | `Microsoft Defender for Storage`         | `Standard`         | `Standard Node`             | `1/Hour`      | × 730 × accountCount  |
-| Storage (txns)      | `Microsoft Defender for Storage`         | `Standard`         | `Standard Transactions`     | `1M`          | × transactionMillions |
-| Storage (malware)   | `Microsoft Defender for Storage`         | `Malware Scanning` | `Malware Scanning Data Ingested` | `1 GB`   | × scannedGB           |
-| Containers          | `Microsoft Defender for Containers`      | `Standard vCore`   | `Standard vCore vCore Pack` | `1/Hour`      | × 730 × totalVCores   |
-| Containers (images) | `Microsoft Defender for Containers`      | `Standard Images`  | `Standard Images`           | `1`           | × imageScansPerMonth  |
-| Cosmos DB           | `Microsoft Defender for Azure Cosmos DB` | `Standard`         | `Standard 100 RU/s`        | `1/Hour`      | × 730 × (RUs / 100)   |
-| DNS                 | `Microsoft Defender for DNS`             | `Standard`         | `Standard Queries`          | `1M`          | × queryMillions       |
-| Resource Manager    | `Microsoft Defender for Resource Manager`| `Per node Std`     | `Per node Std Node`         | `1/Hour`      | × 730 × subCount      |
-| MySQL               | `Microsoft Defender for MySQL`           | `Standard`         | `Standard Node`             | `1/Month`     | × serverCount         |
-| PostgreSQL          | `Microsoft Defender for PostgreSQL`      | `Standard`         | `Standard Node`             | `1/Month`     | × serverCount         |
-| MariaDB             | `Microsoft Defender for MariaDB`         | `Standard`         | `Standard Instance`         | `1 Hour`      | × 730 × instanceCount |
+| Sub-product         | productName                               | skuName            | meterName                        | unitOfMeasure | Formula               |
+| ------------------- | ----------------------------------------- | ------------------ | -------------------------------- | ------------- | --------------------- |
+| Servers P1          | `Microsoft Defender for Servers`          | `Standard P1`      | `Standard P1 Node`               | `1/Hour`      | × 730 × serverCount   |
+| Servers P2          | `Microsoft Defender for Servers`          | `Standard P2`      | `Standard P2 Node`               | `1/Hour`      | × 730 × serverCount   |
+| SQL (PaaS)          | `Microsoft Defender for SQL`              | `Standard`         | `Standard Instance`              | `1 Hour`      | × 730 × instanceCount |
+| SQL (Node)          | `Microsoft Defender for SQL`              | `Standard`         | `Standard Node`                  | `1/Month`     | × nodeCount           |
+| SQL (vCore)         | `Microsoft Defender for SQL`              | `Standard`         | `Standard vCore`                 | `1 Hour`      | × 730 × vCoreCount    |
+| App Service         | `Microsoft Defender for App Service`      | `Standard`         | `Standard Node`                  | `1/Hour`      | × 730 × planCount     |
+| Key Vault           | `Microsoft Defender for Key Vault`        | `Per node Std`     | `Per node Std Node`              | `1/Hour`      | × 730 × vaultCount    |
+| Storage             | `Microsoft Defender for Storage`          | `Standard`         | `Standard Node`                  | `1/Hour`      | × 730 × accountCount  |
+| Storage (txns)      | `Microsoft Defender for Storage`          | `Standard`         | `Standard Transactions`          | `1M`          | × transactionMillions |
+| Storage (malware)   | `Microsoft Defender for Storage`          | `Malware Scanning` | `Malware Scanning Data Ingested` | `1 GB`        | × scannedGB           |
+| Containers          | `Microsoft Defender for Containers`       | `Standard vCore`   | `Standard vCore vCore Pack`      | `1/Hour`      | × 730 × totalVCores   |
+| Containers (images) | `Microsoft Defender for Containers`       | `Standard Images`  | `Standard Images`                | `1`           | × imageScansPerMonth  |
+| Cosmos DB           | `Microsoft Defender for Azure Cosmos DB`  | `Standard`         | `Standard 100 RU/s`              | `1/Hour`      | × 730 × (RUs / 100)   |
+| DNS                 | `Microsoft Defender for DNS`              | `Standard`         | `Standard Queries`               | `1M`          | × queryMillions       |
+| Resource Manager    | `Microsoft Defender for Resource Manager` | `Per node Std`     | `Per node Std Node`              | `1/Hour`      | × 730 × subCount      |
+| MySQL               | `Microsoft Defender for MySQL`            | `Standard`         | `Standard Node`                  | `1/Month`     | × serverCount         |
+| PostgreSQL          | `Microsoft Defender for PostgreSQL`       | `Standard`         | `Standard Node`                  | `1/Month`     | × serverCount         |
+| MariaDB             | `Microsoft Defender for MariaDB`          | `Standard`         | `Standard Instance`              | `1 Hour`      | × 730 × instanceCount |
 
 ## Cost Formula
 

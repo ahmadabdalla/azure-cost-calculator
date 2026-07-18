@@ -4,7 +4,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 
 | Item             | Detail                                                                                                                                                                                                      |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Waza version     | `v0.23.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                                                                                                        |
+| Waza version     | `v0.38.0` — see "Upgrading Waza" in Known limitations for all files that must change on version bump                                                                                                        |
 | Workflow         | `.github/workflows/eval.yml`                                                                                                                                                                                |
 | Composite action | `.github/actions/install-waza/action.yml`                                                                                                                                                                   |
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock)                                                                                      |
@@ -18,7 +18,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 Install Waza for your platform, then run evaluations locally.
 
 ```bash
-WAZA_VERSION="v0.23.0"
+WAZA_VERSION="v0.38.0"
 mkdir -p ~/bin
 
 # macOS (Apple Silicon)
@@ -89,6 +89,57 @@ The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. 
 
 **To extend:** add a filter in the `Detect critical file changes` step and map it to tags in `Build eval scope`. New tasks are picked up automatically if their tags match.
 
+### Manual dispatch (workflow_dispatch)
+
+The `run-evals` job triggers a real-model eval on any branch without opening a PR. Useful for:
+
+- Verifying a scoped subset before merging (see "Scoping recipe" below).
+- Comparing behavior across models: `claude-sonnet-4.6`, `claude-sonnet-4.5`, `claude-opus-4.6`, `gpt-5.3-codex`.
+- Full-suite assessments not tied to a code change.
+
+**Dispatch from the CLI:**
+
+```bash
+# Scoped: 4 smoke tasks + 1 cosmos-db happy path. ~90s wall clock.
+gh workflow run eval.yml \
+  --ref my-branch \
+  -f model=claude-sonnet-4.6 \
+  -f tag="smoke,service:cosmos-db"
+
+# Full suite: all 92 tasks. Multi-model comparisons should scope down first.
+gh workflow run eval.yml -f model=claude-sonnet-4.6
+```
+
+Inputs (`.github/workflows/eval.yml`):
+
+| Input   | Type   | Default             | Meaning                                                                              |
+| ------- | ------ | ------------------- | ------------------------------------------------------------------------------------ |
+| `model` | choice | `claude-sonnet-4.6` | One of `claude-sonnet-4.6`, `claude-sonnet-4.5`, `claude-opus-4.6`, `gpt-5.3-codex`  |
+| `tag`   | string | (empty runs all)    | Comma-separated tag filter, e.g. `smoke,service:cosmos-db`. Tags are OR'd, not AND'd |
+
+**Retrieve and inspect results:**
+
+```bash
+# Find the run ID (most recent first)
+gh run list --workflow=eval.yml --limit 5
+
+# Download artifacts
+gh run download <run-id> --dir ./eval-out
+# results.json lands at ./eval-out/eval-results-<model>/results.json
+
+# Quick summary
+python3 -c "
+import json, glob
+r = json.load(open(glob.glob('./eval-out/*/results.json')[0]))
+s = r['summary']
+print(f\"aggregate={s['aggregate_score']:.3f}  passed={s['succeeded']}/{s['total_tests']}\")
+for t in r['tasks']:
+    print(f\"  {t['test_id']:60s} status={t['status']:10s} avg={t['stats']['avg_score']:.3f}\")
+"
+```
+
+**Scoping recipe for verification runs.** Use `tag="smoke,service:<one-service>"` to run the 4 smoke tests plus one service happy path. This exercises trigger behavior, disambiguation, alias routing, and the pricing script path in ~90 seconds. It is the minimum footprint that surfaces most regressions; use it to verify skill/config changes before requesting review.
+
 ### Mock executor
 
 Runs only `--tags negative` tasks. Negative tests pass deterministically under mock because the mock executor never activates skills. Positive tests are excluded: they require real AI output and always fail under mock, producing no actionable signal. `waza check` (run in `validate-eval-schema`) already covers schema and grader config validation.
@@ -131,7 +182,7 @@ Both `model` and `judge_model` are set to `claude-sonnet-4.6` in the current eva
 
 ## Cost and resource budget
 
-Eval runs consume premium requests through the Copilot API. The cost is dominated by the 677 KB skill directory loaded as system context on every LLM call, not by the task prompt itself.
+Runs consume [AI Credits (AIC)](https://docs.github.com/en/copilot/concepts/billing/usage-based-billing-for-organizations-and-enterprises), billed per token (input, output, and cached). The token footprint is dominated by the 677 KB skill directory loaded as system context on every LLM call, not by the task prompt itself.
 
 ### Per-task cost (empirical, claude-sonnet-4.6)
 
@@ -140,11 +191,11 @@ Eval runs consume premium requests through the Copilot API. The cost is dominate
 | Clean disambiguation (agent asks and stops) | ~9               | ~194K        | 3 execution turns + grading           |
 | Full estimation (agent runs pricing script) | 15-23            | 370K-600K    | Multi-turn tool use compounds history |
 
-These numbers are from controlled experiments with `trials_per_task: 3` (issue [#632](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632)). With the default `trials_per_task: 1`, divide by 3 for a rough single-trial estimate.
+These numbers are from controlled experiments with `trials_per_task: 3` (issue [#632](https://github.com/ahmadabdalla/azure-cost-calculator/issues/632)), taken before GitHub Copilot's June 2026 transition to AI Credits; the "Premium requests" unit is retained as historical footprint data. Divide by 3 for a rough single-trial estimate at `trials_per_task: 1`.
 
-### Full suite cost
+### Scoping runs
 
-With 33 tasks at `trials_per_task: 1`, expect approximately 100-200 premium requests for a full unfiltered run. Use `--tags` filtering to scope runs to what you actually need:
+Use `--tags` filtering to scope runs to what you actually need:
 
 ```bash
 # Run only the service you changed
@@ -329,16 +380,16 @@ The `validate-eval-schema` job enforces this: if a PR changes a service referenc
 
 ## Known limitations
 
-| Limitation                                                                                               | Mitigation                                                                                                                                                                                                                                                                                                                                    |
-| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Prompt grader (judge LLM) may time out on long responses                                                 | Override the session timeout per task with the top-level `timeout_seconds` field if a specific task consistently times out                                                                                                                                                                                                                    |
-| Prompt grader variance on borderline values                                                              | Use `code` grader for numeric checks                                                                                                                                                                                                                                                                                                          |
-| `**` glob not supported recursively in waza v0.23.0: tasks at depth 2+ silently skipped                  | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                                                                                                                                                                          |
-| Upgrading Waza: the version is pinned in multiple files; a partial update breaks schema validation or CI | Update all of these together: `.github/actions/install-waza/action.yml` (version + checksum), `.devcontainer/Dockerfile` (curl URL), `.waza.yaml` ($schema URL), `eval.yaml` and `eval-mock.yaml` ($schema URL), all task YAML files ($schema URL), `docs/ops/evals.md` (version row + schema links), `docs/ops/dev-container.md` (table row) |
-| `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                                           | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                                                                                                                                                               |
-| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                                             | Intentional; skill carries domain reference architecture                                                                                                                                                                                                                                                                                      |
-| `argument-hint` frontmatter diverges from agentskills.io spec                                            | Project convention; not blocking for evals                                                                                                                                                                                                                                                                                                    |
-| `waza suggest` diverges from project conventions and fails intermittently                                | Do not use `waza suggest`; author tasks directly following the task contract and exemplars in this doc                                                                                                                                                                                                                                        |
+| Limitation                                                                                 | Mitigation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt grader (judge LLM) may time out on long responses                                   | Override the session timeout per task with the top-level `timeout_seconds` field if a specific task consistently times out                                                                                                                                                                                                                                                                                                                                                                                     |
+| Prompt grader variance on borderline values                                                | Use `code` grader for numeric checks                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `**` glob not supported recursively as of waza v0.38.0: tasks at depth 2+ silently skipped | Use explicit depth patterns: `tasks/*/*.yaml` and `tasks/*/*/*.yaml`                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Upgrading Waza: the version is pinned in a handful of files; a partial update breaks CI    | Update all of these together: `.github/actions/install-waza/action.yml` (version + checksum), `.devcontainer/Dockerfile` (curl URL + checksum), `docs/ops/evals.md` (version row + schema links in References), `docs/ops/dev-container.md` (table row). YAML files (`.waza.yaml`, `eval.yaml`, `eval-mock.yaml`, all task files) intentionally do not carry `$schema` URLs: `waza check` validates against the bundled schema in whichever binary is installed, so those files need no touch on version bumps |
+| `currency-format` regex (`\$[\d,]+\.\d{2}`) assumes USD output                             | Tasks targeting non-USD regions (e.g. West Europe returns EUR) will fail this grader; use a USD region in the prompt, or update the regex to match the expected currency symbol                                                                                                                                                                                                                                                                                                                                |
+| SKILL.md exceeds Waza 500-token recommendation (3800 tokens)                               | Intentional; skill carries domain reference architecture                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `argument-hint` frontmatter diverges from agentskills.io spec                              | Project convention; not blocking for evals                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `waza suggest` diverges from project conventions and fails intermittently                  | Do not use `waza suggest`; author tasks directly following the task contract and exemplars in this doc                                                                                                                                                                                                                                                                                                                                                                                                         |
 
 ## Results interpretation
 
@@ -379,7 +430,7 @@ Global graders (defined in `eval.yaml` under `graders:`) apply to every task. If
 | Symptom                                                                 | Fix                                                                                                                                                                                                  |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `copilot is not authenticated`                                          | Create fine-grained PAT with "Copilot Requests" permission; add as repo secret                                                                                                                       |
-| `waza check` schema errors                                              | Verify `id`, `name`, `inputs.prompt` present; check `$schema` URL                                                                                                                                    |
+| `waza check` schema errors                                              | Verify required fields are present (task: `id`, `name`, `inputs.prompt`); waza validates against its bundled schema, so upgrading the pinned binary can change what fails                            |
 | Prompt grader scores 0 unexpectedly                                     | Run `waza run --tags <tag> --verbose` locally; review grader prompt wording                                                                                                                          |
 | `uses-pricing-script` scores 0                                          | The task used `behavior.required_tools` instead of `tool_constraint`; replace with the standard grader (see [Standard graders](#standard-graders-for-happy-path-tasks))                              |
 | Tasks skipped or results empty                                          | Verify `--tags` matches task tags; check `results/` directory is writable                                                                                                                            |
@@ -397,7 +448,7 @@ Global graders (defined in `eval.yaml` under `graders:`) apply to every task. If
 ### Monthly
 
 1. Recheck Waza pin and checksum in `.github/actions/install-waza/action.yml`.
-2. If upgrading Waza, update all pinned schema URLs in eval docs and YAML files.
+2. If upgrading Waza, follow the "Upgrading Waza" row in [Known limitations](#known-limitations).
 3. Review `Known limitations` and remove stale mitigations.
 4. Review flaky prompt graders and convert high-value checks to deterministic graders where possible.
 
@@ -415,5 +466,5 @@ Historical record of research, experiments, and design decisions. Issues and PRs
 - [Getting started guide](https://github.com/microsoft/waza/blob/main/docs/GETTING-STARTED.md)
 - [CI/CD integration guide](https://github.com/microsoft/waza/blob/main/docs/SKILLS_CI_INTEGRATION.md)
 - [Integration testing (Copilot SDK)](https://github.com/microsoft/waza/blob/main/docs/INTEGRATION-TESTING.md)
-- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/eval.schema.json)
-- [Task schema](https://raw.githubusercontent.com/microsoft/waza/v0.23.0/schemas/task.schema.json)
+- [Eval schema](https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/eval.schema.json)
+- [Task schema](https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json)

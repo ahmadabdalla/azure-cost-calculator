@@ -50,7 +50,7 @@ MeterName: Standard Overage Operations
 | --- | --- | --- | --- |
 | `{Tier} Instance` | per tier | `1/Day` | Daily store fee; Free is zero |
 | `{Tier} Overage Operations` | Dev/Std/Prem | `1K` or `10K` | Developer: `1K`; Standard/Premium: `10K` |
-| `{Tier} Replica Instance` | Std/Prem | `1/Day` | Per additional replica |
+| `{Tier} Replica Instance` | Std/Prem | `1/Day` | Standard bills every replica; Premium: additional only |
 | `{Tier} Replica Overage Operations` | Std/Prem | `10K` | Per-replica request overage |
 | `{Tier} Replica Snapshots Overage` | Std/Prem | `1 MB/Day` | Per-replica snapshot overage; sub-cent |
 | `{Tier} Snapshots Overage` | Dev/Std/Prem | `1 MB/Day` | Sub-cent; see Known Rates |

@@ -39,27 +39,27 @@ MeterName: Inter-Region {direction}
 
 ## Key Fields
 
-| Parameter     | How to determine                 | Example values                                            |
-| ------------- | -------------------------------- | --------------------------------------------------------- |
-| `serviceName` | Always `Virtual Network`         | `Virtual Network`                                         |
-| `productName` | Select by cost component         | `IP Addresses`, `Virtual Network Peering`                 |
-| `skuName`     | Varies by product                | `Standard`, `Basic`, `Intra-Region`, `Inter-Region`       |
-| `meterName`   | Specific meter within product    | `Standard IPv4 Static Public IP`, `Intra-Region Ingress`  |
+| Parameter     | How to determine              | Example values                                           |
+| ------------- | ----------------------------- | -------------------------------------------------------- |
+| `serviceName` | Always `Virtual Network`      | `Virtual Network`                                        |
+| `productName` | Select by cost component      | `IP Addresses`, `Virtual Network Peering`                |
+| `skuName`     | Varies by product             | `Standard`, `Basic`, `Intra-Region`, `Inter-Region`      |
+| `meterName`   | Specific meter within product | `Standard IPv4 Static Public IP`, `Intra-Region Ingress` |
 
 ## Meter Names
 
-| Meter | skuName | productName | unitOfMeasure | Notes |
-| ----- | ------- | ----------- | ------------- | ----- |
-| `Standard IPv4 Static Public IP` | `Standard` | `IP Addresses` | `1 Hour` | Production default; zone-redundant |
-| `Basic IPv4 Static Public IP` | `Basic` | `IP Addresses` | `1 Hour` | Legacy; no zone redundancy |
-| `Basic IPv4 Dynamic Public IP` | `Basic` | `IP Addresses` | `1 Hour` | Free when attached to running VM |
-| `Global IPv4 Static Public IP` | `Global` | `IP Addresses` | `1 Hour` | Cross-region services (e.g., Front Door) |
-| `Intra-Region Ingress` | `Intra-Region` | `Virtual Network Peering` | `1 GB` | Region: Global required |
-| `Intra-Region Egress` | `Intra-Region` | `Virtual Network Peering` | `1 GB` | Region: Global required |
-| `Inter-Region Ingress` | `Inter-Region` | `Global Virtual Network Peering` | `1 GB` | Regional; rate varies by zone pair |
-| `Inter-Region Egress` | `Inter-Region` | `Global Virtual Network Peering` | `1 GB` | Regional; rate varies by zone pair |
+| Meter                            | skuName        | productName                      | unitOfMeasure | Notes                                    |
+| -------------------------------- | -------------- | -------------------------------- | ------------- | ---------------------------------------- |
+| `Standard IPv4 Static Public IP` | `Standard`     | `IP Addresses`                   | `1 Hour`      | Production default; zone-redundant       |
+| `Basic IPv4 Static Public IP`    | `Basic`        | `IP Addresses`                   | `1 Hour`      | Legacy; no zone redundancy               |
+| `Basic IPv4 Dynamic Public IP`   | `Basic`        | `IP Addresses`                   | `1 Hour`      | Free when attached to running VM         |
+| `Global IPv4 Static Public IP`   | `Global`       | `IP Addresses`                   | `1 Hour`      | Cross-region services (e.g., Front Door) |
+| `Intra-Region Ingress`           | `Intra-Region` | `Virtual Network Peering`        | `1 GB`        | Region: Global required                  |
+| `Intra-Region Egress`            | `Intra-Region` | `Virtual Network Peering`        | `1 GB`        | Region: Global required                  |
+| `Inter-Region Ingress`           | `Inter-Region` | `Global Virtual Network Peering` | `1 GB`        | Regional; rate varies by zone pair       |
+| `Inter-Region Egress`            | `Inter-Region` | `Global Virtual Network Peering` | `1 GB`        | Regional; rate varies by zone pair       |
 
-> Other products under this serviceName: Public IP Prefix, Accelerated Connections, Azure Virtual Network Manager, Virtual Network TAP. For Private Endpoints, see `networking/private-link.md`.
+> Other products under this serviceName: Public IP Prefix, Accelerated Connections, Azure Virtual Network Manager, Virtual Network Routing Appliance, and `Virtual Network` with skuName `TAP`. For Private Endpoints, see `networking/private-link.md`.
 
 ## Cost Formula
 
@@ -72,7 +72,7 @@ Monthly  = PublicIP + Peering
 ## Notes
 
 - VNets, subnets, route tables, and NSGs are free. No API meters for these resources
-- Basic Public IPs are being retired. Use Standard SKU for new deployments
+- Basic Public IPs were retired on 2025-09-30; existing resources are still billed but no new Basic IPs can be created. Use Standard SKU for new deployments
 - Standard IPs are static-only and zone-redundant by default
 - Inter-region peering rates vary by zone pairing (same continent vs cross-continent)
 - VNet flow logs are billed under `Network Watcher`, not under this serviceName

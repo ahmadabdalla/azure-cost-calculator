@@ -1,0 +1,56 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/netapp-files/standard-capacity-pool
+name: Happy Path - Azure NetApp Files Standard Capacity Pool
+description: >
+  Tests cost estimation for a provisioned capacity pool billed per GiB/hour.
+  Azure NetApp Files capacity meters use unitOfMeasure "1 GiB/Hour" which the
+  pricing script does not treat as hourly, so MonthlyCost omits the x730
+  multiplier (and may round to $0.00 for small quantities); the agent must
+  multiply retailPrice x provisionedGiB x 730 manually. Validates the manual
+  monthly calculation and correct tier selection.
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:netapp-files
+inputs:
+  prompt: "What is the monthly cost for a 4 TiB Standard tier Azure NetApp Files capacity pool in East US?"
+expected:
+  output_contains:
+    - "Azure NetApp Files"
+    - "730"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      contains:
+        - "Azure NetApp Files"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: monthly-multiplier-applied
+    config:
+      contains:
+        - "730"
+    weight: 1.0
+  - type: text
+    name: capacity-acknowledged
+    config:
+      contains:
+        - "4"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

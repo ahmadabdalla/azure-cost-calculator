@@ -1,0 +1,46 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:communication/phone-numbers/us-geographic-lease
+name: Happy Path - ACS Phone Numbers US Geographic Lease
+description: >
+  Tests cost estimation for Azure Communication Services Phone Numbers, a
+  per-number monthly lease service. Validates the number count drives a
+  monthly total using the correct country and product-type filter.
+tags:
+  - happy-path
+  - single-service
+  - communication
+  - service:phone-numbers
+inputs:
+  prompt: "What is the monthly cost for 25 US geographic phone numbers in Azure Communication Services (East US)?"
+expected:
+  output_contains:
+    - "Phone Numbers"
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Phone Numbers|ACS Phone Numbers|PSTN|Telephony"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: number-count-acknowledged
+    config:
+      contains:
+        - "25"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

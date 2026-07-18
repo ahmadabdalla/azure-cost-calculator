@@ -3,19 +3,19 @@ name: Install Waza CLI
 description: Downloads and verifies the Waza binary for Linux runners.
 
 # IMPORTANT: `version` and `checksum` are coupled. The default checksum is
-# pinned to the default version (v0.23.0 linux-amd64). If you update `version`,
+# pinned to the default version (v0.38.0 linux-amd64). If you update `version`,
 # you MUST also update `checksum` to match the new binary. Mismatched values
 # will cause sha256sum verification to fail.
 
 inputs:
   version:
-    description: "Waza release tag (e.g. v0.23.0)"
+    description: "Waza release tag (e.g. v0.38.0)"
     required: false
-    default: "v0.23.0"
+    default: "v0.38.0"
   checksum:
     description: "SHA256 checksum of the waza-linux-amd64 binary. Must match the version input."
     required: false
-    default: "9cf7c99292100892b3274155b39f62e54c66d6dbd43d69b1a626a9ef5d35668b"
+    default: "9d274f563e0f05b50d56f0223c03bdc561180ffea13662583188ecc042a9fe15"
 
 runs:
   using: composite

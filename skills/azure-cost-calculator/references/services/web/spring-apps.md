@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure Spring Apps
 
-> **Warning**: Azure Spring Apps is retiring. No new customers after March 2025; full shutdown March 31, 2028. Migrate to Azure Container Apps or AKS.
+> **Warning**: Azure Spring Apps is retiring. No new customers after March 17, 2025; full shutdown March 31, 2028. Migrate to Azure Container Apps or AKS.
 
 > **Trap (Inflated totals)**: Omitting `SkuName` returns all tiers and tracking meters summed. Always include `SkuName` and `MeterName`. Use `ProductName: Azure Spring Apps` (not `Azure Spring Apps Enterprise`) for all tiers.
 

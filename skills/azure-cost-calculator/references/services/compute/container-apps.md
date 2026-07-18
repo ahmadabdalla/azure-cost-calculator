@@ -2,37 +2,50 @@
 serviceName: Azure Container Apps
 category: compute
 aliases: [ACA, Container Apps]
-primaryCost: "vCPU seconds + memory GiB seconds (Consumption) or vCPU hours + memory GiB hours (Dedicated)"
+primaryCost: "Consumption: vCPU-s + GiB-s + requests (free grants apply); Dedicated: vCPU-h + GiB-h + management fee"
 hasFreeGrant: true
 privateEndpoint: true
 ---
 
 # Azure Container Apps
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Use `UnitPrice` from API results directly. If workload type is unspecified, default to Consumption (event-driven); always-on workloads require Dedicated plan.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Always query in the user's target currency first; if the API returns a non-zero `UnitPrice`, use it directly. If it returns zero, fall back to USD and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Do NOT report zero to the user. If workload type is unspecified, default to Consumption.
 
 ## Query Pattern
 
-### All plans: substitute {Plan} SKU (ServiceName and ProductName are always the same)
+### Consumption plan (Standard SKU — per-second billing)
 
 ServiceName: Azure Container Apps
 ProductName: Azure Container Apps
-SkuName: {Plan}
-InstanceCount: {N}
+SkuName: Standard
+InstanceCount: 1
 
-- **Consumption**: SkuName `Standard` — per-second; use `UnitPrice` directly
-- **Dedicated**: SkuName `Dedicated` — per-hour; `InstanceCount` = workload profile instances
-- **Hybrid**: SkuName `Hybrid` — per-hour; Arc-enabled environments
-- **Dynamic Sessions**: SkuName `Dynamic Sessions` — per-hour
+### Dedicated plan (per-hour billing)
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Dedicated
+
+### Hybrid plan (Arc-enabled — per-hour billing)
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Hybrid
+
+### Dynamic Sessions (per-hour billing)
+
+ServiceName: Azure Container Apps
+ProductName: Azure Container Apps
+SkuName: Dynamic Sessions
 
 ## Key Fields
 
-| Parameter     | How to determine                           | Example values                                       |
-| ------------- | ------------------------------------------ | ---------------------------------------------------- |
-| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
-| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                               |
+| Parameter     | How to determine                           | Example values                                        |
+| ------------- | ------------------------------------------ | ----------------------------------------------------- |
+| `serviceName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
+| `productName` | Always `Azure Container Apps`              | `Azure Container Apps`                                |
 | `skuName`     | Plan type; determines billing model        | `Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions` |
-| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage` |
+| `meterName`   | Resource dimension within plan (see below) | `Standard vCPU Active Usage`, `Dedicated vCPU Usage`  |
 
 ## Meter Names
 
@@ -75,16 +88,7 @@ Dynamic: Monthly = sessions × session_price × 730
 - Free grant (180K vCPU-s + 360K GiB-s + 2M requests) is per subscription, shared across all Container Apps
 - Idle vs Active: vCPU idle ~1/8 of active; memory idle = active; min replicas > 0 = active rate; scale-to-zero = no charges
 - Dynamic Sessions: code interpreter billed per session-hour; custom pools on Dedicated use Dedicated meters only
-- Private endpoints require Dedicated plan; Savings Plans shown on pricing page but not in Retail Prices API
-
-## SKU Selection Guide
-
-| Workload Type               | SKU                | Pricing Model | Notes                                   |
-| --------------------------- | ------------------ | ------------- | --------------------------------------- |
-| Scale-to-zero, event-driven | `Standard`         | Per-second    | Free grant: 180K vCPU-s + 360K GiB-s/mo |
-| Always-on, min replicas > 0 | `Dedicated`        | Per-hour      | Background workers, ML pipelines        |
-| Hybrid (on-prem connected)  | `Hybrid`           | Per-hour      | Arc-enabled environments                |
-| Code interpreter sessions   | `Dynamic Sessions` | Per-hour      | Billed separately by session duration   |
+- Private endpoints incur `Dedicated Plan Management` fee on any plan type (Consumption+PE: add a separate `SkuName: Dedicated`, `meterName: Dedicated Plan Management` query — it is not returned by the Standard SKU query); no Reservation or Savings Plan pricing (API returns `savingsPlan: null` for all meters)
 
 ## Manual Calculation Example
 10M req/mo, 0.5 vCPU, 1 GiB, 0.8s avg duration:
