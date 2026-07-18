@@ -78,7 +78,8 @@ MeterName: Standard vCore
 | `Standard vCore` | `Azure Purview Scanning Ingestion and Classification` | `Standard` | `1 Hour` | Classic scanning |
 | `Standard Assets` | `Microsoft Purview On-Demand Classification` | `Standard` | `10K` | Per 10K classified |
 
-> Other meters: Audit Standard Asset (1K), Communication Compliance Standard/Premium (1K), eDiscovery Premium GB (1/Day), eDiscovery Graph API Export (1 GB, first 50 GB free), In Transit Protection Request (sub-cent), Investigations Compute Unit (1 Hour) and GB (1/Day), OCR Transaction (first 2,500 free then sub-cent), Data Lifecycle Management Premium (1K/Day, sub-cent).
+> Other meters: Audit Standard Asset (1K), Communication Compliance Standard/Premium (1K), eDiscovery Premium GB (1/Day), eDiscovery Graph API Standard Export (1 GB, first 50 GB free), Retention GB (1/Day), In Transit Protection Request (sub-cent), Investigations Compute Unit (1 Hour) and GB (1/Day), OCR Transaction (first 2,500 free then sub-cent), Data Lifecycle Management Premium (1K/Day, sub-cent).
+> Classic Data Map add-ons (`Azure Purview`): Resource Set vCore (1 Hour), Data Map Enrichment vCore (1 Hour), Data Policy (1 Hour, `Region: Global` only). `Microsoft Purview Data Map` mirrors Advanced Resource Set vCore (1 Hour) under the current serviceName.
 
 ## Cost Formula
 
