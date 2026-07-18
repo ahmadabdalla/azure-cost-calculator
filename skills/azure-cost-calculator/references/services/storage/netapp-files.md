@@ -32,6 +32,14 @@ SkuName: Premium
 MeterName: Premium Capacity
 Quantity: 2048
 
+### Flexible tier (capacity + throughput beyond 128 MiBps free)
+
+ServiceName: Azure NetApp Files
+ProductName: Azure NetApp Files
+SkuName: Flexible Service Level
+MeterName: Flexible Service Level Capacity
+Quantity: 4096
+
 ### Backup storage
 
 ServiceName: Azure NetApp Files
@@ -69,14 +77,16 @@ MeterName: Backup Capacity
 Capacity: Monthly = retailPrice × provisionedGiB × 730
 Backup:   Monthly = backup_retailPrice × backupGiB
 Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throughput_price × 730
+CRR:      Monthly = crr_retailPrice × replicatedGiB   (per GiB replicated; NOT × 730)
 ```
 
 ## Notes
 
 - Billing is on **provisioned capacity pool size**, not consumed (min 1 TiB, 1 TiB increments); snapshots consume pool capacity at the pool's tier rate
+- Sizes are set in TiB but billed in **GiB** (1 TiB = 1,024 GiB); if a user says "TB" for capacity, treat as TiB and convert ×1,024
 - Standard/Premium/Ultra/Flexible/Elastic ZRS differ in throughput/IOPS; tier is a never-assume parameter
-- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge)
-- CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`), region-pair-specific, Days/Hours/Minutes frequency
+- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge); not RI-eligible
+- CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`) plus generic `Cross Region Replication`, region-pair-specific, Days/Hours/Minutes frequency; despite `1 GiB/Hour` unit, price is **per GiB replicated per month** (×1, NOT × 730)
 - Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link; no PE support
 
 ## Known Rates
