@@ -7,7 +7,7 @@ primaryCost: "Data stored per-GB/month (tiered) + operations per-10K + data retr
 privateEndpoint: true
 ---
 
-# Storage Accounts (Blob)
+# Storage
 
 > **Trap**: `productName = 'Blob Storage'` only covers **LRS/GRS/RA-GRS**. For ZRS/GZRS/RA-GZRS use `productName = 'General Block Blob v2'`; wrong productName returns zero results.
 
@@ -89,12 +89,27 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice)
 - Early delete: Cool 30d, Cold 90d, Archive 180d; rate equals data stored rate, prorated
 - Archive tier: LRS/GRS/RA-GRS only (no ZRS/GZRS/RA-GZRS); Cold tier has no Reserved Instances
 - PE sub-resources (never-assume): `blob`, `file`, `queue`, `table`, `dfs`, `web`. Secondary variants (`blob_secondary`, etc.) for RA-GRS/RA-GZRS.
-- Azure Files, Table, and Queue use distinct `productName` values under `serviceName: Storage`; query each sub-product separately
+- Sub-products (see Product Names): Files ops use `LRS Write/Read/Protocol Operations` + a separate `LRS Metadata` (per-GB) meter; Tables (`Write/Read/Scan Operations`) and Queues (`Class 1 Operations`, `Class 2 Operations`) are sub-cent per-10K. Legacy `Files`/`Queues` productNames apply to GPv1 accounts
+
+## Reserved Instance Pricing
+
+Reserved capacity discounts Blob (Hot/Cool/Archive) and Azure Files data at fixed commitments (Blob: 100 TB / 1 PB / 10 PB; Files: 10 TB / 100 TB), 1-Year or 3-Year terms (set via `reservationTerm`). Billed under `Storage Reserved Capacity` (Blob), `Files Reserved Capacity`, or `Premium Files Reserved Capacity` — distinct from PAYG productNames. Not available for Cold tier, Tables, or Queues.
+
+> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items; it multiplies the full term price by 730. Calculate `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
+
+ServiceName: Storage
+ProductName: Storage Reserved Capacity
+SkuName: Hot - 100 TB LRS
+PriceType: Reservation
 
 ## Product Names
 
-| Redundancy         | productName             |
-| ------------------ | ----------------------- |
-| LRS, GRS, RA-GRS   | `Blob Storage`          |
-| ZRS, GZRS, RA-GZRS | `General Block Blob v2` |
-| Premium LRS/ZRS    | `Premium Block Blob`    |
+| Sub-product / Redundancy    | productName             | Default skuName | Data Stored meter       |
+| --------------------------- | ----------------------- | --------------- | ----------------------- |
+| Blob LRS, GRS, RA-GRS       | `Blob Storage`          | `Hot LRS`       | `Hot LRS Data Stored`   |
+| Blob ZRS, GZRS, RA-GZRS     | `General Block Blob v2` | `Hot ZRS`       | `Hot ZRS Data Stored`   |
+| Blob Premium LRS/ZRS        | `Premium Block Blob`    | `Premium LRS`   | `Premium LRS Data Stored` |
+| Azure Files (pay-as-you-go) | `Files v2`              | `Standard LRS`  | `LRS Data Stored`       |
+| Azure Files (provisioned)   | `Premium Files`         | `Premium LRS`   | `Premium LRS Provisioned` |
+| Table Storage               | `Tables`                | `Standard LRS`  | `LRS Data Stored`       |
+| Queue Storage               | `Queues v2`             | `Standard LRS`  | `LRS Data Stored`       |
