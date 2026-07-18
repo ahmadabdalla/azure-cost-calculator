@@ -1,0 +1,51 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/backup/vm-backup-with-storage
+name: Happy Path - Azure Backup VM Protected Instances with Storage
+description: >
+  Tests cost estimation for a two-component service. Azure Backup bills a
+  per-protected-instance fee plus separate per-GB vault storage. Validates
+  that both the protected instance count and the LRS storage volume are
+  acknowledged and summed.
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:backup
+inputs:
+  prompt: "What is the monthly cost to back up 10 Azure VMs with 500 GB of LRS vault storage using Azure Backup in East US?"
+expected:
+  output_contains:
+    - "Backup"
+    - "Assumptions"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure Backup|Backup"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: instance-count-acknowledged
+    config:
+      contains:
+        - "10"
+    weight: 0.5
+  - type: text
+    name: storage-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

@@ -32,6 +32,14 @@ SkuName: Premium
 MeterName: Premium Capacity
 Quantity: 2048
 
+### Flexible tier (capacity + throughput beyond 128 MiBps free)
+
+ServiceName: Azure NetApp Files
+ProductName: Azure NetApp Files
+SkuName: Flexible Service Level
+MeterName: Flexible Service Level Capacity
+Quantity: 4096
+
 ### Backup storage
 
 ServiceName: Azure NetApp Files
@@ -50,18 +58,18 @@ MeterName: Backup Capacity
 
 ## Meter Names
 
-| Meter | skuName | unitOfMeasure | Notes |
-| ----- | ------- | ------------- | ----- |
-| `Standard Capacity` | `Standard` | `1 GiB/Hour` | × 730 for monthly |
-| `Premium Capacity` | `Premium` | `1 GiB/Hour` | × 730 for monthly |
-| `Ultra Capacity` | `Ultra` | `1 GiB/Hour` | × 730 for monthly |
-| `Backup Capacity` | `Backup` | `1 GiB/Month` | No × 730 needed |
-| `Volume Restore Capacity` | `Volume Restore` | `1 GiB` | One-time per restore |
-| `Elastic Zone Redundant Storage Capacity` | `Elastic Zone Redundant Storage` | `1 GiB/Hour` | Preview; × 730 for monthly |
-| `Standard Storage with Cool Access Capacity` | `Standard Storage with Cool Access` | `1 GiB/Hour` | Cool tier at-rest |
-| `Standard Storage with Cool Access Data Transfer` | `Standard Storage with Cool Access` | `1 GiB` | Per-transfer to/from cool |
-| `Flexible Service Level Capacity` | `Flexible Service Level` | `1 GiB/Hour` | Capacity component |
-| `Flexible Service Level Throughput MiBps` | `Flexible Service Level` | `1/Hour` | Beyond 128 MiBps free |
+| Meter                                             | skuName                             | unitOfMeasure | Notes                      |
+| ------------------------------------------------- | ----------------------------------- | ------------- | -------------------------- |
+| `Standard Capacity`                               | `Standard`                          | `1 GiB/Hour`  | × 730 for monthly          |
+| `Premium Capacity`                                | `Premium`                           | `1 GiB/Hour`  | × 730 for monthly          |
+| `Ultra Capacity`                                  | `Ultra`                             | `1 GiB/Hour`  | × 730 for monthly          |
+| `Backup Capacity`                                 | `Backup`                            | `1 GiB/Month` | No × 730 needed            |
+| `Volume Restore Capacity`                         | `Volume Restore`                    | `1 GiB`       | One-time per restore       |
+| `Elastic Zone Redundant Storage Capacity`         | `Elastic Zone Redundant Storage`    | `1 GiB/Hour`  | Preview; × 730 for monthly |
+| `Standard Storage with Cool Access Capacity`      | `Standard Storage with Cool Access` | `1 GiB/Hour`  | Cool tier at-rest          |
+| `Standard Storage with Cool Access Data Transfer` | `Standard Storage with Cool Access` | `1 GiB`       | Per-transfer to/from cool  |
+| `Flexible Service Level Capacity`                 | `Flexible Service Level`            | `1 GiB/Hour`  | Capacity component         |
+| `Flexible Service Level Throughput MiBps`         | `Flexible Service Level`            | `1/Hour`      | Beyond 128 MiBps free      |
 
 ## Cost Formula
 
@@ -69,24 +77,26 @@ MeterName: Backup Capacity
 Capacity: Monthly = retailPrice × provisionedGiB × 730
 Backup:   Monthly = backup_retailPrice × backupGiB
 Flexible: Monthly = capacity_price × GiB × 730 + max(0, MiBps - 128) × throughput_price × 730
+CRR:      Monthly = crr_retailPrice × replicatedGiB   (per GiB replicated; NOT × 730)
 ```
 
 ## Notes
 
 - Billing is on **provisioned capacity pool size**, not consumed (min 1 TiB, 1 TiB increments); snapshots consume pool capacity at the pool's tier rate
+- Sizes are set in TiB but billed in **GiB** (1 TiB = 1,024 GiB); if a user says "TB" for capacity, treat as TiB and convert ×1,024
 - Standard/Premium/Ultra/Flexible/Elastic ZRS differ in throughput/IOPS; tier is a never-assume parameter
-- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge)
-- CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`), region-pair-specific, Days/Hours/Minutes frequency
+- Double Encrypted variants: `SkuName: {Tier} Double Encrypted` (~19–21% surcharge); not RI-eligible
+- CRR meters: two naming patterns (`CRR -` and `Cross Region Replication -`) plus generic `Cross Region Replication`, region-pair-specific, Days/Hours/Minutes frequency; despite `1 GiB/Hour` unit, price is **per GiB replicated per month** (×1, NOT × 730)
 - Network isolation uses **delegated subnets** (`Microsoft.NetApp/volumes`), not Private Link; no PE support
 
 ## Known Rates
 
-| Meter | Unit | Published Rate (USD) | Monthly per GiB |
-| ----- | ---- | -------------------- | --------------- |
-| `Standard Capacity` | 1 GiB/Hour | $0.000202 | ~$0.15 |
-| `Premium Capacity` | 1 GiB/Hour | $0.000403 | ~$0.29 |
-| `Ultra Capacity` | 1 GiB/Hour | $0.000538 | ~$0.39 |
-| `Backup Capacity` | 1 GiB/Month | $0.05 | $0.05 |
+| Meter               | Unit        | Published Rate (USD) | Monthly per GiB |
+| ------------------- | ----------- | -------------------- | --------------- |
+| `Standard Capacity` | 1 GiB/Hour  | $0.000202            | ~$0.15          |
+| `Premium Capacity`  | 1 GiB/Hour  | $0.000403            | ~$0.29          |
+| `Ultra Capacity`    | 1 GiB/Hour  | $0.000538            | ~$0.39          |
+| `Backup Capacity`   | 1 GiB/Month | $0.05                | $0.05           |
 
 > These rates are from the Azure Retail Prices API (eastus). The script shows `$0.00` for capacity meters because `1 GiB/Hour` is not recognized as hourly. Multiply `retailPrice × GiB × 730` manually. For non-USD currencies, see [regions-and-currencies.md](../../regions-and-currencies.md).
 

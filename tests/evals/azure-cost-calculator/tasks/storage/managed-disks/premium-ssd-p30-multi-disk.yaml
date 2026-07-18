@@ -1,0 +1,52 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/managed-disks/premium-ssd-p30-multi-disk
+name: Managed Disks - Premium SSD P30 Multi-Disk
+description: >
+  Tests cost estimation for Premium SSD managed disks with multiple instances.
+  Premium SSD returns two meters per disk (Disk + Disk Mount) that must both be
+  summed and scaled by disk count. Validates that the agent includes the mount
+  fee and does not rely on the disk meter alone.
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:managed-disks
+inputs:
+  prompt: "What is the monthly cost for 2 Premium SSD P30 LRS managed disks in East US?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Managed Disks|Premium SSD"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: disk-count-acknowledged
+    config:
+      contains:
+        - "2"
+    weight: 0.5
+  - type: text
+    name: mount-fee-acknowledged
+    config:
+      regex_match:
+        - "[Mm]ount"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0

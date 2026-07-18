@@ -1,0 +1,62 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/storage/hot-lrs-blob-with-operations
+name: Happy Path - Blob Storage Hot LRS with Operations
+description: >
+  Tests cost estimation for Azure Blob Storage with tiered per-GB storage plus
+  per-10K operations. Validates the productName filter (Blob Storage for LRS),
+  tiered Hot pricing, and multi-meter summing (storage + read + write ops).
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:storage
+inputs:
+  prompt: "What is the monthly cost for 500 GB of Azure Blob Storage with Hot LRS in East US, with 10 million read operations and 1 million write operations?"
+expected:
+  output_contains:
+    - "Assumptions"
+  output_not_contains:
+    - "Summary format"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Blob Storage|Azure Storage|Storage"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: storage-size-acknowledged
+    config:
+      contains:
+        - "500"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
+  - type: prompt
+    name: complete-estimate-quality
+    config:
+      continue_session: true
+      prompt: >
+        You are evaluating an AI agent's response to: "What is the monthly cost for 500 GB of Azure Blob Storage with Hot LRS in East US, with 10 million read operations and 1 million write operations?"
+
+        The agent's response is in the conversation above. Check it for these criteria:
+        (1) Includes an Assumptions section disclosing safe-default parameters.
+        (2) Shows a monthly total cost using the correct billing model for Azure Blob Storage
+            (tiered per-GB storage + per-10K operations, queried via productName filter).
+        (3) Accounts for 500 GB storage with 10 million read and 1 million write operations as specified.
+
+        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
+
+        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+    weight: 1.5
