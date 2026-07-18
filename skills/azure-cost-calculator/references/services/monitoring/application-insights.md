@@ -78,7 +78,8 @@ The first 90 days of retention are **free** for Application Insights data (App\*
 
 ```
 Retained GB = dailyIngestionGB × chargeableDays
-where chargeableDays = max(0, retentionPeriodDays - 90)  (at steady-state)
+where dailyIngestionGB = monthlyIngestionGB / 30  (house convention: 30-day month)
+      chargeableDays   = max(0, retentionPeriodDays - 90)  (at steady-state)
 ```
 
 > **Note**: For newly created workspaces that haven't accumulated a full retention period of data, use `max(0, min(retentionPeriodDays, actualDaysOfData) - 90)`. At steady state, `actualDaysOfData` always exceeds the retention period, so the formula simplifies to `max(0, retentionPeriodDays - 90)`.

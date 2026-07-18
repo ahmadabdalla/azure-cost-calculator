@@ -66,7 +66,7 @@ MeterName: 100 GB Commitment Tier Capacity Reservation
 Ingestion (PAYG)  = tier2_retailPrice × max(0, estimatedGB_per_month - 5)
 Retention         = retention_retailPrice × dailyIngestionGB × max(0, retentionDays - freeDays)
   where freeDays = 90 (Sentinel enabled) or 31 (standard)
-  dailyIngestionGB = all _IsBillable=true data (grants don't reduce retention volume)
+  dailyIngestionGB = monthlyIngestionGB / 30 (30-day month); all _IsBillable=true data (grants don't reduce retention volume)
 Commitment Tier   = commitment_retailPrice × 30   # unitOfMeasure = 1/Day
 Total = Ingestion + Retention (+ Commitment Tier if applicable, replaces Ingestion)
 ```
