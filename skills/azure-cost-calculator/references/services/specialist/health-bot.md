@@ -67,6 +67,6 @@ Free = no charge (all meters return zero price)
 
 - **Free tier**: Returns zero-price meters (Free MCU, Free Message); included to prevent unnecessary API queries
 - **Standard tier includes monthly allowance**: 10,000 messages and 1,000 MCUs per month; overages billed per-unit above the monthly allowance
-- **MCU (Message Compute Unit)**: 1 MCU = one Health Bot scenario execution; Standard tier includes monthly allowance, overages billed per-unit
+- **MCU (Medical Content Consumption Unit)**: charged per encounter with licensed third-party medical content (e.g. Infermedica symptom checker) or Generative AI features, not per scenario; most tenant-authored scenarios consume zero MCUs; Standard tier includes monthly allowance, overages billed per-unit
 - **Agent Tier**: Per-action billing; action multipliers vary by feature type (1–18 actions per interaction depending on scenario complexity)
 - **Bot Service channels**: Standard channels (Teams, Slack) are free; premium channels (DirectLine, Web Chat) are separate; see `ai-ml/bot-service.md`
