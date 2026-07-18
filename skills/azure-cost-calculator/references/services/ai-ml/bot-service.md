@@ -6,6 +6,7 @@ billingNeeds: [Azure App Service, Functions]
 primaryCost: "S1 premium channel messages per 1K (DirectLine/Web Chat); standard channels free"
 pricingRegion: global
 hasFreeGrant: true
+privateEndpoint: true
 ---
 
 # Azure Bot Service
@@ -64,6 +65,7 @@ Free = no charge (10K premium messages/month included; standard channels unlimit
 - **Standard channels are free**: Teams, Slack, Facebook, etc. have no paid meter at any tier
 - **Premium channels**: DirectLine and Web Chat; billable only on S1 tier
 - **Underlying compute**: Bot apps run on Azure App Service or Functions; billed separately under those services
+- **PE sub-resources** (never-assume): `Bot` (Direct Line) and `Token`; supported only via the Direct Line App Service extension (DL-ASE), not the base bot resource; see `networking/private-link.md` for PE and DNS zone pricing
 - **Free tier cap**: 10,000 premium channel messages/month (enforced service-side; API returns zero-price meters)
 - **Sovereign cloud**: US Gov uses separate `S1 Premium Channel Messages` and `Free Standard Channel Messages` meters; `Free Premium Channel Messages` is absent
 - **Health Bot**: For healthcare bot pricing (Agent Tier, Standard daily fee), see `specialist/health-bot.md`
