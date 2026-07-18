@@ -82,7 +82,7 @@ All listed meters use `ServiceName: Azure Monitor` and `ProductName: Azure Monit
 | `Data Replication Data Replicated`                         | `Data Replication`                          | `1 GB`        | Cross-workspace replication                         |
 | `Standard Web Test Execution`                              | `Standard Web Test`                         | `1`           | Availability test execution (sub-cent)              |
 | `Alerts Metric Monitored`                                  | `Alerts`                                    | `1/Month`     | Tiered: first 10 signals free                       |
-| `Alerts Dynamic Threshold`                                 | `Alerts`                                    | `1/Month`     | Dynamic threshold metric alert signal               |
+| `Alerts Dynamic Threshold`                                 | `Alerts`                                    | `1/Month`     | Dynamic threshold metric alert; no free tier        |
 | `Dynamic Threshold Log Alerts`                             | `Dynamic Threshold Log Alerts`              | `1/Month`     | Returns zero price in all regions (no paid tier)    |
 | `Alerts Resource Monitored at {N} Minute Frequency`        | `Alerts`                                    | `1/Month`     | Log search alerts: 1/5/10/15 min frequencies        |
 | `Alerts System Log Monitored at {N} Minute Frequency`      | `Alerts`                                    | `1/Month`     | System log alerts: 10× Resource Monitored rate      |
@@ -98,14 +98,14 @@ All listed meters use `ServiceName: Azure Monitor` and `ProductName: Azure Monit
 ## Cost Formula
 
 ```
-Metrics        = samples / 10M × retailPrice (per metric SKU)
+Metrics        = samples / 10M × retailPrice (single tier, no free grant)
 Log Ingestion  = ingestedGB × retailPrice (per log tier: Basic, Auxiliary, Cloud Pipeline)
 Archive/Search = GB × retailPrice (per GB/month, or per query/job scanned)
 Restore        = max(restoredGB × restoreDays, 2048 × 0.5) × retailPrice  # min 2 TB × 0.5 day (12 h)
-API Calls      = max(0, calls - 1M) / unitSize × retailPrice  # Native Metric Queries & API Calls: first 1M free
-Metric Alerts  = max(0, metricSignals - 10) × retailPrice  # static or dynamic threshold, per signal
+Tiered meters  = max(0, rawCount / unitSize - tierMinimumUnits) × retailPrice
+                 # Metric Alerts, Emails, Notifications, API Calls: take tierMinimumUnits + retailPrice from the PAID-tier row
+                 # unitSize = numeric part of unitOfMeasure (1, 10, 1K = 1000); free grant = tierMinimumUnits × unitSize
 Log Alerts     = logAlertRules × frequency_retailPrice  # Resource/System Log at 1/5/10/15 min; System Log ≈ 10× Resource
-Notifications  = max(0, events - freeGrant) / unitSize × retailPrice
 Commitment     = retailPrice × 30 (unit is 1/Day)
 ```
 
