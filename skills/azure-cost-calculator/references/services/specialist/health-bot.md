@@ -52,8 +52,8 @@ SkuName: Free
 | `Standard Overage MCU`      | `Standard`   | `1`           | Message Compute Unit overage |
 | `Standard Overage Messages` | `Standard`   | `1K`          | Per 1K messages overage      |
 | `Agent Tier Action`         | `Agent Tier` | `1`           | Per-action billing           |
-| `Free MCU`                  | `Free`       | `1`           | Free tier, zero price       |
-| `Free Message`              | `Free`       | `1K`          | Free tier, zero price       |
+| `Free MCU`                  | `Free`       | `1`           | Free tier, zero price        |
+| `Free Message`              | `Free`       | `1K`          | Free tier, zero price        |
 
 ## Cost Formula
 
