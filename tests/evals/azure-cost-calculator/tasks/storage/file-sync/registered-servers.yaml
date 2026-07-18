@@ -1,0 +1,52 @@
+# Waza eval task: see docs/ops/evals.md
+id: eval:storage/file-sync/registered-servers
+name: Happy Path - Azure File Sync Registered Servers with Free Grant
+description: >
+  Tests cost estimation for Azure File Sync per-server billing. The service
+  charges a flat monthly fee per registered server under serviceName Storage,
+  productName File Sync, with the first server per Storage Sync Service free.
+  Validates that the agent acknowledges the server count and applies the
+  first-server-free grant (5 servers registered, 4 billable).
+tags:
+  - happy-path
+  - single-service
+  - storage
+  - service:file-sync
+inputs:
+  prompt: "What is the monthly cost of Azure File Sync with 5 registered servers in East US?"
+expected:
+  output_contains:
+    - "File Sync"
+    - "Assumptions"
+graders:
+  - type: text
+    name: correct-service-name
+    config:
+      regex_match:
+        - "Azure File Sync|File Sync"
+    weight: 1.0
+  - type: text
+    name: currency-format
+    config:
+      regex_match:
+        - "\\$[\\d,]+\\.\\d{2}"
+    weight: 1.0
+  - type: text
+    name: server-count-acknowledged
+    config:
+      contains:
+        - "5"
+    weight: 0.5
+  - type: text
+    name: free-server-acknowledged
+    config:
+      regex_match:
+        - "free|first server"
+    weight: 0.5
+  - type: tool_constraint
+    name: uses-pricing-script
+    config:
+      expect_tools:
+        - tool: bash
+          command_pattern: "get-azure-pricing\\.sh"
+    weight: 1.0
