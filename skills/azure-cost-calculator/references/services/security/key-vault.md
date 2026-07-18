@@ -33,15 +33,15 @@ MeterName: Operations
 
 ## Meter Names
 
-| Meter                                    | SKU              | unitOfMeasure | Notes                            |
-| ---------------------------------------- | ---------------- | ------------- | -------------------------------- |
-| `Operations`                             | Standard/Premium | 10K           | Secret/key read/write            |
-| `Advanced Key Operations`                | Standard/Premium | 10K           | RSA/EC cryptographic ops         |
-| `Certificate Renewal Request`            | Standard/Premium | 1             | Per certificate renewal          |
+| Meter                                    | SKU              | unitOfMeasure | Notes                                |
+| ---------------------------------------- | ---------------- | ------------- | ------------------------------------ |
+| `Operations`                             | Standard/Premium | 10K           | Secret/key read/write                |
+| `Advanced Key Operations`                | Standard/Premium | 10K           | RSA/EC cryptographic ops             |
+| `Certificate Renewal Request`            | Standard/Premium | 1             | Per certificate renewal              |
 | `Secret Renewal`                         | Standard/Premium | 1             | Managed storage account key rotation |
-| `Automated Key Rotation`                 | Standard/Premium | 1 Rotation    | Per key auto-rotation            |
-| `Premium HSM-protected RSA 2048-bit key` | Premium          | 1             | Per HSM key, per month           |
-| `Premium HSM-protected Advanced Key`     | Premium          | 1             | Per key, tiered, see trap below |
+| `Automated Key Rotation`                 | Standard/Premium | 1 Rotation    | Per key auto-rotation                |
+| `Premium HSM-protected RSA 2048-bit key` | Premium          | 1             | Per HSM key, per month               |
+| `Premium HSM-protected Advanced Key`     | Premium          | 1             | Per key, tiered, see trap below      |
 
 > **Do NOT use**: `Standard Instance` meter; that is Azure Dedicated HSM (thousands/month).
 
