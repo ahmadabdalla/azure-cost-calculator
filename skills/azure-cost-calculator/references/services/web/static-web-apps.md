@@ -24,13 +24,16 @@ privateEndpoint: true
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
+SkuName: Standard
 MeterName: Standard App
+InstanceCount: {appCount}
 Region: eastus2
 
 ### Bandwidth: pass Quantity with total GB to see per-tier unit prices
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
+SkuName: Standard
 MeterName: Standard Bandwidth Usage
 Quantity: 500
 Region: eastus2
@@ -39,6 +42,7 @@ Region: eastus2
 
 ServiceName: Azure App Service
 ProductName: Static Web Apps
+SkuName: Standard
 MeterName: Standard Azure Front Door Add-on
 Region: eastus2
 
@@ -72,7 +76,7 @@ Total       = App + Bandwidth + AFD Add-on
 
 - **Free tier**: Includes 2 custom domains, 100 GB bandwidth/month, built-in auth, and serverless APIs. No meters in the API; zero cost.
 - **Standard tier**: Query API with eastus2 for current per-app monthly fee. Adds custom auth, SLA, and more APIs.
-- **Bandwidth**: Standard includes 100 GB/month free. Query API for overage rate per GB; the API returns two bandwidth rows per region (free tier and overage tier).
+- **Bandwidth**: 100 GB/month is included free **per subscription** (shared across all apps, not per app). Query API for overage rate per GB; the API returns two bandwidth rows per region (free tier and overage tier). Deduct the 100 GB grant once per subscription, not once per app.
 - **Azure Front Door add-on**: Optional. Provides enterprise-grade edge with WAF, custom rules, and bot protection. Query API for current hourly rate.
 - **Tier limitations**: Free tier: 2 custom domains, 0.5 GB storage, community support. Standard tier: 5 custom domains, 2 GB storage, SLA-backed.
 - **Private Endpoints**: Supported on Standard tier only. Not available on the Free tier.
