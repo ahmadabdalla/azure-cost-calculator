@@ -51,10 +51,10 @@ Migration project costs come from dependent services:
 
 - Azure Migrate hub (discovery, assessment, business case) is **completely free**
 - Server replication uses Azure Site Recovery; first **180 days free** per instance (migration-specific benefit via Azure Migrate; standalone ASR for disaster recovery offers only 31 days free), then standard ASR rates; query the target region because select commercial regions price higher
-- Database Migration Service has a free Basic 1 vCore API meter for offline/Standard migration; Premium 4 vCore has vCore billing after 180 days
+- Database Migration Service has a free Basic 1 vCore API meter for offline/Standard migration; Premium 4 vCore has vCore billing after 183 days
 - Storage consumed during replication and network egress are billed under their respective services regardless of free periods
 - Third-party ISV tools (Carbonite, Cloudamize, etc.) have separate vendor licensing outside Azure billing
-- Log Analytics data ingestion for Azure Migrate discovery is no longer complimentary as of July 1, 2024; standard Azure Monitor rates apply for agent-based dependency analysis
+- Log Analytics data ingestion for Azure Migrate agent-based dependency analysis is no longer fully complimentary; standard tiered Azure Monitor rates apply (first 5 GB/month PAYG free tier still applies where eligible)
 
 ## Known Rates
 
@@ -62,7 +62,7 @@ Migration project costs come from dependent services:
 | --------- | ---------- | ----------- | ------------ |
 | Server replication (`VM Replicated to Azure`, per VM/month) | from $25.00 | 180 days | Azure Site Recovery |
 | DMS Basic 1 vCore (`1 vCore vCore - Free`, offline, per vCore/hr) | $0.00 | Always free | Azure Database Migration Service |
-| DMS Premium 4 vCore (`4 vCore`, per hr) | $0.308 | 180 days | Azure Database Migration Service |
+| DMS Premium 4 vCore (`4 vCore`, per hr) | $0.308 | 183 days | Azure Database Migration Service |
 
 > ASR is $25.00 in most commercial regions, but `mexicocentral` is $27.50 and `chilecentral` is $35.00 in the Retail Prices API. The DMS pricing page calls the free offline tier Standard; the API productName remains `Azure Database Migration Service Basic Compute`.
 >

@@ -39,7 +39,7 @@ Monthly = 0 (free service, no meters)
 
 ## Notes
 
-- Management Groups are **completely free** with no usage limits
+- Management Groups are **completely free** with no usage-based charges
 - Used to organize subscriptions into a hierarchy for governance, policy, and access management
 - Each Microsoft Entra tenant gets a single root management group
 - Supports up to six levels of depth (excluding the root and subscription level)
