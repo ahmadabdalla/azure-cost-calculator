@@ -93,9 +93,7 @@ Monthly = Σ(retailPrice × GB_in_tier) + (readOps/10K × readPrice)
 
 ## Reserved Instance Pricing
 
-Reserved capacity discounts Blob (Hot/Cool/Archive) and Azure Files data at fixed commitments (Blob: 100 TB / 1 PB / 10 PB; Files: 10 TB / 100 TB), 1-Year or 3-Year terms (set via `reservationTerm`). Billed under `Storage Reserved Capacity` (Blob), `Files Reserved Capacity`, or `Premium Files Reserved Capacity` — distinct from PAYG productNames. Not available for Cold tier, Tables, or Queues.
-
-> **Trap (RI MonthlyCost)**: The script's `MonthlyCost` is wrong for Reservation items; it multiplies the full term price by 730. Calculate `unitPrice ÷ 12` (1-Year) or `unitPrice ÷ 36` (3-Year).
+Reserved capacity discounts Blob (Hot/Cool/Archive) and Azure Files data at fixed commitments (Blob: 100 TB / 1 PB / 10 PB; Files: 10 TB / 100 TB), 1-Year or 3-Year terms (set via `reservationTerm`). Billed under `Storage Reserved Capacity` (Blob), `Files Reserved Capacity`, or `Premium Files Reserved Capacity` — distinct from PAYG productNames. Not available for Cold tier, Tables, or Queues. Reservation `retailPrice` is the total commitment cost, not a per-month rate.
 
 ServiceName: Storage
 ProductName: Storage Reserved Capacity

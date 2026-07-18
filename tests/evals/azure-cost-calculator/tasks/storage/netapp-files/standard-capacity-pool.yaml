@@ -4,9 +4,10 @@ name: Happy Path - Azure NetApp Files Standard Capacity Pool
 description: >
   Tests cost estimation for a provisioned capacity pool billed per GiB/hour.
   Azure NetApp Files capacity meters use unitOfMeasure "1 GiB/Hour" which the
-  pricing script does not treat as hourly, so MonthlyCost returns zero and the
-  agent must multiply retailPrice x provisionedGiB x 730 manually. Validates
-  the manual monthly calculation and correct tier selection.
+  pricing script does not treat as hourly, so MonthlyCost omits the x730
+  multiplier (and may round to $0.00 for small quantities); the agent must
+  multiply retailPrice x provisionedGiB x 730 manually. Validates the manual
+  monthly calculation and correct tier selection.
 tags:
   - happy-path
   - single-service
