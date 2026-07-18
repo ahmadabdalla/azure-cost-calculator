@@ -48,6 +48,7 @@ Multiple gateways  = retailPrice × 30 × gatewayCount
 ## Notes
 
 - Single SKU (`Standard`) with one meter; no tier selection needed
+- Capacity planning: one gateway = one virtual appliance instance; scale by `gatewayCount` for multiple parallel gateways
 - Virtual appliance runs on-premises (Hyper-V or VMware); the daily fee covers the Azure management service only
 - Azure Storage charges (Blob, Files, transactions) are billed separately under `serviceName: Storage`; see `storage/storage.md`
 - Shares `serviceName: Data Box` with physical transfer devices; see `storage/data-box.md` for offline Data Box products
