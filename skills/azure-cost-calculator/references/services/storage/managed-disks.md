@@ -12,6 +12,7 @@ privateEndpoint: true
 > **Trap (two-meter)**: Premium SSD returns **both** "Disk" and "Disk Mount" meters; you MUST sum both. Mount fee alone is ~5% of cost; using only mount fee = ~20× underestimate. Standard SSD returns 3 meters (Disk + Disk Mount + Operations per 10K). Standard HDD returns 2 (Disk + Operations, no mount fee). Query each meter by `MeterName` and sum with correct scaling; do not rely on `summary.totalMonthlyCost`.
 
 > **Trap (Premium SSD v2)**: API returns two rows each for IOPS and Throughput; one at zero (free tier), one at paid rate. Use non-zero `retailPrice` and subtract: `max(0, IOPS - 3000)`, `max(0, MBps - 125)`.
+
 > **Trap (Ultra vCPU)**: Ultra Disk has a 4th meter `Ultra LRS Reservation per vCPU Provisioned`; per vCPU on the attached VM.
 
 ## Query Pattern
@@ -41,7 +42,13 @@ ServiceName: Storage
 SkuName: Premium LRS
 ProductName: Azure Premium SSD v2
 
-> **Note**: For ZRS, replace `LRS` with `ZRS` in SkuName (Premium/Standard SSD only). Standard HDD uses `ProductName: Standard HDD Managed Disks`, `SkuName: S{Size} LRS`.
+### Standard HDD (e.g., S30 LRS): LRS only, no mount fee (Disk + Operations)
+
+ServiceName: Storage
+SkuName: S30 LRS
+ProductName: Standard HDD Managed Disks
+
+> **Note**: For ZRS, replace `LRS` with `ZRS` in SkuName (Premium/Standard SSD only; Standard HDD and Ultra disk tiers are LRS-only).
 
 ## Key Fields
 
