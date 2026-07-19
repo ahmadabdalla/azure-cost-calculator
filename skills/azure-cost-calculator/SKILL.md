@@ -44,7 +44,7 @@ Service reference files specify query parameters as `Key: Value` pairs. Translat
    - A multi-model or multi-feature service (e.g., Azure OpenAI, AI Services, Defender for Cloud) has no model or feature variant specified → ask which one (cost can vary 15–30×)
    - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
    - Batch all gaps into one prompt. Offer concrete choices with sensible options (e.g., "100 GB/month?", "GPT-4o or GPT-4o-mini?"). One round max; if user declines a specific parameter, apply safe defaults only for **Safe-default** gaps and disclose them; if any **Never-assume** gap remains, do NOT proceed; state what cannot be estimated without the missing input.
-3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md): glob `services/**/*<keyword>*.md`; if that misses, grep [service-routing.md](references/service-routing.md) for the name/alias and open the path embedded in the matching line
+3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md): glob `services/**/*<keyword>*.md`; if that returns 0 or ambiguous (multiple) matches, grep [service-routing.md](references/service-routing.md) for the name/alias and open the path embedded in the matching line
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified**: user provided value (use verbatim)
