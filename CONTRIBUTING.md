@@ -29,7 +29,7 @@ Follow these steps exactly:
 
 1. Read `docs/service-catalog.md` (pending services) and `skills/azure-cost-calculator/references/service-routing.md` (implemented services) to find {SERVICE_NAME}.
 2. If found in the catalog, the service needs a new reference file. Note the exact API `serviceName`, category folder, and aliases from the catalog entry.
-3. If found in the routing map, a reference file already exists. Derive the filename using the convention: strip "Azure"/"Microsoft"/"MS" prefix, kebab-case, `.md`.
+3. If found in the routing map, a reference file already exists at the path embedded in the matching entry (e.g. `Azure App Service (services/compute/app-service.md): ...`).
 4. If not found in either file, stop and tell the user to open an issue first.
 
 ### Step 2 - Check for duplicates

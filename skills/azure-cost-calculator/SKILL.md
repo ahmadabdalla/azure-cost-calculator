@@ -9,7 +9,7 @@ allowed-tools:
   - PowerShell
 metadata:
   author: ahmadabdalla
-  version: "1.9.0"
+  version: "1.10.0"
 ---
 
 # Azure Cost Calculator
@@ -20,11 +20,11 @@ Deterministic Azure cost estimation using the public Retail Prices API. Never gu
 
 Choose the script runtime based on what is available:
 
-| Runtime                    | Condition                                                                                                                                                | Pricing script                 | Explore script                     |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------- |
-| **Bash** (preferred)       | `curl` and `jq` available                                                                                                                                | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
-| **PowerShell 7+**          | `pwsh` available                                                                                                                                         | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
-| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only). Add `-ExecutionPolicy RemoteSigned` before `-File` to avoid silent failures from default policy restrictions. | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| Runtime                    | Condition                                                                                                  | Pricing script                 | Explore script                     |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------- |
+| **Bash** (preferred)       | `curl` and `jq` available                                                                                  | `scripts/get-azure-pricing.sh` | `scripts/explore-azure-pricing.sh` |
+| **PowerShell 7+**          | `pwsh` available                                                                                           | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
+| **Windows PowerShell 5.1** | `powershell.exe` available (Windows only). Requires `-ExecutionPolicy RemoteSigned` (see Critical Rule 6). | `scripts/Get-AzurePricing.ps1` | `scripts/Explore-AzurePricing.ps1` |
 
 Both produce identical JSON output. Bash flags use `--kebab-case` equivalents of PowerShell `-PascalCase` parameters (e.g., `-ServiceName` → `--service-name`).
 
@@ -44,7 +44,7 @@ Service reference files specify query parameters as `Key: Value` pairs. Translat
    - A multi-model or multi-feature service (e.g., Azure OpenAI, AI Services, Defender for Cloud) has no model or feature variant specified → ask which one (cost can vary 15–30×)
    - User describes a goal without a hosting model (e.g., "a web app") → present 2–3 options with trade-offs
    - Batch all gaps into one prompt. Offer concrete choices with sensible options (e.g., "100 GB/month?", "GPT-4o or GPT-4o-mini?"). One round max; if user declines a specific parameter, apply safe defaults only for **Safe-default** gaps and disclose them; if any **Never-assume** gap remains, do NOT proceed; state what cannot be estimated without the missing input.
-3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md) (file search → routing map → category browse → broad search → discovery)
+3. **Locate** each service reference using the lookup workflow in [shared.md](references/shared.md): glob `services/**/*<keyword>*.md`; if that returns 0 or ambiguous (multiple) matches, grep [service-routing.md](references/service-routing.md) for the name/alias and open the path embedded in the matching line
 4. **Read** matched service files; check `billingNeeds` and follow dependency chains (e.g., AKS → VMs → Managed Disks)
 5. **Classify** each parameter using the Disambiguation Protocol in [shared.md](references/shared.md):
    - **Specified**: user provided value (use verbatim)
@@ -75,15 +75,15 @@ After presenting the estimate, the user may request changes (switch region, add 
 
 ## Reference Index (load on demand)
 
-| Condition                                                                       | Read                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Always (entry point)                                                            | [references/shared.md](references/shared.md): constants, category index, alias lookup                                                                                                                                           |
-| Query returned 0 results or wrong data                                          | [references/pitfalls.md](references/pitfalls.md): troubleshooting and traps                                                                                                                                                     |
-| User asks about Reserved Instances or savings plans                             | [references/reserved-instances.md](references/reserved-instances.md)                                                                                                                                                             |
-| Non-USD currency or non-eastus region                                           | [references/regions-and-currencies.md](references/regions-and-currencies.md)                                                                                                                                                     |
+| Condition                                                                      | Read                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Always (entry point)                                                           | [references/shared.md](references/shared.md): constants, category index, alias lookup                                                                                                                                          |
+| Query returned 0 results or wrong data                                         | [references/pitfalls.md](references/pitfalls.md): troubleshooting and traps                                                                                                                                                    |
+| User asks about Reserved Instances or savings plans                            | [references/reserved-instances.md](references/reserved-instances.md)                                                                                                                                                           |
+| Non-USD currency or non-eastus region                                          | [references/regions-and-currencies.md](references/regions-and-currencies.md)                                                                                                                                                   |
 | User requests private endpoints or private access; confirm PE intent with user | [references/services/networking/private-link.md](references/services/networking/private-link.md): PE pricing, [references/services/networking/private-dns.md](references/services/networking/private-dns.md): DNS zone pricing |
-| File search returned 0 or ambiguous results                                     | [references/service-routing.md](references/service-routing.md) - implemented services routing                                                                                                                                    |
-| First time running scripts or unfamiliar with parameters                        | [references/workflow.md](references/workflow.md): script parameters and output formats                                                                                                                                          |
+| File search returned 0 or ambiguous results                                    | [references/service-routing.md](references/service-routing.md): grep for the name/alias and open the path embedded in the matching line; do not read in full                                                                   |
+| First time running scripts or unfamiliar with parameters                       | [references/workflow.md](references/workflow.md): script parameters and output formats                                                                                                                                         |
 
 ## Critical Rules
 
@@ -92,7 +92,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 3. **Ask before assuming**: if a required parameter is ambiguous or missing, stop, **clarify** and ask the user. Never silently default a never-assume parameter. At the request level, use the Clarify checks in Step 2 (for example monthly volume, data transfer, and model/feature variant). At the parameter level, use the authoritative Disambiguation Protocol table in [shared.md](references/shared.md).
 4. **Default output format is Json**: never use Summary (invisible to agents)
 5. **Lazy-load service references**: only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
-6. **PowerShell: use `-File`, not `-Command`**: run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe`; default Windows policies silently block script execution (see Runtime Detection note above). (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
+6. **PowerShell: use `-File`, not `-Command`**: run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe`; default Windows policies silently block script execution. (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
 7. **Use exact category names**: group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
 8. **Scope to user-specified resources**: only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
 9. **MeterId**: when the user requests meter IDs, add `--include-meter-id` / `-IncludeMeterId`. No extra API calls needed.
@@ -126,13 +126,8 @@ These apply to EVERY query:
 
 When estimating **3 or more services**, use these rules to reduce token consumption:
 
-1. **Partial reads**: read only lines 1–45 of each service file (YAML front matter, trap, first query pattern).
-2. **Front matter routing**: use YAML metadata to skip unnecessary work:
-   - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
-   - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
-   - `apiServiceName` → use instead of `serviceName` in queries
-   - `queryServiceNames` → query blocks may use these additional `ServiceName` values
-   - `hasFreeGrant: true` → apply grant deduction; `privateEndpoint: true` → add PE line item
+1. **Partial reads**: for each service file, grep its section headers (`^## `) to find where the `## Query Pattern` section ends (the next `## ` header), then read from line 1 to that boundary. This captures the YAML front matter, trap, and the complete Query Pattern (all meters) without reading the rest of the file.
+2. **Front matter routing**: use YAML metadata to skip unnecessary work (skip API, swap `serviceName`, apply grants/PE) per the Service File Metadata table above.
 3. **Full read triggers**: no query pattern in partial read, non-default config, 0/unexpected results, or `billingConsiderations` applies.
 4. **Parallel queries**: run independent service queries in parallel, but limit to 3–5 concurrent requests to avoid API rate limiting. If querying more than 5 services, stagger starts in batches.
 5. **Skip redundant references**: read shared.md and pitfalls.md once at the start, not between services.

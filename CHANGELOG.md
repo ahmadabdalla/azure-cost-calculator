@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.10.0] - 2026-07-20
+
+### Changed
+
+- Context-management uplift across `SKILL.md`, `shared.md`, and `service-routing.md`: routing map entries now embed each reference file's full relative path so an alias resolves to a file in one hop, and batch service-file reads are bounded to the `## Query Pattern` section. Reduces throwaway context the agent builds while capturing cost figures, with no change to estimated costs.
+- `pitfalls.md`: removed the redundant Troubleshooting section and trimmed over-explained cells; all unique traps and the discovery workflow are retained.
+
 ## [1.9.0] - 2026-07-19
 
 ### Added
