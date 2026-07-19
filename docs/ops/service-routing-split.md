@@ -49,7 +49,7 @@ Three related terms appear across documentation. Use these consistently:
 
 | Term                          | Meaning                                                                                                       | Example                              |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| **Display name**              | Human-readable name in the routing map / catalog (before the colon)                                           | `Azure VMware Solution`              |
+| **Display name**              | Human-readable name in the routing map / catalog (before the embedded path)                                   | `Azure VMware Solution`              |
 | **API serviceName**           | Exact case-sensitive value for the Azure Retail Prices API `serviceName` filter                               | `Specialized Compute`                |
 | **`serviceName` field**       | YAML front matter field; the primary service identifier, usually equals both display name and API serviceName | `serviceName: Virtual Machines`      |
 | **`queryServiceNames` field** | Extra API `serviceName` values that are valid only for query pattern blocks                                   | `queryServiceNames: [Azure Monitor]` |
@@ -71,7 +71,7 @@ When implementing a service from the catalog:
 
 2. **Create the reference file** - add the `.md` file in the appropriate category folder under `skills/azure-cost-calculator/references/services/`.
 
-3. **Add to agent routing** - add the entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section.
+3. **Add to agent routing** - add the entry to `skills/azure-cost-calculator/references/service-routing.md` under the correct category section. Embed the reference file's full relative path in parentheses: `- Display Name (services/{category}/{file}.md): Alias1, Alias2`.
 
 4. **Remove from catalog** - delete the entry from `docs/service-catalog.md`.
 
@@ -100,13 +100,13 @@ When tracking a service that does not have a reference file yet:
 
 CI runs these checks to enforce sync between routing and files:
 
-| Test                         | What it checks                                                       |
-| ---------------------------- | -------------------------------------------------------------------- |
-| `Test-RoutingFileSync`       | Routing map entries and service files are bidirectionally in sync    |
-| `Test-AliasRoutingSync`      | Aliases in service files match aliases declared in routing map       |
-| `Test-AliasUniqueness`       | No two services claim the same alias                                 |
-| `Test-BillingNeedsReference` | `billingNeeds` values in files reference valid routing service names |
-| `Test-FileNaming`            | File names follow kebab-case convention derived from `serviceName`   |
+| Test                         | What it checks                                                                                                                   |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `Test-RoutingFileSync`       | Routing map entries and service files are bidirectionally in sync; each embedded path exists and matches its alias-resolved file |
+| `Test-AliasRoutingSync`      | Aliases in service files match aliases declared in routing map                                                                   |
+| `Test-AliasUniqueness`       | No two services claim the same alias                                                                                             |
+| `Test-BillingNeedsReference` | `billingNeeds` values in files reference valid routing service names                                                             |
+| `Test-FileNaming`            | File names follow kebab-case convention derived from `serviceName`                                                               |
 
 All tests run via:
 
@@ -118,14 +118,16 @@ pwsh tests/Validate-ServiceReference.ps1
 
 ## Troubleshooting
 
-| Symptom                          | Likely cause                                      | Fix                                                            |
-| -------------------------------- | ------------------------------------------------- | -------------------------------------------------------------- |
-| "File has no routing entry"      | Service file created but not added to routing map | Add entry to `service-routing.md`                              |
-| "Routing entry has no file"      | Entry added to routing but file does not exist    | Create the service reference file, or remove the routing entry |
-| "Alias collision"                | Two files claim the same alias                    | Resolve duplicate alias in one of the files                    |
-| "Alias mismatch"                 | File aliases differ from routing map              | Sync aliases between file frontmatter and routing map          |
-| "Service still in catalog"       | Service implemented but not removed from catalog  | Delete the entry from `docs/service-catalog.md`                |
-| "billingNeeds invalid reference" | `billingNeeds` references non-existent service    | Use exact `serviceName` from routing map                       |
+| Symptom                                       | Likely cause                                              | Fix                                                                 |
+| --------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
+| "File has no routing entry"                   | Service file created but not added to routing map         | Add entry to `service-routing.md`                                   |
+| "Routing entry has no file"                   | Entry added to routing but file does not exist            | Create the service reference file, or remove the routing entry      |
+| "embeds path ... but the file does not exist" | Embedded path is wrong or the file moved                  | Fix the parenthetical path in `service-routing.md` to the real file |
+| "embeds path ... but its aliases resolve to"  | Embedded path points to a different file than the aliases | Align the embedded path with the file that owns those aliases       |
+| "Alias collision"                             | Two files claim the same alias                            | Resolve duplicate alias in one of the files                         |
+| "Alias mismatch"                              | File aliases differ from routing map                      | Sync aliases between file frontmatter and routing map               |
+| "Service still in catalog"                    | Service implemented but not removed from catalog          | Delete the entry from `docs/service-catalog.md`                     |
+| "billingNeeds invalid reference"              | `billingNeeds` references non-existent service            | Use exact `serviceName` from routing map                            |
 
 ---
 

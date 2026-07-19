@@ -20,12 +20,12 @@ For region names, currency conversion, and API-unavailable services, see [region
 Service reference files are organized by category. To find a service file:
 
 1. **File search**: search for files matching `services/**/*<keyword>*.md`
-2. **Routing map**: if search returns 0 or ambiguous results, check [service-routing.md](service-routing.md) for the authoritative category and filename
+2. **Routing map**: if search returns 0 or ambiguous results, grep [service-routing.md](service-routing.md) for the name/alias and open the reference file path embedded in the matching line; do not read the map in full
 3. **Category browse**: pick the category below and list the directory
 4. **Broad search**: list `services/**/*.md` to see all files
 5. **Discovery**: use the explore script for services not yet documented
 
-> Each service file contains its own `serviceName`, `category`, and `aliases` metadata. For the full routing map of services to categories and filenames, see [service-routing.md](service-routing.md).
+> Each service file contains its own `serviceName`, `category`, and `aliases` metadata. For the full routing map of services to reference file paths, see [service-routing.md](service-routing.md).
 
 ### Category Index
 
@@ -86,21 +86,21 @@ Before querying prices, classify every sizing parameter against this table. Miss
 
 | Category         | Parameters                                                                                            | Rule                                       |
 | ---------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| **Never-assume** | tier, SKU, vCores, instance count, storage size, node count, DTU, throughput (RU/s), PE sub-resources | MUST ask user; do not guess               |
+| **Never-assume** | tier, SKU, vCores, instance count, storage size, node count, DTU, throughput (RU/s), PE sub-resources | MUST ask user; do not guess                |
 | **Safe-default** | region, zone redundancy, storage redundancy, reserved term, hybrid benefit                            | Use default below, disclose in assumptions |
 
 **Safe defaults when unspecified:** region = eastus, zone redundancy = disabled, storage redundancy = LRS, commitment = PAYG, AHUB = none.
 
 #### Modifier Query Methods
 
-| Modifier    | How to Query                                                                                  | Monthly Calculation                      |
-| ----------- | --------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Modifier    | How to Query                                                                                 | Monthly Calculation                      |
+| ----------- | -------------------------------------------------------------------------------------------- | ---------------------------------------- |
 | AHUB (VMs)  | Query Linux meter for same SKU; see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below | Linux rate IS the AHUB rate              |
 | AHUB (SQL)  | Query compute meter only; see [Azure Hybrid Benefit](#azure-hybrid-benefit-ahub) below       | `compute_retailPrice × vCoreCount × 730` |
-| Reserved 1Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 12`                         |
-| Reserved 3Y | Add `PriceType: Reservation`                                                                  | `unitPrice ÷ 36`                         |
-| Spot        | Filter `skuName` contains "Spot"                                                              | Use returned rate directly               |
-| Dev/Test    | Add `PriceType: DevTestConsumption`                                                           | Use returned rate directly               |
+| Reserved 1Y | Add `PriceType: Reservation`                                                                 | `unitPrice ÷ 12`                         |
+| Reserved 3Y | Add `PriceType: Reservation`                                                                 | `unitPrice ÷ 36`                         |
+| Spot        | Filter `skuName` contains "Spot"                                                             | Use returned rate directly               |
+| Dev/Test    | Add `PriceType: DevTestConsumption`                                                          | Use returned rate directly               |
 
 #### Assumptions Disclosure
 
@@ -120,9 +120,9 @@ Omit lines where the user explicitly specified the value. Only disclose values t
 
 AHUB means the customer already owns Windows Server or SQL Server licenses. The API returns the correct AHUB price directly; **NEVER manually compute a percentage discount**.
 
-| Workload                                | How to query                                                                                                                                                                                                               | Why                                                                                                                                                         |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                           | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate; no math needed.                                                                    |
+| Workload                                | How to query                                                                                                                                                                                                             | Why                                                                                                                                                        |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Windows VMs**                         | Query the **Linux** (base OS) meter for the same VM SKU. Filter on the same `productName` / `armSkuName` but select the result where `productName` does NOT contain `"Windows"`.                                         | AHUB removes the Windows license cost. The Linux rate IS the AHUB rate; no math needed.                                                                    |
 | **SQL Database / SQL Managed Instance** | AHUB: compute meter only; compute `retailPrice` IS the AHUB rate. PAYG: also query `SQL License` product (Global, per-vCore); PAYG rate = compute `retailPrice` + `sql_license_retailPrice`. Monthly × vCoreCount × 730. | Compute and license are separate additive meters. AHUB drops the license to zero. **Do NOT subtract**; a negative result means the billing model is wrong. |
 
 **Rules:**

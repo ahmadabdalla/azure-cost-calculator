@@ -42,6 +42,14 @@ function Get-RoutingMapEntry {
         $serviceName = $entryLine.Substring(0, $colonIndex).Trim()
         $aliasString = $entryLine.Substring($colonIndex + 1).Trim()
 
+        # Path-embedded format: "Display Name (services/category/file.md)".
+        # Extract the parenthetical path and strip it from the service name.
+        $path = $null
+        if ($serviceName -match '^(.*?)\s*\(([^)]+\.md)\)\s*$') {
+            $serviceName = $Matches[1].Trim()
+            $path = $Matches[2].Trim()
+        }
+
         if (-not $serviceName) { continue }
 
         $aliases = @()
@@ -49,7 +57,7 @@ function Get-RoutingMapEntry {
             $trimmed = $a.Trim()
             if ($trimmed) { $aliases += $trimmed }
         }
-        $entries.Add(@{ Service = $serviceName; Aliases = $aliases })
+        $entries.Add(@{ Service = $serviceName; Aliases = $aliases; Path = $path })
     }
 
     , $entries
