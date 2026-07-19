@@ -126,7 +126,7 @@ These apply to EVERY query:
 
 When estimating **3 or more services**, use these rules to reduce token consumption:
 
-1. **Partial reads**: read only lines 1–45 of each service file (YAML front matter, trap, first query pattern).
+1. **Partial reads**: for each service file, grep its section headers (`^## `) to find where the `## Query Pattern` section ends (the next `## ` header), then read from line 1 to that boundary. This captures the YAML front matter, trap, and the complete Query Pattern (all meters) without reading the rest of the file.
 2. **Front matter routing**: use YAML metadata to skip unnecessary work:
    - `hasMeters: false` / `pricingRegion: api-unavailable` → skip API; use Known Rates or `primaryCost`
    - `pricingRegion: global` → `Region: Global`; `empty-region` → omit region
