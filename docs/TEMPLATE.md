@@ -73,8 +73,9 @@ primaryCost:
   INSTRUCTIONS FOR AUTHORS:
 
   0. 45-LINE RULE: The first Query Pattern example MUST be the most common/default
-     configuration and MUST appear within the first 45 lines of the file. This enables
-     batch estimation mode to read only lines 1–45 for multi-service estimates.
+     configuration and MUST appear within the first 45 lines of the file. This keeps
+     the Query Pattern section near the top so batch estimation mode's section-bounded
+     read (front matter through the end of `## Query Pattern`) stays small for multi-service estimates.
      Ensure the first usable default Query Pattern (declarative Key: Value block,
      not including comments or purely instructional content) appears within lines
      1–45. Do not rely on exact line ranges for YAML front matter, titles, or

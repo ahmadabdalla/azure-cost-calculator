@@ -123,6 +123,31 @@ function Test-RoutingFileSync {
         }
     }
 
+    # Check 3: Every embedded routing path must exist and match the alias-resolved file
+    foreach ($entry in $routingEntries) {
+        if (-not $entry.Path) { continue }
+        $relFromServices = ($entry.Path -replace '^services/', '') -replace '\\', '/'
+        $fullPath = Join-Path -Path $RootPath -ChildPath $relFromServices
+        if (-not (Test-Path $fullPath)) {
+            $checks.Add((New-ValidationCheck -Name 'routing_file_sync' -Pass $false `
+                        -PassMessage 'n/a' `
+                        -FailMessage "Routing entry '$($entry.Service)' embeds path '$($entry.Path)' but the file does not exist"))
+            continue
+        }
+        $entryAliasKeys = @($entry.Aliases | ForEach-Object { $_.ToLowerInvariant() })
+        $resolved = @()
+        foreach ($fa in $fileAliases) {
+            foreach ($a in $fa.Aliases) {
+                if ($entryAliasKeys -contains $a) { $resolved += ($fa.RelPath -replace '\\', '/'); break }
+            }
+        }
+        if ($resolved.Count -gt 0 -and ($resolved -notcontains $relFromServices)) {
+            $checks.Add((New-ValidationCheck -Name 'routing_file_sync' -Pass $false `
+                        -PassMessage 'n/a' `
+                        -FailMessage "Routing entry '$($entry.Service)' embeds path '$($entry.Path)' but its aliases resolve to [$($resolved -join ', ')]"))
+        }
+    }
+
     if ($checks.Count -eq 0) {
         $checks.Add((New-ValidationCheck -Name 'routing_file_sync' -Pass $true `
                     -PassMessage 'All routing entries and service files are in sync' `
