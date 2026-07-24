@@ -16,6 +16,20 @@ All API filter values (`serviceName`, `productName`, `skuName`, `meterName`) are
 
 > **Note:** The skill uses a two-phase workflow (Analysis → Estimation) with a Specification Review gate. See `skills/azure-cost-calculator/SKILL.md` for the full workflow. For tips on writing deterministic prompts, see `skills/azure-cost-calculator/USAGE.md`.
 
+## Initiative Documentation
+
+Substantial proofs of concept, features, infrastructure changes, and research
+spikes start at `specs/<initiative>/README.md` and follow the
+[Documentation Operating Model](docs/documentation-model.md). Select only the
+lightweight templates the initiative needs from `docs/templates/initiative/`;
+do not copy another initiative's document shape by default.
+
+Validate documentation changes with:
+
+```bash
+python3 tests/docs/validate_documentation.py
+```
+
 ## The Prompt
 
 Copy the prompt below, replace `{SERVICE_NAME}` with the Azure service you want to add, and paste it into your AI assistant. The AI must have access to this repository's files and the ability to run terminal commands.

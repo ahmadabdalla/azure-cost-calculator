@@ -1,0 +1,30 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run validator tests
+        run: python3 -m unittest discover -s tests/docs -p "test_*.py"
+
+      - name: Validate repository documentation
+        run: python3 tests/docs/validate_documentation.py

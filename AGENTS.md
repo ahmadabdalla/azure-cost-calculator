@@ -16,6 +16,7 @@ AI agent plugin for real-time Azure cost estimation using the Azure Retail Price
 | `tests/evals/`                             | Waza evaluation suites and task definitions for behavior quality checks                                                                   |
 | `.waza.yaml`                               | Project-level Waza configuration (paths, defaults, and runtime settings)                                                                  |
 | `docs/`                                    | Templates (`TEMPLATE.md`), plugin docs, and operational guides (`docs/ops/`)                                                              |
+| `specs/`                                   | Initiative specifications and plans; each substantial initiative starts at `specs/<initiative>/README.md`                                 |
 
 ## Git conventions
 
@@ -55,7 +56,11 @@ Releases are handled by `create-release.yml` when a PR with a `release: ` prefix
 ## For maintainers
 
 - Operational documentation lives in `docs/ops/`.
+- Initiative documentation follows `docs/documentation-model.md`; use only the
+  artifact templates under `docs/templates/initiative/` that the work needs.
 - When implementing or changing a repo feature (workflows, automation, infrastructure), create or update the corresponding ops doc.
 - Each ops doc should cover: what the feature does, prerequisites, how to make changes, troubleshooting, and external references.
 - Tests must be created or updated in the `tests/` folder, not inside `skills/`.
 - The `skills/` folder is for end-users installing the skill; it should only contain artifacts they use. Do not place maintainer-only files (tests, docs, tooling) there.
+- Run `python3 tests/docs/validate_documentation.py` after changing initiative
+  documents, documentation templates, or local Markdown links.
