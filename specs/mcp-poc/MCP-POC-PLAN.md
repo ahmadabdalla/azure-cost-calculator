@@ -3,7 +3,6 @@
 **Status:** Proposed  
 **Last updated:** 2026-07-24  
 **Related issue:** [#1035 — poc: hosted subscription MCP for Azure cost estimation](https://github.com/ahmadabdalla/azure-cost-calculator/issues/1035)  
-**Technology choices:** Deliberately excluded from this plan. See [MCP-POC-TECH-STACK-NOTES.md](MCP-POC-TECH-STACK-NOTES.md).
 
 ## 1. Purpose
 
