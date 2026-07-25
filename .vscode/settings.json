@@ -6,5 +6,16 @@
   ],
   "[markdown]": {
     "editor.formatOnSave": false
+  },
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/task.schema.json": [
+      "tests/evals/azure-cost-calculator/tasks/*/*.yaml",
+      "tests/evals/azure-cost-calculator/tasks/*/*/*.yaml"
+    ],
+    "https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/eval.schema.json": [
+      "tests/evals/azure-cost-calculator/eval.yaml",
+      "tests/evals/azure-cost-calculator/eval-mock.yaml"
+    ],
+    "https://raw.githubusercontent.com/microsoft/waza/v0.38.0/schemas/config.schema.json": ".waza.yaml"
   }
 }
