@@ -421,8 +421,6 @@ go/no-go recommendation.
 - Security/failure/concurrency/quota scenarios.
 - Operations, retention, recovery, compatibility, OAuth-gap, and incident
   documentation.
-- Issue #1035 reconciliation that preserves its history and links this entry
-  point.
 - Final gate table and recommendation.
 
 **Out of scope:**
@@ -438,7 +436,6 @@ go/no-go recommendation.
 - Human-readable findings and final recommendation.
 - Complete MCP operations guide under `docs/ops/`.
 - Updated `evidence.md` with all findings and closed/open questions.
-- Reconciled issue #1035.
 
 **Acceptance criteria:**
 

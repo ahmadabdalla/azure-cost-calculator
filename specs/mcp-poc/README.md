@@ -34,9 +34,7 @@ interactive performance, and no server-funded inference.
 | [Decisions](decisions.md) | Authoritative | Accepted |
 | [Evidence and open questions](evidence.md) | Authoritative for evidence | Active |
 | [Work packages](work-packages.md) | Authoritative | Proposed |
-| [Original combined plan](MCP-POC-PLAN.md) | Historical evidence | Historical |
-| [Tech-interviewer run](tech-interviewer/mcp-poc-plan-tech-interviewer-2026-07-24-run-01.md) | Historical evidence | Historical |
-| [Issue #1035](https://github.com/ahmadabdalla/azure-cost-calculator/issues/1035) | Historical input; reconciliation assigned to `WP-006` | Open |
+| [Issue #1035](https://github.com/ahmadabdalla/azure-cost-calculator/issues/1035) | Tracking issue aligned with this initiative | Open |
 
 ## Authority and ownership matrix
 
