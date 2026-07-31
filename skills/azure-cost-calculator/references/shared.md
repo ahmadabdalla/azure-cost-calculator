@@ -57,20 +57,19 @@ Service reference files are organized by category. To find a service file:
 
 ### API-Unavailable Services
 
-Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and USD-to-local conversion handling for USD-only services.
+Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them. Front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) is the source of truth; manual rates are USD, so convert via [regions-and-currencies.md](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Never send the user to the Azure pricing calculator.
 
 ### Global/Empty-Region Services
 
 Some services use `Global` or empty `armRegionName` instead of standard regions; querying a standard region returns nothing silently. See [pitfalls.md](pitfalls.md) for handling details and [regions-and-currencies.md](regions-and-currencies.md) for the affected-services list.
 
-### USD-Only Prices: Mandatory Conversion
+### Currency Is Independent of Region Scoping
 
-API-unavailable and Global-region services return **USD-only** prices. If the user requested a non-USD currency, you **MUST** derive a conversion factor and apply it. Do NOT leave prices in USD. Do NOT direct users to the Azure pricing calculator.
-Method: [regions-and-currencies.md & Deriving a USD→local currency conversion factor](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
+`currencyCode` is a top-level query parameter, unaffected by `armRegionName`. Request the user's target currency and use the returned price directly, including for `pricingRegion: global` and `empty-region` services. In direct `API:` URLs, substitute `{currencyCode}` with that currency before sending; never drop or empty the parameter to clear an error, and check the response's `currencyCode` matches what you asked for. Derive an FX factor only for manual USD rates the API does not publish: [regions-and-currencies.md](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
 
 ### Sub-Cent Pricing ($0.00 Display)
 
-Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00`; this is a rounding issue, not the actual price. Always query in the user's target currency first; if the Retail Prices API returns a non-zero `unitPrice`/`retailPrice` value, use that API value directly (Azure publishes rounded non-USD rates that can differ significantly from direct FX conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](regions-and-currencies.md). Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
+Consumption-based meters (Functions, Container Apps) have sub-cent unit prices. Scripts display `$0.00`; this is display rounding, not the price. Query in the user's target currency and use the returned `unitPrice`/`retailPrice` directly; the API returns six decimal places in every currency. A `retailPrice` of `0.0` is a genuine free-grant tier (`tierMinimumUnits: 0`), not a missing price: take the paid rate from the higher `tierMinimumUnits` row. Do NOT report `$0.00` to the user. Apply free grant deductions per each service file.
 
 ### Reserved Instance MonthlyCost
 

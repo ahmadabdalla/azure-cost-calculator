@@ -11,7 +11,7 @@ privateEndpoint: true
 
 # Load Balancer
 
-> **Warning**: Commercial Load Balancer pricing lives under `Region: Global`; standard commercial regions (e.g., `eastus`) return zero results. Edge Zone (`att*`, `sgxsingapore1`) and US Gov deployments have their own region-scoped meters. Prices are USD-only.
+> **Warning**: Commercial Load Balancer pricing lives under `Region: Global`; standard commercial regions (e.g., `eastus`) return zero results. Edge Zone (`att*`, `sgxsingapore1`) and US Gov deployments have their own region-scoped meters.
 
 > **Trap**: Unfiltered queries sum base fee, data processing, overage, and free-tier meters. `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 

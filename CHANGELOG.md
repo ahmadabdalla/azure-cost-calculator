@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.10.1] - 2026-07-31
+
+### Fixed
+
+- Service references no longer claim the Retail Prices API returns USD-only pricing. `currencyCode` is a top-level query parameter honoured independently of `armRegionName`, so `Global` and empty-region services (`load-balancer.md`, `nat-gateway.md`, `route-server.md`, `private-dns.md`, `dns-private-resolver.md`, `scom-managed-instance.md`, `container-storage.md`) return the target currency directly instead of requiring a derived FX factor.
+- `container-apps.md`, `functions.md`, `app-configuration.md`, `devops.md`, `entra-external-id.md`, `automation.md`, and `netapp-files.md` now query the target currency and use the returned value rather than converting from USD.
+- Direct `API:` URLs in five networking references carry `&currencyCode={currencyCode}`; omitting the parameter or sending it empty silently returns USD with no error.
+- `functions.md`: a `retailPrice` of `0.0` is the free-grant tier (`tierMinimumUnits: 0`), not a missing price.
+
+### Changed
+
+- `shared.md` and `regions-and-currencies.md`: FX derivation is scoped to manual USD rates the API does not publish. The empty API-unavailable table and the USD-only services table are removed in favour of service file front matter.
+- `pitfalls.md`: API-unavailable guidance points at front matter (`pricingRegion: api-unavailable`).
+
+
 ## [1.10.0] - 2026-07-20
 
 ### Changed

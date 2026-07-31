@@ -33,7 +33,7 @@ Region: Zone 1
 
 ### Direct API (Global pricing)
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and skuName eq 'Public' and armRegionName eq ''
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and skuName eq 'Public' and armRegionName eq ''&currencyCode={currencyCode}
 Fields: meterName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields

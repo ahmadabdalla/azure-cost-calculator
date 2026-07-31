@@ -33,7 +33,7 @@ Region: Zone 1
 
 ### Direct API (both meters, Zone 1)
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and contains(skuName, 'DNS Security Policy') and armRegionName eq 'Zone 1'
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Azure DNS' and contains(skuName, 'DNS Security Policy') and armRegionName eq 'Zone 1'&currencyCode={currencyCode}
 Fields: meterName, skuName, unitPrice, unitOfMeasure
 
 ## Key Fields

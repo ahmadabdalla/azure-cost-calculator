@@ -112,4 +112,56 @@ Describe 'Test-ContentRule' {
 
         $check.Pass | Should -BeFalse
     }
+
+    It 'accepts a direct API URL that passes a non-empty currencyCode' {
+        $url = 'API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq ''Azure DNS''&currencyCode={currencyCode}'
+        $lines = New-ServiceReferenceLines -QueryLines @($url)
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+        $check = $checks | Where-Object Name -eq 'api_url_currency_code'
+
+        $check.Pass | Should -BeTrue
+    }
+
+    It 'rejects a direct API URL that omits currencyCode' {
+        $url = 'API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq ''Azure DNS'''
+        $lines = New-ServiceReferenceLines -QueryLines @($url)
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+        $check = $checks | Where-Object Name -eq 'api_url_currency_code'
+
+        $check.Pass | Should -BeFalse
+    }
+
+    It 'rejects a direct API URL whose currencyCode is empty' {
+        $url = 'API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq ''Azure DNS''&currencyCode='
+        $lines = New-ServiceReferenceLines -QueryLines @($url)
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+        $check = $checks | Where-Object Name -eq 'api_url_currency_code'
+
+        $check.Pass | Should -BeFalse
+    }
+
+    It 'rejects a currencyCode buried inside the $filter clause' {
+        $url = 'API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq ''Azure DNS'' and currencyCode eq ''EUR'''
+        $lines = New-ServiceReferenceLines -QueryLines @($url)
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+        $check = $checks | Where-Object Name -eq 'api_url_currency_code'
+
+        $check.Pass | Should -BeFalse
+    }
+
+    It 'checks Retail Prices query URLs even without an API: prefix' {
+        $url = 'See https://prices.azure.com/api/retail/prices?$filter=serviceName eq ''Azure DNS'''
+        $lines = New-ServiceReferenceLines -QueryLines @('ServiceName: Display Service', $url)
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+        $check = $checks | Where-Object Name -eq 'api_url_currency_code'
+
+        $check.Pass | Should -BeFalse
+    }
+
+    It 'skips the currencyCode check for files with no direct API URLs' {
+        $lines = New-ServiceReferenceLines -QueryLines @('ServiceName: Display Service')
+        $checks = Test-ContentRule -Lines $lines -FrontMatter (Get-FrontMatter -Lines $lines)
+
+        ($checks | Where-Object Name -eq 'api_url_currency_code') | Should -BeNullOrEmpty
+    }
 }
