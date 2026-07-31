@@ -12,7 +12,7 @@ tags:
   - analytics
   - service:hdinsight
 inputs:
-  prompt: "How much would a 4-node HDInsight Spark cluster cost per month using D4a v4 worker nodes in East US?"
+  prompt: "How much would an HDInsight Spark cluster with 4 D4a v4 worker nodes cost per month in East US? Use D4a v4 for the head and Zookeeper nodes as well."
 expected:
   output_contains:
     - "Assumptions"
@@ -49,10 +49,10 @@ graders:
     config:
       continue_session: true
       prompt: >
-        You are evaluating an AI agent's response to: "How much would a 4-node HDInsight Spark cluster cost per month using D4a v4 worker nodes in East US?"
+        You are evaluating an AI agent's response to: "How much would an HDInsight Spark cluster with 4 D4a v4 worker nodes cost per month in East US? Use D4a v4 for the head and Zookeeper nodes as well."
 
         The agent's response is in the conversation above. Check it for these criteria:
-        (1) Includes an Assumptions section disclosing safe-default parameters (e.g., head node size, Zookeeper nodes).
+        (1) Includes an Assumptions section disclosing safe-default parameters (e.g., pay-as-you-go commitment).
         (2) Shows a monthly total cost using the correct billing model (hourly per-node × 730 × node count).
         (3) Accounts for multiple node roles (at minimum Head nodes + Worker nodes; Zookeeper nodes for Spark).
 
