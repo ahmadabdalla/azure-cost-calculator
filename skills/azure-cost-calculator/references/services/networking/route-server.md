@@ -9,7 +9,7 @@ pricingRegion: global
 
 # Azure Route Server
 
-> **Warning**: Route Server has no per-commercial-region meters: standard regions (e.g., `eastus`) return zero results. Use `Region: Global` for commercial cloud; a parallel `US Gov` meter set exists for government cloud at a premium. Prices are USD-only.
+> **Warning**: Route Server has no per-commercial-region meters: standard regions (e.g., `eastus`) return zero results. Use `Region: Global` for commercial cloud; a parallel `US Gov` meter set exists for government cloud at a premium.
 
 > **Trap**: Unfiltered queries sum all 6 meters (gateway, scaling units, Route Maps, and connection units). `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 

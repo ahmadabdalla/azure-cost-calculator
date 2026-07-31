@@ -9,7 +9,7 @@ pricingRegion: global
 
 # NAT Gateway
 
-> **Warning**: NAT Gateway pricing is region-restricted: standard commercial regions (e.g., `eastus`) return zero results. Use `Region: Global` for commercial cloud and `Region: US Gov` for government cloud (US Gov meters carry a premium). Prices are USD-only.
+> **Warning**: NAT Gateway pricing is region-restricted: standard commercial regions (e.g., `eastus`) return zero results. Use `Region: Global` for commercial cloud and `Region: US Gov` for government cloud (US Gov meters carry a premium).
 
 > **Trap**: Unfiltered queries return gateway (hourly), data processing (per-GB), and StandardV2 logging (monthly) meters summed. `totalMonthlyCost` is meaningless. Query each meter separately using `MeterName`.
 

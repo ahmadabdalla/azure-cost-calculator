@@ -16,7 +16,7 @@ hasFreeGrant: true
 
 > **Trap (free tier)**: v1 includes 5 TiB free per storage pool. The API returns a flat rate with no tier structure; manually deduct: `max(0, provisionedGiB - 5120) × retailPrice`.
 
-> **Warning**: Global-only pricing; use `Region: Global`. Default region queries return zero results. Prices are USD-only.
+> **Warning**: Global-only pricing; use `Region: Global`. Default region queries return zero results.
 
 ## Query Pattern
 
@@ -59,5 +59,5 @@ Total = orchestration + underlying disk cost (see managed-disks.md)
 - v2.0.0+ backing storage: Local NVMe, Elastic SAN only (Azure Disks not supported)
 - Orchestration meter covers management only; all data storage, IOPS, and throughput costs are billed through the underlying storage service
 - Provisioned pool size (GiB) is a never-assume parameter; confirm the intended pool size with the user before estimating
-- Global-region USD-only pricing; for non-USD currencies see [regions-and-currencies.md](../../regions-and-currencies.md)
+- Global-region pricing; use `Region: Global`. Currency is unaffected: pass the target `currencyCode` directly
 - Network isolation is handled through AKS cluster networking

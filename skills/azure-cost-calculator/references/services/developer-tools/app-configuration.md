@@ -85,4 +85,4 @@ Monthly = instance_retailPrice × 30 × instanceCount
 | `Developer Overage Operations` | 1K | $0.04 | 3,000 requests/day |
 | `Standard/Premium Overage Operations` | 10K | $0.06 | Std: 200K/day, Prem: 800K/day |
 
-> These rates match `retailPrice` values from the API. For non-USD currencies, use the currency derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> These rates match `retailPrice` values from the API. For non-USD currencies, query the same meters in the target currency and use the returned value.
