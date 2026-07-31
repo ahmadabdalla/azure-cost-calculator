@@ -81,7 +81,7 @@ See [reserved-instances.md](reserved-instances.md) for full RI traps.
 
 ### Disambiguation Protocol
 
-Before querying prices, classify every sizing parameter against this table. Missing never-assume params → stop and ask. Missing safe-default params → use default and disclose.
+Before querying prices, classify every sizing parameter of the services being priced against this table. Missing never-assume params → stop and ask. Missing safe-default params → use default and disclose. Quantities of `billingNeeds` companion resources are out of scope here; Critical Rule 8 in SKILL.md governs them.
 
 | Category         | Parameters                                                                                            | Rule                                       |
 | ---------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
