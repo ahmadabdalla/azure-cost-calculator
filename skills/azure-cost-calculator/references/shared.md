@@ -113,7 +113,7 @@ Every estimate MUST begin with an assumptions block before presenting cost numbe
 - Zone Redundancy: {Enabled | Disabled}
 - {any other safe-defaults used}
 
-Omit lines where the user explicitly specified the value. Only disclose values that were defaulted.
+Always emit this block, including when the user specified every value. List the values actually used and mark those that were defaulted.
 
 ### Azure Hybrid Benefit (AHUB)
 
