@@ -6,6 +6,11 @@ __pycache__/
 prompts
 settings.local.json
 
+# MCP generated files
+mcp/node_modules/
+mcp/dist/
+mcp/*.tsbuildinfo
+
 # Private operational notes (not for public repo)
 docs/ops/notes.md
 
