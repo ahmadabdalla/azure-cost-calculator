@@ -12,7 +12,7 @@ pricingRegion: empty-region
 >
 > **Trap (tiered pricing)**: Zone and query meters each return two rows (one per tier). For zones: apply tier 1 rate to the first 25, tier 2 rate to the remainder. For queries: apply tier 1 rate to the first 1B, tier 2 to the remainder. Do NOT use a single tier's rate for all units.
 
-> **Warning**: **Zone-based regions / Global pricing**: use `Region: Zone 1` (not ARM regions) or use the `API:` query below.
+> **Warning**: **Zone-based regions / Global pricing**: run the pricing script with `Region: Zone 1` (not ARM regions); fall back to the `API:` query below only if it returns nothing.
 
 ## Query Pattern
 
