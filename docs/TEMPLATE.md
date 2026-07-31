@@ -157,7 +157,7 @@ primaryCost:
 >
 > **Agent instruction**: {Optional; specific guidance for the AI agent, e.g., "Do NOT report $0.00 to the user", "Always ignore the script's MonthlyCost for Reservation items", etc.}
 
-> **Warning**: {For API-unavailable, Global-only, or USD-only pricing notices, e.g., "This service has no regional pricing; use direct API query with USD only."}
+> **Warning**: {Region or API-availability notices, e.g., "No regional pricing; query with `Region: Global`." Do NOT claim USD-only pricing: `pricingRegion` does not constrain currency.}
 
 > **Note**: {For informational context that is not a trap or warning, e.g., "The Azure Portal calls this service 'X' but the API uses 'Y'."}
 
@@ -273,7 +273,7 @@ Total = ${result} USD/month
 | `{meter}` | {unit} | ${rate} | {grant or N/A} |
 > These rates are from the [Azure pricing page]({url}). The API returns them
 > but at precision below what the script rounds to. The script shows `$0.00`.
-> For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> For non-USD currencies, query the same meters in the target currency and use the returned value.
 -->
 <!-- === COMMON SKUS TABLE === -->
 <!--

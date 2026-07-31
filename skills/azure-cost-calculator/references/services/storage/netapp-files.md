@@ -98,7 +98,7 @@ CRR:      Monthly = crr_retailPrice × replicatedGiB   (per GiB replicated; NOT 
 | `Ultra Capacity`    | 1 GiB/Hour  | $0.000538            | ~$0.39          |
 | `Backup Capacity`   | 1 GiB/Month | $0.05                | $0.05           |
 
-> These rates are from the Azure Retail Prices API (eastus). The script shows `$0.00` for capacity meters because `1 GiB/Hour` is not recognized as hourly. Multiply `retailPrice × GiB × 730` manually. For non-USD currencies, see [regions-and-currencies.md](../../regions-and-currencies.md).
+> These rates are from the Azure Retail Prices API (eastus). The script shows `$0.00` for capacity meters because `1 GiB/Hour` is not recognized as hourly. Multiply `retailPrice × GiB × 730` manually. For non-USD currencies, query the same meters in the target currency and use the returned value.
 
 ## Reserved Instance Pricing
 

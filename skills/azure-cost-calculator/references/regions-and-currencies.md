@@ -29,17 +29,13 @@ These services have **no pricing data** in the Azure Retail Prices API and must 
 | ------------------ | --------------- | --------- |
 | _(none currently)_ |                 |           |
 
-If a service is added to this table, note the limitation to the user and provide the manual fallback values above (in USD). If the user's requested currency is NOT USD, you **MUST** derive a conversion factor using the method below and convert all USD-only prices to the target currency. Do NOT leave prices in USD when the user requested a different currency. Do NOT direct them to the Azure pricing calculator; perform the conversion yourself.
+If a service is added to this table, note the limitation to the user and provide the manual fallback values above. Manual fallback values are stated in USD, so convert them to the user's requested currency yourself. Do NOT direct them to the Azure pricing calculator.
 
-## USD-Only Services
+## Currency Handling
 
-These services return pricing in **USD only**; either because they are API-unavailable or because they use `pricingRegion: global` in their service file. **Services without `pricingRegion: global` support native non-USD currencies**; pass the target `currencyCode` directly to the script and the API returns prices in that currency (see [pitfalls.md](pitfalls.md) for the correct query parameter usage). Native local-currency prices can differ from USD × FX conversion, so always query in the target currency directly rather than converting.
+`currencyCode` is a top-level query parameter, independent of `pricingRegion`. Region scoping controls which `armRegionName` values return rows; it does not constrain currency. Request the user's target currency and use the returned value directly, including for `global` and `empty-region` services.
 
-| Service       | Reason                                                                 | Reference                                                        |
-| ------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Private Link  | Global region, USD only; use `Region: Global`                          | [private-link.md](services/networking/private-link.md)           |
-| Private DNS   | Empty-region pricing (`armRegionName == ''`); USD only; use workaround | [private-dns.md](services/networking/private-dns.md)             |
-| Load Balancer | Global region, USD only; use `Region: Global`                          | [load-balancer.md](services/networking/load-balancer.md)         |
+Derive a conversion factor only for manual USD rates that the API does not publish.
 
 ## Sub-Cent Services
 
@@ -52,9 +48,9 @@ Consumption-based meters with per-unit prices below $0.01. See the Sub-Cent Pric
 
 ## Deriving a USD→local currency conversion factor
 
-When ANY service in the estimate returns USD-only prices and the user requested a non-USD currency, you **MUST** perform this conversion. Do NOT skip it. Do NOT leave individual services in USD while others are in the target currency.
+Use this only for manual USD rates that the API does not publish. Otherwise query the target currency directly.
 
-> **MANDATORY**: You MUST use this exact anchor SKU; do NOT substitute any other service, even one already in the estimate. Azure sets local-currency prices independently per service, so different anchors yield different factors and non-deterministic results.
+> **MANDATORY**: You MUST use this exact anchor SKU; do NOT substitute any other service, even one already in the estimate. A fixed anchor keeps the derived factor deterministic across estimates.
 
 **Fixed anchor: use these exact parameters (no substitutions):**
 
@@ -80,4 +76,4 @@ Currency: <target currency>
 factor = target_price / usd_price
 ```
 
-Apply this factor to all USD-only prices. Always note the conversion caveat to the user; the derived factor is approximate and may differ from the actual exchange rate.
+Note the caveat that the derived factor is approximate. Do NOT attach it to values the API returned in the target currency.

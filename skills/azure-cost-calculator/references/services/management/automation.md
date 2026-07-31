@@ -94,4 +94,4 @@ Monthly = Runbooks + Watchers + DSC Nodes
 
 > These rates are from the [Azure Automation pricing page](https://azure.microsoft.com/pricing/details/automation/). The API returns them
 > but per-minute and per-hour rates are below what the script rounds to; the script shows `$0.00`.
-> For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> For non-USD currencies, query the same meters in the target currency and use the returned value.

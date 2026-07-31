@@ -107,4 +107,4 @@ Total:            Sum of the applicable components above
 | `Standard Monthly Active Users` (B2C)            | 9.95M+     | $0.0025         | -           |
 | `Basic Multi-Factor Authentication` (B2C)        | Flat       | $0.0300         | None        |
 
-> These rates are from the Azure Retail Prices API at `Global` region. The script rounds `MonthlyCost` to cents, so sub-cent meters can total zero at low volumes; use `UnitPrice`. For non-USD currencies, use the method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> These rates are from the Azure Retail Prices API at `Global` region. The script rounds `MonthlyCost` to cents, so sub-cent meters can total zero at low volumes; use `UnitPrice`. For non-USD currencies, query the same meters in the target currency and use the returned value.
