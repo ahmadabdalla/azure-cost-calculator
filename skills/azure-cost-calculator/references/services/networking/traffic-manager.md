@@ -48,7 +48,7 @@ Region: Global
 
 ### Direct API (all Global meters)
 
-API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Traffic Manager' and armRegionName eq 'Global'
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Traffic Manager' and armRegionName eq 'Global'&currencyCode={currencyCode}
 Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields

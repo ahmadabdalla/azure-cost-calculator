@@ -65,7 +65,7 @@ Some services use `Global` or empty `armRegionName` instead of standard regions;
 
 ### Currency Is Independent of Region Scoping
 
-`currencyCode` is a top-level query parameter, unaffected by `armRegionName`. Request the user's target currency and use the returned price directly, including for `pricingRegion: global` and `empty-region` services. Derive an FX factor only for manual USD rates the API does not publish: [regions-and-currencies.md](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
+`currencyCode` is a top-level query parameter, unaffected by `armRegionName`. Request the user's target currency and use the returned price directly, including for `pricingRegion: global` and `empty-region` services. In direct `API:` URLs, substitute `{currencyCode}` with that currency before sending; never drop or empty the parameter to clear an error, and check the response's `currencyCode` matches what you asked for. Derive an FX factor only for manual USD rates the API does not publish: [regions-and-currencies.md](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor).
 
 ### Sub-Cent Pricing ($0.00 Display)
 

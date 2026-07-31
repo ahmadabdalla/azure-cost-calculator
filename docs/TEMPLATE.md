@@ -177,7 +177,7 @@ MeterName: {meterName}
   - Add ProductName, SkuName, MeterName as needed for precise results
   - Show the most filtered query first; add variants for tiers, OS, SKUs
   - For Global-only pricing, use direct API calls in declarative format:
-    API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq '{serviceName}' and ...
+    API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq '{serviceName}' and ...&currencyCode={currencyCode}
     Fields: meterName, unitPrice, unitOfMeasure
   - Use PriceType: Reservation for RI queries
   - Use Quantity: N for per-unit meters, InstanceCount: N for multiple resources
