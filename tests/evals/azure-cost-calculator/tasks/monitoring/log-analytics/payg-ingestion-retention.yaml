@@ -56,9 +56,8 @@ graders:
         (3) Charges retention for the 59-day delta beyond the standard 31-day free period (90 total days - 31 free days).
         (4) Produces a plausible East US total near $113.33/month (about $103.50 ingestion + $9.83 retention).
 
-        Score 1.0 if all four criteria are met. Score 0.5 if two or three are met. Score 0.0 if fewer than two are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all four criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script
