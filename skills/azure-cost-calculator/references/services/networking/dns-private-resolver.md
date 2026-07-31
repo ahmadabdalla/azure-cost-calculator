@@ -11,7 +11,7 @@ pricingRegion: empty-region
 
 > **Trap (mixed meters)**: The API `serviceName` "Azure DNS" returns meters across five `skuName` groups: `Public`, `Private`, `Private Resolver`, `DNS Security Policy Domains`, and `DNS Security Policy Queries`. Always filter with `skuName eq 'Private Resolver'` to isolate DNS Private Resolver pricing.
 
-> **Warning**: **Empty-region pricing**: scripts require a Region filter. Use `Region: Zone 1` as a workaround, or query the API directly with `armRegionName eq ''`.
+> **Warning**: **Empty-region pricing**: scripts require a Region filter. Use `Region: Zone 1` as a workaround, or use the `API:` query below.
 
 > **Agent instruction**: All three meters use `unitOfMeasure: "1"`. This is a per-month per-unit charge. Multiply by endpoint/ruleset count only. Do not apply the 730-hour multiplier and ignore the script's auto-calculated MonthlyCost for these meters.
 

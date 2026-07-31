@@ -12,7 +12,7 @@ pricingRegion: global
 
 > **Trap (sub-cent rounding)**: DNS query pricing is per million queries. Small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
-> **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or query the API directly.
+> **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Use `Region: Global` or use the `API:` query below.
 
 ## Query Pattern
 

@@ -13,7 +13,7 @@ pricingRegion: empty-region
 >
 > **Trap (tiered pricing)**: Zone pricing returns two API rows (`tierMinimumUnits` 0 and 25). For ≤25 zones, use tier-1 `retailPrice` only. For 26+ zones, apply tier-1 to the first 25 and tier-2 to the remainder. Do NOT sum all tiers.
 
-> **Warning**: **Empty-region pricing**: scripts require a Region filter and return nothing for Private DNS. Use `Region: Zone 1` as a workaround, or query the API directly with `armRegionName eq ''`.
+> **Warning**: **Empty-region pricing**: scripts require a Region filter and return nothing for Private DNS. Use `Region: Zone 1` as a workaround, or use the `API:` queries below.
 
 ## Query Pattern
 
