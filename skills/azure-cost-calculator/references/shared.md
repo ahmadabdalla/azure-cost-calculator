@@ -57,7 +57,7 @@ Service reference files are organized by category. To find a service file:
 
 ### API-Unavailable Services
 
-Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them; use the manual fallback in each service file. Treat each service file's front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) as the source of truth for API availability and manual-rate handling. See [regions-and-currencies.md](regions-and-currencies.md#known-api-unavailable-services) for shared examples and for converting USD manual fallback rates to the user's currency.
+Some services have **no data** in the Retail Prices API; scripts return zero results. Do NOT query them. Front matter (`pricingRegion: api-unavailable`, `hasKnownRates`) is the source of truth; manual rates are USD, so convert via [regions-and-currencies.md](regions-and-currencies.md#deriving-a-usdlocal-currency-conversion-factor). Never send the user to the Azure pricing calculator.
 
 ### Global/Empty-Region Services
 

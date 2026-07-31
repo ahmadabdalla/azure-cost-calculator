@@ -21,16 +21,6 @@ Reference for region names, currency handling, and services not available in the
 
 > **Note**: Some services use non-standard regions. Private DNS pricing is listed under empty `armRegionName` or zone-based regions; querying any standard region returns **nothing** and the scripts cannot query it. Private Link, Load Balancer, and Defender CSPM use `armRegionName = 'Global'` and can be queried with `Region: Global`. See [pitfalls.md](pitfalls.md) for details.
 
-## Known API-Unavailable Services
-
-These services have **no pricing data** in the Azure Retail Prices API and must be estimated manually:
-
-| Service            | Manual Estimate | Reference |
-| ------------------ | --------------- | --------- |
-| _(none currently)_ |                 |           |
-
-If a service is added to this table, note the limitation to the user and provide the manual fallback values above. Manual fallback values are stated in USD, so convert them to the user's requested currency yourself. Do NOT direct them to the Azure pricing calculator.
-
 ## Currency Handling
 
 `currencyCode` is a top-level query parameter, independent of `pricingRegion`. Region scoping controls which `armRegionName` values return rows; it does not constrain currency. Request the user's target currency and use the returned value directly, including for `global` and `empty-region` services.

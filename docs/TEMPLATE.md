@@ -273,7 +273,8 @@ Total = ${result} USD/month
 | `{meter}` | {unit} | ${rate} | {grant or N/A} |
 > These rates are from the [Azure pricing page]({url}). The API returns them
 > but at precision below what the script rounds to. The script shows `$0.00`.
-> For non-USD currencies, query the same meters in the target currency and use the returned value.
+> For non-USD currencies, query the same meters in the target currency. If the API does not
+> publish the rate, derive an FX factor via [regions-and-currencies.md](../../regions-and-currencies.md).
 -->
 <!-- === COMMON SKUS TABLE === -->
 <!--
