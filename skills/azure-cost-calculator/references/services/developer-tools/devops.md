@@ -98,4 +98,4 @@ Monthly = (basic_users × basic_retailPrice) + (testplan_users × testplan_retai
 | Per-minute agent (Linux 8-core) | per-minute     | $0.022     | None                                  |
 | Artifacts storage               | per-GB/month   | $2.00      | 2 GB                                  |
 
-> Rates match `retailPrice` values from the API. Per-minute agents also cover Linux/Windows 16-core and macOS Standard/XL at higher rates. Published at the [Azure DevOps pricing page](https://azure.microsoft.com/pricing/details/devops/azure-devops-services/). For non-USD currencies, use the derivation method in [regions-and-currencies.md](../../regions-and-currencies.md).
+> Rates match `retailPrice` values from the API. Per-minute agents also cover Linux/Windows 16-core and macOS Standard/XL at higher rates. Published at the [Azure DevOps pricing page](https://azure.microsoft.com/pricing/details/devops/azure-devops-services/). For non-USD currencies, query the same meters in the target currency and use the returned value.

@@ -9,7 +9,7 @@ privateEndpoint: true
 
 # Azure Container Apps
 
-> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Always query in the user's target currency first; if the API returns a non-zero `UnitPrice`, use it directly. If it returns zero, fall back to USD and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Do NOT report zero to the user. If workload type is unspecified, default to Consumption.
+> **Trap**: Unfiltered query returns 13 meters across 4 SKUs (`Standard`, `Dedicated`, `Hybrid`, `Dynamic Sessions`) including GPU. Always filter by `SkuName`. For Consumption (`Standard`), the script's `MonthlyCost` shows zero because per-second units cannot be multiplied by 730. Always query in the user's target currency and use the returned `UnitPrice` directly. Do NOT report zero to the user. If workload type is unspecified, default to Consumption.
 
 ## Query Pattern
 

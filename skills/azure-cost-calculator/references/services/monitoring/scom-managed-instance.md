@@ -13,7 +13,7 @@ hasFreeGrant: true
 
 > **Trap (serviceName)**: API `serviceName` is `Azure Monitor`, shared with all Azure Monitor products. An unfiltered query returns many unrelated meters. Always filter by `ProductName: Azure Monitor SCOM Managed Instance` to isolate SCOM MI pricing.
 
-> **Warning**: **Global-only pricing**: All meters use `armRegionName = 'Global'`. Standard region queries (e.g., `eastus`) return zero results. Use `Region: Global`. Prices are USD-only; for non-USD currencies, derive a conversion factor per [regions-and-currencies.md](../../regions-and-currencies.md).
+> **Warning**: **Global-only pricing**: All meters use `armRegionName = 'Global'`. Standard region queries (e.g., `eastus`) return zero results. Use `Region: Global`. Currency is unaffected: pass the target `currencyCode` directly.
 
 ## Query Pattern
 

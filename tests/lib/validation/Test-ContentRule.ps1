@@ -127,6 +127,16 @@ function Test-ContentRule {
                 -PassMessage 'No template instruction comments found' `
                 -FailMessage 'Found template instruction comments -- delete all <!-- INSTRUCTIONS FOR AUTHORS --> blocks before publishing'))
 
+    # Retail Prices query URLs must pass currencyCode as a non-empty top-level parameter.
+    # Omitting it, emptying it, or burying it in $filter makes the API return USD silently.
+    $apiUrlLines = @($Lines | Where-Object { $_ -match 'prices\.azure\.com/api/retail/prices\?' })
+    if ($apiUrlLines.Count -gt 0) {
+        $noCurrency = @($apiUrlLines | Where-Object { $_ -notmatch '[?&]currencyCode=[^&\s]' })
+        $checks.Add((New-ValidationCheck -Name 'api_url_currency_code' -Pass ($noCurrency.Count -eq 0) `
+                    -PassMessage "All $($apiUrlLines.Count) direct API URL(s) pass a non-empty currencyCode" `
+                    -FailMessage "$($noCurrency.Count) direct API URL(s) omit a non-empty top-level currencyCode. The API silently returns USD when it is missing or empty -- append '&currencyCode={currencyCode}'."))
+    }
+
     # Every ServiceName: in a query must match declared service metadata to avoid silent API mismatches
     $parseServiceNameValues = {
         param([AllowNull()][object]$Value)

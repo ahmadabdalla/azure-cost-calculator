@@ -10,9 +10,9 @@ privateEndpoint: true
 
 # Azure Functions
 
-> **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Always query in the user's target currency first. If the API returns a non-zero `UnitPrice`, use it directly (Azure publishes rounded non-USD rates that can be ~2× the direct FX conversion, e.g. AUD 0.0001 vs ~0.00005 from manual conversion). If it returns zero, fall back to the USD rate and convert via [regions-and-currencies.md](../../regions-and-currencies.md). Always explain the free grant deduction.
+> **Trap**: Sub-cent unit prices display as zero (`MonthlyCost` rounds to 2 dp). Query in the user's target currency and use the returned `UnitPrice` directly; the API returns six decimal places in every currency. Always explain the free grant deduction.
 >
-> **Trap (Flex non-USD inflation)**: For Flex Consumption On Demand Execution Time, some non-USD rates (e.g. AUD `0.0001/GB-s`) are a published floor, the lowest non-zero value the API returns, which can overstate cost by ~4× vs the USD-derived rate at high volumes. If total Flex Consumption On Demand GB-s across the estimate exceeds **1M GB-s/month** in a non-USD currency, also derive the rate from USD using [regions-and-currencies.md](../../regions-and-currencies.md). Use the API-published non-USD rate for the primary cost total; surface the USD-derived rate as an informational comparison noting the API rate may be inflated by currency rounding.
+> **Trap (tiered free grant)**: Consumption and Flex execution meters return one row per tier. The `tierMinimumUnits: 0` row is priced `0.0` because it is the free grant, not because the price is missing. Take the paid rate from the higher tier row (Flex: 100K GB-s, 25K × 10 executions) and deduct the grant per the Notes below.
 
 ## Query Pattern
 
