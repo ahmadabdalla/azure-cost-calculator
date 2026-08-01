@@ -66,10 +66,8 @@ graders:
         current East US Log Analytics ingestion and retention query results,
         rounded to two decimal places.
 
-        Score 1.0 if all five criteria are met. Score 0.5 if four are met. Score 0.0
-        if fewer than four are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all five criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script

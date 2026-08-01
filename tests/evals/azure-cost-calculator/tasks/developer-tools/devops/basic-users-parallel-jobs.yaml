@@ -13,7 +13,7 @@ tags:
   - developer-tools
   - service:devops
 inputs:
-  prompt: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs?"
+  prompt: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs? None of the users hold Visual Studio subscriptions or Microsoft 365 licenses granting Azure DevOps entitlements."
 expected:
   output_contains:
     - "Assumptions"
@@ -43,16 +43,15 @@ graders:
     config:
       continue_session: true
       prompt: >
-        You are evaluating an AI agent's response to: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs?"
+        You are evaluating an AI agent's response to: "How much would Azure DevOps cost per month for 10 Basic users and 4 Microsoft-hosted parallel jobs? None of the users hold Visual Studio subscriptions or Microsoft 365 licenses granting Azure DevOps entitlements."
 
         The agent's response is in the conversation above. Check it for these criteria:
         (1) Includes an Assumptions section disclosing safe-default parameters.
         (2) Shows a monthly total cost using the correct billing model for Azure DevOps (per-user/month licenses plus per-job/month parallel jobs, not hourly).
         (3) Applies the free grants (first 5 Basic users free, 1 Microsoft-hosted parallel job free) to the totals of 10 Basic users and 4 parallel jobs.
 
-        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all three criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script

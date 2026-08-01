@@ -57,9 +57,8 @@ graders:
         (3) Shows a monthly total cost using the correct billing model with endpoint hourly and data processing components.
         (4) Accounts for 5 private endpoints as specified.
 
-        Score 1.0 if all four criteria are met. Score 0.5 if three are met. Score 0.0 if fewer than three are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all four criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script

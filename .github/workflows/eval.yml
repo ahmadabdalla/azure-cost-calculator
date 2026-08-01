@@ -18,7 +18,7 @@ on:
         required: false
         type: string
   pull_request:
-    branches: [dev]
+    branches: [dev, main]
 
 # Workflow always triggers on PR (no paths: filter) so required status checks
 # report a status. Path filtering is handled inside each job using
@@ -110,7 +110,6 @@ jobs:
   # Real LLM evaluation on PRs that modify files critical to skill behavior.
   # dorny/paths-filter detects which file categories changed; a mapping step
   # converts categories to eval task tags so only relevant tasks run.
-  # continue-on-error: true until prompt graders are fully stable.
   evaluate-critical:
     name: Evaluate Critical Changes (Copilot SDK)
     runs-on: ubuntu-latest
@@ -195,7 +194,6 @@ jobs:
         uses: ./.github/actions/install-waza
       - name: Run targeted evaluations
         if: steps.scope.outputs.run == 'true'
-        continue-on-error: true
         env:
           COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
           EVAL_TAGS: ${{ steps.scope.outputs.tags }}

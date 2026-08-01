@@ -10,7 +10,7 @@ Automated evaluation of the Azure Cost Calculator skill using [Waza](https://git
 | Eval suite       | `tests/evals/azure-cost-calculator/eval.yaml` (copilot-sdk), `tests/evals/azure-cost-calculator/eval-mock.yaml` (mock)                                                                                      |
 | Task files       | `tests/evals/azure-cost-calculator/tasks/*/*.yaml` and `tests/evals/azure-cost-calculator/tasks/*/*/*.yaml`                                                                                                 |
 | Project config   | `.waza.yaml`                                                                                                                                                                                                |
-| Auth secret      | `COPILOT_GITHUB_TOKEN` (fine-grained PAT, "Copilot Requests" permission)                                                                                                                                    |
+| Auth secret      | `COPILOT_GITHUB_TOKEN`. CI needs a fine-grained PAT with the "Copilot Requests" permission; local runs accept any token for a Copilot-enabled account, including `gh auth token`.                            |
 | External API     | [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices) (public, unauthenticated; called by `get-azure-pricing.sh` during happy-path tasks) |
 
 ## Quick start
@@ -33,7 +33,7 @@ chmod +x ~/bin/waza
 waza check
 
 # Run evals with real AI
-export COPILOT_GITHUB_TOKEN="<your-pat>"
+export COPILOT_GITHUB_TOKEN="$(gh auth token)"   # or a fine-grained PAT
 waza run --verbose --output results/results.json
 
 # Run a specific service
@@ -61,7 +61,7 @@ Tasks mirror the skill's service reference hierarchy. One prompt per file; one d
 
 ## CI pipeline
 
-Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
+Three jobs in `.github/workflows/eval.yml` run on PRs to `dev` and `main`; one additional job is manual dispatch:
 
 | Job                           | Executor      | What it does                                                                          | LLM calls |
 | ----------------------------- | ------------- | ------------------------------------------------------------------------------------- | --------- |
@@ -85,7 +85,7 @@ The workflow uses [dorny/paths-filter](https://github.com/dorny/paths-filter) to
 
 Service names are extracted from filenames dynamically (`basename virtual-machines.md .md` becomes `--tags service:virtual-machines`). Multiple tags are OR'd.
 
-The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. `continue-on-error: true` prevents eval failures from blocking PRs while graders are being tuned.
+The job requires `COPILOT_GITHUB_TOKEN`; skips with a notice if not configured. Eval failures block the PR.
 
 **To extend:** add a filter in the `Detect critical file changes` step and map it to tags in `Build eval scope`. New tasks are picked up automatically if their tags match.
 
@@ -273,9 +273,8 @@ This grader assumes USD output. Use a USD-billed region in the task prompt (East
       (2) Shows a monthly total cost using the correct billing model for {Service Display Name}.
       (3) Accounts for {key quantity, e.g., "2 instances as specified"}.
 
-      Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
-
-      Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+      If all three criteria are met, call set_waza_grade_pass with a description and reason.
+      Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
   weight: 1.5
 ```
 
@@ -340,12 +339,9 @@ Routing is proven indirectly through the agent's knowledge of the service's neve
       parameters before a price can be calculated: {never-assume parameter list for this service}.
       These are "never-assume" parameters the agent must not guess.
 
-      Review the agent response and score it:
-      - Score 1.0 if the agent asks for at least one of the listed never-assume parameters and does NOT provide a cost estimate.
-      - Score 0.5 if the agent asks for at least one of the listed never-assume parameters but also includes a cost estimate.
-      - Score 0.0 if the agent provides a cost estimate without asking for any of the listed never-assume parameters.
-
-      Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+      Review the agent response. Call set_waza_grade_pass if the agent asks for at least one of the
+      listed never-assume parameters and does NOT provide a cost estimate. Otherwise call
+      set_waza_grade_fail with a reason, including when the agent asks but still provides a cost estimate.
   weight: 2.0
 ```
 
@@ -399,7 +395,7 @@ Eval results are saved as JSON artifacts (30-day retention in CI) and can be gen
 
 Each task produces a score from 0.0 to 1.0. The score is the weighted average across all graders on that task. The aggregate score across the full run is the unweighted average of all task scores.
 
-A task with three graders scoring (0, 1, 1) with equal weights produces a task score of 0.67, not 0.00. This means a single critical grader scoring 0 can be masked by passing graders that test unrelated properties. When diagnosing a score, always check per-grader results, not just the aggregate.
+Score and status are independent. A task with three graders scoring (0, 1, 1) with equal weights produces a task score of 0.67, not 0.00, but the task still fails: waza marks a run failed if any grader has `passed: false`, with no score threshold. A high score never masks a failing grader. In run 30629412973, `storage/netapp-files` scored 0.958 and failed while `smoke/should-not-trigger` scored 0.500 and passed. Treat the score as a reporting metric and the status as the gate.
 
 ### Key fields in results JSON
 
@@ -409,17 +405,25 @@ A task with three graders scoring (0, 1, 1) with equal weights produces a task s
 | `tasks[].stats.avg_score`           | Average score for a specific task across trials                             |
 | `tasks[].stats.std_dev_score`       | Score variance across trials (zero when `trials_per_task: 1`)               |
 | `tasks[].stats.ci95_lo` / `ci95_hi` | 95% confidence interval bounds (only meaningful with `trials_per_task > 1`) |
-| `tasks[].graders[].score`           | Per-grader score for each trial                                             |
+| `tasks[].runs[].validations`        | Per-grader map keyed by grader name: `score`, `weight`, `passed`, `feedback` |
 
 ### Reading per-grader results
 
-When a task score is unexpected, check which grader moved:
+When a task fails or its score is unexpected, check which grader moved:
 
-1. Look at `tasks[].graders[]` for the task in question.
-2. Identify which grader scored 0 or below threshold.
+1. Look at `tasks[].runs[].validations` for the task in question.
+2. Identify the graders with `passed: false`; any one of them fails the task regardless of score.
 3. Check whether that grader is testing the behavior you care about or an unrelated property.
 
-Global graders (defined in `eval.yaml` under `graders:`) apply to every task. If a global grader tests something irrelevant to a specific task, it adds noise to that task's score. The current global grader `no-summary-format` checks that the response does not contain "Summary format"; this is unrelated to most task behaviors and can inflate scores when paired with a failing critical grader.
+List every failing grader across a run with:
+
+```bash
+jq -r '.tasks[] | select(.status != "passed") | .test_id,
+       (.runs[].validations | to_entries[] | select(.value.passed == false)
+        | "    \(.key): \(.value.score) \(.value.feedback)")' results/results.json
+```
+
+Global graders (defined in `eval.yaml` under `graders:`) apply to every task. If a global grader tests something irrelevant to a specific task, it adds noise to that task's score. The current global grader `no-summary-format` checks that the response does not contain "Summary format"; this is unrelated to most task behaviors and can inflate the reported score when paired with a failing critical grader. It cannot change task status.
 
 ### Comparing results
 
