@@ -49,9 +49,8 @@ graders:
         (2) Shows a monthly total cost using the correct billing model for Azure Container Storage (per-GiB orchestration fee with 5 TiB free grant deduction).
         (3) Accounts for the 10 TiB pool size as specified.
 
-        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all three criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script

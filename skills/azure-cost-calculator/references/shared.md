@@ -81,7 +81,7 @@ See [reserved-instances.md](reserved-instances.md) for full RI traps.
 
 ### Disambiguation Protocol
 
-Before querying prices, classify every sizing parameter against this table. Missing never-assume params → stop and ask. Missing safe-default params → use default and disclose.
+Before querying prices, classify every sizing parameter of the services being priced against this table. Missing never-assume params → stop and ask. Missing safe-default params → use default and disclose. Quantities of `billingNeeds` companion resources are out of scope here; Critical Rule 8 in SKILL.md governs them.
 
 | Category         | Parameters                                                                                            | Rule                                       |
 | ---------------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------ |
@@ -113,7 +113,7 @@ Every estimate MUST begin with an assumptions block before presenting cost numbe
 - Zone Redundancy: {Enabled | Disabled}
 - {any other safe-defaults used}
 
-Omit lines where the user explicitly specified the value. Only disclose values that were defaulted.
+Always emit this block, including when the user specified every value. List the values actually used and mark those that were defaulted.
 
 ### Azure Hybrid Benefit (AHUB)
 

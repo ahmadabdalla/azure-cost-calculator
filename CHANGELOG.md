@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 <!-- versions -->
 
+## [1.10.2] - 2026-08-01
+
+### Fixed
+
+- Service reference prose no longer invites the agent to "query the API directly" without routing through the currency-safe `API:` template (`pitfalls.md`, `dns-private-resolver.md`, `private-dns.md`, `dns.md`, `traffic-manager.md`). An omitted `currencyCode` returns HTTP 200 silently in USD — same failure class as the 1.10.1 fix.
+- Zone/global-region service references (`dns-private-resolver.md`, `private-dns.md`, `dns.md`, `traffic-manager.md`) now direct the agent to run the pricing script first, falling back to the `API:` template only if the script returns nothing.
+- `hdinsight.md` gained a `currencyCode`-safe `API:` query for its empty-region add-on software meters; none previously existed.
+- `traffic-manager.md` now documents a US Gov query path alongside the existing commercial (Global) one.
+- `shared.md` and `SKILL.md`: the Assumptions requirement and `billingNeeds` companion-pricing rule no longer collapse to no compliant path when a quantity is unspecified.
+
+### Changed
+
+- Eval suite reliability restored: all 62 prompt graders now score via `set_waza_grade_pass`/`set_waza_grade_fail` tool calls instead of a decimal-text contract Waza never parsed (previously a coin-flip on judge verbosity, masked by a suppressed CI gate). Two eval tasks that could never pass as authored were corrected, and the CI eval gate now blocks on failure and covers PRs to `main` as well as `dev`.
+
 ## [1.10.1] - 2026-07-31
 
 ### Fixed

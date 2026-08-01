@@ -9,7 +9,7 @@ allowed-tools:
   - PowerShell
 metadata:
   author: ahmadabdalla
-  version: "1.10.1"
+  version: "1.10.2"
 ---
 
 # Azure Cost Calculator
@@ -56,7 +56,7 @@ Service reference files specify query parameters as `Key: Value` pairs. Translat
    | ------- | --------- | ------------------ | ---------------------- |
    - If **any never-assume parameter** is missing → ask user before proceeding
    - If only safe-default gaps remain → disclose defaults and proceed to Phase 2
-   - **Single-service shortcut**: skip this table for single-service estimates where all parameters are specified
+   - **Single-service shortcut**: skip this Specification Review table for single-service estimates where all parameters are specified; the Phase 2 Assumptions block is still required
 
 ### Phase 2: Estimation
 
@@ -94,7 +94,7 @@ After presenting the estimate, the user may request changes (switch region, add 
 5. **Lazy-load service references**: only read files from `references/services/` directly required by the user's query. Use the file-search workflow (Step 2) to locate specific files.
 6. **PowerShell: use `-File`, not `-Command`**: run scripts with `pwsh -File` or `powershell.exe -File`; on Linux/macOS, bash strips OData quotes from inline commands. **PS 5.1 caveats:** (a) Always add `-ExecutionPolicy RemoteSigned` before `-File` when using `powershell.exe`; default Windows policies silently block script execution. (b) Use `-Command` instead of `-File` when passing array parameters (e.g., `-Region 'eastus','australiaeast'`), because `-File` mode does not parse PowerShell expression syntax and collapses the array into a single string.
 7. **Use exact category names**: group line items using the exact Category Index names from shared.md verbatim (e.g., "Compute", "Databases", "AI + ML"). Do not paraphrase, abbreviate, or rename them.
-8. **Scope to user-specified resources**: only include resources explicitly stated in the user's architecture. Companion resources from `billingNeeds` are included automatically.
+8. **Scope to user-specified resources**: only include resources explicitly stated in the user's architecture. Price a `billingNeeds` companion resource only when its quantity is specified or documented in the service file; otherwise list it as a separately billed dependency excluded from the total. An unspecified `billingNeeds` quantity is not a never-assume gap; this carve-out does not extend to `privateEndpoint` sub-resources.
 9. **MeterId**: when the user requests meter IDs, add `--include-meter-id` / `-IncludeMeterId`. No extra API calls needed.
 
 ## Service File Metadata
@@ -103,7 +103,7 @@ YAML front matter fields. Optional fields use default elision; omitted means the
 
 | Field                   | Required | Default    | Action                                                                                  |
 | ----------------------- | :------: | ---------- | --------------------------------------------------------------------------------------- |
-| `billingNeeds`          |    -     | omit       | Read and price listed dependency services                                               |
+| `billingNeeds`          |    -     | omit       | Read listed dependency services; price those with a known quantity, list the rest as separately billed |
 | `billingConsiderations` |    -     | omit       | Ask user about listed pricing factors before calculating                                |
 | `primaryCost`           |    ✔     | -          | One-line billing summary for quick cost context                                         |
 | `apiServiceName`        |    -     | omit       | Use instead of `serviceName` in API queries                                             |
