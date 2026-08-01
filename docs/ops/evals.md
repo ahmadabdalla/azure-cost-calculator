@@ -61,7 +61,7 @@ Tasks mirror the skill's service reference hierarchy. One prompt per file; one d
 
 ## CI pipeline
 
-Three jobs in `.github/workflows/eval.yml` run on PRs to `dev`; one additional job is manual dispatch:
+Three jobs in `.github/workflows/eval.yml` run on PRs to `dev` and `main`; one additional job is manual dispatch:
 
 | Job                           | Executor      | What it does                                                                          | LLM calls |
 | ----------------------------- | ------------- | ------------------------------------------------------------------------------------- | --------- |

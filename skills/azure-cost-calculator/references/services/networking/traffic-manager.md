@@ -12,7 +12,7 @@ pricingRegion: global
 
 > **Trap (sub-cent rounding)**: DNS query pricing is per million queries. Small volumes produce minimal cost in the script. Use `Quantity` to represent millions of queries (e.g., `Quantity: 10` = 10M queries/month). Use `retailPrice` from query results for each tier.
 
-> **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Run the pricing script with `Region: Global`; fall back to the `API:` query below only if it returns nothing.
+> **Warning**: **Global-only pricing**: Traffic Manager has no regional pricing. `armRegionName` is `Global` (commercial) or `US Gov`. The default `eastus` region returns zero results. Commercial: run the pricing script with `Region: Global`. US Gov subscriptions: use `Region: US Gov`. Fall back to the matching `API:` query below only if the script returns nothing.
 
 ## Query Pattern
 
@@ -46,9 +46,14 @@ SkuName: Non-Azure Endpoint
 MeterName: Non-Azure Endpoint Health Checks
 Region: Global
 
-### Direct API (all Global meters)
+### Direct API (commercial, all Global meters)
 
 API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Traffic Manager' and armRegionName eq 'Global'&currencyCode={currencyCode}
+Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
+
+### Direct API (US Gov, all meters)
+
+API: https://prices.azure.com/api/retail/prices?$filter=serviceName eq 'Traffic Manager' and armRegionName eq 'US Gov'&currencyCode={currencyCode}
 Fields: meterName, skuName, unitPrice, unitOfMeasure, tierMinimumUnits
 
 ## Key Fields
