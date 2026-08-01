@@ -9,7 +9,7 @@ allowed-tools:
   - PowerShell
 metadata:
   author: ahmadabdalla
-  version: "1.10.1"
+  version: "1.10.2"
 ---
 
 # Azure Cost Calculator
