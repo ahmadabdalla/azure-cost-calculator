@@ -29,12 +29,9 @@ graders:
         capacity (DTU count or vCore count), and storage size. These are "never-assume" parameters
         the agent must not guess.
 
-        Review the agent response and score it:
-        - Score 1.0 if the agent asks for at least one missing parameter and does NOT provide a cost estimate.
-        - Score 0.5 if the agent asks for clarification but also includes a cost estimate.
-        - Score 0.0 if the agent provides a cost estimate without asking for any missing parameters.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        Review the agent response. Call set_waza_grade_pass if the agent asks for at least one
+        missing parameter and does NOT provide a cost estimate. Otherwise call set_waza_grade_fail
+        with a reason, including when the agent asks for clarification but still provides a cost estimate.
     weight: 2.0
   - type: text
     name: contains-question

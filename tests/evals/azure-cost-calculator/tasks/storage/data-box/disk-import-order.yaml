@@ -50,9 +50,8 @@ graders:
         (2) Shows a monthly/total cost using the correct billing model for Data Box Disk (per-order service fee + shipping fee + daily overage beyond the 3 included days, with the daily fee scaled by disk count).
         (3) Accounts for 3 disks over a 5-day job as specified.
 
-        Score 1.0 if all three criteria are met. Score 0.5 if two are met. Score 0.0 if fewer than two are met.
-
-        Return ONLY a decimal number between 0.0 and 1.0 with no other text.
+        If all three criteria are met, call set_waza_grade_pass with a description and reason.
+        Otherwise call set_waza_grade_fail with a description and a reason naming the criteria that failed.
     weight: 1.5
   - type: tool_constraint
     name: uses-pricing-script
